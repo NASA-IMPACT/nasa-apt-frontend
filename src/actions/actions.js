@@ -706,14 +706,14 @@ export function uploadFile(file) {
   data.append('file', keyedFile);
   return {
     [RSAA]: {
-      endpoint: `http://${s3Uri}/${figuresBucket}`,
+      endpoint: `${s3Uri}/${figuresBucket}`,
       method: 'POST',
       fetch: async (...args) => {
         let location;
         const res = await fetch(...args);
         // Localstack doesn't support key return yet.
         if (res.status === 200) {
-          location = `http://${s3Uri}/${figuresBucket}/${keyedFile.name}`;
+          location = `${s3Uri}/${figuresBucket}/${keyedFile.name}`;
         } else {
           const text = await res.text();
           const xml = new DOMParser().parseFromString(text, 'application/xml');
@@ -773,14 +773,14 @@ export function uploadJson(json) {
   data.append('file', keyedFile);
   return {
     [RSAA]: {
-      endpoint: `http://${s3Uri}/${jsonBucket}`,
+      endpoint: `${s3Uri}/${jsonBucket}`,
       method: 'POST',
       fetch: async (...args) => {
         let location;
         const res = await fetch(...args);
         // Localstack doesn't support key return yet.
         if (res.status === 200) {
-          location = `http://${s3Uri}/${jsonBucket}/${keyedFile.name}`;
+          location = `${s3Uri}/${jsonBucket}/${keyedFile.name}`;
         } else {
           const text = await res.text();
           const xml = new DOMParser().parseFromString(text, 'application/xml');
@@ -821,13 +821,13 @@ export function serializeDocument(versionObject) {
 export function checkPdf(key) {
   return {
     [RSAA]: {
-      endpoint: `http://${s3Uri}/${atbdBucket}/${key}.pdf`,
+      endpoint: `${s3Uri}/${atbdBucket}/${key}.pdf`,
       method: 'HEAD',
       fetch: async (...args) => {
         let response;
         const res = await fetch(...args);
         if (res.status === 200) {
-          const location = `http://${s3Uri}/${atbdBucket}/${key}.pdf`;
+          const location = `${s3Uri}/${atbdBucket}/${key}.pdf`;
           response = new Response(
             JSON.stringify({ location }),
             {
@@ -854,7 +854,7 @@ export function checkPdf(key) {
 export function checkHtml(key) {
   return {
     [RSAA]: {
-      endpoint: `http://${s3Uri}/${atbdBucket}/${key}/index.html`,
+      endpoint: `${s3Uri}/${atbdBucket}/${key}/index.html`,
       method: 'HEAD',
       fetch: async (...args) => {
         let response;
