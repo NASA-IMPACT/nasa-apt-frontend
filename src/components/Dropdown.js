@@ -207,6 +207,7 @@ export default class Dropdown extends React.Component {
 
     let tetherAttachment;
     let tetherTargetAttachment;
+    // eslint-disable-next-line default-case
     switch (direction) {
       case 'up':
         tetherAttachment = `bottom ${alignment}`;
