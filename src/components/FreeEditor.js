@@ -76,6 +76,12 @@ function renderMark(props, editor, next) {
     case 'underline': {
       return <u {...props}>{children}</u>;
     }
+    case 'superscript': {
+      return <sup {...props}>{children}</sup>;
+    }
+    case 'subscript': {
+      return <sub {...props}>{children}</sub>;
+    }
     default: {
       return next();
     }
