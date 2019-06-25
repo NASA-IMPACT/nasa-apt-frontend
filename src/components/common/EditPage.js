@@ -91,6 +91,7 @@ const StepperLabel = styled.h6`
   font-size: 0.875rem;
   color: ${_rgba('#FFFFFF', 0.64)};
   margin-right: 0.5rem;
+  white-space: nowrap;
 `;
 
 const ItemCount = styled.span`
