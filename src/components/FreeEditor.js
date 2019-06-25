@@ -76,6 +76,12 @@ function renderMark(props, editor, next) {
     case 'underline': {
       return <u {...props}>{children}</u>;
     }
+    case 'superscript': {
+      return <sup {...props}>{children}</sup>;
+    }
+    case 'subscript': {
+      return <sub {...props}>{children}</sub>;
+    }
     default: {
       return next();
     }
@@ -187,6 +193,14 @@ export class FreeEditor extends React.Component {
   }
 
   toggleMark(nextMark) {
+    // Ensure sub/superscript are not applied at the same time
+    if (nextMark === 'superscript') {
+      this.editor.removeMark('subscript');
+    } else if (nextMark === 'subscript') {
+      this.editor.removeMark('superscript');
+    }
+
+    // Apply toggle
     this.editor.toggleMark(nextMark);
   }
 
