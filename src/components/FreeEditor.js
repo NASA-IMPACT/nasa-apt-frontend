@@ -193,6 +193,14 @@ export class FreeEditor extends React.Component {
   }
 
   toggleMark(nextMark) {
+    // Ensure sub/superscript are not applied at the same time
+    if (nextMark === 'superscript') {
+      this.editor.removeMark('subscript');
+    } else if (nextMark === 'subscript') {
+      this.editor.removeMark('superscript');
+    }
+
+    // Apply toggle
     this.editor.toggleMark(nextMark);
   }
 
