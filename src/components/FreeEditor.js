@@ -39,12 +39,14 @@ const reference = 'reference';
 const _rgba = stylizeFunction(rgba);
 
 const EditorStatus = styled.div`
-  border-color: ${props => (props.invalid ? themeVal('color.danger')
-    : _rgba(themeVal('color.base'), 0.16))};
+  border-color: ${props => props.invalid
+    ? themeVal('color.danger')
+    : _rgba(themeVal('color.base'), 0.16)};
   border-radius: ${themeVal('shape.rounded')};
   border-style: solid;
-  border-width: ${props => (props.invalid ? multiply(themeVal('layout.border'), 2)
-    : themeVal('layout.border'))};
+  border-width: ${props => props.invalid
+    ? multiply(themeVal('layout.border'), 2)
+    : themeVal('layout.border')};
   margin-bottom: 1rem;
 `;
 
@@ -55,11 +57,7 @@ const EditorContainer = styled.div`
   padding: 1rem 3rem;
 `;
 
-const plugins = [
-  TrailingBlock(),
-  SoftBreak(),
-  PluginDeepTable()
-];
+const plugins = [TrailingBlock(), SoftBreak(), PluginDeepTable()];
 
 function renderMark(props, editor, next) {
   const {
@@ -119,12 +117,8 @@ export class FreeEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      initialValue
-    } = nextProps;
-    const {
-      initialValue: previousInitialValue
-    } = this.props;
+    const { initialValue } = nextProps;
+    const { initialValue: previousInitialValue } = this.props;
 
     if (initialValue !== previousInitialValue) {
       this.setState({
@@ -227,11 +221,13 @@ export class FreeEditor extends React.Component {
         nodes: [
           {
             object: 'text',
-            leaves: [{
-              text: '\\',
-            }]
-          },
-        ],
+            leaves: [
+              {
+                text: '\\'
+              }
+            ]
+          }
+        ]
       })
       .focus();
   }
@@ -241,23 +237,27 @@ export class FreeEditor extends React.Component {
       uploadedImageToPlace: src,
       uploadedImageCaption: caption
     } = this.state;
-    this.editor.insertBlock({
-      type: 'image',
-      data: {
-        src,
-        caption
-      }
-    }).insertBlock({
-      type: paragraph,
-      nodes: [
-        {
-          object: 'text',
-          leaves: [{
-            text: '',
-          }]
-        },
-      ],
-    });
+    this.editor
+      .insertBlock({
+        type: 'image',
+        data: {
+          src,
+          caption
+        }
+      })
+      .insertBlock({
+        type: paragraph,
+        nodes: [
+          {
+            object: 'text',
+            leaves: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ]
+      });
   }
 
   insertLink(url, replaceText) {
@@ -270,32 +270,37 @@ export class FreeEditor extends React.Component {
     this.editor.insertInline({
       type: 'link',
       data: { url },
-      nodes: [{
-        object: 'text',
-        leaves: [{
-          text
-        }]
-      }]
+      nodes: [
+        {
+          object: 'text',
+          leaves: [
+            {
+              text
+            }
+          ]
+        }
+      ]
     });
   }
 
   insertReference() {
     const { lastCreatedReference } = this.props;
-    const {
-      publication_reference_id: id,
-      title: name
-    } = lastCreatedReference;
+    const { publication_reference_id: id, title: name } = lastCreatedReference;
     this.editor.insertInline({
       type: reference,
       data: { id, name },
-      nodes: [{
-        object: 'text',
-        leaves: [{
-          // TODO: decide if we want to render something
-          // more meaningful than this stand-in.
-          text: 'ref'
-        }]
-      }]
+      nodes: [
+        {
+          object: 'text',
+          leaves: [
+            {
+              // TODO: decide if we want to render something
+              // more meaningful than this stand-in.
+              text: 'ref'
+            }
+          ]
+        }
+      ]
     });
   }
 
@@ -306,11 +311,13 @@ export class FreeEditor extends React.Component {
         nodes: [
           {
             object: 'text',
-            leaves: [{
-              text: '',
-            }]
-          },
-        ],
+            leaves: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ]
       })
       .focus();
   }
@@ -320,42 +327,29 @@ export class FreeEditor extends React.Component {
   }
 
   insertColumn() {
-    this.onChange(
-      this.editor.insertColumn()
-    );
+    this.onChange(this.editor.insertColumn());
   }
 
   insertRow() {
-    this.onChange(
-      this.editor.insertRow()
-    );
+    this.onChange(this.editor.insertRow());
   }
 
   removeColumn() {
-    this.onChange(
-      this.editor.removeColumn()
-    );
+    this.onChange(this.editor.removeColumn());
   }
 
   removeRow() {
-    this.onChange(
-      this.editor.removeRow()
-    );
+    this.onChange(this.editor.removeRow());
   }
 
   removeTable() {
-    this.onChange(
-      this.editor.removeTable()
-    );
+    this.onChange(this.editor.removeTable());
   }
 
   /* eslint-disable-next-line */
   renderNode(props, editor, next) {
     const {
-      attributes,
-      children,
-      node,
-      isFocused
+      attributes, children, node, isFocused
     } = props;
     const { value } = this.state;
     const selectedText = value.fragment.text;
@@ -368,11 +362,7 @@ export class FreeEditor extends React.Component {
         const caption = node.data.get('caption');
         return (
           <figure>
-            <EditorImage
-              isFocused={isFocused}
-              src={src}
-              {...attributes}
-            />
+            <EditorImage isFocused={isFocused} src={src} {...attributes} />
             <figcaption>{caption}</figcaption>
           </figure>
         );
@@ -400,11 +390,15 @@ export class FreeEditor extends React.Component {
         // in the focused text is because focusing on an inline fragment,
         // ie a link or reference, will trigger this case as well as
         // the case for that specific inline node.
-        const hasSelection = !!(focusText.length && selectedText.length
-          && focusText.indexOf(selectedText) >= 0);
+        const hasSelection = !!(
+          focusText.length
+          && selectedText.length
+          && focusText.indexOf(selectedText) >= 0
+        );
 
-        const activeMarks = Array.from(value.activeMarks)
-          .map(Mark => Mark.type);
+        const activeMarks = Array.from(value.activeMarks).map(
+          Mark => Mark.type
+        );
 
         return (
           <EditorFormattableText
@@ -425,7 +419,14 @@ export class FreeEditor extends React.Component {
             metadata={url}
             readOnly
           >
-            <a href={url} rel="noopener noreferrer" target="_blank" {...attributes}>{children}</a>
+            <a
+              href={url}
+              rel="noopener noreferrer"
+              target="_blank"
+              {...attributes}
+            >
+              {children}
+            </a>
           </EditorInlineMetadata>
         );
       }
@@ -454,10 +455,7 @@ export class FreeEditor extends React.Component {
 
   render() {
     const {
-      state: {
-        value,
-        activeTool
-      },
+      state: { value, activeTool },
       save,
       onChange,
       onMouseDown,
@@ -465,11 +463,7 @@ export class FreeEditor extends React.Component {
       renderNode
     } = this;
 
-    const {
-      className,
-      inlineSaveBtn,
-      invalid
-    } = this.props;
+    const { className, inlineSaveBtn, invalid } = this.props;
 
     return (
       <div className={className}>
@@ -479,7 +473,9 @@ export class FreeEditor extends React.Component {
             <ButtonGroup orientation="horizontal">
               <EquationBtn
                 id={equation}
-                onClick={() => { this.selectTool(equation); }}
+                onClick={() => {
+                  this.selectTool(equation);
+                }}
                 active={activeTool === equation}
                 variation="base-plain"
                 size="large"
@@ -489,7 +485,9 @@ export class FreeEditor extends React.Component {
 
               <ParagraphBtn
                 id={paragraph}
-                onClick={() => { this.selectTool(paragraph); }}
+                onClick={() => {
+                  this.selectTool(paragraph);
+                }}
                 active={activeTool === paragraph}
                 variation="base-plain"
                 size="large"
@@ -499,7 +497,9 @@ export class FreeEditor extends React.Component {
 
               <TableBtn
                 id={table}
-                onClick={() => { this.selectTool(table); }}
+                onClick={() => {
+                  this.selectTool(table);
+                }}
                 active={activeTool === table}
                 variation="base-plain"
                 size="large"
@@ -509,25 +509,26 @@ export class FreeEditor extends React.Component {
 
               <EditorFigureTool
                 onSaveSuccess={(uploadedFile, caption) => {
-                  this.setState({
-                    uploadedImageToPlace: uploadedFile,
-                    uploadedImageCaption: caption
-                  }, () => this.selectTool(image));
+                  this.setState(
+                    {
+                      uploadedImageToPlace: uploadedFile,
+                      uploadedImageCaption: caption
+                    },
+                    () => this.selectTool(image)
+                  );
                 }}
                 active={activeTool === image}
               />
 
               <EditorReferenceTool
-                onSaveSuccess={() => { this.selectTool(reference); }}
+                onSaveSuccess={() => {
+                  this.selectTool(reference);
+                }}
                 active={activeTool === reference}
               />
 
               {inlineSaveBtn && (
-                <Button
-                  onClick={save}
-                  variation="base-plain"
-                  size="large"
-                >
+                <Button onClick={save} variation="base-plain" size="large">
                   Save
                 </Button>
               )}
@@ -548,11 +549,7 @@ export class FreeEditor extends React.Component {
           </EditorContainer>
         </EditorStatus>
         {!inlineSaveBtn && (
-          <Button
-            onClick={save}
-            variation="base-raised-light"
-            size="large"
-          >
+          <Button onClick={save} variation="base-raised-light" size="large">
             Save
           </Button>
         )}
@@ -603,4 +600,7 @@ const mapStateToProps = (state) => {
   return { lastCreatedReference };
 };
 
-export default connect(mapStateToProps, null)(StyledFreeEditor);
+export default connect(
+  mapStateToProps,
+  null
+)(StyledFreeEditor);

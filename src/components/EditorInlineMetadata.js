@@ -22,7 +22,7 @@ const MetaContainer = styled.span`
 
 const StaticMeta = styled.span`
   color: rgba(0, 0, 0, 0.64);
-  background: #FFF;
+  background: #fff;
   box-shadow: ${themeVal('boxShadow.input')};
   display: flex;
   height: 2.5rem;
@@ -64,10 +64,7 @@ export function InlineMetadata(props) {
 InlineMetadata.propTypes = {
   hasActiveSelection: T.bool,
   readOnly: T.bool,
-  metadata: T.oneOfType([
-    T.string,
-    T.number
-  ]),
+  metadata: T.oneOfType([T.string, T.number]),
   onRemove: T.func,
   onSubmit: T.func,
   children: T.node
@@ -129,11 +126,7 @@ class MetadataEditor extends Component {
       <StaticMeta>
         <span>{value}</span>
         {!!onRemove && (
-          <RemoveButton
-            variation="base-plain"
-            size="small"
-            hideText
-          >
+          <RemoveButton variation="base-plain" size="small" hideText>
             Remove
           </RemoveButton>
         )}
