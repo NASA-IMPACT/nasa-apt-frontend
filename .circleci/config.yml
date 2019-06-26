@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  aws-s3: circleci/aws-s3@1.0.3
 jobs:
   build:
     docker:
@@ -7,7 +9,8 @@ jobs:
     working_directory: ~/repo
 
     environment:
-      - PRODUCTION_BRANCH: develop
+      - DEVELOPMENT_BRANCH: development
+      - PRODUCTION_BRANCH: master
 
     steps:
       - checkout
@@ -15,9 +18,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run: yarn install
 
@@ -35,21 +38,61 @@ jobs:
           command: yarn lint
 
       - run:
+          name: Test
+          command: yarn test
+
+      - run:
           name: Building site
           command: |
-            if [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
-              yarn build           
+            if [ "${CIRCLE_BRANCH}" == "${DEVELOPMENT_BRANCH}" ]; then
+              echo "export REACT_APP_ATBD_JSON_BUCKET=${REACT_APP_ATBD_JSON_BUCKET_STAGING}" >> $BASH_ENV
+              echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_STAGING}" >> $BASH_ENV
+              echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_STAGING}" >> $BASH_ENV
+              echo "export REACT_APP_API_URL=${REACT_APP_API_URL_STAGING}" >> $BASH_ENV
+              source $BASH_ENV
+              yarn build
+            elif [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
+              echo "export REACT_APP_ATBD_JSON_BUCKET=${REACT_APP_ATBD_JSON_BUCKET_PRODUCTION}" >> $BASH_ENV
+              echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_PRODUCTION}" >> $BASH_ENV
+              echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_PRODUCTION}" >> $BASH_ENV
+              echo "export REACT_APP_API_URL=${REACT_APP_API_URL_PRODUCTION}" >> $BASH_ENV
+              source $BASH_ENV
+              yarn build
             else
               echo "Skip building site"
             fi
 
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - build
+            - package.json
+
+  deploy:
+    docker:
+      - image: circleci/python:2.7-jessie
+    steps:
+      - attach_workspace:
+          at: ~/repo
       - run:
-          name: Deploy to Surge
+          name: Install awscli
+          command: sudo pip install awscli
+      - run:
+          name: Deploy to S3
           command: |
-            if [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
-              cp ./build/index.html ./build/200.html
-              ./node_modules/surge/lib/cli.js --project ./build --domain nasa-apt-dev.surge.sh
+            if [ "${CIRCLE_BRANCH}" == "${DEVELOPMENT_BRANCH}" ]; then
+              aws s3 sync ~/repo/build s3://nasa-apt-staging-application --delete
+            elif [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
+              aws s3 sync ~/repo/build s3://nasa-apt-production-application --delete
             else
               echo "Not the branch you're looking for, skipping deploy"
             fi
 
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
