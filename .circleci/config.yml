@@ -9,7 +9,7 @@ jobs:
     working_directory: ~/repo
 
     environment:
-      - DEVELOPMENT_BRANCH: development
+      - DEVELOPMENT_BRANCH: develop
       - PRODUCTION_BRANCH: master
 
     steps:
