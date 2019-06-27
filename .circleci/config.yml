@@ -71,6 +71,11 @@ jobs:
   deploy:
     docker:
       - image: circleci/python:2.7-jessie
+
+    environment:
+      - DEVELOPMENT_BRANCH: develop
+      - PRODUCTION_BRANCH: master
+
     steps:
       - attach_workspace:
           at: ~/repo
