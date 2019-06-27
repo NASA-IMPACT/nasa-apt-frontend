@@ -111,6 +111,36 @@ const DocTablePublishButton = styled(Button)`
   }
 `;
 
+const DocTableActionsTrigger = styled(Button)`
+  &::before {
+    ${collecticon('ellipsis-vertical')}
+  }
+`;
+
+const DocTableActionPreview  = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('eye')}
+  }
+`;
+
+const DocTableActionEdit = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('pencil')}
+  }
+`;
+
+const DocTableActionPublish = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('arrow-up-right')}
+  }
+`;
+
+const DocTableActionDelete = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('trash-bin')}
+  }
+`;
+
 const AtbdPublishedState = styled.span`
   ${antialiased}
   display: flex;
@@ -167,6 +197,33 @@ const AtbdList = (props) => {
           />
           <DocTablePublishButton variation="primary-plain" size="small" href="#" title="Publish document">Publish</DocTablePublishButton>
           <DocTableEditButton variation="primary-plain" size="small" title="Edit document" onClick={() => props.push(`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`)}>Edit</DocTableEditButton>
+
+          <Dropdown
+            alignment="middle"
+            direction="left"
+            triggerElement={
+              <DocTableActionsTrigger variation="primary-plain" size="small" title="View Document options" hideText>Otions</DocTableActionsTrigger>
+            }
+          >
+            <DropTitle>Document options</DropTitle>
+            <DropMenu role="menu" iconified>
+              <li>
+                <DocTableActionPreview title="Preview document">Preview</DocTableActionPreview >
+              </li>
+              <li>
+                <DocTableActionPublish title="Publish document">Publish</DocTableActionPublish>
+              </li>
+              <li>
+                <DocTableActionEdit title="Edit document">Edit</DocTableActionEdit>
+              </li>
+            </DropMenu>
+            <DropMenu role="menu" iconified>
+              <li>
+                <DocTableActionDelete title="Delete document" disabled>Delete</DocTableActionDelete>
+              </li>
+            </DropMenu>
+          </Dropdown>
+
         </DocTableBodyTdActions>
       </tr>
     );
