@@ -45,6 +45,12 @@ const buttonConfig = [{
 }, {
   display: <u>u</u>,
   mark: 'underline'
+}, {
+  display: <span>x&#178;</span>,
+  mark: 'superscript'
+}, {
+  display: <span>x&#8322;</span>,
+  mark: 'subscript'
 }];
 
 const baseVariation = 'base-raised-light';
