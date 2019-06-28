@@ -21,8 +21,9 @@ import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
 import EditorReference from './EditorReference';
 import EditorReferenceTool from './EditorReferenceTool';
+import EditorFormatTextToolbar from './EditorFormatTextToolbar';
 import EditorFormattableText from './EditorFormattableText';
-import EditorInlineMetadata from './EditorInlineMetadata';
+// import EditorInlineMetadata from './EditorInlineMetadata';
 import { getValidOrBlankDocument } from './editorBlankDocument';
 import schema from './editorSchema';
 import { themeVal, stylizeFunction } from '../styles/utils/general';
@@ -93,27 +94,31 @@ export class FreeEditor extends React.Component {
     this.state = {
       value: Value.fromJSON(getValidOrBlankDocument(initialValue)),
       activeTool: null,
+      selection: null,
       uploadedImageToPlace: null,
       uploadedImageCaption: null
     };
-    this.onChange = this.onChange.bind(this);
-    this.renderNode = this.renderNode.bind(this);
-    this.insertEquation = this.insertEquation.bind(this);
-    this.insertParagraph = this.insertParagraph.bind(this);
-    this.insertTable = this.insertTable.bind(this);
-    this.selectTool = this.selectTool.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onKeyDown = this.onKeyDown.bind(this);
-    this.toggleMark = this.toggleMark.bind(this);
-    this.save = this.save.bind(this);
     this.insertColumn = this.insertColumn.bind(this);
+    this.insertEquation = this.insertEquation.bind(this);
+    this.insertImage = this.insertImage.bind(this);
+    this.insertLink = this.insertLink.bind(this);
+    this.insertParagraph = this.insertParagraph.bind(this);
+    this.insertReference = this.insertReference.bind(this);
     this.insertRow = this.insertRow.bind(this);
+    this.insertTable = this.insertTable.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseUp = this.onMouseUp.bind(this);
     this.removeColumn = this.removeColumn.bind(this);
     this.removeRow = this.removeRow.bind(this);
     this.removeTable = this.removeTable.bind(this);
-    this.insertImage = this.insertImage.bind(this);
-    this.insertLink = this.insertLink.bind(this);
-    this.insertReference = this.insertReference.bind(this);
+    this.renderNode = this.renderNode.bind(this);
+    this.save = this.save.bind(this);
+    this.selectTool = this.selectTool.bind(this);
+    this.toggleMark = this.toggleMark.bind(this);
+    this.updateSelectionState = this.updateSelectionState.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -150,6 +155,10 @@ export class FreeEditor extends React.Component {
     }
   }
 
+  onMouseUp() {
+    this.updateSelectionState();
+  }
+
   onKeyDown(event, editor, next) {
     if (!event.metaKey) return next();
 
@@ -176,6 +185,10 @@ export class FreeEditor extends React.Component {
       event.preventDefault();
       this.toggleMark(nextMark);
     }
+  }
+
+  onKeyUp() {
+    this.updateSelectionState();
   }
 
   onChange(event) {
@@ -396,14 +409,9 @@ export class FreeEditor extends React.Component {
           && focusText.indexOf(selectedText) >= 0
         );
 
-        const activeMarks = Array.from(value.activeMarks).map(
-          Mark => Mark.type
-        );
-
         return (
           <EditorFormattableText
             hasSelection={hasSelection}
-            activeMarks={activeMarks}
             toggleMark={this.toggleMark}
             insertLink={this.insertLink}
             {...props}
@@ -414,38 +422,38 @@ export class FreeEditor extends React.Component {
       case 'link': {
         const url = node.data.get('url');
         return (
-          <EditorInlineMetadata
-            hasActiveSelection={!!(selectedText.length && url)}
-            metadata={url}
-            readOnly
+          // <EditorInlineMetadata
+          //   hasActiveSelection={!!(selectedText.length && url)}
+          //   metadata={url}
+          //   readOnly
+          // >
+          <a
+            href={url}
+            rel="noopener noreferrer"
+            target="_blank"
+            {...attributes}
           >
-            <a
-              href={url}
-              rel="noopener noreferrer"
-              target="_blank"
-              {...attributes}
-            >
-              {children}
-            </a>
-          </EditorInlineMetadata>
+            {children}
+          </a>
+          // </EditorInlineMetadata>
         );
       }
 
       case reference: {
-        const name = node.data.get('name');
+        // const name = node.data.get('name');
         return (
-          <EditorInlineMetadata
-            hasActiveSelection={!!(selectedText.length && name)}
-            metadata={`Ref: ${name}`}
-            readOnly
+          // <EditorInlineMetadata
+          //   hasActiveSelection={!!(selectedText.length && name)}
+          //   metadata={`Ref: ${name}`}
+          //   readOnly
+          // >
+          <EditorReference
+            data-reference-id={node.data.get('id')}
+            {...attributes}
           >
-            <EditorReference
-              data-reference-id={node.data.get('id')}
-              {...attributes}
-            >
-              {children}
-            </EditorReference>
-          </EditorInlineMetadata>
+            {children}
+          </EditorReference>
+          // </EditorInlineMetadata>
         );
       }
       default:
@@ -453,20 +461,38 @@ export class FreeEditor extends React.Component {
     }
   }
 
+  updateSelectionState() {
+    this.setState({ selection: window.getSelection() });
+  }
+
   render() {
     const {
-      state: { value, activeTool },
+      value, activeTool, selection
+    } = this.state;
+
+    const {
       save,
       onChange,
       onMouseDown,
+      onMouseUp,
       onKeyDown,
+      onKeyUp,
       renderNode
     } = this;
 
     const { className, inlineSaveBtn, invalid } = this.props;
 
     return (
-      <div className={className}>
+      <div
+        className={className}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+      >
+        <EditorFormatTextToolbar
+          value={value}
+          selection={selection}
+          toggleMark={this.toggleMark}
+        />
         <EditorStatus invalid={invalid}>
           <Toolbar>
             <ToolbarLabel>Insert</ToolbarLabel>
@@ -540,8 +566,8 @@ export class FreeEditor extends React.Component {
               schema={schema}
               value={value}
               onChange={onChange}
-              onMouseDown={onMouseDown}
               onKeyDown={onKeyDown}
+              onKeyUp={onKeyUp}
               renderNode={renderNode}
               renderMark={renderMark}
               plugins={plugins}
