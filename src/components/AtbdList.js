@@ -202,10 +202,10 @@ const AtbdList = (props) => {
             alignment="middle"
             direction="left"
             triggerElement={
-              <DocTableActionsTrigger variation="primary-plain" size="small" title="View Document options" hideText>Otions</DocTableActionsTrigger>
+              <DocTableActionsTrigger variation="primary-plain" size="small" title="View Document options" hideText>Actions</DocTableActionsTrigger>
             }
           >
-            <DropTitle>Document options</DropTitle>
+            <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
               <li>
                 <DocTableActionPreview title="Preview document">Preview</DocTableActionPreview >
