@@ -99,18 +99,6 @@ const DocTableBodyTdActions = styled.td`
   }
 `;
 
-const DocTableEditButton = styled(Button)`
-  &::before {
-    ${collecticon('pencil')};
-  }
-`;
-
-const DocTablePublishButton = styled(Button)`
-  &::before {
-    ${collecticon('arrow-up-right')};
-  }
-`;
-
 const DocTableActionsTrigger = styled(Button)`
   &::before {
     ${collecticon('ellipsis-vertical')}
@@ -195,9 +183,6 @@ const AtbdList = (props) => {
             atbd_id={atbd_id}
             atbd_version={1}
           />
-          <DocTablePublishButton variation="primary-plain" size="small" href="#" title="Publish document">Publish</DocTablePublishButton>
-          <DocTableEditButton variation="primary-plain" size="small" title="Edit document" onClick={() => props.push(`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`)}>Edit</DocTableEditButton>
-
           <Dropdown
             alignment="middle"
             direction="left"
@@ -214,7 +199,7 @@ const AtbdList = (props) => {
                 <DocTableActionPublish title="Publish document">Publish</DocTableActionPublish>
               </li>
               <li>
-                <DocTableActionEdit title="Edit document">Edit</DocTableActionEdit>
+                <DocTableActionEdit title="Edit document" onClick={() => props.push(`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`)}>Edit</DocTableActionEdit>
               </li>
             </DropMenu>
             <DropMenu role="menu" iconified>
