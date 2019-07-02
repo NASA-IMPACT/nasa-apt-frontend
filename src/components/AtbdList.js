@@ -33,11 +33,7 @@ import {
   InpageBodyInner
 } from './common/Inpage';
 
-import Dropdown, {
-  DropTitle,
-  DropMenu,
-  DropMenuItem
-} from './Dropdown';
+import Dropdown, { DropTitle, DropMenu, DropMenuItem } from './Dropdown';
 
 import Table from '../styles/table';
 
@@ -63,7 +59,8 @@ const DocTable = styled(Table)`
   width: auto;
   max-width: none;
 
-  th, td {
+  th,
+  td {
     padding: ${themeVal('layout.space')};
   }
 `;
@@ -108,7 +105,7 @@ const DocTableActionsTrigger = styled(Button)`
   }
 `;
 
-const DocTableActionPreview  = styled(DropMenuItem)`
+const DocTableActionPreview = styled(DropMenuItem)`
   &::before {
     ${collecticon('eye')}
   }
@@ -139,7 +136,7 @@ const AtbdPublishedState = styled.span`
   padding: 0 ${divide(themeVal('layout.space'), 2)};
   background-color: ${_rgba(themeVal('color.base'), 0.64)};
   border-radius: ${themeVal('shape.ellipsoid')};
-  color: #FFF;
+  color: #fff;
   white-space: nowrap;
   font-size: 0.875rem;
   font-weight: ${themeVal('type.base.bold')};
@@ -159,10 +156,7 @@ const FilterTrigger = styled(Button)`
 `;
 
 const AtbdList = (props) => {
-  const {
-    atbds,
-    createAtbd: create,
-  } = props;
+  const { atbds, createAtbd: create } = props;
 
   const atbdElements = atbds.map((atbd) => {
     const {
@@ -175,43 +169,64 @@ const AtbdList = (props) => {
     const { status } = atbd_versions[0];
     return (
       <tr key={atbd_id}>
-        <td><AtbdPublishedState>{status}</AtbdPublishedState></td>
+        <td>
+          <AtbdPublishedState>{status}</AtbdPublishedState>
+        </td>
         <DocTableBodyThTitle scope="row">
           <strong>{title}</strong>
-          { false && <AtbdVersion>Version 1.0</AtbdVersion> }
+          {false && <AtbdVersion>Version 1.0</AtbdVersion>}
         </DocTableBodyThTitle>
-        <DocTableBodyTdAuthors title={contact}><span>{contact}</span></DocTableBodyTdAuthors>
+        <DocTableBodyTdAuthors title={contact}>
+          <span>{contact}</span>
+        </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
-          <AtbdPreview
-            atbd_id={atbd_id}
-            atbd_version={1}
-          />
+          <AtbdPreview atbd_id={atbd_id} atbd_version={1} />
           <Dropdown
             alignment="middle"
             direction="left"
-            triggerElement={
-              <DocTableActionsTrigger variation="primary-plain" size="small" title="View Document options" hideText>Actions</DocTableActionsTrigger>
-            }
+            triggerElement={(
+              <DocTableActionsTrigger
+                variation="primary-plain"
+                size="small"
+                title="View Document options"
+                hideText
+              >
+                Actions
+              </DocTableActionsTrigger>
+)}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionPreview title="Preview document">Preview</DocTableActionPreview >
+                <DocTableActionPreview title="Preview document">
+                  Preview
+                </DocTableActionPreview>
               </li>
               <li>
-                <DocTableActionPublish title="Publish document">Publish</DocTableActionPublish>
+                <DocTableActionPublish title="Publish document">
+                  Publish
+                </DocTableActionPublish>
               </li>
               <li>
-                <DocTableActionEdit title="Edit document" onClick={() => props.push(`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`)}>Edit</DocTableActionEdit>
+                <DocTableActionEdit
+                  title="Edit document"
+                  onClick={() => props.push(
+                    `/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`
+                  )
+                  }
+                >
+                  Edit
+                </DocTableActionEdit>
               </li>
             </DropMenu>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionDelete title="Delete document" disabled>Delete</DocTableActionDelete>
+                <DocTableActionDelete title="Delete document" disabled>
+                  Delete
+                </DocTableActionDelete>
               </li>
             </DropMenu>
           </Dropdown>
-
         </DocTableBodyTdActions>
       </tr>
     );
@@ -221,7 +236,10 @@ const AtbdList = (props) => {
       <StickyContainer>
         <Sticky>
           {stickyProps => (
-            <InpageHeader style={stickyProps.style} isSticky={stickyProps.isSticky}>
+            <InpageHeader
+              style={stickyProps.style}
+              isSticky={stickyProps.isSticky}
+            >
               <InpageHeaderInner>
                 <InpageHeadline>
                   <InpageTitle>Documents</InpageTitle>
@@ -233,9 +251,14 @@ const AtbdList = (props) => {
                     <FilterLabel>Status</FilterLabel>
                     <Dropdown
                       alignment="left"
-                      triggerElement={
-                        <FilterTrigger variation="achromic-plain" title="Toggle menu options">All</FilterTrigger>
-                      }
+                      triggerElement={(
+                        <FilterTrigger
+                          variation="achromic-plain"
+                          title="Toggle menu options"
+                        >
+                          All
+                        </FilterTrigger>
+)}
                     >
                       <DropTitle>Select status</DropTitle>
                       <DropMenu role="menu" selectable>
@@ -254,10 +277,21 @@ const AtbdList = (props) => {
                 </InpageFilters>
 
                 <InpageToolbar>
-                  <SearchButton variation="achromic-plain" title="Search documents" disabled>Search</SearchButton>
-                  <CreateButton variation="achromic-plain" title="Create new document" onClick={create}>Create</CreateButton>
+                  <SearchButton
+                    variation="achromic-plain"
+                    title="Search documents"
+                    disabled
+                  >
+                    Search
+                  </SearchButton>
+                  <CreateButton
+                    variation="achromic-plain"
+                    title="Create new document"
+                    onClick={create}
+                  >
+                    Create
+                  </CreateButton>
                 </InpageToolbar>
-
               </InpageHeaderInner>
             </InpageHeader>
           )}
@@ -267,15 +301,21 @@ const AtbdList = (props) => {
             <DocTable>
               <thead>
                 <tr>
-                  <DocTableHeadThStatus scope="col"><span>Status</span></DocTableHeadThStatus>
-                  <DocTableHeadThTitle scope="col"><span>Title</span></DocTableHeadThTitle>
-                  <th scope="col"><span>Authors</span></th>
-                  <DocTableHeadThActions scope="col"><span>Actions</span></DocTableHeadThActions>
+                  <DocTableHeadThStatus scope="col">
+                    <span>Status</span>
+                  </DocTableHeadThStatus>
+                  <DocTableHeadThTitle scope="col">
+                    <span>Title</span>
+                  </DocTableHeadThTitle>
+                  <th scope="col">
+                    <span>Authors</span>
+                  </th>
+                  <DocTableHeadThActions scope="col">
+                    <span>Actions</span>
+                  </DocTableHeadThActions>
                 </tr>
               </thead>
-              <tbody>
-                {atbdElements}
-              </tbody>
+              <tbody>{atbdElements}</tbody>
             </DocTable>
           </InpageBodyInner>
         </InpageBody>
@@ -285,10 +325,12 @@ const AtbdList = (props) => {
 };
 
 AtbdList.propTypes = {
-  atbds: PropTypes.arrayOf(PropTypes.shape({
-    atbd_id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired
-  })),
+  atbds: PropTypes.arrayOf(
+    PropTypes.shape({
+      atbd_id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired
+    })
+  ),
   push: PropTypes.func,
   createAtbd: PropTypes.func.isRequired
 };
@@ -300,4 +342,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatch = { push, createAtbd };
 
-export default connect(mapStateToProps, mapDispatch)(AtbdList);
+export default connect(
+  mapStateToProps,
+  mapDispatch
+)(AtbdList);
