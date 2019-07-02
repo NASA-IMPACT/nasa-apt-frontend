@@ -59,6 +59,9 @@ const CreateButton = styled(Button)`
 
 const DocTable = styled(Table)`
   white-space: nowrap;
+  margin: 0 -${themeVal('layout.space')};
+  width: auto;
+  max-width: none;
 
   th, td {
     padding: ${themeVal('layout.space')};
