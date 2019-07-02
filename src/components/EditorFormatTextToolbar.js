@@ -142,12 +142,9 @@ class FormatTextToolbar extends React.Component {
 
   render() {
     const { isUrlEditor } = this.state;
-    const { selection } = this.props;
+    const { range } = this.props;
 
-    if (!selection) return null;
-
-    // Get selection range
-    const range = selection.getRangeAt(0).cloneRange();
+    if (!range) return null;
 
     // // Return null if nothing is selected
     const { width } = range.getBoundingClientRect();
@@ -177,7 +174,7 @@ class FormatTextToolbar extends React.Component {
 }
 
 FormatTextToolbar.propTypes = {
-  selection: T.object,
+  range: T.object,
   toggleMark: T.func.isRequired,
   value: T.object.isRequired
 };

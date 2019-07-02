@@ -94,7 +94,7 @@ export class FreeEditor extends React.Component {
     this.state = {
       value: Value.fromJSON(getValidOrBlankDocument(initialValue)),
       activeTool: null,
-      selection: null,
+      range: null,
       uploadedImageToPlace: null,
       uploadedImageCaption: null
     };
@@ -108,9 +108,7 @@ export class FreeEditor extends React.Component {
     this.insertTable = this.insertTable.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
-    this.onKeyUp = this.onKeyUp.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
     this.removeColumn = this.removeColumn.bind(this);
     this.removeRow = this.removeRow.bind(this);
     this.removeTable = this.removeTable.bind(this);
@@ -118,7 +116,6 @@ export class FreeEditor extends React.Component {
     this.save = this.save.bind(this);
     this.selectTool = this.selectTool.bind(this);
     this.toggleMark = this.toggleMark.bind(this);
-    this.updateSelectionState = this.updateSelectionState.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -132,7 +129,13 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  onMouseDown() {
+  onMouseDown(e) {
+    // Do nothing if click origin is not from content area
+    if (e.target.dataset.slateContent !== 'true') {
+      e.preventDefault();
+      return;
+    }
+
     const { activeTool } = this.state;
     if (activeTool) {
       setTimeout(() => {
@@ -153,10 +156,6 @@ export class FreeEditor extends React.Component {
         }
       }, 0);
     }
-  }
-
-  onMouseUp() {
-    this.updateSelectionState();
   }
 
   onKeyDown(event, editor, next) {
@@ -187,16 +186,25 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  onKeyUp() {
-    this.updateSelectionState();
-  }
-
   onChange(event) {
     const { value } = event;
     this.setState({
       value,
       activeTool: null
     });
+
+    // With until next tick to update range state,
+    // as it depends on rendering
+    setTimeout(() => {
+      const { isFocused } = value.selection;
+      const selection = window.getSelection();
+      this.setState({
+        range:
+          isFocused && selection && selection.rangeCount
+            ? selection.getRangeAt(0).cloneRange()
+            : null
+      });
+    }, 1);
   }
 
   toggleMark(nextMark) {
@@ -461,14 +469,8 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  updateSelectionState() {
-    this.setState({ selection: window.getSelection() });
-  }
-
   render() {
-    const {
-      value, activeTool, selection
-    } = this.state;
+    const { value, activeTool, range } = this.state;
 
     const {
       save,
@@ -490,7 +492,7 @@ export class FreeEditor extends React.Component {
       >
         <EditorFormatTextToolbar
           value={value}
-          selection={selection}
+          range={range}
           toggleMark={this.toggleMark}
         />
         <EditorStatus invalid={invalid}>
