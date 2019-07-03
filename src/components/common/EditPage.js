@@ -42,7 +42,7 @@ import Dropdown, {
   DropTitle,
   DropMenu,
   DropMenuItem
-} from '../Dropdown';
+} from './Dropdown';
 
 const _rgba = stylizeFunction(rgba);
 

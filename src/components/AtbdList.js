@@ -37,7 +37,7 @@ import Dropdown, {
   DropTitle,
   DropMenu,
   DropMenuItem
-} from './Dropdown';
+} from './common/Dropdown';
 
 import Table from '../styles/table';
 
