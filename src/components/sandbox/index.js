@@ -44,6 +44,7 @@ import {
   FormHelperMessage,
   FormHelperCounter
 } from '../../styles/form/helper';
+import Modal from '../common/Modal';
 
 // Create a ul component to include some styling.
 
@@ -123,6 +124,9 @@ class Sandbox extends Component {
         <InpageBody>
           <InpageBodyInner>
             <Prose>
+              <h2>Modal</h2>
+              <Modal />
+
               <h2>Loader</h2>
               <Button variation="base-raised-light" onClick={showLoading}>Show loader</Button>
 
