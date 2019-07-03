@@ -23,7 +23,7 @@ import EditorReference from './EditorReference';
 import EditorReferenceTool from './EditorReferenceTool';
 import EditorFormatTextToolbar from './EditorFormatTextToolbar';
 import EditorFormattableText from './EditorFormattableText';
-// import EditorInlineMetadata from './EditorInlineMetadata';
+import EditorInlineMetadata from './EditorInlineMetadata';
 import { getValidOrBlankDocument } from './editorBlankDocument';
 import schema from './editorSchema';
 import { themeVal, stylizeFunction } from '../styles/utils/general';
@@ -430,11 +430,6 @@ export class FreeEditor extends React.Component {
       case 'link': {
         const url = node.data.get('url');
         return (
-          // <EditorInlineMetadata
-          //   hasActiveSelection={!!(selectedText.length && url)}
-          //   metadata={url}
-          //   readOnly
-          // >
           <a
             href={url}
             rel="noopener noreferrer"
@@ -443,25 +438,17 @@ export class FreeEditor extends React.Component {
           >
             {children}
           </a>
-          // </EditorInlineMetadata>
         );
       }
 
       case reference: {
-        // const name = node.data.get('name');
         return (
-          // <EditorInlineMetadata
-          //   hasActiveSelection={!!(selectedText.length && name)}
-          //   metadata={`Ref: ${name}`}
-          //   readOnly
-          // >
           <EditorReference
             data-reference-id={node.data.get('id')}
             {...attributes}
           >
             {children}
           </EditorReference>
-          // </EditorInlineMetadata>
         );
       }
       default:
@@ -495,6 +482,7 @@ export class FreeEditor extends React.Component {
           range={range}
           toggleMark={this.toggleMark}
         />
+        <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
           <Toolbar>
             <ToolbarLabel>Insert</ToolbarLabel>

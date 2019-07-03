@@ -146,7 +146,7 @@ class FormatTextToolbar extends React.Component {
 
     if (!range) return null;
 
-    // // Return null if nothing is selected
+    // Return null if nothing is selected
     const { width } = range.getBoundingClientRect();
     if (width === 0) return null;
 
