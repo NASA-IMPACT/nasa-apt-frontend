@@ -54,7 +54,8 @@ class FormatTextToolbar extends React.Component {
     super(props);
     this.state = {
       isUrlEditor: false,
-      urlValue: ''
+      urlValue: '',
+      lastSelectedRange: null
     };
     this.setUrlEditor = this.setUrlEditor.bind(this);
     this.insertLink = this.insertLink.bind(this);
@@ -71,7 +72,8 @@ class FormatTextToolbar extends React.Component {
   }
 
   setUrlEditor(isUrlEditor) {
-    this.setState({ isUrlEditor });
+    const { range: lastSelectedRange } = this.props;
+    this.setState({ isUrlEditor, lastSelectedRange });
   }
 
   insertLink() {
@@ -86,6 +88,7 @@ class FormatTextToolbar extends React.Component {
     if (keyCode === 13) {
       e.preventDefault();
       this.insertLink();
+      this.setState({ isUrlEditor: false, urlValue: '' });
     }
   }
 
@@ -102,6 +105,9 @@ class FormatTextToolbar extends React.Component {
           this.setState({ urlValue: e.currentTarget.value });
         }}
         onKeyDown={this.handleKeyPress}
+        onBlur={() => {
+          this.setState({ isUrlEditor: false, urlValue: '' });
+        }}
         ref={this.input}
       />
     );
@@ -141,17 +147,29 @@ class FormatTextToolbar extends React.Component {
   }
 
   render() {
-    const { isUrlEditor } = this.state;
-    const { range } = this.props;
+    const { isUrlEditor, lastSelectedRange } = this.state;
+    const { range: currentRange } = this.props;
+    let referenceElement;
 
-    if (!range) return null;
+    if (isUrlEditor) {
+      // If the popup is set to be displayed the URL editor should  use the
+      // last selected range, otherwise the popup will not a reference for
+      // positioning.
+      referenceElement = lastSelectedRange;
+    } else {
+      // If the toolbar is set to be displayed get the current range
+      referenceElement = currentRange;
 
-    // Return null if nothing is selected
-    const { width } = range.getBoundingClientRect();
-    if (width === 0) return null;
+      // Check is a range exists
+      if (!referenceElement) return null;
+
+      // If so, check if something is selected
+      const { width } = referenceElement.getBoundingClientRect();
+      if (width === 0) return null;
+    }
 
     return (
-      <Popper referenceElement={range} placement="top-center">
+      <Popper referenceElement={referenceElement} placement="top-center">
         {({
           ref, style, placementA, arrowProps
         }) => (
@@ -176,6 +194,7 @@ class FormatTextToolbar extends React.Component {
 FormatTextToolbar.propTypes = {
   range: T.object,
   toggleMark: T.func.isRequired,
+  insertLink: T.func.isRequired,
   value: T.object.isRequired
 };
 

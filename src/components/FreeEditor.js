@@ -481,6 +481,7 @@ export class FreeEditor extends React.Component {
           value={value}
           range={range}
           toggleMark={this.toggleMark}
+          insertLink={this.insertLink}
         />
         <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
