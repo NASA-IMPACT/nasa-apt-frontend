@@ -44,7 +44,7 @@ import {
   FormHelperMessage,
   FormHelperCounter
 } from '../../styles/form/helper';
-import Modal from '../common/Modal';
+import { Modal, ModalBody, ModalHeader } from '../common/Modal';
 
 // Create a ul component to include some styling.
 
@@ -111,6 +111,14 @@ const showLoading = () => {
 };
 
 class Sandbox extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalRevealed: false
+    };
+  }
+
   render() {
     return (
       <Inpage>
@@ -125,7 +133,24 @@ class Sandbox extends Component {
           <InpageBodyInner>
             <Prose>
               <h2>Modal</h2>
-              <Modal />
+              <Button variation="base-raised-light" onClick={() => this.setState({ modalRevealed: true })}>Show modal</Button>
+              <Modal
+                id="sandbox-modal"
+                size="full"
+                // eslint-disable-next-line
+                revealed={this.state.modalRevealed}
+                onCloseClick={() => this.setState({ modalRevealed: false })}
+                headerComponent={(
+                  <ModalHeader>
+                    This is an example of a modal
+                  </ModalHeader>
+                )}
+                bodyComponent={(
+                  <ModalBody>
+                    <p>This is the body</p>
+                  </ModalBody>
+                )}
+              />
 
               <h2>Loader</h2>
               <Button variation="base-raised-light" onClick={showLoading}>Show loader</Button>
@@ -183,6 +208,7 @@ class Sandbox extends Component {
                             checked={undefined}
                             type="checkbox"
                             name="checkbox-a"
+                            id="checkbox-a"
                           >
                             Checkbox A
                           </FormCheckable>
@@ -190,6 +216,7 @@ class Sandbox extends Component {
                             checked={undefined}
                             type="checkbox"
                             name="checkbox-b"
+                            id="checkbox-b"
                           >
                             Checkbox B
                           </FormCheckable>
