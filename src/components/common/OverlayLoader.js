@@ -3,9 +3,12 @@ import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
 
 import styled, { keyframes } from 'styled-components/macro';
+import { rgba } from 'polished';
 
-import { themeVal } from '../../styles/utils/general';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
 import collecticon from '../../styles/collecticons';
+
+const _rgba = stylizeFunction(rgba);
 
 // Minimum time the loading is visible.
 const MIN_TIME = 512;
@@ -42,7 +45,7 @@ const OverlayLoader = styled.div`
   justify-content: center;
   align-items: center;
   cursor: not-allowed;
-  background: radial-gradient(farthest-side, #fff, rgba(255,255,255,0.64));
+  background: radial-gradient(farthest-side, #fff, ${_rgba(themeVal('color.surface'), 0.64)});
 
   &::before {
     ${collecticon('arrow-spin-cw')};

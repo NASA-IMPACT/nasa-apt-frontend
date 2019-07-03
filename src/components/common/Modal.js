@@ -32,6 +32,7 @@ const ModalInner = styled.div`
   overflow: hidden;
   width: 100%;
   margin: ${multiply(themeVal('layout.space'), 2)};
+  box-shadow: 0 0 32px 2px ${_rgba(themeVal('color.base'), 0.04)}, 0 16px 48px -16px ${_rgba(themeVal('color.base'), 0.12)};
 
   /* Size attribute */
   ${({ size }) => `max-width: ${sizeMapping[size]};`}
@@ -54,7 +55,7 @@ const ModalWrapper = styled.section`
   overflow-y: auto;
   opacity: 1;
   visibility: visible;
-  background: ${_rgba(themeVal('color.base'), 0.64)};
+  background: radial-gradient(farthest-side, #fff, ${_rgba(themeVal('color.surface'), 0.64)});
   transform: translate3d(0, 0, 0);
 
   &.modal-appear,
