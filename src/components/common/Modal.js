@@ -4,11 +4,15 @@ import { createPortal } from 'react-dom';
 import { PropTypes as T } from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import styled, { createGlobalStyle } from 'styled-components/macro';
+import { rgba } from 'polished';
 
-import { themeVal } from '../../styles/utils/general';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
+import { multiply } from '../../styles/utils/math';
 import collecticons from '../../styles/collecticons';
 
 import Button from '../../styles/button/button';
+
+const _rgba = stylizeFunction(rgba);
 
 const sizeMapping = {
   small: '32rem',
@@ -23,7 +27,11 @@ const ModalInner = styled.div`
   grid-template-columns: 100%;
   grid-template-rows: auto;
   grid-auto-rows: 1fr;
-  height: 100vh;
+  background: ${themeVal('color.surface')};
+  border-radius: ${themeVal('shape.rounded')};
+  overflow: hidden;
+  width: 100%;
+  margin: ${multiply(themeVal('layout.space'), 2)};
 
   /* Size attribute */
   ${({ size }) => `max-width: ${sizeMapping[size]};`}
@@ -34,6 +42,9 @@ const ModalInner = styled.div`
 `;
 
 const ModalWrapper = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -43,7 +54,7 @@ const ModalWrapper = styled.section`
   overflow-y: auto;
   opacity: 1;
   visibility: visible;
-  background: #fff;
+  background: ${_rgba(themeVal('color.base'), 0.64)};
   transform: translate3d(0, 0, 0);
 
   &.modal-appear,
@@ -302,7 +313,7 @@ export const ModalHeader = styled.header`
   flex-flow: row nowrap;
   align-items: center;
   background: #fff;
-  padding: ${themeVal('layout.space')};
+  padding: ${multiply(themeVal('layout.space'), 1.5)} ${multiply(themeVal('layout.space'), 2)};
   box-shadow: 0 0 0 1px ${themeVal('color.mist')};
   min-height: 4rem;
 
@@ -312,11 +323,17 @@ export const ModalHeader = styled.header`
 `;
 
 export const ModalBody = styled.div`
-  padding: ${themeVal('layout.space')};
+  padding: ${multiply(themeVal('layout.space'), 1.5)} ${multiply(themeVal('layout.space'), 2)};
 
   & > *:last-child {
     margin-bottom: 0;
   }
+`;
+
+export const ModalTitle = styled.h1`
+  font-size: 1.25rem;
+  line-height: 2rem;
+  margin: 0;
 `;
 
 export const ModalFooter = props => <footer {...props} />;

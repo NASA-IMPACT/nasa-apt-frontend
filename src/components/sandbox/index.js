@@ -44,7 +44,13 @@ import {
   FormHelperMessage,
   FormHelperCounter
 } from '../../styles/form/helper';
-import { Modal, ModalBody, ModalHeader } from '../common/Modal';
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalTitle
+} from '../common/Modal';
 
 // Create a ul component to include some styling.
 
@@ -136,19 +142,24 @@ class Sandbox extends Component {
               <Button variation="base-raised-light" onClick={() => this.setState({ modalRevealed: true })}>Show modal</Button>
               <Modal
                 id="sandbox-modal"
-                size="full"
+                size="medium"
                 // eslint-disable-next-line
                 revealed={this.state.modalRevealed}
                 onCloseClick={() => this.setState({ modalRevealed: false })}
                 headerComponent={(
                   <ModalHeader>
-                    This is an example of a modal
+                    <ModalTitle>Delete this document?</ModalTitle>
                   </ModalHeader>
                 )}
                 bodyComponent={(
                   <ModalBody>
-                    <p>This is the body</p>
+                    <p>The document <strong>Atmospheric Correction Method for ASTER Thermal Radiometry Over Land</strong> will be deleted.</p>
                   </ModalBody>
+                )}
+                footerComponent={(
+                  <ModalFooter>
+                    <p>Footer goes here.</p>
+                  </ModalFooter>
                 )}
               />
 
