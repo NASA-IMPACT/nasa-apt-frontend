@@ -21,6 +21,7 @@ import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
 import EditorReference from './EditorReference';
 import EditorReferenceTool from './EditorReferenceTool';
+import EditorFormatTextToolbar from './EditorFormatTextToolbar';
 import EditorFormattableText from './EditorFormattableText';
 import EditorInlineMetadata from './EditorInlineMetadata';
 import { getValidOrBlankDocument } from './editorBlankDocument';
@@ -39,12 +40,14 @@ const reference = 'reference';
 const _rgba = stylizeFunction(rgba);
 
 const EditorStatus = styled.div`
-  border-color: ${props => (props.invalid ? themeVal('color.danger')
-    : _rgba(themeVal('color.base'), 0.16))};
+  border-color: ${props => props.invalid
+    ? themeVal('color.danger')
+    : _rgba(themeVal('color.base'), 0.16)};
   border-radius: ${themeVal('shape.rounded')};
   border-style: solid;
-  border-width: ${props => (props.invalid ? multiply(themeVal('layout.border'), 2)
-    : themeVal('layout.border'))};
+  border-width: ${props => props.invalid
+    ? multiply(themeVal('layout.border'), 2)
+    : themeVal('layout.border')};
   margin-bottom: 1rem;
 `;
 
@@ -55,11 +58,7 @@ const EditorContainer = styled.div`
   padding: 1rem 3rem;
 `;
 
-const plugins = [
-  TrailingBlock(),
-  SoftBreak(),
-  PluginDeepTable()
-];
+const plugins = [TrailingBlock(), SoftBreak(), PluginDeepTable()];
 
 function renderMark(props, editor, next) {
   const {
@@ -95,36 +94,33 @@ export class FreeEditor extends React.Component {
     this.state = {
       value: Value.fromJSON(getValidOrBlankDocument(initialValue)),
       activeTool: null,
+      range: null,
       uploadedImageToPlace: null,
       uploadedImageCaption: null
     };
-    this.onChange = this.onChange.bind(this);
-    this.renderNode = this.renderNode.bind(this);
-    this.insertEquation = this.insertEquation.bind(this);
-    this.insertParagraph = this.insertParagraph.bind(this);
-    this.insertTable = this.insertTable.bind(this);
-    this.selectTool = this.selectTool.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onKeyDown = this.onKeyDown.bind(this);
-    this.toggleMark = this.toggleMark.bind(this);
-    this.save = this.save.bind(this);
     this.insertColumn = this.insertColumn.bind(this);
+    this.insertEquation = this.insertEquation.bind(this);
+    this.insertImage = this.insertImage.bind(this);
+    this.insertLink = this.insertLink.bind(this);
+    this.insertParagraph = this.insertParagraph.bind(this);
+    this.insertReference = this.insertReference.bind(this);
     this.insertRow = this.insertRow.bind(this);
+    this.insertTable = this.insertTable.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onMouseDown = this.onMouseDown.bind(this);
     this.removeColumn = this.removeColumn.bind(this);
     this.removeRow = this.removeRow.bind(this);
     this.removeTable = this.removeTable.bind(this);
-    this.insertImage = this.insertImage.bind(this);
-    this.insertLink = this.insertLink.bind(this);
-    this.insertReference = this.insertReference.bind(this);
+    this.renderNode = this.renderNode.bind(this);
+    this.save = this.save.bind(this);
+    this.selectTool = this.selectTool.bind(this);
+    this.toggleMark = this.toggleMark.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      initialValue
-    } = nextProps;
-    const {
-      initialValue: previousInitialValue
-    } = this.props;
+    const { initialValue } = nextProps;
+    const { initialValue: previousInitialValue } = this.props;
 
     if (initialValue !== previousInitialValue) {
       this.setState({
@@ -133,7 +129,13 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  onMouseDown() {
+  onMouseDown(e) {
+    // Do nothing if click origin is not from content area
+    if (e.target.dataset.slateContent !== 'true') {
+      e.preventDefault();
+      return;
+    }
+
     const { activeTool } = this.state;
     if (activeTool) {
       setTimeout(() => {
@@ -190,6 +192,19 @@ export class FreeEditor extends React.Component {
       value,
       activeTool: null
     });
+
+    // With until next tick to update range state,
+    // as it depends on rendering
+    setTimeout(() => {
+      const { isFocused } = value.selection;
+      const selection = window.getSelection();
+      this.setState({
+        range:
+          isFocused && selection && selection.rangeCount
+            ? selection.getRangeAt(0).cloneRange()
+            : null
+      });
+    }, 1);
   }
 
   toggleMark(nextMark) {
@@ -227,11 +242,13 @@ export class FreeEditor extends React.Component {
         nodes: [
           {
             object: 'text',
-            leaves: [{
-              text: '\\',
-            }]
-          },
-        ],
+            leaves: [
+              {
+                text: '\\'
+              }
+            ]
+          }
+        ]
       })
       .focus();
   }
@@ -241,23 +258,27 @@ export class FreeEditor extends React.Component {
       uploadedImageToPlace: src,
       uploadedImageCaption: caption
     } = this.state;
-    this.editor.insertBlock({
-      type: 'image',
-      data: {
-        src,
-        caption
-      }
-    }).insertBlock({
-      type: paragraph,
-      nodes: [
-        {
-          object: 'text',
-          leaves: [{
-            text: '',
-          }]
-        },
-      ],
-    });
+    this.editor
+      .insertBlock({
+        type: 'image',
+        data: {
+          src,
+          caption
+        }
+      })
+      .insertBlock({
+        type: paragraph,
+        nodes: [
+          {
+            object: 'text',
+            leaves: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ]
+      });
   }
 
   insertLink(url, replaceText) {
@@ -270,32 +291,37 @@ export class FreeEditor extends React.Component {
     this.editor.insertInline({
       type: 'link',
       data: { url },
-      nodes: [{
-        object: 'text',
-        leaves: [{
-          text
-        }]
-      }]
+      nodes: [
+        {
+          object: 'text',
+          leaves: [
+            {
+              text
+            }
+          ]
+        }
+      ]
     });
   }
 
   insertReference() {
     const { lastCreatedReference } = this.props;
-    const {
-      publication_reference_id: id,
-      title: name
-    } = lastCreatedReference;
+    const { publication_reference_id: id, title: name } = lastCreatedReference;
     this.editor.insertInline({
       type: reference,
       data: { id, name },
-      nodes: [{
-        object: 'text',
-        leaves: [{
-          // TODO: decide if we want to render something
-          // more meaningful than this stand-in.
-          text: 'ref'
-        }]
-      }]
+      nodes: [
+        {
+          object: 'text',
+          leaves: [
+            {
+              // TODO: decide if we want to render something
+              // more meaningful than this stand-in.
+              text: 'ref'
+            }
+          ]
+        }
+      ]
     });
   }
 
@@ -306,11 +332,13 @@ export class FreeEditor extends React.Component {
         nodes: [
           {
             object: 'text',
-            leaves: [{
-              text: '',
-            }]
-          },
-        ],
+            leaves: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ]
       })
       .focus();
   }
@@ -320,42 +348,29 @@ export class FreeEditor extends React.Component {
   }
 
   insertColumn() {
-    this.onChange(
-      this.editor.insertColumn()
-    );
+    this.onChange(this.editor.insertColumn());
   }
 
   insertRow() {
-    this.onChange(
-      this.editor.insertRow()
-    );
+    this.onChange(this.editor.insertRow());
   }
 
   removeColumn() {
-    this.onChange(
-      this.editor.removeColumn()
-    );
+    this.onChange(this.editor.removeColumn());
   }
 
   removeRow() {
-    this.onChange(
-      this.editor.removeRow()
-    );
+    this.onChange(this.editor.removeRow());
   }
 
   removeTable() {
-    this.onChange(
-      this.editor.removeTable()
-    );
+    this.onChange(this.editor.removeTable());
   }
 
   /* eslint-disable-next-line */
   renderNode(props, editor, next) {
     const {
-      attributes,
-      children,
-      node,
-      isFocused
+      attributes, children, node, isFocused
     } = props;
     const { value } = this.state;
     const selectedText = value.fragment.text;
@@ -368,11 +383,7 @@ export class FreeEditor extends React.Component {
         const caption = node.data.get('caption');
         return (
           <figure>
-            <EditorImage
-              isFocused={isFocused}
-              src={src}
-              {...attributes}
-            />
+            <EditorImage isFocused={isFocused} src={src} {...attributes} />
             <figcaption>{caption}</figcaption>
           </figure>
         );
@@ -400,16 +411,15 @@ export class FreeEditor extends React.Component {
         // in the focused text is because focusing on an inline fragment,
         // ie a link or reference, will trigger this case as well as
         // the case for that specific inline node.
-        const hasSelection = !!(focusText.length && selectedText.length
-          && focusText.indexOf(selectedText) >= 0);
-
-        const activeMarks = Array.from(value.activeMarks)
-          .map(Mark => Mark.type);
+        const hasSelection = !!(
+          focusText.length
+          && selectedText.length
+          && focusText.indexOf(selectedText) >= 0
+        );
 
         return (
           <EditorFormattableText
             hasSelection={hasSelection}
-            activeMarks={activeMarks}
             toggleMark={this.toggleMark}
             insertLink={this.insertLink}
             {...props}
@@ -420,31 +430,25 @@ export class FreeEditor extends React.Component {
       case 'link': {
         const url = node.data.get('url');
         return (
-          <EditorInlineMetadata
-            hasActiveSelection={!!(selectedText.length && url)}
-            metadata={url}
-            readOnly
+          <a
+            href={url}
+            rel="noopener noreferrer"
+            target="_blank"
+            {...attributes}
           >
-            <a href={url} rel="noopener noreferrer" target="_blank" {...attributes}>{children}</a>
-          </EditorInlineMetadata>
+            {children}
+          </a>
         );
       }
 
       case reference: {
-        const name = node.data.get('name');
         return (
-          <EditorInlineMetadata
-            hasActiveSelection={!!(selectedText.length && name)}
-            metadata={`Ref: ${name}`}
-            readOnly
+          <EditorReference
+            data-reference-id={node.data.get('id')}
+            {...attributes}
           >
-            <EditorReference
-              data-reference-id={node.data.get('id')}
-              {...attributes}
-            >
-              {children}
-            </EditorReference>
-          </EditorInlineMetadata>
+            {children}
+          </EditorReference>
         );
       }
       default:
@@ -453,33 +457,42 @@ export class FreeEditor extends React.Component {
   }
 
   render() {
+    const { value, activeTool, range } = this.state;
+
     const {
-      state: {
-        value,
-        activeTool
-      },
       save,
       onChange,
       onMouseDown,
+      onMouseUp,
       onKeyDown,
+      onKeyUp,
       renderNode
     } = this;
 
-    const {
-      className,
-      inlineSaveBtn,
-      invalid
-    } = this.props;
+    const { className, inlineSaveBtn, invalid } = this.props;
 
     return (
-      <div className={className}>
+      <div
+        className={className}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+      >
+        <EditorFormatTextToolbar
+          value={value}
+          range={range}
+          toggleMark={this.toggleMark}
+          insertLink={this.insertLink}
+        />
+        <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
           <Toolbar>
             <ToolbarLabel>Insert</ToolbarLabel>
             <ButtonGroup orientation="horizontal">
               <EquationBtn
                 id={equation}
-                onClick={() => { this.selectTool(equation); }}
+                onClick={() => {
+                  this.selectTool(equation);
+                }}
                 active={activeTool === equation}
                 variation="base-plain"
                 size="large"
@@ -489,7 +502,9 @@ export class FreeEditor extends React.Component {
 
               <ParagraphBtn
                 id={paragraph}
-                onClick={() => { this.selectTool(paragraph); }}
+                onClick={() => {
+                  this.selectTool(paragraph);
+                }}
                 active={activeTool === paragraph}
                 variation="base-plain"
                 size="large"
@@ -499,7 +514,9 @@ export class FreeEditor extends React.Component {
 
               <TableBtn
                 id={table}
-                onClick={() => { this.selectTool(table); }}
+                onClick={() => {
+                  this.selectTool(table);
+                }}
                 active={activeTool === table}
                 variation="base-plain"
                 size="large"
@@ -509,25 +526,26 @@ export class FreeEditor extends React.Component {
 
               <EditorFigureTool
                 onSaveSuccess={(uploadedFile, caption) => {
-                  this.setState({
-                    uploadedImageToPlace: uploadedFile,
-                    uploadedImageCaption: caption
-                  }, () => this.selectTool(image));
+                  this.setState(
+                    {
+                      uploadedImageToPlace: uploadedFile,
+                      uploadedImageCaption: caption
+                    },
+                    () => this.selectTool(image)
+                  );
                 }}
                 active={activeTool === image}
               />
 
               <EditorReferenceTool
-                onSaveSuccess={() => { this.selectTool(reference); }}
+                onSaveSuccess={() => {
+                  this.selectTool(reference);
+                }}
                 active={activeTool === reference}
               />
 
               {inlineSaveBtn && (
-                <Button
-                  onClick={save}
-                  variation="base-plain"
-                  size="large"
-                >
+                <Button onClick={save} variation="base-plain" size="large">
                   Save
                 </Button>
               )}
@@ -539,8 +557,8 @@ export class FreeEditor extends React.Component {
               schema={schema}
               value={value}
               onChange={onChange}
-              onMouseDown={onMouseDown}
               onKeyDown={onKeyDown}
+              onKeyUp={onKeyUp}
               renderNode={renderNode}
               renderMark={renderMark}
               plugins={plugins}
@@ -548,11 +566,7 @@ export class FreeEditor extends React.Component {
           </EditorContainer>
         </EditorStatus>
         {!inlineSaveBtn && (
-          <Button
-            onClick={save}
-            variation="base-raised-light"
-            size="large"
-          >
+          <Button onClick={save} variation="base-raised-light" size="large">
             Save
           </Button>
         )}
@@ -603,4 +617,7 @@ const mapStateToProps = (state) => {
   return { lastCreatedReference };
 };
 
-export default connect(mapStateToProps, null)(StyledFreeEditor);
+export default connect(
+  mapStateToProps,
+  null
+)(StyledFreeEditor);
