@@ -30,7 +30,7 @@ const ModalInner = styled.div`
   border-radius: ${themeVal('shape.rounded')};
   overflow: hidden;
   width: 100%;
-  margin: ${multiply(themeVal('layout.space'), 2)};
+  margin: auto;
   box-shadow: 0 0 32px 2px ${_rgba(themeVal('color.base'), 0.04)}, 0 16px 48px -16px ${_rgba(themeVal('color.base'), 0.12)};
 
   /* Size attribute */
@@ -43,8 +43,6 @@ const ModalInner = styled.div`
 
 const ModalWrapper = styled.section`
   display: flex;
-  align-items: center;
-  justify-content: center;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -56,6 +54,7 @@ const ModalWrapper = styled.section`
   visibility: visible;
   background: ${themeVal('color.silk')};
   transform: translate3d(0, 0, 0);
+  padding: ${multiply(themeVal('layout.space'), 2)};
 
   &.modal-appear,
   &.modal-enter {
