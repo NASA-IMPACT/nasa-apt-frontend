@@ -49,6 +49,7 @@ jobs:
               echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_STAGING}" >> $BASH_ENV
               echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_STAGING}" >> $BASH_ENV
               echo "export REACT_APP_API_URL=${REACT_APP_API_URL_STAGING}" >> $BASH_ENV
+              echo "export REACT_APP_ATBD_BUCKET_WEBSITE=${REACT_APP_ATBD_BUCKET_WEBSITE_STAGING}" >> $BASH_ENV
               source $BASH_ENV
               yarn build
             elif [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
@@ -56,6 +57,7 @@ jobs:
               echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_PRODUCTION}" >> $BASH_ENV
               echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_PRODUCTION}" >> $BASH_ENV
               echo "export REACT_APP_API_URL=${REACT_APP_API_URL_PRODUCTION}" >> $BASH_ENV
+              echo "export REACT_APP_ATBD_BUCKET_WEBSITE=${REACT_APP_ATBD_BUCKET_WEBSITE_PRODUCTION}" >> $BASH_ENV
               source $BASH_ENV
               yarn build
             else

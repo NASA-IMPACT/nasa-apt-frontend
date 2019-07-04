@@ -41,13 +41,13 @@ export const InpageHeaderInner = styled(Constrainer)`
 export const InpageHeadline = styled.div`
   display: flex;
   flex-flow: column;
+  min-width: 0;
 `;
 
 export const InpageTitle = styled.h1`
   ${truncated()}
   font-size: 1.25rem;
   line-height: 2rem;
-  max-width: 24rem;
   margin: 0;
 `;
 
@@ -87,6 +87,7 @@ export const InpageToolbar = styled.div`
   flex-flow: row nowrap;
   margin: 0 0 0 auto;
   line-height: 2rem;
+  padding: 0 0 0 ${themeVal('layout.space')};
 
   > * {
     margin: 0 0 0 ${divide(themeVal('layout.space'), 2)};
