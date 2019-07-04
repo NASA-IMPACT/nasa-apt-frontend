@@ -8,7 +8,7 @@ import { rgba } from 'polished';
 
 import { themeVal, stylizeFunction } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
-import collecticons from '../../styles/collecticons';
+import collecticon from '../../styles/collecticons';
 
 import Button from '../../styles/button/button';
 
@@ -84,7 +84,7 @@ const ModalWrapper = styled.section`
 
 const ModalClose = styled(Button)`
   &::before {
-    ${collecticons('xmark--small')}
+    ${collecticon('xmark--small')}
   }
 `;
 
@@ -337,6 +337,12 @@ export const ModalFooter = styled.footer`
   background: #fff;
   padding: ${multiply(themeVal('layout.space'), 2)};
 
+  > a,
+  > button {
+    margin-right: ${themeVal('layout.space')};
+    min-width: 7rem;
+  }
+
   & > *:last-child {
     margin-bottom: 0;
   }
@@ -355,4 +361,22 @@ export const ModalTitle = styled.h1`
   font-size: 1.25rem;
   line-height: 2rem;
   margin: 0;
+`;
+
+export const ModalCancelButton = styled(Button)`
+  ::before {
+    ${collecticon('xmark--small')}
+  }
+`;
+
+export const ModalSaveButton = styled(Button)`
+  ::before {
+    ${collecticon('tick--small')}
+  }
+`;
+
+export const ModalDeleteButton = styled(Button)`
+  ::before {
+    ${collecticon('trash-bin')}
+  }
 `;

@@ -49,7 +49,9 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ModalTitle
+  ModalTitle,
+  ModalCancelButton,
+  ModalDeleteButton
 } from '../common/Modal';
 
 // Create a ul component to include some styling.
@@ -158,7 +160,8 @@ class Sandbox extends Component {
                 )}
                 footerComponent={(
                   <ModalFooter>
-                    <p>Footer goes here.</p>
+                    <ModalCancelButton variation="base-raised-light" title='Cancel action'>Cancel</ModalCancelButton>
+                    <ModalDeleteButton variation="base-raised-light" title='Cancel action'>Delete</ModalDeleteButton>
                   </ModalFooter>
                 )}
               />
