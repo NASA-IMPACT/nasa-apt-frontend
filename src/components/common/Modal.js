@@ -26,7 +26,6 @@ const ModalInner = styled.div`
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto;
-  grid-auto-rows: 1fr;
   background: ${themeVal('color.surface')};
   border-radius: ${themeVal('shape.rounded')};
   overflow: hidden;
@@ -55,7 +54,7 @@ const ModalWrapper = styled.section`
   overflow-y: auto;
   opacity: 1;
   visibility: visible;
-  background: radial-gradient(farthest-side, #fff, ${_rgba(themeVal('color.surface'), 0.64)});
+  background: ${themeVal('color.silk')};
   transform: translate3d(0, 0, 0);
 
   &.modal-appear,
@@ -299,6 +298,50 @@ if (process.env.NODE_ENV !== 'production') {
   };
 }
 
+export const ModalHeader = styled.header`
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: #fff;
+  padding: ${multiply(themeVal('layout.space'), 2)};
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ModalBody = styled.div`
+  padding: 0 ${multiply(themeVal('layout.space'), 2)};
+
+  &:first-child {
+    padding-top: ${multiply(themeVal('layout.space'), 2)};
+  }
+
+  &:last-child {
+    padding-bottom: ${multiply(themeVal('layout.space'), 2)};
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ModalFooter = styled.footer`
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: #fff;
+  padding: ${multiply(themeVal('layout.space'), 2)};
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
 export const ModalToolbar = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -307,34 +350,9 @@ export const ModalToolbar = styled.div`
   align-self: flex-start;
 `;
 
-export const ModalHeader = styled.header`
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  background: #fff;
-  padding: ${multiply(themeVal('layout.space'), 1.5)} ${multiply(themeVal('layout.space'), 2)};
-  box-shadow: 0 0 0 1px ${themeVal('color.mist')};
-  min-height: 4rem;
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-export const ModalBody = styled.div`
-  padding: ${multiply(themeVal('layout.space'), 1.5)} ${multiply(themeVal('layout.space'), 2)};
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-`;
 
 export const ModalTitle = styled.h1`
   font-size: 1.25rem;
   line-height: 2rem;
   margin: 0;
 `;
-
-export const ModalFooter = props => <footer {...props} />;
