@@ -127,6 +127,10 @@ const EditPage = (props) => {
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}`
     },
     {
+      display: 'References',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}`
+    },
+    {
       display: 'Algorithm description',
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_description}`
     },
@@ -137,10 +141,6 @@ const EditPage = (props) => {
     {
       display: 'Algorithm implementation',
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}`
-    },
-    {
-      display: 'References',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}`
     }
   ];
 

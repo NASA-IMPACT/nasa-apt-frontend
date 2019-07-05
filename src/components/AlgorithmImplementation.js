@@ -69,7 +69,7 @@ function AlgorithmImplementation(props) {
         <EditPage
           title={title || ''}
           id={atbd_id}
-          step={6}
+          step={7}
         >
           <h2>Algorithm Implementation</h2>
           <ImplementationForm

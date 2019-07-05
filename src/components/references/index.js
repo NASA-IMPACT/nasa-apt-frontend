@@ -15,7 +15,7 @@ export function References(props) {
     const { title } = atbd;
     returnValue = (
       <Inpage>
-        <EditPage title={title || ''} id={atbd_id} step={7}>
+        <EditPage title={title || ''} id={atbd_id} step={4}>
           <h2>References</h2>
           <p>
             Please remove any references that are no longer attached to this

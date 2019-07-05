@@ -44,7 +44,7 @@ export function AlgorithmUsage(props) {
       <EditPage
         title={title || ''}
         id={atbd_id}
-        step={5}
+        step={6}
         numSteps={7}
       >
         <h2>Algorithm Usage</h2>
