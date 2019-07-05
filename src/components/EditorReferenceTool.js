@@ -7,7 +7,7 @@ import Button from '../styles/button/button';
 import collecticon from '../styles/collecticons';
 import {
   createReference,
-  setLastCreatedReference
+  setActiveReference
 } from '../actions/actions';
 import {
   showGlobalLoading,
@@ -70,9 +70,8 @@ export class EditorReferenceTool extends Component {
     this.state = {
       activeModal: false,
       referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
       selectedReference: null,
-      selectEmpty: false,
       fields
     };
     this.setModalState = this.setModalState.bind(this);
@@ -81,21 +80,20 @@ export class EditorReferenceTool extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.validate = this.validate.bind(this);
+    this.onInsertReference = this.onInsertReference.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { lastCreatedReference, onSaveSuccess } = nextProps;
-    const { lastCreatedReference: prev } = this.props;
-    if (lastCreatedReference !== prev) {
-      onSaveSuccess();
-      this.resetForm();
-      hideGlobalLoading();
-    }
+    const { activeReference } = nextProps;
+    const { publication_reference_id: id } = activeReference || {};
+    this.resetForm(id);
+    hideGlobalLoading();
   }
 
   onReferenceNameChange(e) {
     this.setState({
-      referenceName: e.currentTarget.value
+      referenceName: e.currentTarget.value,
+      referenceEmpty: e.currentTarget.value === ''
     });
   }
 
@@ -115,6 +113,20 @@ export class EditorReferenceTool extends Component {
     });
   }
 
+  onInsertReference() {
+    const {
+      insertReference,
+      references,
+      setActiveReference: setReference
+    } = this.props;
+    const { selectedReference } = this.state;
+    const reference = references.find(d => d.publication_reference_id === selectedReference);
+    setReference(null);
+    this.resetForm(null);
+    insertReference(reference);
+    this.setModalState(false);
+  }
+
   onSubmit(e) {
     e.preventDefault();
     const {
@@ -128,37 +140,26 @@ export class EditorReferenceTool extends Component {
       return this.validate();
     }
 
-    const {
-      references,
-      setLastCreatedReference: setReference
-    } = this.props;
-
-    if (selectedReference !== 'NEW') {
-      const reference = references.find(d => d.publication_reference_id === selectedReference);
-      setReference(reference);
-    } else {
-      const { createReference: create, atbdVersion } = this.props;
-      const { atbd_id, atbd_version } = atbdVersion;
-      const payload = {
-        atbd_id,
-        atbd_version,
-        title: referenceName
-      };
-      Object.keys(fields).forEach((field) => {
-        if (fields[field]) {
-          payload[field] = fields[field];
-        }
-      });
-      showGlobalLoading();
-      create(payload);
-    }
+    const { createReference: create, atbdVersion } = this.props;
+    const { atbd_id, atbd_version } = atbdVersion;
+    const payload = {
+      atbd_id,
+      atbd_version,
+      title: referenceName
+    };
+    Object.keys(fields).forEach((field) => {
+      if (fields[field]) {
+        payload[field] = fields[field];
+      }
+    });
+    showGlobalLoading();
+    create(payload);
   }
 
-  resetForm() {
+  resetForm(selectedReference) {
     this.setState({
-      activeModal: false,
-      referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
+      selectedReference,
       fields: { ...defaultFieldValues }
     });
   }
@@ -170,7 +171,7 @@ export class EditorReferenceTool extends Component {
     this.setState({
       activeModal: !!nextState,
       referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
       fields: { ...defaultFieldValues }
     });
   }
@@ -178,7 +179,6 @@ export class EditorReferenceTool extends Component {
   validate() {
     this.setState(state => ({
       referenceEmpty: !state.referenceName,
-      selectEmpty: !state.selectedReference
     }));
   }
 
@@ -188,7 +188,6 @@ export class EditorReferenceTool extends Component {
       referenceName,
       referenceEmpty,
       selectedReference,
-      selectEmpty,
       fields
     } = this.state;
 
@@ -198,10 +197,14 @@ export class EditorReferenceTool extends Component {
       onOptionalFieldChange,
       onSelectChange,
       validate,
-      onSubmit
+      onSubmit,
+      onInsertReference
     } = this;
 
-    const { active, references } = this.props;
+    const {
+      references,
+      disabled
+    } = this.props;
 
     const selectOptions = references.map(d => ({
       value: d.publication_reference_id,
@@ -228,7 +231,7 @@ export class EditorReferenceTool extends Component {
               value={selectedReference}
               onChange={onSelectChange}
             />
-            {selectEmpty && (
+            {!selectedReference && (
               <FormHelper>
                 <FormHelperMessage>Please select a new or existing reference.</FormHelperMessage>
               </FormHelper>
@@ -272,11 +275,24 @@ export class EditorReferenceTool extends Component {
                 </FormGroupBody>
               </FormGroup>
             )}
+
+            {selectedReference === 'NEW' && (
+              <Button
+                onClick={onSubmit}
+                variation="base-raised-light"
+                disabled={referenceEmpty}
+                size="large"
+                type="submit"
+              >
+               Create
+              </Button>
+            )}
             <Button
-              onClick={onSubmit}
+              onClick={onInsertReference}
+              disabled={!selectedReference || selectedReference === 'NEW'}
               variation="base-raised-light"
               size="large"
-              type="submit"
+              type="button"
             >
               Place
             </Button>
@@ -293,9 +309,9 @@ export class EditorReferenceTool extends Component {
 
         <ReferenceBtn
           onClick={() => setModalState(true)}
+          disabled={disabled}
           variation="base-plain"
           size="large"
-          active={active}
         >
           Reference
         </ReferenceBtn>
@@ -305,24 +321,24 @@ export class EditorReferenceTool extends Component {
 }
 
 EditorReferenceTool.propTypes = {
-  onSaveSuccess: T.func,
   createReference: T.func,
-  setLastCreatedReference: T.func,
-  lastCreatedReference: T.object,
+  setActiveReference: T.func,
+  insertReference: T.func,
+  activeReference: T.object,
   atbdVersion: T.object,
   references: T.array,
-  active: T.bool
+  disabled: T.bool
 };
 
 const mapStateToProps = state => ({
-  lastCreatedReference: state.application.lastCreatedReference,
+  activeReference: state.application.activeReference,
   atbdVersion: state.application.atbdVersion,
   references: state.application.references
 });
 
 const mapDispatch = {
   createReference,
-  setLastCreatedReference
+  setActiveReference
 };
 
 export default connect(mapStateToProps, mapDispatch)(EditorReferenceTool);

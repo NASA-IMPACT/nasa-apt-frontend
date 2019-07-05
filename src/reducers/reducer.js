@@ -11,7 +11,7 @@ const initialState = {
   atbdVersion: undefined,
   atbdCitation: undefined,
   selectedAtbd: undefined,
-  lastCreatedReference: undefined,
+  activeReference: undefined,
   t: undefined
 };
 
@@ -275,11 +275,11 @@ export default function (state = initialState, action) {
       };
     }
 
-    case actions.SET_LAST_CREATED_REFERENCE: {
+    case actions.SET_ACTIVE_REFERENCE: {
       const { payload } = action;
       return {
         ...state,
-        lastCreatedReference: payload
+        activeReference: payload
       };
     }
 
@@ -288,7 +288,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         references: state.references.concat([payload]),
-        lastCreatedReference: payload
+        activeReference: payload
       };
     }
 
