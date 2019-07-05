@@ -34,7 +34,6 @@ import ButtonGroup from '../styles/button/group';
 const equation = 'equation';
 const paragraph = 'paragraph';
 const table = 'table';
-const image = 'image';
 const reference = 'reference';
 
 const _rgba = stylizeFunction(rgba);
@@ -94,9 +93,7 @@ export class FreeEditor extends React.Component {
     this.state = {
       value: Value.fromJSON(getValidOrBlankDocument(initialValue)),
       activeTool: null,
-      range: null,
-      uploadedImageToPlace: null,
-      uploadedImageCaption: null
+      range: null
     };
     this.insertColumn = this.insertColumn.bind(this);
     this.insertEquation = this.insertEquation.bind(this);
@@ -116,6 +113,7 @@ export class FreeEditor extends React.Component {
     this.save = this.save.bind(this);
     this.selectTool = this.selectTool.bind(this);
     this.toggleMark = this.toggleMark.bind(this);
+    this.onFocus = this.onFocus.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -128,33 +126,11 @@ export class FreeEditor extends React.Component {
       });
     }
   }
-
+  /* eslint-disable-next-line */
   onMouseDown(e) {
     // Do nothing if click origin is not from content area
     if (e.target.dataset.slateContent !== 'true') {
       e.preventDefault();
-      return;
-    }
-
-    const { activeTool } = this.state;
-    if (activeTool) {
-      setTimeout(() => {
-        if (activeTool === equation) {
-          this.insertEquation();
-        }
-        if (activeTool === paragraph) {
-          this.insertParagraph();
-        }
-        if (activeTool === table) {
-          this.insertTable();
-        }
-        if (activeTool === image) {
-          this.insertImage();
-        }
-        if (activeTool === reference) {
-          this.insertReference();
-        }
-      }, 0);
     }
   }
 
@@ -184,6 +160,15 @@ export class FreeEditor extends React.Component {
       event.preventDefault();
       this.toggleMark(nextMark);
     }
+  }
+
+  onFocus() {
+    // Wait one tick to allow editor focus value to get set.
+    setTimeout(() => {
+      this.setState({
+        hasCursor: true
+      });
+    }, 1);
   }
 
   onChange(event) {
@@ -253,32 +238,24 @@ export class FreeEditor extends React.Component {
       .focus();
   }
 
-  insertImage() {
-    const {
-      uploadedImageToPlace: src,
-      uploadedImageCaption: caption
-    } = this.state;
-    this.editor
-      .insertBlock({
-        type: 'image',
-        data: {
-          src,
-          caption
-        }
-      })
-      .insertBlock({
-        type: paragraph,
-        nodes: [
-          {
-            object: 'text',
-            leaves: [
-              {
-                text: ''
-              }
-            ]
-          }
-        ]
-      });
+  insertImage(src, caption) {
+    this.editor.insertBlock({
+      type: 'image',
+      data: {
+        src,
+        caption
+      }
+    }).insertBlock({
+      type: paragraph,
+      nodes: [
+        {
+          object: 'text',
+          leaves: [{
+            text: '',
+          }]
+        },
+      ],
+    });
   }
 
   insertLink(url, replaceText) {
@@ -304,24 +281,22 @@ export class FreeEditor extends React.Component {
     });
   }
 
-  insertReference() {
-    const { lastCreatedReference } = this.props;
-    const { publication_reference_id: id, title: name } = lastCreatedReference;
+  insertReference(newReference) {
+    const {
+      publication_reference_id: id,
+      title: name
+    } = newReference;
     this.editor.insertInline({
       type: reference,
       data: { id, name },
-      nodes: [
-        {
-          object: 'text',
-          leaves: [
-            {
-              // TODO: decide if we want to render something
-              // more meaningful than this stand-in.
-              text: 'ref'
-            }
-          ]
-        }
-      ]
+      nodes: [{
+        object: 'text',
+        leaves: [{
+          // TODO: decide if we want to render something
+          // more meaningful than this stand-in.
+          text: 'ref'
+        }]
+      }]
     });
   }
 
@@ -457,16 +432,16 @@ export class FreeEditor extends React.Component {
   }
 
   render() {
-    const { value, activeTool, range } = this.state;
+    const { value, hasCursor, range } = this.state;
 
     const {
       save,
       onChange,
       onMouseDown,
-      onMouseUp,
       onKeyDown,
       onKeyUp,
-      renderNode
+      renderNode,
+      onFocus
     } = this;
 
     const { className, inlineSaveBtn, invalid } = this.props;
@@ -475,7 +450,6 @@ export class FreeEditor extends React.Component {
       <div
         className={className}
         onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
       >
         <EditorFormatTextToolbar
           value={value}
@@ -490,10 +464,8 @@ export class FreeEditor extends React.Component {
             <ButtonGroup orientation="horizontal">
               <EquationBtn
                 id={equation}
-                onClick={() => {
-                  this.selectTool(equation);
-                }}
-                active={activeTool === equation}
+                onClick={this.insertEquation}
+                disabled={!hasCursor}
                 variation="base-plain"
                 size="large"
               >
@@ -502,10 +474,8 @@ export class FreeEditor extends React.Component {
 
               <ParagraphBtn
                 id={paragraph}
-                onClick={() => {
-                  this.selectTool(paragraph);
-                }}
-                active={activeTool === paragraph}
+                onClick={this.insertParagraph}
+                disabled={!hasCursor}
                 variation="base-plain"
                 size="large"
               >
@@ -514,10 +484,8 @@ export class FreeEditor extends React.Component {
 
               <TableBtn
                 id={table}
-                onClick={() => {
-                  this.selectTool(table);
-                }}
-                active={activeTool === table}
+                onClick={this.insertTable}
+                disabled={!hasCursor}
                 variation="base-plain"
                 size="large"
               >
@@ -525,25 +493,16 @@ export class FreeEditor extends React.Component {
               </TableBtn>
 
               <EditorFigureTool
+                disabled={!hasCursor}
                 onSaveSuccess={(uploadedFile, caption) => {
-                  this.setState(
-                    {
-                      uploadedImageToPlace: uploadedFile,
-                      uploadedImageCaption: caption
-                    },
-                    () => this.selectTool(image)
-                  );
+                  this.insertImage(uploadedFile, caption);
                 }}
-                active={activeTool === image}
               />
 
               <EditorReferenceTool
-                onSaveSuccess={() => {
-                  this.selectTool(reference);
-                }}
-                active={activeTool === reference}
+                disabled={!hasCursor}
+                insertReference={this.insertReference}
               />
-
               {inlineSaveBtn && (
                 <Button onClick={save} variation="base-plain" size="large">
                   Save
@@ -559,6 +518,7 @@ export class FreeEditor extends React.Component {
               onChange={onChange}
               onKeyDown={onKeyDown}
               onKeyUp={onKeyUp}
+              onFocus={onFocus}
               renderNode={renderNode}
               renderMark={renderMark}
               plugins={plugins}
