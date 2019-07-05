@@ -31,7 +31,8 @@ const ModalInner = styled.div`
   overflow: hidden;
   width: 100%;
   margin: auto;
-  box-shadow: 0 0 32px 2px ${_rgba(themeVal('color.base'), 0.04)}, 0 16px 48px -16px ${_rgba(themeVal('color.base'), 0.12)};
+  box-shadow: 0 0 32px 2px ${_rgba(themeVal('color.base'), 0.04)},
+    0 16px 48px -16px ${_rgba(themeVal('color.base'), 0.12)};
 
   /* Size attribute */
   ${({ size }) => `max-width: ${sizeMapping[size]};`}
@@ -233,7 +234,10 @@ export class Modal extends React.Component {
 
     const header = React.cloneElement(headerComponent, headerComponent.props, [
       ...React.Children.toArray(headerComponent.props.children),
-      React.cloneElement(toolbar, { ...toolbar.props, key: `modal-${this.uid}-toolbar` })
+      React.cloneElement(toolbar, {
+        ...toolbar.props,
+        key: `modal-${this.uid}-toolbar`
+      })
     ]);
 
     return createPortal(
@@ -354,7 +358,6 @@ export const ModalToolbar = styled.div`
   align-items: center;
   align-self: flex-start;
 `;
-
 
 export const ModalTitle = styled.h1`
   font-size: 1.25rem;

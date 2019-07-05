@@ -31,10 +31,7 @@ import {
 } from '../../styles/form/group';
 import FormLabel from '../../styles/form/label';
 import FormInput from '../../styles/form/input';
-import {
-  FormCheckable,
-  FormCheckableGroup
-} from '../../styles/form/checkable';
+import { FormCheckable, FormCheckableGroup } from '../../styles/form/checkable';
 import FormSelect from '../../styles/form/select';
 import FormTextarea from '../../styles/form/textarea';
 import FormToolbar from '../../styles/form/toolbar';
@@ -141,7 +138,12 @@ class Sandbox extends Component {
           <InpageBodyInner>
             <Prose>
               <h2>Modal</h2>
-              <Button variation="base-raised-light" onClick={() => this.setState({ modalRevealed: true })}>Show modal</Button>
+              <Button
+                variation="base-raised-light"
+                onClick={() => this.setState({ modalRevealed: true })}
+              >
+                Show modal
+              </Button>
               <Modal
                 id="sandbox-modal"
                 size="medium"
@@ -152,33 +154,48 @@ class Sandbox extends Component {
                   <ModalHeader>
                     <ModalTitle>Delete this document?</ModalTitle>
                   </ModalHeader>
-                )}
+)}
                 bodyComponent={(
                   <ModalBody>
-                    <p>The document <strong>Atmospheric Correction Method for ASTER Thermal Radiometry Over Land</strong> will be deleted.</p>
+                    <p>
+                      The document{' '}
+                      <strong>
+                        Atmospheric Correction Method for ASTER Thermal
+                        Radiometry Over Land
+                      </strong>{' '}
+                      will be deleted.
+                    </p>
                   </ModalBody>
-                )}
+)}
                 footerComponent={(
                   <ModalFooter>
-                    <ModalCancelButton variation="base-raised-light" title='Cancel action'>Cancel</ModalCancelButton>
-                    <ModalDeleteButton variation="base-raised-light" title='Cancel action'>Delete</ModalDeleteButton>
+                    <ModalCancelButton
+                      variation="base-raised-light"
+                      title="Cancel action"
+                    >
+                      Cancel
+                    </ModalCancelButton>
+                    <ModalDeleteButton
+                      variation="base-raised-light"
+                      title="Cancel action"
+                    >
+                      Delete
+                    </ModalDeleteButton>
                   </ModalFooter>
-                )}
+)}
               />
 
               <h2>Loader</h2>
-              <Button variation="base-raised-light" onClick={showLoading}>Show loader</Button>
+              <Button variation="base-raised-light" onClick={showLoading}>
+                Show loader
+              </Button>
 
               <h2>Form elements</h2>
               <Form>
                 <FormFieldset>
                   <FormFieldsetHeader>
                     <FormLegend>Form legend</FormLegend>
-                    <RemoveButton
-                      variation="base-plain"
-                      size="small"
-                      hideText
-                    >
+                    <RemoveButton variation="base-plain" size="small" hideText>
                       Remove fieldset
                     </RemoveButton>
                   </FormFieldsetHeader>
@@ -195,7 +212,10 @@ class Sandbox extends Component {
                           >
                             Learn more
                           </InfoButton>
-                          <ReactTooltip effect="solid" className="type-primary" />
+                          <ReactTooltip
+                            effect="solid"
+                            className="type-primary"
+                          />
                         </FormToolbar>
                       </FormGroupHeader>
                       <FormGroupBody>
@@ -206,7 +226,9 @@ class Sandbox extends Component {
                           placeholder="This is a text input"
                         />
                         <FormHelper>
-                          <FormHelperMessage>This is some help text.</FormHelperMessage>
+                          <FormHelperMessage>
+                            This is some help text.
+                          </FormHelperMessage>
                           <FormHelperCounter>0 / 80</FormHelperCounter>
                         </FormHelper>
                       </FormGroupBody>
@@ -299,7 +321,9 @@ class Sandbox extends Component {
                       <FormFieldsetBody>
                         <FormGroup>
                           <FormGroupHeader>
-                            <FormLabel htmlFor="textarea-b">Form label</FormLabel>
+                            <FormLabel htmlFor="textarea-b">
+                              Form label
+                            </FormLabel>
                           </FormGroupHeader>
                           <FormGroupBody>
                             <FormTextarea
@@ -308,7 +332,9 @@ class Sandbox extends Component {
                               placeholder="This is a textarea"
                             />
                             <FormHelper>
-                              <FormHelperMessage>This is an error message.</FormHelperMessage>
+                              <FormHelperMessage>
+                                This is an error message.
+                              </FormHelperMessage>
                             </FormHelper>
                           </FormGroupBody>
                         </FormGroup>
@@ -317,20 +343,21 @@ class Sandbox extends Component {
 
                     <FormGroup>
                       <FormGroupHeader>
-                        <FormLabel htmlFor="select-a" optional>Form label</FormLabel>
+                        <FormLabel htmlFor="select-a" optional>
+                          Form label
+                        </FormLabel>
                       </FormGroupHeader>
                       <FormGroupBody>
-                        <FormSelect
-                          size="large"
-                          id="select-a"
-                        >
+                        <FormSelect size="large" id="select-a">
                           <option value="option-1">Option 1</option>
                           <option value="option-2">Option 2</option>
                           <option value="option-3">Option 3</option>
                           <option value="option-4">Option 4</option>
                         </FormSelect>
                         <FormHelper>
-                          <FormHelperMessage>This is some help text.</FormHelperMessage>
+                          <FormHelperMessage>
+                            This is some help text.
+                          </FormHelperMessage>
                         </FormHelper>
                       </FormGroupBody>
                     </FormGroup>
@@ -347,7 +374,9 @@ class Sandbox extends Component {
                           invalid
                         />
                         <FormHelper>
-                          <FormHelperMessage>This is an error message.</FormHelperMessage>
+                          <FormHelperMessage>
+                            This is an error message.
+                          </FormHelperMessage>
                         </FormHelper>
                       </FormGroupBody>
                     </FormGroup>
