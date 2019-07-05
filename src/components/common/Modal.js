@@ -97,6 +97,88 @@ const BodyUnscrollable = createGlobalStyle`
   `}
 `;
 
+export const ModalHeader = styled.header`
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: #fff;
+  padding: ${multiply(themeVal('layout.space'), 2)};
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ModalBody = styled.div`
+  padding: 0 ${multiply(themeVal('layout.space'), 2)};
+
+  &:first-child {
+    padding-top: ${multiply(themeVal('layout.space'), 2)};
+  }
+
+  &:last-child {
+    padding-bottom: ${multiply(themeVal('layout.space'), 2)};
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ModalFooter = styled.footer`
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: #fff;
+  padding: ${multiply(themeVal('layout.space'), 2)};
+
+  > a,
+  > button {
+    margin-right: ${themeVal('layout.space')};
+    min-width: 7rem;
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ModalToolbar = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  margin-left: auto;
+  align-items: center;
+  align-self: flex-start;
+`;
+
+export const ModalTitle = styled.h1`
+  font-size: 1.25rem;
+  line-height: 2rem;
+  margin: 0;
+`;
+
+export const ModalCancelButton = styled(Button)`
+  ::before {
+    ${collecticon('xmark--small')}
+  }
+`;
+
+export const ModalSaveButton = styled(Button)`
+  ::before {
+    ${collecticon('tick--small')}
+  }
+`;
+
+export const ModalDeleteButton = styled(Button)`
+  ::before {
+    ${collecticon('trash-bin')}
+  }
+`;
+
 /**
  * React modal component.
  * The Modal component provides 3 sections for content.
@@ -300,85 +382,3 @@ if (process.env.NODE_ENV !== 'production') {
     toolbarComponent: T.node
   };
 }
-
-export const ModalHeader = styled.header`
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  background: #fff;
-  padding: ${multiply(themeVal('layout.space'), 2)};
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-export const ModalBody = styled.div`
-  padding: 0 ${multiply(themeVal('layout.space'), 2)};
-
-  &:first-child {
-    padding-top: ${multiply(themeVal('layout.space'), 2)};
-  }
-
-  &:last-child {
-    padding-bottom: ${multiply(themeVal('layout.space'), 2)};
-  }
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-export const ModalFooter = styled.footer`
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  background: #fff;
-  padding: ${multiply(themeVal('layout.space'), 2)};
-
-  > a,
-  > button {
-    margin-right: ${themeVal('layout.space')};
-    min-width: 7rem;
-  }
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-export const ModalToolbar = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  margin-left: auto;
-  align-items: center;
-  align-self: flex-start;
-`;
-
-export const ModalTitle = styled.h1`
-  font-size: 1.25rem;
-  line-height: 2rem;
-  margin: 0;
-`;
-
-export const ModalCancelButton = styled(Button)`
-  ::before {
-    ${collecticon('xmark--small')}
-  }
-`;
-
-export const ModalSaveButton = styled(Button)`
-  ::before {
-    ${collecticon('tick--small')}
-  }
-`;
-
-export const ModalDeleteButton = styled(Button)`
-  ::before {
-    ${collecticon('trash-bin')}
-  }
-`;
