@@ -129,12 +129,21 @@ export class FreeEditor extends React.Component {
     }
   }
 
+  /* eslint-disable-next-line */
   onMouseDown(e) {
-    // Do nothing if click origin is not from content area
-    if (e.target.dataset.slateContent !== 'true') {
-      e.preventDefault();
-      return;
-    }
+    // The following block verifies if the event is coming from the toolbar
+    // by checking if toolbar container (#format-toolbar) is a parent element
+    // of target node. If so, it executes e.preventsDefault() to avoid losing
+    // focus of selected text.
+    const toolbar = document.querySelector('#format-toolbar');
+    let el = e.target;
+    do {
+      if (el && el === toolbar) {
+        e.preventDefault();
+        return;
+      }
+      el = el.parentNode;
+    } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
 
     const { activeTool } = this.state;
     if (activeTool) {
