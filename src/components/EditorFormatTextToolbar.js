@@ -174,6 +174,7 @@ class FormatTextToolbar extends React.Component {
           ref, style, placementA, arrowProps
         }) => (
           <div
+            id="format-toolbar"
             ref={ref}
             style={{ ...style, zIndex: 100 }}
             data-placement={placementA}

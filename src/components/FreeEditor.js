@@ -126,6 +126,7 @@ export class FreeEditor extends React.Component {
       });
     }
   }
+  
   /* eslint-disable-next-line */
   onMouseDown(e) {
     // The following block verifies if the event is coming from the toolbar
@@ -141,7 +142,6 @@ export class FreeEditor extends React.Component {
       }
       el = el.parentNode;
     } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
-  }
 
   onKeyDown(event, editor, next) {
     if (!event.metaKey) return next();

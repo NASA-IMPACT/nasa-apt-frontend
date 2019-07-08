@@ -33,7 +33,11 @@ import {
   InpageBodyInner
 } from './common/Inpage';
 
-import Dropdown, { DropTitle, DropMenu, DropMenuItem } from './Dropdown';
+import Dropdown, {
+  DropTitle,
+  DropMenu,
+  DropMenuItem
+} from './common/Dropdown';
 
 import Table from '../styles/table';
 
