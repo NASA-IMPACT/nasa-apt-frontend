@@ -3,32 +3,32 @@ import { connect } from 'react-redux';
 import { PropTypes as T } from 'prop-types';
 import styled from 'styled-components';
 
-import Button from '../styles/button/button';
-import collecticon from '../styles/collecticons';
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
 import {
   createReference,
   setLastCreatedReference
-} from '../actions/actions';
+} from '../../actions/actions';
 import {
   showGlobalLoading,
   hideGlobalLoading
-} from './common/OverlayLoader';
+} from '../common/OverlayLoader';
 
 import {
   FormGroup,
   FormGroupBody,
   FormGroupHeader
-} from '../styles/form/group';
-import FormLabel from '../styles/form/label';
-import FormInput from '../styles/form/input';
+} from '../../styles/form/group';
+import FormLabel from '../../styles/form/label';
+import FormInput from '../../styles/form/input';
 import {
   FormHelper,
   FormHelperMessage
-} from '../styles/form/helper';
-import Modal from '../styles/modal/modal';
-import { ModalInner, CloseModal } from '../styles/modal/inner';
-import Input, { InputFormGroup } from './common/Input';
-import Select from './common/Select';
+} from '../../styles/form/helper';
+import Modal from '../../styles/modal/modal';
+import { ModalInner, CloseModal } from '../../styles/modal/inner';
+import Input, { InputFormGroup } from '../common/Input';
+import Select from '../common/Select';
 
 export const ReferenceBtn = styled(Button)`
   ::before {
@@ -59,7 +59,7 @@ function formatFieldLabel(field) {
   return result.join(' ');
 }
 
-export class EditorReferenceTool extends Component {
+export class ReferenceModalEditor extends Component {
   constructor(props) {
     super(props);
 
@@ -304,7 +304,7 @@ export class EditorReferenceTool extends Component {
   }
 }
 
-EditorReferenceTool.propTypes = {
+ReferenceModalEditor.propTypes = {
   onSaveSuccess: T.func,
   createReference: T.func,
   setLastCreatedReference: T.func,
@@ -325,4 +325,4 @@ const mapDispatch = {
   setLastCreatedReference
 };
 
-export default connect(mapStateToProps, mapDispatch)(EditorReferenceTool);
+export default connect(mapStateToProps, mapDispatch)(ReferenceModalEditor);

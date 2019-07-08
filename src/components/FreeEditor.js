@@ -19,7 +19,7 @@ import {
 import EditorImage from './EditorImage';
 import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
-import EditorReferenceTool from './EditorReferenceTool';
+import ReferenceModalEditor from './references/ModalEditor';
 import EditorFormatTextToolbar from './EditorFormatTextToolbar';
 import EditorFormattableText from './EditorFormattableText';
 import EditorInlineMetadata from './EditorInlineMetadata';
@@ -553,7 +553,7 @@ export class FreeEditor extends React.Component {
                 active={activeTool === image}
               />
 
-              <EditorReferenceTool
+              <ReferenceModalEditor
                 onSaveSuccess={() => {
                   this.selectTool(reference);
                 }}
