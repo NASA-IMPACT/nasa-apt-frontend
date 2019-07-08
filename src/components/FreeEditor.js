@@ -295,18 +295,20 @@ export class FreeEditor extends React.Component {
       publication_reference_id: id,
       title: name
     } = newReference;
-    this.editor.insertInline({
-      type: reference,
-      data: { id, name },
-      nodes: [{
-        object: 'text',
-        leaves: [{
-          // TODO: decide if we want to render something
-          // more meaningful than this stand-in.
-          text: 'ref'
+    this.editor
+      .insertInline({
+        type: reference,
+        data: { id, name },
+        nodes: [{
+          object: 'text',
+          leaves: [{
+            // TODO: decide if we want to render something
+            // more meaningful than this stand-in.
+            text: 'ref'
+          }]
         }]
-      }]
-    });
+      })
+      .focus();
   }
 
   insertParagraph() {
