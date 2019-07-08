@@ -137,8 +137,8 @@ export class EditorFigureTool extends Component {
 
   render() {
     const {
-      active,
-      uploadedFile
+      uploadedFile,
+      disabled
     } = this.props;
 
     const {
@@ -231,7 +231,7 @@ export class EditorFigureTool extends Component {
           onClick={() => setModalState(true)}
           variation="base-plain"
           size="large"
-          active={active}
+          disabled={disabled}
         >
           Figure
         </FigureButton>
@@ -243,8 +243,8 @@ export class EditorFigureTool extends Component {
 EditorFigureTool.propTypes = {
   uploadFile: PropTypes.func.isRequired,
   onSaveSuccess: PropTypes.func.isRequired,
-  active: PropTypes.bool,
-  uploadedFile: PropTypes.string
+  uploadedFile: PropTypes.string,
+  disabled: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
