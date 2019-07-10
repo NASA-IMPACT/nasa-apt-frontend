@@ -28,7 +28,6 @@ const ModalInner = styled.div`
   grid-template-rows: auto;
   background: ${themeVal('color.surface')};
   border-radius: ${themeVal('shape.rounded')};
-  overflow: hidden;
   width: 100%;
   margin: auto;
   box-shadow: 0 0 32px 2px ${_rgba(themeVal('color.base'), 0.04)},
@@ -98,13 +97,12 @@ const BodyUnscrollable = createGlobalStyle`
 `;
 
 export const ModalHeader = styled.header`
-  position: relative;
-  z-index: 10;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   background: #fff;
   padding: ${multiply(themeVal('layout.space'), 2)};
+  border-radius: ${themeVal('shape.rounded')} ${themeVal('shape.rounded')} 0 0;
 
   & > *:last-child {
     margin-bottom: 0;
@@ -128,13 +126,12 @@ export const ModalBody = styled.div`
 `;
 
 export const ModalFooter = styled.footer`
-  position: relative;
-  z-index: 10;
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   background: #fff;
   padding: ${multiply(themeVal('layout.space'), 2)};
+  border-radius: 0 0 ${themeVal('shape.rounded')} ${themeVal('shape.rounded')};
 
   > a,
   > button {
@@ -192,7 +189,7 @@ export const ModalDeleteButton = styled(Button)`
  * - footerComponent
  *
  * For convenience the modal module exports several elements to be used as
- * defaults or as base for overrides by stayled-components.
+ * defaults or as base for overrides by styled-components.
  *
  * Available properties listed as parameters:
  *
