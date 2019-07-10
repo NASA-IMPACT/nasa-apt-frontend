@@ -3,32 +3,35 @@ import { connect } from 'react-redux';
 import { PropTypes as T } from 'prop-types';
 import styled from 'styled-components';
 
-import Button from '../../styles/button/button';
-import collecticon from '../../styles/collecticons';
 import {
   createReference,
   setLastCreatedReference
 } from '../../actions/actions';
-import {
-  showGlobalLoading,
-  hideGlobalLoading
-} from '../common/OverlayLoader';
 
+import Select from '../common/Select';
+import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
+import {
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalTitle,
+  ModalFooter,
+  ModalSaveButton,
+  ModalCancelButton
+} from '../common/Modal';
+
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
+import Form from '../../styles/form/form';
+import { FormFieldset, FormFieldsetBody } from '../../styles/form/fieldset';
 import {
   FormGroup,
-  FormGroupBody,
-  FormGroupHeader
+  FormGroupHeader,
+  FormGroupBody
 } from '../../styles/form/group';
 import FormLabel from '../../styles/form/label';
 import FormInput from '../../styles/form/input';
-import {
-  FormHelper,
-  FormHelperMessage
-} from '../../styles/form/helper';
-import Modal from '../../styles/modal/modal';
-import { ModalInner, CloseModal } from '../../styles/modal/inner';
-import Input, { InputFormGroup } from '../common/Input';
-import Select from '../common/Select';
+import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
 
 export const ReferenceBtn = styled(Button)`
   ::before {
@@ -117,24 +120,21 @@ export class ReferenceModalEditor extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const {
-      referenceName,
-      fields,
-      selectedReference
-    } = this.state;
+    const { referenceName, fields, selectedReference } = this.state;
 
-    if (!selectedReference
-      || (selectedReference === 'NEW' && !referenceName.length)) {
+    if (
+      !selectedReference
+      || (selectedReference === 'NEW' && !referenceName.length)
+    ) {
       return this.validate();
     }
 
-    const {
-      references,
-      setLastCreatedReference: setReference
-    } = this.props;
+    const { references, setLastCreatedReference: setReference } = this.props;
 
     if (selectedReference !== 'NEW') {
-      const reference = references.find(d => d.publication_reference_id === selectedReference);
+      const reference = references.find(
+        d => d.publication_reference_id === selectedReference
+      );
       setReference(reference);
     } else {
       const { createReference: create, atbdVersion } = this.props;
@@ -216,80 +216,111 @@ export class ReferenceModalEditor extends Component {
     return (
       <Fragment>
         <Modal
-          active={activeModal}
-          onBodyClick={() => setModalState(false)}
-        >
-          <ModalInner>
-            <Select
-              name="reference-new-existing-select"
-              id="reference-new-existing-select"
-              label="New or existing reference"
-              options={selectOptions}
-              value={selectedReference}
-              onChange={onSelectChange}
-            />
-            {selectEmpty && (
-              <FormHelper>
-                <FormHelperMessage>Please select a new or existing reference.</FormHelperMessage>
-              </FormHelper>
-            )}
-            {selectedReference === 'NEW' && (
-              <FormGroup>
-                <FormGroupHeader>
-                  <FormLabel htmlFor="reference-title">Reference Name</FormLabel>
-                </FormGroupHeader>
-                <FormGroupBody>
-                  <FormInput
-                    type="text"
-                    size="large"
-                    id="reference-title"
-                    placeholder="Enter a title"
-                    value={referenceName}
-                    onChange={onReferenceNameChange}
-                    onBlur={validate}
+          id="reference-editor"
+          size="large"
+          revealed={activeModal}
+          onCloseClick={() => setModalState(false)}
+          onOverlayClick={() => setModalState(false)}
+          headerComponent={(
+            <ModalHeader>
+              <ModalTitle>Insert a reference</ModalTitle>
+            </ModalHeader>
+)}
+          bodyComponent={(
+            <ModalBody>
+              <Form>
+                <FormGroup>
+                  <Select
+                    name="reference-new-existing-select"
+                    id="reference-new-existing-select"
+                    label="Select existing or create new:"
+                    options={selectOptions}
+                    value={selectedReference}
+                    onChange={onSelectChange}
                   />
-                  {referenceEmpty && (
-                    <FormHelper>
-                      <FormHelperMessage>Please enter a reference.</FormHelperMessage>
-                    </FormHelper>
+                  {selectEmpty && (
+                  <FormHelper>
+                    <FormHelperMessage>
+                        Please select a new or existing reference.
+                    </FormHelperMessage>
+                  </FormHelper>
                   )}
-                </FormGroupBody>
-                <FormGroupBody>
-                  <InputFormGroup>
+                </FormGroup>
+
+                {selectedReference === 'NEW' && (
+                <FormFieldset>
+                  <FormFieldsetBody>
+                    <FormGroup>
+                      <FormGroupHeader>
+                        <FormLabel htmlFor="reference-title">
+                            Reference Name
+                        </FormLabel>
+                      </FormGroupHeader>
+                      <FormGroupBody>
+                        <FormInput
+                          type="text"
+                          size="large"
+                          id="reference-title"
+                          placeholder="Enter a title"
+                          value={referenceName}
+                          onChange={onReferenceNameChange}
+                          onBlur={validate}
+                        />
+                        {referenceEmpty && (
+                        <FormHelper>
+                          <FormHelperMessage>
+                                Please enter a reference.
+                          </FormHelperMessage>
+                        </FormHelper>
+                        )}
+                      </FormGroupBody>
+                    </FormGroup>
+
                     {Object.keys(fields).map(field => (
-                      <Input
-                        id={`reference-form-${field}`}
-                        name={`reference-form-${field}`}
-                        key={`reference-form-${field}`}
-                        label={formatFieldLabel(field)}
-                        type="text"
-                        value={fields[field]}
-                        onChange={e => onOptionalFieldChange(e, field)}
-                        optional
-                      />
+                      <FormGroup key={field}>
+                        <FormGroupHeader>
+                          <FormLabel htmlFor={`reference-form-${field}`}>
+                            {formatFieldLabel(field)}
+                          </FormLabel>
+                        </FormGroupHeader>
+                        <FormGroupBody>
+                          <FormInput
+                            id={`reference-form-${field}`}
+                            name={`reference-form-${field}`}
+                            key={`reference-form-${field}`}
+                            type="text"
+                            value={fields[field]}
+                            onChange={e => onOptionalFieldChange(e, field)}
+                            optional
+                          />
+                        </FormGroupBody>
+                      </FormGroup>
                     ))}
-                  </InputFormGroup>
-                </FormGroupBody>
-              </FormGroup>
-            )}
-            <Button
-              onClick={onSubmit}
-              variation="base-raised-light"
-              size="large"
-              type="submit"
-            >
-              Place
-            </Button>
-            <CloseModal
-              onClick={() => setModalState(false)}
-              variation="base-plain"
-              size="large"
-              hideText
-            >
-              Close
-            </CloseModal>
-          </ModalInner>
-        </Modal>
+                  </FormFieldsetBody>
+                </FormFieldset>
+                )}
+              </Form>
+            </ModalBody>
+)}
+          footerComponent={(
+            <ModalFooter>
+              <ModalCancelButton
+                variation="base-raised-light"
+                title="Cancel action"
+                onClick={() => setModalState(false)}
+              >
+                Cancel
+              </ModalCancelButton>
+              <ModalSaveButton
+                variation="base-raised-light"
+                title="Insert reference"
+                onClick={onSubmit}
+              >
+                Done
+              </ModalSaveButton>
+            </ModalFooter>
+)}
+        />
 
         <ReferenceBtn
           onClick={() => setModalState(true)}
@@ -325,4 +356,7 @@ const mapDispatch = {
   setLastCreatedReference
 };
 
-export default connect(mapStateToProps, mapDispatch)(ReferenceModalEditor);
+export default connect(
+  mapStateToProps,
+  mapDispatch
+)(ReferenceModalEditor);
