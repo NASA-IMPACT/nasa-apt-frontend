@@ -1,21 +1,21 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
 import { connect } from 'react-redux';
-import { deleteReference } from '../../actions/actions';
 
 import { Inpage } from '../common/Inpage';
 import EditPage from '../common/EditPage';
-import RemoveButton from '../../styles/button/remove';
+
+import ReferenceFormWrapper from './FormWrapper';
 
 export function References(props) {
-  const { atbdVersion, references, deleteReference: del } = props;
+  const { atbdVersion, references } = props;
   let returnValue;
   if (atbdVersion) {
     const { atbd, atbd_id } = atbdVersion;
     const { title } = atbd;
     returnValue = (
       <Inpage>
-        <EditPage title={title || ''} id={atbd_id} step={4}>
+        <EditPage title={title || ''} id={atbd_id} step={7}>
           <h2>References</h2>
           <p>
             Please remove any references that are no longer attached to this
@@ -26,19 +26,7 @@ export function References(props) {
           </p>
           <ul>
             {references.map((d, i) => (
-              <li key={d.publication_reference_id}>
-                <span>
-                  #{i + 1} {d.title}
-                </span>
-                <RemoveButton
-                  variation="base-plain"
-                  size="small"
-                  hideText
-                  onClick={() => del(d.publication_reference_id)}
-                >
-                  Delete
-                </RemoveButton>
-              </li>
+              <ReferenceFormWrapper key={i} data={d} index={i} />
             ))}
             {!references.length && <p>No references attached.</p>}
           </ul>
@@ -62,7 +50,7 @@ const mapStateToProps = state => ({
   references: state.application.references
 });
 
-const mapDispatch = { deleteReference };
+const mapDispatch = {};
 
 export default connect(
   mapStateToProps,
