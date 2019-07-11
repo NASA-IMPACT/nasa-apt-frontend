@@ -39,6 +39,15 @@ export const ReferenceBtn = styled(Button)`
   }
 `;
 
+const ReferencesFormFieldsLayout = styled.div`
+  display: grid;
+  align-items: start;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const defaultFieldValues = {
   authors: '',
   series: '',
@@ -248,56 +257,54 @@ export class ReferenceModalEditor extends Component {
                 </FormGroup>
 
                 {selectedReference === 'NEW' && (
-                <FormFieldset>
-                  <FormFieldsetBody>
-                    <FormGroup>
+                <ReferencesFormFieldsLayout>
+                  <FormGroup>
+                    <FormGroupHeader>
+                      <FormLabel htmlFor="reference-title">
+                          Reference Name
+                      </FormLabel>
+                    </FormGroupHeader>
+                    <FormGroupBody>
+                      <FormInput
+                        type="text"
+                        size="large"
+                        id="reference-title"
+                        placeholder="Enter a title"
+                        value={referenceName}
+                        onChange={onReferenceNameChange}
+                        onBlur={validate}
+                      />
+                      {referenceEmpty && (
+                      <FormHelper>
+                        <FormHelperMessage>
+                              Please enter a reference.
+                        </FormHelperMessage>
+                      </FormHelper>
+                      )}
+                    </FormGroupBody>
+                  </FormGroup>
+
+                  {Object.keys(fields).map(field => (
+                    <FormGroup key={field}>
                       <FormGroupHeader>
-                        <FormLabel htmlFor="reference-title">
-                            Reference Name
+                        <FormLabel htmlFor={`reference-form-${field}`}>
+                          {formatFieldLabel(field)}
                         </FormLabel>
                       </FormGroupHeader>
                       <FormGroupBody>
                         <FormInput
+                          id={`reference-form-${field}`}
+                          name={`reference-form-${field}`}
+                          key={`reference-form-${field}`}
                           type="text"
-                          size="large"
-                          id="reference-title"
-                          placeholder="Enter a title"
-                          value={referenceName}
-                          onChange={onReferenceNameChange}
-                          onBlur={validate}
+                          value={fields[field]}
+                          onChange={e => onOptionalFieldChange(e, field)}
+                          optional
                         />
-                        {referenceEmpty && (
-                        <FormHelper>
-                          <FormHelperMessage>
-                                Please enter a reference.
-                          </FormHelperMessage>
-                        </FormHelper>
-                        )}
                       </FormGroupBody>
                     </FormGroup>
-
-                    {Object.keys(fields).map(field => (
-                      <FormGroup key={field}>
-                        <FormGroupHeader>
-                          <FormLabel htmlFor={`reference-form-${field}`}>
-                            {formatFieldLabel(field)}
-                          </FormLabel>
-                        </FormGroupHeader>
-                        <FormGroupBody>
-                          <FormInput
-                            id={`reference-form-${field}`}
-                            name={`reference-form-${field}`}
-                            key={`reference-form-${field}`}
-                            type="text"
-                            value={fields[field]}
-                            onChange={e => onOptionalFieldChange(e, field)}
-                            optional
-                          />
-                        </FormGroupBody>
-                      </FormGroup>
-                    ))}
-                  </FormFieldsetBody>
-                </FormFieldset>
+                  ))}
+                </ReferencesFormFieldsLayout>
                 )}
               </Form>
             </ModalBody>
