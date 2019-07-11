@@ -26,7 +26,7 @@ export function References(props) {
           </p>
           <ul>
             {references.map((d, i) => (
-              <ReferenceFormWrapper key={i} data={d} index={i} />
+              <ReferenceFormWrapper key={d.publication_reference_id} data={d} index={i} />
             ))}
             {!references.length && <p>No references attached.</p>}
           </ul>
