@@ -24,12 +24,10 @@ export function References(props) {
             Do not delete any that are currently referenced in any section with
             a <sup>ref</sup> superscript.
           </p>
-          <ul>
-            {references.map((d, i) => (
-              <ReferenceFormWrapper key={d.publication_reference_id} data={d} index={i} />
-            ))}
-            {!references.length && <p>No references attached.</p>}
-          </ul>
+          {references.map(d => (
+            <ReferenceFormWrapper key={d.publication_reference_id} data={d} />
+          ))}
+          {!references.length && <p>No references attached.</p>}
         </EditPage>
       </Inpage>
     );

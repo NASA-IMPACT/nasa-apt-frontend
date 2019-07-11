@@ -41,24 +41,19 @@ const ReferencesFormFieldsLayout = styled.div`
   width: 100%;
 `;
 
+// Helper function
+function formatFieldLabel(field) {
+  if (field === 'isbn' || field === 'doi') return field.toUpperCase();
+
+  const result = field.split('_');
+  result[0] = result[0].charAt(0).toUpperCase() + result[0].slice(1, result[0].length);
+  return result.join(' ');
+}
+
 export class ReferenceFormWrapper extends Component {
   constructor(props) {
     super(props);
-
-    const { data } = props;
-
-    this.state = {
-      title: data.title
-    };
-
-    this.onReferenceNameChange = this.onReferenceNameChange.bind(this);
     this.onReferenceUpdate = this.onReferenceUpdate.bind(this);
-  }
-
-  onReferenceNameChange(e) {
-    this.setState({
-      title: e.currentTarget.value
-    });
   }
 
   // eslint-disable-next-line
@@ -67,16 +62,14 @@ export class ReferenceFormWrapper extends Component {
   }
 
   render() {
-    const { data, index, deleteReferenceAction } = this.props;
+    const { data, deleteReferenceAction } = this.props;
     const { publication_reference_id } = data;
-
-    const { title } = this.state;
 
     return (
       <Form>
         <FormFieldset>
           <FormFieldsetHeader>
-            <FormLegend>Ref. {index + 1}</FormLegend>
+            <FormLegend>Ref. {publication_reference_id}</FormLegend>
             <RemoveButton
               variation="base-plain"
               size="small"
@@ -88,23 +81,25 @@ export class ReferenceFormWrapper extends Component {
           </FormFieldsetHeader>
           <FormFieldsetBody>
             <ReferencesFormFieldsLayout>
-              <FormGroup>
-                <FormGroupHeader>
-                  <FormLabel htmlFor="reference-title">
-                    Reference Name
-                  </FormLabel>
-                </FormGroupHeader>
-                <FormGroupBody>
-                  <FormInput
-                    type="text"
-                    size="large"
-                    id="reference-title"
-                    placeholder="Enter a title"
-                    value={title}
-                    readOnly
-                  />
-                </FormGroupBody>
-              </FormGroup>
+              {Object.keys(data).map(field => (
+                <FormGroup key={field}>
+                  <FormGroupHeader>
+                    <FormLabel htmlFor={`reference-form-${field}`}>
+                      {formatFieldLabel(field)}
+                    </FormLabel>
+                  </FormGroupHeader>
+                  <FormGroupBody>
+                    <FormInput
+                      id={`reference-form-${field}`}
+                      name={`reference-form-${field}`}
+                      key={`reference-form-${field}`}
+                      type="text"
+                      value={data[field]}
+                      readOnly
+                    />
+                  </FormGroupBody>
+                </FormGroup>
+              ))}
             </ReferencesFormFieldsLayout>
             <Button
               type="submit"
@@ -123,7 +118,6 @@ export class ReferenceFormWrapper extends Component {
 }
 
 ReferenceFormWrapper.propTypes = {
-  index: T.number,
   data: T.object,
   deleteReferenceAction: T.func
 };
