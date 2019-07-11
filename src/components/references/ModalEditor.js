@@ -23,7 +23,6 @@ import {
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
 import Form from '../../styles/form/form';
-import { FormFieldset, FormFieldsetBody } from '../../styles/form/fieldset';
 import {
   FormGroup,
   FormGroupHeader,
