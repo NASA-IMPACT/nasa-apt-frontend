@@ -38,11 +38,7 @@ import {
 
 import Prose from '../../styles/type/prose';
 
-import Dropdown, {
-  DropTitle,
-  DropMenu,
-  DropMenuItem
-} from './Dropdown';
+import Dropdown, { DropTitle, DropMenu, DropMenuItem } from './Dropdown';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -102,33 +98,50 @@ const ItemCount = styled.span`
   justify-content: center;
   font-size: 0.75rem;
   line-height: 1.5rem;
-  color: #FFF;
+  color: #fff;
   background-color: ${themeVal('color.link')};
   border-radius: ${themeVal('shape.ellipsoid')};
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
-
 `;
 
 const EditPage = (props) => {
   const {
-    title,
-    step,
-    id,
-    children
+    title, step, id, children
   } = props;
 
   const version = 1;
 
   const items = [
-    { display: 'Identifying information', link: `/${atbdsedit}/${id}/${drafts}/${version}/${identifying_information}` },
-    { display: 'Introduction', link: `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}` },
-    { display: 'Contact information', link: `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}` },
-    { display: 'Algorithm description', link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_description}` },
-    { display: 'Algorithm usage', link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_usage}` },
-    { display: 'Algorithm implementation', link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}` },
-    { display: 'References', link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}` }
+    {
+      display: 'Identifying information',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${identifying_information}`
+    },
+    {
+      display: 'Introduction',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}`
+    },
+    {
+      display: 'Contact information',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}`
+    },
+    {
+      display: 'References',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}`
+    },
+    {
+      display: 'Algorithm description',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_description}`
+    },
+    {
+      display: 'Algorithm usage',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_usage}`
+    },
+    {
+      display: 'Algorithm implementation',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}`
+    }
   ];
 
   const numSteps = items.length;
@@ -139,22 +152,28 @@ const EditPage = (props) => {
       <StickyContainer>
         <Sticky>
           {stickyProps => (
-            <InpageHeader style={stickyProps.style} isSticky={stickyProps.isSticky}>
+            <InpageHeader
+              style={stickyProps.style}
+              isSticky={stickyProps.isSticky}
+            >
               <InpageHeaderInner>
                 <InpageHeadline>
-                  <InpageTitle>{ title }</InpageTitle>
+                  <InpageTitle>{title}</InpageTitle>
                   <InpageTagline>Editing document</InpageTagline>
                 </InpageHeadline>
                 <InpageToolbar>
                   <Stepper>
-                    <StepperLabel>
-                      { stepCount }
-                    </StepperLabel>
+                    <StepperLabel>{stepCount}</StepperLabel>
                     <StepDrop
                       alignment="right"
-                      triggerElement={
-                        <StepDropTrigger variation="achromic-plain" title="Toggle menu options">{items[step - 1].display}</StepDropTrigger>
-                      }
+                      triggerElement={(
+                        <StepDropTrigger
+                          variation="achromic-plain"
+                          title="Toggle menu options"
+                        >
+                          {items[step - 1].display}
+                        </StepDropTrigger>
+)}
                     >
                       <DropTitle>Select step</DropTitle>
                       <DropMenu role="menu" selectable>
@@ -176,16 +195,22 @@ const EditPage = (props) => {
                   <PrevButton
                     variation="achromic-plain"
                     title="View previous step"
-                    onClick={() => items[step - 2].link && props.push(items[step - 2].link)}
-                    disabled={(step === 1)}
-                  > Prev
+                    onClick={() => items[step - 2].link && props.push(items[step - 2].link)
+                    }
+                    disabled={step === 1}
+                  >
+                    {' '}
+                    Prev
                   </PrevButton>
                   <NextButton
                     variation="achromic-plain"
                     title="View next step"
-                    onClick={() => items[step].link && props.push(items[step].link)}
-                    disabled={(step === 7)}
-                  > Next
+                    onClick={() => items[step].link && props.push(items[step].link)
+                    }
+                    disabled={step === 7}
+                  >
+                    {' '}
+                    Next
                   </NextButton>
                 </InpageToolbar>
               </InpageHeaderInner>
@@ -194,9 +219,7 @@ const EditPage = (props) => {
         </Sticky>
         <InpageBody>
           <InpageBodyInner>
-            <Prose>
-              { children }
-            </Prose>
+            <Prose>{children}</Prose>
           </InpageBodyInner>
         </InpageBody>
       </StickyContainer>
@@ -212,10 +235,13 @@ EditPage.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]),
-  push: PropTypes.func,
+  push: PropTypes.func
 };
 
 const mapStateToProps = () => ({});
 const mapDispatch = { push };
 
-export default connect(mapStateToProps, mapDispatch)(EditPage);
+export default connect(
+  mapStateToProps,
+  mapDispatch
+)(EditPage);
