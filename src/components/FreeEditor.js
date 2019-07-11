@@ -19,8 +19,7 @@ import {
 import EditorImage from './EditorImage';
 import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
-import EditorReference from './EditorReference';
-import EditorReferenceTool from './EditorReferenceTool';
+import ReferenceModalEditor from './references/ModalEditor';
 import EditorFormatTextToolbar from './EditorFormatTextToolbar';
 import EditorFormattableText from './EditorFormattableText';
 import EditorInlineMetadata from './EditorInlineMetadata';
@@ -56,6 +55,14 @@ const EditorContainer = styled.div`
   border-bottom-left-radius: ${themeVal('shape.rounded')};
   border-bottom-right-radius: ${themeVal('shape.rounded')};
   padding: 1rem 3rem;
+`;
+
+const ReferenceNode = styled.sup`
+  margin-left: 0.1rem;
+  text-decoration: underline;
+  * {
+    text-decoration: none;
+  }
 `;
 
 const plugins = [TrailingBlock(), SoftBreak(), PluginDeepTable()];
@@ -452,12 +459,12 @@ export class FreeEditor extends React.Component {
 
       case reference: {
         return (
-          <EditorReference
+          <ReferenceNode
             data-reference-id={node.data.get('id')}
             {...attributes}
           >
             {children}
-          </EditorReference>
+          </ReferenceNode>
         );
       }
       default:
@@ -546,7 +553,7 @@ export class FreeEditor extends React.Component {
                 active={activeTool === image}
               />
 
-              <EditorReferenceTool
+              <ReferenceModalEditor
                 onSaveSuccess={() => {
                   this.selectTool(reference);
                 }}
