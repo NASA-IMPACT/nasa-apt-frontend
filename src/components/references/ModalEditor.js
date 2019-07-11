@@ -333,6 +333,7 @@ export class ReferenceModalEditor extends Component {
                 <ModalSaveButton
                   variation="base-raised-light"
                   title="Insert reference"
+                  disabled={referenceEmpty}
                   onClick={onSubmit}
                 >
                  Create
