@@ -55,7 +55,7 @@ const types = createTypes([
   ...async('CHECK_PDF'),
   ...async('CHECK_HTML'),
 
-  'SET_LAST_CREATED_REFERENCE'
+  'SET_ACTIVE_REFERENCE'
 ]);
 
 export default types;

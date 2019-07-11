@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import {
   createReference,
-  setLastCreatedReference
+  setActiveReference
 } from '../../actions/actions';
 
 import Select from '../common/Select';
@@ -38,6 +38,11 @@ export const ReferenceBtn = styled(Button)`
   }
 `;
 
+export const PlaceButton = styled(Button)`
+  ::before {
+    ${collecticon('tick--small')}
+  }
+`;
 const ReferencesFormFieldsLayout = styled.div`
   display: grid;
   align-items: start;
@@ -81,9 +86,8 @@ export class ReferenceModalEditor extends Component {
     this.state = {
       activeModal: false,
       referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
       selectedReference: null,
-      selectEmpty: false,
       fields
     };
     this.setModalState = this.setModalState.bind(this);
@@ -92,21 +96,20 @@ export class ReferenceModalEditor extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.validate = this.validate.bind(this);
+    this.onInsertReference = this.onInsertReference.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { lastCreatedReference, onSaveSuccess } = nextProps;
-    const { lastCreatedReference: prev } = this.props;
-    if (lastCreatedReference !== prev) {
-      onSaveSuccess();
-      this.resetForm();
-      hideGlobalLoading();
-    }
+    const { activeReference } = nextProps;
+    const { publication_reference_id: id } = activeReference || {};
+    this.resetForm(id);
+    hideGlobalLoading();
   }
 
   onReferenceNameChange(e) {
     this.setState({
-      referenceName: e.currentTarget.value
+      referenceName: e.currentTarget.value,
+      referenceEmpty: e.currentTarget.value === ''
     });
   }
 
@@ -126,47 +129,53 @@ export class ReferenceModalEditor extends Component {
     });
   }
 
+  onInsertReference() {
+    const {
+      insertReference,
+      references,
+      setActiveReference: setReference
+    } = this.props;
+    const { selectedReference } = this.state;
+    const reference = references.find(d => d.publication_reference_id === selectedReference);
+    setReference(null);
+    this.resetForm(null);
+    insertReference(reference);
+    this.setModalState(false);
+  }
+
   onSubmit(e) {
     e.preventDefault();
-    const { referenceName, fields, selectedReference } = this.state;
+    const {
+      referenceName,
+      fields,
+      selectedReference
+    } = this.state;
 
-    if (
-      !selectedReference
-      || (selectedReference === 'NEW' && !referenceName.length)
-    ) {
+    if (!selectedReference
+      || (selectedReference === 'NEW' && !referenceName.length)) {
       return this.validate();
     }
 
-    const { references, setLastCreatedReference: setReference } = this.props;
-
-    if (selectedReference !== 'NEW') {
-      const reference = references.find(
-        d => d.publication_reference_id === selectedReference
-      );
-      setReference(reference);
-    } else {
-      const { createReference: create, atbdVersion } = this.props;
-      const { atbd_id, atbd_version } = atbdVersion;
-      const payload = {
-        atbd_id,
-        atbd_version,
-        title: referenceName
-      };
-      Object.keys(fields).forEach((field) => {
-        if (fields[field]) {
-          payload[field] = fields[field];
-        }
-      });
-      showGlobalLoading();
-      create(payload);
-    }
+    const { createReference: create, atbdVersion } = this.props;
+    const { atbd_id, atbd_version } = atbdVersion;
+    const payload = {
+      atbd_id,
+      atbd_version,
+      title: referenceName
+    };
+    Object.keys(fields).forEach((field) => {
+      if (fields[field]) {
+        payload[field] = fields[field];
+      }
+    });
+    showGlobalLoading();
+    create(payload);
   }
 
-  resetForm() {
+  resetForm(selectedReference) {
     this.setState({
-      activeModal: false,
-      referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
+      selectedReference,
       fields: { ...defaultFieldValues }
     });
   }
@@ -178,7 +187,7 @@ export class ReferenceModalEditor extends Component {
     this.setState({
       activeModal: !!nextState,
       referenceName: '',
-      referenceEmpty: false,
+      referenceEmpty: true,
       fields: { ...defaultFieldValues }
     });
   }
@@ -186,7 +195,6 @@ export class ReferenceModalEditor extends Component {
   validate() {
     this.setState(state => ({
       referenceEmpty: !state.referenceName,
-      selectEmpty: !state.selectedReference
     }));
   }
 
@@ -196,7 +204,6 @@ export class ReferenceModalEditor extends Component {
       referenceName,
       referenceEmpty,
       selectedReference,
-      selectEmpty,
       fields
     } = this.state;
 
@@ -206,10 +213,11 @@ export class ReferenceModalEditor extends Component {
       onOptionalFieldChange,
       onSelectChange,
       validate,
-      onSubmit
+      onSubmit,
+      onInsertReference
     } = this;
 
-    const { active, references } = this.props;
+    const { references, disabled } = this.props;
 
     const selectOptions = references.map(d => ({
       value: d.publication_reference_id,
@@ -246,15 +254,12 @@ export class ReferenceModalEditor extends Component {
                     value={selectedReference}
                     onChange={onSelectChange}
                   />
-                  {selectEmpty && (
-                  <FormHelper>
-                    <FormHelperMessage>
-                        Please select a new or existing reference.
-                    </FormHelperMessage>
-                  </FormHelper>
+                  {!selectedReference && (
+                    <FormHelper>
+                      <FormHelperMessage>Please select a new or existing reference.</FormHelperMessage>
+                    </FormHelper>
                   )}
                 </FormGroup>
-
                 {selectedReference === 'NEW' && (
                 <ReferencesFormFieldsLayout>
                   <FormGroup>
@@ -307,9 +312,16 @@ export class ReferenceModalEditor extends Component {
                 )}
               </Form>
             </ModalBody>
-)}
+          )}
           footerComponent={(
             <ModalFooter>
+              <PlaceButton
+                variation="base-raised-light"
+                onClick={onInsertReference}
+                disabled={!selectedReference || selectedReference === 'NEW'}
+              >
+                Place
+              </PlaceButton>
               <ModalCancelButton
                 variation="base-raised-light"
                 title="Cancel action"
@@ -317,22 +329,25 @@ export class ReferenceModalEditor extends Component {
               >
                 Cancel
               </ModalCancelButton>
-              <ModalSaveButton
-                variation="base-raised-light"
-                title="Insert reference"
-                onClick={onSubmit}
-              >
-                Done
-              </ModalSaveButton>
+              {selectedReference === 'NEW' && (
+                <ModalSaveButton
+                  variation="base-raised-light"
+                  title="Insert reference"
+                  disabled={referenceEmpty}
+                  onClick={onSubmit}
+                >
+                 Create
+                </ModalSaveButton>
+              )}
             </ModalFooter>
-)}
+          )}
         />
 
         <ReferenceBtn
           onClick={() => setModalState(true)}
           variation="base-plain"
           size="large"
-          active={active}
+          disabled={disabled}
         >
           Reference
         </ReferenceBtn>
@@ -342,24 +357,24 @@ export class ReferenceModalEditor extends Component {
 }
 
 ReferenceModalEditor.propTypes = {
-  onSaveSuccess: T.func,
   createReference: T.func,
-  setLastCreatedReference: T.func,
-  lastCreatedReference: T.object,
+  setActiveReference: T.func,
+  insertReference: T.func,
+  activeReference: T.object,
   atbdVersion: T.object,
   references: T.array,
-  active: T.bool
+  disabled: T.bool
 };
 
 const mapStateToProps = state => ({
-  lastCreatedReference: state.application.lastCreatedReference,
+  activeReference: state.application.activeReference,
   atbdVersion: state.application.atbdVersion,
   references: state.application.references
 });
 
 const mapDispatch = {
   createReference,
-  setLastCreatedReference
+  setActiveReference
 };
 
 export default connect(
