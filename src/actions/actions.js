@@ -677,6 +677,22 @@ export function createReference(reference) {
   };
 }
 
+export function updateReference(id, document) {
+  return {
+    [RSAA]: {
+      endpoint: `${BASE_URL}/publication_references?publication_reference_id=eq.${id}`,
+      method: 'PATCH',
+      body: JSON.stringify(document),
+      headers: returnObjectHeaders,
+      types: [
+        types.UPDATE_REFERENCE,
+        types.UPDATE_REFERENCE_SUCCESS,
+        types.UPDATE_REFERENCE_FAIL
+      ]
+    }
+  };
+}
+
 export function deleteReference(id) {
   return {
     [RSAA]: {
