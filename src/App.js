@@ -31,7 +31,7 @@ import Contacts from './components/Contacts';
 import AlgorithmDescription from './components/AlgorithmDescription';
 import AlgorithmUsage from './components/AlgorithmUsage';
 import AlgorithmImplementation from './components/AlgorithmImplementation';
-import References from './components/References';
+import References from './components/references';
 import Help from './components/help';
 import About from './components/about';
 import Sandbox from './components/sandbox';

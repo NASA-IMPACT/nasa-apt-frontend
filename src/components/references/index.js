@@ -1,13 +1,13 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
 import { connect } from 'react-redux';
-import { deleteReference } from '../actions/actions';
+import { deleteReference } from '../../actions/actions';
 
 import {
   Inpage
-} from './common/Inpage';
-import EditPage from './common/EditPage';
-import RemoveButton from '../styles/button/remove';
+} from '../common/Inpage';
+import EditPage from '../common/EditPage';
+import RemoveButton from '../../styles/button/remove';
 
 export function References(props) {
   const {
