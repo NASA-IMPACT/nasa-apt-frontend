@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
 
+import ValidationSchema from './ValidationSchema';
+
 // Actions
 import { updateReference } from '../../actions/actions';
 
@@ -14,6 +16,7 @@ import Button from '../../styles/button/button';
 import FormLabel from '../../styles/form/label';
 import FormInput from '../../styles/form/input';
 import { FormFieldsetBody } from '../../styles/form/fieldset';
+import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
 import {
   FormGroup,
   FormGroupHeader,
@@ -36,232 +39,104 @@ const FieldsLayout = styled.div`
 
 const InnerForm = (props) => {
   const {
-    values, handleChange, handleBlur, handleSubmit
+    values,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    errors,
+    isValid
   } = props;
+
+  const renderFormGroup = field => (
+    <FormGroup key={field.id}>
+      <FormGroupHeader>
+        <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
+      </FormGroupHeader>
+      <FormGroupBody>
+        <FormInput
+          id={`reference-form-${field.id}`}
+          name={field.id}
+          type="text"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={values[field.id]}
+        />
+        {errors[field.id] ? (
+          <FormHelper>
+            <FormHelperMessage>{errors[field.id]}</FormHelperMessage>
+          </FormHelper>
+        ) : null}
+      </FormGroupBody>
+    </FormGroup>
+  );
 
   return (
     <FormFieldsetBody>
       <FieldsLayout>
         <SpanThree>
-          <FormGroup>
-            <FormGroupHeader>
-              <FormLabel htmlFor="title">Title</FormLabel>
-            </FormGroupHeader>
-            <FormGroupBody>
-              <FormInput
-                id="reference-form-title"
-                name="title"
-                type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.title}
-              />
-            </FormGroupBody>
-          </FormGroup>
+          {renderFormGroup({ id: 'title', label: 'Title' })}
         </SpanThree>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="authors">Authors</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-authors"
-              name="authors"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.authors}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="series">Series</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-series"
-              name="series"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.series}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="edition">Edition</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-edition"
-              name="edition"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.edition}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="volume">Volume</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-volume"
-              name="volume"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.volume}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="issues">Issue</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-issues"
-              name="issues"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.issues}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="report_number">Report Number</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-report_number"
-              name="report_number"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.report_number}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="publication_place">Publication Place</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-publication_place"
-              name="publication_place"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.publication_place}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="publisher">Publisher</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-publisher"
-              name="publisher"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.publisher}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="pages">Pages</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-pages"
-              name="pages"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.pages}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="isbn">ISBN</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-isbn"
-              name="isbn"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.isbn}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="doi">DOI</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-doi"
-              name="doi"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.doi}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="online_resource">Online Resource</FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-online_resource"
-              name="online_resource"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.online_resource}
-            />
-          </FormGroupBody>
-        </FormGroup>
-        <FormGroup>
-          <FormGroupHeader>
-            <FormLabel htmlFor="other_reference_details">
-              Other Reference Details
-            </FormLabel>
-          </FormGroupHeader>
-          <FormGroupBody>
-            <FormInput
-              id="reference-form-other_reference_details"
-              name="other_reference_details"
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.other_reference_details}
-            />
-          </FormGroupBody>
-        </FormGroup>
+        {[
+          {
+            id: 'authors',
+            label: 'Authors'
+          },
+          {
+            id: 'series',
+            label: 'Series'
+          },
+          {
+            id: 'edition',
+            label: 'Edition'
+          },
+          {
+            id: 'volume',
+            label: 'Volume'
+          },
+          {
+            id: 'issue',
+            label: 'Issue'
+          },
+          {
+            id: 'report_number',
+            label: 'Report Number'
+          },
+          {
+            id: 'publication_place',
+            label: 'Publication Place'
+          },
+          {
+            id: 'publisher',
+            label: 'Publisher'
+          },
+          {
+            id: 'pages',
+            label: 'Pages'
+          },
+          {
+            id: 'isbn',
+            label: 'ISBN'
+          },
+          {
+            id: 'doi',
+            label: 'DOI'
+          },
+          {
+            id: 'online_resource',
+            label: 'Online Resource'
+          },
+          {
+            id: 'other_reference_details',
+            label: 'Other Reference Details'
+          }
+        ].map(renderFormGroup)}
       </FieldsLayout>
       <Button
         type="submit"
         variation="base-raised-light"
         size="large"
         onClick={handleSubmit}
+        disabled={!isValid}
       >
         Update reference
       </Button>
@@ -271,12 +146,15 @@ const InnerForm = (props) => {
 
 InnerForm.propTypes = {
   values: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  isValid: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 };
 
 const ReferenceForm = withFormik({
+  validationSchema: ValidationSchema,
   mapPropsToValues: (props) => {
     const initialValues = Object.assign({}, props.initialValues);
 
