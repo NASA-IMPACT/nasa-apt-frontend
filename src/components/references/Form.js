@@ -47,6 +47,8 @@ const InnerForm = (props) => {
     isValid
   } = props;
 
+  const { isNew } = values;
+
   const renderFormGroup = field => (
     <FormGroup key={field.id}>
       <FormGroupHeader>
@@ -138,7 +140,7 @@ const InnerForm = (props) => {
         onClick={handleSubmit}
         disabled={!isValid}
       >
-        Update reference
+        {isNew ? 'Add new reference' : 'Update reference'}
       </Button>
     </FormFieldsetBody>
   );

@@ -16,13 +16,15 @@ import { FormFieldset, FormFieldsetHeader } from '../../styles/form/fieldset';
 export class ReferenceFormWrapper extends Component {
   render() {
     const { data, handleDeleteReference } = this.props;
-    const { publication_reference_id } = data;
+    const { publication_reference_id, isNew } = data;
 
     return (
       <Form>
         <FormFieldset>
           <FormFieldsetHeader>
-            <FormLegend>ID {publication_reference_id}</FormLegend>
+            <FormLegend>
+              {isNew ? 'New reference' : `ID ${publication_reference_id}`}
+            </FormLegend>
             <RemoveButton
               variation="base-plain"
               size="small"
