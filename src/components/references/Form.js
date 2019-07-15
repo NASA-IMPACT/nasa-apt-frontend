@@ -6,9 +6,6 @@ import styled from 'styled-components';
 
 import ValidationSchema from './ValidationSchema';
 
-// Actions
-import { updateReference } from '../../actions/actions';
-
 // General components
 import Button from '../../styles/button/button';
 
@@ -168,23 +165,13 @@ const ReferenceForm = withFormik({
     return initialValues;
   },
   handleSubmit: (values, { props }) => {
-    const { publication_reference_id: id } = props.initialValues;
-
-    // Set properties as null if empty string
-    const document = Object.assign({}, values);
-    Object.keys(document).forEach((key) => {
-      if (document[key] === '') document[key] = null;
-    });
-
-    props.updateReference(id, document);
+    props.handleSubmit(values);
   }
 })(InnerForm);
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = {
-  updateReference
-};
+const mapDispatchToProps = {};
 
 export default connect(
   mapStateToProps,
