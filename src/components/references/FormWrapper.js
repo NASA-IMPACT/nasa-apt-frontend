@@ -14,18 +14,8 @@ import FormLegend from '../../styles/form/legend';
 import { FormFieldset, FormFieldsetHeader } from '../../styles/form/fieldset';
 
 export class ReferenceFormWrapper extends Component {
-  constructor(props) {
-    super(props);
-    this.onReferenceUpdate = this.onReferenceUpdate.bind(this);
-  }
-
-  // eslint-disable-next-line
-  onReferenceUpdate(e) {
-    e.preventDefault();
-  }
-
   render() {
-    const { data, deleteReferenceAction } = this.props;
+    const { data, handleDeleteReference } = this.props;
     const { publication_reference_id } = data;
 
     return (
@@ -37,7 +27,7 @@ export class ReferenceFormWrapper extends Component {
               variation="base-plain"
               size="small"
               hideText
-              onClick={() => deleteReferenceAction(publication_reference_id)}
+              onClick={() => handleDeleteReference(data)}
             >
               Remove
             </RemoveButton>
@@ -51,7 +41,7 @@ export class ReferenceFormWrapper extends Component {
 
 ReferenceFormWrapper.propTypes = {
   data: T.object,
-  deleteReferenceAction: T.func
+  handleDeleteReference: T.func
 };
 
 const mapStateToProps = () => ({});

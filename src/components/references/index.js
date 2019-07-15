@@ -8,6 +8,8 @@ import AddButton from '../../styles/button/add';
 
 import ReferenceFormWrapper from './FormWrapper';
 
+import { deleteReference } from '../../actions/actions';
+
 export class References extends React.Component {
   constructor(props) {
     super(props);
@@ -15,10 +17,11 @@ export class References extends React.Component {
       newReferences: []
     };
 
-    this.addNewReference = this.addNewReference.bind(this);
+    this.addReference = this.addReference.bind(this);
+    this.handleDeleteReference = this.handleDeleteReference.bind(this);
   }
 
-  addNewReference() {
+  addReference() {
     // Push a empty reference to newReferences array.
     // Set a timestamp as .
     this.setState(prevState => ({
@@ -29,6 +32,21 @@ export class References extends React.Component {
         }
       ])
     }));
+  }
+
+  handleDeleteReference(reference) {
+    if (typeof reference.publication_reference_id !== 'undefined') {
+      // Is a existing reference
+      const { deleteReferenceAction } = this.props;
+      deleteReferenceAction(reference.publication_reference_id);
+    } else {
+      // Is a new reference
+      this.setState(prevState => ({
+        newReferences: prevState.newReferences.filter(
+          r => r.timestamp !== reference.timestamp
+        )
+      }));
+    }
   }
 
   render() {
@@ -56,13 +74,18 @@ export class References extends React.Component {
                 <ReferenceFormWrapper
                   key={d.publication_reference_id}
                   data={d}
+                  handleDeleteReference={this.handleDeleteReference}
                 />
               ))}
             {newReferences.map(d => (
-              <ReferenceFormWrapper key={d.timestamp} data={d} />
+              <ReferenceFormWrapper
+                key={d.timestamp}
+                data={d}
+                handleDeleteReference={this.handleDeleteReference}
+              />
             ))}
             {!references.length && <p>No references attached.</p>}
-            <AddButton variation="base-plain" onClick={this.addNewReference}>
+            <AddButton variation="base-plain" onClick={this.addReference}>
               Add a reference
             </AddButton>
           </EditPage>
@@ -75,7 +98,8 @@ export class References extends React.Component {
 
 References.propTypes = {
   atbdVersion: T.object,
-  references: T.array
+  references: T.array,
+  deleteReferenceAction: T.func
 };
 
 const mapStateToProps = state => ({
@@ -83,7 +107,9 @@ const mapStateToProps = state => ({
   references: state.application.references
 });
 
-const mapDispatch = {};
+const mapDispatch = {
+  deleteReferenceAction: deleteReference
+};
 
 export default connect(
   mapStateToProps,
