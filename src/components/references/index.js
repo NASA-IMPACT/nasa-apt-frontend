@@ -123,7 +123,7 @@ export class References extends React.Component {
                 <ReferenceFormWrapper
                   key={d.publication_reference_id}
                   data={d}
-                  deleteExistingReference={this.deleteExistingReference}
+                  handleDeleteReference={this.deleteExistingReference}
                   handleSubmit={this.handleSubmit}
                 />
               ))}
@@ -131,7 +131,7 @@ export class References extends React.Component {
               <ReferenceFormWrapper
                 key={d.timestamp}
                 data={d}
-                handleDeleteReference={this.handleDeleteReference}
+                handleDeleteReference={this.deleteNewReference}
                 handleSubmit={this.handleSubmit}
               />
             ))}
