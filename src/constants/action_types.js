@@ -47,6 +47,7 @@ const types = createTypes([
 
   ...async('FETCH_ATBD_VERSION_REFERENCES'),
   ...async('CREATE_REFERENCE'),
+  ...async('UPDATE_REFERENCE'),
   ...async('DELETE_REFERENCE'),
   ...async('UPLOAD_FILE'),
   ...async('FETCH_STATIC'),
