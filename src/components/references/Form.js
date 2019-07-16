@@ -69,6 +69,8 @@ const InnerForm = (props) => {
     </FormGroup>
   );
 
+  const buttonLabel = isNew ? 'Add new reference' : 'Update reference';
+
   return (
     <FormFieldsetBody>
       <FieldsLayout>
@@ -131,13 +133,14 @@ const InnerForm = (props) => {
         ].map(renderFormGroup)}
       </FieldsLayout>
       <Button
+        title={buttonLabel}
         type="submit"
         variation="base-raised-light"
         size="large"
         onClick={handleSubmit}
         disabled={!isValid}
       >
-        {isNew ? 'Add new reference' : 'Update reference'}
+        {buttonLabel}
       </Button>
     </FormFieldsetBody>
   );
