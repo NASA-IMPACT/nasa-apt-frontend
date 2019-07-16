@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
 import { connect } from 'react-redux';
+import cloneDeep from 'lodash.clonedeep';
 
 import { Inpage } from '../common/Inpage';
 import EditPage from '../common/EditPage';
@@ -115,7 +116,7 @@ export class References extends React.Component {
               Do not delete any that are currently referenced in any section
               with a <sup>ref</sup> superscript.
             </p>
-            {references
+            {cloneDeep(references)
               .sort(
                 (a, b) => a.publication_reference_id - b.publication_reference_id
               )
