@@ -50,6 +50,7 @@ import {
   ModalCancelButton,
   ModalDeleteButton
 } from '../common/Modal';
+import { confirmDeleteDoc, showConfirmationPrompt } from '../common/ConfirmationPrompt';
 
 // Create a ul component to include some styling.
 
@@ -144,6 +145,59 @@ class Sandbox extends Component {
               >
                 Show modal
               </Button>
+              {' '}
+              <Button
+                variation="base-raised-light"
+                onClick={async () => {
+                  const res = await confirmDeleteDoc('Atmospheric Correction Method for ASTER Thermal Radiometry Over Land');
+                  alert(res.result ? 'Document can be deleted' : 'Document can not be deleted')
+                }}
+              >
+                Confirm delete
+              </Button>
+              {' '}
+              <Button
+                variation="base-raised-light"
+                onClick={async () => {
+                  const res = await showConfirmationPrompt();
+                  alert(res.result ? 'User says yes' : 'User says no')
+                }}
+              >
+                Show confirm
+              </Button>
+              {' '}
+              <Button
+                variation="base-raised-light"
+                onClick={async () => {
+                  const res = await showConfirmationPrompt({
+                    title: 'Do you really think this is a good idea?',
+                    content: 'This may lead to problems down the line',
+                    renderControls: ({ confirm, cancel }) => (
+                      <React.Fragment>
+                        <Button
+                          variation="base-raised-light"
+                          title="Cancel this action"
+                          onClick={cancel}
+                        >
+                          STOP
+                        </Button>
+                        <ModalDeleteButton
+                          variation="base-raised-light"
+                          title="Confirm this action"
+                          onClick={confirm}
+                        >
+                          I know what I&apos;m doing
+                        </ModalDeleteButton>
+                      </React.Fragment>
+                    ),
+                    data: 'code-D92GKL1'
+                  });
+                  alert(res.result ? `Ok!\nExtra data: ${res.data}` : 'That was a close call');
+                }}
+              >
+                Show confirm custom
+              </Button>
+
               <Modal
                 id="sandbox-modal"
                 size="medium"
@@ -152,21 +206,18 @@ class Sandbox extends Component {
                 onCloseClick={() => this.setState({ modalRevealed: false })}
                 headerComponent={(
                   <ModalHeader>
-                    <ModalTitle>Delete this document?</ModalTitle>
+                    <ModalTitle>This is a duckling</ModalTitle>
                   </ModalHeader>
-)}
+                )}
                 bodyComponent={(
                   <ModalBody>
                     <p>
-                      The document{' '}
-                      <strong>
-                        Atmospheric Correction Method for ASTER Thermal
-                        Radiometry Over Land
-                      </strong>{' '}
-                      will be deleted.
+                      This the modal content featuring an image of a yellow duck.
                     </p>
+                    <img src="http://tiny.cc/ducky" alt="Yellow duckling" width="400px" />
+                    <p>Source: google <br />The modal footer may be used to show more content like buttons but it is not required</p>
                   </ModalBody>
-)}
+                )}
                 footerComponent={(
                   <ModalFooter>
                     <ModalCancelButton
@@ -182,7 +233,7 @@ class Sandbox extends Component {
                       Delete
                     </ModalDeleteButton>
                   </ModalFooter>
-)}
+                )}
               />
 
               <h2>Loader</h2>
@@ -442,6 +493,9 @@ class Sandbox extends Component {
             </Prose>
           </InpageBodyInner>
         </InpageBody>
+
+
+        {/* <ConfirmationPrompt /> is mounted at high level (App.js) */}
       </Inpage>
     );
   }
