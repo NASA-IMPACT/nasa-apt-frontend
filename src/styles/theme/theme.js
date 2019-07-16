@@ -23,6 +23,11 @@ color = {
   info: '#5860FF'
 };
 
+color = {
+  ...color,
+  silk: `radial-gradient(farthest-side, ${color.surface}, ${rgba(color.surface, 0.64)})`
+};
+
 const type = {
   base: {
     root: '16px',

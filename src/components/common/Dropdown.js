@@ -5,10 +5,10 @@ import { CSSTransition } from 'react-transition-group';
 import styled, { css } from 'styled-components/macro';
 import { rgba, tint } from 'polished';
 
-import { themeVal, stylizeFunction } from '../styles/utils/general';
-import { divide, multiply } from '../styles/utils/math';
-import { headingAlt } from '../styles/type/heading';
-import collecticon from '../styles/collecticons';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
+import { divide, multiply } from '../../styles/utils/math';
+import { headingAlt } from '../../styles/type/heading';
+import collecticon from '../../styles/collecticons';
 
 const _rgba = stylizeFunction(rgba);
 const _tint = stylizeFunction(tint);
@@ -207,6 +207,7 @@ export default class Dropdown extends React.Component {
 
     let tetherAttachment;
     let tetherTargetAttachment;
+    // eslint-disable-next-line default-case
     switch (direction) {
       case 'up':
         tetherAttachment = `bottom ${alignment}`;

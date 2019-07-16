@@ -3,6 +3,7 @@ import { css } from 'styled-components/macro';
 import { mediaRanges } from '../theme/theme';
 
 const buildMediaExp = ([lower, upper], type) => {
+  // eslint-disable-next-line default-case
   switch (type) {
     case 'Up':
       // It makes no sense to have a media query "Up" from nothing.

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { PropTypes as T } from 'prop-types';
 import styled from 'styled-components/macro';
+import { Popper } from 'react-popper';
 
 import RemoveButton from '../styles/button/remove';
 import FormInput from '../styles/form/input';
 import { themeVal } from '../styles/utils/general';
 
 const InlineContainer = styled.span`
-  position: relative;
   > * {
     cursor: default;
   }
@@ -15,14 +15,13 @@ const InlineContainer = styled.span`
 
 const MetaContainer = styled.span`
   display: block;
-  position: absolute;
   top: -2.6rem;
   z-index: 10;
 `;
 
 const StaticMeta = styled.span`
   color: rgba(0, 0, 0, 0.64);
-  background: #FFF;
+  background: #fff;
   box-shadow: ${themeVal('boxShadow.input')};
   display: flex;
   height: 2.5rem;
@@ -39,38 +38,63 @@ const MetaInput = styled(FormInput)`
 
 export function InlineMetadata(props) {
   const {
-    hasActiveSelection,
-    metadata,
     readOnly,
     onRemove,
     onSubmit,
-    children
+    value
   } = props;
+
+  // Get node at cursor position
+  const node = value.anchorInline;
+
+  // Do not render if node is not a reference
+  if (!node || node.type !== 'reference') {
+    return null;
+  }
+
+  // Get selection range
+  const range = window
+    .getSelection()
+    .getRangeAt(0)
+    .cloneRange();
+
+  // Do not render if something is selected
+  const { width } = range.getBoundingClientRect();
+  if (width > 0) return null;
+
+  // Get reference display name
+  const displayName = node.data.get('name');
+
   return (
-    <InlineContainer>
-      {children}
-      {hasActiveSelection && (
-        <MetadataEditor
-          initialValue={metadata}
-          readOnly={readOnly}
-          onRemove={onRemove}
-          onSubmit={onSubmit}
-        />
+    <Popper referenceElement={range} placement="top-center">
+      {({
+        ref, style, placementA, arrowProps
+      }) => (
+        <div
+          ref={ref}
+          style={{ ...style, zIndex: 100 }}
+          data-placement={placementA}
+        >
+          <InlineContainer>
+            <MetadataEditor
+              initialValue={displayName}
+              readOnly={readOnly}
+              onRemove={onRemove}
+              onSubmit={onSubmit}
+            />
+          </InlineContainer>
+          <div ref={arrowProps.ref} style={arrowProps.style} />
+        </div>
       )}
-    </InlineContainer>
+    </Popper>
   );
 }
 
 InlineMetadata.propTypes = {
-  hasActiveSelection: T.bool,
+  value: T.object,
   readOnly: T.bool,
-  metadata: T.oneOfType([
-    T.string,
-    T.number
-  ]),
   onRemove: T.func,
-  onSubmit: T.func,
-  children: T.node
+  onSubmit: T.func
 };
 
 class MetadataEditor extends Component {
@@ -129,11 +153,7 @@ class MetadataEditor extends Component {
       <StaticMeta>
         <span>{value}</span>
         {!!onRemove && (
-          <RemoveButton
-            variation="base-plain"
-            size="small"
-            hideText
-          >
+          <RemoveButton variation="base-plain" size="small" hideText>
             Remove
           </RemoveButton>
         )}
@@ -143,6 +163,7 @@ class MetadataEditor extends Component {
 
   render() {
     const { readOnly } = this.props;
+
     return (
       <MetaContainer contentEditable={false}>
         {readOnly ? this.renderStaticMeta() : this.renderMetaEditor()}

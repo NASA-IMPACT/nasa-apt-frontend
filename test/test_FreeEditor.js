@@ -4,6 +4,7 @@ import { shallow, configure } from 'enzyme';
 import test from 'tape';
 import sinon from 'sinon';
 import { Value } from 'slate';
+import ButtonGroup from '../src/styles/button/group';
 import { Toolbar } from '../src/components/Toolbars';
 
 configure({ adapter: new Adapter() });
@@ -49,7 +50,8 @@ test('FreeEditor initial value', (t) => {
   t.end();
 });
 
-test('FreeEditor tool selection', (t) => {
+test('FreeEditor insert buttons enabled', (t) => {
+  t.plan(10);
   const save = sinon.spy();
   const initialValue = Value.fromJSON({});
   const { FreeEditor } = proxyquire(
@@ -65,26 +67,24 @@ test('FreeEditor tool selection', (t) => {
       className=""
     />
   );
-  const equation = 'equation';
-  const EquationButton = wrapper.find(Toolbar).shallow()
-    .findWhere(n => n.props().id === equation).first();
-  EquationButton.simulate('click');
-  t.equal(wrapper.state().activeTool, equation);
+  const instance = wrapper.instance();
+  wrapper.find(Toolbar).shallow()
+    .find(ButtonGroup)
+    .children()
+    .forEach((node) => {
+      const { disabled } = node.props();
+      t.ok(disabled, 'Tool button disabled');
+    });
+  instance.onFocus();
+  wrapper.update();
 
-  const paragraph = 'paragraph';
-  const ParagraphButton = wrapper.find(Toolbar).shallow()
-    .findWhere(n => n.props().id === paragraph).first();
-  ParagraphButton.simulate('click');
-  t.equal(wrapper.state().activeTool, paragraph);
-
-  const table = 'table';
-  const TableButton = wrapper.find(Toolbar).shallow()
-    .findWhere(n => n.props().id === table).first();
-  TableButton.simulate('click');
-  t.equal(wrapper.state().activeTool, table);
-
-  TableButton.simulate('click');
-  t.notOk(wrapper.state().activeTool,
-    'Click active tool a second time disables it');
-  t.end();
+  setTimeout(() => {
+    wrapper.find(Toolbar).shallow()
+      .find(ButtonGroup)
+      .children()
+      .forEach((node) => {
+        const { disabled } = node.props();
+        t.notOk(disabled, 'Tool button enabled');
+      });
+  }, 2);
 });
