@@ -10,15 +10,8 @@ import ValidationSchema from './ValidationSchema';
 import Button from '../../styles/button/button';
 
 // Form components
-import FormLabel from '../../styles/form/label';
-import FormInput from '../../styles/form/input';
 import { FormFieldsetBody } from '../../styles/form/fieldset';
-import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
-import {
-  FormGroup,
-  FormGroupHeader,
-  FormGroupBody
-} from '../../styles/form/group';
+import FormGroup from './FormGroup';
 
 // Styled components
 const SpanThree = styled.div`
@@ -47,26 +40,14 @@ const InnerForm = (props) => {
   const { isNew } = values;
 
   const renderFormGroup = field => (
-    <FormGroup key={field.id}>
-      <FormGroupHeader>
-        <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
-      </FormGroupHeader>
-      <FormGroupBody>
-        <FormInput
-          id={`reference-form-${field.id}`}
-          name={field.id}
-          type="text"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values[field.id]}
-        />
-        {errors[field.id] ? (
-          <FormHelper>
-            <FormHelperMessage>{errors[field.id]}</FormHelperMessage>
-          </FormHelper>
-        ) : null}
-      </FormGroupBody>
-    </FormGroup>
+    <FormGroup
+      key={field.id}
+      field={field}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      values={values}
+      errors={errors}
+    />
   );
 
   const buttonLabel = isNew ? 'Add new reference' : 'Update reference';
