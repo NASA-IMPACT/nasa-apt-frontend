@@ -63,10 +63,8 @@ export class References extends React.Component {
     const { createReferenceAction, updateReferenceAction } = this.props;
     const { publication_reference_id: id } = values;
 
-    const payload = {};
-
-    // Create payload with allowed properties for references
-    [
+    // Create payload made only allowed properties for references
+    const payload = [
       'atbd_id',
       'atbd_version',
       'authors',
@@ -82,14 +80,15 @@ export class References extends React.Component {
       'report_number',
       'series',
       'title',
-      'volume',
-    ].forEach((key) => {
+      'volume'
+    ].reduce((acc, key) => {
       const value = values[key];
       if (value) {
         // Replace empty string with null
-        payload[key] = value !== '' ? value : null;
+        acc[key] = value !== '' ? value : null;
       }
-    });
+      return acc;
+    }, {});
 
     if (values.isNew) {
       createReferenceAction(payload);
