@@ -150,7 +150,8 @@ class Sandbox extends Component {
                 variation="base-raised-light"
                 onClick={async () => {
                   const res = await confirmDeleteDoc('Atmospheric Correction Method for ASTER Thermal Radiometry Over Land');
-                  alert(res.result ? 'Document can be deleted' : 'Document can not be deleted')
+                  // eslint-disable-next-line
+                  alert(res.result ? 'Document can be deleted' : 'Document can not be deleted');
                 }}
               >
                 Confirm delete
@@ -160,7 +161,8 @@ class Sandbox extends Component {
                 variation="base-raised-light"
                 onClick={async () => {
                   const res = await showConfirmationPrompt();
-                  alert(res.result ? 'User says yes' : 'User says no')
+                  // eslint-disable-next-line
+                  alert(res.result ? 'User says yes' : 'User says no');
                 }}
               >
                 Show confirm
@@ -192,6 +194,7 @@ class Sandbox extends Component {
                     ),
                     data: 'code-D92GKL1'
                   });
+                  // eslint-disable-next-line
                   alert(res.result ? `Ok!\nExtra data: ${res.data}` : 'That was a close call');
                 }}
               >
