@@ -43,7 +43,7 @@ const baseState = {
 };
 
 /**
- * Confimration Prompt element.
+ * Confirmation Prompt element.
  * Renders a modal to ask the user for confirmation on some action.
  *
  * Usage:
@@ -51,13 +51,13 @@ const baseState = {
  * the application tree. It has no properties requirements.
  *
  * The show the confirmation prompt use showConfirmationPrompt(opts)
- * @param {object} opts The options for the contimation prompt
+ * @param {object} opts The options for the confirmation prompt
  * @param {string} opts.title The confirmation title to be displayed on the
  *                 header. Defaults to "Are you sure?"
  * @param {node} opts.content The content for the prompt. Can be a react
  *               component. Defaults to <p>This action will be carried out.</p>
  * @param {function} renderControls The callback function to render the buttons.
- *                   Has the follwing signature: ({ confirm, cancel }), with
+ *                   Has the following signature: ({ confirm, cancel }), with
  *                   confirm and cancel being the function to call when the
  *                   buttons are clicked. Defaults to "Confirm/Cancel" buttons.
  * @param {any} data Any extra data that the confirmation prompt should keep
@@ -162,13 +162,13 @@ export default ConfirmationPrompt;
 /**
  * Displays a confirmation prompt to the user
  *
- * @param {object} opts The options for the contimation prompt
+ * @param {object} opts The options for the confirmation prompt
  * @param {string} opts.title The confirmation title to be displayed on the
  *                 header. Defaults to "Are you sure?"
  * @param {node} opts.content The content for the prompt. Can be a react
  *               component. Defaults to <p>This action will be carried out.</p>
  * @param {function} renderControls The callback function to render the buttons.
- *                   Has the follwing signature: ({ confirm, cancel }), with
+ *                   Has the following signature: ({ confirm, cancel }), with
  *                   confirm and cancel being the function to call when the
  *                   buttons are clicked. Defaults to "Confirm/Cancel" buttons.
  * @param {any} data Any extra data that the confirmation prompt should keep
