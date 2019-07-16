@@ -42,6 +42,7 @@ import Dropdown, {
 import Table from '../styles/table';
 
 import AtbdPreview from './AtbdPreview';
+import { confirmDeleteDoc } from './common/ConfirmationPrompt';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -228,8 +229,9 @@ const AtbdList = (props) => {
                 <DocTableActionDelete
                   title="Delete document"
                   disabled
-                  onClick={() => {
-                    deleteatbd(atbd_id);
+                  onClick={async () => {
+                    const res = await confirmDeleteDoc(title);
+                    if (res.result) deleteatbd(atbd_id);
                   }}
                 >
                   Delete
