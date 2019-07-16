@@ -38,7 +38,7 @@ export class References extends React.Component {
       newReferences: prevState.newReferences.concat([
         {
           isNew: true,
-          timestamp: +new Date(),
+          timestamp: Date.now(),
           atbd_version,
           atbd_id
         }
