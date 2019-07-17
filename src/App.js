@@ -24,6 +24,7 @@ import {
 import PageHeader from './components/common/PageHeader';
 import PageFooter from './components/common/PageFooter';
 import { GlobalLoading } from './components/common/OverlayLoader';
+import ConfirmationPrompt from './components/common/ConfirmationPrompt';
 import AtbdList from './components/AtbdList';
 import IdentifyingInformation from './components/IdentifyingInformation';
 import Introduction from './components/Introduction';
@@ -99,6 +100,7 @@ const App = () => (
             </PageBody>
             <PageFooter />
           </Page>
+          <ConfirmationPrompt />
           <GlobalLoading />
         </React.Fragment>
       </ThemeProvider>

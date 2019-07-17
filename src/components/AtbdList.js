@@ -5,7 +5,7 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
 import { push } from 'connected-react-router';
-import { createAtbd } from '../actions/actions';
+import { createAtbd, deleteAtbd } from '../actions/actions';
 import {
   atbdsedit,
   drafts,
@@ -42,6 +42,7 @@ import Dropdown, {
 import Table from '../styles/table';
 
 import AtbdPreview from './AtbdPreview';
+import { confirmDeleteDoc } from './common/ConfirmationPrompt';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -160,7 +161,7 @@ const FilterTrigger = styled(Button)`
 `;
 
 const AtbdList = (props) => {
-  const { atbds, createAtbd: create } = props;
+  const { atbds, createAtbd: create, deleteAtbd: deleteatbd } = props;
 
   const atbdElements = atbds.map((atbd) => {
     const {
@@ -225,7 +226,14 @@ const AtbdList = (props) => {
             </DropMenu>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionDelete title="Delete document" disabled>
+                <DocTableActionDelete
+                  title="Delete document"
+                  disabled
+                  onClick={async () => {
+                    const res = await confirmDeleteDoc(title);
+                    if (res.result) deleteatbd(atbd_id);
+                  }}
+                >
                   Delete
                 </DocTableActionDelete>
               </li>
@@ -336,7 +344,8 @@ AtbdList.propTypes = {
     })
   ),
   push: PropTypes.func,
-  createAtbd: PropTypes.func.isRequired
+  createAtbd: PropTypes.func.isRequired,
+  deleteAtbd: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -344,7 +353,7 @@ const mapStateToProps = (state) => {
   return { atbds };
 };
 
-const mapDispatch = { push, createAtbd };
+const mapDispatch = { push, createAtbd, deleteAtbd };
 
 export default connect(
   mapStateToProps,

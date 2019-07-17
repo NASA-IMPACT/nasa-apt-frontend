@@ -44,7 +44,7 @@ test('FETCH_CONTACTS_SUCCESS', (t) => {
   });
   t.notOk(state.contacts === payload,
     'Does not reference payload object for immutability');
-  t.ok(state.contacts.every(t => !!t.id));
+  t.ok(state.contacts.every(c => !!c.id));
   t.end();
 });
 
@@ -207,5 +207,29 @@ test('CREATE_ATBD_SUCCESS', (t) => {
     'Adds empty contacts property to created atbd in list');
   t.equal(state.atbds[1].atbd_versions[0].atbd_version, 1,
     'Adds created version to created atbd in list');
+  t.end();
+});
+
+
+test('DELETE_ATBD_SUCCESS', (t) => {
+  const payload = {
+    atbd_id: 1
+  };
+
+  const previousState = {
+    atbds: [
+      { atbd_id: 1 }
+    ]
+  };
+
+  const state = reducer(previousState, {
+    type: actions.DELETE_ATBD_SUCCESS,
+    payload
+  });
+
+  t.notOk(state.atbds === previousState.atbds,
+    'Does not mutate for immutability');
+  t.equal(state.atbds.length, 0,
+    'Removes correct atbd from atbds');
   t.end();
 });
