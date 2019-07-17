@@ -5,19 +5,19 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
 import { push } from 'connected-react-router';
-import { createAtbd } from '../actions/actions';
+import { createAtbd } from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
   identifying_information
-} from '../constants/routes';
-import { themeVal, stylizeFunction } from '../styles/utils/general';
-import { divide } from '../styles/utils/math';
+} from '../../constants/routes';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
+import { divide } from '../../styles/utils/math';
 
-import { visuallyHidden, truncated, antialiased } from '../styles/helpers';
-import { VerticalDivider } from '../styles/divider';
-import Button from '../styles/button/button';
-import collecticon from '../styles/collecticons';
+import { visuallyHidden, truncated, antialiased } from '../../styles/helpers';
+import { VerticalDivider } from '../../styles/divider';
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
 
 import {
   Inpage,
@@ -31,17 +31,17 @@ import {
   InpageToolbar,
   InpageBody,
   InpageBodyInner
-} from './common/Inpage';
+} from '../common/Inpage';
 
 import Dropdown, {
   DropTitle,
   DropMenu,
   DropMenuItem
-} from './common/Dropdown';
+} from '../common/Dropdown';
 
-import Table from '../styles/table';
+import Table from '../../styles/table';
 
-import AtbdPreview from './AtbdPreview';
+import PreviewButton from './PreviewButton';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -184,7 +184,7 @@ const AtbdList = (props) => {
           <span>{contact}</span>
         </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
-          <AtbdPreview atbd_id={atbd_id} atbd_version={1} />
+          <PreviewButton atbd_id={atbd_id} atbd_version={1} />
           <Dropdown
             alignment="middle"
             direction="left"

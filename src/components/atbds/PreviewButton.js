@@ -2,9 +2,9 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import Button from '../styles/button/button';
-import collecticon from '../styles/collecticons';
-import { serializeDocument } from '../actions/actions';
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
+import { serializeDocument } from '../../actions/actions';
 
 const Link = styled.a`
   margin-left: 1rem

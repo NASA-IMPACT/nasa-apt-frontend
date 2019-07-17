@@ -24,7 +24,7 @@ import {
 import PageHeader from './components/common/PageHeader';
 import PageFooter from './components/common/PageFooter';
 import { GlobalLoading } from './components/common/OverlayLoader';
-import AtbdList from './components/AtbdList';
+import AtbdIndex from './components/atbds';
 import IdentifyingInformation from './components/IdentifyingInformation';
 import Introduction from './components/Introduction';
 import Contacts from './components/Contacts';
@@ -58,7 +58,7 @@ const App = () => (
             <PageHeader />
             <PageBody>
               <Switch>
-                <Route path={`/${atbds}`} component={AtbdList} />
+                <Route path={`/${atbds}`} component={AtbdIndex} />
                 <Route
                   path={`/${atbdsedit}/:atbd_id/${drafts}/:atbd_version/${identifying_information}`}
                   component={IdentifyingInformation}
