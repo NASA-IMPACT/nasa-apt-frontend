@@ -88,9 +88,9 @@ jobs:
           name: Deploy to S3
           command: |
             if [ "${CIRCLE_BRANCH}" == "${DEVELOPMENT_BRANCH}" ]; then
-              aws s3 sync ~/repo/build s3://nasa-apt-staging-application --delete
+              aws s3 sync ~/repo/build ${APPLICATION_BUCKET_STAGING} --delete
             elif [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
-              aws s3 sync ~/repo/build s3://nasa-apt-production-application --delete
+              aws s3 sync ~/repo/build ${APPLICATION_BUCKET_PRODUCTION} --delete
             else
               echo "Not the branch you're looking for, skipping deploy"
             fi

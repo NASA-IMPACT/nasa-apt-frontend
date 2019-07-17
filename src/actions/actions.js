@@ -95,6 +95,21 @@ export function createAtbd() {
   };
 }
 
+export function deleteAtbd(atbd_id) {
+  return {
+    [RSAA]: {
+      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}`,
+      method: 'DELETE',
+      headers: returnObjectHeaders,
+      types: [
+        types.DELETE_ATBD,
+        types.DELETE_ATBD_SUCCESS,
+        types.DELETE_ATBD_FAIL
+      ]
+    }
+  };
+}
+
 export function updateAtbd(atbd_id, document) {
   return {
     [RSAA]: {

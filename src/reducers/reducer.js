@@ -353,6 +353,14 @@ export default function (state = initialState, action) {
       return removedSerializingAtbdVersion;
     }
 
+    case actions.DELETE_ATBD_SUCCESS: {
+      const { payload: { atbd_id } } = action;
+      return {
+        ...state,
+        atbds: state.atbds.filter(a => a.atbd_id !== atbd_id)
+      };
+    }
+
     default: return state;
   }
 }
