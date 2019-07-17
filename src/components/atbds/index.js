@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
 import { push } from 'connected-react-router';
 import { createAtbd } from '../../actions/actions';
+
 import {
   atbdsedit,
   drafts,
@@ -148,11 +150,6 @@ const AtbdPublishedState = styled.span`
   min-width: 6rem;
 `;
 
-const AtbdVersion = styled.span`
-  text-transform: uppercase;
-  color: ${themeVal('color.darkgray')};
-`;
-
 const FilterTrigger = styled(Button)`
   &::after {
     ${collecticon('chevron-down--small')}
@@ -177,8 +174,9 @@ const AtbdList = (props) => {
           <AtbdPublishedState>{status}</AtbdPublishedState>
         </td>
         <DocTableBodyThTitle scope="row">
-          <strong>{title}</strong>
-          {false && <AtbdVersion>Version 1.0</AtbdVersion>}
+          <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
+            <strong>{title}</strong>
+          </Link>
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>
           <span>{contact}</span>
