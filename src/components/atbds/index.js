@@ -87,6 +87,10 @@ const DocTableHeadThStatus = styled.th`
 
 const DocTableBodyThTitle = styled.th`
   white-space: normal;
+
+  a {
+    color: inherit;
+  }
 `;
 
 const DocTableBodyTdAuthors = styled.td`
