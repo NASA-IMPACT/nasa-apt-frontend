@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router';
+import { ToastContainer, toast } from 'react-toastify';
 
 import styled, { ThemeProvider } from 'styled-components';
 import theme from './styles/theme/theme';
@@ -37,6 +38,7 @@ import Help from './components/help';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
+import { CloseButton } from './components/common/toasts';
 
 const Page = styled.div`
   display: grid;
@@ -102,6 +104,10 @@ const App = () => (
           </Page>
           <ConfirmationPrompt />
           <GlobalLoading />
+          <ToastContainer
+            position={toast.POSITION.BOTTOM_RIGHT}
+            closeButton={<CloseButton />}
+          />
         </React.Fragment>
       </ThemeProvider>
     </ConnectedRouter>
