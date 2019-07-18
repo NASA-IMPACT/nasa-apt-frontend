@@ -40,7 +40,6 @@ export const AlgorithmDescription = (props) => {
     t
   } = props;
 
-  let returnValue;
   if (atbdVersion) {
     const {
       atbd,
@@ -58,7 +57,7 @@ export const AlgorithmDescription = (props) => {
     } = atbdVersion;
     const title = atbd && atbd.title;
 
-    returnValue = (
+    return (
       <Inpage>
         <EditPage
           title={title || ''}
@@ -250,10 +249,8 @@ export const AlgorithmDescription = (props) => {
         </EditPage>
       </Inpage>
     );
-  } else {
-    returnValue = <div>Loading</div>;
   }
-  return returnValue;
+  return null;
 };
 
 AlgorithmDescription.propTypes = {

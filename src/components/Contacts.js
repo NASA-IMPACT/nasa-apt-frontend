@@ -56,7 +56,6 @@ class Contacts extends React.Component {
       selectedAtbd
     } = this.props;
 
-    let returnValue;
     if (selectedAtbd) {
       const {
         atbd_id,
@@ -85,7 +84,7 @@ class Contacts extends React.Component {
         availableContacts = contactsAndGroups.filter(d => existingContacts.indexOf(d.id) === -1);
       }
 
-      returnValue = (
+      return (
         <Inpage>
           <EditPage
             title={title || ''}
@@ -123,10 +122,8 @@ class Contacts extends React.Component {
           </EditPage>
         </Inpage>
       );
-    } else {
-      returnValue = <div>Loading</div>;
     }
-    return returnValue;
+    return null;
   }
 }
 
