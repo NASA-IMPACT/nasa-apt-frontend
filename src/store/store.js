@@ -14,6 +14,7 @@ import reducer from '../reducers/reducer';
 import locationMiddleware from './locationMiddleware';
 import serializeMiddleware from './serializeMiddleware';
 import toastNotificationMiddleware from './toastNotificationMiddleware';
+import globalLoadingMiddleware from './globalLoadingMiddleware';
 
 const logger = createLogger({
   level: 'info',
@@ -41,6 +42,7 @@ const store = createStore(
     locationMiddleware,
     serializeMiddleware,
     toastNotificationMiddleware,
+    globalLoadingMiddleware,
     logger
   )
   /*

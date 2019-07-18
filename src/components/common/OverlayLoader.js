@@ -152,6 +152,8 @@ export class GlobalLoading extends React.Component {
  *                        counters shown are hidden.
  *                        Each function call will increment the counter.
  *                        Default 1
+ * @param {boolean} force Sets the count to the given value without incrementing
+ *
  * @example
  * showGlobalLoading()
  * // Counter set to 1
@@ -162,7 +164,7 @@ export class GlobalLoading extends React.Component {
  * hideGlobalLoading(3)
  * // Counter is now 0 and the loading is dismissed.
  */
-export function showGlobalLoading(count = 1) {
+export function showGlobalLoading(count = 1, force = false) {
   if (theGlobalLoading === null) {
     throw new Error('<GlobalLoading /> component not mounted');
   }
@@ -170,7 +172,9 @@ export function showGlobalLoading(count = 1) {
     clearTimeout(hideTimeout);
   }
 
-  theGlobalLoadingCount += count;
+  theGlobalLoadingCount = force
+    ? count
+    : theGlobalLoadingCount + count;
 
   theGlobalLoading.setState({
     showTimestamp: Date.now(),
@@ -184,6 +188,7 @@ export function showGlobalLoading(count = 1) {
  *                        negative number will immediately dismiss the loading
  *                        without waiting for the minimum display time.
  *                        Default 1
+ * @param {boolean} force Sets the count to the given value without decrementing
  * @param {function} cb   Callback called after the loading is hidden.
  *
  * @example
@@ -196,7 +201,7 @@ export function showGlobalLoading(count = 1) {
  * hideGlobalLoading(3)
  * // Counter is now 0 and the loading is dismissed.
  */
-export function hideGlobalLoading(count = 1, cb = () => {}) {
+export function hideGlobalLoading(count = 1, force = false, cb = () => {}) {
   if (theGlobalLoading === null) {
     throw new Error('<GlobalLoading /> component not mounted');
   }
@@ -205,7 +210,7 @@ export function hideGlobalLoading(count = 1, cb = () => {}) {
     cb = count; // eslint-disable-line
     count = 1; // eslint-disable-line
   }
-
+  console.log('hideGlobalLoading', theGlobalLoadingCount);
   const hide = () => { theGlobalLoading.setState({ revealed: false }); cb(); };
 
   // Using 0 or negative numbers results in the loading being
@@ -216,7 +221,9 @@ export function hideGlobalLoading(count = 1, cb = () => {}) {
   }
 
   // Decrement counter by given amount without going below 0.
-  theGlobalLoadingCount -= count;
+  theGlobalLoadingCount = force
+    ? count
+    : theGlobalLoadingCount - count;
   if (theGlobalLoadingCount < 0) theGlobalLoadingCount = 0;
 
   const time = theGlobalLoading.state.showTimestamp;
