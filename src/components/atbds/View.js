@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import T from 'prop-types';
+import styled from 'styled-components/macro';
 import { connect } from 'react-redux';
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -11,11 +12,14 @@ import {
   InpageTitle,
   InpageTagline,
   InpageToolbar,
-  InpageBody,
-  InpageBodyInner
+  InpageBody
 } from '../common/Inpage';
 
-import Prose from '../../styles/type/prose';
+const IFrameHtml = styled.iframe`
+  position: absolute;
+  width: 100%;
+  height: auto;
+`;
 
 class AtbdView extends Component {
   static propTypes = {
@@ -26,8 +30,6 @@ class AtbdView extends Component {
     const { atbd } = this.props;
 
     if (!atbd) return <div>ATBD loading or not found.</div>;
-
-    const { contacts } = atbd;
 
     return (
       <Inpage>
@@ -44,38 +46,17 @@ class AtbdView extends Component {
                       <InpageTitle>{atbd.title}</InpageTitle>
                       <InpageTagline>Viewing document</InpageTagline>
                     </InpageHeadline>
-                    <InpageToolbar>
-                      Toolbar
-                    </InpageToolbar>
+                    <InpageToolbar>Toolbar</InpageToolbar>
                   </InpageHeaderInner>
                 </InpageHeader>
               )}
             </Sticky>
             <InpageBody>
-              <InpageBodyInner>
-                <Prose>
-                  <h1>{atbd.title}</h1>
-                  <h2>Identifying Information</h2>
-                  <h3>General</h3>
-                  <h3>Citation</h3>
-                  <h2>Introduction</h2>
-                  <h3>Introduction</h3>
-                  <h3>Historical Perspective</h3>
-                  <h2>Contacts</h2>
-                  {contacts && contacts.length === 0 ? (
-                    <div>No contacts associated.</div>
-                  ) : (
-                    <ul>
-                      {contacts.map(c => (
-                        <li key={c.contact_id}>{c.displayName}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <h2>References</h2>
-                  <h2>Algorithm Description</h2>
-                  <h2>Algorithm Usage</h2>
-                </Prose>
-              </InpageBodyInner>
+              <IFrameHtml
+                id="inlineFrameExample"
+                title="Inline Frame Example"
+                src="http://nasa-apt-staging-atbd.s3-website-us-east-1.amazonaws.com/ATBD_10v1_288403d0-a97c-11e9-802c-9f1151e7787d/"
+              />
             </InpageBody>
           </StickyContainer>
         )}
