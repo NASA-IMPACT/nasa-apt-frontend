@@ -66,19 +66,18 @@ export default () => css`
 
   .Toastify__toast {
     position: relative;
-    min-height: 64px;
+    min-height: 4rem;
     box-sizing: border-box;
     margin-bottom: ${themeVal('layout.space')};
-    padding: 8px;
+    padding: ${themeVal('layout.space')};
     box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1),
       0 2px 15px 0 rgba(0, 0, 0, 0.05);
-    display: -ms-flexbox;
     display: flex;
-    -ms-flex-pack: justify;
     justify-content: space-between;
-    max-height: 800px;
     overflow: hidden;
     font-family: ${themeVal('type.base.family')};
+    font-size: 1rem;
+    line-height: 1.25rem;
     cursor: pointer;
     direction: ltr;
     border-radius: ${themeVal('shape.rounded')};
@@ -118,28 +117,6 @@ export default () => css`
     }
   }
 
-  .Toastify__close-button {
-    color: #fff;
-    font-weight: bold;
-    font-size: 14px;
-    background: transparent;
-    outline: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    opacity: 0.7;
-    transition: 0.3s ease;
-    -ms-flex-item-align: start;
-    align-self: flex-start;
-  }
-  .Toastify__close-button--default {
-    color: #000;
-    opacity: 0.3;
-  }
-  .Toastify__close-button:hover,
-  .Toastify__close-button:focus {
-    opacity: 1;
-  }
 
   @keyframes Toastify__trackProgress {
     0% {

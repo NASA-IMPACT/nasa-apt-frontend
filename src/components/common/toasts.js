@@ -8,6 +8,8 @@ import collecticon from '../../styles/collecticons';
 import Button from '../../styles/button/button';
 
 const ButtonIconXmark = styled(Button)`
+  transform: translate(0.25rem, -0.25rem);
+
   ::before {
     ${collecticon('xmark--small')}
   }
