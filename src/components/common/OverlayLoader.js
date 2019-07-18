@@ -210,7 +210,6 @@ export function hideGlobalLoading(count = 1, force = false, cb = () => {}) {
     cb = count; // eslint-disable-line
     count = 1; // eslint-disable-line
   }
-  console.log('hideGlobalLoading', theGlobalLoadingCount);
   const hide = () => { theGlobalLoading.setState({ revealed: false }); cb(); };
 
   // Using 0 or negative numbers results in the loading being
