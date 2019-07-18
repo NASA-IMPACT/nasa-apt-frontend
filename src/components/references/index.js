@@ -106,7 +106,7 @@ export class References extends React.Component {
       const { title } = atbd;
       return (
         <Inpage>
-          <EditPage title={title || ''} id={atbd_id} step={4}>
+          <EditPage title={title || ''} id={atbd_id} step={3}>
             <h2>References</h2>
             <p>
               Please remove any references that are no longer attached to this
