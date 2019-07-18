@@ -8,9 +8,11 @@ import thunk from 'redux-thunk';
 import { apiMiddleware } from 'redux-api-middleware';
 import { createBrowserHistory } from 'history';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
+
 import reducer from '../reducers/reducer';
 import locationMiddleware from './locationMiddleware';
 import serializeMiddleware from './serializeMiddleware';
+import toastNotificationMiddleware from './toastNotificationMiddleware';
 /*
 const composeEnhancers = composeWithDevTools({
   serialize: {
@@ -29,7 +31,8 @@ const store = createStore(
     thunk,
     apiMiddleware,
     locationMiddleware,
-    serializeMiddleware
+    serializeMiddleware,
+    toastNotificationMiddleware,
   )
   /*
   composeEnhancers(
