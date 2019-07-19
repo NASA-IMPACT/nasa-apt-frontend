@@ -14,10 +14,18 @@ import {
   InpageBody
 } from '../common/Inpage';
 
-const IFrameHtml = styled.iframe`
+const ATDBDFrame = styled.div`
+  position: relative;
+  padding-top: 56.25%;
+`;
+
+const ATDBDFrameObject = styled.iframe`
   position: absolute;
+  top: 0;
+  left:0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  border: none;
 `;
 
 class AtbdView extends Component {
@@ -44,11 +52,15 @@ class AtbdView extends Component {
               </InpageHeaderInner>
             </InpageHeader>
             <InpageBody>
-              <IFrameHtml
-                id="inlineFrameExample"
-                title="Inline Frame Example"
-                src="http://nasa-apt-staging-atbd.s3-website-us-east-1.amazonaws.com/ATBD_10v1_288403d0-a97c-11e9-802c-9f1151e7787d/"
-              />
+              <ATDBDFrame>
+                <ATDBDFrameObject
+                  frameborder="0"
+                  allowfullscreen
+                  id="inlineFrameExample"
+                  title="Inline Frame Example"
+                  src="http://nasa-apt-staging-atbd.s3-website-us-east-1.amazonaws.com/ATBD_10v1_288403d0-a97c-11e9-802c-9f1151e7787d/"
+                />
+              </ATDBDFrame>
             </InpageBody>
           </Fragment>
         )}
