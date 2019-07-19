@@ -265,7 +265,7 @@ export function fetchAtbds() {
 export function fetchAtbd(atbd_id) {
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*)`,
+      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)`,
       method: 'GET',
       headers: { Accept: 'application/vnd.pgrst.object+json' },
       types: [
