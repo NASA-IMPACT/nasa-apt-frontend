@@ -18,8 +18,9 @@ const initialState = {
 const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
   const { payload } = action;
   const { [idKey]: id } = payload;
-  const variables = state.atbdVersion[tableName]
-    .filter(variable => (variable[idKey] !== id));
+  const variables = state.atbdVersion[tableName].filter(
+    variable => variable[idKey] !== id
+  );
   return {
     ...state,
     atbdVersion: {
@@ -31,8 +32,7 @@ const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
 
 const addAtbdVersionChildItem = (tableName, state, action) => {
   const { payload } = action;
-  const next = state.atbdVersion[tableName]
-    .concat([payload]);
+  const next = state.atbdVersion[tableName].concat([payload]);
   return {
     ...state,
     atbdVersion: {
@@ -46,9 +46,11 @@ const addAtbdVersionChildItem = (tableName, state, action) => {
 // to make working with them in combination easier.
 const normalizeContact = (contactOrGroup) => {
   const isGroup = !contactOrGroup.contact_id;
-  const displayName = isGroup ? contactOrGroup.group_name
+  const displayName = isGroup
+    ? contactOrGroup.group_name
     : `${contactOrGroup.last_name}, ${contactOrGroup.first_name}`;
-  const id = isGroup ? `g${contactOrGroup.contact_group_id}`
+  const id = isGroup
+    ? `g${contactOrGroup.contact_group_id}`
     : `c${contactOrGroup.contact_id}`;
   return {
     ...contactOrGroup,
@@ -61,8 +63,11 @@ const normalizeContact = (contactOrGroup) => {
 // Normalize contact, contact groups
 const normalizeSelectedAtbd = (atbd) => {
   const next = { ...atbd };
-  next.contacts = Array.isArray(atbd.contacts) ? atbd.contacts.map(normalizeContact) : [];
-  next.contact_groups = Array.isArray(atbd.contact_groups) ? atbd.contact_groups.map(normalizeContact)
+  next.contacts = Array.isArray(atbd.contacts)
+    ? atbd.contacts.map(normalizeContact)
+    : [];
+  next.contact_groups = Array.isArray(atbd.contact_groups)
+    ? atbd.contact_groups.map(normalizeContact)
     : [];
   return next;
 };
@@ -125,9 +130,9 @@ export default function (state = initialState, action) {
       const { payload } = action;
       const idProperty = payload.contact_id ? 'contact_id' : 'contact_group_id';
       const group = payload.contact_id ? 'contacts' : 'contact_groups';
-      const addedContact = state[group].find(d => (
-        d[idProperty] === payload[idProperty]
-      ));
+      const addedContact = state[group].find(
+        d => d[idProperty] === payload[idProperty]
+      );
       const newState = {
         ...state,
         selectedAtbd: {
@@ -147,7 +152,9 @@ export default function (state = initialState, action) {
         ...state,
         selectedAtbd: {
           ...state.selectedAtbd,
-          [group]: state.selectedAtbd[group].filter(d => d[idProperty] !== payload[idProperty])
+          [group]: state.selectedAtbd[group].filter(
+            d => d[idProperty] !== payload[idProperty]
+          )
         }
       };
     }
@@ -173,8 +180,10 @@ export default function (state = initialState, action) {
         ...state,
         atbdVersion: {
           ...state.atbdVersion,
-          algorithm_input_variables:
-            [...state.atbdVersion.algorithm_input_variables, { ...payload }]
+          algorithm_input_variables: [
+            ...state.atbdVersion.algorithm_input_variables,
+            { ...payload }
+          ]
         }
       };
     }
@@ -185,8 +194,10 @@ export default function (state = initialState, action) {
         ...state,
         atbdVersion: {
           ...state.atbdVersion,
-          algorithm_output_variables:
-            [...state.atbdVersion.algorithm_output_variables, { ...payload }]
+          algorithm_output_variables: [
+            ...state.atbdVersion.algorithm_output_variables,
+            { ...payload }
+          ]
         }
       };
     }
@@ -204,7 +215,9 @@ export default function (state = initialState, action) {
     }
 
     case actions.UPLOAD_FILE_SUCCESS: {
-      const { payload: { location } } = action;
+      const {
+        payload: { location }
+      } = action;
       return {
         ...state,
         uploadedFile: location
@@ -297,7 +310,9 @@ export default function (state = initialState, action) {
       const id = payload.publication_reference_id;
       return {
         ...state,
-        references: state.references.filter(d => d.publication_reference_id !== id)
+        references: state.references.filter(
+          d => d.publication_reference_id !== id
+        )
       };
     }
 
