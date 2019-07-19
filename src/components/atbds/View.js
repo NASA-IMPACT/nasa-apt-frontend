@@ -3,6 +3,9 @@ import T from 'prop-types';
 import styled from 'styled-components/macro';
 import { connect } from 'react-redux';
 
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
+
 import {
   Inpage,
   InpageHeader,
@@ -13,6 +16,36 @@ import {
   InpageToolbar,
   InpageBody
 } from '../common/Inpage';
+
+import Dropdown, {
+  DropTitle,
+  DropMenu,
+  DropMenuItem
+} from '../common/Dropdown';
+
+const OptionsTrigger = styled(Button)`
+  &::before {
+    ${collecticon('ellipsis-vertical')}
+  }
+`;
+
+const DocumentActionDelete = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('trash-bin')}
+  }
+`;
+
+const DownloadButton = styled(Button)`
+  &::before {
+    ${collecticon('download-2')};
+  }
+`;
+
+const EditButton = styled(Button)`
+  &::before {
+    ${collecticon('pencil')};
+  }
+`;
 
 const ATDBDFrame = styled.div`
   position: relative;
@@ -48,7 +81,38 @@ class AtbdView extends Component {
                   <InpageTitle>{atbd.title}</InpageTitle>
                   <InpageTagline>Viewing document</InpageTagline>
                 </InpageHeadline>
-                <InpageToolbar>Toolbar</InpageToolbar>
+                <InpageToolbar>
+                  <Dropdown
+                    alignment="right"
+                    triggerElement={(
+                      <OptionsTrigger
+                        variation="achromic-plain"
+                        title="Toggle menu options"
+                      >
+                        Options
+                      </OptionsTrigger>
+                    )}
+                  >
+                    <DropTitle>Document options</DropTitle>
+                    <DropMenu role="menu" iconified>
+                      <DocumentActionDelete title="Delete document" disabled>
+                        Delete
+                      </DocumentActionDelete>
+                    </DropMenu>
+                  </Dropdown>
+                  <DownloadButton
+                    variation="achromic-plain"
+                    title="Download document as PDF"
+                  >
+                    Download
+                  </DownloadButton>
+                  <EditButton
+                    variation="achromic-plain"
+                    title="Edit document"
+                  >
+                    Edit
+                  </EditButton>
+                </InpageToolbar>
               </InpageHeaderInner>
             </InpageHeader>
             <InpageBody>
