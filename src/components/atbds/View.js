@@ -1,4 +1,5 @@
 import React, { Fragment, Component } from 'react';
+import { push } from 'connected-react-router';
 import T from 'prop-types';
 import styled from 'styled-components/macro';
 import { connect } from 'react-redux';
@@ -76,7 +77,8 @@ class AtbdView extends Component {
     serializePdfFail: T.bool,
     htmlUrl: T.string,
     pdfUrl: T.string,
-    match: T.object
+    match: T.object,
+    visitLink: T.func
   };
 
   componentDidMount() {
@@ -124,7 +126,8 @@ class AtbdView extends Component {
       isSerializingHtml,
       serializeHtmlFail,
       isSerializingPdf,
-      serializePdfFail
+      serializePdfFail,
+      visitLink
     } = this.props;
 
     if (!atbd) return null;
@@ -173,7 +176,16 @@ class AtbdView extends Component {
                   >
                     Download PDF
                   </DownloadButton>
-                  <EditButton variation="achromic-plain" title="Edit document">
+                  <EditButton
+                    variation="achromic-plain"
+                    title="Edit document"
+                    onClick={() => visitLink(
+                      `/atbdsedit/${
+                        atbd.atbd_id
+                      }/drafts/1/identifying_information`
+                    )
+                    }
+                  >
                     Edit
                   </EditButton>
                 </InpageToolbar>
@@ -221,7 +233,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatch = {
   fetchAtbdAction: fetchAtbd,
-  serializeDocumentAction: serializeDocument
+  serializeDocumentAction: serializeDocument,
+  visitLink: push
 };
 
 export default connect(
