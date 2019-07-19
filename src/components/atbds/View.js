@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { Fragment, Component } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components/macro';
 import { connect } from 'react-redux';
-import { StickyContainer, Sticky } from 'react-sticky';
 
 import {
   Inpage,
@@ -34,23 +33,16 @@ class AtbdView extends Component {
     return (
       <Inpage>
         {atbd && (
-          <StickyContainer>
-            <Sticky>
-              {stickyProps => (
-                <InpageHeader
-                  style={stickyProps.style}
-                  isSticky={stickyProps.isSticky}
-                >
-                  <InpageHeaderInner>
-                    <InpageHeadline>
-                      <InpageTitle>{atbd.title}</InpageTitle>
-                      <InpageTagline>Viewing document</InpageTagline>
-                    </InpageHeadline>
-                    <InpageToolbar>Toolbar</InpageToolbar>
-                  </InpageHeaderInner>
-                </InpageHeader>
-              )}
-            </Sticky>
+          <Fragment>
+            <InpageHeader>
+              <InpageHeaderInner>
+                <InpageHeadline>
+                  <InpageTitle>{atbd.title}</InpageTitle>
+                  <InpageTagline>Viewing document</InpageTagline>
+                </InpageHeadline>
+                <InpageToolbar>Toolbar</InpageToolbar>
+              </InpageHeaderInner>
+            </InpageHeader>
             <InpageBody>
               <IFrameHtml
                 id="inlineFrameExample"
@@ -58,7 +50,7 @@ class AtbdView extends Component {
                 src="http://nasa-apt-staging-atbd.s3-website-us-east-1.amazonaws.com/ATBD_10v1_288403d0-a97c-11e9-802c-9f1151e7787d/"
               />
             </InpageBody>
-          </StickyContainer>
+          </Fragment>
         )}
       </Inpage>
     );
