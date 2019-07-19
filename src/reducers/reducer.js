@@ -323,12 +323,30 @@ export default function (state = initialState, action) {
         ...state,
         serializingAtbdVersion: {
           ...payload
-        }
+        },
+        isSerializingHtml: true,
+      };
+    }
+
+    case actions.SERIALIZE_DOCUMENT_SUCCESS: {
+      return {
+        ...state
+      };
+    }
+
+    case actions.SERIALIZE_DOCUMENT_FAIL: {
+      const newState = Object.assign({}, state);
+      delete newState.serializingAtbdVersion;
+      return {
+        ...newState,
+        isSerializingHtml: false
       };
     }
 
     case actions.CHECK_PDF_SUCCESS: {
-      const { payload: { location: pdfLocation } } = action;
+      const {
+        payload: { location: pdfLocation }
+      } = action;
       return {
         ...state,
         serializingAtbdVersion: {
@@ -338,21 +356,20 @@ export default function (state = initialState, action) {
       };
     }
     case actions.CHECK_HTML_SUCCESS: {
-      const { payload: { location: html } } = action;
+      const {
+        payload: { location: html }
+      } = action;
       return {
         ...state,
         serializingAtbdVersion: {
           ...state.serializingAtbdVersion,
           html
-        }
+        },
+        isSerializingHtml: false
       };
     }
-    case actions.SERIALIZE_DOCUMENT_FAIL: {
-      // Removes the serializingAtbdVersion state property.
-      const { serializingAtbdVersion, ...removedSerializingAtbdVersion } = state;
-      return removedSerializingAtbdVersion;
-    }
 
-    default: return state;
+    default:
+      return state;
   }
 }
