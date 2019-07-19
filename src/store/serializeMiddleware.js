@@ -28,14 +28,13 @@ const serializeMiddleware = store => next => async (action) => {
         const pdfInterval = setInterval(async () => {
           const checkPdfResp = await store.dispatch(checkPdf(key));
           pdfTries += 1;
-          if (checkPdfResp.type === types.CHECK_PDF_SUCCESS) {
+          if (checkPdfResp.type === types.SERIALIZE_PDF_SUCCESS) {
             clearInterval(pdfInterval);
           }
           if (pdfTries > retries) {
             clearInterval(pdfInterval);
             store.dispatch({
-              type: types.SERIALIZE_DOCUMENT_FAIL,
-              payload: 'Timeout'
+              type: types.SERIALIZE_PDF_FAIL
             });
           }
         }, 3000);
@@ -43,14 +42,13 @@ const serializeMiddleware = store => next => async (action) => {
         const htmlInterval = setInterval(async () => {
           const checkHtmlResp = await store.dispatch(checkHtml(key));
           htmlTries += 1;
-          if (checkHtmlResp.type === types.CHECK_HTML_SUCCESS) {
+          if (checkHtmlResp.type === types.SERIALIZE_HTML_SUCCESS) {
             clearInterval(htmlInterval);
           }
           if (htmlTries > retries) {
             clearInterval(htmlInterval);
             store.dispatch({
-              type: types.SERIALIZE_DOCUMENT_FAIL,
-              payload: 'Timeout'
+              type: types.SERIALIZE_HTML_FAIL
             });
           }
         }, 3000);

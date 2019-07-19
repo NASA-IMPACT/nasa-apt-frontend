@@ -860,7 +860,7 @@ export function checkPdf(key) {
       },
       types: [
         types.CHECK_PDF,
-        types.CHECK_PDF_SUCCESS,
+        types.SERIALIZE_PDF_SUCCESS,
         types.CHECK_PDF_FAIL
       ]
     }
@@ -893,7 +893,7 @@ export function checkHtml(key) {
       },
       types: [
         types.CHECK_HTML,
-        types.CHECK_HTML_SUCCESS,
+        types.SERIALIZE_HTML_SUCCESS,
         types.CHECK_HTML_FAIL
       ]
     }

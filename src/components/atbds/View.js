@@ -71,7 +71,11 @@ class AtbdView extends Component {
     serializeDocumentAction: T.func,
     fetchAtbdAction: T.func,
     isSerializingHtml: T.bool,
+    isSerializingPdf: T.bool,
+    serializeHtmlFail: T.bool,
+    serializePdfFail: T.bool,
     htmlUrl: T.string,
+    pdfUrl: T.string,
     match: T.object
   };
 
@@ -114,10 +118,20 @@ class AtbdView extends Component {
 
   render() {
     const {
-      atbd, htmlUrl, pdfUrl, isSerializingHtml
+      atbd,
+      htmlUrl,
+      pdfUrl,
+      isSerializingHtml,
+      serializeHtmlFail,
+      isSerializingPdf,
+      serializePdfFail
     } = this.props;
 
-    if (!atbd) return <div>ATBD loading or not found.</div>;
+    if (!atbd) return null;
+
+    if (!isSerializingHtml && serializeHtmlFail) {
+      return null;
+    }
 
     return (
       <Inpage>
@@ -136,6 +150,7 @@ class AtbdView extends Component {
                       <OptionsTrigger
                         variation="achromic-plain"
                         title="Toggle menu options"
+                        disabled
                       >
                         Options
                       </OptionsTrigger>
@@ -154,6 +169,7 @@ class AtbdView extends Component {
                     as="a"
                     target="_blank"
                     href={pdfUrl}
+                    disabled={isSerializingPdf || serializePdfFail}
                   >
                     Download PDF
                   </DownloadButton>
@@ -164,7 +180,7 @@ class AtbdView extends Component {
               </InpageHeaderInner>
             </InpageHeader>
             <InpageBody>
-              {!isSerializingHtml && (
+              {!isSerializingHtml && !serializeHtmlFail && (
                 <IFrameWrapper>
                   <IFrame
                     frameborder="0"
@@ -187,11 +203,17 @@ const mapStateToProps = (state) => {
   const {
     selectedAtbd,
     serializingAtbdVersion,
-    isSerializingHtml
+    isSerializingHtml,
+    isSerializingPdf,
+    serializePdfFail,
+    serializeHtmlFail
   } = state.application;
   return {
     atbd: selectedAtbd,
     isSerializingHtml,
+    isSerializingPdf,
+    serializePdfFail,
+    serializeHtmlFail,
     htmlUrl: serializingAtbdVersion && serializingAtbdVersion.html,
     pdfUrl: serializingAtbdVersion && serializingAtbdVersion.pdf
   };

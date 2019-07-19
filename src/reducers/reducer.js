@@ -325,37 +325,13 @@ export default function (state = initialState, action) {
           ...payload
         },
         isSerializingHtml: true,
+        isSerializingPdf: true,
+        serializeHtmlFail: false,
+        serializePdfFail: false
       };
     }
 
-    case actions.SERIALIZE_DOCUMENT_SUCCESS: {
-      return {
-        ...state
-      };
-    }
-
-    case actions.SERIALIZE_DOCUMENT_FAIL: {
-      const newState = Object.assign({}, state);
-      delete newState.serializingAtbdVersion;
-      return {
-        ...newState,
-        isSerializingHtml: false
-      };
-    }
-
-    case actions.CHECK_PDF_SUCCESS: {
-      const {
-        payload: { location: pdfLocation }
-      } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...state.serializingAtbdVersion,
-          pdf: pdfLocation
-        }
-      };
-    }
-    case actions.CHECK_HTML_SUCCESS: {
+    case actions.SERIALIZE_HTML_SUCCESS: {
       const {
         payload: { location: html }
       } = action;
@@ -365,7 +341,53 @@ export default function (state = initialState, action) {
           ...state.serializingAtbdVersion,
           html
         },
-        isSerializingHtml: false
+        isSerializingHtml: false,
+        serializeHtmlFail: false
+      };
+    }
+
+    case actions.SERIALIZE_PDF_FAIL: {
+      const newState = Object.assign({}, state);
+      if (
+        newState.serializingAtbdVersion
+        && newState.serializingAtbdVersion.pdf
+      ) {
+        delete newState.serializingAtbdVersion.pdf;
+      }
+      return {
+        ...newState,
+        isSerializingPdf: false,
+        serializePdfFail: true
+      };
+    }
+
+    case actions.SERIALIZE_PDF_SUCCESS: {
+      const {
+        payload: { location: pdfLocation }
+      } = action;
+      return {
+        ...state,
+        serializingAtbdVersion: {
+          ...state.serializingAtbdVersion,
+          pdf: pdfLocation
+        },
+        isSerializingPdf: false,
+        serializePdfFail: false
+      };
+    }
+
+    case actions.SERIALIZE_HTML_FAIL: {
+      const newState = Object.assign({}, state);
+      if (
+        newState.serializingAtbdVersion
+        && newState.serializingAtbdVersion.html
+      ) {
+        delete newState.serializingAtbdVersion.html;
+      }
+      return {
+        ...newState,
+        isSerializingHtml: false,
+        serializeHtmlFail: true
       };
     }
 
