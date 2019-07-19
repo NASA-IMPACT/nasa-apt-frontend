@@ -50,8 +50,6 @@ Any impure actions which may have side effects (asynchronous API requests, inter
 
 Cross-cutting actions are also managed through the use of middleware.
 
-The application store is configured to support the [redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension) for advanced debugging with state rewind and fast forward.
-
 Because the application makes extensive use of [HOCs](https://reactjs.org/docs/higher-order-components.html), wrapped components are exposed as the default export while raw components are available as a named component.  This allows for unit testing without invoking HOC behavior.
 
 The application uses [tape-await](https://github.com/mbostock/tape-await) to simplify asynchronous test flow for middleware.

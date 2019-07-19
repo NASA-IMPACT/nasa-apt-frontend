@@ -1,9 +1,6 @@
 import {
-  createStore,
-  combineReducers,
-  applyMiddleware
+  createStore, combineReducers, applyMiddleware, compose
 } from 'redux';
-// import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { apiMiddleware } from 'redux-api-middleware';
 import { createBrowserHistory } from 'history';
@@ -11,34 +8,35 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import reducer from '../reducers/reducer';
 import locationMiddleware from './locationMiddleware';
 import serializeMiddleware from './serializeMiddleware';
-/*
-const composeEnhancers = composeWithDevTools({
-  serialize: {
-    immutable: Immutable
-  }
-});
-*/
+
 export const history = createBrowserHistory();
+
+const enhancers = [];
+
+// Dev Tools
+if (process.env.NODE_ENV === 'development') {
+  const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__;
+
+  if (typeof devToolsExtension === 'function') {
+    enhancers.push(devToolsExtension());
+  }
+}
+
 const store = createStore(
   combineReducers({
     router: connectRouter(history),
     application: reducer
   }),
-  applyMiddleware(
-    routerMiddleware(history),
-    thunk,
-    apiMiddleware,
-    locationMiddleware,
-    serializeMiddleware
-  )
-  /*
-  composeEnhancers(
+  compose(
     applyMiddleware(
+      routerMiddleware(history),
       thunk,
-      apiMiddleware
-    )
+      apiMiddleware,
+      locationMiddleware,
+      serializeMiddleware
+    ),
+    ...enhancers
   )
-  */
 );
 
 export default store;
