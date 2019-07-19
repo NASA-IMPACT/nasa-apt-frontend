@@ -113,7 +113,9 @@ class AtbdView extends Component {
   }
 
   render() {
-    const { atbd, htmlUrl, isSerializingHtml } = this.props;
+    const {
+      atbd, htmlUrl, pdfUrl, isSerializingHtml
+    } = this.props;
 
     if (!atbd) return <div>ATBD loading or not found.</div>;
 
@@ -149,8 +151,11 @@ class AtbdView extends Component {
                   <DownloadButton
                     variation="achromic-plain"
                     title="Download document as PDF"
+                    as="a"
+                    target="_blank"
+                    href={pdfUrl}
                   >
-                    Download
+                    Download PDF
                   </DownloadButton>
                   <EditButton variation="achromic-plain" title="Edit document">
                     Edit
@@ -187,7 +192,8 @@ const mapStateToProps = (state) => {
   return {
     atbd: selectedAtbd,
     isSerializingHtml,
-    htmlUrl: serializingAtbdVersion && serializingAtbdVersion.html
+    htmlUrl: serializingAtbdVersion && serializingAtbdVersion.html,
+    pdfUrl: serializingAtbdVersion && serializingAtbdVersion.pdf
   };
 };
 
