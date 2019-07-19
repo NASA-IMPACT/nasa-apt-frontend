@@ -49,7 +49,7 @@ const EditButton = styled(Button)`
 
 const ATDBDFrame = styled.div`
   position: relative;
-  padding-top: 56.25%;
+  height: 100%;
 `;
 
 const ATDBDFrameObject = styled.iframe`
@@ -58,7 +58,7 @@ const ATDBDFrameObject = styled.iframe`
   left:0;
   width: 100%;
   height: 100%;
-  border: none;
+  border: 0;
 `;
 
 class AtbdView extends Component {
