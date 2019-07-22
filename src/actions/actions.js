@@ -921,23 +921,3 @@ export function setActiveReference(reference) {
     payload: reference
   };
 }
-
-export function showLoading(triggeringAction) {
-  return {
-    type: types.SHOW_LOADING,
-    payload: triggeringAction
-  };
-}
-
-export function hideLoading(triggeringAction) {
-  return {
-    type: types.HIDE_LOADING,
-    payload: triggeringAction
-  };
-}
-
-export function clearLoading() {
-  return {
-    type: types.CLEAR_LOADING
-  };
-}

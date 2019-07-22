@@ -48,7 +48,7 @@ test('AlgorithmDescription editor values', (t) => {
       t={{}}
     />
   );
-
-  t.equal(loadingWrapper.html(), null, 'Returns empty when atbdVersion is loading');
+  const div = loadingWrapper.find('div').first();
+  t.equal(div.text(), 'Loading', 'Returns Loading div when atbdVersion is loading');
   t.end();
 });

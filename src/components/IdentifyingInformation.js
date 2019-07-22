@@ -97,6 +97,8 @@ export class IdentifyingInformation extends Component {
       t
     } = this.props;
 
+    let returnValue;
+
     if (atbd) {
       const {
         title: atbdTitle,
@@ -114,7 +116,7 @@ export class IdentifyingInformation extends Component {
         atbd_id
       } = atbd;
 
-      return (
+      returnValue = (
         <Inpage>
           <EditPage
             title={title || ''}
@@ -199,8 +201,10 @@ export class IdentifyingInformation extends Component {
           </EditPage>
         </Inpage>
       );
+    } else {
+      returnValue = <div>Loading</div>;
     }
-    return null;
+    return returnValue;
   }
 }
 
