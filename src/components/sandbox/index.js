@@ -51,7 +51,6 @@ import {
   ModalDeleteButton
 } from '../common/Modal';
 import { confirmDeleteDoc, showConfirmationPrompt } from '../common/ConfirmationPrompt';
-import toasts from '../common/toasts';
 
 // Create a ul component to include some styling.
 
@@ -139,19 +138,6 @@ class Sandbox extends Component {
         <InpageBody>
           <InpageBodyInner>
             <Prose>
-              <h2>Toasts</h2>
-              <Button
-                variation="base-raised-light"
-                onClick={() => {
-                  toasts.success('This is a success toast. Will auto-dismiss!');
-                  toasts.info('This is a info toast. Will auto-dismiss!');
-                  toasts.error('This is a error toast. Will NOT auto-dismiss!', { autoClose: false });
-                  toasts.warn('This is a warn toast. Will auto-dismiss!');
-                }}
-              >
-                Show Toasts
-              </Button>
-
               <h2>Modal</h2>
               <Button
                 variation="base-raised-light"

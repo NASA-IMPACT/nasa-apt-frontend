@@ -12,10 +12,7 @@ const initialState = {
   atbdCitation: undefined,
   selectedAtbd: undefined,
   activeReference: undefined,
-  t: undefined,
-  // Store what actions are triggering a loading.
-  // The will be added/removed as loadings are triggered.
-  globalLoading: []
+  t: undefined
 };
 
 const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
@@ -81,30 +78,6 @@ const replaceAtIndex = (arr, idProperty, next) => {
     return result;
   }
   return arr;
-};
-
-const handleLoading = (state, action) => {
-  const { type, payload } = action;
-  const { globalLoading } = state;
-
-  if (type === actions.SHOW_LOADING) {
-    return {
-      ...state,
-      globalLoading: [...globalLoading, payload]
-    };
-  }
-  if (type === actions.HIDE_LOADING) {
-    return {
-      ...state,
-      globalLoading: globalLoading.filter(a => a !== payload)
-    };
-  }
-  if (type === actions.CLEAR_LOADING) {
-    return {
-      ...state,
-      globalLoading: []
-    };
-  }
 };
 
 export default function (state = initialState, action) {
@@ -386,12 +359,6 @@ export default function (state = initialState, action) {
         ...state,
         atbds: state.atbds.filter(a => a.atbd_id !== atbd_id)
       };
-    }
-
-    case actions.SHOW_LOADING:
-    case actions.HIDE_LOADING:
-    case actions.CLEAR_LOADING: {
-      return handleLoading(state, action);
     }
 
     default: return state;
