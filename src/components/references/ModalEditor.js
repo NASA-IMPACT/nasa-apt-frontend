@@ -60,6 +60,7 @@ const defaultFieldValues = {
   issue: '',
   report_number: '',
   publication_place: '',
+  year: '',
   publisher: '',
   pages: '',
   isbn: '',
