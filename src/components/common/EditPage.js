@@ -119,16 +119,16 @@ const EditPage = (props) => {
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${identifying_information}`
     },
     {
-      display: 'Introduction',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}`
-    },
-    {
       display: 'Contact information',
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}`
     },
     {
       display: 'References',
       link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}`
+    },
+    {
+      display: 'Introduction',
+      link: `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}`
     },
     {
       display: 'Algorithm description',

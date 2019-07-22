@@ -5,6 +5,7 @@ import { themeVal, stylizeFunction } from './utils/general';
 import { collecticonsFont } from './collecticons';
 import { unscrollableY, unscrollableX } from './helpers';
 import reactTooltipStyles from './vendor/react-tooltip';
+import reactToastifyStyles from './vendor/react-toastify';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -152,5 +153,6 @@ export default createGlobalStyle`
   ${normalize()}
   ${collecticonsFont()}
   ${reactTooltipStyles()}
+  ${reactToastifyStyles()}
   ${baseStyles}
 `;
