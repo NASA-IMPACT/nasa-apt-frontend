@@ -9,7 +9,6 @@ import {
 } from '../../actions/actions';
 
 import Select from '../common/Select';
-import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
 import {
   Modal,
   ModalBody,
@@ -103,7 +102,6 @@ export class ReferenceModalEditor extends Component {
     const { activeReference } = nextProps;
     const { publication_reference_id: id } = activeReference || {};
     this.resetForm(id);
-    hideGlobalLoading();
   }
 
   onReferenceNameChange(e) {
@@ -168,7 +166,6 @@ export class ReferenceModalEditor extends Component {
         payload[field] = fields[field];
       }
     });
-    showGlobalLoading();
     create(payload);
   }
 
