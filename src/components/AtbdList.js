@@ -178,7 +178,7 @@ const AtbdList = (props) => {
           <AtbdPublishedState>{status}</AtbdPublishedState>
         </td>
         <DocTableBodyThTitle scope="row">
-          <strong>{title}</strong>
+          <strong>{title || 'Untitled Document'}</strong>
           {false && <AtbdVersion>Version 1.0</AtbdVersion>}
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>
