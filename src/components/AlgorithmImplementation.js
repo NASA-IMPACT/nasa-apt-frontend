@@ -29,7 +29,6 @@ function AlgorithmImplementation(props) {
   const {
     atbdVersion
   } = props;
-  let returnValue;
   if (atbdVersion && Array.isArray(atbdVersion.data_access_input_data)) {
     const {
       atbd,
@@ -64,7 +63,7 @@ function AlgorithmImplementation(props) {
       data_access_related_urls
     } = atbdVersion;
 
-    returnValue = (
+    return (
       <Inpage>
         <EditPage
           title={title || ''}
@@ -138,10 +137,8 @@ function AlgorithmImplementation(props) {
         </EditPage>
       </Inpage>
     );
-  } else {
-    returnValue = <div>Loading</div>;
   }
-  return returnValue;
+  return null;
 }
 
 AlgorithmImplementation.propTypes = {
