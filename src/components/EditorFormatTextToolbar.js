@@ -9,35 +9,16 @@ import ButtonGroup from '../styles/button/group';
 
 const activeVariation = 'base-raised-semidark';
 const baseVariation = 'base-raised-light';
+
 const ActionsContainer = styled.div`
   z-index: 10000;
 `;
-const buttonConfig = [
-  {
-    display: <strong>B</strong>,
-    mark: 'bold'
-  },
-  {
-    display: <em>i</em>,
-    mark: 'italic'
-  },
-  {
-    display: <u>u</u>,
-    mark: 'underline'
-  },
-  {
-    display: <span>x&#178;</span>,
-    mark: 'superscript'
-  },
-  {
-    display: <span>x&#8322;</span>,
-    mark: 'subscript'
-  }
-];
+
 const FixedWidthButton = styled(Button)`
   width: 3rem;
 `;
-const LinkButton = styled(FixedWidthButton)`
+
+const LinkButton = styled(FixedWidthButton).attrs({ hideText: true })`
   ::before {
     ${collecticon('link')}
     line-height: 1;
@@ -48,6 +29,39 @@ const LinkButton = styled(FixedWidthButton)`
 const UrlInput = styled(FormInput)`
   width: 20rem;
 `;
+
+const buttonConfig = [
+  {
+    display: <strong>B</strong>,
+    mark: 'bold',
+    el: FixedWidthButton
+  },
+  {
+    display: <em>i</em>,
+    mark: 'italic',
+    el: FixedWidthButton
+  },
+  {
+    display: <u>u</u>,
+    mark: 'underline',
+    el: FixedWidthButton
+  },
+  {
+    display: <span>x&#178;</span>,
+    mark: 'superscript',
+    el: FixedWidthButton
+  },
+  {
+    display: <span>x&#8322;</span>,
+    mark: 'subscript',
+    el: FixedWidthButton
+  },
+  {
+    display: 'Add a link',
+    mark: 'link',
+    el: LinkButton
+  }
+];
 
 class FormatTextToolbar extends React.Component {
   constructor(props) {
@@ -114,34 +128,33 @@ class FormatTextToolbar extends React.Component {
   }
 
   renderFormatOptions() {
-    const { value, toggleMark } = this.props;
+    const { value, toggleMark, activeFormatters } = this.props;
     const { setUrlEditor } = this;
 
     const activeMarks = Array.from(value.activeMarks).map(Mark => Mark.type);
 
+    const btns = activeFormatters.length
+      ? buttonConfig.filter(btn => activeFormatters.includes(btn.mark))
+      : buttonConfig;
+
     return (
       <ButtonGroup orientation="horizontal">
-        {buttonConfig.map(config => (
-          <FixedWidthButton
-            key={config.mark}
-            onClick={() => toggleMark(config.mark)}
+        {btns.map(btn => (
+          <btn.el
+            key={btn.mark}
+            onClick={() => btn.mark === 'link'
+              ? setUrlEditor(true)
+              : toggleMark(btn.mark)
+            }
             variation={
-              activeMarks.indexOf(config.mark) >= 0
+              activeMarks.indexOf(btn.mark) >= 0 && btn.mark !== 'link'
                 ? activeVariation
                 : baseVariation
             }
           >
-            {config.display}
-          </FixedWidthButton>
+            {btn.display}
+          </btn.el>
         ))}
-        <LinkButton
-          key="link"
-          hideText
-          variation={baseVariation}
-          onClick={() => setUrlEditor(true)}
-        >
-          Add a link
-        </LinkButton>
       </ButtonGroup>
     );
   }
@@ -194,9 +207,14 @@ class FormatTextToolbar extends React.Component {
 
 FormatTextToolbar.propTypes = {
   range: T.object,
+  activeFormatters: T.array,
   toggleMark: T.func.isRequired,
   insertLink: T.func.isRequired,
   value: T.object.isRequired
+};
+
+FormatTextToolbar.defaultProps = {
+  activeFormatters: []
 };
 
 export default FormatTextToolbar;
