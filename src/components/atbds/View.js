@@ -4,11 +4,11 @@ import T from 'prop-types';
 import styled from 'styled-components/macro';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { connect } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { fetchAtbd, serializeDocument } from '../../actions/actions';
 
 // Components
-import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
 import {
   Inpage,
   InpageHeader,
@@ -28,6 +28,7 @@ import Dropdown, {
 // Styled components
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
+import toasts from '../common/toasts';
 
 const OptionsTrigger = styled(Button)`
   &::before {
@@ -58,7 +59,6 @@ class AtbdView extends Component {
     atbd: T.object,
     serializeDocumentAction: T.func,
     fetchAtbdAction: T.func,
-    isSerializingHtml: T.bool,
     isSerializingPdf: T.bool,
     serializePdfFail: T.bool,
     pdfUrl: T.string,
@@ -80,17 +80,17 @@ class AtbdView extends Component {
     const {
       atbd: oldAtbd,
       serializeDocumentAction,
-      isSerializingHtml: wasSerializingHtml
+      isSerializingPdf: wasSerializingPdf
     } = this.props;
-    const { atbd, isSerializingHtml } = nextProps;
+    const { atbd, isSerializingPdf } = nextProps;
 
     // Start serialization, if is not already started
     if (
-      !isSerializingHtml
+      !isSerializingPdf
       && atbd
       && (!oldAtbd || atbd.atbd_id !== oldAtbd.atbd_id)
     ) {
-      showGlobalLoading();
+      this.pdfCreationToast = toasts.info('PDF document is being created', { autoClose: false });
       serializeDocumentAction({
         atbd_id: atbd.atbd_id,
         atbd_version: atbd.atbd_versions[0].atbd_version
@@ -98,8 +98,9 @@ class AtbdView extends Component {
     }
 
     // Serialization was finished, hide loading.
-    if (wasSerializingHtml && !isSerializingHtml) {
-      hideGlobalLoading();
+    if (wasSerializingPdf && !isSerializingPdf) {
+      toast.dismiss(this.pdfCreationToast);
+      toasts.success('PDF document ready');
     }
   }
 
@@ -113,6 +114,8 @@ class AtbdView extends Component {
     } = this.props;
 
     if (!atbd) return null;
+
+    console.log('atbd', atbd);
 
     return (
       <Inpage>
