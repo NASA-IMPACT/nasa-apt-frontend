@@ -90,7 +90,7 @@ class Contacts extends React.Component {
           <EditPage
             title={title || ''}
             id={atbd_id}
-            step={3}
+            step={2}
           >
             <h2>Contacts</h2>
             {atbdContacts.map((d, i) => (
