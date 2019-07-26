@@ -1,7 +1,8 @@
-import React, { Fragment, Component } from 'react';
+import React, { Component } from 'react';
 import { push } from 'connected-react-router';
 import T from 'prop-types';
 import styled from 'styled-components/macro';
+import { StickyContainer, Sticky } from 'react-sticky';
 import { connect } from 'react-redux';
 
 import { fetchAtbd, serializeDocument } from '../../actions/actions';
@@ -52,20 +53,6 @@ const EditButton = styled(Button)`
   }
 `;
 
-const IFrameWrapper = styled.div`
-  position: relative;
-  height: 100%;
-`;
-
-const IFrame = styled.iframe`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-`;
-
 class AtbdView extends Component {
   static propTypes = {
     atbd: T.object,
@@ -73,9 +60,7 @@ class AtbdView extends Component {
     fetchAtbdAction: T.func,
     isSerializingHtml: T.bool,
     isSerializingPdf: T.bool,
-    serializeHtmlFail: T.bool,
     serializePdfFail: T.bool,
-    htmlUrl: T.string,
     pdfUrl: T.string,
     match: T.object,
     visitLink: T.func
@@ -121,10 +106,7 @@ class AtbdView extends Component {
   render() {
     const {
       atbd,
-      htmlUrl,
       pdfUrl,
-      isSerializingHtml,
-      serializeHtmlFail,
       isSerializingPdf,
       serializePdfFail,
       visitLink
@@ -132,79 +114,72 @@ class AtbdView extends Component {
 
     if (!atbd) return null;
 
-    if (!isSerializingHtml && serializeHtmlFail) {
-      return null;
-    }
-
     return (
       <Inpage>
         {atbd && (
-          <Fragment>
-            <InpageHeader>
-              <InpageHeaderInner>
-                <InpageHeadline>
-                  <InpageTitle>{atbd.title}</InpageTitle>
-                  <InpageTagline>Viewing document</InpageTagline>
-                </InpageHeadline>
-                <InpageToolbar>
-                  <Dropdown
-                    alignment="right"
-                    triggerElement={(
-                      <OptionsTrigger
-                        variation="achromic-plain"
-                        title="Toggle menu options"
-                        disabled
+          <StickyContainer>
+            <Sticky>
+              {stickyProps => (
+                <InpageHeader
+                  style={stickyProps.style}
+                  isSticky={stickyProps.isSticky}
+                >
+                  <InpageHeaderInner>
+                    <InpageHeadline>
+                      <InpageTitle>{atbd.title}</InpageTitle>
+                      <InpageTagline>Viewing document</InpageTagline>
+                    </InpageHeadline>
+                    <InpageToolbar>
+                      <Dropdown
+                        alignment="right"
+                        triggerElement={(
+                          <OptionsTrigger
+                            variation="achromic-plain"
+                            title="Toggle menu options"
+                            disabled
+                          >
+                            Options
+                          </OptionsTrigger>
+                        )}
                       >
-                        Options
-                      </OptionsTrigger>
-)}
-                  >
-                    <DropTitle>Document options</DropTitle>
-                    <DropMenu role="menu" iconified>
-                      <DocumentActionDelete title="Delete document" disabled>
-                        Delete
-                      </DocumentActionDelete>
-                    </DropMenu>
-                  </Dropdown>
-                  <DownloadButton
-                    variation="achromic-plain"
-                    title="Download document as PDF"
-                    as="a"
-                    target="_blank"
-                    href={pdfUrl}
-                    disabled={isSerializingPdf || serializePdfFail}
-                  >
-                    Download PDF
-                  </DownloadButton>
-                  <EditButton
-                    variation="achromic-plain"
-                    title="Edit document"
-                    onClick={() => visitLink(
-                      `/atbdsedit/${
-                        atbd.atbd_id
-                      }/drafts/1/identifying_information`
-                    )
-                    }
-                  >
-                    Edit
-                  </EditButton>
-                </InpageToolbar>
-              </InpageHeaderInner>
-            </InpageHeader>
-            <InpageBody>
-              {!isSerializingHtml && !serializeHtmlFail && (
-                <IFrameWrapper>
-                  <IFrame
-                    frameborder="0"
-                    allowfullscreen
-                    id="inlineFrameExample"
-                    title="Inline Frame Example"
-                    src={htmlUrl}
-                  />
-                </IFrameWrapper>
+                        <DropTitle>Document options</DropTitle>
+                        <DropMenu role="menu" iconified>
+                          <DocumentActionDelete
+                            title="Delete document"
+                            disabled
+                          >
+                            Delete
+                          </DocumentActionDelete>
+                        </DropMenu>
+                      </Dropdown>
+                      <DownloadButton
+                        variation="achromic-plain"
+                        title="Download document as PDF"
+                        as="a"
+                        target="_blank"
+                        href={pdfUrl}
+                        disabled={isSerializingPdf || serializePdfFail}
+                      >
+                        Download PDF
+                      </DownloadButton>
+                      <EditButton
+                        variation="achromic-plain"
+                        title="Edit document"
+                        onClick={() => visitLink(
+                          `/atbdsedit/${
+                            atbd.atbd_id
+                          }/drafts/1/identifying_information`
+                        )}
+                      >
+                        Edit
+                      </EditButton>
+                    </InpageToolbar>
+                  </InpageHeaderInner>
+                </InpageHeader>
               )}
-            </InpageBody>
-          </Fragment>
+            </Sticky>
+            <InpageBody>Hello</InpageBody>
+          </StickyContainer>
         )}
       </Inpage>
     );
