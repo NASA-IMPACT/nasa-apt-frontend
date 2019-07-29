@@ -7,7 +7,7 @@ import collecticon from '../styles/collecticons';
 import { serializeDocument } from '../actions/actions';
 
 const Link = styled.a`
-  margin-left: 1rem
+  margin-left: 1rem;
 `;
 
 const DocTablePreviewButton = styled(Button)`
