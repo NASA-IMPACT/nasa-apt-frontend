@@ -88,6 +88,10 @@ const InnerForm = (props) => {
             label: 'Publication Place'
           },
           {
+            id: 'year',
+            label: 'Year'
+          },
+          {
             id: 'publisher',
             label: 'Publisher'
           },
