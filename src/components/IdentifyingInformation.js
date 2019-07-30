@@ -137,11 +137,6 @@ export class IdentifyingInformation extends Component {
                       <FormToolbar>
                         <InfoButton text={t.title} />
                       </FormToolbar>
-                      {titleEmpty && (
-                        <FormHelper>
-                          <FormHelperMessage>Please enter a title.</FormHelperMessage>
-                        </FormHelper>
-                      )}
                     </FormGroupHeader>
                     <FormGroupBody>
                       <FormInput
@@ -154,6 +149,11 @@ export class IdentifyingInformation extends Component {
                         onBlur={e => onTextFieldBlur(e, 'titleEmpty')}
                         invalid={titleEmpty}
                       />
+                      {titleEmpty && (
+                        <FormHelper>
+                          <FormHelperMessage>Please enter a title.</FormHelperMessage>
+                        </FormHelper>
+                      )}
                     </FormGroupBody>
                   </FormGroup>
                   <Button
