@@ -179,7 +179,7 @@ const AtbdList = (props) => {
         </td>
         <DocTableBodyThTitle scope="row">
           <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
-            <strong>{title}</strong>
+            <strong>{title || 'Untitled Document'}</strong>
           </Link>
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>

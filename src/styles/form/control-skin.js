@@ -55,7 +55,7 @@ const controlSkin = () => css`
 
   &[readonly] {
     cursor: text;
-    color: rgba($base-font-color, 0.64);
+    color: ${_rgba(themeVal('type.base.color'), 0.64)};
   }
 
   &:hover {

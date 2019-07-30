@@ -24,7 +24,6 @@ import {
 } from './constants/routes';
 import PageHeader from './components/common/PageHeader';
 import PageFooter from './components/common/PageFooter';
-import { GlobalLoading } from './components/common/OverlayLoader';
 import ConfirmationPrompt from './components/common/ConfirmationPrompt';
 import AtbdIndex from './components/atbds';
 import AtbdView from './components/atbds/View';
@@ -40,6 +39,7 @@ import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
+import OverlayLoaderConnector from './components/common/OverlayLoaderConnector';
 
 const Page = styled.div`
   display: grid;
@@ -57,6 +57,7 @@ const App = () => (
     <ConnectedRouter history={history}>
       <ThemeProvider theme={theme.main}>
         <React.Fragment>
+          <OverlayLoaderConnector />
           <GlobalStyle />
           <Page>
             <PageHeader />
@@ -105,7 +106,6 @@ const App = () => (
             <PageFooter />
           </Page>
           <ConfirmationPrompt />
-          <GlobalLoading />
           <ToastContainer
             position={toast.POSITION.BOTTOM_RIGHT}
             closeButton={<CloseButton />}
