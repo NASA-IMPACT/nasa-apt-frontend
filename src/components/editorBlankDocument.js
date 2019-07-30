@@ -1,16 +1,32 @@
 import { get } from 'object-path';
 
+// Full blank document.
+// https://docs.slatejs.org/guides/data-model#the-value
 const editorBlankDocument = {
+  object: 'value',
   document: {
+    object: 'document',
+    data: {},
     nodes: [
       {
         object: 'block',
         type: 'paragraph',
+        data: {},
         nodes: [
-        ],
-      },
-    ],
-  },
+          {
+            object: 'text',
+            leaves: [
+              {
+                object: 'leaf',
+                text: '',
+                marks: []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 };
 
 export default editorBlankDocument;
