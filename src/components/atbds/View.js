@@ -352,7 +352,7 @@ class AtbdView extends Component {
   }
 
   renderContent() {
-    const { atbdVersion } = this.props;
+    const { atbdVersion, atbd } = this.props;
     if (!atbdVersion) return null;
 
     const {
@@ -639,6 +639,51 @@ class AtbdView extends Component {
             }))
           }
         ]
+      },
+      {
+        label: 'Contacts',
+        id: 'contacts',
+        renderer: el => (atbd.contacts.length || atbd.contact_groups.length) && (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            <ul>
+              {atbd.contacts.concat(atbd.contact_groups).map(contact => (
+                <li key={contact.contact_id || contact.contact_group_id}>
+                  <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
+                  <Dl type="horizontal">
+                    {!!contact.roles.length && (
+                      <React.Fragment>
+                        <dt>Roles</dt>
+                        <dd>{contact.roles.join(', ')}</dd>
+                      </React.Fragment>
+                    )}
+                    {contact.url && (
+                      <React.Fragment>
+                        <dt>Url</dt>
+                        <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
+                      </React.Fragment>
+                    )}
+                    {contact.uuid && (
+                      <React.Fragment>
+                        <dt>UUID</dt>
+                        <dd>{contact.uuid}</dd>
+                      </React.Fragment>
+                    )}
+                  </Dl>
+
+                  <h4>Mechanisms</h4>
+                  <Dl type="horizontal">
+                    {contact.mechanisms.map(m => (
+                      <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
+                        <dt>{m.mechanism_type}</dt>
+                        <dd>{m.mechanism_value}</dd>
+                      </React.Fragment>
+                    ))}
+                  </Dl>
+                </li>
+              ))}
+            </ul>
+          </AtbdSection>
+        )
       },
       {
         label: 'References',
