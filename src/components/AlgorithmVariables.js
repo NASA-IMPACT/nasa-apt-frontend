@@ -73,7 +73,7 @@ const slateJSON2Html = (val) => {
   } catch (error) {
     // Not a json value.
   }
-  return <span>{val}</span>;
+  return val;
 };
 
 const AlgorithmVariables = (props) => {
