@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withFormik } from 'formik';
-import jsonschema from 'jsonschema';
 import { Value } from 'slate';
 
-import apiSchema from '../schemas/schema.json';
-import transformErrors from '../schemas/transformErrors';
 import { InputFormGroup } from './common/Input';
 import Button from '../styles/button/button';
 import Form from '../styles/form/form';
@@ -15,8 +12,6 @@ import InputEditor from './common/InputEditor';
 const name = 'name';
 const long_name = 'long_name';
 const unit = 'unit';
-
-const validator = new jsonschema.Validator();
 
 export const InnerAlgorithmVariableForm = (props) => {
   const {
@@ -122,20 +117,20 @@ export const AlgorithmVariableForm = withFormik({
     return initialValues;
   },
 
-  validate: (values, props) => {
-    // TODO: Add proper validation!
-    return {};
-    let errors = {};
-    const { schemaKey } = props;
-    const schema = apiSchema.definitions[`${schemaKey}s`];
-    schema.required = schema.required.filter(
-      property => (property !== `${schemaKey}_id`)
-    );
-    errors = transformErrors(
-      validator.validate(values, schema).errors
-    );
-    return errors;
-  },
+  // validate: (values, props) => {
+  //   // TODO: Add proper validation!
+  //   return {};
+  //   let errors = {};
+  //   const { schemaKey } = props;
+  //   const schema = apiSchema.definitions[`${schemaKey}s`];
+  //   schema.required = schema.required.filter(
+  //     property => (property !== `${schemaKey}_id`)
+  //   );
+  //   errors = transformErrors(
+  //     validator.validate(values, schema).errors
+  //   );
+  //   return errors;
+  // },
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
     const { create } = props;
