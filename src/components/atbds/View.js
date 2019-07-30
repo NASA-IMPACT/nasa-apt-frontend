@@ -40,6 +40,9 @@ import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
 import toasts from '../common/toasts';
 import Table from '../../styles/table';
+import Dl from '../../styles/type/definition-list';
+import { themeVal } from '../../styles/utils/general';
+import { multiply } from '../../styles/utils/math';
 
 
 const OptionsTrigger = styled(Button)`
@@ -66,13 +69,61 @@ const EditButton = styled(Button)`
   }
 `;
 
-const AtbdSection = styled.section``;
 const AtbdSectionHeader = styled.header``;
 const AtbdSectionTitle = styled.h1``;
-const AtbdSectionBody = styled.div``;
+const AtbdSectionBody = styled.div`
+  h2, h3 {
+    margin-top: ${multiply(themeVal('layout.space'), 2)};
+    margin-bottom: ${themeVal('layout.space')};
+  }
+`;
+
+function AtbdSectionBase({
+  id, title, children, ...props
+}) {
+  return (
+    <section {...props}>
+      <AtbdSectionHeader>
+        <AtbdSectionTitle id={id}>{title}</AtbdSectionTitle>
+      </AtbdSectionHeader>
+      <AtbdSectionBody>
+        {children}
+      </AtbdSectionBody>
+    </section>
+  );
+}
+
+AtbdSectionBase.propTypes = {
+  title: T.string,
+  id: T.string,
+  children: T.node
+};
+const AtbdSection = styled(AtbdSectionBase)``;
+
+const AtbdMeta = styled.div`
+  margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+`;
+
+const AtbdMetaTitle = styled.h2`
+  margin-bottom: ${themeVal('layout.space')};
+`;
+
+const AtbdMetaDetails = styled(Dl)``;
+
+const AtbdIndex = styled.nav``;
+
+const AtbdIndexTitle = styled.h2`
+  margin-bottom: ${themeVal('layout.space')};
+`;
+
+const AtbdIndexMenu = styled.ol`
+  margin-left: 1rem;
+`;
+
 class AtbdView extends Component {
   static propTypes = {
     atbd: T.object,
+    atbdVersion: T.object,
     serializeDocumentAction: T.func,
     fetchAtbdAction: T.func,
     isSerializingPdf: T.bool,
@@ -243,12 +294,66 @@ class AtbdView extends Component {
     }
   }
 
+  renderReadOnlyEditor(document) {
+    return (
+      <Editor
+        readOnly
+        value={Value.fromJSON(document)}
+        renderNode={this.renderNode}
+        renderMark={this.renderMark}
+      />
+    );
+  }
+
+  renderAlgorithmVars(vars, idKey) {
+    return vars.map(v => (
+      <Dl type="horizontal" key={v[idKey]}>
+        <dt>Name</dt>
+        <dd>{v.document
+          ? this.renderReadOnlyEditor(v.name)
+          : v.name}
+        </dd>
+        <dt>Long name</dt>
+        <dd>{v.document
+          ? this.renderReadOnlyEditor(v.long_name)
+          : v.long_name}
+        </dd>
+        <dt>Unit</dt>
+        <dd>{v.document
+          ? this.renderReadOnlyEditor(v.unit)
+          : v.unit}
+        </dd>
+      </Dl>
+    ));
+  }
+
+  renderUrlDescriptionField(data) {
+    return (
+      <React.Fragment key={data.id}>
+        <h4>Url</h4>
+        <p><a href={data.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{data.url}</a></p>
+        <h4>Description</h4>
+        <Prose>
+          {this.renderReadOnlyEditor(data.description)}
+        </Prose>
+      </React.Fragment>
+    );
+  }
+
+  renderTOCList(data) {
+    return data.map(entry => (
+      <AtbdIndexMenu key={entry.id}>
+        <li>
+          <a href={`#${entry.id}`} title={`Go to ${entry.label} section`}>{entry.label}</a>
+          {entry.children && this.renderTOCList(entry.children)}
+        </li>
+      </AtbdIndexMenu>
+    ));
+  }
+
   renderContent() {
     const { atbdVersion } = this.props;
     if (!atbdVersion) return null;
-
-
-    console.log(atbdVersion)
 
     const {
       introduction,
@@ -261,101 +366,306 @@ class AtbdView extends Component {
       algorithm_usage_constraints,
       performance_assessment_validation_methods,
       performance_assessment_validation_uncertainties,
-      performance_assessment_validation_errors
+      performance_assessment_validation_errors,
+      algorithm_input_variables,
+      algorithm_output_variables,
+      algorithm_implementations,
+      data_access_input_data,
+      data_access_output_data,
+      data_access_related_urls
     } = atbdVersion;
 
-    const ReadOnlyEditor = ({ document }) => (
-      <Editor
-        readOnly
-        value={Value.fromJSON(document)}
-        renderNode={this.renderNode}
-        renderMark={this.renderMark}
-      />
+    // When the section that's being rendered is a list of items we only need
+    // to print the title and then the data from the children.
+    // This method is a utility to just render the children.
+    const childrenPassThroughRenderer = el => (
+      <AtbdSection key={el.id} id={el.id} title={el.label}>
+        {el.children.map(child => child.renderer(child))}
+      </AtbdSection>
     );
+
+    // The index contains all the sections to be rendered.
+    // Each node has the following properties:
+    // label: Human readable title to print
+    // id: Unique id in the whole page to be used as anchor
+    // rendered: Function to render this element. It is called with the current
+    //           element being rendered. The first level of the index is
+    //           rendered with the <AtbdSection> wrapper.
+    // children: Any children this node should have. They must follow this
+    //           same structure.
+    const index = [
+      {
+        label: 'Introduction',
+        id: 'introduction',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            {this.renderReadOnlyEditor(introduction)}
+          </AtbdSection>
+        )
+      },
+      {
+        label: 'Historical Perspective',
+        id: 'historic-prespective',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            {this.renderReadOnlyEditor(historical_perspective)}
+          </AtbdSection>
+        )
+      },
+      {
+        label: 'Algorithm Description',
+        id: 'algo-description',
+        renderer: childrenPassThroughRenderer,
+        children: [
+          {
+            label: 'Scientific Theory',
+            id: 'sci-theory',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderReadOnlyEditor(scientific_theory)}
+                </Prose>
+                {el.children.map(child => child.renderer(child))}
+              </React.Fragment>
+            ),
+            children: [
+              {
+                label: 'Assumptions',
+                id: 'sci-theory-assumptions',
+                renderer: el => (
+                  <React.Fragment key={el.id}>
+                    <h3 id={el.id}>{el.label}</h3>
+                    <Prose>
+                      {this.renderReadOnlyEditor(scientific_theory_assumptions)}
+                    </Prose>
+                  </React.Fragment>
+                )
+              }
+            ]
+          },
+          {
+            label: 'Mathematical Theory',
+            id: 'math-theory',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderReadOnlyEditor(mathematical_theory)}
+                </Prose>
+                {el.children.map(child => child.renderer(child))}
+              </React.Fragment>
+            ),
+            children: [
+              {
+                label: 'Assumptions',
+                id: 'math-theory-assumptions',
+                renderer: el => (
+                  <React.Fragment key={el.id}>
+                    <h3 id={el.id}>{el.label}</h3>
+                    <Prose>
+                      {this.renderReadOnlyEditor(mathematical_theory_assumptions)}
+                    </Prose>
+                  </React.Fragment>
+                )
+              }
+            ]
+          },
+          {
+            label: 'Algorithm Input Variables',
+            id: 'algo-input-var',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderAlgorithmVars(algorithm_input_variables, 'algorithm_input_variable_id')}
+                </Prose>
+              </React.Fragment>
+            )
+          },
+          {
+            label: 'Algorithm Output Variables',
+            id: 'algo-output-var',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderAlgorithmVars(algorithm_output_variables, 'algorithm_output_variable_id')}
+                </Prose>
+              </React.Fragment>
+            )
+          }
+        ]
+      },
+      {
+        label: 'Algorithm Implementations',
+        id: 'algo-implementations',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            {el.children.map(child => child.renderer(child))}
+          </AtbdSection>
+        ),
+        children: algorithm_implementations.map((o, idx) => ({
+          label: `Entry #${idx + 1}`,
+          id: `algo-implementations-${idx + 1}`,
+          renderer: el => (
+            <React.Fragment key={el.id}>
+              <h2 id={el.id}>{el.label}</h2>
+              {this.renderUrlDescriptionField({
+                id: o.algorithm_implementation_id,
+                url: o.access_url,
+                description: o.execution_description
+              })}
+            </React.Fragment>
+          )
+        }))
+      },
+      {
+        label: 'Algorithm Usage Constraints',
+        id: 'algo-usage-constraints',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            {this.renderReadOnlyEditor(algorithm_usage_constraints)}
+          </AtbdSection>
+        )
+      },
+      {
+        label: 'Performance Assessment Validation',
+        id: 'perf-assesment-validation',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            {el.children.map(child => child.renderer(child))}
+          </AtbdSection>
+        ),
+        children: [
+          {
+            label: 'Performance Assessment Validation Methods',
+            id: 'perf-assesment-validation-method',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderReadOnlyEditor(performance_assessment_validation_methods)}
+                </Prose>
+              </React.Fragment>
+            )
+          },
+          {
+            label: 'Performance Assessment Validation Uncertainties',
+            id: 'perf-assesment-validation-uncert',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderReadOnlyEditor(performance_assessment_validation_uncertainties)}
+                </Prose>
+              </React.Fragment>
+            )
+          },
+          {
+            label: 'Performance Assessment Validation Errors',
+            id: 'perf-assesment-validation-err',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h2 id={el.id}>{el.label}</h2>
+                <Prose>
+                  {this.renderReadOnlyEditor(performance_assessment_validation_errors)}
+                </Prose>
+              </React.Fragment>
+            )
+          }
+        ]
+      },
+      {
+        label: 'Data Access',
+        id: 'data-access',
+        renderer: childrenPassThroughRenderer,
+        children: [
+          {
+            label: 'Data Access Input Data',
+            id: 'data-access-input',
+            renderer: childrenPassThroughRenderer,
+            children: data_access_input_data.map((o, idx) => ({
+              label: `Entry #${idx + 1}`,
+              id: `data-access-input-${idx + 1}`,
+              renderer: el => (
+                <React.Fragment key={el.id}>
+                  <h2 id={el.id}>{el.label}</h2>
+                  {this.renderUrlDescriptionField({
+                    id: o.data_access_input_data_id,
+                    url: o.access_url,
+                    description: o.description
+                  })}
+                </React.Fragment>
+              )
+            }))
+          },
+          {
+            label: 'Data Access Output Data',
+            id: 'data-access-output',
+            renderer: childrenPassThroughRenderer,
+            children: data_access_output_data.map((o, idx) => ({
+              label: `Entry #${idx + 1}`,
+              id: `data-access-output-${idx + 1}`,
+              renderer: el => (
+                <React.Fragment key={el.id}>
+                  <h2 id={el.id}>{el.label}</h2>
+                  {this.renderUrlDescriptionField({
+                    id: o.data_access_output_data_id,
+                    url: o.access_url,
+                    description: o.description
+                  })}
+                </React.Fragment>
+              )
+            }))
+          },
+          {
+            label: 'Data Access Related URLs',
+            id: 'data-access-related-urls',
+            renderer: childrenPassThroughRenderer,
+            children: data_access_related_urls.map((o, idx) => ({
+              label: `Entry #${idx + 1}`,
+              id: `data-access-related-urls-${idx + 1}`,
+              renderer: el => (
+                <React.Fragment key={el.id}>
+                  <h2 id={el.id}>{el.label}</h2>
+                  {this.renderUrlDescriptionField({
+                    id: o.data_access_related_url_id,
+                    url: o.url,
+                    description: o.description
+                  })}
+                </React.Fragment>
+              )
+            }))
+          }
+        ]
+      },
+      {
+        label: 'References',
+        id: 'references',
+        renderer: el => this.referenceIndex.length && (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            <ol>
+              {this.referenceIndex.map((o, idx) => {
+                const ref = publication_references.find(r => r.publication_reference_id === o.id);
+                return (
+                  <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] <em>{ref.authors}</em> {ref.title}</li>
+                );
+              })}
+            </ol>
+          </AtbdSection>
+        )
+      }
+    ];
 
     return (
       <React.Fragment>
-        <ReadOnlyEditorSection
-          title="Introduction"
-          document={introduction}
-          renderNode={this.renderNode}
-          renderMark={this.renderMark}
-        />
-        <ReadOnlyEditorSection
-          title="Historical Perspective"
-          document={historical_perspective}
-          renderNode={this.renderNode}
-          renderMark={this.renderMark}
-        />
+        <AtbdIndex>
+          <AtbdIndexTitle>Contents</AtbdIndexTitle>
+          {this.renderTOCList(index)}
+        </AtbdIndex>
 
-        <AtbdSection>
-          <AtbdSectionHeader>
-            <AtbdSectionTitle>Algorithm Description</AtbdSectionTitle>
-          </AtbdSectionHeader>
-          <AtbdSectionBody>
-            <h2>Scientific Theory</h2>
-            <Prose>
-              <ReadOnlyEditor document={scientific_theory} />
-            </Prose>
-            <h3>Assumptions</h3>
-            <Prose>
-              <ReadOnlyEditor document={scientific_theory_assumptions} />
-            </Prose>
-            <h2>Mathematical Theory</h2>
-            <Prose>
-              <ReadOnlyEditor document={mathematical_theory} />
-            </Prose>
-            <h3>Assumptions</h3>
-            <Prose>
-              <ReadOnlyEditor document={mathematical_theory_assumptions} />
-            </Prose>
-          </AtbdSectionBody>
-        </AtbdSection>
-
-        <ReadOnlyEditorSection
-          title="Algorithm Usage Constraints"
-          document={algorithm_usage_constraints}
-          renderNode={this.renderNode}
-          renderMark={this.renderMark}
-        />
-
-        <AtbdSection>
-          <AtbdSectionHeader>
-            <AtbdSectionTitle>Performance Assessment Validation</AtbdSectionTitle>
-          </AtbdSectionHeader>
-          <AtbdSectionBody>
-            <h2>Methods</h2>
-            <Prose>
-              <ReadOnlyEditor document={performance_assessment_validation_methods} />
-            </Prose>
-            <h3>Uncertainties</h3>
-            <Prose>
-              <ReadOnlyEditor document={performance_assessment_validation_uncertainties} />
-            </Prose>
-            <h2>Errors</h2>
-            <Prose>
-              <ReadOnlyEditor document={performance_assessment_validation_errors} />
-            </Prose>
-          </AtbdSectionBody>
-        </AtbdSection>
-
-        {this.referenceIndex.length && (
-          <AtbdSection>
-            <AtbdSectionHeader>
-              <AtbdSectionTitle>References</AtbdSectionTitle>
-            </AtbdSectionHeader>
-            <AtbdSectionBody>
-              <ol>
-                {this.referenceIndex.map((o, idx) => {
-                  const ref = publication_references.find(r => r.publication_reference_id === o.id);
-                  return (
-                    <li key={o.id} id={`#reference-${o.id}`}>[{idx + 1}] <em>{ref.authors}</em> {ref.title}</li>
-                  );
-                })}
-              </ol>
-            </AtbdSectionBody>
-          </AtbdSection>
-        )}
+        {index.map(entry => entry.renderer(entry))}
       </React.Fragment>
     );
   }
@@ -370,7 +680,6 @@ class AtbdView extends Component {
     } = this.props;
 
     if (!atbd) return null;
-
 
     return (
       <Inpage>
@@ -438,6 +747,19 @@ class AtbdView extends Component {
             </Sticky>
             <InpageBody>
               <InpageBodyInner>
+
+                <AtbdMeta>
+                  <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
+                  <AtbdMetaDetails type="horizontal">
+                    <dt>Version</dt>
+                    <dd>{atbd.atbd_versions[0].atbd_version}</dd>
+                    <dt>Date</dt>
+                    <dd>10 Feb, 2019</dd>
+                    <dt>Authors</dt>
+                    <dd>Name</dd>
+                  </AtbdMetaDetails>
+                </AtbdMeta>
+
                 {this.renderContent()}
               </InpageBodyInner>
             </InpageBody>
@@ -481,33 +803,3 @@ export default connect(
   mapStateToProps,
   mapDispatch
 )(AtbdView);
-
-
-function ReadOnlyEditorSection({
-  title, document, renderNode, renderMark
-}) {
-  return (
-    <AtbdSection>
-      <AtbdSectionHeader>
-        <AtbdSectionTitle>{title}</AtbdSectionTitle>
-      </AtbdSectionHeader>
-      <AtbdSectionBody>
-        <Prose>
-          <Editor
-            readOnly
-            value={Value.fromJSON(document)}
-            renderNode={renderNode}
-            renderMark={renderMark}
-          />
-        </Prose>
-      </AtbdSectionBody>
-    </AtbdSection>
-  );
-}
-
-ReadOnlyEditorSection.propTypes = {
-  title: T.string,
-  document: T.object,
-  renderNode: T.func,
-  renderMark: T.func
-};
