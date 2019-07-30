@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { withFormik } from 'formik';
 import styled from 'styled-components';
 
@@ -157,11 +156,4 @@ const ReferenceForm = withFormik({
   }
 })(InnerForm);
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = {};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ReferenceForm);
+export default ReferenceForm;

@@ -10,11 +10,16 @@ import {
   FormGroupBody
 } from '../../styles/form/group';
 
+import apiSchema from '../../schemas/schema.json';
+import transformInputType from '../../schemas/transformInputType';
+
 export default class ReferenceFormGroup extends React.Component {
   render() {
     const {
       field, values, errors, onChange, onBlur
     } = this.props;
+    const publicationReferenceFields = apiSchema
+      .definitions.publication_references.properties;
     return (
       <FormGroup>
         <FormGroupHeader>
@@ -24,7 +29,7 @@ export default class ReferenceFormGroup extends React.Component {
           <FormInput
             id={`reference-form-${field.id}`}
             name={field.id}
-            type="text"
+            type={transformInputType(publicationReferenceFields[field.id].type)}
             onChange={onChange}
             onBlur={onBlur}
             value={values[field.id] || ''}
