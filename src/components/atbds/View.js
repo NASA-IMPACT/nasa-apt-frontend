@@ -76,6 +76,10 @@ const AtbdSectionBody = styled.div`
     margin-top: ${multiply(themeVal('layout.space'), 2)};
     margin-bottom: ${themeVal('layout.space')};
   }
+
+  table {
+    margin-bottom: ${themeVal('layout.space')};
+  }
 `;
 
 function AtbdSectionBase({
