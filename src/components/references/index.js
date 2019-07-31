@@ -70,13 +70,14 @@ export class References extends React.Component {
     const payload = Object.keys(publicationReferenceFields)
       .reduce((acc, key) => {
         const value = values[key];
-        if (value) {
+        if (!value || value === '') {
           // Replace empty string with null
-          acc[key] = value !== '' ? value : null;
+          acc[key] = null;
+        } else {
+          acc[key] = value;
         }
         return acc;
       }, {});
-
     if (values.isNew) {
       createReferenceAction(payload);
       this.deleteNewReference(values);
