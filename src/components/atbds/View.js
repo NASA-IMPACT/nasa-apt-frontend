@@ -126,11 +126,9 @@ class AtbdView extends Component {
   static propTypes = {
     atbd: T.object,
     atbdVersion: T.object,
+    serializingAtbdVersion: T.object,
     serializeDocumentAction: T.func,
     fetchAtbdAction: T.func,
-    isSerializingPdf: T.bool,
-    serializePdfFail: T.bool,
-    pdfUrl: T.string,
     match: T.object,
     visitLink: T.func
   };
@@ -150,9 +148,17 @@ class AtbdView extends Component {
     const {
       atbd: oldAtbd,
       serializeDocumentAction,
-      isSerializingPdf: wasSerializingPdf
+      serializingAtbdVersion: {
+        isSerializingPdf: wasSerializingPdf
+      }
     } = this.props;
-    const { atbd, isSerializingPdf } = nextProps;
+
+    const {
+      atbd,
+      serializingAtbdVersion: {
+        isSerializingPdf
+      }
+    } = nextProps;
 
     // Start serialization, if is not already started
     if (
@@ -714,9 +720,11 @@ class AtbdView extends Component {
   render() {
     const {
       atbd,
-      pdfUrl,
-      isSerializingPdf,
-      serializePdfFail,
+      serializingAtbdVersion: {
+        isSerializingPdf,
+        serializePdfFail,
+        pdf
+      },
       visitLink
     } = this.props;
 
@@ -765,7 +773,7 @@ class AtbdView extends Component {
                         title="Download document as PDF"
                         as="a"
                         target="_blank"
-                        href={pdfUrl}
+                        href={pdf}
                         disabled={isSerializingPdf || serializePdfFail}
                       >
                         Download PDF
@@ -815,20 +823,16 @@ const mapStateToProps = (state) => {
   const {
     selectedAtbd,
     serializingAtbdVersion,
-    isSerializingHtml,
-    isSerializingPdf,
-    serializePdfFail,
-    serializeHtmlFail,
     atbdVersion
   } = state.application;
+
+  const { atbd_id } = selectedAtbd || {};
   return {
     atbdVersion,
     atbd: selectedAtbd,
-    isSerializingHtml,
-    isSerializingPdf,
-    serializePdfFail,
-    serializeHtmlFail,
-    pdfUrl: serializingAtbdVersion && serializingAtbdVersion.pdf
+    serializingAtbdVersion: serializingAtbdVersion && atbd_id
+      ? serializingAtbdVersion[atbd_id]
+      : {}
   };
 };
 

@@ -25,21 +25,24 @@ const AtbdPreview = (props) => {
   } = props;
 
   const {
-    atbd_id: serializing_id,
     pdf,
-    html
+    html,
+    isSerializingHtml,
+    isSerializingPdf,
+    serializeHtmlFail,
+    serializePdfFail
   } = serializingAtbdVersion || {};
 
   let label = 'Preview';
-  let pdfLink = <span />;
-  let htmlLink = <span />;
-  if (atbd_id === serializing_id && pdf) {
+  let pdfLink = null;
+  let htmlLink = null;
+  if (!serializePdfFail && pdf) {
     pdfLink = <Link target="_blank" href={pdf}>PDF</Link>;
   }
-  if (atbd_id === serializing_id && html) {
+  if (!serializeHtmlFail && html) {
     htmlLink = <Link target="_blank" href={html}>HTML</Link>;
   }
-  if (atbd_id === serializing_id && !(pdf && html)) {
+  if (isSerializingHtml || isSerializingPdf) {
     label = 'Creating';
   }
   return (
@@ -72,8 +75,12 @@ AtbdPreview.propTypes = {
 
 const mapDispatchToProps = { serializeDocument };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, props) => {
   const { serializingAtbdVersion } = state.application;
-  return { serializingAtbdVersion };
+  return {
+    serializingAtbdVersion: serializingAtbdVersion
+      ? serializingAtbdVersion[props.atbd_id]
+      : {}
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(AtbdPreview);

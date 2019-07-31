@@ -849,7 +849,7 @@ export function serializeDocument(versionObject) {
   };
 }
 
-export function checkPdf(key) {
+export function checkPdf(key, { atbd_id }) {
   return {
     [RSAA]: {
       endpoint: `${s3Uri}/${atbdBucket}/${key}.pdf`,
@@ -860,7 +860,7 @@ export function checkPdf(key) {
         if (res.status === 200) {
           const location = `${s3Uri}/${atbdBucket}/${key}.pdf`;
           response = new Response(
-            JSON.stringify({ location }),
+            JSON.stringify({ location, atbd_id }),
             {
               status: res.status,
               headers: {
@@ -882,7 +882,7 @@ export function checkPdf(key) {
   };
 }
 
-export function checkHtml(key) {
+export function checkHtml(key, { atbd_id }) {
   return {
     [RSAA]: {
       endpoint: `${s3Uri}/${atbdBucket}/${key}/index.html`,
@@ -893,7 +893,7 @@ export function checkHtml(key) {
         if (res.status === 200) {
           const location = `${atbdBucketWebsite}/${key}/`;
           response = new Response(
-            JSON.stringify({ location }),
+            JSON.stringify({ location, atbd_id }),
             {
               status: res.status,
               headers: {

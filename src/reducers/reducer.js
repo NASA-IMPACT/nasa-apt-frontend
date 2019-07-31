@@ -359,80 +359,6 @@ export default function (state = initialState, action) {
       };
     }
 
-    case actions.SERIALIZE_DOCUMENT: {
-      const { payload } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...payload
-        },
-        isSerializingHtml: true,
-        isSerializingPdf: true,
-        serializeHtmlFail: false,
-        serializePdfFail: false
-      };
-    }
-
-    case actions.SERIALIZE_HTML_SUCCESS: {
-      const {
-        payload: { location: html }
-      } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...state.serializingAtbdVersion,
-          html
-        },
-        isSerializingHtml: false,
-        serializeHtmlFail: false
-      };
-    }
-
-    case actions.SERIALIZE_PDF_FAIL: {
-      const newState = Object.assign({}, state);
-      if (
-        newState.serializingAtbdVersion
-        && newState.serializingAtbdVersion.pdf
-      ) {
-        delete newState.serializingAtbdVersion.pdf;
-      }
-      return {
-        ...newState,
-        isSerializingPdf: false,
-        serializePdfFail: true
-      };
-    }
-
-    case actions.SERIALIZE_PDF_SUCCESS: {
-      const {
-        payload: { location: pdfLocation }
-      } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...state.serializingAtbdVersion,
-          pdf: pdfLocation
-        },
-        isSerializingPdf: false,
-        serializePdfFail: false
-      };
-    }
-
-    case actions.SERIALIZE_HTML_FAIL: {
-      const newState = Object.assign({}, state);
-      if (
-        newState.serializingAtbdVersion
-        && newState.serializingAtbdVersion.html
-      ) {
-        delete newState.serializingAtbdVersion.html;
-      }
-      return {
-        ...newState,
-        isSerializingHtml: false,
-        serializeHtmlFail: true
-      };
-    }
-
     case actions.DELETE_ATBD_SUCCESS: {
       const { payload: { atbd_id } } = action;
       return {
@@ -447,7 +373,80 @@ export default function (state = initialState, action) {
       return handleLoading(state, action);
     }
 
+    case actions.SERIALIZE_DOCUMENT:
+    case actions.SERIALIZE_HTML_SUCCESS:
+    case actions.SERIALIZE_PDF_FAIL:
+    case actions.SERIALIZE_PDF_SUCCESS:
+    case actions.SERIALIZE_HTML_FAIL: {
+      return {
+        ...state,
+        serializingAtbdVersion: handleSerialize(state.serializingAtbdVersion, action)
+      };
+    }
+
     default:
       return state;
   }
 }
+
+const handleSerialize = (stateSlice = {}, action) => {
+  const { type, payload } = action;
+  const { atbd_id } = payload;
+
+  if (type === actions.SERIALIZE_DOCUMENT) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        atbd_id,
+        pdf: null,
+        html: null,
+        isSerializingHtml: true,
+        isSerializingPdf: true,
+        serializeHtmlFail: false,
+        serializePdfFail: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_HTML_SUCCESS) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        html: payload.location,
+        isSerializingHtml: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_HTML_FAIL) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        html: null,
+        isSerializingHtml: false,
+        serializeHtmlFail: true,
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_PDF_SUCCESS) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        pdf: payload.location,
+        isSerializingPdf: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_PDF_FAIL) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        pdf: null,
+        isSerializingPdf: false,
+        serializePdfFail: true,
+      }
+    };
+  }
+};

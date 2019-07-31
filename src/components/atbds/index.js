@@ -199,7 +199,7 @@ const AtbdList = (props) => {
               >
                 Actions
               </DocTableActionsTrigger>
-)}
+            )}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
@@ -218,8 +218,7 @@ const AtbdList = (props) => {
                   title="Edit document"
                   onClick={() => props.push(
                     `/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`
-                  )
-                  }
+                  )}
                 >
                   Edit
                 </DocTableActionEdit>
@@ -271,7 +270,7 @@ const AtbdList = (props) => {
                         >
                           All
                         </FilterTrigger>
-)}
+                      )}
                     >
                       <DropTitle>Select status</DropTitle>
                       <DropMenu role="menu" selectable>
