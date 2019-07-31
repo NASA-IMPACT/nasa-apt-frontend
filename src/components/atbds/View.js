@@ -11,9 +11,7 @@ import { Editor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
 import {
-  fetchAtbd,
-  serializeDocument,
-  fetchEntireAtbdVersion
+  serializeDocument
 } from '../../actions/actions';
 
 // Components
@@ -148,16 +146,6 @@ class AtbdView extends Component {
     this.renderNode = this.renderNode.bind(this);
   }
 
-  componentDidMount() {
-    const {
-      match: {
-        params: { atbd_id }
-      },
-      fetchAtbdAction
-    } = this.props;
-    fetchAtbdAction(atbd_id);
-  }
-
   componentWillReceiveProps(nextProps) {
     const {
       atbd: oldAtbd,
@@ -175,10 +163,6 @@ class AtbdView extends Component {
       this.pdfCreationToast = toasts.info('PDF document is being created', {
         autoClose: false
       });
-      fetchEntireAtbdVersion({
-        atbd_id: atbd.atbd_id,
-        atbd_version: atbd.atbd_versions[0].atbd_version
-      });
       serializeDocumentAction({
         atbd_id: atbd.atbd_id,
         atbd_version: atbd.atbd_versions[0].atbd_version
@@ -190,6 +174,10 @@ class AtbdView extends Component {
       toast.dismiss(this.pdfCreationToast);
       toasts.success('PDF document ready');
     }
+  }
+
+  componentWillUnmount() {
+    toast.dismiss(this.pdfCreationToast);
   }
 
   /* eslint-disable-next-line */
@@ -299,6 +287,8 @@ class AtbdView extends Component {
   }
 
   renderReadOnlyEditor(document) {
+    if (!document) return 'Not Available';
+
     return (
       <Editor
         readOnly
@@ -313,17 +303,17 @@ class AtbdView extends Component {
     return vars.map(v => (
       <Dl type="horizontal" key={v[idKey]}>
         <dt>Name</dt>
-        <dd>{v.document
+        <dd>{v.name.document
           ? this.renderReadOnlyEditor(v.name)
           : v.name}
         </dd>
         <dt>Long name</dt>
-        <dd>{v.document
+        <dd>{v.long_name.document
           ? this.renderReadOnlyEditor(v.long_name)
           : v.long_name}
         </dd>
         <dt>Unit</dt>
-        <dd>{v.document
+        <dd>{v.unit.document
           ? this.renderReadOnlyEditor(v.unit)
           : v.unit}
         </dd>
@@ -357,7 +347,9 @@ class AtbdView extends Component {
 
   renderContent() {
     const { atbdVersion, atbd } = this.props;
-    if (!atbdVersion) return null;
+    // Avoid a race condition when there's an atbdVersion loaded for
+    // another atbd.
+    if (!atbdVersion || atbdVersion.atbd_id !== atbd.atbd_id) return null;
 
     const {
       introduction,
@@ -647,7 +639,7 @@ class AtbdView extends Component {
       {
         label: 'Contacts',
         id: 'contacts',
-        renderer: el => (atbd.contacts.length || atbd.contact_groups.length) && (
+        renderer: el => (atbd.contacts.length || atbd.contact_groups.length) ? (
           <AtbdSection key={el.id} id={el.id} title={el.label}>
             <ul>
               {atbd.contacts.concat(atbd.contact_groups).map(contact => (
@@ -687,12 +679,12 @@ class AtbdView extends Component {
               ))}
             </ul>
           </AtbdSection>
-        )
+        ) : null
       },
       {
         label: 'References',
         id: 'references',
-        renderer: el => this.referenceIndex.length && (
+        renderer: el => this.referenceIndex.length ? (
           <AtbdSection key={el.id} id={el.id} title={el.label}>
             <ol>
               {this.referenceIndex.map((o, idx) => {
@@ -703,7 +695,7 @@ class AtbdView extends Component {
               })}
             </ol>
           </AtbdSection>
-        )
+        ) : null
       }
     ];
 
@@ -836,16 +828,13 @@ const mapStateToProps = (state) => {
     isSerializingPdf,
     serializePdfFail,
     serializeHtmlFail,
-    htmlUrl: serializingAtbdVersion && serializingAtbdVersion.html,
     pdfUrl: serializingAtbdVersion && serializingAtbdVersion.pdf
   };
 };
 
 const mapDispatch = {
-  fetchAtbdAction: fetchAtbd,
   serializeDocumentAction: serializeDocument,
-  visitLink: push,
-  fetchEntireAtbdVersion
+  visitLink: push
 };
 
 export default connect(
