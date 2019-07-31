@@ -146,7 +146,6 @@ class AtbdView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {
-      atbd: oldAtbd,
       serializeDocumentAction,
       serializingAtbdVersion: {
         isSerializingPdf: wasSerializingPdf
@@ -156,16 +155,14 @@ class AtbdView extends Component {
     const {
       atbd,
       serializingAtbdVersion: {
-        isSerializingPdf
+        isSerializingPdf,
+        pdf,
+        serializePdfFail
       }
     } = nextProps;
 
     // Start serialization, if is not already started
-    if (
-      !isSerializingPdf
-      && atbd
-      && (!oldAtbd || atbd.atbd_id !== oldAtbd.atbd_id)
-    ) {
+    if (atbd && !isSerializingPdf && !pdf && !serializePdfFail) {
       this.pdfCreationToast = toasts.info('PDF document is being created', {
         autoClose: false
       });
