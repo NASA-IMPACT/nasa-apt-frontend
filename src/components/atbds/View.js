@@ -695,8 +695,10 @@ class AtbdView extends Component {
             <ol>
               {this.referenceIndex.map((o, idx) => {
                 const ref = publication_references.find(r => r.publication_reference_id === o.id);
-                return (
+                return ref ? (
                   <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] <em>{ref.authors}</em> {ref.title}</li>
+                ) : (
+                  <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] Reference not found</li>
                 );
               })}
             </ol>
