@@ -305,7 +305,7 @@ class AtbdView extends Component {
     );
   }
 
-  renderAlgorithmVars(vars, idKey) {
+  renderAlgorithmVars(vars = [], idKey) {
     return vars.map(v => (
       <Dl type="horizontal" key={v[idKey]}>
         <dt>Name</dt>
@@ -357,6 +357,8 @@ class AtbdView extends Component {
     // another atbd.
     if (!atbdVersion || atbdVersion.atbd_id !== atbd.atbd_id) return null;
 
+    // It is never certain that these variables will be set.
+    // Always check for undefined.
     const {
       introduction,
       publication_references,
@@ -507,7 +509,7 @@ class AtbdView extends Component {
             {el.children.map(child => child.renderer(child))}
           </AtbdSection>
         ),
-        children: algorithm_implementations.map((o, idx) => ({
+        children: (algorithm_implementations || []).map((o, idx) => ({
           label: `Entry #${idx + 1}`,
           id: `algo-implementations-${idx + 1}`,
           renderer: el => (
@@ -587,7 +589,7 @@ class AtbdView extends Component {
             label: 'Data Access Input Data',
             id: 'data-access-input',
             renderer: childrenPassThroughRenderer,
-            children: data_access_input_data.map((o, idx) => ({
+            children: (data_access_input_data || []).map((o, idx) => ({
               label: `Entry #${idx + 1}`,
               id: `data-access-input-${idx + 1}`,
               renderer: el => (
@@ -606,7 +608,7 @@ class AtbdView extends Component {
             label: 'Data Access Output Data',
             id: 'data-access-output',
             renderer: childrenPassThroughRenderer,
-            children: data_access_output_data.map((o, idx) => ({
+            children: (data_access_output_data || []).map((o, idx) => ({
               label: `Entry #${idx + 1}`,
               id: `data-access-output-${idx + 1}`,
               renderer: el => (
@@ -625,7 +627,7 @@ class AtbdView extends Component {
             label: 'Data Access Related URLs',
             id: 'data-access-related-urls',
             renderer: childrenPassThroughRenderer,
-            children: data_access_related_urls.map((o, idx) => ({
+            children: (data_access_related_urls || []).map((o, idx) => ({
               label: `Entry #${idx + 1}`,
               id: `data-access-related-urls-${idx + 1}`,
               renderer: el => (
@@ -645,47 +647,55 @@ class AtbdView extends Component {
       {
         label: 'Contacts',
         id: 'contacts',
-        renderer: el => (atbd.contacts.length || atbd.contact_groups.length) ? (
-          <AtbdSection key={el.id} id={el.id} title={el.label}>
-            <ul>
-              {atbd.contacts.concat(atbd.contact_groups).map(contact => (
-                <li key={contact.contact_id || contact.contact_group_id}>
-                  <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
-                  <Dl type="horizontal">
-                    {!!contact.roles.length && (
-                      <React.Fragment>
-                        <dt>Roles</dt>
-                        <dd>{contact.roles.join(', ')}</dd>
-                      </React.Fragment>
-                    )}
-                    {contact.url && (
-                      <React.Fragment>
-                        <dt>Url</dt>
-                        <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
-                      </React.Fragment>
-                    )}
-                    {contact.uuid && (
-                      <React.Fragment>
-                        <dt>UUID</dt>
-                        <dd>{contact.uuid}</dd>
-                      </React.Fragment>
-                    )}
-                  </Dl>
+        renderer: (el) => {
+          const contactsSingle = atbd.contacts || [];
+          const contactsGroups = atbd.contact_groups || [];
+          const contacts = contactsSingle.concat(contactsGroups);
 
-                  <h4>Mechanisms</h4>
-                  <Dl type="horizontal">
-                    {contact.mechanisms.map(m => (
-                      <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
-                        <dt>{m.mechanism_type}</dt>
-                        <dd>{m.mechanism_value}</dd>
-                      </React.Fragment>
-                    ))}
-                  </Dl>
-                </li>
-              ))}
-            </ul>
-          </AtbdSection>
-        ) : null
+          if (!contacts.length) return null;
+
+          return (
+            <AtbdSection key={el.id} id={el.id} title={el.label}>
+              <ul>
+                {contacts.map(contact => (
+                  <li key={contact.contact_id || contact.contact_group_id}>
+                    <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
+                    <Dl type="horizontal">
+                      {!!contact.roles.length && (
+                        <React.Fragment>
+                          <dt>Roles</dt>
+                          <dd>{contact.roles.join(', ')}</dd>
+                        </React.Fragment>
+                      )}
+                      {contact.url && (
+                        <React.Fragment>
+                          <dt>Url</dt>
+                          <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
+                        </React.Fragment>
+                      )}
+                      {contact.uuid && (
+                        <React.Fragment>
+                          <dt>UUID</dt>
+                          <dd>{contact.uuid}</dd>
+                        </React.Fragment>
+                      )}
+                    </Dl>
+
+                    <h4>Mechanisms</h4>
+                    <Dl type="horizontal">
+                      {contact.mechanisms.map(m => (
+                        <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
+                          <dt>{m.mechanism_type}</dt>
+                          <dd>{m.mechanism_value}</dd>
+                        </React.Fragment>
+                      ))}
+                    </Dl>
+                  </li>
+                ))}
+              </ul>
+            </AtbdSection>
+          );
+        }
       },
       {
         label: 'References',
@@ -694,7 +704,7 @@ class AtbdView extends Component {
           <AtbdSection key={el.id} id={el.id} title={el.label}>
             <ol>
               {this.referenceIndex.map((o, idx) => {
-                const ref = publication_references.find(r => r.publication_reference_id === o.id);
+                const ref = (publication_references || []).find(r => r.publication_reference_id === o.id);
                 return ref ? (
                   <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] <em>{ref.authors}</em> {ref.title}</li>
                 ) : (
