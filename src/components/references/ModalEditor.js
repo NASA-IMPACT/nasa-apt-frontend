@@ -30,6 +30,8 @@ import {
 import FormLabel from '../../styles/form/label';
 import FormInput from '../../styles/form/input';
 import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
+import apiSchema from '../../schemas/schema.json';
+import transformInputType from '../../schemas/transformInputType';
 
 export const ReferenceBtn = styled(Button)`
   ::before {
@@ -227,6 +229,9 @@ export class ReferenceModalEditor extends Component {
       label: 'New reference'
     });
 
+    const publicationReferenceFields = apiSchema
+      .definitions.publication_references.properties;
+
     return (
       <Fragment>
         <Modal
@@ -298,7 +303,7 @@ export class ReferenceModalEditor extends Component {
                           id={`reference-form-${field}`}
                           name={`reference-form-${field}`}
                           key={`reference-form-${field}`}
-                          type="text"
+                          type={transformInputType(publicationReferenceFields[field].type)}
                           value={fields[field]}
                           onChange={e => onOptionalFieldChange(e, field)}
                           optional

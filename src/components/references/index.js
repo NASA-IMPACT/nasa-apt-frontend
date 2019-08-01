@@ -14,6 +14,7 @@ import {
   deleteReference,
   updateReference
 } from '../../actions/actions';
+import apiSchema from '../../schemas/schema.json';
 
 export class References extends React.Component {
   constructor(props) {
@@ -63,33 +64,20 @@ export class References extends React.Component {
     const { createReferenceAction, updateReferenceAction } = this.props;
     const { publication_reference_id: id } = values;
 
+    const publicationReferenceFields = apiSchema
+      .definitions.publication_references.properties;
     // Create payload made only allowed properties for references
-    const payload = [
-      'atbd_id',
-      'atbd_version',
-      'authors',
-      'doi',
-      'edition',
-      'isbn',
-      'issue',
-      'online_resource',
-      'other_reference_details',
-      'pages',
-      'publication_place',
-      'publisher',
-      'report_number',
-      'series',
-      'title',
-      'volume'
-    ].reduce((acc, key) => {
-      const value = values[key];
-      if (value) {
-        // Replace empty string with null
-        acc[key] = value !== '' ? value : null;
-      }
-      return acc;
-    }, {});
-
+    const payload = Object.keys(publicationReferenceFields)
+      .reduce((acc, key) => {
+        const value = values[key];
+        if (!value || value === '') {
+          // Replace empty string with null
+          acc[key] = null;
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
     if (values.isNew) {
       createReferenceAction(payload);
       this.deleteNewReference(values);
