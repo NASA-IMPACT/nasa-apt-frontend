@@ -21,6 +21,15 @@ export const TableBtn = styled(Button)`
   }
 `;
 
+export const RemoveBtn = styled(Button).attrs({
+  variation: 'base-raised-light',
+  size: 'small'
+})`
+  ::before {
+    ${collecticon('trash-bin')}
+  }
+`;
+
 export const Toolbar = styled.div`
   display: flex;
   flex-flow: row nowrap;
