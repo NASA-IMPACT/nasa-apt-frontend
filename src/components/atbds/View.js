@@ -839,7 +839,7 @@ const mapStateToProps = (state) => {
   return {
     atbdVersion,
     atbd: selectedAtbd,
-    serializingAtbdVersion: serializingAtbdVersion && atbd_id
+    serializingAtbdVersion: serializingAtbdVersion && atbd_id && serializingAtbdVersion[atbd_id]
       ? serializingAtbdVersion[atbd_id]
       : {}
   };
