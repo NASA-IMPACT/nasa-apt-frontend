@@ -164,7 +164,7 @@ class ContactFormWrapper extends Component {
           <AddContactDropBtn size="large" variation="base-raised-light">
             {this.getDropLabel()}
           </AddContactDropBtn>
-)}
+        )}
       >
         <ReactSelect
           autoFocus
@@ -191,7 +191,7 @@ class ContactFormWrapper extends Component {
   }
 
   render() {
-    const { title, contact } = this.props;
+    const { title } = this.props;
 
     return (
       <FormFieldset>
@@ -207,7 +207,7 @@ class ContactFormWrapper extends Component {
           </RemoveButton>
         </FormFieldsetHeader>
         <FormFieldsetBody>
-          {!contact.atbd_id && this.renderContactSelectDropdown()}
+          {this.renderContactSelectDropdown()}
           {this.renderForm()}
         </FormFieldsetBody>
       </FormFieldset>

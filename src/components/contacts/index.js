@@ -25,7 +25,7 @@ class Contacts extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: []
+      contacts: null
     };
 
     this.addContact = this.addContact.bind(this);
@@ -38,8 +38,25 @@ class Contacts extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // Dev notes:
+    // The order in which the contacts are displayed in the form may not reflect
+    // their order in the ATBD and there's no way to enforce it.
+    // The order will persist while the contacts are being added, but a new data
+    // fetch will result in the contacts being displayed in the order they
+    // come from the api.
+    // The form allows users to add person contacts and group contacts through
+    // the same interface, but they're stored in different lists, so whenever
+    // there's a fresh render the groups are always displayed last.
+    // The checking of `stateContacts === null` is also related to the contact
+    // order. The contacts get added and removed from the `selectedAtbd` through
+    // the reducer when a corresponding action gets fired. Because of it, the
+    // `selectedAtbd` value would change and the display order with it making
+    // the experience confusing for the user. By checking if the contact state
+    // was initialized we ensure that this code only fires once, as soon as
+    // there's data.
     const { selectedAtbd } = this.props;
-    if (selectedAtbd !== nextProps.selectedAtbd && nextProps.selectedAtbd) {
+    const { contacts: stateContacts } = this.state;
+    if (stateContacts === null && selectedAtbd !== nextProps.selectedAtbd && nextProps.selectedAtbd) {
       const { atbd_id, contacts, contact_groups } = nextProps.selectedAtbd;
       this.setState({
         contacts: [
@@ -75,33 +92,39 @@ class Contacts extends React.Component {
     });
   }
 
-  async onRemoveClick(idx) {
+  async detachContact(contact) {
     const {
       deleteAtbdContact: deleteContact,
       deleteAtbdContactGroup: deleteContactGroup
     } = this.props;
-    const { contacts } = this.state;
     const {
       isGroup,
       displayName,
       atbd_id,
       contact_group_id,
       contact_id
-    } = contacts[idx];
+    } = contact;
     const { result } = await confirmRemoveContact(
       displayName || 'New Contact',
       isGroup
     );
 
-    if (result) {
-      if (atbd_id) {
-        // Contact is attached. Detach.
-        const deleteFn = isGroup ? deleteContactGroup : deleteContact;
-        const id = isGroup ? contact_group_id : contact_id;
-        const removeRes = await deleteFn(atbd_id, id);
-        // Safety check. Toast is displayed through middleware.
-        if (removeRes.type.endsWith('_FAIL')) return;
-      }
+    if (!result) return false;
+    if (atbd_id) {
+      // Contact is attached. Detach.
+      const deleteFn = isGroup ? deleteContactGroup : deleteContact;
+      const id = isGroup ? contact_group_id : contact_id;
+      const removeRes = await deleteFn(atbd_id, id);
+      // Safety check. Toast is displayed through middleware.
+      if (removeRes.type.endsWith('_FAIL')) return false;
+    }
+    return true;
+  }
+
+  async onRemoveClick(idx) {
+    const { contacts } = this.state;
+    const success = await this.detachContact(contacts[idx]);
+    if (success) {
       const next = contacts.filter((d, i) => i !== idx);
       this.setState({ contacts: next });
     }
@@ -109,8 +132,17 @@ class Contacts extends React.Component {
 
   // Triggered when the option selected from the dropdown changes.
   // Used to select an existing contact from the list.
-  onSelectChange(idx, selectedContact) {
+  async onSelectChange(idx, selectedContact) {
     const { contacts } = this.state;
+    const { atbd_id } = contacts[idx];
+
+    // If the current contact is attached to an ATBD we need to detach it
+    // before continuing.
+    if (atbd_id) {
+      const success = await this.detachContact(contacts[idx]);
+      if (!success) return;
+    }
+
     this.setState({
       contacts: Object.assign([], contacts, {
         [idx]: {
