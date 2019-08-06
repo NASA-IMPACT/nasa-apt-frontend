@@ -37,14 +37,12 @@ export class IdentifyingInformation extends Component {
     super(props);
     this.state = {
       title: '',
-      titleEmpty: false,
 
       // Hide the citation form by default,
       // as it's not required and also very long.
       showCitationForm: false
     };
     this.onTextFieldChange = this.onTextFieldChange.bind(this);
-    this.onTextFieldBlur = this.onTextFieldBlur.bind(this);
     this.updateAtbdTitle = this.updateAtbdTitle.bind(this);
     this.toggleCitationForm = this.toggleCitationForm.bind(this);
   }
@@ -62,14 +60,8 @@ export class IdentifyingInformation extends Component {
 
   onTextFieldChange(e, prop) {
     this.setState({
-      [prop]: e.currentTarget.value
-    });
-  }
-
-  onTextFieldBlur(e, prop) {
-    const empty = !e.currentTarget.value;
-    this.setState({
-      [prop]: empty
+      [prop]: e.currentTarget.value,
+      [`${prop}Touched`]: true
     });
   }
 
@@ -102,12 +94,11 @@ export class IdentifyingInformation extends Component {
     if (atbd) {
       const {
         title: atbdTitle,
-        titleEmpty,
+        titleTouched,
         showCitationForm
       } = this.state;
       const {
         onTextFieldChange,
-        onTextFieldBlur,
         updateAtbdTitle
       } = this;
 
@@ -146,10 +137,10 @@ export class IdentifyingInformation extends Component {
                         placeholder="Enter a title"
                         value={atbdTitle}
                         onChange={e => onTextFieldChange(e, 'title')}
-                        onBlur={e => onTextFieldBlur(e, 'titleEmpty')}
-                        invalid={titleEmpty}
+                        onBlur={e => onTextFieldChange(e, 'title')}
+                        invalid={titleTouched && atbdTitle === ''}
                       />
-                      {titleEmpty && (
+                      {titleTouched && atbdTitle === '' && (
                         <FormHelper>
                           <FormHelperMessage>Please enter a title.</FormHelperMessage>
                         </FormHelper>
@@ -158,6 +149,7 @@ export class IdentifyingInformation extends Component {
                   </FormGroup>
                   <Button
                     onClick={updateAtbdTitle}
+                    disabled={atbdTitle === ''}
                     variation="base-raised-light"
                     size="large"
                     type="submit"
