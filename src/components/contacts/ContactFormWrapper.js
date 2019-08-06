@@ -4,25 +4,25 @@ import PropTypes from 'prop-types';
 import ReactSelect from 'react-select';
 import styled from 'styled-components';
 
-import Dropdown from './common/Dropdown';
-import FormLegend from '../styles/form/legend';
-import FormLabel from '../styles/form/label';
+import Dropdown from '../common/Dropdown';
+import FormLegend from '../../styles/form/legend';
+import FormLabel from '../../styles/form/label';
 import {
   FormFieldset,
   FormFieldsetHeader,
   FormFieldsetBody
-} from '../styles/form/fieldset';
+} from '../../styles/form/fieldset';
 import {
   FormGroup,
   FormGroupBody,
   FormGroupHeader
-} from '../styles/form/group';
-import { FormCheckable, FormCheckableGroup } from '../styles/form/checkable';
-import RemoveButton from '../styles/button/remove';
+} from '../../styles/form/group';
+import { FormCheckable, FormCheckableGroup } from '../../styles/form/checkable';
+import RemoveButton from '../../styles/button/remove';
 import ContactForm from './ContactForm';
-import Button from '../styles/button/button';
-import collecticon from '../styles/collecticons';
-import AddBtn from '../styles/button/add';
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
+import AddBtn from '../../styles/button/add';
 
 const PERSON = 'person';
 const GROUP = 'group';

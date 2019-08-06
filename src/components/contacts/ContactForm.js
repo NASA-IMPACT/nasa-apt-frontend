@@ -7,32 +7,32 @@ import jsonschema from 'jsonschema';
 import styled from 'styled-components/macro';
 import { get, set } from 'object-path';
 
-import apiSchema from '../schemas/schema.json';
-import addMinLength from '../schemas/addMinLength';
-import transformErrors from '../schemas/transformErrors';
-import validateEmail from '../schemas/validateEmail';
-import Select from './common/Select';
-import Input, { InputFormGroup } from './common/Input';
+import apiSchema from '../../schemas/schema.json';
+import addMinLength from '../../schemas/addMinLength';
+import transformErrors from '../../schemas/transformErrors';
+import validateEmail from '../../schemas/validateEmail';
+import Select from '../common/Select';
+import Input, { InputFormGroup } from '../common/Input';
 import {
   FormFieldset,
   FormFieldsetHeader,
   FormFieldsetBody
-} from '../styles/form/fieldset';
+} from '../../styles/form/fieldset';
 import {
   FormGroup,
   FormGroupBody,
   FormGroupHeader
-} from '../styles/form/group';
-import { FormHelper, FormHelperMessage } from '../styles/form/helper';
-import { FormCheckable } from '../styles/form/checkable';
-import Form from '../styles/form/form';
-import FormLegend from '../styles/form/legend';
-import FormLabel from '../styles/form/label';
-import FormToolbar from '../styles/form/toolbar';
-import InfoButton from './common/InfoButton';
-import SubmitBtn from '../styles/button/submit';
-import AddBtn from '../styles/button/add';
-import RemoveButton from '../styles/button/remove';
+} from '../../styles/form/group';
+import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
+import { FormCheckable } from '../../styles/form/checkable';
+import Form from '../../styles/form/form';
+import FormLegend from '../../styles/form/legend';
+import FormLabel from '../../styles/form/label';
+import FormToolbar from '../../styles/form/toolbar';
+import InfoButton from '../common/InfoButton';
+import SubmitBtn from '../../styles/button/submit';
+import AddBtn from '../../styles/button/add';
+import RemoveButton from '../../styles/button/remove';
 
 const validator = new jsonschema.Validator();
 
