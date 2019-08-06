@@ -254,9 +254,20 @@ class Contacts extends React.Component {
     const { atbd_id, title } = selectedAtbd;
     const { contacts } = this.state;
 
-    const availableContacts = [...allContacts, ...allContactGroups].filter(
-      o => !contacts.find(c => c.id === o.id)
-    );
+    const availableContacts = [
+      {
+        label: 'Person',
+        options: allContacts.filter(
+          o => !contacts.find(c => c.id === o.id)
+        )
+      },
+      {
+        label: 'Group',
+        options: allContactGroups.filter(
+          o => !contacts.find(c => c.id === o.id)
+        )
+      }
+    ];
 
     return (
       <Inpage>

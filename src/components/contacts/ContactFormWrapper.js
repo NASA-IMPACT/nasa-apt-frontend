@@ -40,6 +40,18 @@ const ContactSelectDropdown = styled(Dropdown)`
   min-width: 20rem;
 `;
 
+const MagnifierIcon = styled.i`
+  padding: 0 0.5rem;
+
+  ::after {
+    ${collecticon('magnifier-right')}
+  }
+`;
+
+const selectStyles = {
+  menu: () => ({}) // Remove all styles
+};
+
 class ContactFormWrapper extends Component {
   constructor(props) {
     super(props);
@@ -168,7 +180,8 @@ class ContactFormWrapper extends Component {
       >
         <ReactSelect
           autoFocus
-          components={{ Menu }}
+          styles={selectStyles}
+          components={{ DropdownIndicator, IndicatorSeparator: null }}
           getOptionLabel={opt => opt.displayName}
           getOptionValue={opt => opt.id}
           backspaceRemovesValue={false}
@@ -230,8 +243,4 @@ ContactFormWrapper.propTypes = {
 
 export default ContactFormWrapper;
 
-const Menu = ({ children }) => <div>{children}</div>;
-
-Menu.propTypes = {
-  children: PropTypes.node
-};
+const DropdownIndicator = () => <MagnifierIcon />;
