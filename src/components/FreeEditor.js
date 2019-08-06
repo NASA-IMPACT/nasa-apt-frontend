@@ -449,7 +449,6 @@ export class FreeEditor extends React.Component {
                 }) => (
                   <span ref={ref} style={style} data-placement={placement}>
                     <RemoveBtn
-                      hideText
                       onClick={() => this.editor.unwrapInline('link')}
                     >
                       Remove Link
