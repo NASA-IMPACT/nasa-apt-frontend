@@ -17,7 +17,7 @@ const returnObjectHeaders = {
 };
 
 export function createContact(contact) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/contacts`,
       method: 'POST',
@@ -29,11 +29,11 @@ export function createContact(contact) {
         types.CREATE_CONTACT_FAIL
       ]
     }
-  };
+  });
 }
 
 export function createContactGroup(contactGroup) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/contact_groups`,
       method: 'POST',
@@ -45,11 +45,11 @@ export function createContactGroup(contactGroup) {
         types.CREATE_CONTACT_GROUP_FAIL
       ]
     }
-  };
+  });
 }
 
 export function updateContact(contact_id, document) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/contacts?contact_id=eq.${contact_id}`,
       method: 'PATCH',
@@ -61,11 +61,11 @@ export function updateContact(contact_id, document) {
         types.UPDATE_CONTACT_FAIL
       ]
     }
-  };
+  });
 }
 
 export function updateContactGroup(contact_group_id, document) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/contact_groups?contact_group_id=eq.${contact_group_id}`,
       method: 'PATCH',
@@ -77,7 +77,7 @@ export function updateContactGroup(contact_group_id, document) {
         types.UPDATE_CONTACT_GROUP_FAIL
       ]
     }
-  };
+  });
 }
 
 export function createAtbd() {
@@ -307,7 +307,7 @@ export function fetchContacts() {
 }
 
 export function createAtbdContact(atbd_contact) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/atbd_contacts`,
       method: 'POST',
@@ -319,11 +319,11 @@ export function createAtbdContact(atbd_contact) {
         types.CREATE_ATBD_CONTACT_FAIL
       ]
     }
-  };
+  });
 }
 
 export function deleteAtbdContact(atbd_id, contact_id) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint:
         `${BASE_URL}/atbd_contacts?atbd_id=eq.${atbd_id}&contact_id=eq.${contact_id}`,
@@ -335,7 +335,7 @@ export function deleteAtbdContact(atbd_id, contact_id) {
         types.DELETE_ATBD_CONTACT_FAIL
       ]
     }
-  };
+  });
 }
 
 export function fetchContactGroups() {
@@ -353,7 +353,7 @@ export function fetchContactGroups() {
 }
 
 export function createAtbdContactGroup(atbd_contact_group) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/atbd_contact_groups`,
       method: 'POST',
@@ -365,11 +365,11 @@ export function createAtbdContactGroup(atbd_contact_group) {
         types.CREATE_ATBD_CONTACT_GROUP_FAIL
       ]
     }
-  };
+  });
 }
 
 export function deleteAtbdContactGroup(atbd_id, contact_group_id) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/atbd_contact_groups?atbd_id=eq.${atbd_id}&`
         + `contact_group_id=eq.${contact_group_id}`,
@@ -381,7 +381,7 @@ export function deleteAtbdContactGroup(atbd_id, contact_group_id) {
         types.DELETE_ATBD_CONTACT_GROUP_FAIL
       ]
     }
-  };
+  });
 }
 
 export function createAlgorithmInputVariable(variable) {
