@@ -28,7 +28,7 @@ import ConfirmationPrompt from './components/common/ConfirmationPrompt';
 import AtbdList from './components/AtbdList';
 import IdentifyingInformation from './components/IdentifyingInformation';
 import Introduction from './components/Introduction';
-import Contacts from './components/Contacts';
+import Contacts from './components/contacts/';
 import AlgorithmDescription from './components/AlgorithmDescription';
 import AlgorithmUsage from './components/AlgorithmUsage';
 import AlgorithmImplementation from './components/AlgorithmImplementation';

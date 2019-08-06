@@ -238,3 +238,47 @@ export function confirmDeleteDoc(name, data) {
     data
   });
 }
+
+
+/**
+ * Convenience method to show a remove confirmation prompt for a atbd contact.
+ * Will display a "Cancel/Remove" buttons and:
+ * title: 'Remove this (contact|contact group) from the ATBD?'
+ * content: <p>The (contact|contact group) <strong>{name}</strong> will be removed.</p>
+ *
+ * @param {string} name Name of the contact to remove
+ * @param {any} data Any extra data that the confirmation prompt should keep
+ *              track of. Useful to know what confirmation we're working with.
+ */
+export function confirmRemoveContact(name, isGroup, data) {
+  const what = isGroup ? 'contact group' : 'contact';
+  return showConfirmationPrompt({
+    title: `Remove this ${what} from the ATBD?`,
+    content: (
+      <React.Fragment>
+        <p>The {what} <strong>{name}</strong> will be removed.</p>
+        <p>This action will not remove the {what} from APT.</p>
+      </React.Fragment>
+    ),
+    // eslint-disable-next-line
+    renderControls: ({ confirm, cancel }) => (
+      <React.Fragment>
+        <ModalCancelButton
+          variation="base-raised-light"
+          title="Cancel contact removal"
+          onClick={cancel}
+        >
+          Cancel
+        </ModalCancelButton>
+        <ModalDeleteButton
+          variation="base-raised-light"
+          title="Confirm contact removal"
+          onClick={confirm}
+        >
+          Remove
+        </ModalDeleteButton>
+      </React.Fragment>
+    ),
+    data
+  });
+}

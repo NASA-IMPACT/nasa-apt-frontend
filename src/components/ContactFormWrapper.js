@@ -1,18 +1,10 @@
 /* eslint camelcase: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import ReactSelect from 'react-select';
+import styled from 'styled-components';
 
-import {
-  createAtbdContact,
-  createContact,
-  updateContact,
-  createAtbdContactGroup,
-  createContactGroup,
-  updateContactGroup
-} from '../actions/actions';
-
-import Select from './common/Select';
+import Dropdown from './common/Dropdown';
 import FormLegend from '../styles/form/legend';
 import FormLabel from '../styles/form/label';
 import {
@@ -25,121 +17,49 @@ import {
   FormGroupBody,
   FormGroupHeader
 } from '../styles/form/group';
-import {
-  FormCheckable,
-  FormCheckableGroup
-} from '../styles/form/checkable';
+import { FormCheckable, FormCheckableGroup } from '../styles/form/checkable';
 import RemoveButton from '../styles/button/remove';
-
 import ContactForm from './ContactForm';
+import Button from '../styles/button/button';
+import collecticon from '../styles/collecticons';
+import AddBtn from '../styles/button/add';
 
-const NEW = 'new';
 const PERSON = 'person';
 const GROUP = 'group';
+
+const AddContactDropBtn = styled(Button)`
+  display: flex;
+
+  ::after {
+    ${collecticon('chevron-down--small')}
+    margin-left: auto;
+  }
+`;
+
+const ContactSelectDropdown = styled(Dropdown)`
+  min-width: 20rem;
+`;
 
 class ContactFormWrapper extends Component {
   constructor(props) {
     super(props);
-    const { contact } = props;
-    let selectedContact = null;
-    let type = null;
-    if (contact) {
-      selectedContact = contact.id;
-      type = contact.isGroup ? GROUP : PERSON;
-    }
-    this.state = {
-      selectedContact,
-      type
-    };
+
     this.onSelectChange = this.onSelectChange.bind(this);
-    this.onTypeChange = this.onTypeChange.bind(this);
-    this.save = this.save.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onCreateClick = this.onCreateClick.bind(this);
+    this.onRemoveClick = this.onRemoveClick.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    const {
-      lastCreatedContact,
-      selectedAtbd,
-      createAtbdContact: attachContact,
-      createAtbdContactGroup: attachContactGroup
-    } = this.props;
-
-    const { lastCreatedContact: prev } = prevProps;
-    if (lastCreatedContact !== prev) {
-      const { atbd_id } = selectedAtbd;
-      // Attach this contact to the current atbd.
-      const idProperty = lastCreatedContact.isGroup
-        ? 'contact_group_id' : 'contact_id';
-      const attachFn = lastCreatedContact.isGroup
-        ? attachContactGroup : attachContact;
-      const payload = {
-        atbd_id,
-        [idProperty]: lastCreatedContact[idProperty]
-      };
-      attachFn(payload);
-    }
-  }
-
-  onSelectChange({ value, type }) {
-    const next = { selectedContact: value };
-    if (value !== NEW && type) {
-      next.type = type;
-    } else if (value === NEW) {
-      next.type = null;
-    }
-    this.setState(next);
-  }
-
-  onTypeChange(type) {
-    this.setState({ type });
-  }
-
-  save(payload) {
-    const {
-      selectedContact,
-      type
-    } = this.state;
-    const {
-      selectedAtbd,
-      contact,
-      createContactGroup, // eslint-disable-line no-shadow
-      createContact, // eslint-disable-line no-shadow
-      updateContactGroup, // eslint-disable-line no-shadow
-      updateContact, // eslint-disable-line no-shadow
-      createAtbdContact: attachContact,
-      createAtbdContactGroup: attachContactGroup,
-      onRemove
-    } = this.props;
-
-    if (selectedContact === NEW) {
-      // Create a wholly new contact or contact group
-      const saveFn = type === GROUP ? createContactGroup : createContact;
-      saveFn(payload);
-      onRemove();
-    } else {
-      // Patch the existing contact or contact group,
-      // and if necessary, link it to this ATBD.
-      const updateFn = type === GROUP ? updateContactGroup : updateContact;
-      const id = selectedContact.slice(1, selectedContact.length);
-      updateFn(id, payload);
-
-      if (!contact) {
-        const attachFn = type === GROUP
-          ? attachContactGroup : attachContact;
-        const { atbd_id } = selectedAtbd;
-        attachFn({
-          [type === GROUP ? 'contact_group_id' : 'contact_id']: id,
-          atbd_id
-        });
-        onRemove();
-      }
-    }
+  onFormSubmit(action, payload) {
+    const { contactIndex, onFormSubmit } = this.props;
+    onFormSubmit(action, contactIndex, payload);
   }
 
   renderTypePicker() {
-    const { onTypeChange } = this;
-    const { id } = this.props;
-    const { type } = this.state;
+    const {
+      id, contact, contactIndex, onTypeChange
+    } = this.props;
+
     return (
       <FormGroup>
         <FormGroupHeader>
@@ -148,20 +68,20 @@ class ContactFormWrapper extends Component {
         <FormGroupBody>
           <FormCheckableGroup>
             <FormCheckable
-              checked={type === PERSON}
+              checked={!contact.isGroup}
               type="radio"
               name={`${id}-radio`}
               id={`${id}-type-person`}
-              onChange={() => onTypeChange(PERSON)}
+              onChange={() => onTypeChange(contactIndex, PERSON)}
             >
               Person
             </FormCheckable>
             <FormCheckable
-              checked={type === GROUP}
+              checked={contact.isGroup}
               type="radio"
               name={`${id}-radio`}
               id={`${id}-type-group`}
-              onChange={() => onTypeChange(GROUP)}
+              onChange={() => onTypeChange(contactIndex, GROUP)}
             >
               Group
             </FormCheckable>
@@ -172,70 +92,106 @@ class ContactFormWrapper extends Component {
   }
 
   renderForm() {
-    const {
-      selectedContact,
-      type
-    } = this.state;
-    const {
-      contact,
-      contacts,
-      id
-    } = this.props;
-    const {
-      save
-    } = this;
+    const { contact, id } = this.props;
 
-    let data = contact;
-    let isExistingContact = false;
+    switch (contact.__action) {
+      case 'selecting':
+        return null;
+      case 'creating':
+        return (
+          <React.Fragment>
+            {this.renderTypePicker()}
+            <ContactForm
+              contact={contact}
+              id={id}
+              isGroup={contact.isGroup}
+              onSubmit={this.onFormSubmit}
+            />
+          </React.Fragment>
+        );
+      default:
+        return (
+          <ContactForm
+            contact={contact}
+            id={id}
+            isGroup={contact.isGroup}
+            onSubmit={this.onFormSubmit}
+          />
+        );
+    }
+  }
 
-    // This scenario means someone has chosen an existing contact
-    // to add to this ATBD (and possibly to edit the existing contact).
-    if (!data && selectedContact !== NEW) {
-      data = contacts.find(d => selectedContact === d.id);
-      isExistingContact = true;
+  onCreateClick() {
+    const { contactIndex, onCreateSelect } = this.props;
+
+    onCreateSelect(contactIndex);
+  }
+
+  onSelectChange(...args) {
+    const { contactIndex, onSelectChange } = this.props;
+
+    onSelectChange(contactIndex, ...args);
+  }
+
+  onRemoveClick() {
+    const { contactIndex, onRemoveClick } = this.props;
+
+    onRemoveClick(contactIndex);
+  }
+
+  getDropLabel() {
+    const { contact } = this.props;
+
+    if (contact.__action === 'creating') {
+      return 'Creating new contact';
     }
 
+    if (contact.__action === 'editing') {
+      return `Editing: ${contact.displayName}`;
+    }
+
+    return 'Select or create contact';
+  }
+
+  renderContactSelectDropdown() {
+    const { availableContacts, contact } = this.props;
+
     return (
-      <ContactForm
-        contact={data}
-        id={id}
-        isGroup={type === GROUP}
-        save={save}
-        forceAllowSubmit={isExistingContact}
-      />
+      <ContactSelectDropdown
+        alignment="left"
+        direction="down"
+        triggerElement={(
+          <AddContactDropBtn size="large" variation="base-raised-light">
+            {this.getDropLabel()}
+          </AddContactDropBtn>
+)}
+      >
+        <ReactSelect
+          autoFocus
+          components={{ Menu }}
+          getOptionLabel={opt => opt.displayName}
+          getOptionValue={opt => opt.id}
+          backspaceRemovesValue={false}
+          controlShouldRenderValue={false}
+          hideSelectedOptions={false}
+          isClearable={false}
+          menuIsOpen
+          maxMenuHeight={200}
+          options={availableContacts}
+          placeholder="Search contact..."
+          tabSelectsValue={false}
+          onChange={this.onSelectChange}
+          value={contact.id}
+        />
+        <AddBtn onClick={this.onCreateClick} data-hook="dropdown:close">
+          Create new contact
+        </AddBtn>
+      </ContactSelectDropdown>
     );
   }
 
   render() {
-    const {
-      onSelectChange
-    } = this;
-
-    const {
-      title,
-      id,
-      contact,
-      contacts,
-      onRemove
-    } = this.props;
-
-    const {
-      selectedContact,
-      type
-    } = this.state;
-
-    const readonly = !!contact;
-    const label = readonly ? 'Edit existing' : 'New or existing';
-    const selectOptions = contacts.map(d => ({
-      value: d.id,
-      label: d.displayName,
-      type: d.isGroup ? GROUP : PERSON
-    }));
-
-    selectOptions.unshift({
-      value: NEW,
-      label: 'New contact'
-    });
+    const { title, contact } = this.props;
 
     return (
       <FormFieldset>
@@ -245,23 +201,14 @@ class ContactFormWrapper extends Component {
             variation="base-plain"
             size="small"
             hideText
-            onClick={onRemove}
+            onClick={this.onRemoveClick}
           >
             Remove
           </RemoveButton>
         </FormFieldsetHeader>
         <FormFieldsetBody>
-          <Select
-            name={`${id}-select`}
-            id={`${id}-select`}
-            label={label}
-            options={selectOptions}
-            value={selectedContact}
-            onChange={onSelectChange}
-            readonly={readonly}
-          />
-          {selectedContact === NEW && this.renderTypePicker()}
-          {!!type && this.renderForm()}
+          {!contact.atbd_id && this.renderContactSelectDropdown()}
+          {this.renderForm()}
         </FormFieldsetBody>
       </FormFieldset>
     );
@@ -269,37 +216,22 @@ class ContactFormWrapper extends Component {
 }
 
 ContactFormWrapper.propTypes = {
+  id: PropTypes.string,
   title: PropTypes.string.isRequired,
-  id: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]).isRequired,
+  availableContacts: PropTypes.array,
   contact: PropTypes.object,
-  contacts: PropTypes.array,
-  onRemove: PropTypes.func.isRequired,
-
-  selectedAtbd: PropTypes.object,
-  lastCreatedContact: PropTypes.object,
-  createAtbdContact: PropTypes.func,
-  createContact: PropTypes.func,
-  updateContact: PropTypes.func,
-  createAtbdContactGroup: PropTypes.func,
-  createContactGroup: PropTypes.func,
-  updateContactGroup: PropTypes.func
+  contactIndex: PropTypes.number,
+  onRemoveClick: PropTypes.func,
+  onFormSubmit: PropTypes.func,
+  onTypeChange: PropTypes.func,
+  onCreateSelect: PropTypes.func,
+  onSelectChange: PropTypes.func
 };
 
-const mapStateToProps = state => ({
-  selectedAtbd: state.application.selectedAtbd,
-  lastCreatedContact: state.application.lastCreatedContact
-});
+export default ContactFormWrapper;
 
-const mapDispatch = {
-  createAtbdContact,
-  createContact,
-  updateContact,
-  createAtbdContactGroup,
-  createContactGroup,
-  updateContactGroup
+const Menu = ({ children }) => <div>{children}</div>;
+
+Menu.propTypes = {
+  children: PropTypes.node
 };
-
-export default connect(mapStateToProps, mapDispatch)(ContactFormWrapper);
