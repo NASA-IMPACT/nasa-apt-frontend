@@ -111,7 +111,7 @@ export function deleteAtbd(atbd_id) {
 }
 
 export function updateAtbd(atbd_id, document) {
-  return {
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}`,
       method: 'PATCH',
@@ -123,7 +123,7 @@ export function updateAtbd(atbd_id, document) {
         types.UPDATE_ATBD_FAIL
       ]
     }
-  };
+  });
 }
 
 export function fetchCitation(versionObject) {

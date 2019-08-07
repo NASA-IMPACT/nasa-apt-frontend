@@ -65,7 +65,7 @@ export class IdentifyingInformation extends Component {
     });
   }
 
-  updateAtbdTitle(e) {
+  async updateAtbdTitle(e) {
     e.preventDefault();
     const {
       updateAtbd: update,
@@ -73,7 +73,11 @@ export class IdentifyingInformation extends Component {
     } = this.props;
     const { atbd_id } = atbd;
     const { title } = this.state;
-    update(atbd_id, { title });
+    this.setState({ titleTouched: false });
+    const res = await update(atbd_id, { title });
+    if (res.type.endsWith('_FAIL')) {
+      this.setState({ titleTouched: true });
+    }
   }
 
   toggleCitationForm() {
@@ -149,7 +153,7 @@ export class IdentifyingInformation extends Component {
                   </FormGroup>
                   <Button
                     onClick={updateAtbdTitle}
-                    disabled={atbdTitle === ''}
+                    disabled={!titleTouched || atbdTitle === ''}
                     variation="base-raised-light"
                     size="large"
                     type="submit"
