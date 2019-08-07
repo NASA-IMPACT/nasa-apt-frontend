@@ -175,7 +175,11 @@ class AtbdView extends Component {
     // Serialization was finished, hide loading.
     if (wasSerializingPdf && !isSerializingPdf) {
       toast.dismiss(this.pdfCreationToast);
-      toasts.success('PDF document ready');
+      if (pdf) {
+        toasts.success('PDF document ready');
+      } else {
+        toasts.error('PDF creation failed. Try again later');
+      }
     }
   }
 
