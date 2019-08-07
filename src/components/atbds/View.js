@@ -306,24 +306,32 @@ class AtbdView extends Component {
     );
   }
 
+  getAlgorithmVarValue(val) {
+    // If it's already a valid json doc render.
+    if (val && val.document) {
+      return this.renderReadOnlyEditor(val);
+    }
+    // Check if it can be parsed as JSON.
+    try {
+      const jsonVal = JSON.parse(val);
+      if (jsonVal.document) {
+        return this.renderReadOnlyEditor(jsonVal);
+      }
+    } catch (error) {
+      // Not a json value.
+    }
+    return val;
+  }
+
   renderAlgorithmVars(vars = [], idKey) {
     return vars.map(v => (
       <Dl type="horizontal" key={v[idKey]}>
         <dt>Name</dt>
-        <dd>{v.name.document
-          ? this.renderReadOnlyEditor(v.name)
-          : v.name}
-        </dd>
+        <dd>{this.getAlgorithmVarValue(v.name)}</dd>
         <dt>Long name</dt>
-        <dd>{v.long_name.document
-          ? this.renderReadOnlyEditor(v.long_name)
-          : v.long_name}
-        </dd>
+        <dd>{this.getAlgorithmVarValue(v.long_name)}</dd>
         <dt>Unit</dt>
-        <dd>{v.unit.document
-          ? this.renderReadOnlyEditor(v.unit)
-          : v.unit}
-        </dd>
+        <dd>{this.getAlgorithmVarValue(v.unit)}</dd>
       </Dl>
     ));
   }
