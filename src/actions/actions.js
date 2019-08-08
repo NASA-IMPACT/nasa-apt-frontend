@@ -280,7 +280,7 @@ export function fetchAtbds() {
 export function fetchAtbd(atbd_id) {
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*)`,
+      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)`,
       method: 'GET',
       headers: { Accept: 'application/vnd.pgrst.object+json' },
       types: [
@@ -849,7 +849,7 @@ export function serializeDocument(versionObject) {
   };
 }
 
-export function checkPdf(key) {
+export function checkPdf(key, { atbd_id }) {
   return {
     [RSAA]: {
       endpoint: `${s3Uri}/${atbdBucket}/${key}.pdf`,
@@ -860,7 +860,7 @@ export function checkPdf(key) {
         if (res.status === 200) {
           const location = `${s3Uri}/${atbdBucket}/${key}.pdf`;
           response = new Response(
-            JSON.stringify({ location }),
+            JSON.stringify({ location, atbd_id }),
             {
               status: res.status,
               headers: {
@@ -875,14 +875,14 @@ export function checkPdf(key) {
       },
       types: [
         types.CHECK_PDF,
-        types.CHECK_PDF_SUCCESS,
+        types.SERIALIZE_PDF_SUCCESS,
         types.CHECK_PDF_FAIL
       ]
     }
   };
 }
 
-export function checkHtml(key) {
+export function checkHtml(key, { atbd_id }) {
   return {
     [RSAA]: {
       endpoint: `${s3Uri}/${atbdBucket}/${key}/index.html`,
@@ -893,7 +893,7 @@ export function checkHtml(key) {
         if (res.status === 200) {
           const location = `${atbdBucketWebsite}/${key}/`;
           response = new Response(
-            JSON.stringify({ location }),
+            JSON.stringify({ location, atbd_id }),
             {
               status: res.status,
               headers: {
@@ -908,7 +908,7 @@ export function checkHtml(key) {
       },
       types: [
         types.CHECK_HTML,
-        types.CHECK_HTML_SUCCESS,
+        types.SERIALIZE_HTML_SUCCESS,
         types.CHECK_HTML_FAIL
       ]
     }

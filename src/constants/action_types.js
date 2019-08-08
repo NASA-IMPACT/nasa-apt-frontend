@@ -54,6 +54,8 @@ const types = createTypes([
   ...async('FETCH_STATIC'),
   ...async('UPLOAD_JSON'),
   ...async('SERIALIZE_DOCUMENT'),
+  ...async('SERIALIZE_PDF'),
+  ...async('SERIALIZE_HTML'),
   ...async('CHECK_PDF'),
   ...async('CHECK_HTML'),
 

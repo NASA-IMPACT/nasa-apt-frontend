@@ -26,31 +26,35 @@ const serializeMiddleware = store => next => async (action) => {
         let pdfTries = 0;
         const key = location.split('/').pop().split('.')[0];
         const pdfInterval = setInterval(async () => {
-          const checkPdfResp = await store.dispatch(checkPdf(key));
+          const checkPdfResp = await store.dispatch(checkPdf(key, versionObject));
           pdfTries += 1;
-          if (checkPdfResp.type === types.CHECK_PDF_SUCCESS) {
+          if (checkPdfResp.type === types.SERIALIZE_PDF_SUCCESS) {
             clearInterval(pdfInterval);
           }
           if (pdfTries > retries) {
             clearInterval(pdfInterval);
             store.dispatch({
-              type: types.SERIALIZE_DOCUMENT_FAIL,
-              payload: 'Timeout'
+              type: types.SERIALIZE_PDF_FAIL,
+              payload: {
+                atbd_id: versionObject.atbd_id
+              }
             });
           }
         }, 3000);
         let htmlTries = 0;
         const htmlInterval = setInterval(async () => {
-          const checkHtmlResp = await store.dispatch(checkHtml(key));
+          const checkHtmlResp = await store.dispatch(checkHtml(key, versionObject));
           htmlTries += 1;
-          if (checkHtmlResp.type === types.CHECK_HTML_SUCCESS) {
+          if (checkHtmlResp.type === types.SERIALIZE_HTML_SUCCESS) {
             clearInterval(htmlInterval);
           }
           if (htmlTries > retries) {
             clearInterval(htmlInterval);
             store.dispatch({
-              type: types.SERIALIZE_DOCUMENT_FAIL,
-              payload: 'Timeout'
+              type: types.SERIALIZE_HTML_FAIL,
+              payload: {
+                atbd_id: versionObject.atbd_id
+              }
             });
           }
         }, 3000);

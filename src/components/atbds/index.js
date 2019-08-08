@@ -1,23 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
 import { push } from 'connected-react-router';
-import { createAtbd, deleteAtbd } from '../actions/actions';
+import { createAtbd, deleteAtbd } from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
   identifying_information
-} from '../constants/routes';
-import { themeVal, stylizeFunction } from '../styles/utils/general';
-import { divide } from '../styles/utils/math';
+} from '../../constants/routes';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
+import { divide } from '../../styles/utils/math';
 
-import { visuallyHidden, truncated, antialiased } from '../styles/helpers';
-import { VerticalDivider } from '../styles/divider';
-import Button from '../styles/button/button';
-import collecticon from '../styles/collecticons';
+import { visuallyHidden, truncated, antialiased } from '../../styles/helpers';
+import { VerticalDivider } from '../../styles/divider';
+import Button from '../../styles/button/button';
+import collecticon from '../../styles/collecticons';
 
 import {
   Inpage,
@@ -31,18 +32,18 @@ import {
   InpageToolbar,
   InpageBody,
   InpageBodyInner
-} from './common/Inpage';
+} from '../common/Inpage';
 
 import Dropdown, {
   DropTitle,
   DropMenu,
   DropMenuItem
-} from './common/Dropdown';
+} from '../common/Dropdown';
 
-import Table from '../styles/table';
+import Table from '../../styles/table';
 
-import AtbdPreview from './AtbdPreview';
-import { confirmDeleteDoc } from './common/ConfirmationPrompt';
+import PreviewButton from './PreviewButton';
+import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -86,6 +87,10 @@ const DocTableHeadThStatus = styled.th`
 
 const DocTableBodyThTitle = styled.th`
   white-space: normal;
+
+  a {
+    color: inherit;
+  }
 `;
 
 const DocTableBodyTdAuthors = styled.td`
@@ -149,11 +154,6 @@ const AtbdPublishedState = styled.span`
   min-width: 6rem;
 `;
 
-const AtbdVersion = styled.span`
-  text-transform: uppercase;
-  color: ${themeVal('color.darkgray')};
-`;
-
 const FilterTrigger = styled(Button)`
   &::after {
     ${collecticon('chevron-down--small')}
@@ -178,14 +178,15 @@ const AtbdList = (props) => {
           <AtbdPublishedState>{status}</AtbdPublishedState>
         </td>
         <DocTableBodyThTitle scope="row">
-          <strong>{title || 'Untitled Document'}</strong>
-          {false && <AtbdVersion>Version 1.0</AtbdVersion>}
+          <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
+            <strong>{title || 'Untitled Document'}</strong>
+          </Link>
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>
           <span>{contact}</span>
         </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
-          <AtbdPreview atbd_id={atbd_id} atbd_version={1} />
+          <PreviewButton atbd_id={atbd_id} atbd_version={1} />
           <Dropdown
             alignment="middle"
             direction="left"
@@ -198,7 +199,7 @@ const AtbdList = (props) => {
               >
                 Actions
               </DocTableActionsTrigger>
-)}
+            )}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
@@ -217,8 +218,7 @@ const AtbdList = (props) => {
                   title="Edit document"
                   onClick={() => props.push(
                     `/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`
-                  )
-                  }
+                  )}
                 >
                   Edit
                 </DocTableActionEdit>
@@ -270,7 +270,7 @@ const AtbdList = (props) => {
                         >
                           All
                         </FilterTrigger>
-)}
+                      )}
                     >
                       <DropTitle>Select status</DropTitle>
                       <DropMenu role="menu" selectable>

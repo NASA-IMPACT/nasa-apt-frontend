@@ -7,6 +7,8 @@ const globalLoadingMiddleware = store => next => async (action) => {
   const excludedActions = [
     'UPLOAD_JSON',
     'SERIALIZE_DOCUMENT',
+    'SERIALIZE_PDF',
+    'SERIALIZE_HTML',
     'CHECK_PDF',
     'CHECK_HTML'
   ];
