@@ -108,6 +108,14 @@ class MetadataEditor extends Component {
     this.input = React.createRef();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { initialValue: prev } = this.props;
+    const { initialValue } = nextProps;
+    if (prev !== initialValue) {
+      this.setState({ value: initialValue });
+    }
+  }
+
   onChange(e) {
     this.setState({ value: e.currentTarget.value });
   }

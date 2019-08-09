@@ -7,6 +7,8 @@ import SoftBreak from 'slate-soft-break';
 import PluginDeepTable from 'slate-deep-table';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
+import { Manager, Reference, Popper } from 'react-popper';
+
 import EquationEditor from './EquationEditor';
 import TrailingBlock from '../slate-plugins/TrailingBlock';
 import {
@@ -14,7 +16,8 @@ import {
   ParagraphBtn,
   TableBtn,
   Toolbar,
-  ToolbarLabel
+  ToolbarLabel,
+  RemoveBtn
 } from './Toolbars';
 import EditorImage from './EditorImage';
 import EditorTable from './EditorTable';
@@ -424,14 +427,37 @@ export class FreeEditor extends React.Component {
       case 'link': {
         const url = node.data.get('url');
         return (
-          <a
-            href={url}
-            rel="noopener noreferrer"
-            target="_blank"
-            {...attributes}
-          >
-            {children}
-          </a>
+          <Manager>
+            <Reference>
+              {({ ref }) => (
+                <a
+                  href={url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title={url}
+                  ref={ref}
+                  {...attributes}
+                >
+                  {children}
+                </a>
+              )}
+            </Reference>
+            {isFocused ? (
+              <Popper placement="top-center">
+                {({
+                  ref, style, placement
+                }) => (
+                  <span ref={ref} style={style} data-placement={placement}>
+                    <RemoveBtn
+                      onClick={() => this.editor.unwrapInline('link')}
+                    >
+                      Remove Link
+                    </RemoveBtn>
+                  </span>
+                )}
+              </Popper>
+            ) : null}
+          </Manager>
         );
       }
 
