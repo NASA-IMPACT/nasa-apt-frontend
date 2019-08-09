@@ -29,7 +29,7 @@ import AtbdIndex from './components/atbds';
 import AtbdView from './components/atbds/View';
 import IdentifyingInformation from './components/IdentifyingInformation';
 import Introduction from './components/Introduction';
-import Contacts from './components/Contacts';
+import Contacts from './components/contacts';
 import AlgorithmDescription from './components/AlgorithmDescription';
 import AlgorithmUsage from './components/AlgorithmUsage';
 import AlgorithmImplementation from './components/AlgorithmImplementation';

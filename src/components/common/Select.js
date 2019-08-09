@@ -14,6 +14,7 @@ import {
   FormHelperMessage
 } from '../../styles/form/helper';
 import InfoButton from './InfoButton';
+import theme from '../../styles/theme/theme';
 
 const Select = (props) => {
   const {
@@ -49,6 +50,15 @@ const Select = (props) => {
       </FormGroupHeader>
       <FormGroupBody>
         <ReactSelect
+          styles={{
+            control: provided => !!error && touched
+              ? {
+                ...provided,
+                borderColor: theme.main.color.danger,
+                borderWidth: '2px'
+              }
+              : provided
+          }}
           options={options}
           name={name}
           value={activeValue}

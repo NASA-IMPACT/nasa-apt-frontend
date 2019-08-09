@@ -56,6 +56,7 @@ const InputForm = (props) => {
         <Input
           id={id}
           name={name}
+          invalid={!!error && touched}
           size="large"
           {...inputProps}
         />
