@@ -288,6 +288,12 @@ class AtbdView extends Component {
         }
         return <sup><a href={`#reference-${refId}`} title="Link to reference">{refIdx + 1}</a></sup>;
       }
+      case 'unordered-list':
+        return <ul {...attributes}>{children}</ul>;
+      case 'ordered-list':
+        return <ol {...attributes}>{children}</ol>;
+      case 'list-item':
+        return <li {...attributes}>{children}</li>;
       default:
         return next();
     }
