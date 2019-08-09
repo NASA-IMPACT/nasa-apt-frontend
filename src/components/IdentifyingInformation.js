@@ -37,14 +37,12 @@ export class IdentifyingInformation extends Component {
     super(props);
     this.state = {
       title: '',
-      titleEmpty: false,
 
       // Hide the citation form by default,
       // as it's not required and also very long.
       showCitationForm: false
     };
     this.onTextFieldChange = this.onTextFieldChange.bind(this);
-    this.onTextFieldBlur = this.onTextFieldBlur.bind(this);
     this.updateAtbdTitle = this.updateAtbdTitle.bind(this);
     this.toggleCitationForm = this.toggleCitationForm.bind(this);
   }
@@ -62,18 +60,12 @@ export class IdentifyingInformation extends Component {
 
   onTextFieldChange(e, prop) {
     this.setState({
-      [prop]: e.currentTarget.value
+      [prop]: e.currentTarget.value,
+      [`${prop}Touched`]: true
     });
   }
 
-  onTextFieldBlur(e, prop) {
-    const empty = !e.currentTarget.value;
-    this.setState({
-      [prop]: empty
-    });
-  }
-
-  updateAtbdTitle(e) {
+  async updateAtbdTitle(e) {
     e.preventDefault();
     const {
       updateAtbd: update,
@@ -81,7 +73,11 @@ export class IdentifyingInformation extends Component {
     } = this.props;
     const { atbd_id } = atbd;
     const { title } = this.state;
-    update(atbd_id, { title });
+    this.setState({ titleTouched: false });
+    const res = await update(atbd_id, { title });
+    if (res.type.endsWith('_FAIL')) {
+      this.setState({ titleTouched: true });
+    }
   }
 
   toggleCitationForm() {
@@ -100,12 +96,11 @@ export class IdentifyingInformation extends Component {
     if (atbd) {
       const {
         title: atbdTitle,
-        titleEmpty,
+        titleTouched,
         showCitationForm
       } = this.state;
       const {
         onTextFieldChange,
-        onTextFieldBlur,
         updateAtbdTitle
       } = this;
 
@@ -135,11 +130,6 @@ export class IdentifyingInformation extends Component {
                       <FormToolbar>
                         <InfoButton text={t.title} />
                       </FormToolbar>
-                      {titleEmpty && (
-                        <FormHelper>
-                          <FormHelperMessage>Please enter a title.</FormHelperMessage>
-                        </FormHelper>
-                      )}
                     </FormGroupHeader>
                     <FormGroupBody>
                       <FormInput
@@ -149,13 +139,19 @@ export class IdentifyingInformation extends Component {
                         placeholder="Enter a title"
                         value={atbdTitle}
                         onChange={e => onTextFieldChange(e, 'title')}
-                        onBlur={e => onTextFieldBlur(e, 'titleEmpty')}
-                        invalid={titleEmpty}
+                        onBlur={e => onTextFieldChange(e, 'title')}
+                        invalid={titleTouched && atbdTitle === ''}
                       />
+                      {titleTouched && atbdTitle === '' && (
+                        <FormHelper>
+                          <FormHelperMessage>Please enter a title.</FormHelperMessage>
+                        </FormHelper>
+                      )}
                     </FormGroupBody>
                   </FormGroup>
                   <Button
                     onClick={updateAtbdTitle}
+                    disabled={!titleTouched || atbdTitle === ''}
                     variation="base-raised-light"
                     size="large"
                     type="submit"
