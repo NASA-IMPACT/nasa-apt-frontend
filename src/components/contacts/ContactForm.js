@@ -224,7 +224,7 @@ export const InnerContactForm = (props) => {
         </SpanTwo>
       </InputFormGroup>
 
-      {!!errors.NO_MECHANISMS && (
+      {(!!errors.NO_MECHANISMS || !values[mechanisms].length) && (
         <FormFieldset>
           <FormFieldsetBody>
             <FormHelper>
@@ -393,12 +393,6 @@ export const ContactForm = withFormik({
       [roles]: roleTypes.map(r => contactRoles.indexOf(r) >= 0),
       ...nameField
     };
-    if (!initialValues[mechanisms].length) {
-      initialValues[mechanisms].push({
-        mechanism_type: null,
-        mechanism_value: ''
-      });
-    }
     return initialValues;
   },
 
