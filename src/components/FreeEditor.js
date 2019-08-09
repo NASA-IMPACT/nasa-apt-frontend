@@ -68,7 +68,7 @@ const EditorContainer = styled.div`
   }
 
   ol {
-    list-style: decimal-leading-zero;
+    list-style: decimal;
   }
 `;
 

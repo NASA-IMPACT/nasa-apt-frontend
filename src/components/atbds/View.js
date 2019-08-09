@@ -80,6 +80,11 @@ const AtbdSectionBody = styled.div`
   }
 `;
 
+const AtbdContent = styled(Prose)`
+  max-width: 44rem;
+  margin: 0 auto;
+`;
+
 function AtbdSectionBase({
   id, title, children, ...props
 }) {
@@ -100,7 +105,13 @@ AtbdSectionBase.propTypes = {
   id: T.string,
   children: T.node
 };
-const AtbdSection = styled(AtbdSectionBase)``;
+const AtbdSection = styled(AtbdSectionBase)`
+  &:not(:last-child) {
+    padding-bottom: ${multiply(themeVal('layout.space'), 3)};
+    margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+    border-bottom: 1px solid ${themeVal('color.shadow')};
+  }
+`;
 
 const AtbdMeta = styled.div`
   margin-bottom: ${multiply(themeVal('layout.space'), 3)};
@@ -120,6 +131,28 @@ const AtbdIndexTitle = styled.h2`
 
 const AtbdIndexMenu = styled.ol`
   margin-left: 1rem;
+
+  &, ol {
+    counter-reset: section;
+    list-style-type: none !important;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+
+  li::before {
+    counter-increment: section;
+    content: counters(section, ".");
+    margin-right: 1rem;
+  }
+`;
+
+const AtbdContactList = styled.ul`
+  && {
+    list-style: none;
+    margin-left: 0;
+  }
 `;
 
 class AtbdView extends Component {
@@ -305,6 +338,7 @@ class AtbdView extends Component {
     return (
       <Editor
         readOnly
+        className="prose-editor"
         value={Value.fromJSON(document)}
         renderNode={this.renderNode}
         renderMark={this.renderMark}
@@ -330,7 +364,7 @@ class AtbdView extends Component {
   }
 
   renderAlgorithmVars(vars = [], idKey) {
-    return vars.map(v => (
+    return vars.length ? vars.map(v => (
       <Dl type="horizontal" key={v[idKey]}>
         <dt>Name</dt>
         <dd>{this.getAlgorithmVarValue(v.name)}</dd>
@@ -339,7 +373,7 @@ class AtbdView extends Component {
         <dt>Unit</dt>
         <dd>{this.getAlgorithmVarValue(v.unit)}</dd>
       </Dl>
-    ));
+    )) : 'Not Available';
   }
 
   renderUrlDescriptionField(data) {
@@ -356,14 +390,16 @@ class AtbdView extends Component {
   }
 
   renderTOCList(data) {
-    return data.map(entry => (
-      <AtbdIndexMenu key={entry.id}>
-        <li>
-          <a href={`#${entry.id}`} title={`Go to ${entry.label} section`}>{entry.label}</a>
-          {entry.children && this.renderTOCList(entry.children)}
-        </li>
+    return (
+      <AtbdIndexMenu>
+        {data.map(entry => (
+          <li key={entry.id}>
+            <a href={`#${entry.id}`} title={`Go to ${entry.label} section`}>{entry.label}</a>
+            {entry.children && this.renderTOCList(entry.children)}
+          </li>
+        ))}
       </AtbdIndexMenu>
-    ));
+    );
   }
 
   renderContent() {
@@ -399,7 +435,10 @@ class AtbdView extends Component {
     // This method is a utility to just render the children.
     const childrenPassThroughRenderer = el => (
       <AtbdSection key={el.id} id={el.id} title={el.label}>
-        {el.children.map(child => child.renderer(child))}
+        {el.children && el.children.length
+          ? el.children.map(child => child.renderer(child))
+          : 'Not Available'
+        }
       </AtbdSection>
     );
 
@@ -418,7 +457,9 @@ class AtbdView extends Component {
         id: 'introduction',
         renderer: el => (
           <AtbdSection key={el.id} id={el.id} title={el.label}>
-            {this.renderReadOnlyEditor(introduction)}
+            <Prose>
+              {this.renderReadOnlyEditor(introduction)}
+            </Prose>
           </AtbdSection>
         )
       },
@@ -427,7 +468,9 @@ class AtbdView extends Component {
         id: 'historic-prespective',
         renderer: el => (
           <AtbdSection key={el.id} id={el.id} title={el.label}>
-            {this.renderReadOnlyEditor(historical_perspective)}
+            <Prose>
+              {this.renderReadOnlyEditor(historical_perspective)}
+            </Prose>
           </AtbdSection>
         )
       },
@@ -519,11 +562,7 @@ class AtbdView extends Component {
       {
         label: 'Algorithm Implementations',
         id: 'algo-implementations',
-        renderer: el => (
-          <AtbdSection key={el.id} id={el.id} title={el.label}>
-            {el.children.map(child => child.renderer(child))}
-          </AtbdSection>
-        ),
+        renderer: childrenPassThroughRenderer,
         children: (algorithm_implementations || []).map((o, idx) => ({
           label: `Entry #${idx + 1}`,
           id: `algo-implementations-${idx + 1}`,
@@ -667,47 +706,50 @@ class AtbdView extends Component {
           const contactsGroups = atbd.contact_groups || [];
           const contacts = contactsSingle.concat(contactsGroups);
 
-          if (!contacts.length) return null;
-
           return (
             <AtbdSection key={el.id} id={el.id} title={el.label}>
-              <ul>
-                {contacts.map(contact => (
-                  <li key={contact.contact_id || contact.contact_group_id}>
-                    <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
-                    <Dl type="horizontal">
-                      {!!contact.roles.length && (
-                        <React.Fragment>
-                          <dt>Roles</dt>
-                          <dd>{contact.roles.join(', ')}</dd>
-                        </React.Fragment>
-                      )}
-                      {contact.url && (
-                        <React.Fragment>
-                          <dt>Url</dt>
-                          <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
-                        </React.Fragment>
-                      )}
-                      {contact.uuid && (
-                        <React.Fragment>
-                          <dt>UUID</dt>
-                          <dd>{contact.uuid}</dd>
-                        </React.Fragment>
-                      )}
-                    </Dl>
+              {contacts.length
+                ? (
+                  <AtbdContactList>
+                    {contacts.map(contact => (
+                      <li key={contact.contact_id || contact.contact_group_id}>
+                        <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
+                        <Dl type="horizontal">
+                          {!!contact.roles.length && (
+                            <React.Fragment>
+                              <dt>Roles</dt>
+                              <dd>{contact.roles.join(', ')}</dd>
+                            </React.Fragment>
+                          )}
+                          {contact.url && (
+                            <React.Fragment>
+                              <dt>Url</dt>
+                              <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
+                            </React.Fragment>
+                          )}
+                          {contact.uuid && (
+                            <React.Fragment>
+                              <dt>UUID</dt>
+                              <dd>{contact.uuid}</dd>
+                            </React.Fragment>
+                          )}
+                        </Dl>
 
-                    <h4>Mechanisms</h4>
-                    <Dl type="horizontal">
-                      {contact.mechanisms.map(m => (
-                        <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
-                          <dt>{m.mechanism_type}</dt>
-                          <dd>{m.mechanism_value}</dd>
-                        </React.Fragment>
-                      ))}
-                    </Dl>
-                  </li>
-                ))}
-              </ul>
+                        <h4>Mechanisms</h4>
+                        <Dl type="horizontal">
+                          {contact.mechanisms.map(m => (
+                            <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
+                              <dt>{m.mechanism_type}</dt>
+                              <dd>{m.mechanism_value}</dd>
+                            </React.Fragment>
+                          ))}
+                        </Dl>
+                      </li>
+                    ))}
+                  </AtbdContactList>
+                )
+                : 'Not Available'
+              }
             </AtbdSection>
           );
         }
@@ -823,20 +865,21 @@ class AtbdView extends Component {
             </Sticky>
             <InpageBody>
               <InpageBodyInner>
+                <AtbdContent>
+                  <AtbdMeta>
+                    <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
+                    <AtbdMetaDetails type="horizontal">
+                      <dt>Version</dt>
+                      <dd>{atbd.atbd_versions[0].atbd_version}</dd>
+                      <dt>Date</dt>
+                      <dd>10 Feb, 2019</dd>
+                      <dt>Authors</dt>
+                      <dd>Name</dd>
+                    </AtbdMetaDetails>
+                  </AtbdMeta>
 
-                <AtbdMeta>
-                  <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
-                  <AtbdMetaDetails type="horizontal">
-                    <dt>Version</dt>
-                    <dd>{atbd.atbd_versions[0].atbd_version}</dd>
-                    <dt>Date</dt>
-                    <dd>10 Feb, 2019</dd>
-                    <dt>Authors</dt>
-                    <dd>Name</dd>
-                  </AtbdMetaDetails>
-                </AtbdMeta>
-
-                {this.renderContent()}
+                  {this.renderContent()}
+                </AtbdContent>
               </InpageBodyInner>
             </InpageBody>
           </StickyContainer>
