@@ -63,6 +63,10 @@ const EditorContainer = styled.div`
   border-bottom-right-radius: ${themeVal('shape.rounded')};
   padding: 1rem 3rem;
 
+  ul, ol {
+    margin-bottom: 1rem;
+  }
+
   ul {
     list-style: disc;
   }
@@ -169,7 +173,23 @@ export class FreeEditor extends React.Component {
     } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
   }
 
-  onKeyDown(event, editor, next) {
+  onKeyDown(event, change, next) {
+    const { value } = change;
+    // List handling
+    if (event.key === 'Enter') {
+      const block = value.startBlock;
+      const currentItem = block && block.type === listItem ? block : null;
+      // Not in a list
+      if (!currentItem) { return next(); }
+      if (currentItem.text.trim() === '') {
+        return change
+          .setBlocks(paragraph)
+          .unwrapBlock(unorderedList)
+          .unwrapBlock(orderedList);
+      }
+    }
+    // List handling END
+
     if (!event.metaKey) return next();
 
     let nextMark;
