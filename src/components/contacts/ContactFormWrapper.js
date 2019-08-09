@@ -173,7 +173,11 @@ class ContactFormWrapper extends Component {
         alignment="left"
         direction="down"
         triggerElement={(
-          <AddContactDropBtn size="large" variation="base-raised-light">
+          <AddContactDropBtn
+            size="large"
+            variation="base-raised-light"
+            disabled={!!contact.atbd_id}
+          >
             {this.getDropLabel()}
           </AddContactDropBtn>
         )}
