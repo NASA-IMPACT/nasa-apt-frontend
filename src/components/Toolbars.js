@@ -37,13 +37,13 @@ export const RemoveBtn = styled(Button).attrs({
 
 export const ULBtn = styled(Button).attrs(baseAttrs)`
   ::before {
-    ${collecticon('unordered-list')}
+    ${collecticon('list')}
   }
 `;
 
 export const OLBtn = styled(Button).attrs(baseAttrs)`
   ::before {
-    ${collecticon('ordered-list')}
+    ${collecticon('list-numbered')}
   }
 `;
 
