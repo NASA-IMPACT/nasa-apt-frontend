@@ -276,7 +276,7 @@ class Contacts extends React.Component {
           {contacts.map((d, i) => (
             <ContactFormWrapper
               key={d.id || `new-${i}`}
-              id={d.id}
+              id={d.id || `new-${i}`}
               title={`Contact #${i + 1}`}
               contact={d}
               contactIndex={i}

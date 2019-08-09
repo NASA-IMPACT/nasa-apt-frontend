@@ -21,6 +21,7 @@ export default function InfoButton({ text }) {
         size="small"
         hideText
         data-tip={text}
+        tabIndex={-1}
       >
         Learn more
       </Btn>
