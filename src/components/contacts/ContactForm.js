@@ -224,7 +224,7 @@ export const InnerContactForm = (props) => {
         </SpanTwo>
       </InputFormGroup>
 
-      {(!!errors.NO_MECHANISMS || !values[mechanisms].length) && (
+      {(!!errors.NO_MECHANISMS || !values[mechanisms] || !values[mechanisms].length) && (
         <FormFieldset>
           <FormFieldsetBody>
             <FormHelper>
