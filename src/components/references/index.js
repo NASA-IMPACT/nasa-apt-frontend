@@ -64,11 +64,10 @@ export class References extends React.Component {
     const { createReferenceAction, updateReferenceAction } = this.props;
     const { publication_reference_id: id } = values;
 
-    const publicationReferenceFields = apiSchema
-      .definitions.publication_references.properties;
+    const publicationReferenceFields = apiSchema.definitions.publication_references.properties;
     // Create payload made only allowed properties for references
-    const payload = Object.keys(publicationReferenceFields)
-      .reduce((acc, key) => {
+    const payload = Object.keys(publicationReferenceFields).reduce(
+      (acc, key) => {
         const value = values[key];
         if (!value || value === '') {
           // Replace empty string with null
@@ -77,7 +76,9 @@ export class References extends React.Component {
           acc[key] = value;
         }
         return acc;
-      }, {});
+      },
+      {}
+    );
     if (values.isNew) {
       createReferenceAction(payload);
       this.deleteNewReference(values);
@@ -113,6 +114,7 @@ export class References extends React.Component {
                   data={d}
                   handleDeleteReference={this.deleteExistingReference}
                   handleSubmit={this.handleSubmit}
+                  submitButton="Update reference"
                 />
               ))}
             {newReferences.map(d => (
@@ -120,6 +122,7 @@ export class References extends React.Component {
                 key={d.timestamp}
                 data={d}
                 handleDeleteReference={this.deleteNewReference}
+                submitButton="Add reference"
                 handleSubmit={this.handleSubmit}
               />
             ))}

@@ -28,15 +28,14 @@ const FieldsLayout = styled.div`
 
 const InnerForm = (props) => {
   const {
-    values,
-    handleChange,
-    handleBlur,
-    handleSubmit,
     errors,
-    isValid
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    submitButton,
+    isValid,
+    values
   } = props;
-
-  const { isNew } = values;
 
   const renderFormGroup = field => (
     <FormGroup
@@ -48,8 +47,6 @@ const InnerForm = (props) => {
       errors={errors}
     />
   );
-
-  const buttonLabel = isNew ? 'Add new reference' : 'Update reference';
 
   return (
     <FormFieldsetBody>
@@ -116,27 +113,30 @@ const InnerForm = (props) => {
           }
         ].map(renderFormGroup)}
       </FieldsLayout>
-      <Button
-        title={buttonLabel}
-        type="submit"
-        variation="base-raised-light"
-        size="large"
-        onClick={handleSubmit}
-        disabled={!isValid}
-      >
-        {buttonLabel}
-      </Button>
+      {submitButton && (
+        <Button
+          title={submitButton}
+          type="submit"
+          variation="base-raised-light"
+          size="large"
+          onClick={handleSubmit}
+          disabled={!isValid}
+        >
+          {submitButton}
+        </Button>
+      )}
     </FormFieldsetBody>
   );
 };
 
 InnerForm.propTypes = {
+  submitButton: PropTypes.string,
   values: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   isValid: PropTypes.bool.isRequired,
   handleChange: PropTypes.func.isRequired,
-  handleBlur: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  handleBlur: PropTypes.func.isRequired
 };
 
 const ReferenceForm = withFormik({
