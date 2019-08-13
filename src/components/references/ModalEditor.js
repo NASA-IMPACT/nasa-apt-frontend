@@ -5,6 +5,13 @@ import styled from 'styled-components';
 
 import { createReference, setActiveReference } from '../../actions/actions';
 
+import collecticon from '../../styles/collecticons';
+import Button from '../../styles/button/button';
+import Form from '../../styles/form/form';
+import ReferenceForm from './Form';
+import { FormFieldset } from '../../styles/form/fieldset';
+import { FormGroup } from '../../styles/form/group';
+import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
 import Select from '../common/Select';
 import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
 import {
@@ -15,16 +22,6 @@ import {
   ModalFooter,
   ModalCancelButton
 } from '../common/Modal';
-
-import Button from '../../styles/button/button';
-import collecticon from '../../styles/collecticons';
-import Form from '../../styles/form/form';
-
-import { FormFieldset } from '../../styles/form/fieldset';
-import { FormGroup } from '../../styles/form/group';
-import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
-
-import ReferenceForm from './Form';
 
 export const ReferenceBtn = styled(Button)`
   ::before {
@@ -44,16 +41,14 @@ export class ReferenceModalEditor extends Component {
 
     this.state = {
       activeModal: false,
-      referenceName: '',
-      selectedReference: null
+      selectedReference: null,
+      newReferenceForm: {
+        isValid: false
+      }
     };
     this.setModalState = this.setModalState.bind(this);
-    this.onReferenceNameChange = this.onReferenceNameChange.bind(this);
-    this.onOptionalFieldChange = this.onOptionalFieldChange.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     this.onInsertReference = this.onInsertReference.bind(this);
-    this.createAndInsertReference = this.createAndInsertReference.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,68 +57,10 @@ export class ReferenceModalEditor extends Component {
     this.resetForm(id);
   }
 
-  onReferenceNameChange(e) {
-    this.setState({
-      referenceName: e.currentTarget.value
-    });
-  }
-
-  onOptionalFieldChange(e, fieldName) {
-    const { fields } = this.state;
-    this.setState({
-      fields: {
-        ...fields,
-        [fieldName]: e.currentTarget.value
-      }
-    });
-  }
-
   onSelectChange({ value }) {
     this.setState({
       selectedReference: value
     });
-  }
-
-  onInsertReference() {
-    const {
-      insertReference,
-      references,
-      setActiveReferenceAction
-    } = this.props;
-    const { selectedReference } = this.state;
-    const reference = references.find(
-      d => d.publication_reference_id === selectedReference
-    );
-    setActiveReferenceAction(null);
-    this.resetForm(null);
-    insertReference(reference);
-    this.setModalState(false);
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    const { referenceName, fields, selectedReference } = this.state;
-
-    if (
-      !selectedReference
-      || (selectedReference === 'NEW' && !referenceName.length)
-    ) {
-      return this.validate();
-    }
-
-    const { createReferenceAction: create, atbdVersion } = this.props;
-    const { atbd_id, atbd_version } = atbdVersion;
-    const payload = {
-      atbd_id,
-      atbd_version,
-      title: referenceName
-    };
-    Object.keys(fields).forEach((field) => {
-      if (fields[field]) {
-        payload[field] = fields[field];
-      }
-    });
-    create(payload);
   }
 
   resetForm(selectedReference) {
@@ -137,37 +74,67 @@ export class ReferenceModalEditor extends Component {
   // with expected behavior.
   setModalState(nextState) {
     this.setState({
-      activeModal: !!nextState,
-      referenceName: ''
+      activeModal: !!nextState
     });
   }
 
-  async createAndInsertReference(formValues) {
-    const { createReferenceAction, atbdVersion, insertReference } = this.props;
+  async onInsertReference() {
+    // Do nothing when no reference is selected
+    const { selectedReference } = this.state;
+    if (!selectedReference) return;
 
-    const { atbd_version, atbd_id } = atbdVersion;
-    showGlobalLoading();
-    const { error, payload } = await createReferenceAction({
-      ...formValues,
-      atbd_version,
-      atbd_id
-    });
-    hideGlobalLoading();
-    if (!error) {
-      insertReference(payload);
-      this.setModalState(false);
+    // Get a action methods
+    const {
+      createReferenceAction,
+      setActiveReferenceAction,
+      insertReference
+    } = this.props;
+
+    // If reference is new
+    if (selectedReference === 'NEW') {
+      // Get ATBD info
+      const { atbdVersion } = this.props;
+      const { atbd_version, atbd_id } = atbdVersion;
+
+      // Get form values
+      const {
+        newReferenceForm: { values }
+      } = this.state;
+
+      // Try to create it
+      showGlobalLoading();
+      const { error, payload } = await createReferenceAction({
+        ...values,
+        atbd_version,
+        atbd_id
+      });
+      hideGlobalLoading();
+
+      // Insert if successful, otherwise do nothing (error toast should appear)
+      if (!error) {
+        insertReference(payload);
+        this.setModalState(false);
+        this.resetForm(null);
+      }
+    } else {
+      // Get existing reference by id
+      const { references } = this.props;
+      const reference = references.find(
+        d => d.publication_reference_id === selectedReference
+      );
+
+      // Insert it
+      setActiveReferenceAction(null);
       this.resetForm(null);
+      insertReference(reference);
+      this.setModalState(false);
     }
   }
 
   render() {
     const { activeModal, selectedReference } = this.state;
 
-    const {
-      setModalState,
-      onSelectChange,
-      onInsertReference
-    } = this;
+    const { setModalState, onSelectChange, onInsertReference } = this;
 
     const { references, disabled } = this.props;
 
@@ -180,6 +147,18 @@ export class ReferenceModalEditor extends Component {
       value: 'NEW',
       label: 'New reference'
     });
+
+    // Identify "Place" button status
+    let insertIsDisabled = true;
+    if (selectedReference) {
+      // An existing reference is selected
+      if (selectedReference !== 'NEW') insertIsDisabled = false;
+      else {
+        // A new reference is being created, get validation status
+        const { newReferenceForm } = this.state;
+        insertIsDisabled = !newReferenceForm.isValid;
+      }
+    }
 
     return (
       <Fragment>
@@ -221,8 +200,11 @@ export class ReferenceModalEditor extends Component {
                       isNew: true,
                       timestamp: Date.now()
                     }}
-                    submitButton="Create and insert reference"
-                    handleSubmit={this.createAndInsertReference}
+                    handleFormUpdate={(isValid, values) => {
+                      this.setState({
+                        newReferenceForm: { isValid, values }
+                      });
+                    }}
                   />
                 </FormFieldset>
                 )}
@@ -236,20 +218,19 @@ export class ReferenceModalEditor extends Component {
                 title="Cancel action"
                 onClick={() => {
                   setModalState(false);
-                  // resetForm(null);
                 }}
               >
                 Cancel
               </ModalCancelButton>
-              {selectedReference && selectedReference !== 'NEW' && (
               <PlaceButton
                 variation="primary-raised-dark"
                 onClick={onInsertReference}
-                disabled={!selectedReference || selectedReference === 'NEW'}
+                disabled={insertIsDisabled}
               >
-                  Insert at position
+                {selectedReference && selectedReference === 'NEW'
+                  ? 'Create and insert at position'
+                  : 'Insert at position'}
               </PlaceButton>
-              )}
             </ModalFooter>
 )}
         />
