@@ -54,7 +54,7 @@ ReferenceFormWrapper.propTypes = {
   data: T.object,
   handleDeleteReference: T.func,
   handleSubmit: T.func,
-  submitButton: T.object
+  submitButton: T.string
 };
 
 const mapStateToProps = () => ({});

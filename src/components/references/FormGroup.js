@@ -11,7 +11,7 @@ import {
 } from '../../styles/form/group';
 
 import apiSchema from '../../schemas/schema.json';
-import transformInputType from '../../schemas/transformInputType';
+import { transformInputType } from '../../schemas/utils';
 
 export default class ReferenceFormGroup extends React.Component {
   render() {

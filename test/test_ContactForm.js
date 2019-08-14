@@ -42,16 +42,12 @@ test('ContactForm validation', (t) => {
   const transformErrors = sinon.stub().returns({});
   const validateEmail = sinon.stub().returns(false);
   const email = 'Email';
-  const { ContactForm } = proxyquire(
-    '../src/components/contacts/ContactForm',
-    {
-      '../schemas/transformErrors': transformErrors,
-      '../schemas/validateEmail': validateEmail,
-      '../actions/actions': {
-        createContact: () => {}
-      }
+  const { ContactForm } = proxyquire('../src/components/contacts/ContactForm', {
+    '../schemas/utils': { transformErrors, validateEmail },
+    '../actions/actions': {
+      createContact: () => {}
     }
-  );
+  });
 
   const wrapper = shallow((<ContactForm />));
   const instance = wrapper.instance();
