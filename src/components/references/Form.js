@@ -4,7 +4,7 @@ import { withFormik } from 'formik';
 import styled from 'styled-components';
 import isEqual from 'lodash.isequal';
 
-import ValidationSchema from './ValidationSchema';
+import { validator } from '../../schemas/references';
 
 // General components
 import Button from '../../styles/button/button';
@@ -162,7 +162,7 @@ InnerForm.propTypes = {
 };
 
 const ReferenceForm = withFormik({
-  validationSchema: ValidationSchema,
+  validationSchema: validator,
   mapPropsToValues: (props) => {
     const initialValues = Object.assign({}, props.initialValues);
 
