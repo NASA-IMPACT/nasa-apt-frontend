@@ -38,10 +38,7 @@ const MetaInput = styled(FormInput)`
 
 export function InlineMetadata(props) {
   const {
-    readOnly,
-    onRemove,
-    onSubmit,
-    value
+    readOnly, onRemove, onSubmit, value
   } = props;
 
   // Get node at cursor position
@@ -52,15 +49,20 @@ export function InlineMetadata(props) {
     return null;
   }
 
-  // Get selection range
-  const range = window
-    .getSelection()
-    .getRangeAt(0)
-    .cloneRange();
+  // Get selection
+  const select = window.getSelection();
 
-  // Do not render if something is selected
-  const { width } = range.getBoundingClientRect();
-  if (width > 0) return null;
+  // Get range, if defined
+  let range;
+  if (select && select.rangeCount > 0) {
+    range = select.getRangeAt(0).cloneRange();
+
+    // Do not render if something is selected
+    const { width } = range.getBoundingClientRect();
+    if (width > 0) return null;
+  } else {
+    return null;
+  }
 
   // Get reference display name
   const displayName = node.data.get('name');
