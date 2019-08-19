@@ -407,10 +407,12 @@ export class FreeEditor extends React.Component {
 
   insertOrderedList() {
     this.insertList(orderedList);
+    this.editor.focus();
   }
 
   insertUnorderedList() {
     this.insertList(unorderedList);
+    this.editor.focus();
   }
 
   insertList(type) {
