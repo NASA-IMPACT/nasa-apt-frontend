@@ -62,7 +62,6 @@ export class References extends React.Component {
   }
 
   async handleDeleteNewReference(reference) {
-    console.log({reference})
     // Show confirmation dialog
     const { result } = await confirmDeleteReference(reference);
 
