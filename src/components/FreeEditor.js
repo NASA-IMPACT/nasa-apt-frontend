@@ -17,7 +17,9 @@ import {
   TableBtn,
   Toolbar,
   ToolbarLabel,
-  RemoveBtn
+  RemoveBtn,
+  ULBtn,
+  OLBtn
 } from './Toolbars';
 import EditorImage from './EditorImage';
 import EditorTable from './EditorTable';
@@ -37,6 +39,9 @@ const equation = 'equation';
 const paragraph = 'paragraph';
 const table = 'table';
 const reference = 'reference';
+const unorderedList = 'unordered-list';
+const orderedList = 'ordered-list';
+const listItem = 'list-item';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -57,6 +62,18 @@ const EditorContainer = styled.div`
   border-bottom-left-radius: ${themeVal('shape.rounded')};
   border-bottom-right-radius: ${themeVal('shape.rounded')};
   padding: 1rem 3rem;
+
+  ul, ol {
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
 `;
 
 const ReferenceNode = styled.sup`
@@ -67,7 +84,7 @@ const ReferenceNode = styled.sup`
   }
 `;
 
-const plugins = [TrailingBlock(), SoftBreak(), PluginDeepTable()];
+const plugins = [TrailingBlock(), SoftBreak({ shift: true }), PluginDeepTable()];
 
 function renderMark(props, editor, next) {
   const {
@@ -113,6 +130,8 @@ export class FreeEditor extends React.Component {
     this.insertReference = this.insertReference.bind(this);
     this.insertRow = this.insertRow.bind(this);
     this.insertTable = this.insertTable.bind(this);
+    this.insertUnorderedList = this.insertUnorderedList.bind(this);
+    this.insertOrderedList = this.insertOrderedList.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
@@ -154,7 +173,23 @@ export class FreeEditor extends React.Component {
     } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
   }
 
-  onKeyDown(event, editor, next) {
+  onKeyDown(event, change, next) {
+    const { value } = change;
+    // List handling
+    if (event.key === 'Enter') {
+      const block = value.startBlock;
+      const currentItem = block && block.type === listItem ? block : null;
+      // Not in a list
+      if (!currentItem) { return next(); }
+      if (currentItem.text.trim() === '') {
+        return change
+          .setBlocks(paragraph)
+          .unwrapBlock(unorderedList)
+          .unwrapBlock(orderedList);
+      }
+    }
+    // List handling END
+
     if (!event.metaKey) return next();
 
     let nextMark;
@@ -364,6 +399,62 @@ export class FreeEditor extends React.Component {
     this.onChange(this.editor.removeTable());
   }
 
+
+  hasBlock(type) {
+    const { value } = this.state;
+    return value.blocks.some(node => node.type === type);
+  }
+
+  insertOrderedList() {
+    this.insertList(orderedList);
+    this.editor.focus();
+  }
+
+  insertUnorderedList() {
+    this.insertList(unorderedList);
+    this.editor.focus();
+  }
+
+  insertList(type) {
+    const { editor } = this;
+    const { value } = editor;
+    const { document } = value;
+
+    const isList = this.hasBlock(listItem);
+    const isType = value.blocks.some(block => (
+      !!document.getClosest(block.key, parent => parent.type === type)
+    ));
+
+    if (isList && isType) {
+      editor
+        .setBlocks(paragraph)
+        .unwrapBlock(unorderedList)
+        .unwrapBlock(orderedList);
+    } else if (isList) {
+      editor
+        .unwrapBlock(
+          type === unorderedList ? orderedList : unorderedList
+        )
+        .wrapBlock(type);
+    } else {
+      editor.setBlocks(listItem).wrapBlock(type);
+    }
+  }
+
+  isButtonActive(type) {
+    let isActive = this.hasBlock(type);
+
+    if ([unorderedList, orderedList].includes(type)) {
+      const { value: { document, blocks } } = this.state;
+
+      if (blocks.size > 0) {
+        const parent = document.getParent(blocks.first().key);
+        isActive = this.hasBlock(listItem) && parent && parent.type === type;
+      }
+    }
+    return isActive;
+  }
+
   /* eslint-disable-next-line */
   renderNode(props, editor, next) {
     const {
@@ -471,6 +562,15 @@ export class FreeEditor extends React.Component {
           </ReferenceNode>
         );
       }
+      case unorderedList:
+        return <ul {...attributes}>{children}</ul>;
+
+      case orderedList:
+        return <ol {...attributes}>{children}</ol>;
+
+      case listItem:
+        return <li {...attributes}>{children}</li>;
+
       default:
         return next();
     }
@@ -511,8 +611,6 @@ export class FreeEditor extends React.Component {
                 id={equation}
                 onClick={this.insertEquation}
                 disabled={!hasCursor}
-                variation="base-plain"
-                size="large"
               >
                 Equation
               </EquationBtn>
@@ -521,8 +619,6 @@ export class FreeEditor extends React.Component {
                 id={paragraph}
                 onClick={this.insertParagraph}
                 disabled={!hasCursor}
-                variation="base-plain"
-                size="large"
               >
                 Paragraph
               </ParagraphBtn>
@@ -531,8 +627,6 @@ export class FreeEditor extends React.Component {
                 id={table}
                 onClick={this.insertTable}
                 disabled={!hasCursor}
-                variation="base-plain"
-                size="large"
               >
                 Table
               </TableBtn>
@@ -548,6 +642,25 @@ export class FreeEditor extends React.Component {
                 disabled={!hasCursor}
                 insertReference={this.insertReference}
               />
+
+              <ULBtn
+                id={unorderedList}
+                active={this.isButtonActive(unorderedList)}
+                onClick={this.insertUnorderedList}
+                disabled={!hasCursor}
+              >
+                Unordered list
+              </ULBtn>
+
+              <OLBtn
+                id={orderedList}
+                active={this.isButtonActive(orderedList)}
+                onClick={this.insertOrderedList}
+                disabled={!hasCursor}
+              >
+                Ordered list
+              </OLBtn>
+
               {inlineSaveBtn && (
                 <Button onClick={save} variation="base-plain" size="large">
                   Save

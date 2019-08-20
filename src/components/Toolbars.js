@@ -3,19 +3,24 @@ import { themeVal } from '../styles/utils/general';
 import Button from '../styles/button/button';
 import collecticon from '../styles/collecticons';
 
-export const EquationBtn = styled(Button)`
+const baseAttrs = {
+  variation: 'base-plain',
+  size: 'large'
+};
+
+export const EquationBtn = styled(Button).attrs(baseAttrs)`
   ::before {
     ${collecticon('pi')}
   }
 `;
 
-export const ParagraphBtn = styled(Button)`
+export const ParagraphBtn = styled(Button).attrs(baseAttrs)`
   ::before {
     ${collecticon('pilcrow')}
   }
 `;
 
-export const TableBtn = styled(Button)`
+export const TableBtn = styled(Button).attrs(baseAttrs)`
   ::before {
     ${collecticon('table')}
   }
@@ -27,6 +32,18 @@ export const RemoveBtn = styled(Button).attrs({
 })`
   ::before {
     ${collecticon('trash-bin')}
+  }
+`;
+
+export const ULBtn = styled(Button).attrs(baseAttrs)`
+  ::before {
+    ${collecticon('list')}
+  }
+`;
+
+export const OLBtn = styled(Button).attrs(baseAttrs)`
+  ::before {
+    ${collecticon('list-numbered')}
   }
 `;
 
