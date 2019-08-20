@@ -27,6 +27,11 @@ const FieldsLayout = styled.div`
   width: 100%;
 `;
 class InnerForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.renderFormGroup = this.renderFormGroup.bind(this);
+  }
+
   componentDidUpdate(prevProps) {
     // Do nothing if "handleFormUpdate" is undefined. This function is intended
     // to handle form submit from the parent component.
@@ -45,18 +50,12 @@ class InnerForm extends React.Component {
     }
   }
 
-  render() {
+  renderFormGroup(field) {
     const {
-      errors,
-      handleBlur,
-      handleChange,
-      handleSubmit,
-      submitButton,
-      isValid,
-      values
+      errors, handleBlur, handleChange, values
     } = this.props;
 
-    const renderFormGroup = field => (
+    return (
       <FormGroup
         key={field.id}
         field={field}
@@ -66,12 +65,16 @@ class InnerForm extends React.Component {
         errors={errors}
       />
     );
+  }
+
+  render() {
+    const { handleSubmit, submitButton, isValid } = this.props;
 
     return (
       <FormFieldsetBody>
         <FieldsLayout>
           <SpanThree>
-            {renderFormGroup({ id: 'title', label: 'Title' })}
+            {this.renderFormGroup({ id: 'title', label: 'Title' })}
           </SpanThree>
           {[
             {
@@ -130,7 +133,7 @@ class InnerForm extends React.Component {
               id: 'other_reference_details',
               label: 'Other Reference Details'
             }
-          ].map(renderFormGroup)}
+          ].map(this.renderFormGroup)}
         </FieldsLayout>
         {submitButton && (
           <Button
