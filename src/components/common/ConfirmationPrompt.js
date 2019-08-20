@@ -142,7 +142,7 @@ class ConfirmationPrompt extends Component {
           <ModalHeader>
             <ModalTitle>{title}</ModalTitle>
           </ModalHeader>
-        )}
+)}
         bodyComponent={content && <ModalBody>{content}</ModalBody>}
         footerComponent={(
           <ModalFooter>
@@ -151,7 +151,7 @@ class ConfirmationPrompt extends Component {
               confirm: this.onConfirm
             })}
           </ModalFooter>
-        )}
+)}
       />
     );
   }
@@ -186,10 +186,7 @@ export function showConfirmationPrompt(opts = {}) {
     throw new Error('<ConfirmationPrompt /> component not mounted');
   }
   const {
-    data,
-    title,
-    content,
-    renderControls
+    data, title, content, renderControls
   } = opts;
   return new Promise((resolve) => {
     theConfirmationModal.setState({
@@ -199,6 +196,50 @@ export function showConfirmationPrompt(opts = {}) {
       renderControls: renderControls || baseState.renderControls,
       onResult: result => resolve({ result, data: data || baseState.data })
     });
+  });
+}
+
+/**
+ * Convenience method to show a delete confirmation prompt for a reference.
+ * Will display a "Cancel/Delete" buttons and:
+ * title: 'Delete this reference?'
+ * content: <p>The reference <strong>{title}</strong> will be deleted.</p>
+ *
+ * @param {string} title Title of the reference to delete
+ * @param {any} data Any extra data that the confirmation prompt should keep
+ *              track of. Useful to know what confirmation we're working with.
+ */
+export function confirmDeleteReference(reference, data) {
+  const { isNew, title } = reference;
+  return showConfirmationPrompt({
+    title: 'Delete this reference?',
+    content: isNew ? (
+      <p>This new reference will be discarded from the list.</p>
+    ) : (
+      <p>
+        The reference <strong>{title}</strong> will be deleted.
+      </p>
+    ),
+    // eslint-disable-next-line
+    renderControls: ({ confirm, cancel }) => (
+      <React.Fragment>
+        <ModalCancelButton
+          variation="base-raised-light"
+          title="Cancel reference deletion"
+          onClick={cancel}
+        >
+          Cancel
+        </ModalCancelButton>
+        <ModalDeleteButton
+          variation="base-raised-light"
+          title="Confirm document deletion"
+          onClick={confirm}
+        >
+          Delete
+        </ModalDeleteButton>
+      </React.Fragment>
+    ),
+    data
   });
 }
 
@@ -215,9 +256,13 @@ export function showConfirmationPrompt(opts = {}) {
 export function confirmDeleteDoc(name, data) {
   return showConfirmationPrompt({
     title: 'Delete this document?',
-    content: <p>The document <strong>{name}</strong> will be deleted.</p>,
+    content: (
+      <p>
+        The document <strong>{name}</strong> will be deleted.
+      </p>
+    ),
     // eslint-disable-next-line
-    renderControls: ({ confirm, cancel }) => (
+    renderControls: ({ confirm, cancel }) => (
       <React.Fragment>
         <ModalCancelButton
           variation="base-raised-light"
@@ -239,7 +284,6 @@ export function confirmDeleteDoc(name, data) {
   });
 }
 
-
 /**
  * Convenience method to show a remove confirmation prompt for a atbd contact.
  * Will display a "Cancel/Remove" buttons and:
@@ -256,12 +300,14 @@ export function confirmRemoveContact(name, isGroup, data) {
     title: `Remove this ${what} from the ATBD?`,
     content: (
       <React.Fragment>
-        <p>The {what} <strong>{name}</strong> will be removed.</p>
+        <p>
+          The {what} <strong>{name}</strong> will be removed.
+        </p>
         <p>This action will not remove the {what} from APT.</p>
       </React.Fragment>
     ),
     // eslint-disable-next-line
-    renderControls: ({ confirm, cancel }) => (
+    renderControls: ({ confirm, cancel }) => (
       <React.Fragment>
         <ModalCancelButton
           variation="base-raised-light"

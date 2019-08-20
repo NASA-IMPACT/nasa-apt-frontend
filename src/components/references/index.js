@@ -15,6 +15,7 @@ import {
   updateReference
 } from '../../actions/actions';
 import apiSchema from '../../schemas/schema.json';
+import { confirmDeleteReference } from '../common/ConfirmationPrompt';
 
 export class References extends React.Component {
   constructor(props) {
@@ -24,9 +25,10 @@ export class References extends React.Component {
     };
 
     this.addReference = this.addReference.bind(this);
-    this.deleteExistingReference = this.deleteExistingReference.bind(this);
-    this.deleteNewReference = this.deleteNewReference.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDeleteNewReference = this.handleDeleteNewReference.bind(this);
+    this.deleteNewReference = this.deleteNewReference.bind(this);
+    this.deleteExistingReference = this.deleteExistingReference.bind(this);
   }
 
   addReference() {
@@ -47,12 +49,31 @@ export class References extends React.Component {
     }));
   }
 
-  deleteExistingReference(reference) {
+  async deleteExistingReference(reference) {
+    // Show confirmation dialog
+    const { result } = await confirmDeleteReference(reference);
+
+    // Do nothing if cancelled
+    if (!result) return false;
+
+    // Perform delete
     const { deleteReferenceAction } = this.props;
     deleteReferenceAction(reference.publication_reference_id);
   }
 
+  async handleDeleteNewReference(reference) {
+    console.log({reference})
+    // Show confirmation dialog
+    const { result } = await confirmDeleteReference(reference);
+
+    // Do nothing if cancelled
+    if (!result) return false;
+
+    this.deleteNewReference(reference);
+  }
+
   deleteNewReference(reference) {
+    // Remove reference from list of new references
     this.setState(prevState => ({
       newReferences: prevState.newReferences.filter(
         r => r.timestamp !== reference.timestamp
@@ -121,7 +142,7 @@ export class References extends React.Component {
               <ReferenceFormWrapper
                 key={d.timestamp}
                 data={d}
-                handleDeleteReference={this.deleteNewReference}
+                handleDeleteReference={this.handleDeleteNewReference}
                 submitButton="Add reference"
                 handleSubmit={this.handleSubmit}
               />
