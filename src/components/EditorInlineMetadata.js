@@ -44,25 +44,17 @@ export function InlineMetadata(props) {
   // Get node at cursor position
   const node = value.anchorInline;
 
-  // Do not render if node is not a reference
-  if (!node || node.type !== 'reference') {
-    return null;
-  }
+  // Skip rendering if node is not a reference
+  if (!node || node.type !== 'reference') return null;
 
-  // Get selection
+  // Get selection object, skip rendering if no selection or range is available
   const select = window.getSelection();
+  if (!select || !select.rangeCount) return null;
 
-  // Get range, if defined
-  let range;
-  if (select && select.rangeCount > 0) {
-    range = select.getRangeAt(0).cloneRange();
-
-    // Do not render if something is selected
-    const { width } = range.getBoundingClientRect();
-    if (width > 0) return null;
-  } else {
-    return null;
-  }
+  // Get range object, skip rendering if width is zero
+  const range = select.getRangeAt(0).cloneRange();
+  const { width } = range.getBoundingClientRect();
+  if (width > 0) return null;
 
   // Get reference display name
   const displayName = node.data.get('name');
