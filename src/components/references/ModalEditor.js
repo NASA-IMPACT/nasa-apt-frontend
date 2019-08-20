@@ -152,8 +152,9 @@ export class ReferenceModalEditor extends Component {
     let insertIsDisabled = true;
     if (selectedReference) {
       // An existing reference is selected
-      if (selectedReference !== 'NEW') insertIsDisabled = false;
-      else {
+      if (selectedReference !== 'NEW') {
+        insertIsDisabled = false;
+      } else {
         // A new reference is being created, get validation status
         const { newReferenceForm } = this.state;
         insertIsDisabled = !newReferenceForm.isValid;
