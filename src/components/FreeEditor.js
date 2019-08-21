@@ -7,7 +7,6 @@ import SoftBreak from 'slate-soft-break';
 import PluginDeepTable from 'slate-deep-table';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
-import { Manager, Reference, Popper } from 'react-popper';
 
 import EquationEditor from './EquationEditor';
 import TrailingBlock from '../slate-plugins/TrailingBlock';
@@ -17,7 +16,6 @@ import {
   TableBtn,
   Toolbar,
   ToolbarLabel,
-  RemoveBtn,
   ULBtn,
   OLBtn
 } from './Toolbars';
@@ -26,14 +24,20 @@ import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
 import ReferenceModalEditor from './references/ModalEditor';
 import EditorFormatTextToolbar from './EditorFormatTextToolbar';
-import EditorFormattableText from './EditorFormattableText';
 import EditorInlineMetadata from './EditorInlineMetadata';
+import Button from '../styles/button/button';
+import ButtonGroup from '../styles/button/group';
+import LinkEditorToolbar from './common/slateEditor/LinkToolbar';
+
 import { getValidOrBlankDocument } from './editorBlankDocument';
 import schema from './editorSchema';
 import { themeVal, stylizeFunction } from '../styles/utils/general';
 import { multiply } from '../styles/utils/math';
-import Button from '../styles/button/button';
-import ButtonGroup from '../styles/button/group';
+import {
+  isDescendant,
+  getCurrentSelectionRange,
+  renderMark
+} from './common/slateEditor/utils';
 
 const equation = 'equation';
 const paragraph = 'paragraph';
@@ -63,7 +67,12 @@ const EditorContainer = styled.div`
   border-bottom-right-radius: ${themeVal('shape.rounded')};
   padding: 1rem 3rem;
 
-  ul, ol {
+  p {
+    margin-bottom: 1rem;
+  }
+
+  ul,
+  ol {
     margin-bottom: 1rem;
   }
 
@@ -84,34 +93,11 @@ const ReferenceNode = styled.sup`
   }
 `;
 
-const plugins = [TrailingBlock(), SoftBreak({ shift: true }), PluginDeepTable()];
-
-function renderMark(props, editor, next) {
-  const {
-    mark: { type },
-    children
-  } = props;
-  switch (type) {
-    case 'bold': {
-      return <strong {...props}>{children}</strong>;
-    }
-    case 'italic': {
-      return <em {...props}>{children}</em>;
-    }
-    case 'underline': {
-      return <u {...props}>{children}</u>;
-    }
-    case 'superscript': {
-      return <sup {...props}>{children}</sup>;
-    }
-    case 'subscript': {
-      return <sub {...props}>{children}</sub>;
-    }
-    default: {
-      return next();
-    }
-  }
-}
+const plugins = [
+  TrailingBlock(),
+  SoftBreak({ shift: true }),
+  PluginDeepTable()
+];
 
 export class FreeEditor extends React.Component {
   constructor(props) {
@@ -120,7 +106,11 @@ export class FreeEditor extends React.Component {
     this.state = {
       value: Value.fromJSON(getValidOrBlankDocument(initialValue)),
       activeTool: null,
-      range: null
+      urlEditorData: {
+        enabled: false,
+        value: ''
+      },
+      lastSelectedRange: null
     };
     this.insertColumn = this.insertColumn.bind(this);
     this.insertEquation = this.insertEquation.bind(this);
@@ -143,6 +133,10 @@ export class FreeEditor extends React.Component {
     this.selectTool = this.selectTool.bind(this);
     this.toggleMark = this.toggleMark.bind(this);
     this.onFocus = this.onFocus.bind(this);
+
+    this.enableUrlEditor = this.enableUrlEditor.bind(this);
+    this.disableUrlEditor = this.disableUrlEditor.bind(this);
+    this.onLinkDelete = this.onLinkDelete.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -163,14 +157,9 @@ export class FreeEditor extends React.Component {
     // of target node. If so, it executes e.preventsDefault() to avoid losing
     // focus of selected text.
     const toolbar = document.querySelector('#format-toolbar');
-    let el = e.target;
-    do {
-      if (el && el === toolbar) {
-        e.preventDefault();
-        return;
-      }
-      el = el.parentNode;
-    } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
+    if (isDescendant(e.target, toolbar)) {
+      e.preventDefault();
+    }
   }
 
   onKeyDown(event, change, next) {
@@ -180,7 +169,9 @@ export class FreeEditor extends React.Component {
       const block = value.startBlock;
       const currentItem = block && block.type === listItem ? block : null;
       // Not in a list
-      if (!currentItem) { return next(); }
+      if (!currentItem) {
+        return next();
+      }
       if (currentItem.text.trim() === '') {
         return change
           .setBlocks(paragraph)
@@ -232,19 +223,6 @@ export class FreeEditor extends React.Component {
       value,
       activeTool: null
     });
-
-    // With until next tick to update range state,
-    // as it depends on rendering
-    setTimeout(() => {
-      const { isFocused } = value.selection;
-      const selection = window.getSelection();
-      this.setState({
-        range:
-          isFocused && selection && selection.rangeCount
-            ? selection.getRangeAt(0).cloneRange()
-            : null
-      });
-    }, 1);
   }
 
   toggleMark(nextMark) {
@@ -294,65 +272,73 @@ export class FreeEditor extends React.Component {
   }
 
   insertImage(src, caption) {
-    this.editor.insertBlock({
-      type: 'image',
-      data: {
-        src,
-        caption
-      }
-    }).insertBlock({
-      type: paragraph,
-      nodes: [
-        {
-          object: 'text',
-          leaves: [{
-            text: '',
-          }]
-        },
-      ],
-    });
+    this.editor
+      .insertBlock({
+        type: 'image',
+        data: {
+          src,
+          caption
+        }
+      })
+      .insertBlock({
+        type: paragraph,
+        nodes: [
+          {
+            object: 'text',
+            leaves: [
+              {
+                text: ''
+              }
+            ]
+          }
+        ]
+      });
   }
 
-  insertLink(url, replaceText) {
-    const { value } = this.state;
-    const { selection } = value;
-    let text = replaceText;
-    if (!text) {
-      text = selection.isCollapsed ? 'link' : value.fragment.text;
-    }
-    this.editor.insertInline({
-      type: 'link',
-      data: { url },
-      nodes: [
-        {
-          object: 'text',
-          leaves: [
-            {
-              text
-            }
-          ]
-        }
-      ]
-    });
+  insertLink(url) {
+    // NextTick to ensure the editor has the correct value.
+    setTimeout(() => {
+      const { value } = this.state;
+
+      const hasLink = value.inlines.some(inline => inline.type === 'link');
+
+      if (hasLink) {
+        this.editor
+          .setInlines({
+            type: 'link',
+            data: { url }
+          })
+          .focus();
+      } else {
+        this.editor
+          .wrapInline({
+            type: 'link',
+            data: { url }
+          })
+          .focus()
+          .moveToEnd();
+      }
+    }, 1);
   }
 
   insertReference(newReference) {
-    const {
-      publication_reference_id: id,
-      title: name
-    } = newReference;
+    const { publication_reference_id: id, title: name } = newReference;
     this.editor
       .insertInline({
         type: reference,
         data: { id, name },
-        nodes: [{
-          object: 'text',
-          leaves: [{
-            // TODO: decide if we want to render something
-            // more meaningful than this stand-in.
-            text: 'ref'
-          }]
-        }]
+        nodes: [
+          {
+            object: 'text',
+            leaves: [
+              {
+                // TODO: decide if we want to render something
+                // more meaningful than this stand-in.
+                text: 'ref'
+              }
+            ]
+          }
+        ]
       })
       .focus();
   }
@@ -399,7 +385,6 @@ export class FreeEditor extends React.Component {
     this.onChange(this.editor.removeTable());
   }
 
-
   hasBlock(type) {
     const { value } = this.state;
     return value.blocks.some(node => node.type === type);
@@ -421,9 +406,9 @@ export class FreeEditor extends React.Component {
     const { document } = value;
 
     const isList = this.hasBlock(listItem);
-    const isType = value.blocks.some(block => (
-      !!document.getClosest(block.key, parent => parent.type === type)
-    ));
+    const isType = value.blocks.some(
+      block => !!document.getClosest(block.key, parent => parent.type === type)
+    );
 
     if (isList && isType) {
       editor
@@ -432,9 +417,7 @@ export class FreeEditor extends React.Component {
         .unwrapBlock(orderedList);
     } else if (isList) {
       editor
-        .unwrapBlock(
-          type === unorderedList ? orderedList : unorderedList
-        )
+        .unwrapBlock(type === unorderedList ? orderedList : unorderedList)
         .wrapBlock(type);
     } else {
       editor.setBlocks(listItem).wrapBlock(type);
@@ -445,7 +428,9 @@ export class FreeEditor extends React.Component {
     let isActive = this.hasBlock(type);
 
     if ([unorderedList, orderedList].includes(type)) {
-      const { value: { document, blocks } } = this.state;
+      const {
+        value: { document, blocks }
+      } = this.state;
 
       if (blocks.size > 0) {
         const parent = document.getParent(blocks.first().key);
@@ -460,8 +445,6 @@ export class FreeEditor extends React.Component {
     const {
       attributes, children, node, isFocused
     } = props;
-    const { value } = this.state;
-    const selectedText = value.fragment.text;
 
     switch (node.type) {
       case 'equation':
@@ -489,66 +472,43 @@ export class FreeEditor extends React.Component {
         );
       }
       case 'paragraph': {
-        // Focus text applies when a single text block is focused.
-        // Importantly, it's empty when multiple, non-text blocks are focused.
-        // Use focus text in addition to the length of any highlighted text
-        // to determine whether we have a selection.
-        const focusText = value.focusText ? value.focusText.text : '';
-
-        // The reason we must check whether the value fragment exists
-        // in the focused text is because focusing on an inline fragment,
-        // ie a link or reference, will trigger this case as well as
-        // the case for that specific inline node.
-        const hasSelection = !!(
-          focusText.length
-          && selectedText.length
-          && focusText.indexOf(selectedText) >= 0
-        );
-
-        return (
-          <EditorFormattableText
-            hasSelection={hasSelection}
-            toggleMark={this.toggleMark}
-            insertLink={this.insertLink}
-            {...props}
-          />
-        );
+        return <p {...attributes}>{children}</p>;
       }
 
       case 'link': {
         const url = node.data.get('url');
+
         return (
-          <Manager>
-            <Reference>
-              {({ ref }) => (
-                <a
-                  href={url}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title={url}
-                  ref={ref}
-                  {...attributes}
-                >
-                  {children}
-                </a>
-              )}
-            </Reference>
-            {isFocused ? (
-              <Popper placement="top-center">
-                {({
-                  ref, style, placement
-                }) => (
-                  <span ref={ref} style={style} data-placement={placement}>
-                    <RemoveBtn
-                      onClick={() => this.editor.unwrapInline('link')}
-                    >
-                      Remove Link
-                    </RemoveBtn>
-                  </span>
-                )}
-              </Popper>
-            ) : null}
-          </Manager>
+          <a
+            href={url}
+            rel="noopener noreferrer"
+            target="_blank"
+            title={url}
+            {...attributes}
+            onClick={(e) => {
+              let range;
+              // Create a range selection without actually selecting anything.
+              if (document.body.createTextRange) {
+                range = document.body.createTextRange();
+                range.moveToElementText(e.target);
+              } else if (window.getSelection) {
+                range = document.createRange();
+                range.selectNodeContents(e.target);
+              }
+
+              if (range) {
+                this.setState({
+                  urlEditorData: {
+                    enabled: true,
+                    value: url
+                  },
+                  lastSelectedRange: range
+                });
+              }
+            }}
+          >
+            {children}
+          </a>
         );
       }
 
@@ -576,8 +536,41 @@ export class FreeEditor extends React.Component {
     }
   }
 
+  disableUrlEditor() {
+    this.setState({
+      urlEditorData: {
+        enabled: false,
+        value: ''
+      }
+    });
+  }
+
+  enableUrlEditor(value = '') {
+    this.setState({
+      urlEditorData: {
+        enabled: true,
+        value
+      },
+      lastSelectedRange: getCurrentSelectionRange()
+    });
+  }
+
+  onLinkDelete() {
+    const {
+      urlEditorData: { value }
+    } = this.state;
+    if (value) {
+      setTimeout(() => {
+        this.editor.unwrapInline('link');
+      }, 1);
+    }
+    this.disableUrlEditor();
+  }
+
   render() {
-    const { value, hasCursor, range } = this.state;
+    const {
+      value, hasCursor, urlEditorData, lastSelectedRange
+    } = this.state;
 
     const {
       save,
@@ -591,17 +584,29 @@ export class FreeEditor extends React.Component {
 
     const { className, inlineSaveBtn, invalid } = this.props;
 
+    const { isFocused } = value.selection;
+    const range = isFocused ? getCurrentSelectionRange() : null;
+
     return (
-      <div
-        className={className}
-        onMouseDown={onMouseDown}
-      >
+      <div className={className} onMouseDown={onMouseDown}>
         <EditorFormatTextToolbar
           value={value}
           range={range}
-          toggleMark={this.toggleMark}
-          insertLink={this.insertLink}
+          onButtonClick={which => which === 'link' ? this.enableUrlEditor() : this.toggleMark(which)
+          }
         />
+        {urlEditorData.enabled && (
+          <LinkEditorToolbar
+            onCancel={this.disableUrlEditor}
+            onConfirm={(url) => {
+              if (url.trim()) this.insertLink(url);
+              this.disableUrlEditor();
+            }}
+            onDelete={this.onLinkDelete}
+            value={urlEditorData.value}
+            range={lastSelectedRange}
+          />
+        )}
         <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
           <Toolbar>

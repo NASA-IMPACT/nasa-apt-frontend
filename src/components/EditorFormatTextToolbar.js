@@ -3,7 +3,6 @@ import { PropTypes as T } from 'prop-types';
 import { Popper } from 'react-popper';
 import styled from 'styled-components/macro';
 import collecticon from '../styles/collecticons';
-import FormInput from '../styles/form/input';
 import Button from '../styles/button/button';
 import ButtonGroup from '../styles/button/group';
 
@@ -24,10 +23,6 @@ const LinkButton = styled(FixedWidthButton).attrs({ hideText: true })`
     line-height: 1;
     vertical-align: middle;
   }
-`;
-
-const UrlInput = styled(FormInput)`
-  width: 20rem;
 `;
 
 const buttonConfig = [
@@ -64,72 +59,8 @@ const buttonConfig = [
 ];
 
 class FormatTextToolbar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isUrlEditor: false,
-      urlValue: '',
-      lastSelectedRange: null
-    };
-    this.setUrlEditor = this.setUrlEditor.bind(this);
-    this.insertLink = this.insertLink.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.input = React.createRef();
-  }
-
-  componentDidUpdate(_, prevState) {
-    const { isUrlEditor } = this.state;
-    if (isUrlEditor && !prevState.isUrlEditor) {
-      // Focus the input after rendering it
-      this.input.current.focus();
-    }
-  }
-
-  setUrlEditor(isUrlEditor) {
-    const { range: lastSelectedRange } = this.props;
-    this.setState({ isUrlEditor, lastSelectedRange });
-  }
-
-  insertLink() {
-    const { insertLink } = this.props;
-    const { urlValue } = this.state;
-    insertLink(urlValue);
-  }
-
-  handleKeyPress(e) {
-    const { keyCode } = e;
-    // enter
-    if (keyCode === 13) {
-      e.preventDefault();
-      this.insertLink();
-      this.setState({ isUrlEditor: false, urlValue: '' });
-    }
-  }
-
-  renderUrlEditor() {
-    const { urlValue } = this.state;
-    return (
-      <UrlInput
-        type="text"
-        id="url-editor"
-        size="large"
-        placeholder="Enter a URL"
-        value={urlValue}
-        onChange={(e) => {
-          this.setState({ urlValue: e.currentTarget.value });
-        }}
-        onKeyDown={this.handleKeyPress}
-        onBlur={() => {
-          this.setState({ isUrlEditor: false, urlValue: '' });
-        }}
-        ref={this.input}
-      />
-    );
-  }
-
   renderFormatOptions() {
-    const { value, toggleMark, activeFormatters } = this.props;
-    const { setUrlEditor } = this;
+    const { value, onButtonClick, activeFormatters } = this.props;
 
     const activeMarks = Array.from(value.activeMarks).map(Mark => Mark.type);
 
@@ -142,10 +73,10 @@ class FormatTextToolbar extends React.Component {
         {btns.map(btn => (
           <btn.el
             key={btn.mark}
-            onClick={() => btn.mark === 'link'
-              ? setUrlEditor(true)
-              : toggleMark(btn.mark)
-            }
+            onClick={(e) => {
+              e.preventDefault();
+              onButtonClick(btn.mark);
+            }}
             variation={
               activeMarks.indexOf(btn.mark) >= 0 && btn.mark !== 'link'
                 ? activeVariation
@@ -160,29 +91,12 @@ class FormatTextToolbar extends React.Component {
   }
 
   render() {
-    const { isUrlEditor, lastSelectedRange } = this.state;
-    const { range: currentRange } = this.props;
-    let referenceElement;
-
-    if (isUrlEditor) {
-      // If the popup is set to be displayed the URL editor should  use the
-      // last selected range, otherwise the popup will not a reference for
-      // positioning.
-      referenceElement = lastSelectedRange;
-    } else {
-      // If the toolbar is set to be displayed get the current range
-      referenceElement = currentRange;
-
-      // Check is a range exists
-      if (!referenceElement) return null;
-
-      // If so, check if something is selected
-      const { width } = referenceElement.getBoundingClientRect();
-      if (width === 0) return null;
-    }
+    const { range } = this.props;
+    // Check is a range exists and if something is selected
+    if (!range || !range.getBoundingClientRect().width) return null;
 
     return (
-      <Popper referenceElement={referenceElement} placement="top-center">
+      <Popper referenceElement={range} placement="top-center">
         {({
           ref, style, placementA, arrowProps
         }) => (
@@ -192,11 +106,7 @@ class FormatTextToolbar extends React.Component {
             style={{ ...style, zIndex: 100 }}
             data-placement={placementA}
           >
-            <ActionsContainer>
-              {isUrlEditor
-                ? this.renderUrlEditor()
-                : this.renderFormatOptions()}
-            </ActionsContainer>
+            <ActionsContainer>{this.renderFormatOptions()}</ActionsContainer>
             <div ref={arrowProps.ref} style={arrowProps.style} />
           </div>
         )}
@@ -208,8 +118,7 @@ class FormatTextToolbar extends React.Component {
 FormatTextToolbar.propTypes = {
   range: T.object,
   activeFormatters: T.array,
-  toggleMark: T.func.isRequired,
-  insertLink: T.func.isRequired,
+  onButtonClick: T.func.isRequired,
   value: T.object.isRequired
 };
 
