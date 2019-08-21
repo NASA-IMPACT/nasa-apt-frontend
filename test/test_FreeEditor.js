@@ -51,7 +51,7 @@ test('FreeEditor initial value', (t) => {
 });
 
 test('FreeEditor insert buttons enabled', (t) => {
-  t.plan(14);
+  t.plan(12);
   const save = sinon.spy();
   const initialValue = Value.fromJSON({});
   const { FreeEditor } = proxyquire(
