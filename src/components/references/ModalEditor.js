@@ -35,7 +35,7 @@ import transformInputType from '../../schemas/transformInputType';
 
 export const ReferenceBtn = styled(Button)`
   ::before {
-    ${collecticon('circle-question')}
+    ${collecticon('book-bookmark')}
   }
 `;
 
@@ -351,6 +351,8 @@ export class ReferenceModalEditor extends Component {
           variation="base-plain"
           size="large"
           disabled={disabled}
+          hideText
+          data-tip="Reference"
         >
           Reference
         </ReferenceBtn>

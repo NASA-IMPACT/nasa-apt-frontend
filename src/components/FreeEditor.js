@@ -12,7 +12,6 @@ import EquationEditor from './EquationEditor';
 import TrailingBlock from '../slate-plugins/TrailingBlock';
 import {
   EquationBtn,
-  ParagraphBtn,
   TableBtn,
   Toolbar,
   ToolbarLabel,
@@ -116,7 +115,6 @@ export class FreeEditor extends React.Component {
     this.insertEquation = this.insertEquation.bind(this);
     this.insertImage = this.insertImage.bind(this);
     this.insertLink = this.insertLink.bind(this);
-    this.insertParagraph = this.insertParagraph.bind(this);
     this.insertReference = this.insertReference.bind(this);
     this.insertRow = this.insertRow.bind(this);
     this.insertTable = this.insertTable.bind(this);
@@ -335,24 +333,6 @@ export class FreeEditor extends React.Component {
                 // TODO: decide if we want to render something
                 // more meaningful than this stand-in.
                 text: 'ref'
-              }
-            ]
-          }
-        ]
-      })
-      .focus();
-  }
-
-  insertParagraph() {
-    this.editor
-      .insertBlock({
-        type: paragraph,
-        nodes: [
-          {
-            object: 'text',
-            leaves: [
-              {
-                text: ''
               }
             ]
           }
@@ -612,29 +592,47 @@ export class FreeEditor extends React.Component {
           <Toolbar>
             <ToolbarLabel>Insert</ToolbarLabel>
             <ButtonGroup orientation="horizontal">
-              <EquationBtn
-                id={equation}
-                onClick={this.insertEquation}
+              <ULBtn
+                id={unorderedList}
+                active={this.isButtonActive(unorderedList)}
+                onClick={this.insertUnorderedList}
                 disabled={!hasCursor}
+                hideText
+                data-tip="Unordered list"
               >
-                Equation
-              </EquationBtn>
+                Unordered list
+              </ULBtn>
 
-              <ParagraphBtn
-                id={paragraph}
-                onClick={this.insertParagraph}
+              <OLBtn
+                id={orderedList}
+                active={this.isButtonActive(orderedList)}
+                onClick={this.insertOrderedList}
                 disabled={!hasCursor}
+                hideText
+                data-tip="Ordered list"
               >
-                Paragraph
-              </ParagraphBtn>
+                Ordered list
+              </OLBtn>
 
               <TableBtn
                 id={table}
                 onClick={this.insertTable}
                 disabled={!hasCursor}
+                hideText
+                data-tip="Table"
               >
                 Table
               </TableBtn>
+
+              <EquationBtn
+                id={equation}
+                onClick={this.insertEquation}
+                disabled={!hasCursor}
+                hideText
+                data-tip="Equation"
+              >
+                Equation
+              </EquationBtn>
 
               <EditorFigureTool
                 disabled={!hasCursor}
@@ -647,24 +645,6 @@ export class FreeEditor extends React.Component {
                 disabled={!hasCursor}
                 insertReference={this.insertReference}
               />
-
-              <ULBtn
-                id={unorderedList}
-                active={this.isButtonActive(unorderedList)}
-                onClick={this.insertUnorderedList}
-                disabled={!hasCursor}
-              >
-                Unordered list
-              </ULBtn>
-
-              <OLBtn
-                id={orderedList}
-                active={this.isButtonActive(orderedList)}
-                onClick={this.insertOrderedList}
-                disabled={!hasCursor}
-              >
-                Ordered list
-              </OLBtn>
 
               {inlineSaveBtn && (
                 <Button onClick={save} variation="base-plain" size="large">
