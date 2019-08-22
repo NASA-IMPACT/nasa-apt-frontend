@@ -51,7 +51,7 @@ test('FreeEditor initial value', (t) => {
 });
 
 test('FreeEditor insert buttons enabled', (t) => {
-  t.plan(12);
+  t.plan(6);
   const save = sinon.spy();
   const initialValue = Value.fromJSON({});
   const { FreeEditor } = proxyquire(
@@ -67,17 +67,6 @@ test('FreeEditor insert buttons enabled', (t) => {
       className=""
     />
   );
-  const instance = wrapper.instance();
-  wrapper.find(Toolbar).shallow()
-    .find(ButtonGroup)
-    .children()
-    .forEach((node) => {
-      const { disabled } = node.props();
-      t.ok(disabled, 'Tool button disabled');
-    });
-  instance.onFocus();
-  wrapper.update();
-
   setTimeout(() => {
     wrapper.find(Toolbar).shallow()
       .find(ButtonGroup)
