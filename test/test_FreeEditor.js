@@ -5,7 +5,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import { Value } from 'slate';
 import ButtonGroup from '../src/styles/button/group';
-import { Toolbar } from '../src/components/Toolbars';
+import { Toolbar, ToolbarLabel } from '../src/components/Toolbars';
 
 configure({ adapter: new Adapter() });
 
@@ -51,7 +51,7 @@ test('FreeEditor initial value', (t) => {
 });
 
 test('FreeEditor insert buttons enabled', (t) => {
-  t.plan(6);
+  t.plan(10);
   const save = sinon.spy();
   const initialValue = Value.fromJSON({});
   const { FreeEditor } = proxyquire(
@@ -67,13 +67,28 @@ test('FreeEditor insert buttons enabled', (t) => {
       className=""
     />
   );
-  setTimeout(() => {
-    wrapper.find(Toolbar).shallow()
-      .find(ButtonGroup)
-      .children()
-      .forEach((node) => {
-        const { disabled } = node.props();
-        t.notOk(disabled, 'Tool button enabled');
-      });
-  }, 2);
+
+  const insertToolbar = wrapper.find(Toolbar).childAt(0).shallow();
+  t.equal(insertToolbar.find(ToolbarLabel).text(), 'Insert');
+
+  // 6 buttons
+  insertToolbar
+    .find(ButtonGroup)
+    .children()
+    .forEach((node) => {
+      const { disabled } = node.props();
+      t.notOk(disabled, 'Tool button enabled');
+    });
+
+  const actionsToolbar = wrapper.find(Toolbar).childAt(1).shallow();
+  t.equal(actionsToolbar.find(ToolbarLabel).text(), 'Actions');
+
+  // 2 buttons
+  actionsToolbar
+    .find(ButtonGroup)
+    .children()
+    .forEach((node) => {
+      const { disabled } = node.props();
+      t.ok(disabled, 'Tool button disabled');
+    });
 });
