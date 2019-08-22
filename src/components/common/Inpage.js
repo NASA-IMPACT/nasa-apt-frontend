@@ -6,6 +6,7 @@ import { themeVal, stylizeFunction } from '../../styles/utils/general';
 import { multiply, divide } from '../../styles/utils/math';
 import { headingAlt } from '../../styles/type/heading';
 import Constrainer from '../../styles/constrainer';
+import StatusPill from './StatusPill';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -42,6 +43,17 @@ export const InpageHeadline = styled.div`
   display: flex;
   flex-flow: column;
   min-width: 0;
+`;
+
+export const InpageTitleWrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  min-width: 0;
+
+  ${StatusPill} {
+    align-self: center;
+    margin-left: 0.5rem;
+  }
 `;
 
 export const InpageTitle = styled.h1`
