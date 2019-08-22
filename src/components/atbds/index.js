@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
-import { rgba } from 'polished';
 import { push } from 'connected-react-router';
 import { createAtbd, deleteAtbd } from '../../actions/actions';
 import {
@@ -12,10 +11,9 @@ import {
   drafts,
   identifying_information
 } from '../../constants/routes';
-import { themeVal, stylizeFunction } from '../../styles/utils/general';
-import { divide } from '../../styles/utils/math';
+import { themeVal } from '../../styles/utils/general';
 
-import { visuallyHidden, truncated, antialiased } from '../../styles/helpers';
+import { visuallyHidden, truncated } from '../../styles/helpers';
 import { VerticalDivider } from '../../styles/divider';
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
@@ -44,8 +42,7 @@ import Table from '../../styles/table';
 
 import PreviewButton from './PreviewButton';
 import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
-
-const _rgba = stylizeFunction(rgba);
+import StatusPill from '../common/StatusPill';
 
 const SearchButton = styled(Button)`
   &::before {
@@ -139,21 +136,6 @@ const DocTableActionDelete = styled(DropMenuItem)`
   }
 `;
 
-const AtbdPublishedState = styled.span`
-  ${antialiased}
-  display: flex;
-  justify-content: center;
-  padding: 0 ${divide(themeVal('layout.space'), 2)};
-  background-color: ${_rgba(themeVal('color.base'), 0.64)};
-  border-radius: ${themeVal('shape.ellipsoid')};
-  color: #fff;
-  white-space: nowrap;
-  font-size: 0.875rem;
-  font-weight: ${themeVal('type.base.bold')};
-  line-height: 1.5rem;
-  min-width: 6rem;
-`;
-
 const FilterTrigger = styled(Button)`
   &::after {
     ${collecticon('chevron-down--small')}
@@ -175,7 +157,7 @@ const AtbdList = (props) => {
     return (
       <tr key={atbd_id}>
         <td>
-          <AtbdPublishedState>{status}</AtbdPublishedState>
+          <StatusPill>{status}</StatusPill>
         </td>
         <DocTableBodyThTitle scope="row">
           <Link to={`/atbds/${atbd_id}`} title="View this ATBD">

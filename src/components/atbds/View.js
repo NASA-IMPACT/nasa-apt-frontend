@@ -24,7 +24,8 @@ import {
   InpageTagline,
   InpageToolbar,
   InpageBody,
-  InpageBodyInner
+  InpageBodyInner,
+  InpageTitleWrapper
 } from '../common/Inpage';
 import Prose from '../../styles/type/prose';
 import Dropdown, {
@@ -41,6 +42,7 @@ import Table from '../../styles/table';
 import Dl from '../../styles/type/definition-list';
 import { themeVal } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
+import StatusPill from '../common/StatusPill';
 
 
 const OptionsTrigger = styled(Button)`
@@ -801,89 +803,90 @@ class AtbdView extends Component {
 
     return (
       <Inpage>
-        {atbd && (
-          <StickyContainer>
-            <Sticky>
-              {stickyProps => (
-                <InpageHeader
-                  style={stickyProps.style}
-                  isSticky={stickyProps.isSticky}
-                >
-                  <InpageHeaderInner>
-                    <InpageHeadline>
+        <StickyContainer>
+          <Sticky>
+            {stickyProps => (
+              <InpageHeader
+                style={stickyProps.style}
+                isSticky={stickyProps.isSticky}
+              >
+                <InpageHeaderInner>
+                  <InpageHeadline>
+                    <InpageTitleWrapper>
                       <InpageTitle>{atbd.title}</InpageTitle>
-                      <InpageTagline>Viewing document</InpageTagline>
-                    </InpageHeadline>
-                    <InpageToolbar>
-                      <Dropdown
-                        alignment="right"
-                        triggerElement={(
-                          <OptionsTrigger
-                            variation="achromic-plain"
-                            title="Toggle menu options"
-                            disabled
-                          >
-                            Options
-                          </OptionsTrigger>
-                        )}
-                      >
-                        <DropTitle>Document options</DropTitle>
-                        <DropMenu role="menu" iconified>
-                          <DocumentActionDelete
-                            title="Delete document"
-                            disabled
-                          >
-                            Delete
-                          </DocumentActionDelete>
-                        </DropMenu>
-                      </Dropdown>
-                      <DownloadButton
-                        variation="achromic-plain"
-                        title="Download document as PDF"
-                        as="a"
-                        target="_blank"
-                        href={pdf}
-                        disabled={isSerializingPdf || serializePdfFail}
-                      >
-                        Download PDF
-                      </DownloadButton>
-                      <EditButton
-                        variation="achromic-plain"
-                        title="Edit document"
-                        onClick={() => visitLink(
-                          `/atbdsedit/${
-                            atbd.atbd_id
-                          }/drafts/1/identifying_information`
-                        )}
-                      >
-                        Edit
-                      </EditButton>
-                    </InpageToolbar>
-                  </InpageHeaderInner>
-                </InpageHeader>
-              )}
-            </Sticky>
-            <InpageBody>
-              <InpageBodyInner>
-                <AtbdContent>
-                  <AtbdMeta>
-                    <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
-                    <AtbdMetaDetails type="horizontal">
-                      <dt>Version</dt>
-                      <dd>{atbd.atbd_versions[0].atbd_version}</dd>
-                      <dt>Date</dt>
-                      <dd>10 Feb, 2019</dd>
-                      <dt>Authors</dt>
-                      <dd>Name</dd>
-                    </AtbdMetaDetails>
-                  </AtbdMeta>
+                      <StatusPill>{atbd.atbd_versions[0].status}</StatusPill>
+                    </InpageTitleWrapper>
+                    <InpageTagline>Viewing document</InpageTagline>
+                  </InpageHeadline>
+                  <InpageToolbar>
+                    <Dropdown
+                      alignment="right"
+                      triggerElement={(
+                        <OptionsTrigger
+                          variation="achromic-plain"
+                          title="Toggle menu options"
+                          disabled
+                        >
+                          Options
+                        </OptionsTrigger>
+                      )}
+                    >
+                      <DropTitle>Document options</DropTitle>
+                      <DropMenu role="menu" iconified>
+                        <DocumentActionDelete
+                          title="Delete document"
+                          disabled
+                        >
+                          Delete
+                        </DocumentActionDelete>
+                      </DropMenu>
+                    </Dropdown>
+                    <DownloadButton
+                      variation="achromic-plain"
+                      title="Download document as PDF"
+                      as="a"
+                      target="_blank"
+                      href={pdf}
+                      disabled={isSerializingPdf || serializePdfFail}
+                    >
+                      Download PDF
+                    </DownloadButton>
+                    <EditButton
+                      variation="achromic-plain"
+                      title="Edit document"
+                      onClick={() => visitLink(
+                        `/atbdsedit/${
+                          atbd.atbd_id
+                        }/drafts/1/identifying_information`
+                      )}
+                    >
+                      Edit
+                    </EditButton>
+                  </InpageToolbar>
+                </InpageHeaderInner>
+              </InpageHeader>
+            )}
+          </Sticky>
+          <InpageBody>
+            <InpageBodyInner>
+              <AtbdContent>
+                <AtbdMeta>
+                  <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
+                  <AtbdMetaDetails type="horizontal">
+                    <dt>Version</dt>
+                    <dd>{atbd.atbd_versions[0].atbd_version}</dd>
+                    <dt>Date</dt>
+                    <dd>10 Feb, 2019</dd>
+                    <dt>Authors</dt>
+                    <dd>Name</dd>
+                  </AtbdMetaDetails>
+                </AtbdMeta>
 
-                  {this.renderContent()}
-                </AtbdContent>
-              </InpageBodyInner>
-            </InpageBody>
-          </StickyContainer>
-        )}
+                {this.renderContent()}
+              </AtbdContent>
+            </InpageBodyInner>
+          </InpageBody>
+        </StickyContainer>
       </Inpage>
     );
   }
