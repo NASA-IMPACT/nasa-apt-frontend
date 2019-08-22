@@ -649,7 +649,7 @@ export class FreeEditor extends React.Component {
                 onClick={this.insertUnorderedList}
                 disabled={!hasCursor}
               >
-                Unordered list
+                Bullets
               </ULBtn>
 
               <OLBtn
@@ -658,7 +658,7 @@ export class FreeEditor extends React.Component {
                 onClick={this.insertOrderedList}
                 disabled={!hasCursor}
               >
-                Ordered list
+                List
               </OLBtn>
 
               {inlineSaveBtn && (
