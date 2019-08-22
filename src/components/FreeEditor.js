@@ -16,7 +16,10 @@ import {
   Toolbar,
   ToolbarLabel,
   ULBtn,
-  OLBtn
+  OLBtn,
+  UndoBtn,
+  RedoBtn,
+  ToolbarGroup
 } from './Toolbars';
 import EditorImage from './EditorImage';
 import EditorTable from './EditorTable';
@@ -133,6 +136,8 @@ export class FreeEditor extends React.Component {
     this.enableUrlEditor = this.enableUrlEditor.bind(this);
     this.disableUrlEditor = this.disableUrlEditor.bind(this);
     this.onLinkDelete = this.onLinkDelete.bind(this);
+    this.onUndoClick = this.onUndoClick.bind(this);
+    this.onRedoClick = this.onRedoClick.bind(this);
 
     this.setEditorReference = (editorValue) => {
       this.editor = editorValue;
@@ -236,6 +241,16 @@ export class FreeEditor extends React.Component {
           : 'dismiss-empty-delete'
       });
     }, 1);
+  }
+
+  onUndoClick(e) {
+    e.preventDefault();
+    this.editor.undo();
+  }
+
+  onRedoClick(e) {
+    e.preventDefault();
+    this.editor.redo();
   }
 
   toggleMark(nextMark) {
@@ -392,6 +407,7 @@ export class FreeEditor extends React.Component {
 
   removeTable() {
     this.onChange(this.editor.removeTable());
+    this.editor.snapshotSelection();
   }
 
   hasBlock(type) {
@@ -585,6 +601,10 @@ export class FreeEditor extends React.Component {
   render() {
     const { value, urlEditorData, lastSelectedRange } = this.state;
 
+    const { data } = value;
+    const undos = data.get('undos');
+    const redos = data.get('redos');
+
     const {
       save,
       onChange,
@@ -630,62 +650,87 @@ export class FreeEditor extends React.Component {
         <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
           <Toolbar>
-            <ToolbarLabel>Insert</ToolbarLabel>
-            <ButtonGroup orientation="horizontal">
-              <ULBtn
-                id={unorderedList}
-                active={this.isButtonActive(unorderedList)}
-                onClick={this.insertUnorderedList}
-                hideText
-                data-tip="Bullets"
-              >
-                Bullets
-              </ULBtn>
+            <ToolbarGroup>
+              <ToolbarLabel>Insert</ToolbarLabel>
+              <ButtonGroup orientation="horizontal">
+                <ULBtn
+                  id={unorderedList}
+                  active={this.isButtonActive(unorderedList)}
+                  onClick={this.insertUnorderedList}
+                  hideText
+                  data-tip="Bullets"
+                >
+                  Bullets
+                </ULBtn>
 
-              <OLBtn
-                id={orderedList}
-                active={this.isButtonActive(orderedList)}
-                onClick={this.insertOrderedList}
-                hideText
-                data-tip="List"
-              >
-                List
-              </OLBtn>
+                <OLBtn
+                  id={orderedList}
+                  active={this.isButtonActive(orderedList)}
+                  onClick={this.insertOrderedList}
+                  hideText
+                  data-tip="List"
+                >
+                  List
+                </OLBtn>
 
-              <TableBtn
-                id={table}
-                onClick={this.insertTable}
-                hideText
-                data-tip="Table"
-              >
-                Table
-              </TableBtn>
+                <TableBtn
+                  id={table}
+                  onClick={this.insertTable}
+                  hideText
+                  data-tip="Table"
+                >
+                  Table
+                </TableBtn>
 
-              <EquationBtn
-                id={equation}
-                onClick={this.insertEquation}
-                hideText
-                data-tip="Equation"
-              >
-                Equation
-              </EquationBtn>
+                <EquationBtn
+                  id={equation}
+                  onClick={this.insertEquation}
+                  hideText
+                  data-tip="Equation"
+                >
+                  Equation
+                </EquationBtn>
 
-              <EditorFigureTool
-                onSaveSuccess={(uploadedFile, caption) => {
-                  this.insertImage(uploadedFile, caption);
-                }}
-              />
+                <EditorFigureTool
+                  onSaveSuccess={(uploadedFile, caption) => {
+                    this.insertImage(uploadedFile, caption);
+                  }}
+                />
 
-              <ReferenceModalEditor
-                insertReference={this.insertReference}
-              />
+                <ReferenceModalEditor
+                  insertReference={this.insertReference}
+                />
 
-              {inlineSaveBtn && (
-                <Button onClick={save} variation="base-plain" size="large">
-                  Save
-                </Button>
-              )}
-            </ButtonGroup>
+                {inlineSaveBtn && (
+                  <Button onClick={save} variation="base-plain" size="large">
+                    Save
+                  </Button>
+                )}
+              </ButtonGroup>
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <ToolbarLabel>Actions</ToolbarLabel>
+              <ButtonGroup orientation="horizontal">
+                <UndoBtn
+                  id="undo"
+                  onClick={this.onUndoClick}
+                  disabled={!undos || !undos.size}
+                  hideText
+                  data-tip="Undo action"
+                >
+                  Undo action
+                </UndoBtn>
+                <RedoBtn
+                  id="redo"
+                  onClick={this.onRedoClick}
+                  disabled={!redos || !redos.size}
+                  hideText
+                  data-tip="Redo action"
+                >
+                  Redo action
+                </RedoBtn>
+              </ButtonGroup>
+            </ToolbarGroup>
           </Toolbar>
           <EditorContainer>
             <Editor
