@@ -130,11 +130,14 @@ export class FreeEditor extends React.Component {
     this.save = this.save.bind(this);
     this.selectTool = this.selectTool.bind(this);
     this.toggleMark = this.toggleMark.bind(this);
-    this.onFocus = this.onFocus.bind(this);
 
     this.enableUrlEditor = this.enableUrlEditor.bind(this);
     this.disableUrlEditor = this.disableUrlEditor.bind(this);
     this.onLinkDelete = this.onLinkDelete.bind(this);
+
+    this.setEditorReference = (editorValue) => {
+      this.editor = editorValue;
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -204,15 +207,6 @@ export class FreeEditor extends React.Component {
       event.preventDefault();
       this.toggleMark(nextMark);
     }
-  }
-
-  onFocus() {
-    // Wait one tick to allow editor focus value to get set.
-    setTimeout(() => {
-      this.setState({
-        hasCursor: true
-      });
-    }, 1);
   }
 
   onChange(event) {
@@ -305,16 +299,13 @@ export class FreeEditor extends React.Component {
           .setInlines({
             type: 'link',
             data: { url }
-          })
-          .focus();
+          });
       } else {
         this.editor
           .wrapInline({
             type: 'link',
             data: { url }
-          })
-          .focus()
-          .moveToEnd();
+          });
       }
     }, 1);
   }
@@ -466,15 +457,9 @@ export class FreeEditor extends React.Component {
             title={url}
             {...attributes}
             onClick={(e) => {
-              let range;
-              // Create a range selection without actually selecting anything.
-              if (document.body.createTextRange) {
-                range = document.body.createTextRange();
-                range.moveToElementText(e.target);
-              } else if (window.getSelection) {
-                range = document.createRange();
-                range.selectNodeContents(e.target);
-              }
+              e.preventDefault();
+              const range = document.createRange();
+              range.selectNodeContents(e.target);
 
               if (range) {
                 this.setState({
@@ -539,7 +524,9 @@ export class FreeEditor extends React.Component {
     const {
       urlEditorData: { value }
     } = this.state;
+
     if (value) {
+      this.editor.focus();
       setTimeout(() => {
         this.editor.unwrapInline('link');
       }, 1);
@@ -549,7 +536,7 @@ export class FreeEditor extends React.Component {
 
   render() {
     const {
-      value, hasCursor, urlEditorData, lastSelectedRange
+      value, urlEditorData, lastSelectedRange
     } = this.state;
 
     const {
@@ -558,15 +545,13 @@ export class FreeEditor extends React.Component {
       onMouseDown,
       onKeyDown,
       onKeyUp,
-      renderNode,
-      onFocus
+      renderNode
     } = this;
 
     const { className, inlineSaveBtn, invalid } = this.props;
 
     const { isFocused } = value.selection;
     const range = isFocused ? getCurrentSelectionRange() : null;
-
     return (
       <div className={className} onMouseDown={onMouseDown}>
         <EditorFormatTextToolbar
@@ -596,7 +581,6 @@ export class FreeEditor extends React.Component {
                 id={unorderedList}
                 active={this.isButtonActive(unorderedList)}
                 onClick={this.insertUnorderedList}
-                disabled={!hasCursor}
                 hideText
                 data-tip="Unordered list"
               >
@@ -607,7 +591,6 @@ export class FreeEditor extends React.Component {
                 id={orderedList}
                 active={this.isButtonActive(orderedList)}
                 onClick={this.insertOrderedList}
-                disabled={!hasCursor}
                 hideText
                 data-tip="Ordered list"
               >
@@ -617,7 +600,6 @@ export class FreeEditor extends React.Component {
               <TableBtn
                 id={table}
                 onClick={this.insertTable}
-                disabled={!hasCursor}
                 hideText
                 data-tip="Table"
               >
@@ -627,7 +609,6 @@ export class FreeEditor extends React.Component {
               <EquationBtn
                 id={equation}
                 onClick={this.insertEquation}
-                disabled={!hasCursor}
                 hideText
                 data-tip="Equation"
               >
@@ -635,14 +616,12 @@ export class FreeEditor extends React.Component {
               </EquationBtn>
 
               <EditorFigureTool
-                disabled={!hasCursor}
                 onSaveSuccess={(uploadedFile, caption) => {
                   this.insertImage(uploadedFile, caption);
                 }}
               />
 
               <ReferenceModalEditor
-                disabled={!hasCursor}
                 insertReference={this.insertReference}
               />
 
@@ -655,13 +634,12 @@ export class FreeEditor extends React.Component {
           </Toolbar>
           <EditorContainer>
             <Editor
-              ref={editorValue => (this.editor = editorValue)}
+              ref={this.setEditorReference}
               schema={schema}
               value={value}
               onChange={onChange}
               onKeyDown={onKeyDown}
               onKeyUp={onKeyUp}
-              onFocus={onFocus}
               renderNode={renderNode}
               renderMark={renderMark}
               plugins={plugins}
