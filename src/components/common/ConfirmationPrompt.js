@@ -232,7 +232,7 @@ export function confirmDeleteReference(reference, data) {
         </ModalCancelButton>
         <ModalDeleteButton
           variation="base-raised-light"
-          title="Confirm document deletion"
+          title="Confirm reference deletion"
           onClick={confirm}
         >
           Delete
