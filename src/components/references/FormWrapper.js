@@ -15,7 +15,12 @@ import { FormFieldset, FormFieldsetHeader } from '../../styles/form/fieldset';
 
 export class ReferenceFormWrapper extends Component {
   render() {
-    const { data, handleDeleteReference, handleSubmit } = this.props;
+    const {
+      data,
+      handleDeleteReference,
+      handleSubmit,
+      submitButton
+    } = this.props;
     const { publication_reference_id, isNew } = data;
 
     return (
@@ -34,7 +39,11 @@ export class ReferenceFormWrapper extends Component {
               Remove
             </RemoveButton>
           </FormFieldsetHeader>
-          <ReferenceForm initialValues={data} handleSubmit={handleSubmit} />
+          <ReferenceForm
+            initialValues={data}
+            submitButton={submitButton}
+            handleSubmit={handleSubmit}
+          />
         </FormFieldset>
       </Form>
     );
@@ -44,7 +53,8 @@ export class ReferenceFormWrapper extends Component {
 ReferenceFormWrapper.propTypes = {
   data: T.object,
   handleDeleteReference: T.func,
-  handleSubmit: T.func
+  handleSubmit: T.func,
+  submitButton: T.string
 };
 
 const mapStateToProps = () => ({});

@@ -1,5 +1,5 @@
 import test from 'tape';
-import addMinLength from '../src/schemas/addMinLength';
+import { addMinLength } from '../src/schemas/utils';
 
 test('addMinLength only adds field to required properties', (t) => {
   const schema = {

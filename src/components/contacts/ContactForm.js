@@ -8,9 +8,12 @@ import styled from 'styled-components/macro';
 import { get, set } from 'object-path';
 
 import apiSchema from '../../schemas/schema.json';
-import addMinLength from '../../schemas/addMinLength';
-import transformErrors from '../../schemas/transformErrors';
-import validateEmail from '../../schemas/validateEmail';
+import {
+  addMinLength,
+  transformErrors,
+  validateEmail
+} from '../../schemas/utils';
+
 import Select from '../common/Select';
 import Input, { InputFormGroup } from '../common/Input';
 import {

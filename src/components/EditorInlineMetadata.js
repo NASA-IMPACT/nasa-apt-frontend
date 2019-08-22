@@ -38,27 +38,21 @@ const MetaInput = styled(FormInput)`
 
 export function InlineMetadata(props) {
   const {
-    readOnly,
-    onRemove,
-    onSubmit,
-    value
+    readOnly, onRemove, onSubmit, value
   } = props;
 
   // Get node at cursor position
   const node = value.anchorInline;
 
-  // Do not render if node is not a reference
-  if (!node || node.type !== 'reference') {
-    return null;
-  }
+  // Skip rendering if node is not a reference
+  if (!node || node.type !== 'reference') return null;
 
-  // Get selection range
-  const range = window
-    .getSelection()
-    .getRangeAt(0)
-    .cloneRange();
+  // Get selection object, skip rendering if no selection or range is available
+  const select = window.getSelection();
+  if (!select || !select.rangeCount) return null;
 
-  // Do not render if something is selected
+  // Get range object, skip rendering if width is zero
+  const range = select.getRangeAt(0).cloneRange();
   const { width } = range.getBoundingClientRect();
   if (width > 0) return null;
 
