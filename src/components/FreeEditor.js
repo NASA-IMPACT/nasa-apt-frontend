@@ -582,9 +582,9 @@ export class FreeEditor extends React.Component {
                 active={this.isButtonActive(unorderedList)}
                 onClick={this.insertUnorderedList}
                 hideText
-                data-tip="Unordered list"
+                data-tip="Bullets"
               >
-                Unordered list
+                Bullets
               </ULBtn>
 
               <OLBtn
@@ -592,9 +592,9 @@ export class FreeEditor extends React.Component {
                 active={this.isButtonActive(orderedList)}
                 onClick={this.insertOrderedList}
                 hideText
-                data-tip="Ordered list"
+                data-tip="List"
               >
-                Ordered list
+                List
               </OLBtn>
 
               <TableBtn
