@@ -232,6 +232,8 @@ export class EditorFigureTool extends Component {
           variation="base-plain"
           size="large"
           disabled={disabled}
+          data-tip="Figure"
+          hideText
         >
           Figure
         </FigureButton>

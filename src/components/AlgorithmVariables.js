@@ -43,7 +43,9 @@ const rules = [
 const htmlSerializer = new Html({ rules });
 
 const VariableList = styled.ul`
-  list-style: none;
+  && {
+    list-style: none;
+  }
   margin: 1rem 0;
 `;
 

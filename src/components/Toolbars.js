@@ -14,12 +14,6 @@ export const EquationBtn = styled(Button).attrs(baseAttrs)`
   }
 `;
 
-export const ParagraphBtn = styled(Button).attrs(baseAttrs)`
-  ::before {
-    ${collecticon('pilcrow')}
-  }
-`;
-
 export const TableBtn = styled(Button).attrs(baseAttrs)`
   ::before {
     ${collecticon('table')}
