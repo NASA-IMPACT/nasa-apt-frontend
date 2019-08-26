@@ -23,4 +23,9 @@ export default {
       },
     },
   },
+  inlines: {
+    reference: {
+      isVoid: true
+    }
+  }
 };
