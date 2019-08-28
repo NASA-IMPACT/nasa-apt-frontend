@@ -230,7 +230,11 @@ export class FreeEditor extends React.Component {
     // Delay hiding the toolbar or setting the state will prevent the editor
     // from properly updating.
     setTimeout(() => {
-      this.disableUrlEditor();
+      this.disableUrlEditor({
+        reason: value
+          ? 'link-delete'
+          : 'dismiss-empty-delete'
+      });
     }, 1);
   }
 
@@ -536,12 +540,34 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  disableUrlEditor() {
+  disableUrlEditor({ reason }) {
+    const { urlEditorData: { node }, lastSelectedRange } = this.state;
+    const r = lastSelectedRange.cloneRange();
+
     this.setState({
       urlEditorData: {
         enabled: false,
         value: '',
         node: null
+      }
+    }, () => {
+      // When the url editor is closed we need to keep the focus at the
+      // targeted word, but depending on what closing reason the method must
+      // be different.
+      if (reason === 'link-set' || reason === 'link-delete') {
+        // Do nothing as the link insertion/deletion will take care of it.
+        return;
+      }
+
+      if (node) {
+        // If a node is set use it to set the correct focus.
+        this.editor.moveAnchorToEndOfNode(node).moveFocusToEndOfNode(node);
+      } else {
+        // Otherwise use the stored selection.
+        r.collapse();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
       }
     });
   }
@@ -584,11 +610,16 @@ export class FreeEditor extends React.Component {
           <LinkEditorToolbar
             onCancel={this.disableUrlEditor}
             onConfirm={(url) => {
-              if (url.trim()) this.insertLink(url);
+              const trimmed = url.trim();
+              if (trimmed) this.insertLink(trimmed);
               // Delay hiding the toolbar or setting the state will prevent the editor
               // from properly updating.
               setTimeout(() => {
-                this.disableUrlEditor();
+                this.disableUrlEditor({
+                  reason: trimmed
+                    ? 'link-set'
+                    : 'dismiss-empty-confirm'
+                });
               }, 1);
             }}
             onDelete={this.onLinkDelete}

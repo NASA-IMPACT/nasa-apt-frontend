@@ -99,7 +99,7 @@ export default class LinkEditorToolbar extends React.Component {
     );
 
     if (!this.blockNextOutsideClick && this.urlEditorRef.current && !isInside) {
-      onCancel();
+      onCancel({ reason: 'dismiss-outside' });
     }
     this.blockNextOutsideClick = false;
   }
@@ -135,7 +135,7 @@ export default class LinkEditorToolbar extends React.Component {
     // esc
     if (keyCode === 27) {
       e.preventDefault();
-      onCancel();
+      onCancel({ reason: 'dismiss-esc' });
       this.setState({ urlValue: '' });
     }
   }
