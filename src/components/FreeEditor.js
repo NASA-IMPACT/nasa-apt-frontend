@@ -130,7 +130,6 @@ export class FreeEditor extends React.Component {
     this.save = this.save.bind(this);
     this.selectTool = this.selectTool.bind(this);
     this.toggleMark = this.toggleMark.bind(this);
-
     this.enableUrlEditor = this.enableUrlEditor.bind(this);
     this.disableUrlEditor = this.disableUrlEditor.bind(this);
     this.onLinkDelete = this.onLinkDelete.bind(this);
@@ -217,6 +216,28 @@ export class FreeEditor extends React.Component {
     });
   }
 
+  onLinkDelete() {
+    const {
+      urlEditorData: { value, node }
+    } = this.state;
+    if (value) {
+      this.editor
+        .focus()
+        .moveAnchorToEndOfNode(node)
+        .moveFocusToEndOfNode(node)
+        .unwrapInline('link');
+    }
+    // Delay hiding the toolbar or setting the state will prevent the editor
+    // from properly updating.
+    setTimeout(() => {
+      this.disableUrlEditor({
+        reason: value
+          ? 'link-delete'
+          : 'dismiss-empty-delete'
+      });
+    }, 1);
+  }
+
   toggleMark(nextMark) {
     // Ensure sub/superscript are not applied at the same time
     if (nextMark === 'superscript') {
@@ -288,26 +309,43 @@ export class FreeEditor extends React.Component {
   }
 
   insertLink(url) {
-    // NextTick to ensure the editor has the correct value.
-    setTimeout(() => {
-      const { value } = this.state;
+    const {
+      urlEditorData: { node }
+    } = this.state;
 
-      const hasLink = value.inlines.some(inline => inline.type === 'link');
+    this.editor.focus();
 
-      if (hasLink) {
-        this.editor
-          .setInlines({
-            type: 'link',
-            data: { url }
-          });
-      } else {
-        this.editor
-          .wrapInline({
-            type: 'link',
-            data: { url }
-          });
-      }
-    }, 1);
+    // If there is a link node, set the focus and anchor on it.
+    // This is required to ensure that the current selection is on the link.
+    // This is particularly problematic when a user clicks on a link before the
+    // editor was ever focused (like right after page load). In these cases
+    // we need to ensure a correct selection otherwise the cursor would be set
+    // at the beginning of the editor and the subsequent commands would not work
+    // since there wouldn't be a link under the current selection.
+    if (node) {
+      this.editor.moveAnchorToEndOfNode(node).moveFocusToEndOfNode(node);
+    }
+
+    // Use the editor value because the one stored on the state is behind and is
+    // still out of focus.
+    const hasLink = this.editor.value.inlines.some(
+      inline => inline.type === 'link'
+    );
+
+    if (hasLink) {
+      this.editor.setInlines({
+        type: 'link',
+        data: { url }
+      });
+    } else {
+      this.editor
+        .wrapInline({
+          type: 'link',
+          data: { url }
+        })
+        .moveAnchorToEndOfInline()
+        .moveFocusToEndOfInline();
+    }
   }
 
   insertReference(newReference) {
@@ -465,7 +503,8 @@ export class FreeEditor extends React.Component {
                 this.setState({
                   urlEditorData: {
                     enabled: true,
-                    value: url
+                    value: url,
+                    node
                   },
                   lastSelectedRange: range
                 });
@@ -501,11 +540,34 @@ export class FreeEditor extends React.Component {
     }
   }
 
-  disableUrlEditor() {
+  disableUrlEditor({ reason }) {
+    const { urlEditorData: { node }, lastSelectedRange } = this.state;
+    const r = lastSelectedRange.cloneRange();
+
     this.setState({
       urlEditorData: {
         enabled: false,
-        value: ''
+        value: '',
+        node: null
+      }
+    }, () => {
+      // When the url editor is closed we need to keep the focus at the
+      // targeted word, but depending on what closing reason the method must
+      // be different.
+      if (reason === 'link-set' || reason === 'link-delete') {
+        // Do nothing as the link insertion/deletion will take care of it.
+        return;
+      }
+
+      if (node) {
+        // If a node is set use it to set the correct focus.
+        this.editor.moveAnchorToEndOfNode(node).moveFocusToEndOfNode(node);
+      } else {
+        // Otherwise use the stored selection.
+        r.collapse();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
       }
     });
   }
@@ -520,24 +582,8 @@ export class FreeEditor extends React.Component {
     });
   }
 
-  onLinkDelete() {
-    const {
-      urlEditorData: { value }
-    } = this.state;
-
-    if (value) {
-      this.editor.focus();
-      setTimeout(() => {
-        this.editor.unwrapInline('link');
-      }, 1);
-    }
-    this.disableUrlEditor();
-  }
-
   render() {
-    const {
-      value, urlEditorData, lastSelectedRange
-    } = this.state;
+    const { value, urlEditorData, lastSelectedRange } = this.state;
 
     const {
       save,
@@ -564,8 +610,17 @@ export class FreeEditor extends React.Component {
           <LinkEditorToolbar
             onCancel={this.disableUrlEditor}
             onConfirm={(url) => {
-              if (url.trim()) this.insertLink(url);
-              this.disableUrlEditor();
+              const trimmed = url.trim();
+              if (trimmed) this.insertLink(trimmed);
+              // Delay hiding the toolbar or setting the state will prevent the editor
+              // from properly updating.
+              setTimeout(() => {
+                this.disableUrlEditor({
+                  reason: trimmed
+                    ? 'link-set'
+                    : 'dismiss-empty-confirm'
+                });
+              }, 1);
             }}
             onDelete={this.onLinkDelete}
             value={urlEditorData.value}
