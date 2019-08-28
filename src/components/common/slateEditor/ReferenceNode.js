@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { rgba } from 'polished';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { Manager, Reference, Popper } from 'react-popper';
 import { isDescendant } from './utils';
 import ButtonGroup from '../../../styles/button/group';
@@ -15,6 +15,11 @@ const _rgba = stylizeFunction(rgba);
 const ReferenceNodeSup = styled.sup`
   margin-left: 0.125rem;
   text-decoration: underline;
+
+  ${({ isFocused }) => isFocused && css`
+    border: 1px dotted;
+  `}
+
   * {
     text-decoration: none;
   }
@@ -84,7 +89,7 @@ export default class ReferenceNode extends React.Component {
   }
 
   render() {
-    const { node } = this.props;
+    const { node, isFocused } = this.props;
     const { visible } = this.state;
 
     const name = node.data.get('name');
@@ -99,6 +104,7 @@ export default class ReferenceNode extends React.Component {
                 return ref(el);
               }}
               onClick={this.onRefClick}
+              isFocused={isFocused}
             >
               {node.text}
             </ReferenceNodeSup>
@@ -126,7 +132,8 @@ export default class ReferenceNode extends React.Component {
 
 ReferenceNode.propTypes = {
   node: PropTypes.object,
-  editor: PropTypes.object
+  editor: PropTypes.object,
+  isFocused: PropTypes.bool
 };
 
 class ReferenceToolbar extends React.Component {

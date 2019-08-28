@@ -525,7 +525,14 @@ export class FreeEditor extends React.Component {
       }
 
       case reference: {
-        return <ReferenceNode {...attributes} editor={editor} node={node} />;
+        return (
+          <ReferenceNode
+            {...attributes}
+            editor={editor}
+            node={node}
+            isFocused={isFocused}
+          />
+        );
       }
       case unorderedList:
         return <ul {...attributes}>{children}</ul>;
