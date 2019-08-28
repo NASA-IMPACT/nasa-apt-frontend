@@ -74,17 +74,42 @@ export default class ReferenceNode extends React.Component {
     this.refTextNode = null;
   }
 
-  onRefClick(e) {
-    e.preventDefault();
+  componentDidUpdate(prevProps) {
+    const { isFocused } = this.props;
+    // Using the isFocused variable provided by the editor creates some problems
+    // when the ref element is clicked with the mouse.
+    // To circumvent this we delay the show/gide action and cancel it if needed.
+    if (!prevProps.isFocused && isFocused) {
+      this.wouldShowTimeout = setTimeout(() => this.showToolbar(), 150);
+    }
+    if (prevProps.isFocused && !isFocused) {
+      this.wouldHideTimeout = setTimeout(() => this.setState({ visible: false }), 150);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.wouldShowTimeout) clearTimeout(this.wouldShowTimeout);
+    if (this.wouldHideTimeout) clearTimeout(this.wouldHideTimeout);
+  }
+
+  showToolbar() {
     const { editor, node } = this.props;
     editor.moveAnchorToStartOfNode(node).moveFocusToStartOfNode(node);
     this.setState({ visible: true });
+  }
+
+  onRefClick(e) {
+    e.preventDefault();
+    if (this.wouldShowTimeout) clearTimeout(this.wouldShowTimeout);
+    if (this.wouldHideTimeout) clearTimeout(this.wouldHideTimeout);
+    this.showToolbar();
   }
 
   onDeleteClick(e) {
     e.preventDefault();
     const { editor, node } = this.props;
     this.setState({ visible: false });
+    editor.focus().moveAnchorToEndOfNode(node).moveFocusToEndOfNode(node);
     editor.removeNodeByKey(node.key);
   }
 
