@@ -41,6 +41,27 @@ export const OLBtn = styled(Button).attrs(baseAttrs)`
   }
 `;
 
+export const UndoBtn = styled(Button).attrs(baseAttrs)`
+  ::before {
+    ${collecticon('arrow-semi-spin-ccw')}
+  }
+`;
+
+export const RedoBtn = styled(Button).attrs(baseAttrs)`
+  ::before {
+    ${collecticon('arrow-semi-spin-cw')}
+  }
+`;
+
+export const ToolbarGroup = styled.div`
+  display: flex;
+  align-items: center;
+
+  :last-child:not(:first-child) {
+    margin-left: auto;
+  }
+`;
+
 export const Toolbar = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -49,6 +70,10 @@ export const Toolbar = styled.div`
   border-top-left-radius: ${themeVal('shape.rounded')};
   border-top-right-radius: ${themeVal('shape.rounded')};
   padding: 0 3rem;
+
+  ${ToolbarGroup}:not(:last-child) {
+    margin-right: ${themeVal('layout.space')};
+  }
 `;
 
 export const ToolbarLabel = styled.h5`
