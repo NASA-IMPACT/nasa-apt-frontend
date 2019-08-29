@@ -525,12 +525,14 @@ export class FreeEditor extends React.Component {
       }
 
       case reference: {
+        // If something is selected do not show the toolbar
+        const wSel = window.getSelection();
         return (
           <ReferenceNode
             {...attributes}
             editor={editor}
             node={node}
-            isFocused={isFocused}
+            isFocused={isFocused && wSel.isCollapsed}
           />
         );
       }
