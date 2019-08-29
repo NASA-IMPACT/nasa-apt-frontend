@@ -26,7 +26,6 @@ import EditorTable from './EditorTable';
 import EditorFigureTool from './EditorFigureTool';
 import ReferenceModalEditor from './references/ModalEditor';
 import EditorFormatTextToolbar from './EditorFormatTextToolbar';
-import EditorInlineMetadata from './EditorInlineMetadata';
 import Button from '../styles/button/button';
 import ButtonGroup from '../styles/button/group';
 import LinkEditorToolbar from './common/slateEditor/LinkToolbar';
@@ -40,6 +39,7 @@ import {
   getCurrentSelectionRange,
   renderMark
 } from './common/slateEditor/utils';
+import ReferenceNode from './common/slateEditor/ReferenceNode';
 
 const equation = 'equation';
 const paragraph = 'paragraph';
@@ -84,14 +84,6 @@ const EditorContainer = styled.div`
 
   ol {
     list-style: decimal;
-  }
-`;
-
-const ReferenceNode = styled.sup`
-  margin-left: 0.1rem;
-  text-decoration: underline;
-  * {
-    text-decoration: none;
   }
 `;
 
@@ -533,13 +525,15 @@ export class FreeEditor extends React.Component {
       }
 
       case reference: {
+        // If something is selected do not show the toolbar
+        const wSel = window.getSelection();
         return (
           <ReferenceNode
-            data-reference-id={node.data.get('id')}
             {...attributes}
-          >
-            {children}
-          </ReferenceNode>
+            editor={editor}
+            node={node}
+            isFocused={isFocused && wSel.isCollapsed}
+          />
         );
       }
       case unorderedList:
@@ -647,7 +641,6 @@ export class FreeEditor extends React.Component {
             range={lastSelectedRange}
           />
         )}
-        <EditorInlineMetadata value={value} />
         <EditorStatus invalid={invalid}>
           <Toolbar>
             <ToolbarGroup>
