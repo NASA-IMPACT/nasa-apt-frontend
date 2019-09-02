@@ -310,7 +310,8 @@ Contacts.propTypes = {
   selectedAtbd: PropTypes.shape({
     atbd_id: PropTypes.number.isRequired,
     contacts: PropTypes.array,
-    contact_groups: PropTypes.array
+    contact_groups: PropTypes.array,
+    title: PropTypes.string,
   }),
   deleteAtbdContact: PropTypes.func,
   deleteAtbdContactGroup: PropTypes.func,

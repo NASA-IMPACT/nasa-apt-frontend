@@ -2,7 +2,6 @@ import { css } from 'styled-components/macro';
 import { rgba } from 'polished';
 import { disabled } from '../helpers';
 import { themeVal, stylizeFunction } from '../utils/general';
-import { multiply } from '../utils/math';
 
 const _rgba = stylizeFunction(rgba);
 
