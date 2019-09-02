@@ -379,6 +379,7 @@ export class FreeEditor extends React.Component {
 
   insertTable() {
     this.editor.insertTable();
+    this.editor.toggleTableHeaders();
   }
 
   insertColumn() {
@@ -484,6 +485,7 @@ export class FreeEditor extends React.Component {
             removeRow={this.removeRow}
             insertColumn={this.insertColumn}
             removeColumn={this.removeColumn}
+            editor={this.editor}
             {...props}
           />
         );
@@ -762,14 +764,11 @@ const StyledFreeEditor = styled(FreeEditor)`
   table {
     width: 100%;
     border-collapse: collapse;
-    border-top: 1px solid ${themeVal('color.gray')};
     margin-bottom: ${themeVal('layout.space')};
     table-layout: fixed;
   }
   table tr {
     border: none;
-    border-bottom: 1px solid ${themeVal('color.gray')};
-    border-right: 1px solid ${themeVal('color.gray')};
   }
   table thead tr {
     background: #f5f5f5;
@@ -777,9 +776,6 @@ const StyledFreeEditor = styled(FreeEditor)`
   }
   table td {
     border: 1px solid ${themeVal('color.gray')};
-    border-top: none;
-    border-bottom: none;
-    border-right: none;
     line-height: 1;
     padding: 0.5rem;
     position: relative;
