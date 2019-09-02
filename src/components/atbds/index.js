@@ -373,8 +373,7 @@ class AtbdList extends React.Component {
 
   render() {
     const { createAtbd: create } = this.props;
-    const { filter: { status: filterStatus }, searchCurrent } = this.state;
-
+    const { filter: { status: filterStatus }, searchCurrent, searchValue } = this.state;
     const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
 
     return (
@@ -438,6 +437,7 @@ class AtbdList extends React.Component {
                       onChange={this.onSearchChange}
                       onSearch={this.onSearch}
                       value={searchCurrent}
+                      lastSearch={searchValue}
                     />
                     <CreateButton
                       variation="achromic-plain"

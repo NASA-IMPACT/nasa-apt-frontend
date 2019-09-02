@@ -32,7 +32,7 @@ const SearchFormInput = styled(FormInput)`
   ` : ''}
 `;
 
-const CloseButton = styled(Button).attrs({
+const ClearButton = styled(Button).attrs({
   variation: 'base-plain',
   size: 'medium',
   hideText: true
@@ -77,8 +77,15 @@ class SearchControl extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { userExpanded } = this.state;
     if (!prevState.userExpanded && userExpanded) {
-      this.inputFieldRef.current.focus();
+      setTimeout(() => {
+        // Delay is necessary because of the css animations.
+        this.inputFieldRef.current.focus();
+      }, 100);
     }
+  }
+
+  componentWillUnmount() {
+    if (this.blurTimeout) clearTimeout(this.blurTimeout);
   }
 
   isExpanded() {
@@ -111,21 +118,34 @@ class SearchControl extends React.Component {
   }
 
   onFieldBlur() {
-    const { value, onSearch } = this.props;
+    const { value, onChange, lastSearch } = this.props;
     if (!value.trim()) {
-      onSearch('');
-      this.setState({ userExpanded: false });
+      // It has to be possible to search for an empty value and thus clearing
+      // the search. when the user clears the search field and clicks the
+      // search button the blur event fires first. It is delayed a bit to give
+      // the system time to process the click on the search button. If the click
+      // happens, the timeout is cleared and it is handled from there.
+      this.blurTimeout = setTimeout(() => {
+        // If the field is empty when blurred populate it with the last search
+        // if there was one.
+        onChange(lastSearch);
+        if (!lastSearch) {
+          this.setState({ userExpanded: false });
+        }
+      }, 100);
     }
   }
 
   onSearchButtonClick(e) {
     e.preventDefault();
+    if (this.blurTimeout) clearTimeout(this.blurTimeout);
     const { userExpanded } = this.state;
     const { onSearch, value } = this.props;
     if (!userExpanded) {
       this.setState({ userExpanded: true });
     } else {
       onSearch(value);
+      if (!value) this.setState({ userExpanded: false });
     }
   }
 
@@ -134,7 +154,7 @@ class SearchControl extends React.Component {
     const { onChange, onSearch } = this.props;
     onChange('');
     onSearch('');
-    this.setState({ userExpanded: false });
+    this.inputFieldRef.current.focus();
   }
 
   onSearchFieldValueChange(e) {
@@ -169,12 +189,12 @@ class SearchControl extends React.Component {
           onFocus={this.onFieldFocus}
           onKeyDown={this.onFieldKeydown}
         />
-        <CloseButton
+        <ClearButton
           onClick={this.onResetButtonClick}
-          hidden={!expanded}
+          hidden={!expanded || !value}
         >
           Clear Search
-        </CloseButton>
+        </ClearButton>
       </div>
     );
   }
@@ -190,4 +210,5 @@ SearchControl.propTypes = {
   onSearch: T.func,
   className: T.string,
   value: T.string,
+  lastSearch: T.string,
 };
