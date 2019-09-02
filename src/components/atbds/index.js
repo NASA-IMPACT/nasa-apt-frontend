@@ -45,7 +45,6 @@ import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import StatusPill from '../common/StatusPill';
 import SearchControl from '../common/SearchControl';
 import QsState from '../../utils/qs-state';
-import Heading from '../../styles/type/heading';
 import TextHighlight from '../common/TextHighlight';
 
 const atbdStatusOptions = [
@@ -63,6 +62,10 @@ const CreateButton = styled(Button)`
   &::before {
     ${collecticon('plus')};
   }
+`;
+
+const ResultsHeading = styled.h2`
+  margin-bottom: 2rem;
 `;
 
 const DocTable = styled(Table)`
@@ -155,9 +158,12 @@ const NoResultsMessage = styled.div`
   padding: 3rem;
   text-align: center;
 
-  > *:first-child {
+  &::before {
+    ${collecticon('face-sad')};
+    display: block;
     font-size: 4rem;
-    font-weight: bold;
+    line-height: 1;
+    opacity: 0.48;
     margin-bottom: 2rem;
   }
 `;
@@ -349,10 +355,9 @@ class AtbdList extends React.Component {
     if (!atbds.length) {
       return (
         <React.Fragment>
-          <Heading>No results found</Heading>
+          <ResultsHeading>No results found</ResultsHeading>
           <NoResultsMessage>
-            <p>:&apos;(</p>
-            <p>There are no results for the current search/filters criteria</p>
+            <p>There are no results for the current search/filters criteria.</p>
           </NoResultsMessage>
         </React.Fragment>
       );
@@ -360,7 +365,7 @@ class AtbdList extends React.Component {
 
     return (
       <React.Fragment>
-        {searchValue && <Heading>Showing {atbds.length} results for: {searchValue}</Heading>}
+        {searchValue && <ResultsHeading>Showing {atbds.length} result{atbds.length > 1 ? 's' : ''} for <em>{searchValue}</em></ResultsHeading>}
         {this.renderAtbdTable()}
       </React.Fragment>
     );
