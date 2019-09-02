@@ -16,22 +16,43 @@ const SearchButton = styled(Button)`
 `;
 
 const SearchFormInput = styled(FormInput)`
+  visibility: visible;
+  opacity: 1;
+  width: 16rem;
+  padding-right: 2.5rem;
+
+  /* Animation */
+  transition: all 0.24s ease 0s;
+
   ${({ hidden }) => hidden ? css`
-    display: none;
+    padding: 0;
+    visibility: hidden;
+    opacity: 0;
+    width: 0;
   ` : ''}
 `;
 
 const CloseButton = styled(Button).attrs({
-  variation: 'achromic-plain',
+  variation: 'base-plain',
   size: 'medium',
   hideText: true
 })`
+
+  position: absolute;
+  right: 0;
+  z-index: 2;
+  transform: scale(1) rotate(0);
+
+  /* Animation */
+  transition: all 0.32s ease 0s;
+
   &::before {
-    ${collecticon('xmark--small')}
+    ${collecticon('disc-xmark')}
+    opacity: 0.32;
   }
 
   ${({ hidden }) => hidden ? css`
-    display: none;
+    transform: scale(0) rotate(80deg);
   ` : ''}
 `;
 
@@ -160,6 +181,7 @@ class SearchControl extends React.Component {
 }
 
 export default styled(SearchControl)`
+  position: relative;
   display: flex;
 `;
 

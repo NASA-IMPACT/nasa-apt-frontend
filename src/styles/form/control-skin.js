@@ -59,19 +59,16 @@ const controlSkin = () => css`
   }
 
   &:hover {
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${_rgba(themeVal('color.base'), 0.32)};
   }
 
   &:focus,
   &:active {
     outline: 0;
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${themeVal('color.primary')};
   }
 
   ${({ invalid }) => invalid && css`
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${themeVal('color.danger')};
 
     &:hover,

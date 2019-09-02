@@ -365,6 +365,13 @@ function renderButtonVariation(props) {
         'dark',
         props
       );
+    case 'base-plain':
+      return buttonVariation(
+        props.theme.color.base,
+        'plain',
+        'light',
+        props
+      );
     case 'primary-raised-light':
       return buttonVariation(
         props.theme.color.primary,
