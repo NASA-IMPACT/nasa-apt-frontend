@@ -231,7 +231,7 @@ class EditorTable extends React.Component {
       <div contentEditable={false}>
         <TableActionsTopRight isHidden={hidden}>
           <RemoveBtn
-            onClick={remove}
+            onClick={(e) => { this.onMouseOut(); remove(e); }}
             /* eslint-disable-next-line react/jsx-no-bind */
             onMouseOver={this.onMouseOver.bind(this, 'table-remove')}
             /* eslint-disable-next-line react/jsx-no-bind */
@@ -246,7 +246,7 @@ class EditorTable extends React.Component {
         <TableActionsTopLeft leftPos={cellDelta.left} isHidden={hidden}>
           <ButtonGroup orientation="horizontal">
             <MinusBtn
-              onClick={removeColumn}
+              onClick={(e) => { this.onMouseOut(); removeColumn(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'col-remove')}
               /* eslint-disable-next-line react/jsx-no-bind */
@@ -257,7 +257,7 @@ class EditorTable extends React.Component {
               Remove column
             </MinusBtn>
             <PlusBtn
-              onClick={insertColumn}
+              onClick={(e) => { this.onMouseOut(); insertColumn(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'col-add')}
               /* eslint-disable-next-line react/jsx-no-bind */
@@ -273,7 +273,7 @@ class EditorTable extends React.Component {
         <TableActionsLeft topPos={cellDelta.top} isHidden={hidden}>
           <ButtonGroup orientation="vertical">
             <MinusBtn
-              onClick={removeRow}
+              onClick={(e) => { this.onMouseOut(); removeRow(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'row-remove')}
               /* eslint-disable-next-line react/jsx-no-bind */
@@ -284,7 +284,7 @@ class EditorTable extends React.Component {
               Remove row
             </MinusBtn>
             <PlusBtn
-              onClick={insertRow}
+              onClick={(e) => { this.onMouseOut(); insertRow(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'row-add')}
               /* eslint-disable-next-line react/jsx-no-bind */
