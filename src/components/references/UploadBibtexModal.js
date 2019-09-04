@@ -138,15 +138,6 @@ class UploadBibtexModal extends React.Component {
                       <FormHelperMessage>{helperMessage}</FormHelperMessage>
                     </FormHelper>
                     )}
-
-                    {/* <Button
-                      title="Select bibtex file"
-                      type="submit"
-                      variation="base-raised-light"
-                      size="large"
-                    >
-                      Select a bibtex file
-                    </Button> */}
                   </FormFieldsetBody>
                 </FormFieldset>
               </Form>
