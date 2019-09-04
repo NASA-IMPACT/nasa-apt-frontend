@@ -4,7 +4,7 @@ import { withFormik } from 'formik';
 import styled from 'styled-components';
 import isEqual from 'lodash.isequal';
 
-import { validator } from '../../schemas/references';
+import { validator } from '../../utils/references';
 
 // General components
 import Button from '../../styles/button/button';

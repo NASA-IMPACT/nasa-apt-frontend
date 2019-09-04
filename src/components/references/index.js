@@ -119,6 +119,17 @@ export class References extends React.Component {
         <Inpage>
           <EditPage title={title || ''} id={atbd_id} step={3}>
             <h2>References</h2>
+            <AddButton
+              variation="base-plain"
+              onClick={() => {
+                this.setState({
+                  showUploadBibtexModal: true
+                });
+              }}
+            >
+              Upload Bibtex file
+            </AddButton>
+
             <p>
               Please remove any references that are no longer attached to this
               ATBD.
@@ -151,16 +162,6 @@ export class References extends React.Component {
             {!references.length && <p>No references attached.</p>}
             <AddButton variation="base-plain" onClick={this.addReference}>
               Add a reference
-            </AddButton>
-            <AddButton
-              variation="base-plain"
-              onClick={() => {
-                this.setState({
-                  showUploadBibtexModal: true
-                });
-              }}
-            >
-              Upload Bibtex file
             </AddButton>
           </EditPage>
 
