@@ -183,7 +183,7 @@ class EditorTable extends React.Component {
 
   getCurrentCellDelta() {
     const td = this.getCurrentCell();
-    if (!td) return null;
+    if (!td || !this.tableRef.current) return null;
 
     const tablePos = this.tableRef.current.getBoundingClientRect();
     const tdPos = td.getBoundingClientRect();
