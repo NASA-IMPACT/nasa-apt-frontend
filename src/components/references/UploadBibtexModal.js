@@ -64,7 +64,9 @@ class UploadBibtexModal extends React.Component {
       const [file] = files;
 
       this.setState({
-        helperMessage: ''
+        helperMessage: '',
+        references: [],
+        canProceedImport: false
       });
 
       try {
