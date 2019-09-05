@@ -16,7 +16,7 @@ export function parseBibtexFile(inputFile) {
   return new Promise((resolve, reject) => {
     reader.onerror = () => {
       reader.abort();
-      reject(new DOMException('Error reading file.'));
+      reject(new Error('Error reading file.'));
     };
 
     reader.onload = () => {
@@ -24,7 +24,7 @@ export function parseBibtexFile(inputFile) {
         const { data } = new Cite(reader.result, { style: 'bibtex' });
         resolve(data);
       } catch (error) {
-        reject(new DOMException('Error parsing Bibtext file.'));
+        reject(new Error('Error parsing Bibtext file.'));
       }
     };
     reader.readAsText(inputFile);
