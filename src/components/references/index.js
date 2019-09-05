@@ -8,6 +8,7 @@ import EditPage from '../common/EditPage';
 import AddButton from '../../styles/button/add';
 
 import ReferenceFormWrapper from './FormWrapper';
+import UploadBibtexModal from './UploadBibtexModal';
 
 import {
   createReference,
@@ -21,7 +22,8 @@ export class References extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newReferences: []
+      newReferences: [],
+      showUploadBibtexModal: false
     };
 
     this.addReference = this.addReference.bind(this);
@@ -109,7 +111,7 @@ export class References extends React.Component {
 
   render() {
     const { atbdVersion, references } = this.props;
-    const { newReferences } = this.state;
+    const { newReferences, showUploadBibtexModal } = this.state;
     if (atbdVersion) {
       const { atbd, atbd_id } = atbdVersion;
       const { title } = atbd;
@@ -117,6 +119,17 @@ export class References extends React.Component {
         <Inpage>
           <EditPage title={title || ''} id={atbd_id} step={3}>
             <h2>References</h2>
+            <AddButton
+              variation="base-plain"
+              onClick={() => {
+                this.setState({
+                  showUploadBibtexModal: true
+                });
+              }}
+            >
+              Upload Bibtex file
+            </AddButton>
+
             <p>
               Please remove any references that are no longer attached to this
               ATBD.
@@ -151,6 +164,15 @@ export class References extends React.Component {
               Add a reference
             </AddButton>
           </EditPage>
+
+          <UploadBibtexModal
+            isActive={showUploadBibtexModal}
+            onCancel={() => {
+              this.setState({
+                showUploadBibtexModal: false
+              });
+            }}
+          />
         </Inpage>
       );
     }
