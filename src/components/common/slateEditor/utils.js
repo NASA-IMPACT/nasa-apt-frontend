@@ -13,6 +13,18 @@ export function isDescendant(child, parent) {
   return false;
 }
 
+export function getClosestNode(node, selector) {
+  let el = node;
+  do {
+    if (el.matches(selector)) {
+      return el;
+    }
+    el = el.parentNode;
+  } while (el && el.tagName !== 'BODY' && el.tagName !== 'HTML');
+
+  return null;
+}
+
 export function getCurrentSelectionRange() {
   const selection = window.getSelection();
   return selection && selection.rangeCount
