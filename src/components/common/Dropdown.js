@@ -233,8 +233,6 @@ export default class Dropdown extends React.Component {
         break;
     }
 
-    // attachment={tetherAttachment}
-    // targetAttachment={tetherTargetAttachment}
     return (
       <TetherComponent
         // attachment is the content.
@@ -242,8 +240,7 @@ export default class Dropdown extends React.Component {
         // targetAttachment is the trigger
         targetAttachment={tetherTargetAttachment}
         constraints={[{
-          to: 'window',
-          // attachment: 'together'
+          to: 'window'
         }]}
       >
         {this.renderTriggerElement()}
