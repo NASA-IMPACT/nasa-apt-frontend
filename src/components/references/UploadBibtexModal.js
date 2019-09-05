@@ -135,7 +135,9 @@ class UploadBibtexModal extends React.Component {
                     />
                     {helperMessage && helperMessage.length > 0 && (
                     <FormHelper>
-                      <FormHelperMessage>{helperMessage}</FormHelperMessage>
+                      <FormHelperMessage isError={!canProceedImport}>
+                        {helperMessage}
+                      </FormHelperMessage>
                     </FormHelper>
                     )}
                   </FormFieldsetBody>

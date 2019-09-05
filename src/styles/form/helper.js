@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { rgba } from 'polished';
 import { themeVal, stylizeFunction } from '../utils/general';
 
@@ -14,6 +14,11 @@ export const FormHelper = styled.div`
 
 export const FormHelperMessage = styled.p`
   font-size: 0.875rem;
+  ${({ isError }) => isError
+    ? css`
+          color: ${themeVal('color.danger')};
+        `
+    : ''}
 `;
 
 export const FormHelperCounter = styled.p`
