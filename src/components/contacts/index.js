@@ -254,6 +254,8 @@ class Contacts extends React.Component {
     const { atbd_id, title } = selectedAtbd;
     const { contacts } = this.state;
 
+    if (!contacts) return null;
+
     const availableContacts = [
       {
         label: 'Person',
