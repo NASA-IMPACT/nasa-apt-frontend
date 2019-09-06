@@ -7,45 +7,47 @@ import jsonschema from 'jsonschema';
 import styled from 'styled-components/macro';
 import { get, set } from 'object-path';
 
-import apiSchema from '../schemas/schema.json';
-import addMinLength from '../schemas/addMinLength';
-import transformErrors from '../schemas/transformErrors';
-import validateEmail from '../schemas/validateEmail';
-import Select from './common/Select';
-import Input, { InputFormGroup } from './common/Input';
+import apiSchema from '../../schemas/schema.json';
+import {
+  addMinLength,
+  transformErrors,
+  validateEmail
+} from '../../schemas/utils';
+
+import Select from '../common/Select';
+import Input, { InputFormGroup } from '../common/Input';
 import {
   FormFieldset,
   FormFieldsetHeader,
   FormFieldsetBody
-} from '../styles/form/fieldset';
+} from '../../styles/form/fieldset';
 import {
   FormGroup,
   FormGroupBody,
   FormGroupHeader
-} from '../styles/form/group';
-import {
-  FormHelper,
-  FormHelperMessage
-} from '../styles/form/helper';
-import { FormCheckable } from '../styles/form/checkable';
-import Form from '../styles/form/form';
-import FormLegend from '../styles/form/legend';
-import FormLabel from '../styles/form/label';
-import FormToolbar from '../styles/form/toolbar';
-import InfoButton from './common/InfoButton';
-import SubmitBtn from '../styles/button/submit';
-import AddBtn from '../styles/button/add';
-import RemoveButton from '../styles/button/remove';
+} from '../../styles/form/group';
+import { FormHelper, FormHelperMessage } from '../../styles/form/helper';
+import { FormCheckable } from '../../styles/form/checkable';
+import Form from '../../styles/form/form';
+import FormLegend from '../../styles/form/legend';
+import FormLabel from '../../styles/form/label';
+import FormToolbar from '../../styles/form/toolbar';
+import InfoButton from '../common/InfoButton';
+import SubmitBtn from '../../styles/button/submit';
+import AddBtn from '../../styles/button/add';
+import RemoveButton from '../../styles/button/remove';
 
 const validator = new jsonschema.Validator();
 
 const contactsSchema = addMinLength(apiSchema.definitions.contacts);
-contactsSchema.required = contactsSchema
-  .required.filter(property => (property !== 'contact_id'));
+contactsSchema.required = contactsSchema.required.filter(
+  property => property !== 'contact_id'
+);
 
 const contactGroupsSchema = addMinLength(apiSchema.definitions.contact_groups);
-contactGroupsSchema.required = contactGroupsSchema
-  .required.filter(property => (property !== 'contact_group_id'));
+contactGroupsSchema.required = contactGroupsSchema.required.filter(
+  property => property !== 'contact_group_id'
+);
 
 const first_name = 'first_name';
 const middle_name = 'middle_name';
@@ -100,20 +102,39 @@ export const InnerContactForm = (props) => {
     handleBlur,
     handleSubmit,
     setValues,
-
     id,
-    forceAllowSubmit,
     contact,
     isGroup,
     t
   } = props;
-  const submitEnabled = !Object.keys(errors).length
-    && (Object.keys(touched).length || forceAllowSubmit);
 
-  let submitValue = forceAllowSubmit ? 'Attach contact'
-    : contact ? 'Update contact' : 'Create contact';
-  if (isGroup) {
-    submitValue += ' group';
+  // Enabled when:
+  // There are no errors AND one of:
+  //   Contact is attached and something was changed     -- means update
+  //   Contact is not attached but exists in the system  -- means attach
+  //   Contact does not exist something was changed      -- means create
+  const submitEnabled = !Object.keys(errors).length
+    && (
+      (contact.atbd_id && Object.keys(touched).length)
+      || (!contact.atbd_id && contact.id)
+      || (!contact.id && Object.keys(touched).length)
+    );
+
+  const groupMod = isGroup ? ' group' : '';
+
+  let submitValue;
+  if (contact.atbd_id) {
+    // Contact exists and was touched.
+    submitValue = `Update contact${groupMod}`;
+  } else if (contact.id && Object.keys(touched).length) {
+    // Contact exists and was touched.
+    submitValue = `Update and attach contact${groupMod} to ATBD`;
+  } else if (contact.id) {
+    // Contact exists, just need to attach.
+    submitValue = `Attach contact${groupMod} to ATBD`;
+  } else {
+    // Contact does not exist.
+    submitValue = `Create and attach contact${groupMod} to ATBD`;
   }
 
   return (
@@ -206,11 +227,13 @@ export const InnerContactForm = (props) => {
         </SpanTwo>
       </InputFormGroup>
 
-      {!!errors.NO_MECHANISMS && (
+      {(!!errors.NO_MECHANISMS || !values[mechanisms] || !values[mechanisms].length) && (
         <FormFieldset>
           <FormFieldsetBody>
             <FormHelper>
-              <FormHelperMessage>At least one contact mechanism is required.</FormHelperMessage>
+              <FormHelperMessage>
+                At least one contact mechanism is required.
+              </FormHelperMessage>
             </FormHelper>
           </FormFieldsetBody>
         </FormFieldset>
@@ -249,13 +272,16 @@ export const InnerContactForm = (props) => {
                     value: e.value,
                     name: `mechanisms[${i}].${mechanism_type}`
                   }
-                })}
+                })
+                }
                 onBlur={handleBlur}
                 value={get(values, [mechanisms, i, mechanism_type])}
                 touched={get(touched, [mechanisms, i, mechanism_type])}
                 error={get(errors, [mechanisms, i, mechanism_type])}
                 options={mechanismTypes.map(m => ({ value: m, label: m }))}
-                info={isGroup ? t.group_mechanism_type : t.person_mechanism_type}
+                info={
+                  isGroup ? t.group_mechanism_type : t.person_mechanism_type
+                }
               />
               <SpanTwo>
                 <Input
@@ -268,7 +294,9 @@ export const InnerContactForm = (props) => {
                   value={get(values, [mechanisms, i, mechanism_value])}
                   touched={get(touched, [mechanisms, i, mechanism_value])}
                   error={get(errors, [mechanisms, i, mechanism_value])}
-                  info={isGroup ? t.group_mechanism_value : t.person_mechanism_value}
+                  info={
+                    isGroup ? t.group_mechanism_value : t.person_mechanism_value
+                  }
                 />
               </SpanTwo>
             </InputFormGroup>
@@ -280,11 +308,14 @@ export const InnerContactForm = (props) => {
         variation="base-plain"
         onClick={() => setValues({
           ...values,
-          [mechanisms]: values[mechanisms].concat([{
-            [mechanism_type]: null,
-            [mechanism_value]: ''
-          }])
-        })}
+          [mechanisms]: values[mechanisms].concat([
+            {
+              [mechanism_type]: null,
+              [mechanism_value]: ''
+            }
+          ])
+        })
+        }
       >
         Add a contact mechanism
       </AddBtn>
@@ -340,17 +371,10 @@ InnerContactForm.propTypes = {
   setValues: PropTypes.func.isRequired,
 
   contact: PropTypes.object,
-  id: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string
-  ]).isRequired,
+  id: PropTypes.string,
 
   t: PropTypes.object,
-  isGroup: PropTypes.bool,
-  forceAllowSubmit: PropTypes.bool,
-
-  /* eslint-disable react/no-unused-prop-types */
-  save: PropTypes.func
+  isGroup: PropTypes.bool
 };
 
 export const ContactForm = withFormik({
@@ -358,11 +382,12 @@ export const ContactForm = withFormik({
     const { isGroup } = props;
     const contact = props.contact || {};
     const contactRoles = contact.roles || [];
-    const nameField = isGroup ? { [group_name]: contact[group_name] || '' }
+    const nameField = isGroup
+      ? { [group_name]: contact[group_name] || '' }
       : {
         [first_name]: contact.first_name || '',
         [middle_name]: contact.middle_name || '',
-        [last_name]: contact.last_name || '',
+        [last_name]: contact.last_name || ''
       };
     const initialValues = {
       [uuid]: contact.uuid || '',
@@ -371,28 +396,24 @@ export const ContactForm = withFormik({
       [roles]: roleTypes.map(r => contactRoles.indexOf(r) >= 0),
       ...nameField
     };
-    if (!initialValues[mechanisms].length) {
-      initialValues[mechanisms].push({
-        mechanism_type: null,
-        mechanism_value: ''
-      });
-    }
     return initialValues;
   },
 
   validate: (values, { isGroup }) => {
     const schema = isGroup ? contactGroupsSchema : contactsSchema;
     let errors = {};
-    errors = transformErrors(
-      validator.validate(values, schema).errors
-    );
+    errors = transformErrors(validator.validate(values, schema).errors);
 
     // Validate existing mechanism types and values are not null.
     // Also validate email addresses.
     // TODO: validate other mechanisms such as phone numbers.
     values[mechanisms].forEach((mechanism, i) => {
       if (!mechanism[mechanism_type]) {
-        set(errors, [mechanisms, i, mechanism_type], 'Must select a contact mechanism');
+        set(
+          errors,
+          [mechanisms, i, mechanism_type],
+          'Must select a contact mechanism'
+        );
       }
       if (!mechanism[mechanism_value]) {
         set(errors, [mechanisms, i, mechanism_value], 'Must enter a contact');
@@ -413,15 +434,18 @@ export const ContactForm = withFormik({
   },
 
   handleSubmit: (values, { props, setSubmitting, resetForm }) => {
-    const { save } = props;
+    const { onSubmit, contact } = props;
     const payload = {
       ...values,
       mechanisms: formatPostgresArray(values.mechanisms.map(formatMechanism)),
-      roles: formatPostgresArray(values.roles.map((active, idx) => (
-        active && roleTypes[idx]
-      )).filter(Boolean))
+      roles: formatPostgresArray(
+        values.roles
+          .map((active, idx) => active && roleTypes[idx])
+          .filter(Boolean)
+      )
     };
-    save(payload);
+
+    onSubmit(contact.__action, payload);
     setSubmitting(false);
     resetForm();
   },
@@ -431,7 +455,9 @@ export const ContactForm = withFormik({
 })(InnerContactForm);
 
 function formatMechanism(mechanism) {
-  return `(\\"${mechanism[mechanism_type]}\\",\\"${mechanism[mechanism_value]}\\")`;
+  return `(\\"${mechanism[mechanism_type]}\\",\\"${
+    mechanism[mechanism_value]
+  }\\")`;
 }
 
 // ['foo', 'bar'] => '{ "foo", "bar" }'
@@ -446,4 +472,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactForm);

@@ -4,7 +4,7 @@ import { shallow, configure } from 'enzyme';
 import test from 'tape';
 import sinon from 'sinon';
 import SubmitBtn from '../src/styles/button/submit';
-import { InnerContactForm } from '../src/components/ContactForm';
+import { InnerContactForm } from '../src/components/contacts/ContactForm';
 
 const proxyquire = require('proxyquire').noCallThru();
 
@@ -24,7 +24,8 @@ test('InnerContactForm submit disabled', (t) => {
     handleSubmit: () => {},
     setValues: () => {},
     id: 'x',
-    t: {}
+    t: {},
+    contact: {}
   };
   let wrapper = shallow((<InnerContactForm {...props} />));
   let submit = wrapper.find(SubmitBtn);
@@ -41,20 +42,16 @@ test('ContactForm validation', (t) => {
   const transformErrors = sinon.stub().returns({});
   const validateEmail = sinon.stub().returns(false);
   const email = 'Email';
-  const { ContactForm } = proxyquire(
-    '../src/components/ContactForm',
-    {
-      '../schemas/transformErrors': transformErrors,
-      '../schemas/validateEmail': validateEmail,
-      '../actions/actions': {
-        createContact: () => {}
-      }
+  const { ContactForm } = proxyquire('../src/components/contacts/ContactForm', {
+    '../schemas/utils': { transformErrors, validateEmail },
+    '../actions/actions': {
+      createContact: () => {}
     }
-  );
+  });
 
   const wrapper = shallow((<ContactForm />));
   const instance = wrapper.instance();
-  const errors = instance.validate({ mechanisms: [{mechanism_type: email}] });
+  const errors = instance.validate({ mechanisms: [{ mechanism_type: email }] });
   t.ok(errors.mechanisms[0].mechanism_value, 'Adds error when email is invalid');
   t.end();
 });

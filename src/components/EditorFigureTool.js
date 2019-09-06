@@ -6,10 +6,7 @@ import styled from 'styled-components/macro';
 import Button from '../styles/button/button';
 import collecticon from '../styles/collecticons';
 import { uploadFile } from '../actions/actions';
-import {
-  showGlobalLoading,
-  hideGlobalLoading
-} from './common/OverlayLoader';
+import { showGlobalLoading, hideGlobalLoading } from './common/OverlayLoader';
 
 import {
   FormGroup,
@@ -18,10 +15,7 @@ import {
 } from '../styles/form/group';
 import FormLabel from '../styles/form/label';
 import FormInput from '../styles/form/input';
-import {
-  FormHelper,
-  FormHelperMessage
-} from '../styles/form/helper';
+import { FormHelper, FormHelperMessage } from '../styles/form/helper';
 import Modal from '../styles/modal/modal';
 import { ModalInner, CloseModal } from '../styles/modal/inner';
 
@@ -104,14 +98,8 @@ export class EditorFigureTool extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    const {
-      hasUploadedImage,
-      caption
-    } = this.state;
-    const {
-      onSaveSuccess,
-      uploadedFile
-    } = this.props;
+    const { hasUploadedImage, caption } = this.state;
+    const { onSaveSuccess, uploadedFile } = this.props;
 
     if (hasUploadedImage) {
       onSaveSuccess(uploadedFile, caption);
@@ -136,33 +124,19 @@ export class EditorFigureTool extends Component {
   }
 
   render() {
-    const {
-      uploadedFile,
-      disabled
-    } = this.props;
+    const { uploadedFile, disabled } = this.props;
+
+    const { activeModal, hasUploadedImage, caption } = this.state;
 
     const {
-      activeModal,
-      hasUploadedImage,
-      caption
-    } = this.state;
-
-    const {
-      setModalState,
-      onCaptionChange,
-      onSubmit,
-      onFileSelect
+      setModalState, onCaptionChange, onSubmit, onFileSelect
     } = this;
 
     return (
       <Fragment>
-        <Modal
-          active={activeModal}
-          onBodyClick={() => setModalState(false)}
-        >
+        <Modal active={activeModal} onBodyClick={() => setModalState(false)}>
           <ModalInner>
             <FormGroup>
-
               <FormGroupHeader>
                 <FormLabel>Upload an image</FormLabel>
               </FormGroupHeader>
@@ -173,23 +147,21 @@ export class EditorFigureTool extends Component {
                   accept=".png,.jpg,.jpeg"
                   onChange={onFileSelect}
                 />
-                <UploadButton
-                  variation="base-raised-light"
-                  size="large"
-                >
-                  <FormLabel htmlFor="file-upload">Choose an image to upload</FormLabel>
+                <UploadButton variation="base-raised-light" size="large">
+                  <FormLabel htmlFor="file-upload">
+                    Choose an image to upload
+                  </FormLabel>
                 </UploadButton>
                 {!hasUploadedImage && (
                   <FormHelper>
-                    <FormHelperMessage>Please choose an image to upload.</FormHelperMessage>
+                    <FormHelperMessage>
+                      Please choose an image to upload.
+                    </FormHelperMessage>
                   </FormHelper>
                 )}
                 {!!hasUploadedImage && (
                   <Figure>
-                    <img
-                      src={uploadedFile}
-                      alt="Successfully uploaded"
-                    />
+                    <img src={uploadedFile} alt="Successfully uploaded" />
                   </Figure>
                 )}
               </FormGroupBody>
@@ -232,6 +204,8 @@ export class EditorFigureTool extends Component {
           variation="base-plain"
           size="large"
           disabled={disabled}
+          data-tip="Figure"
+          hideText
         >
           Figure
         </FigureButton>
@@ -255,4 +229,7 @@ const mapDispatch = {
   uploadFile
 };
 
-export default connect(mapStateToProps, mapDispatch)(EditorFigureTool);
+export default connect(
+  mapStateToProps,
+  mapDispatch
+)(EditorFigureTool);

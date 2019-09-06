@@ -1,4 +1,6 @@
+import qs from 'qs';
 import { LOCATION_CHANGE, push } from 'connected-react-router';
+
 import * as actions from '../actions/actions';
 import types from '../constants/action_types';
 import {
@@ -18,7 +20,7 @@ import {
 const locationMiddleware = store => next => async (action) => {
   const { type, payload } = action;
   if (type === LOCATION_CHANGE) {
-    const { location: { pathname } } = payload;
+    const { location: { pathname, search } } = payload;
 
     // Redirect '/' to '/atbds'
     if (pathname === '/') {
@@ -27,7 +29,22 @@ const locationMiddleware = store => next => async (action) => {
 
     const pathComponents = pathname.split('/');
     if (pathComponents[1] === atbds) {
-      store.dispatch(actions.fetchAtbds());
+      if (pathComponents.length === 2) {
+        const queryParams = qs.parse(search.substr(1));
+        let filter = '';
+        if (queryParams.search && queryParams.search.trim()) {
+          filter = `&title=like.*${queryParams.search.trim()}*`;
+        }
+        // Route /atbds
+        store.dispatch(actions.fetchAtbds(filter));
+      } else {
+        // Route /atbds/:atbd_id
+        const res = await store.dispatch(actions.fetchAtbd(pathComponents[2]));
+        store.dispatch(actions.fetchEntireAtbdVersion({
+          atbd_id: res.payload.atbd_id,
+          atbd_version: res.payload.atbd_versions[0].atbd_version
+        }));
+      }
     }
     if (pathComponents[1] === atbdsedit) {
       if (pathComponents[3] === drafts) {

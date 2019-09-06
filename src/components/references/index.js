@@ -8,24 +8,29 @@ import EditPage from '../common/EditPage';
 import AddButton from '../../styles/button/add';
 
 import ReferenceFormWrapper from './FormWrapper';
+import UploadBibtexModal from './UploadBibtexModal';
 
 import {
   createReference,
   deleteReference,
   updateReference
 } from '../../actions/actions';
+import apiSchema from '../../schemas/schema.json';
+import { confirmDeleteReference } from '../common/ConfirmationPrompt';
 
 export class References extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newReferences: []
+      newReferences: [],
+      showUploadBibtexModal: false
     };
 
     this.addReference = this.addReference.bind(this);
-    this.deleteExistingReference = this.deleteExistingReference.bind(this);
-    this.deleteNewReference = this.deleteNewReference.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDeleteNewReference = this.handleDeleteNewReference.bind(this);
+    this.deleteNewReference = this.deleteNewReference.bind(this);
+    this.deleteExistingReference = this.deleteExistingReference.bind(this);
   }
 
   addReference() {
@@ -46,12 +51,30 @@ export class References extends React.Component {
     }));
   }
 
-  deleteExistingReference(reference) {
+  async deleteExistingReference(reference) {
+    // Show confirmation dialog
+    const { result } = await confirmDeleteReference(reference);
+
+    // Do nothing if cancelled
+    if (!result) return false;
+
+    // Perform delete
     const { deleteReferenceAction } = this.props;
     deleteReferenceAction(reference.publication_reference_id);
   }
 
+  async handleDeleteNewReference(reference) {
+    // Show confirmation dialog
+    const { result } = await confirmDeleteReference(reference);
+
+    // Do nothing if cancelled
+    if (!result) return false;
+
+    this.deleteNewReference(reference);
+  }
+
   deleteNewReference(reference) {
+    // Remove reference from list of new references
     this.setState(prevState => ({
       newReferences: prevState.newReferences.filter(
         r => r.timestamp !== reference.timestamp
@@ -63,33 +86,21 @@ export class References extends React.Component {
     const { createReferenceAction, updateReferenceAction } = this.props;
     const { publication_reference_id: id } = values;
 
+    const publicationReferenceFields = apiSchema.definitions.publication_references.properties;
     // Create payload made only allowed properties for references
-    const payload = [
-      'atbd_id',
-      'atbd_version',
-      'authors',
-      'doi',
-      'edition',
-      'isbn',
-      'issue',
-      'online_resource',
-      'other_reference_details',
-      'pages',
-      'publication_place',
-      'publisher',
-      'report_number',
-      'series',
-      'title',
-      'volume'
-    ].reduce((acc, key) => {
-      const value = values[key];
-      if (value) {
-        // Replace empty string with null
-        acc[key] = value !== '' ? value : null;
-      }
-      return acc;
-    }, {});
-
+    const payload = Object.keys(publicationReferenceFields).reduce(
+      (acc, key) => {
+        const value = values[key];
+        if (!value || value === '') {
+          // Replace empty string with null
+          acc[key] = null;
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
     if (values.isNew) {
       createReferenceAction(payload);
       this.deleteNewReference(values);
@@ -100,7 +111,7 @@ export class References extends React.Component {
 
   render() {
     const { atbdVersion, references } = this.props;
-    const { newReferences } = this.state;
+    const { newReferences, showUploadBibtexModal } = this.state;
     if (atbdVersion) {
       const { atbd, atbd_id } = atbdVersion;
       const { title } = atbd;
@@ -108,6 +119,17 @@ export class References extends React.Component {
         <Inpage>
           <EditPage title={title || ''} id={atbd_id} step={3}>
             <h2>References</h2>
+            <AddButton
+              variation="base-plain"
+              onClick={() => {
+                this.setState({
+                  showUploadBibtexModal: true
+                });
+              }}
+            >
+              Upload Bibtex file
+            </AddButton>
+
             <p>
               Please remove any references that are no longer attached to this
               ATBD.
@@ -125,13 +147,15 @@ export class References extends React.Component {
                   data={d}
                   handleDeleteReference={this.deleteExistingReference}
                   handleSubmit={this.handleSubmit}
+                  submitButton="Update reference"
                 />
               ))}
             {newReferences.map(d => (
               <ReferenceFormWrapper
                 key={d.timestamp}
                 data={d}
-                handleDeleteReference={this.deleteNewReference}
+                handleDeleteReference={this.handleDeleteNewReference}
+                submitButton="Add reference"
                 handleSubmit={this.handleSubmit}
               />
             ))}
@@ -140,6 +164,15 @@ export class References extends React.Component {
               Add a reference
             </AddButton>
           </EditPage>
+
+          <UploadBibtexModal
+            isActive={showUploadBibtexModal}
+            onCancel={() => {
+              this.setState({
+                showUploadBibtexModal: false
+              });
+            }}
+          />
         </Inpage>
       );
     }

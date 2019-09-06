@@ -158,7 +158,7 @@ const EditPage = (props) => {
             >
               <InpageHeaderInner>
                 <InpageHeadline>
-                  <InpageTitle>{title}</InpageTitle>
+                  <InpageTitle>{title || 'Untitled Document'}</InpageTitle>
                   <InpageTagline>Editing document</InpageTagline>
                 </InpageHeadline>
                 <InpageToolbar>

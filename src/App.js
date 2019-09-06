@@ -24,12 +24,12 @@ import {
 } from './constants/routes';
 import PageHeader from './components/common/PageHeader';
 import PageFooter from './components/common/PageFooter';
-import { GlobalLoading } from './components/common/OverlayLoader';
 import ConfirmationPrompt from './components/common/ConfirmationPrompt';
-import AtbdList from './components/AtbdList';
+import AtbdIndex from './components/atbds';
+import AtbdView from './components/atbds/View';
 import IdentifyingInformation from './components/IdentifyingInformation';
 import Introduction from './components/Introduction';
-import Contacts from './components/Contacts';
+import Contacts from './components/contacts';
 import AlgorithmDescription from './components/AlgorithmDescription';
 import AlgorithmUsage from './components/AlgorithmUsage';
 import AlgorithmImplementation from './components/AlgorithmImplementation';
@@ -39,6 +39,7 @@ import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
+import OverlayLoaderConnector from './components/common/OverlayLoaderConnector';
 
 const Page = styled.div`
   display: grid;
@@ -56,12 +57,14 @@ const App = () => (
     <ConnectedRouter history={history}>
       <ThemeProvider theme={theme.main}>
         <React.Fragment>
+          <OverlayLoaderConnector />
           <GlobalStyle />
           <Page>
             <PageHeader />
             <PageBody>
               <Switch>
-                <Route path={`/${atbds}`} component={AtbdList} />
+                <Route path={`/${atbds}/:atbd_id`} component={AtbdView} />
+                <Route path={`/${atbds}`} component={AtbdIndex} />
                 <Route
                   path={`/${atbdsedit}/:atbd_id/${drafts}/:atbd_version/${identifying_information}`}
                   component={IdentifyingInformation}
@@ -103,7 +106,6 @@ const App = () => (
             <PageFooter />
           </Page>
           <ConfirmationPrompt />
-          <GlobalLoading />
           <ToastContainer
             position={toast.POSITION.BOTTOM_RIGHT}
             closeButton={<CloseButton />}

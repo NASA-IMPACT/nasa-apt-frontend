@@ -12,14 +12,18 @@ const initialState = {
   atbdCitation: undefined,
   selectedAtbd: undefined,
   activeReference: undefined,
-  t: undefined
+  t: undefined,
+  // Store what actions are triggering a loading.
+  // The will be added/removed as loadings are triggered.
+  globalLoading: []
 };
 
 const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
   const { payload } = action;
   const { [idKey]: id } = payload;
-  const variables = state.atbdVersion[tableName]
-    .filter(variable => (variable[idKey] !== id));
+  const variables = state.atbdVersion[tableName].filter(
+    variable => variable[idKey] !== id
+  );
   return {
     ...state,
     atbdVersion: {
@@ -31,8 +35,7 @@ const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
 
 const addAtbdVersionChildItem = (tableName, state, action) => {
   const { payload } = action;
-  const next = state.atbdVersion[tableName]
-    .concat([payload]);
+  const next = state.atbdVersion[tableName].concat([payload]);
   return {
     ...state,
     atbdVersion: {
@@ -46,9 +49,11 @@ const addAtbdVersionChildItem = (tableName, state, action) => {
 // to make working with them in combination easier.
 const normalizeContact = (contactOrGroup) => {
   const isGroup = !contactOrGroup.contact_id;
-  const displayName = isGroup ? contactOrGroup.group_name
+  const displayName = isGroup
+    ? contactOrGroup.group_name
     : `${contactOrGroup.last_name}, ${contactOrGroup.first_name}`;
-  const id = isGroup ? `g${contactOrGroup.contact_group_id}`
+  const id = isGroup
+    ? `g${contactOrGroup.contact_group_id}`
     : `c${contactOrGroup.contact_id}`;
   return {
     ...contactOrGroup,
@@ -61,8 +66,11 @@ const normalizeContact = (contactOrGroup) => {
 // Normalize contact, contact groups
 const normalizeSelectedAtbd = (atbd) => {
   const next = { ...atbd };
-  next.contacts = Array.isArray(atbd.contacts) ? atbd.contacts.map(normalizeContact) : [];
-  next.contact_groups = Array.isArray(atbd.contact_groups) ? atbd.contact_groups.map(normalizeContact)
+  next.contacts = Array.isArray(atbd.contacts)
+    ? atbd.contacts.map(normalizeContact)
+    : [];
+  next.contact_groups = Array.isArray(atbd.contact_groups)
+    ? atbd.contact_groups.map(normalizeContact)
     : [];
   return next;
 };
@@ -78,6 +86,92 @@ const replaceAtIndex = (arr, idProperty, next) => {
     return result;
   }
   return arr;
+};
+
+const handleLoading = (state, action) => {
+  const { type, payload } = action;
+  const { globalLoading } = state;
+
+  if (type === actions.SHOW_LOADING) {
+    return {
+      ...state,
+      globalLoading: [...globalLoading, payload]
+    };
+  }
+  if (type === actions.HIDE_LOADING) {
+    return {
+      ...state,
+      globalLoading: globalLoading.filter(a => a !== payload)
+    };
+  }
+  if (type === actions.CLEAR_LOADING) {
+    return {
+      ...state,
+      globalLoading: []
+    };
+  }
+};
+
+const handleSerialize = (stateSlice = {}, action) => {
+  const { type, payload } = action;
+  const { atbd_id } = payload;
+
+  if (type === actions.SERIALIZE_DOCUMENT) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        atbd_id,
+        pdf: null,
+        html: null,
+        isSerializingHtml: true,
+        isSerializingPdf: true,
+        serializeHtmlFail: false,
+        serializePdfFail: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_HTML_SUCCESS) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        html: payload.location,
+        isSerializingHtml: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_HTML_FAIL) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        html: null,
+        isSerializingHtml: false,
+        serializeHtmlFail: true,
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_PDF_SUCCESS) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        pdf: payload.location,
+        isSerializingPdf: false
+      }
+    };
+  }
+  if (type === actions.SERIALIZE_PDF_FAIL) {
+    return {
+      ...stateSlice,
+      [atbd_id]: {
+        ...stateSlice[atbd_id],
+        pdf: null,
+        isSerializingPdf: false,
+        serializePdfFail: true,
+      }
+    };
+  }
 };
 
 export default function (state = initialState, action) {
@@ -125,9 +219,9 @@ export default function (state = initialState, action) {
       const { payload } = action;
       const idProperty = payload.contact_id ? 'contact_id' : 'contact_group_id';
       const group = payload.contact_id ? 'contacts' : 'contact_groups';
-      const addedContact = state[group].find(d => (
-        d[idProperty] === payload[idProperty]
-      ));
+      const addedContact = state[group].find(
+        d => d[idProperty] === payload[idProperty]
+      );
       const newState = {
         ...state,
         selectedAtbd: {
@@ -147,7 +241,9 @@ export default function (state = initialState, action) {
         ...state,
         selectedAtbd: {
           ...state.selectedAtbd,
-          [group]: state.selectedAtbd[group].filter(d => d[idProperty] !== payload[idProperty])
+          [group]: state.selectedAtbd[group].filter(
+            d => d[idProperty] !== payload[idProperty]
+          )
         }
       };
     }
@@ -173,8 +269,10 @@ export default function (state = initialState, action) {
         ...state,
         atbdVersion: {
           ...state.atbdVersion,
-          algorithm_input_variables:
-            [...state.atbdVersion.algorithm_input_variables, { ...payload }]
+          algorithm_input_variables: [
+            ...state.atbdVersion.algorithm_input_variables,
+            { ...payload }
+          ]
         }
       };
     }
@@ -185,8 +283,10 @@ export default function (state = initialState, action) {
         ...state,
         atbdVersion: {
           ...state.atbdVersion,
-          algorithm_output_variables:
-            [...state.atbdVersion.algorithm_output_variables, { ...payload }]
+          algorithm_output_variables: [
+            ...state.atbdVersion.algorithm_output_variables,
+            { ...payload }
+          ]
         }
       };
     }
@@ -204,7 +304,9 @@ export default function (state = initialState, action) {
     }
 
     case actions.UPLOAD_FILE_SUCCESS: {
-      const { payload: { location } } = action;
+      const {
+        payload: { location }
+      } = action;
       return {
         ...state,
         uploadedFile: location
@@ -297,7 +399,9 @@ export default function (state = initialState, action) {
       const id = payload.publication_reference_id;
       return {
         ...state,
-        references: state.references.filter(d => d.publication_reference_id !== id)
+        references: state.references.filter(
+          d => d.publication_reference_id !== id
+        )
       };
     }
 
@@ -317,42 +421,6 @@ export default function (state = initialState, action) {
       };
     }
 
-    case actions.SERIALIZE_DOCUMENT: {
-      const { payload } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...payload
-        }
-      };
-    }
-
-    case actions.CHECK_PDF_SUCCESS: {
-      const { payload: { location: pdfLocation } } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...state.serializingAtbdVersion,
-          pdf: pdfLocation
-        }
-      };
-    }
-    case actions.CHECK_HTML_SUCCESS: {
-      const { payload: { location: html } } = action;
-      return {
-        ...state,
-        serializingAtbdVersion: {
-          ...state.serializingAtbdVersion,
-          html
-        }
-      };
-    }
-    case actions.SERIALIZE_DOCUMENT_FAIL: {
-      // Removes the serializingAtbdVersion state property.
-      const { serializingAtbdVersion, ...removedSerializingAtbdVersion } = state;
-      return removedSerializingAtbdVersion;
-    }
-
     case actions.DELETE_ATBD_SUCCESS: {
       const { payload: { atbd_id } } = action;
       return {
@@ -361,6 +429,24 @@ export default function (state = initialState, action) {
       };
     }
 
-    default: return state;
+    case actions.SHOW_LOADING:
+    case actions.HIDE_LOADING:
+    case actions.CLEAR_LOADING: {
+      return handleLoading(state, action);
+    }
+
+    case actions.SERIALIZE_DOCUMENT:
+    case actions.SERIALIZE_HTML_SUCCESS:
+    case actions.SERIALIZE_PDF_FAIL:
+    case actions.SERIALIZE_PDF_SUCCESS:
+    case actions.SERIALIZE_HTML_FAIL: {
+      return {
+        ...state,
+        serializingAtbdVersion: handleSerialize(state.serializingAtbdVersion, action)
+      };
+    }
+
+    default:
+      return state;
   }
 }

@@ -11,3 +11,4 @@ require('./test_FreeEditor');
 require('./test_AlgorithmDescription');
 require('./test_reducer');
 require('./test_EditorTable');
+require('./test_References');
