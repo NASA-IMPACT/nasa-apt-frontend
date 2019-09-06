@@ -421,7 +421,7 @@ function renderButtonVariation(props) {
     case 'base-plain':
     default:
       return buttonVariation(
-        props.theme.type.base.color,
+        props.theme.color.base,
         'plain',
         'light',
         props

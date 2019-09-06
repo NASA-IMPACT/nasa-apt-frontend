@@ -263,10 +263,10 @@ export function fetchAtbdVersionVariables(versionObject) {
   };
 }
 
-export function fetchAtbds() {
+export function fetchAtbds(filterStr = '') {
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?select=*,contacts(*),atbd_versions(atbd_id, atbd_version, status)`,
+      endpoint: `${BASE_URL}/atbds?select=*,contacts(*),atbd_versions(atbd_id, atbd_version, status)${filterStr}`,
       method: 'GET',
       types: [
         types.FETCH_ATBDS,

@@ -2,7 +2,6 @@ import { css } from 'styled-components/macro';
 import { rgba } from 'polished';
 import { disabled } from '../helpers';
 import { themeVal, stylizeFunction } from '../utils/general';
-import { multiply } from '../utils/math';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -59,19 +58,16 @@ const controlSkin = () => css`
   }
 
   &:hover {
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${_rgba(themeVal('color.base'), 0.32)};
   }
 
   &:focus,
   &:active {
     outline: 0;
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${themeVal('color.primary')};
   }
 
   ${({ invalid }) => invalid && css`
-    border-width: ${multiply(themeVal('layout.border'), 2)};
     border-color: ${themeVal('color.danger')};
 
     &:hover,
