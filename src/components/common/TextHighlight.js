@@ -3,7 +3,8 @@ import { PropTypes as T } from 'prop-types';
 import styled from 'styled-components/macro';
 import { themeVal } from '../../styles/utils/general';
 
-const SearchHighlight = styled.em`
+const SearchHighlight = styled.mark`
+  font-style: italic;
   background-color: ${themeVal('color.warning')};
 `;
 

@@ -185,7 +185,18 @@ export default function (state = initialState, action) {
 
     case actions.FETCH_ATBDS_SUCCESS: {
       const { payload } = action;
-      return { ...state, atbds: [...payload] };
+      return {
+        ...state,
+        atbds: [
+          ...payload.map((a) => {
+            if (!a.contacts) return a;
+            return {
+              ...a,
+              contacts: a.contacts.filter(Boolean)
+            };
+          })
+        ]
+      };
     }
 
     case actions.FETCH_CONTACTS_SUCCESS: {
