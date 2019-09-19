@@ -731,6 +731,22 @@ export function deleteReference(id) {
   };
 }
 
+export function updateStatus(atbd_id) {
+  return dispatch => dispatch({
+    [RSAA]: {
+      endpoint: `${BASE_URL}/atbd_versions?atbd_id=eq.${atbd_id}`,
+      method: 'PATCH',
+      body: {'status': 'Published'},
+      headers: returnObjectHeaders,
+      types: [
+        types.UPDATE_STATUS,
+        types.UPDATE_STATUS_SUCCESS,
+        types.UPDATE_STATUS_FAIL
+      ]
+    }
+  });
+}
+
 export function uploadFile(file) {
   const id = uuid();
   const extension = file.name.split('.').pop();

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { push } from 'connected-react-router';
-import { createAtbd, deleteAtbd } from '../../actions/actions';
+import { createAtbd, deleteAtbd, updateStatus } from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
@@ -317,7 +317,11 @@ class AtbdList extends React.Component {
                 </DocTableActionPreview>
               </li>
               <li>
-                <DocTableActionPublish title="Publish document">
+                <DocTableActionPublish title="Publish document"
+                  onClick={() => {
+                    updateStatus(atbd_id);
+                  }}
+                >
                   Publish
                 </DocTableActionPublish>
               </li>
