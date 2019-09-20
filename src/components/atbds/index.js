@@ -207,7 +207,7 @@ class AtbdList extends React.Component {
     e.preventDefault();
     const { atbd_version } = atbd.atbd_versions[0];
     /* eslint-disable-next-line react/destructuring-assignment */
-    this.props.updateAtbdVersion(atbd.atbd_id, atbd_version, { 'status': 'Published' });
+    this.props.updateAtbdVersion(atbd.atbd_id, atbd_version, { status: 'Published' });
   }
 
   async onDeleteClick({ title, atbd_id }, e) {
@@ -324,10 +324,9 @@ class AtbdList extends React.Component {
                 </DocTableActionPreview>
               </li>
               <li>
-                <DocTableActionPublish title="Publish document"
-                  onClick={
-                    this.onUpdateClick.bind(this,atbd)
-                  }
+                <DocTableActionPublish 
+                title="Publish document"
+                  onClick={this.onUpdateClick.bind(this, atbd)}
                 >
                   Publish
                 </DocTableActionPublish>
