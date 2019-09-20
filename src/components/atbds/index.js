@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { push } from 'connected-react-router';
-import { createAtbd, deleteAtbd, updateStatus } from '../../actions/actions';
+import { createAtbd, deleteAtbd, updateAtbdVersion } from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
@@ -203,6 +203,13 @@ class AtbdList extends React.Component {
     );
   }
 
+  onUpdateClick(atbd, e) {
+    e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
+    /* eslint-disable-next-line react/destructuring-assignment */
+    this.props.updateAtbdVersion(atbd.atbd_id, atbd_version, { 'status': 'Published' });
+  }
+
   async onDeleteClick({ title, atbd_id }, e) {
     e.preventDefault();
     const res = await confirmDeleteDoc(title);
@@ -318,9 +325,9 @@ class AtbdList extends React.Component {
               </li>
               <li>
                 <DocTableActionPublish title="Publish document"
-                  onClick={() => {
-                    updateStatus(atbd_id);
-                  }}
+                  onClick={
+                    this.onUpdateClick.bind(this,atbd)
+                  }
                 >
                   Publish
                 </DocTableActionPublish>
@@ -476,7 +483,8 @@ AtbdList.propTypes = {
   ),
   push: PropTypes.func,
   createAtbd: PropTypes.func.isRequired,
-  deleteAtbd: PropTypes.func.isRequired
+  deleteAtbd: PropTypes.func.isRequired,
+  updateAtbdVersion: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -484,7 +492,7 @@ const mapStateToProps = (state) => {
   return { atbds };
 };
 
-const mapDispatch = { push, createAtbd, deleteAtbd };
+const mapDispatch = { push, createAtbd, deleteAtbd, updateAtbdVersion };
 
 export default connect(
   mapStateToProps,
