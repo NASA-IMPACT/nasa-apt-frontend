@@ -492,7 +492,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = {
-  push, createAtbd, deleteAtbd, updateAtbdVersion 
+  push, createAtbd, deleteAtbd, updateAtbdVersion
 };
 
 export default connect(
