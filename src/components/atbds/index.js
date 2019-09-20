@@ -324,8 +324,8 @@ class AtbdList extends React.Component {
                 </DocTableActionPreview>
               </li>
               <li>
-                <DocTableActionPublish 
-                title="Publish document"
+                <DocTableActionPublish
+                  title="Publish document"
                   onClick={this.onUpdateClick.bind(this, atbd)}
                 >
                   Publish
@@ -491,7 +491,9 @@ const mapStateToProps = (state) => {
   return { atbds };
 };
 
-const mapDispatch = { push, createAtbd, deleteAtbd, updateAtbdVersion };
+const mapDispatch = {
+  push, createAtbd, deleteAtbd, updateAtbdVersion 
+};
 
 export default connect(
   mapStateToProps,
