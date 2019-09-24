@@ -48,7 +48,6 @@ import SearchControl from '../common/SearchControl';
 import QsState from '../../utils/qs-state';
 import TextHighlight from '../common/TextHighlight';
 
-
 const atbdStatusOptions = [
   {
     id: 'draft',
@@ -204,7 +203,9 @@ class AtbdList extends React.Component {
 
   onEditClick(atbd, e) {
     e.preventDefault();
-    this.props.push(`/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`);
+    this.props.push(
+      `/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`
+    );
   }
 
   onUpdateClick(atbd, e) {
@@ -216,7 +217,7 @@ class AtbdList extends React.Component {
 
   async onDeleteClick({ title, atbd_id }, e) {
     e.preventDefault();
-    const res = await confirmDeleteDoc(title);    
+    const res = await confirmDeleteDoc(title);
     if (res.result) this.props.deleteAtbd(atbd_id);
   }
 
@@ -233,15 +234,18 @@ class AtbdList extends React.Component {
 
   setFilterValue(what, value, e) {
     e.preventDefault();
-    this.setState(state => ({
-      filter: {
-        ...state.filter,
-        [what]: value
+    this.setState(
+      state => ({
+        filter: {
+          ...state.filter,
+          [what]: value
+        }
+      }),
+      () => {
+        const qString = this.qsState.getQs(this.state);
+        this.props.push({ search: qString });
       }
-    }), () => {
-      const qString = this.qsState.getQs(this.state);
-      this.props.push({ search: qString });
-    });
+    );
   }
 
   renderAtbdTable() {
@@ -289,10 +293,7 @@ class AtbdList extends React.Component {
         <DocTableBodyThTitle scope="row">
           <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
             <strong>
-              <TextHighlight
-                value={searchValue}
-                disabled={!title}
-              >
+              <TextHighlight value={searchValue} disabled={!title}>
                 {title || 'Untitled Document'}
               </TextHighlight>
             </strong>
@@ -314,7 +315,7 @@ class AtbdList extends React.Component {
               >
                 Actions
               </DocTableActionsTrigger>
-            )}
+)}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
@@ -380,7 +381,12 @@ class AtbdList extends React.Component {
 
     return (
       <React.Fragment>
-        {searchValue && <ResultsHeading>Showing {atbds.length} result{atbds.length > 1 ? 's' : ''} for <em>{searchValue}</em></ResultsHeading>}
+        {searchValue && (
+          <ResultsHeading>
+            Showing {atbds.length} result{atbds.length > 1 ? 's' : ''} for{' '}
+            <em>{searchValue}</em>
+          </ResultsHeading>
+        )}
         {this.renderAtbdTable()}
       </React.Fragment>
     );
@@ -388,7 +394,11 @@ class AtbdList extends React.Component {
 
   render() {
     const { createAtbd: create } = this.props;
-    const { filter: { status: filterStatus }, searchCurrent, searchValue } = this.state;
+    const {
+      filter: { status: filterStatus },
+      searchCurrent,
+      searchValue
+    } = this.state;
     const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
 
     return (
@@ -418,14 +428,18 @@ class AtbdList extends React.Component {
                           >
                             {activeFilter.label || 'All'}
                           </FilterTrigger>
-                        )}
+)}
                       >
                         <DropTitle>Select status</DropTitle>
                         <DropMenu role="menu" selectable>
                           <li>
                             <DropMenuItem
                               active={filterStatus === 'all'}
-                              onClick={this.setFilterValue.bind(this, 'status', 'all')}
+                              onClick={this.setFilterValue.bind(
+                                this,
+                                'status',
+                                'all'
+                              )}
                               data-hook="dropdown:close"
                             >
                               All
@@ -435,7 +449,11 @@ class AtbdList extends React.Component {
                             <li key={o.id}>
                               <DropMenuItem
                                 active={filterStatus === o.id}
-                                onClick={this.setFilterValue.bind(this, 'status', o.id)}
+                                onClick={this.setFilterValue.bind(
+                                  this,
+                                  'status',
+                                  o.id
+                                )}
                                 data-hook="dropdown:close"
                               >
                                 {o.label}
@@ -467,9 +485,7 @@ class AtbdList extends React.Component {
             )}
           </Sticky>
           <InpageBody>
-            <InpageBodyInner>
-              {this.renderPageContent()}
-            </InpageBodyInner>
+            <InpageBodyInner>{this.renderPageContent()}</InpageBodyInner>
           </InpageBody>
         </StickyContainer>
       </Inpage>
