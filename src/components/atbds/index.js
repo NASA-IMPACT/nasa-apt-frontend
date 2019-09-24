@@ -42,7 +42,6 @@ import Dropdown, {
 
 import Table from '../../styles/table';
 
-import PreviewButton from './PreviewButton';
 import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import StatusPill from '../common/StatusPill';
 import SearchControl from '../common/SearchControl';
@@ -127,7 +126,7 @@ const DocTableActionsTrigger = styled(Button)`
   }
 `;
 
-const DocTableActionPreview = styled(DropMenuItem)`
+const DocTableActionView = styled(DropMenuItem)`
   &::before {
     ${collecticon('eye')}
   }
@@ -303,7 +302,6 @@ class AtbdList extends React.Component {
           <span>{contact}</span>
         </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
-          <PreviewButton atbd_id={atbd_id} atbd_version={1} />
           <Dropdown
             alignment="middle"
             direction="left"
@@ -321,12 +319,12 @@ class AtbdList extends React.Component {
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionPreview
+                <DocTableActionView
                   title="View document"
                   onClick={this.onViewClick.bind(this, atbd)}
                 >
                   View
-                </DocTableActionPreview>
+                </DocTableActionView>
               </li>
               <li>
                 <DocTableActionEdit
