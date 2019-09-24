@@ -324,14 +324,6 @@ class AtbdList extends React.Component {
                 </DocTableActionPreview>
               </li>
               <li>
-                <DocTableActionPublish
-                  title="Publish document"
-                  onClick={this.onUpdateClick.bind(this, atbd)}
-                >
-                  Publish
-                </DocTableActionPublish>
-              </li>
-              <li>
                 <DocTableActionEdit
                   title="Edit document"
                   onClick={this.onEditClick.bind(this, atbd)}
@@ -339,7 +331,17 @@ class AtbdList extends React.Component {
                   Edit
                 </DocTableActionEdit>
               </li>
-
+              {status === 'Draft' && (
+                <li>
+                  <DocTableActionPublish
+                    title="Publish document"
+                    data-hook="dropdown:close"
+                    onClick={this.onUpdateClick.bind(this, atbd)}
+                  >
+                    Publish
+                  </DocTableActionPublish>
+                </li>
+              )}
             </DropMenu>
             <DropMenu role="menu" iconified>
               <li>
