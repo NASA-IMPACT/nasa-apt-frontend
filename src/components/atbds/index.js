@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -46,6 +48,7 @@ import StatusPill from '../common/StatusPill';
 import SearchControl from '../common/SearchControl';
 import QsState from '../../utils/qs-state';
 import TextHighlight from '../common/TextHighlight';
+
 
 const atbdStatusOptions = [
   {
@@ -195,12 +198,14 @@ class AtbdList extends React.Component {
     };
   }
 
+  onViewClick(atbd, e) {
+    e.preventDefault();
+    this.props.push(`/atbds/${atbd.atbd_id}`);
+  }
+
   onEditClick(atbd, e) {
     e.preventDefault();
-    /* eslint-disable-next-line react/destructuring-assignment */
-    this.props.push(
-      `/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`
-    );
+    this.props.push(`/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`);
   }
 
   onUpdateClick(atbd, e) {
@@ -212,8 +217,7 @@ class AtbdList extends React.Component {
 
   async onDeleteClick({ title, atbd_id }, e) {
     e.preventDefault();
-    const res = await confirmDeleteDoc(title);
-    /* eslint-disable-next-line react/destructuring-assignment */
+    const res = await confirmDeleteDoc(title);    
     if (res.result) this.props.deleteAtbd(atbd_id);
   }
 
@@ -224,7 +228,6 @@ class AtbdList extends React.Component {
   onSearch(searchValue) {
     this.setState({ searchValue }, () => {
       const qString = this.qsState.getQs(this.state);
-      /* eslint-disable-next-line react/destructuring-assignment */
       this.props.push({ search: qString });
     });
   }
@@ -238,7 +241,6 @@ class AtbdList extends React.Component {
       }
     }), () => {
       const qString = this.qsState.getQs(this.state);
-      /* eslint-disable-next-line react/destructuring-assignment */
       this.props.push({ search: qString });
     });
   }
@@ -319,8 +321,11 @@ class AtbdList extends React.Component {
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionPreview title="Preview document">
-                  Preview
+                <DocTableActionPreview
+                  title="View document"
+                  onClick={this.onViewClick.bind(this, atbd)}
+                >
+                  View
                 </DocTableActionPreview>
               </li>
               <li>
