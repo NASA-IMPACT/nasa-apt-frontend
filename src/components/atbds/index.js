@@ -196,18 +196,6 @@ class AtbdList extends React.Component {
     };
   }
 
-  onViewClick(atbd, e) {
-    e.preventDefault();
-    this.props.push(`/atbds/${atbd.atbd_id}`);
-  }
-
-  onEditClick(atbd, e) {
-    e.preventDefault();
-    this.props.push(
-      `/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`
-    );
-  }
-
   onUpdateClick(atbd, e) {
     e.preventDefault();
     const { atbd_version } = atbd.atbd_versions[0];
@@ -321,8 +309,9 @@ class AtbdList extends React.Component {
             <DropMenu role="menu" iconified>
               <li>
                 <DocTableActionView
+                  as={Link}
                   title="View document"
-                  onClick={this.onViewClick.bind(this, atbd)}
+                  to={`/atbds/${atbd_id}`}
                 >
                   View
                 </DocTableActionView>
@@ -330,7 +319,8 @@ class AtbdList extends React.Component {
               <li>
                 <DocTableActionEdit
                   title="Edit document"
-                  onClick={this.onEditClick.bind(this, atbd)}
+                  as={Link}
+                  to={`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`}
                 >
                   Edit
                 </DocTableActionEdit>
