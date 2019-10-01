@@ -143,6 +143,12 @@ const DocTableActionPublish = styled(DropMenuItem)`
   }
 `;
 
+const DocTableActionDuplicate = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('pages')}
+  }
+`;
+
 const DocTableActionDelete = styled(DropMenuItem)`
   &::before {
     ${collecticon('trash-bin')}
@@ -303,7 +309,7 @@ class AtbdList extends React.Component {
               >
                 Actions
               </DocTableActionsTrigger>
-)}
+            )}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
@@ -316,24 +322,36 @@ class AtbdList extends React.Component {
                   View
                 </DocTableActionView>
               </li>
-              <li>
-                <DocTableActionEdit
-                  title="Edit document"
-                  as={Link}
-                  to={`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`}
-                >
-                  Edit
-                </DocTableActionEdit>
-              </li>
-              {status === 'Draft' && (
+              {status === 'Draft' ? (
+                <React.Fragment>
+                  <li>
+                    <DocTableActionEdit
+                      title="Edit document"
+                      as={Link}
+                      to={`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`}
+                    >
+                      Edit
+                    </DocTableActionEdit>
+                  </li>
+                  <li>
+                    <DocTableActionPublish
+                      title="Publish document"
+                      data-hook="dropdown:close"
+                      onClick={this.onUpdateClick.bind(this, atbd)}
+                    >
+                      Publish
+                    </DocTableActionPublish>
+                  </li>
+                </React.Fragment>
+              ) : (
                 <li>
-                  <DocTableActionPublish
-                    title="Publish document"
+                  <DocTableActionDuplicate
+                    title="Duplicate document"
                     data-hook="dropdown:close"
-                    onClick={this.onUpdateClick.bind(this, atbd)}
+                    onClick={() => alert('Implementation pending')}
                   >
-                    Publish
-                  </DocTableActionPublish>
+                    Duplicate
+                  </DocTableActionDuplicate>
                 </li>
               )}
             </DropMenu>

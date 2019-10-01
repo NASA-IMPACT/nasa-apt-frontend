@@ -16,6 +16,7 @@ import {
   references,
   error
 } from '../constants/routes';
+import toasts from '../components/common/toasts';
 
 const locationMiddleware = store => next => async (action) => {
   const { type, payload } = action;
@@ -105,6 +106,16 @@ const locationMiddleware = store => next => async (action) => {
     const { atbd_id, atbd_version } = created_version;
     store.dispatch(push(`/${atbdsedit}/${atbd_id}/${drafts}/${atbd_version}/`
       + `${identifying_information}`));
+  }
+
+  // After fetching the version, if we're on the edit page and the ATBD
+  // was already published redirect with a notification.
+  if (type === types.FETCH_ATBD_VERSION_SUCCESS) {
+    const pieces = store.getState().router.location.pathname.split('/');
+    if (pieces[1] === atbdsedit && payload.status === 'Published') {
+      toasts.error('Editing a Published ATBD is not allowed. Consider making a copy.');
+      store.dispatch(push(`/${atbds}`));
+    }
   }
   return next(action);
 };
