@@ -266,7 +266,7 @@ export function fetchAtbdVersionVariables(versionObject) {
 export function fetchAtbds(filterStr = '') {
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?select=*,contacts(*),atbd_versions(atbd_id, atbd_version, status)${filterStr}`,
+      endpoint: `${BASE_URL}/rpc/search_text?${filterStr}`,
       method: 'GET',
       types: [
         types.FETCH_ATBDS,

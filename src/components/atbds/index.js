@@ -50,11 +50,11 @@ import TextHighlight from '../common/TextHighlight';
 
 const atbdStatusOptions = [
   {
-    id: 'draft',
+    id: 'Draft',
     label: 'Draft'
   },
   {
-    id: 'published',
+    id: 'Published',
     label: 'Published'
   }
 ];
@@ -294,7 +294,12 @@ class AtbdList extends React.Component {
           </Link>
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>
-          <span>{contact}</span>
+          <TextHighlight
+            value={searchValue}
+            disabled={!contact}
+          >
+            {contact}
+          </TextHighlight>
         </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
           <Dropdown

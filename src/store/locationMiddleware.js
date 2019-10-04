@@ -32,12 +32,16 @@ const locationMiddleware = store => next => async (action) => {
     if (pathComponents[1] === atbds) {
       if (pathComponents.length === 2) {
         const queryParams = qs.parse(search.substr(1));
-        let filter = '';
+        /* eslint-disable-next-line prefer-const */
+        let filter = [];
         if (queryParams.search && queryParams.search.trim()) {
-          filter = `&title=like.*${queryParams.search.trim()}*`;
+          filter.push(`searchstring=${encodeURIComponent(queryParams.search.trim())}`);
+        }
+        if (queryParams.status) {
+          filter.push(`statusstring=${encodeURIComponent(queryParams.status)}`);
         }
         // Route /atbds
-        store.dispatch(actions.fetchAtbds(filter));
+        store.dispatch(actions.fetchAtbds(filter.join('&')));
       } else {
         // Route /atbds/:atbd_id
         const res = await store.dispatch(actions.fetchAtbd(pathComponents[2]));
