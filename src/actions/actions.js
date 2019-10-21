@@ -100,7 +100,7 @@ export function copyAtbd(atbd_id) {
     [RSAA]: {
       endpoint: `${BASE_URL}/rpc/copy_atbd`,
       method: 'POST',
-      body: JSON.stringify({'originalid': atbd_id}),
+      body: JSON.stringify({ originalid: atbd_id }),
       headers: returnObjectHeaders,
       types: [
         types.COPY_ATBD,

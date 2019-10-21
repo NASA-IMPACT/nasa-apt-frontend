@@ -12,7 +12,8 @@ import { BlockMath } from 'react-katex';
 
 import {
   serializeDocument,
-  deleteAtbd
+  deleteAtbd,
+  copyAtbd
 } from '../../actions/actions';
 
 // Components
@@ -173,6 +174,7 @@ class AtbdView extends Component {
     serializeDocumentAction: T.func,
     deleteAtbdAction: T.func,
     fetchAtbdAction: T.func,
+    copyAtbdAction: T.func,
     match: T.object,
     visitLink: T.func
   };
@@ -240,6 +242,15 @@ class AtbdView extends Component {
     if (res.result) {
       deleteAtbdAction(atbd_id);
       visitLink('/atbds');
+    }
+  }
+
+  async onDuplicateClick({ atbd_id }, e) {
+    e.preventDefault();
+    const { visitLink, copyAtbdAction } = this.props;
+    const res = await copyAtbdAction(atbd_id);
+    if (!res.error) {
+      visitLink(`/atbds/${res.payload.new_id}`);
     }
   }
 
@@ -859,7 +870,7 @@ class AtbdView extends Component {
                           <DocumentActionDuplicate
                             title="Duplicate document"
                             data-hook="dropdown:close"
-                            onClick={() => alert('Implementation pending')}
+                            onClick={this.onDuplicateClick.bind(this, atbd)}
                           >
                             Duplicate
                           </DocumentActionDuplicate>
@@ -949,6 +960,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatch = {
   deleteAtbdAction: deleteAtbd,
+  copyAtbdAction: copyAtbd,
   serializeDocumentAction: serializeDocument,
   visitLink: push
 };
