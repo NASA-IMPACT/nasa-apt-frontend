@@ -7,7 +7,12 @@ import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { push } from 'connected-react-router';
-import { createAtbd, deleteAtbd, updateAtbdVersion } from '../../actions/actions';
+import {
+  createAtbd,
+  deleteAtbd,
+  updateAtbdVersion,
+  copyAtbd
+} from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
@@ -215,6 +220,15 @@ class AtbdList extends React.Component {
     if (res.result) this.props.deleteAtbd(atbd_id);
   }
 
+  async onDuplicateClick({ atbd_id }, e) {
+    e.preventDefault();
+    const { copyAtbdAction } = this.props;
+    const res = await copyAtbdAction(atbd_id);
+    if (!res.error) {
+      this.props.push(`/atbds/${res.payload.new_id}`);
+    }
+  }
+
   onSearchChange(searchCurrent) {
     this.setState({ searchCurrent });
   }
@@ -353,7 +367,7 @@ class AtbdList extends React.Component {
                   <DocTableActionDuplicate
                     title="Duplicate document"
                     data-hook="dropdown:close"
-                    onClick={() => alert('Implementation pending')}
+                    onClick={this.onDuplicateClick.bind(this, atbd)}
                   >
                     Duplicate
                   </DocTableActionDuplicate>
@@ -517,7 +531,8 @@ AtbdList.propTypes = {
   push: PropTypes.func,
   createAtbd: PropTypes.func.isRequired,
   deleteAtbd: PropTypes.func.isRequired,
-  updateAtbdVersion: PropTypes.func.isRequired
+  updateAtbdVersion: PropTypes.func.isRequired,
+  copyAtbdAction: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -526,7 +541,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = {
-  push, createAtbd, deleteAtbd, updateAtbdVersion
+  push,
+  createAtbd,
+  deleteAtbd,
+  updateAtbdVersion,
+  copyAtbdAction: copyAtbd,
 };
 
 export default connect(
