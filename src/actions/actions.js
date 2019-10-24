@@ -95,6 +95,22 @@ export function createAtbd() {
   };
 }
 
+export function copyAtbd(atbd_id) {
+  return {
+    [RSAA]: {
+      endpoint: `${BASE_URL}/rpc/copy_atbd`,
+      method: 'POST',
+      body: JSON.stringify({ originalid: atbd_id }),
+      headers: returnObjectHeaders,
+      types: [
+        types.COPY_ATBD,
+        types.COPY_ATBD_SUCCESS,
+        types.COPY_ATBD_FAIL
+      ]
+    }
+  };
+}
+
 export function deleteAtbd(atbd_id) {
   return {
     [RSAA]: {

@@ -7,6 +7,7 @@ const types = createTypes([
   ...async('UPDATE_CONTACT_GROUP'),
   ...async('CREATE_ATBD'),
   ...async('DELETE_ATBD'),
+  ...async('COPY_ATBD'),
   ...async('UPDATE_ATBD'),
   ...async('CREATE_ATBD_VERSION'),
   ...async('UPDATE_ATBD_VERSION'),

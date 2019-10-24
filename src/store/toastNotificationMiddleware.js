@@ -74,6 +74,16 @@ const toastNotificationMiddleware = (/* store */) => next => async (action) => {
         ? label.deleteSuccess
         : `An error occurred while deleting the ${label}`, { autoClose: false });
     }
+    if (type === `COPY_${a}_SUCCESS`) {
+      toasts.success(label.copySuccess
+        ? label.copySuccess
+        : `${label} was successfully duplicated`);
+    }
+    if (type === `COPY_${a}_FAIL`) {
+      toasts.error(label.copySuccess
+        ? label.copySuccess
+        : `An error occurred while duplicating the ${label}`, { autoClose: false });
+    }
   });
 
   return next(action);
