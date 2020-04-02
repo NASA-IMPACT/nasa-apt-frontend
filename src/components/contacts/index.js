@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components/macro';
 
 import ContactFormWrapper from './ContactFormWrapper';
 import { Inpage } from '../common/Inpage';

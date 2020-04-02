@@ -47,20 +47,20 @@ const FormsExample = () => (
       <FormFieldset>
         <FormFieldsetHeader>
           <FormLegend>Form legend</FormLegend>
-          <RemoveButton variation='base-plain' size='small' hideText>
+          <RemoveButton variation="base-plain" size="small" hideText>
             Remove fieldset
           </RemoveButton>
         </FormFieldsetHeader>
         <FormFieldsetBody>
           <FormGroup>
             <FormGroupHeader>
-              <FormLabel htmlFor='input-text-a'>Form label</FormLabel>
+              <FormLabel htmlFor="input-text-a">Form label</FormLabel>
               <FormToolbar>
                 <InfoButton
-                  variation='base-plain'
-                  size='small'
+                  variation="base-plain"
+                  size="small"
                   hideText
-                  data-tip='This is a very helpful tooltip.'
+                  data-tip="This is a very helpful tooltip."
                 >
                   Learn more
                 </InfoButton>
@@ -68,15 +68,13 @@ const FormsExample = () => (
             </FormGroupHeader>
             <FormGroupBody>
               <FormInput
-                type='text'
-                size='large'
-                id='input-text-a'
-                placeholder='This is a text input'
+                type="text"
+                size="large"
+                id="input-text-a"
+                placeholder="This is a text input"
               />
               <FormHelper>
-                <FormHelperMessage>
-                  This is some help text.
-                </FormHelperMessage>
+                <FormHelperMessage>This is some help text.</FormHelperMessage>
                 <FormHelperCounter>0 / 80</FormHelperCounter>
               </FormHelper>
             </FormGroupBody>
@@ -90,17 +88,17 @@ const FormsExample = () => (
               <FormCheckableGroup>
                 <FormCheckable
                   checked={undefined}
-                  type='checkbox'
-                  name='checkbox-a'
-                  id='checkbox-a'
+                  type="checkbox"
+                  name="checkbox-a"
+                  id="checkbox-a"
                 >
                   Checkbox A
                 </FormCheckable>
                 <FormCheckable
                   checked={undefined}
-                  type='checkbox'
-                  name='checkbox-b'
-                  id='checkbox-b'
+                  type="checkbox"
+                  name="checkbox-b"
+                  id="checkbox-b"
                 >
                   Checkbox B
                 </FormCheckable>
@@ -115,38 +113,38 @@ const FormsExample = () => (
             <FormGroupBody>
               <FormCheckableGroup>
                 <FormCheckable
-                  textPlacement='right'
+                  textPlacement="right"
                   checked={undefined}
-                  type='radio'
-                  name='radio-a'
-                  id='radio-a1'
+                  type="radio"
+                  name="radio-a"
+                  id="radio-a1"
                 >
                   Radio A
                 </FormCheckable>
                 <FormCheckable
-                  textPlacement='right'
+                  textPlacement="right"
                   checked={undefined}
-                  type='radio'
-                  name='radio-a'
-                  id='radio-a2'
+                  type="radio"
+                  name="radio-a"
+                  id="radio-a2"
                 >
                   Radio B
                 </FormCheckable>
                 <FormCheckable
-                  textPlacement='right'
+                  textPlacement="right"
                   checked={undefined}
-                  type='radio'
-                  name='radio-a'
-                  id='radio-a3'
+                  type="radio"
+                  name="radio-a"
+                  id="radio-a3"
                 >
                   Radio C
                 </FormCheckable>
                 <FormCheckable
-                  textPlacement='right'
+                  textPlacement="right"
                   checked={undefined}
-                  type='radio'
-                  name='radio-a'
-                  id='radio-a4'
+                  type="radio"
+                  name="radio-a"
+                  id="radio-a4"
                 >
                   Radio D
                 </FormCheckable>
@@ -158,10 +156,10 @@ const FormsExample = () => (
             <FormFieldsetHeader>
               <FormLegend>Form legend</FormLegend>
               <RemoveButton
-                variation='base-plain'
-                size='small'
+                variation="base-plain"
+                size="small"
                 hideText
-                data-tip='This is a super helpful tooltip.'
+                data-tip="This is a super helpful tooltip."
               >
                 Remove fieldset
               </RemoveButton>
@@ -169,15 +167,13 @@ const FormsExample = () => (
             <FormFieldsetBody>
               <FormGroup>
                 <FormGroupHeader>
-                  <FormLabel htmlFor='textarea-b'>
-                    Form label
-                  </FormLabel>
+                  <FormLabel htmlFor="textarea-b">Form label</FormLabel>
                 </FormGroupHeader>
                 <FormGroupBody>
                   <FormTextarea
-                    size='large'
-                    id='textarea-b'
-                    placeholder='This is a textarea'
+                    size="large"
+                    id="textarea-b"
+                    placeholder="This is a textarea"
                   />
                   <FormHelper>
                     <FormHelperMessage invalid>
@@ -191,34 +187,32 @@ const FormsExample = () => (
 
           <FormGroup>
             <FormGroupHeader>
-              <FormLabel htmlFor='select-a' optional>
+              <FormLabel htmlFor="select-a" optional>
                 Form label
               </FormLabel>
             </FormGroupHeader>
             <FormGroupBody>
-              <FormSelect size='large' id='select-a'>
-                <option value='option-1'>Option 1</option>
-                <option value='option-2'>Option 2</option>
-                <option value='option-3'>Option 3</option>
-                <option value='option-4'>Option 4</option>
+              <FormSelect size="large" id="select-a">
+                <option value="option-1">Option 1</option>
+                <option value="option-2">Option 2</option>
+                <option value="option-3">Option 3</option>
+                <option value="option-4">Option 4</option>
               </FormSelect>
               <FormHelper>
-                <FormHelperMessage>
-                  This is some help text.
-                </FormHelperMessage>
+                <FormHelperMessage>This is some help text.</FormHelperMessage>
               </FormHelper>
             </FormGroupBody>
           </FormGroup>
 
           <FormGroup>
             <FormGroupHeader>
-              <FormLabel htmlFor='textarea-a'>Form label</FormLabel>
+              <FormLabel htmlFor="textarea-a">Form label</FormLabel>
             </FormGroupHeader>
             <FormGroupBody>
               <FormTextarea
-                size='large'
-                id='textarea-a'
-                placeholder='This is a textarea'
+                size="large"
+                id="textarea-a"
+                placeholder="This is a textarea"
                 invalid
               />
               <FormHelper>
