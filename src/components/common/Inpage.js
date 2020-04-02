@@ -59,7 +59,7 @@ export const InpageTitleWrapper = styled.div`
 export const InpageTitle = styled.h1`
   ${truncated()}
   font-size: 1.25rem;
-  line-height: 2rem;
+  line-height: 2.5rem;
   margin: 0;
 `;
 
@@ -79,8 +79,9 @@ export const InpageFilters = styled.div`
 export const FilterItem = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  line-height: 2rem;
+  line-height: 2.5rem;
   margin: 0 ${divide(themeVal('layout.space'), 2)} 0 0;
+  align-items: center;
 
   > * {
     display: inline-flex;

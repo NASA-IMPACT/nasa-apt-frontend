@@ -3,15 +3,23 @@ import T from 'prop-types';
 import styled, { css } from 'styled-components/macro';
 import { rgba, shade, tint } from 'polished';
 
-import { antialiased, visuallyHidden, disabled } from '../helpers';
+import {
+  antialiased,
+  visuallyHidden,
+  disabled,
+  visuallyDisabled as visuallyDisabledHelper
+} from '../helpers';
 import { themeVal } from '../utils/general';
+import collecticon from '../collecticons';
+
+const El = styled.button``;
 
 const BaseButton = React.forwardRef(
   ({
-    children, active, hideText, size, variation, type, element: El, ...rest
+    children, ...rest
   },
   ref) => {
-    const elType = El === 'button' ? type || 'button' : '';
+    const elType = rest.type || (!rest.as ? 'button' : undefined);
     return (
       <El ref={ref} {...rest} type={elType}>
         {!!children && <span>{children}</span>}
@@ -21,19 +29,13 @@ const BaseButton = React.forwardRef(
 );
 
 BaseButton.propTypes = {
-  element: T.oneOfType([T.elementType, T.string]),
   type: T.string,
   children: T.node,
   active: T.bool,
   hideText: T.bool,
   size: T.string,
+  radius: T.string,
   variation: T.string
-};
-
-BaseButton.defaultProps = {
-  element: 'button',
-  type: 'button',
-  size: 'medium'
 };
 
 /**
@@ -73,7 +75,6 @@ const Button = styled(BaseButton)`
   background: none;
   text-shadow: none;
   border: 0;
-  border-radius: ${themeVal('shape.rounded')};
   font-family: ${themeVal('type.base.family')};
   font-weight: ${themeVal('type.base.bold')};
   cursor: pointer;
@@ -85,9 +86,12 @@ const Button = styled(BaseButton)`
     outline: none; /* This causes usability problems. Needs fixing. */
   }
 
-  &:hover {
-    opacity: 1;
-  }
+  ${({ visuallyDisabled: vd }) => !vd
+    && css`
+      &:hover {
+        opacity: 1;
+      }
+    `}
 
   ${({ active }) => (active ? '&,' : '')}
   /* stylelint-disable-line */
@@ -115,6 +119,9 @@ const Button = styled(BaseButton)`
     line-height: inherit !important;
   }
 
+  ${props => renderIcon(props)}
+
+
   /* Checkbox/radio handling */
 
   > input[type=checkbox],
@@ -131,6 +138,12 @@ const Button = styled(BaseButton)`
 
   /* Size */
   ${props => renderButtonSize(props)}
+
+  /* Radius */
+  ${props => renderButtonRadius(props)}
+
+  /* Box */
+  ${props => renderButtonBox(props)}
 
   /* Hide Text */
   ${({ hideText }) => hideText
@@ -153,14 +166,16 @@ const Button = styled(BaseButton)`
     && css`
       ${disabled()}
     `}
+
+  /* Visually Disabled */
+  ${({ visuallyDisabled: vd }) => vd
+    && css`
+      ${visuallyDisabledHelper()}
+    `}
 `;
 
-Button.propTypes = {
-  children: T.node,
-  active: T.bool,
-  hideText: T.bool,
-  variation: T.string,
-  size: T.string
+Button.defaultProps = {
+  size: 'medium'
 };
 
 export default Button;
@@ -168,6 +183,21 @@ export default Button;
 // /////////////////////////////////////////////////////////////////////////////
 //                                 HELPER FUNCTIONS
 // /////////////////////////////////////////////////////////////////////////////
+
+function renderIcon({ useIcon }) {
+  if (!useIcon) return;
+  const [icon, position] = Array.isArray(useIcon)
+    ? useIcon
+    : [useIcon, 'before'];
+
+  const selector = `&::${position}`;
+
+  return css`
+    ${selector} {
+      ${collecticon(icon)}
+    }
+  `;
+}
 
 /**
  * Computes the colors for the given button variation
@@ -183,6 +213,7 @@ function buttonVariationColors(color, style, brightness, { theme }) {
   let bgColorHover = null;
   let bgColorActive = null;
   let shadowColor = null;
+  let borderColor = null;
 
   switch (style) {
     case 'raised':
@@ -193,6 +224,7 @@ function buttonVariationColors(color, style, brightness, { theme }) {
           bgColorHover = tint(0.96, color);
           bgColorActive = tint(0.92, color);
           shadowColor = rgba(theme.color.base, 0.16);
+          borderColor = tint(0.80, color);
           break;
         case 'semidark':
           textColor = color;
@@ -200,16 +232,18 @@ function buttonVariationColors(color, style, brightness, { theme }) {
           bgColorHover = tint(0.84, color);
           bgColorActive = tint(0.8, color);
           shadowColor = rgba(theme.color.base, 0.16);
+          borderColor = tint(0.80, color);
           break;
         case 'dark':
           textColor = tint(1, color);
           bgColor = color;
-          bgColorHover = shade('8%', color);
-          bgColorActive = shade('12%', color);
+          bgColorHover = shade(0.08, color);
+          bgColorActive = shade(0.12, color);
           shadowColor = rgba(theme.color.base, 0.24);
+          borderColor = shade(0.32, color);
           break;
         default:
-          console.error('Invalid brightness property for button raised'); // eslint-disable-line
+          console.error("Invalid brightness property for button raised"); // eslint-disable-line
           break;
       }
       break;
@@ -218,6 +252,7 @@ function buttonVariationColors(color, style, brightness, { theme }) {
       bgColor = rgba(color, 0.16);
       bgColorHover = rgba(color, 0.24);
       bgColorActive = rgba(color, 0.32);
+      borderColor = shade(0.16, color);
       break;
     case 'plain':
       textColor = color;
@@ -226,7 +261,7 @@ function buttonVariationColors(color, style, brightness, { theme }) {
       bgColorActive = rgba(color, 0.16);
       break;
     default:
-      console.error('Invalid style property for button'); // eslint-disable-line
+      console.error("Invalid style property for button"); // eslint-disable-line
       break;
   }
 
@@ -235,7 +270,8 @@ function buttonVariationColors(color, style, brightness, { theme }) {
     bgColor,
     bgColorHover,
     bgColorActive,
-    shadowColor
+    shadowColor,
+    borderColor
   };
 }
 
@@ -251,7 +287,8 @@ export function buttonVariationBaseCss(color, style, brightness, { theme }) {
   const {
     textColor,
     bgColor,
-    shadowColor
+    shadowColor,
+    borderColor
   } = buttonVariationColors(color, style, brightness, { theme });
 
   return css`
@@ -262,11 +299,16 @@ export function buttonVariationBaseCss(color, style, brightness, { theme }) {
       color: ${textColor};
     }
 
-    ${shadowColor
+    ${borderColor
+      && css`
+        border: 1px solid ${borderColor};
+      `}
+
+    /* ${shadowColor
       && css`
         box-shadow: 0 -1px 1px 0 ${rgba(theme.color.base, 0.08)},
           0 2px 6px 0 ${shadowColor};
-      `}
+      `} */
   `;
 }
 
@@ -279,17 +321,19 @@ export function buttonVariationBaseCss(color, style, brightness, { theme }) {
  * @param {object} props The element props
  */
 export function buttonVariationActiveCss(color, style, brightness, { theme }) {
-  const {
-    bgColorActive,
-    shadowColor
-  } = buttonVariationColors(color, style, brightness, { theme });
+  const { bgColorActive, shadowColor } = buttonVariationColors(
+    color,
+    style,
+    brightness,
+    { theme }
+  );
 
   return css`
     background-color: ${bgColorActive};
-    ${shadowColor
+    /* ${shadowColor
       && css`
         box-shadow: inset 0 1px 2px 0 ${shadowColor};
-      `}
+      `} */
   `;
 }
 
@@ -302,9 +346,9 @@ export function buttonVariationActiveCss(color, style, brightness, { theme }) {
  * @param {object} props The element props
  */
 export function buttonVariationHoverCss(color, style, brightness, { theme }) {
-  const {
-    bgColorHover
-  } = buttonVariationColors(color, style, brightness, { theme });
+  const { bgColorHover } = buttonVariationColors(color, style, brightness, {
+    theme
+  });
 
   return css`
     background-color: ${bgColorHover};
@@ -323,17 +367,20 @@ export function buttonVariation(color, style, brightness, props) {
   return css`
     ${buttonVariationBaseCss(color, style, brightness, props)}
 
-    /* &.button--hover, */
-    &:hover {
-      ${buttonVariationHoverCss(color, style, brightness, props)}
-    }
+    ${({ visuallyDisabled: vd }) => !vd
+      && css`
+        /* &.button--hover, */
+        &:hover {
+          ${buttonVariationHoverCss(color, style, brightness, props)}
+        }
 
-    ${({ active }) => (active ? '&, &:hover,' : '')}
-    /* stylelint-disable-line */
-    &.active,
-    &:active {
-      ${buttonVariationActiveCss(color, style, brightness, props)}
-    }
+        ${({ active }) => (active ? '&, &:hover,' : '')}
+        /* stylelint-disable-line */
+      &.active,
+      &:active {
+          ${buttonVariationActiveCss(color, style, brightness, props)}
+        }
+      `}
   `;
 }
 
@@ -343,89 +390,93 @@ export function buttonVariation(color, style, brightness, props) {
  * @param {object} props The element props
  */
 function renderButtonVariation(props) {
+  const { primary, danger, success } = props.theme.color;
+  const baseType = props.theme.type.base.color;
+
   switch (props.variation) {
-    case 'base-raised-light':
-      return buttonVariation(
-        props.theme.type.base.color,
-        'raised',
-        'light',
-        props
-      );
-    case 'base-raised-semidark':
-      return buttonVariation(
-        props.theme.type.base.color,
-        'raised',
-        'semidark',
-        props
-      );
-    case 'base-raised-dark':
-      return buttonVariation(
-        props.theme.type.base.color,
-        'raised',
-        'dark',
-        props
-      );
     case 'primary-raised-light':
-      return buttonVariation(
-        props.theme.color.primary,
-        'raised',
-        'light',
-        props
-      );
+      return buttonVariation(primary, 'raised', 'light', props);
     case 'primary-raised-semidark':
-      return buttonVariation(
-        props.theme.color.primary,
-        'raised',
-        'semidark',
-        props
-      );
+      return buttonVariation(primary, 'raised', 'semidark', props);
     case 'primary-raised-dark':
-      return buttonVariation(
-        props.theme.color.primary,
-        'raised',
-        'dark',
-        props
-      );
+      return buttonVariation(primary, 'raised', 'dark', props);
     case 'primary-plain':
-      return buttonVariation(
-        props.theme.color.primary,
-        'plain',
-        'light',
-        props
-      );
+      return buttonVariation(primary, 'plain', 'light', props);
+
     case 'danger-raised-light':
-      return buttonVariation(
-        props.theme.color.danger,
-        'raised',
-        'light',
-        props
-      );
+      return buttonVariation(danger, 'raised', 'light', props);
     case 'danger-raised-dark':
-      return buttonVariation(
-        props.theme.color.danger,
-        'raised',
-        'dark',
-        props
-      );
+      return buttonVariation(danger, 'raised', 'dark', props);
     case 'danger-plain':
-      return buttonVariation(
-        props.theme.color.danger,
-        'plain',
-        'light',
-        props
-      );
+      return buttonVariation(danger, 'plain', 'light', props);
+
+    case 'success-raised-light':
+      return buttonVariation(success, 'raised', 'light', props);
+    case 'success-raised-dark':
+      return buttonVariation(success, 'raised', 'dark', props);
+    case 'success-plain':
+      return buttonVariation(success, 'plain', 'light', props);
+
     case 'achromic-plain':
       return buttonVariation('#fff', 'plain', null, props);
     case 'achromic-glass':
       return buttonVariation('#fff', 'glass', null, props);
+
+    case 'base-raised-light':
+      return buttonVariation(baseType, 'raised', 'light', props);
+    case 'base-raised-semidark':
+      return buttonVariation(baseType, 'raised', 'semidark', props);
+    case 'base-raised-dark':
+      return buttonVariation(baseType, 'raised', 'dark', props);
     case 'base-plain':
     default:
-      return buttonVariation(
-        props.theme.color.base,
-        'plain',
-        'light',
-        props
-      );
+      return buttonVariation(baseType, 'plain', 'light', props);
+  }
+}
+
+/**
+ * Renders the correct border radius based on the props.
+ *
+ * @param {object} props The element props
+ */
+function renderButtonRadius(props) {
+  switch (props.radius) {
+    case 'ellipsoid':
+      return css`
+        border-radius: ${themeVal('shape.ellipsoid')};
+      `;
+    case 'square':
+      return css`
+        border-radius: 0;
+      `;
+    default:
+      return css`
+        border-radius: ${themeVal('shape.rounded')};
+      `;
+  }
+}
+
+/**
+ * Renders the correct box model based on the props.
+ *
+ * @param {object} props The element props
+ */
+function renderButtonBox(props) {
+  switch (props.box) {
+    case 'block':
+      return css`
+        display: block;
+        width: 100%;
+      `;
+    case 'semi-fluid':
+      return css`
+        display: inline-flex;
+        min-width: 16rem;
+      `;
+    default:
+      return css`
+        display: inline-block;
+      `;
   }
 }
 
@@ -441,21 +492,21 @@ function renderButtonSize(props) {
       return css`
         line-height: 1.25rem;
         font-size: 0.875rem;
-        padding: 0.125rem 0.25rem;
+        padding: 0.125rem 0.5rem;
         min-width: 1.5rem;
       `;
     case 'large':
       return css`
         line-height: 1.5rem;
         font-size: 1rem;
-        padding: 0.5rem 1.25rem;
+        padding: 0.75rem 1.25rem;
         min-width: 2.5rem;
       `;
     case 'xlarge':
       return css`
         line-height: 2rem;
         font-size: 1rem;
-        padding: 0.5rem 1.5rem;
+        padding: 1rem 1.75rem;
         min-width: 3rem;
       `;
     // Medium (32px)
@@ -463,7 +514,7 @@ function renderButtonSize(props) {
       return css`
         line-height: 1.5rem;
         font-size: 1rem;
-        padding: 0.25rem 0.75rem;
+        padding: 0.5rem 1rem;
         min-width: 2rem;
       `;
   }

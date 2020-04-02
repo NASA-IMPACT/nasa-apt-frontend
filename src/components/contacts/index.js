@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import styled from 'styled-components/macro';
 
 import ContactFormWrapper from './ContactFormWrapper';
 import { Inpage } from '../common/Inpage';
@@ -20,6 +21,7 @@ import {
 import { confirmRemoveContact } from '../common/ConfirmationPrompt';
 
 const initStateContact = (atbd_id, arr) => arr.map(v => ({ ...v, __action: 'editing', atbd_id }));
+
 
 class Contacts extends React.Component {
   constructor(props) {
@@ -291,7 +293,7 @@ class Contacts extends React.Component {
             />
           ))}
 
-          <AddBtn variation="base-plain" onClick={this.addContact}>
+          <AddBtn glspLeft={-2} onClick={this.addContact}>
             Add a contact
           </AddBtn>
         </EditPage>

@@ -1,9 +1,12 @@
 import { rgba, tint } from 'polished';
 
+// NASA Earthdata style guidelines
+// https://cdn.earthdata.nasa.gov/eui/latest/docs/eui/index.html
+
 let color = {
-  base: '#000000',
-  primary: '#0C59F7',
-  secondary: '#FC3D21'
+  base: '#323232',
+  primary: '#2276AC', // Ocean Blue
+  secondary: '#2c3e50' // Midnight Blue
 };
 
 color = {
@@ -13,14 +16,17 @@ color = {
   mist: rgba(color.base, 0.04),
   shadow: rgba(color.base, 0.08),
   smoke: rgba(color.base, 0.16),
+
   lightgray: '#EEEEEE',
   gray: '#DBDBDB',
   darkgray: '#666666',
+
   link: color.primary,
-  danger: '#D85D3F',
-  success: '#216869',
+
+  danger: '#e74c3c', // Bright Red
+  success: '#20ce6f', // Light Green
   warning: '#FFC700',
-  info: '#5860FF'
+  info: '#7ab5da' // Sky Blue
 };
 
 color = {
@@ -34,22 +40,22 @@ const type = {
     size: '1rem',
     line: '1.5',
     color: tint(0.16, color.base),
-    family: 'Poppins, sans-serif',
+    family: '"Open Sans", sans-serif',
     style: 'normal',
     weight: 300,
     light: 300,
     regular: 400,
     medium: 400,
-    bold: 600
+    bold: 700
   },
   heading: {
-    family: 'Poppins, sans-serif',
+    family: '"Open Sans", sans-serif',
     style: 'normal',
-    weight: 600,
+    weight: 700,
     light: 300,
     regular: 400,
     medium: 400,
-    bold: 600
+    bold: 700
   }
 };
 

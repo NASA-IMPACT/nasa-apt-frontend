@@ -53,7 +53,7 @@ const baseStyles = css`
   }
 
   a:visited {
-    color: ${themeVal('color.link')};
+    color: inherit;
   }
 
   a:hover {

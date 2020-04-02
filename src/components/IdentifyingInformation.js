@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-  updateAtbd
-} from '../actions/actions';
+import { updateAtbd } from '../actions/actions';
 
 import CitationForm from './CitationForm';
 import EditPage from './common/EditPage';
@@ -25,12 +23,10 @@ import {
 import FormLegend from '../styles/form/legend';
 import FormLabel from '../styles/form/label';
 import FormInput from '../styles/form/input';
-import {
-  FormHelper,
-  FormHelperMessage
-} from '../styles/form/helper';
+import { FormHelper, FormHelperMessage } from '../styles/form/helper';
 import Button from '../styles/button/button';
 import AddBtn from '../styles/button/add';
+import SaveFormButton from '../styles/button/save-form';
 
 export class IdentifyingInformation extends Component {
   constructor(props) {
@@ -67,10 +63,7 @@ export class IdentifyingInformation extends Component {
 
   async updateAtbdTitle(e) {
     e.preventDefault();
-    const {
-      updateAtbd: update,
-      atbd
-    } = this.props;
+    const { updateAtbd: update, atbd } = this.props;
     const { atbd_id } = atbd;
     const { title } = this.state;
     this.setState({ titleTouched: false });
@@ -87,35 +80,17 @@ export class IdentifyingInformation extends Component {
   }
 
   render() {
-    const {
-      atbd,
-      hasCitation,
-      t
-    } = this.props;
+    const { atbd, hasCitation, t } = this.props;
 
     if (atbd) {
-      const {
-        title: atbdTitle,
-        titleTouched,
-        showCitationForm
-      } = this.state;
-      const {
-        onTextFieldChange,
-        updateAtbdTitle
-      } = this;
+      const { title: atbdTitle, titleTouched, showCitationForm } = this.state;
+      const { onTextFieldChange, updateAtbdTitle } = this;
 
-      const {
-        title,
-        atbd_id
-      } = atbd;
+      const { title, atbd_id } = atbd;
 
       return (
         <Inpage>
-          <EditPage
-            title={title || ''}
-            id={atbd_id}
-            step={1}
-          >
+          <EditPage title={title || ''} id={atbd_id} step={1}>
             <h2>Identifying Information</h2>
 
             <Form>
@@ -144,20 +119,19 @@ export class IdentifyingInformation extends Component {
                       />
                       {titleTouched && atbdTitle === '' && (
                         <FormHelper>
-                          <FormHelperMessage>Please enter a title.</FormHelperMessage>
+                          <FormHelperMessage>
+                            Please enter a title.
+                          </FormHelperMessage>
                         </FormHelper>
                       )}
                     </FormGroupBody>
                   </FormGroup>
-                  <Button
+                  <SaveFormButton
                     onClick={updateAtbdTitle}
                     disabled={!titleTouched || atbdTitle === ''}
-                    variation="base-raised-light"
-                    size="large"
-                    type="submit"
                   >
                     Save
-                  </Button>
+                  </SaveFormButton>
                 </FormFieldsetBody>
               </FormFieldset>
             </Form>
@@ -167,29 +141,25 @@ export class IdentifyingInformation extends Component {
                 <FormLegend>Citation</FormLegend>
               </FormFieldsetHeader>
               <FormFieldsetBody>
-                <FormGroup>
-                  {showCitationForm ? <CitationForm /> : (
-                    <FormGroupBody>
-                      {hasCitation ? (
-                        <Button
-                          variation="base-raised-light"
-                          size="large"
-                          onClick={this.toggleCitationForm}
-                        >
-                          Update citation
-                        </Button>
-                      ) : (
-                        <AddBtn
-                          variation="base-raised-light"
-                          size="large"
-                          onClick={this.toggleCitationForm}
-                        >
-                          Add a citation
-                        </AddBtn>
-                      )}
-                    </FormGroupBody>
-                  )}
-                </FormGroup>
+                {showCitationForm ? (
+                  <CitationForm />
+                ) : hasCitation ? (
+                  <Button
+                    variation="base-raised-light"
+                    size="large"
+                    onClick={this.toggleCitationForm}
+                  >
+                    Update citation
+                  </Button>
+                ) : (
+                  <AddBtn
+                    variation="base-raised-light"
+                    size="large"
+                    onClick={this.toggleCitationForm}
+                  >
+                    Add a citation
+                  </AddBtn>
+                )}
               </FormFieldsetBody>
             </FormFieldset>
           </EditPage>

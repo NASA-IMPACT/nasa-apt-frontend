@@ -75,7 +75,8 @@ const StepDropMenuItem = styled(DropMenuItem)`
 const Stepper = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  line-height: 2rem;
+  line-height: 2.5rem;
+  align-items: center;
 
   > * {
     display: inline-flex;
