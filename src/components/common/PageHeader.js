@@ -16,7 +16,7 @@ const PageHead = styled.header`
 const PageHeadInner = styled(Constrainer)`
   display: flex;
   flex-flow: row nowrap;
-  align-items: flex-end;
+  align-items: center;
 `;
 
 const PageHeadline = styled.div`
@@ -26,12 +26,28 @@ const PageHeadline = styled.div`
 const PageTitle = styled.h1`
   font-size: 1.5rem;
   line-height: 1;
-  text-transform: uppercase;
   margin: 0;
+  font-weight: ${themeVal('type.heading.light')};
 
   a {
     color: inherit;
     display: block;
+    background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo.png');
+    background-repeat: no-repeat;
+    padding: 1.5rem 0 0.25rem 4.5rem;
+    background-size: 215px 50px;
+
+    &:hover {
+      background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_hover.png');
+    }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (min--moz-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 1.3 / 1), only screen and (min-resolution: 125dpi), only screen and (min-resolution: 1.3dppx) {
+      background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_2x.png');
+
+      &:hover {
+        background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_hover_2x.png');
+      }
+    }
   }
 `;
 
@@ -53,13 +69,18 @@ const GlobalMenu = styled.ul`
 
   a {
     position: relative;
-    font-weight: ${themeVal('type.base.bold')};
+    font-weight: ${themeVal('type.base.regular')};
+    text-transform: uppercase;
     color: inherit;
+
+    &.active {
+      font-weight: ${themeVal('type.base.bold')};
+    }
   }
 
   .active::before {
     position: absolute;
-    top: 100%;
+    bottom: -0.25rem;
     width: 2rem;
     height: 0.125rem;
     background: #FFFFFF;
@@ -74,7 +95,7 @@ class PageHeader extends React.PureComponent {
         <PageHeadInner>
           <PageHeadline>
             <PageTitle>
-              <Link to="/" title="Go to Homepage">NASA APT</Link>
+              <Link to="/" title="Go to Homepage">Algorithm Publication Tool</Link>
             </PageTitle>
           </PageHeadline>
           <PageNav>

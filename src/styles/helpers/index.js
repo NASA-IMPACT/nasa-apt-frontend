@@ -29,6 +29,11 @@ export const truncated = () => css`
   text-overflow: ellipsis;
 `;
 
+export const visuallyDisabled = () => css`
+  opacity: 0.48;
+  cursor: not-allowed;
+`;
+
 export const disabled = () => css`
   opacity: 0.48;
   pointer-events: none;

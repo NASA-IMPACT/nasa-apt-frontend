@@ -200,7 +200,10 @@ class ContactFormWrapper extends Component {
           onChange={this.onSelectChange}
           value={contact.id}
         />
-        <AddBtn onClick={this.onCreateClick} data-hook="dropdown:close">
+        <AddBtn
+          onClick={this.onCreateClick}
+          data-hook="dropdown:close"
+        >
           Create new contact
         </AddBtn>
       </ContactSelectDropdown>
@@ -215,9 +218,6 @@ class ContactFormWrapper extends Component {
         <FormFieldsetHeader>
           <FormLegend>{title}</FormLegend>
           <RemoveButton
-            variation="base-plain"
-            size="small"
-            hideText
             onClick={this.onRemoveClick}
           >
             Remove

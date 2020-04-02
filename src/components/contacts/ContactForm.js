@@ -13,6 +13,7 @@ import {
   transformErrors,
   validateEmail
 } from '../../schemas/utils';
+import { themeVal } from '../../styles/utils/general';
 
 import Select from '../common/Select';
 import Input, { InputFormGroup } from '../common/Input';
@@ -33,9 +34,9 @@ import FormLegend from '../../styles/form/legend';
 import FormLabel from '../../styles/form/label';
 import FormToolbar from '../../styles/form/toolbar';
 import InfoButton from '../common/InfoButton';
-import SubmitBtn from '../../styles/button/submit';
 import AddBtn from '../../styles/button/add';
 import RemoveButton from '../../styles/button/remove';
+import SaveFormButton from '../../styles/button/save-form';
 
 const validator = new jsonschema.Validator();
 
@@ -91,6 +92,11 @@ const SpanTwo = styled.div`
 
 const SpanThree = styled.div`
   grid-column-start: span 3;
+`;
+
+const MechanismAddBtn = styled(AddBtn)`
+  justify-self: flex-start;
+  margin-left: -${themeVal('layout.space')};
 `;
 
 export const InnerContactForm = (props) => {
@@ -245,9 +251,6 @@ export const InnerContactForm = (props) => {
           <FormFieldsetHeader>
             <FormLegend>Contact Mechanism #{i + 1}</FormLegend>
             <RemoveButton
-              variation="base-plain"
-              size="small"
-              hideText
               onClick={() => {
                 setValues({
                   ...values,
@@ -304,8 +307,8 @@ export const InnerContactForm = (props) => {
         </FormFieldset>
       ))}
 
-      <AddBtn
-        variation="base-plain"
+      <MechanismAddBtn
+        variation="primary-plain"
         onClick={() => setValues({
           ...values,
           [mechanisms]: values[mechanisms].concat([
@@ -318,7 +321,7 @@ export const InnerContactForm = (props) => {
         }
       >
         Add a contact mechanism
-      </AddBtn>
+      </MechanismAddBtn>
 
       <FormGroup>
         <FormGroupHeader>
@@ -349,14 +352,11 @@ export const InnerContactForm = (props) => {
         </FormGroupBody>
       </FormGroup>
 
-      <SubmitBtn
-        type="submit"
-        variation="base-raised-light"
-        size="large"
+      <SaveFormButton
         disabled={!submitEnabled}
       >
         {submitValue}
-      </SubmitBtn>
+      </SaveFormButton>
     </Form>
   );
 };

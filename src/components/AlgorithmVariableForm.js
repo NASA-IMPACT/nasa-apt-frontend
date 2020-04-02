@@ -4,10 +4,10 @@ import { withFormik } from 'formik';
 import { Value } from 'slate';
 
 import { InputFormGroup } from './common/Input';
-import Button from '../styles/button/button';
 import Form from '../styles/form/form';
 import { getValidOrBlankDocument } from './editorBlankDocument';
 import InputEditor from './common/InputEditor';
+import SaveFormButton from '../styles/button/save-form';
 
 const name = 'name';
 const long_name = 'long_name';
@@ -81,15 +81,10 @@ export const InnerAlgorithmVariableForm = (props) => {
           touched={!!touched[unit]}
           info={t.unit}
         />
-        <Button
-          type="submit"
-          variation="base-raised-light"
-          size="large"
-          disabled={!submitEnabled}
-        >
-          Add Algorithm Variable
-        </Button>
       </InputFormGroup>
+      <SaveFormButton disabled={!submitEnabled}>
+        Save new variable
+      </SaveFormButton>
     </Form>
   );
 };

@@ -1,6 +1,8 @@
 import React from 'react';
-import ReactSelect from 'react-select';
 import PropTypes from 'prop-types';
+import styled from 'styled-components/macro';
+import ReactSelect from 'react-select';
+import { rgba } from 'polished';
 
 import {
   FormGroup,
@@ -15,6 +17,57 @@ import {
 } from '../../styles/form/helper';
 import InfoButton from './InfoButton';
 import theme from '../../styles/theme/theme';
+import { themeVal, stylizeFunction } from '../../styles/utils/general';
+import collecticon from '../../styles/collecticons';
+
+const _rgba = stylizeFunction(rgba);
+
+const ReactSelectStyled = styled(ReactSelect)`
+  .react-select__control {
+    height: 3rem;
+  }
+
+  .react-select__option {
+    display: flex;
+  }
+
+  .react-select__option--is-selected {
+    color: inherit;
+    background: none;
+
+    ::after {
+      ${collecticon('tick--small')};
+      margin-left: auto;
+    }
+  }
+
+  .react-select__option--is-focused {
+    background-color: ${_rgba(themeVal('color.link'), 0.12)};
+  }
+`;
+
+const reactSelectContextStyles = (props) => {
+  const { error, touched } = props;
+
+  return {
+    control: (provided, state) => {
+      if (!!error && touched) {
+        return {
+          ...provided,
+          borderColor: theme.main.color.danger,
+          borderWidth: '2px'
+        };
+      }
+      if (state.isFocused) {
+        return {
+          ...provided,
+          borderColor: theme.main.color.primary
+        };
+      }
+      return provided;
+    }
+  };
+};
 
 const Select = (props) => {
   const {
@@ -49,16 +102,9 @@ const Select = (props) => {
         )}
       </FormGroupHeader>
       <FormGroupBody>
-        <ReactSelect
-          styles={{
-            control: provided => !!error && touched
-              ? {
-                ...provided,
-                borderColor: theme.main.color.danger,
-                borderWidth: '2px'
-              }
-              : provided
-          }}
+        <ReactSelectStyled
+          classNamePrefix="react-select"
+          styles={reactSelectContextStyles({ error, touched })}
           options={options}
           name={name}
           value={activeValue}

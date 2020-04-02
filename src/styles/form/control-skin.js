@@ -19,14 +19,14 @@ const lineHeightMatrix = {
 
 const heightMatrix = {
   small: '1.5rem',
-  medium: '2rem',
-  large: '2.5rem'
+  medium: '2.5rem',
+  large: '3rem'
 };
 
 const paddingMatrix = {
   small: '0.125rem 0.5rem',
-  medium: '0.25rem 0.5rem',
-  large: '0.5rem 0.75rem'
+  medium: '0.5rem 0.5rem',
+  large: '0.75rem 0.75rem'
 };
 
 const controlSkin = () => css`

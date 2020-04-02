@@ -99,7 +99,7 @@ const App = () => (
                 />
                 <Route exact path="/help" component={Help} />
                 <Route exact path="/about" component={About} />
-                <Route exact path="/sandbox" component={Sandbox} />
+                <Route path="/sandbox" component={Sandbox} />
                 <Route path="*" component={UhOh} />
               </Switch>
             </PageBody>

@@ -7,7 +7,7 @@ import isEqual from 'lodash.isequal';
 import { validator } from '../../utils/references';
 
 // General components
-import Button from '../../styles/button/button';
+import SaveFormButton from '../../styles/button/save-form';
 
 // Form components
 import { FormFieldsetBody } from '../../styles/form/fieldset';
@@ -136,16 +136,13 @@ class InnerForm extends React.Component {
           ].map(this.renderFormGroup)}
         </FieldsLayout>
         {submitButton && (
-          <Button
+          <SaveFormButton
             title={submitButton}
-            type="submit"
-            variation="base-raised-light"
-            size="large"
             onClick={handleSubmit}
             disabled={!isValid}
           >
             {submitButton}
-          </Button>
+          </SaveFormButton>
         )}
       </FormFieldsetBody>
     );
