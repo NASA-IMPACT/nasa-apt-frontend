@@ -3,8 +3,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure } from 'enzyme';
 import test from 'tape';
 import sinon from 'sinon';
-import SubmitBtn from '../src/styles/button/submit';
 import { InnerContactForm } from '../src/components/contacts/ContactForm';
+import SaveFormButton from '../src/styles/button/save-form';
 
 const proxyquire = require('proxyquire').noCallThru();
 
@@ -28,12 +28,12 @@ test('InnerContactForm submit disabled', (t) => {
     contact: {}
   };
   let wrapper = shallow((<InnerContactForm {...props} />));
-  let submit = wrapper.find(SubmitBtn);
+  let submit = wrapper.find(SaveFormButton);
   t.ok(submit.props().disabled, 'Submit disabled when there are errors');
 
   props.errors = {};
   wrapper = shallow((<InnerContactForm {...props} />));
-  submit = wrapper.find(SubmitBtn);
+  submit = wrapper.find(SaveFormButton);
   t.notOk(submit.props().disabled, 'Submit enabled when there are no errors');
   t.end();
 });
