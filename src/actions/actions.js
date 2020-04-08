@@ -228,7 +228,7 @@ export function fetchAtbdVersion(versionObject) {
   return {
     [RSAA]: {
       endpoint: `${BASE_URL}/atbd_versions?atbd_id=eq.${atbd_id}&`
-        + `atbd_version=eq.${atbd_version}&select=*,atbd(*)`,
+        + `atbd_version=eq.${atbd_version}&select=*,atbd:atbds(*)`,
       method: 'GET',
       headers: returnObjectHeaders,
       types: [
@@ -245,7 +245,7 @@ export function fetchEntireAtbdVersion(versionObject) {
   return {
     [RSAA]: {
       endpoint: `${BASE_URL}/atbd_versions?atbd_id=eq.${atbd_id}&`
-        + `atbd_version=eq.${atbd_version}&select=*,atbd(*),`
+        + `atbd_version=eq.${atbd_version}&select=*,atbd:atbds(*),`
         + `algorithm_input_variables(*),algorithm_output_variables(*),`
         + `algorithm_implementations(*),publication_references(*),`
         + `data_access_input_data(*),data_access_output_data(*),`
