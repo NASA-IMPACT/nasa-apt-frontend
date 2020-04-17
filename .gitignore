@@ -10,6 +10,8 @@
 
 # production
 /build
+# Generated files
+/public/docs
 
 # misc
 .env

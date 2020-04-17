@@ -100,8 +100,9 @@ class PageHeader extends React.PureComponent {
           </PageHeadline>
           <PageNav>
             <GlobalMenu>
-              <li><NavLink exact to="/atbds" title="View page"><span>Documents</span></NavLink></li>
-              <li><NavLink exact to="/about" title="View page"><span>About</span></NavLink></li>
+              <li><NavLink exact to="/atbds" title="View ATBD list page"><span>Documents</span></NavLink></li>
+              <li><NavLink exact to="/about" title="View About APT page"><span>About</span></NavLink></li>
+              <li><NavLink to="/help" title="View Help page"><span>Help</span></NavLink></li>
             </GlobalMenu>
           </PageNav>
         </PageHeadInner>

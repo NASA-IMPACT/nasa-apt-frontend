@@ -106,6 +106,7 @@ const App = () => (
                   component={UhOh}
                 />
                 <Route exact path="/help" component={Help} />
+                <Route path="/help/:page_id" component={Help} />
                 <Route exact path="/about" component={About} />
                 <Route path="/sandbox" component={Sandbox} />
                 <Route path="*" component={UhOh} />
