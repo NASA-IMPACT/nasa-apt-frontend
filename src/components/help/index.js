@@ -10,7 +10,7 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageBody,
-  InpageBodyInner,
+  InpageBodyInner
 } from '../common/Inpage';
 import Prose from '../../styles/type/prose';
 import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
