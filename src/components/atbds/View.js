@@ -46,6 +46,7 @@ import { themeVal } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
 import StatusPill from '../common/StatusPill';
 import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
+import CitationModal from './CitationModal';
 
 
 const OptionsTrigger = styled(Button)`
@@ -63,6 +64,12 @@ const DocumentActionDelete = styled(DropMenuItem)`
 const DocumentActionDuplicate = styled(DropMenuItem)`
   &::before {
     ${collecticon('pages')}
+  }
+`;
+
+const DocumentActionCitation = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('quote-left')}
   }
 `;
 
@@ -189,6 +196,13 @@ class AtbdView extends Component {
 
     this.renderNode = this.renderNode.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
+
+    this.state = {
+      citationModalAtbd: {
+        id: null,
+        version: null
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -252,6 +266,30 @@ class AtbdView extends Component {
     if (!res.error) {
       visitLink(`/atbds/${res.payload.new_id}`);
     }
+  }
+
+  onCitationClick(atbd, e) {
+    e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
+    this.setState({
+      citationModalAtbd: {
+        id: atbd.atbd_id,
+        version: atbd_version
+      }
+    });
+  }
+
+  renderCitationModal() {
+    const { id, version } = this.state.citationModalAtbd;
+    return (
+      <CitationModal
+        id={id}
+        version={version}
+        onClose={() => this.setState({
+          citationModalAtbd: { id: null, version: null }
+        })}
+      />
+    );
   }
 
   /* eslint-disable-next-line */
@@ -875,6 +913,15 @@ class AtbdView extends Component {
                             Duplicate
                           </DocumentActionDuplicate>
                         </li>
+                        <li>
+                          <DocumentActionCitation
+                            title="Get document citation"
+                            data-hook="dropdown:close"
+                            onClick={this.onCitationClick.bind(this, atbd)}
+                          >
+                            Citation
+                          </DocumentActionCitation>
+                        </li>
                       </DropMenu>
                       <DropMenu role="menu" iconified>
                         <li>
@@ -918,6 +965,7 @@ class AtbdView extends Component {
           </Sticky>
           <InpageBody>
             <InpageBodyInner>
+              {this.renderCitationModal()}
               <AtbdContent>
                 <AtbdMeta>
                   <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
