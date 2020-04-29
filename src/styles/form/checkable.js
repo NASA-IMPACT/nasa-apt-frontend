@@ -88,7 +88,6 @@ const formCheckableWrapper = css`
 
 const FormCheckableText = styled.span`
   line-height: 1.5;
-  grid-row:
 `;
 
 const FormCheckableControl = styled.span`
@@ -171,6 +170,7 @@ export const FormCheckable = styled(FormCheckableElement)`
 export const FormCheckableGroup = styled.div`
   display: flex;
   flex-flow: row wrap;
+  align-items: center;
 
   > * {
     margin: 0.25rem 1rem 0.25rem 0;

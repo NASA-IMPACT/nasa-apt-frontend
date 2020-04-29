@@ -8,6 +8,7 @@
   "dependencies": {
     "babel-plugin-macros": "^2.5.1",
     "citation-js": "^0.4.10",
+    "clipboard": "^2.0.6",
     "connected-react-router": "^6.3.2",
     "formik": "^1.5.1",
     "history": "^4.9.0",

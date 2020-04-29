@@ -52,6 +52,7 @@ import StatusPill from '../common/StatusPill';
 import SearchControl from '../common/SearchControl';
 import QsState from '../../utils/qs-state';
 import TextHighlight from '../common/TextHighlight';
+import CitationModal from './CitationModal';
 
 const atbdStatusOptions = [
   {
@@ -63,12 +64,6 @@ const atbdStatusOptions = [
     label: 'Published'
   }
 ];
-
-const CreateButton = styled(Button)`
-  &::before {
-    ${collecticon('plus')};
-  }
-`;
 
 const ResultsHeading = styled.h2`
   margin-bottom: 2rem;
@@ -124,12 +119,6 @@ const DocTableBodyTdActions = styled.td`
   }
 `;
 
-const DocTableActionsTrigger = styled(Button)`
-  &::before {
-    ${collecticon('ellipsis-vertical')}
-  }
-`;
-
 const DocTableActionView = styled(DropMenuItem)`
   &::before {
     ${collecticon('eye')}
@@ -154,15 +143,15 @@ const DocTableActionDuplicate = styled(DropMenuItem)`
   }
 `;
 
-const DocTableActionDelete = styled(DropMenuItem)`
+const DocTableActionCitation = styled(DropMenuItem)`
   &::before {
-    ${collecticon('trash-bin')}
+    ${collecticon('quote-left')}
   }
 `;
 
-const FilterTrigger = styled(Button)`
-  &::after {
-    ${collecticon('chevron-down--small')}
+const DocTableActionDelete = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('trash-bin')}
   }
 `;
 
@@ -203,7 +192,11 @@ class AtbdList extends React.Component {
     this.state = {
       ...state,
       // Value currently on the search field.
-      searchCurrent: state.searchValue
+      searchCurrent: state.searchValue,
+      citationModalAtbd: {
+        id: null,
+        version: null
+      }
     };
   }
 
@@ -212,6 +205,17 @@ class AtbdList extends React.Component {
     const { atbd_version } = atbd.atbd_versions[0];
     /* eslint-disable-next-line react/destructuring-assignment */
     this.props.updateAtbdVersion(atbd.atbd_id, atbd_version, { status: 'Published' });
+  }
+
+  onCitationClick(atbd, e) {
+    e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
+    this.setState({
+      citationModalAtbd: {
+        id: atbd.atbd_id,
+        version: atbd_version
+      }
+    });
   }
 
   async onDeleteClick({ title, atbd_id }, e) {
@@ -320,14 +324,15 @@ class AtbdList extends React.Component {
             alignment="middle"
             direction="left"
             triggerElement={(
-              <DocTableActionsTrigger
+              <Button
                 variation="primary-plain"
+                useIcon="ellipsis-vertical"
                 size="small"
                 title="View Document options"
                 hideText
               >
                 Actions
-              </DocTableActionsTrigger>
+              </Button>
             )}
           >
             <DropTitle>Document actions</DropTitle>
@@ -373,6 +378,15 @@ class AtbdList extends React.Component {
                   </DocTableActionDuplicate>
                 </li>
               )}
+              <li>
+                <DocTableActionCitation
+                  title="Get document citation"
+                  data-hook="dropdown:close"
+                  onClick={this.onCitationClick.bind(this, atbd)}
+                >
+                  Citation
+                </DocTableActionCitation>
+              </li>
             </DropMenu>
             <DropMenu role="menu" iconified>
               <li>
@@ -388,6 +402,19 @@ class AtbdList extends React.Component {
           </Dropdown>
         </DocTableBodyTdActions>
       </tr>
+    );
+  }
+
+  renderCitationModal() {
+    const { id, version } = this.state.citationModalAtbd;
+    return (
+      <CitationModal
+        id={id}
+        version={version}
+        onClose={() => this.setState({
+          citationModalAtbd: { id: null, version: null }
+        })}
+      />
     );
   }
 
@@ -449,13 +476,14 @@ class AtbdList extends React.Component {
                       <Dropdown
                         alignment="left"
                         triggerElement={(
-                          <FilterTrigger
+                          <Button
                             variation="achromic-plain"
+                            useIcon="chevron-down--small"
                             title="Toggle menu options"
                           >
                             {activeFilter.label || 'All'}
-                          </FilterTrigger>
-)}
+                          </Button>
+                        )}
                       >
                         <DropTitle>Select status</DropTitle>
                         <DropMenu role="menu" selectable>
@@ -499,19 +527,21 @@ class AtbdList extends React.Component {
                       value={searchCurrent}
                       lastSearch={searchValue}
                     />
-                    <CreateButton
+                    <Button
                       variation="achromic-plain"
+                      useIcon="plus"
                       title="Create new document"
                       onClick={create}
                     >
                       Create
-                    </CreateButton>
+                    </Button>
                   </InpageToolbar>
                 </InpageHeaderInner>
               </InpageHeader>
             )}
           </Sticky>
           <InpageBody>
+            {this.renderCitationModal()}
             <InpageBodyInner>{this.renderPageContent()}</InpageBodyInner>
           </InpageBody>
         </StickyContainer>

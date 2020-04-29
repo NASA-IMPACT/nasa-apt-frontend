@@ -8,6 +8,10 @@ import {
   FormGroupHeader,
   FormGroup
 } from '../styles/form/group';
+import {
+  FormHelper,
+  FormHelperMessage
+} from '../styles/form/helper';
 import FormLabel from '../styles/form/label';
 import FormInput from '../styles/form/input';
 import InfoButton from './common/InfoButton';
@@ -204,6 +208,9 @@ export class CitationForm extends Component {
               value={release_date}
               onChange={e => onTextFieldChange(e, 'release_date')}
             />
+            <FormHelper>
+              <FormHelperMessage>Use YYYY-MM-DD format</FormHelperMessage>
+            </FormHelper>
           </FormGroupBody>
         </FormGroup>
         <FormGroup>
