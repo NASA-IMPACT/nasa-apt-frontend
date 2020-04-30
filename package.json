@@ -1,6 +1,12 @@
 {
-  "name": "app",
-  "version": "0.1.0",
+  "name": "apt-frontend",
+  "description": "Interface for the Algorithm Publication Tool",
+  "version": "0.2.0",
+  "author": {
+    "name": "Development Seed",
+    "url": "https://developmentseed.org"
+  },
+  "license": "MIT",
   "private": true,
   "resolutions": {
     "react-router": "4.3.1"
@@ -8,6 +14,7 @@
   "dependencies": {
     "babel-plugin-macros": "^2.5.1",
     "citation-js": "^0.4.10",
+    "clipboard": "^2.0.6",
     "connected-react-router": "^6.3.2",
     "formik": "^1.5.1",
     "history": "^4.9.0",
@@ -20,12 +27,14 @@
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
     "lodash.set": "^4.3.2",
+    "markdown-it": "^10.0.0",
     "object-path": "^0.11.4",
     "polished": "^2.3.3",
     "prop-types": "^15.7.2",
     "qs": "^6.8.0",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
+    "react-ga": "^2.7.0",
     "react-immutable-proptypes": "^2.1.0",
     "react-katex": "^2.0.2",
     "react-popper": "^1.3.3",
@@ -49,19 +58,21 @@
     "slate-html-serializer": "0.7.0",
     "slate-react": "^0.21.16",
     "slate-soft-break": "^0.9.0",
-    "styled-components": "^4.1.3",
+    "styled-components": "^5.0.1",
     "uuid": "^3.3.2",
     "yup": "^0.27.0"
   },
   "scripts": {
-    "start": "yarn watch_collecticons & yarn watch_static & react-scripts start",
-    "build": "yarn collecticons && yarn process-static && react-scripts build",
+    "start": "yarn watch_collecticons & yarn watch-static & yarn watch-help & react-scripts start",
+    "build": "yarn collecticons && yarn process-static && yarn process-help && react-scripts build",
     "test": "NODE_ENV=test ./node_modules/.bin/tape ./test/test.js",
     "eject": "react-scripts eject",
     "collecticons": "collecticons compile ./src/assets/icons/collecticons --no-preview --catalog-dest ./src/styles/collecticons --experimental-font-on-catalog --experimental-disable-styles",
     "watch_collecticons": "watch 'yarn collecticons' src/assets/icons/**",
     "process-static": "node ./process-static.js",
-    "watch_static": "watch 'yarn process-static' static",
+    "watch-static": "watch 'yarn process-static' static",
+    "process-help": "node ./process-help.js",
+    "watch-help": "watch 'yarn process-help' help-documentation",
     "lint": "eslint 'src/**/*.js'"
   },
   "eslintConfig": {
@@ -84,6 +95,7 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
+    "fs-extra": "^9.0.0",
     "js-yaml": "^3.13.1",
     "proxyquire": "^2.1.0",
     "sinon": "^7.2.4",

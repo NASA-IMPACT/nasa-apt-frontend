@@ -5,18 +5,20 @@ import { connect } from 'react-redux';
 import Form from '../styles/form/form';
 import {
   FormGroupBody,
-  FormGroupHeader
+  FormGroupHeader,
+  FormGroup
 } from '../styles/form/group';
+import {
+  FormHelper,
+  FormHelperMessage
+} from '../styles/form/helper';
 import FormLabel from '../styles/form/label';
 import FormInput from '../styles/form/input';
-import Button from '../styles/button/button';
 import InfoButton from './common/InfoButton';
 import FormToolbar from '../styles/form/toolbar';
+import SaveFormButton from '../styles/button/save-form';
 
-import {
-  createCitation,
-  updateCitation
-} from '../actions/actions';
+import { createCitation, updateCitation } from '../actions/actions';
 
 export class CitationForm extends Component {
   constructor(props) {
@@ -77,7 +79,8 @@ export class CitationForm extends Component {
       && citation.atbd_version === atbd_version
       && citation.atbd_id === atbd_id;
 
-    const method = hasExisting ? update.bind(null, citation.citation_id)
+    const method = hasExisting
+      ? update.bind(null, citation.citation_id)
       : create;
 
     const document = { ...this.state };
@@ -111,207 +114,218 @@ export class CitationForm extends Component {
 
     const { t } = this.props;
 
-    const {
-      onTextFieldChange,
-      saveCitation
-    } = this;
+    const { onTextFieldChange, saveCitation } = this;
 
     return (
       <Form>
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-creators">Creators</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_creators} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-creators"
-            placeholder="Enter one or multiple citation creator(s)"
-            value={creators}
-            onChange={e => onTextFieldChange(e, 'creators')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-editors">Editors</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_editors} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-editors"
-            placeholder="Enter one or multiple citation editor(s)"
-            value={editors}
-            onChange={e => onTextFieldChange(e, 'editors')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-title">Title</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_title} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-title"
-            placeholder="Enter the citation title"
-            value={title}
-            onChange={e => onTextFieldChange(e, 'title')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-series">Series Name</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_series} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-series"
-            placeholder="Enter the citation series name"
-            value={series_name}
-            onChange={e => onTextFieldChange(e, 'series_name')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-release-date">Release Date</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_release_date} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-release-date"
-            placeholder="Enter the citation release date"
-            value={release_date}
-            onChange={e => onTextFieldChange(e, 'release_date')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-release-place">Release Place</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_release_place} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-release-place"
-            placeholder="Enter the citation release place"
-            value={release_place}
-            onChange={e => onTextFieldChange(e, 'release_place')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-publisher">Publisher</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_publisher} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-publisher"
-            placeholder="Enter the citation publisher"
-            value={publisher}
-            onChange={e => onTextFieldChange(e, 'publisher')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-version">Version</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_version} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-version"
-            placeholder="Enter the citation version"
-            value={version}
-            onChange={e => onTextFieldChange(e, 'version')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-issue">Issue</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_issue} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-issue"
-            placeholder="Enter the citation issue"
-            value={issue}
-            onChange={e => onTextFieldChange(e, 'issue')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-details">Additional Details</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_additional_details} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-details"
-            placeholder="Enter any additional citation details"
-            value={additional_details}
-            onChange={e => onTextFieldChange(e, 'additional_details')}
-          />
-        </FormGroupBody>
-
-        <FormGroupHeader>
-          <FormLabel htmlFor="atbd-citation-url">Online Resource</FormLabel>
-          <FormToolbar>
-            <InfoButton text={t.citation_online_resource} />
-          </FormToolbar>
-        </FormGroupHeader>
-        <FormGroupBody>
-          <FormInput
-            type="text"
-            size="large"
-            id="atbd-citation-url"
-            placeholder="Enter the citation URL"
-            value={online_resource}
-            onChange={e => onTextFieldChange(e, 'online_resource')}
-          />
-          <Button
-            onClick={saveCitation}
-            variation="base-raised-light"
-            size="large"
-            type="submit"
-          >
-            Save
-          </Button>
-        </FormGroupBody>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-creators">Creators</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_creators} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-creators"
+              placeholder="Enter one or multiple citation creator(s)"
+              value={creators}
+              onChange={e => onTextFieldChange(e, 'creators')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-editors">Editors</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_editors} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-editors"
+              placeholder="Enter one or multiple citation editor(s)"
+              value={editors}
+              onChange={e => onTextFieldChange(e, 'editors')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-title">Title</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_title} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-title"
+              placeholder="Enter the citation title"
+              value={title}
+              onChange={e => onTextFieldChange(e, 'title')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-series">Series Name</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_series} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-series"
+              placeholder="Enter the citation series name"
+              value={series_name}
+              onChange={e => onTextFieldChange(e, 'series_name')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-release-date">
+              Release Date
+            </FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_release_date} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-release-date"
+              placeholder="Enter the citation release date"
+              value={release_date}
+              onChange={e => onTextFieldChange(e, 'release_date')}
+            />
+            <FormHelper>
+              <FormHelperMessage>Use YYYY-MM-DD format</FormHelperMessage>
+            </FormHelper>
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-release-place">
+              Release Place
+            </FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_release_place} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-release-place"
+              placeholder="Enter the citation release place"
+              value={release_place}
+              onChange={e => onTextFieldChange(e, 'release_place')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-publisher">Publisher</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_publisher} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-publisher"
+              placeholder="Enter the citation publisher"
+              value={publisher}
+              onChange={e => onTextFieldChange(e, 'publisher')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-version">Version</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_version} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-version"
+              placeholder="Enter the citation version"
+              value={version}
+              onChange={e => onTextFieldChange(e, 'version')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-issue">Issue</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_issue} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-issue"
+              placeholder="Enter the citation issue"
+              value={issue}
+              onChange={e => onTextFieldChange(e, 'issue')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-details">
+              Additional Details
+            </FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_additional_details} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-details"
+              placeholder="Enter any additional citation details"
+              value={additional_details}
+              onChange={e => onTextFieldChange(e, 'additional_details')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupHeader>
+            <FormLabel htmlFor="atbd-citation-url">Online Resource</FormLabel>
+            <FormToolbar>
+              <InfoButton text={t.citation_online_resource} />
+            </FormToolbar>
+          </FormGroupHeader>
+          <FormGroupBody>
+            <FormInput
+              type="text"
+              size="large"
+              id="atbd-citation-url"
+              placeholder="Enter the citation URL"
+              value={online_resource}
+              onChange={e => onTextFieldChange(e, 'online_resource')}
+            />
+          </FormGroupBody>
+        </FormGroup>
+        <SaveFormButton onClick={saveCitation}>Save</SaveFormButton>
       </Form>
     );
   }

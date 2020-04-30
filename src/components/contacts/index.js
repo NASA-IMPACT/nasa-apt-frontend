@@ -21,6 +21,7 @@ import { confirmRemoveContact } from '../common/ConfirmationPrompt';
 
 const initStateContact = (atbd_id, arr) => arr.map(v => ({ ...v, __action: 'editing', atbd_id }));
 
+
 class Contacts extends React.Component {
   constructor(props) {
     super(props);
@@ -291,7 +292,7 @@ class Contacts extends React.Component {
             />
           ))}
 
-          <AddBtn variation="base-plain" onClick={this.addContact}>
+          <AddBtn glspLeft={-2} onClick={this.addContact}>
             Add a contact
           </AddBtn>
         </EditPage>

@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -5,7 +7,12 @@ import { Link } from 'react-router-dom';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { push } from 'connected-react-router';
-import { createAtbd, deleteAtbd } from '../../actions/actions';
+import {
+  createAtbd,
+  deleteAtbd,
+  updateAtbdVersion,
+  copyAtbd
+} from '../../actions/actions';
 import {
   atbdsedit,
   drafts,
@@ -40,29 +47,23 @@ import Dropdown, {
 
 import Table from '../../styles/table';
 
-import PreviewButton from './PreviewButton';
 import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import StatusPill from '../common/StatusPill';
 import SearchControl from '../common/SearchControl';
 import QsState from '../../utils/qs-state';
 import TextHighlight from '../common/TextHighlight';
+import CitationModal from './CitationModal';
 
 const atbdStatusOptions = [
   {
-    id: 'draft',
+    id: 'Draft',
     label: 'Draft'
   },
   {
-    id: 'published',
+    id: 'Published',
     label: 'Published'
   }
 ];
-
-const CreateButton = styled(Button)`
-  &::before {
-    ${collecticon('plus')};
-  }
-`;
 
 const ResultsHeading = styled.h2`
   margin-bottom: 2rem;
@@ -118,13 +119,7 @@ const DocTableBodyTdActions = styled.td`
   }
 `;
 
-const DocTableActionsTrigger = styled(Button)`
-  &::before {
-    ${collecticon('ellipsis-vertical')}
-  }
-`;
-
-const DocTableActionPreview = styled(DropMenuItem)`
+const DocTableActionView = styled(DropMenuItem)`
   &::before {
     ${collecticon('eye')}
   }
@@ -142,15 +137,21 @@ const DocTableActionPublish = styled(DropMenuItem)`
   }
 `;
 
-const DocTableActionDelete = styled(DropMenuItem)`
+const DocTableActionDuplicate = styled(DropMenuItem)`
   &::before {
-    ${collecticon('trash-bin')}
+    ${collecticon('pages')}
   }
 `;
 
-const FilterTrigger = styled(Button)`
-  &::after {
-    ${collecticon('chevron-down--small')}
+const DocTableActionCitation = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('quote-left')}
+  }
+`;
+
+const DocTableActionDelete = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('trash-bin')}
   }
 `;
 
@@ -191,23 +192,45 @@ class AtbdList extends React.Component {
     this.state = {
       ...state,
       // Value currently on the search field.
-      searchCurrent: state.searchValue
+      searchCurrent: state.searchValue,
+      citationModalAtbd: {
+        id: null,
+        version: null
+      }
     };
   }
 
-  onEditClick(atbd, e) {
+  onUpdateClick(atbd, e) {
     e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
     /* eslint-disable-next-line react/destructuring-assignment */
-    this.props.push(
-      `/${atbdsedit}/${atbd.atbd_id}/${drafts}/1/${identifying_information}`
-    );
+    this.props.updateAtbdVersion(atbd.atbd_id, atbd_version, { status: 'Published' });
+  }
+
+  onCitationClick(atbd, e) {
+    e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
+    this.setState({
+      citationModalAtbd: {
+        id: atbd.atbd_id,
+        version: atbd_version
+      }
+    });
   }
 
   async onDeleteClick({ title, atbd_id }, e) {
     e.preventDefault();
     const res = await confirmDeleteDoc(title);
-    /* eslint-disable-next-line react/destructuring-assignment */
     if (res.result) this.props.deleteAtbd(atbd_id);
+  }
+
+  async onDuplicateClick({ atbd_id }, e) {
+    e.preventDefault();
+    const { copyAtbdAction } = this.props;
+    const res = await copyAtbdAction(atbd_id);
+    if (!res.error) {
+      this.props.push(`/atbds/${res.payload.new_id}`);
+    }
   }
 
   onSearchChange(searchCurrent) {
@@ -217,23 +240,24 @@ class AtbdList extends React.Component {
   onSearch(searchValue) {
     this.setState({ searchValue }, () => {
       const qString = this.qsState.getQs(this.state);
-      /* eslint-disable-next-line react/destructuring-assignment */
       this.props.push({ search: qString });
     });
   }
 
   setFilterValue(what, value, e) {
     e.preventDefault();
-    this.setState(state => ({
-      filter: {
-        ...state.filter,
-        [what]: value
+    this.setState(
+      state => ({
+        filter: {
+          ...state.filter,
+          [what]: value
+        }
+      }),
+      () => {
+        const qString = this.qsState.getQs(this.state);
+        this.props.push({ search: qString });
       }
-    }), () => {
-      const qString = this.qsState.getQs(this.state);
-      /* eslint-disable-next-line react/destructuring-assignment */
-      this.props.push({ search: qString });
-    });
+    );
   }
 
   renderAtbdTable() {
@@ -281,55 +305,88 @@ class AtbdList extends React.Component {
         <DocTableBodyThTitle scope="row">
           <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
             <strong>
-              <TextHighlight
-                value={searchValue}
-                disabled={!title}
-              >
+              <TextHighlight value={searchValue} disabled={!title}>
                 {title || 'Untitled Document'}
               </TextHighlight>
             </strong>
           </Link>
         </DocTableBodyThTitle>
         <DocTableBodyTdAuthors title={contact}>
-          <span>{contact}</span>
+          <TextHighlight
+            value={searchValue}
+            disabled={!contact}
+          >
+            {contact}
+          </TextHighlight>
         </DocTableBodyTdAuthors>
         <DocTableBodyTdActions>
-          <PreviewButton atbd_id={atbd_id} atbd_version={1} />
           <Dropdown
             alignment="middle"
             direction="left"
             triggerElement={(
-              <DocTableActionsTrigger
+              <Button
                 variation="primary-plain"
+                useIcon="ellipsis-vertical"
                 size="small"
                 title="View Document options"
                 hideText
               >
                 Actions
-              </DocTableActionsTrigger>
+              </Button>
             )}
           >
             <DropTitle>Document actions</DropTitle>
             <DropMenu role="menu" iconified>
               <li>
-                <DocTableActionPreview title="Preview document">
-                  Preview
-                </DocTableActionPreview>
-              </li>
-              <li>
-                <DocTableActionPublish title="Publish document">
-                  Publish
-                </DocTableActionPublish>
-              </li>
-              <li>
-                <DocTableActionEdit
-                  title="Edit document"
-                  onClick={this.onEditClick.bind(this, atbd)}
+                <DocTableActionView
+                  as={Link}
+                  title="View document"
+                  to={`/atbds/${atbd_id}`}
                 >
-                  Edit
-                </DocTableActionEdit>
+                  View
+                </DocTableActionView>
               </li>
-
+              {status === 'Draft' ? (
+                <React.Fragment>
+                  <li>
+                    <DocTableActionEdit
+                      title="Edit document"
+                      as={Link}
+                      to={`/${atbdsedit}/${atbd_id}/${drafts}/1/${identifying_information}`}
+                    >
+                      Edit
+                    </DocTableActionEdit>
+                  </li>
+                  <li>
+                    <DocTableActionPublish
+                      title="Publish document"
+                      data-hook="dropdown:close"
+                      onClick={this.onUpdateClick.bind(this, atbd)}
+                    >
+                      Publish
+                    </DocTableActionPublish>
+                  </li>
+                </React.Fragment>
+              ) : (
+                <li>
+                  <DocTableActionDuplicate
+                    title="Duplicate document"
+                    data-hook="dropdown:close"
+                    onClick={this.onDuplicateClick.bind(this, atbd)}
+                  >
+                    Duplicate
+                  </DocTableActionDuplicate>
+                </li>
+              )}
+              <li>
+                <DocTableActionCitation
+                  title="Get document citation"
+                  data-hook="dropdown:close"
+                  onClick={this.onCitationClick.bind(this, atbd)}
+                >
+                  Citation
+                </DocTableActionCitation>
+              </li>
             </DropMenu>
             <DropMenu role="menu" iconified>
               <li>
@@ -345,6 +402,19 @@ class AtbdList extends React.Component {
           </Dropdown>
         </DocTableBodyTdActions>
       </tr>
+    );
+  }
+
+  renderCitationModal() {
+    const { id, version } = this.state.citationModalAtbd;
+    return (
+      <CitationModal
+        id={id}
+        version={version}
+        onClose={() => this.setState({
+          citationModalAtbd: { id: null, version: null }
+        })}
+      />
     );
   }
 
@@ -365,7 +435,12 @@ class AtbdList extends React.Component {
 
     return (
       <React.Fragment>
-        {searchValue && <ResultsHeading>Showing {atbds.length} result{atbds.length > 1 ? 's' : ''} for <em>{searchValue}</em></ResultsHeading>}
+        {searchValue && (
+          <ResultsHeading>
+            Showing {atbds.length} result{atbds.length > 1 ? 's' : ''} for{' '}
+            <em>{searchValue}</em>
+          </ResultsHeading>
+        )}
         {this.renderAtbdTable()}
       </React.Fragment>
     );
@@ -373,7 +448,11 @@ class AtbdList extends React.Component {
 
   render() {
     const { createAtbd: create } = this.props;
-    const { filter: { status: filterStatus }, searchCurrent, searchValue } = this.state;
+    const {
+      filter: { status: filterStatus },
+      searchCurrent,
+      searchValue
+    } = this.state;
     const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
 
     return (
@@ -397,12 +476,13 @@ class AtbdList extends React.Component {
                       <Dropdown
                         alignment="left"
                         triggerElement={(
-                          <FilterTrigger
+                          <Button
                             variation="achromic-plain"
+                            useIcon="chevron-down--small"
                             title="Toggle menu options"
                           >
                             {activeFilter.label || 'All'}
-                          </FilterTrigger>
+                          </Button>
                         )}
                       >
                         <DropTitle>Select status</DropTitle>
@@ -410,7 +490,11 @@ class AtbdList extends React.Component {
                           <li>
                             <DropMenuItem
                               active={filterStatus === 'all'}
-                              onClick={this.setFilterValue.bind(this, 'status', 'all')}
+                              onClick={this.setFilterValue.bind(
+                                this,
+                                'status',
+                                'all'
+                              )}
                               data-hook="dropdown:close"
                             >
                               All
@@ -420,7 +504,11 @@ class AtbdList extends React.Component {
                             <li key={o.id}>
                               <DropMenuItem
                                 active={filterStatus === o.id}
-                                onClick={this.setFilterValue.bind(this, 'status', o.id)}
+                                onClick={this.setFilterValue.bind(
+                                  this,
+                                  'status',
+                                  o.id
+                                )}
                                 data-hook="dropdown:close"
                               >
                                 {o.label}
@@ -439,22 +527,22 @@ class AtbdList extends React.Component {
                       value={searchCurrent}
                       lastSearch={searchValue}
                     />
-                    <CreateButton
+                    <Button
                       variation="achromic-plain"
+                      useIcon="plus"
                       title="Create new document"
                       onClick={create}
                     >
                       Create
-                    </CreateButton>
+                    </Button>
                   </InpageToolbar>
                 </InpageHeaderInner>
               </InpageHeader>
             )}
           </Sticky>
           <InpageBody>
-            <InpageBodyInner>
-              {this.renderPageContent()}
-            </InpageBodyInner>
+            {this.renderCitationModal()}
+            <InpageBodyInner>{this.renderPageContent()}</InpageBodyInner>
           </InpageBody>
         </StickyContainer>
       </Inpage>
@@ -472,7 +560,9 @@ AtbdList.propTypes = {
   ),
   push: PropTypes.func,
   createAtbd: PropTypes.func.isRequired,
-  deleteAtbd: PropTypes.func.isRequired
+  deleteAtbd: PropTypes.func.isRequired,
+  updateAtbdVersion: PropTypes.func.isRequired,
+  copyAtbdAction: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
@@ -480,7 +570,13 @@ const mapStateToProps = (state) => {
   return { atbds };
 };
 
-const mapDispatch = { push, createAtbd, deleteAtbd };
+const mapDispatch = {
+  push,
+  createAtbd,
+  deleteAtbd,
+  updateAtbdVersion,
+  copyAtbdAction: copyAtbd,
+};
 
 export default connect(
   mapStateToProps,

@@ -11,7 +11,9 @@ import { Editor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
 import {
-  serializeDocument
+  serializeDocument,
+  deleteAtbd,
+  copyAtbd
 } from '../../actions/actions';
 
 // Components
@@ -43,6 +45,8 @@ import Dl from '../../styles/type/definition-list';
 import { themeVal } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
 import StatusPill from '../common/StatusPill';
+import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
+import CitationModal from './CitationModal';
 
 
 const OptionsTrigger = styled(Button)`
@@ -54,6 +58,18 @@ const OptionsTrigger = styled(Button)`
 const DocumentActionDelete = styled(DropMenuItem)`
   &::before {
     ${collecticon('trash-bin')}
+  }
+`;
+
+const DocumentActionDuplicate = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('pages')}
+  }
+`;
+
+const DocumentActionCitation = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('quote-left')}
   }
 `;
 
@@ -163,7 +179,9 @@ class AtbdView extends Component {
     atbdVersion: T.object,
     serializingAtbdVersion: T.object,
     serializeDocumentAction: T.func,
+    deleteAtbdAction: T.func,
     fetchAtbdAction: T.func,
+    copyAtbdAction: T.func,
     match: T.object,
     visitLink: T.func
   };
@@ -177,6 +195,14 @@ class AtbdView extends Component {
     this.referenceIndex = [];
 
     this.renderNode = this.renderNode.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+
+    this.state = {
+      citationModalAtbd: {
+        id: null,
+        version: null
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -220,6 +246,50 @@ class AtbdView extends Component {
 
   componentWillUnmount() {
     toast.dismiss(this.pdfCreationToast);
+  }
+
+  async onDeleteClick({ title, atbd_id }, e) {
+    e.preventDefault();
+    const { visitLink, deleteAtbdAction } = this.props;
+    const res = await confirmDeleteDoc(title);
+    /* eslint-disable-next-line react/destructuring-assignment */
+    if (res.result) {
+      deleteAtbdAction(atbd_id);
+      visitLink('/atbds');
+    }
+  }
+
+  async onDuplicateClick({ atbd_id }, e) {
+    e.preventDefault();
+    const { visitLink, copyAtbdAction } = this.props;
+    const res = await copyAtbdAction(atbd_id);
+    if (!res.error) {
+      visitLink(`/atbds/${res.payload.new_id}`);
+    }
+  }
+
+  onCitationClick(atbd, e) {
+    e.preventDefault();
+    const { atbd_version } = atbd.atbd_versions[0];
+    this.setState({
+      citationModalAtbd: {
+        id: atbd.atbd_id,
+        version: atbd_version
+      }
+    });
+  }
+
+  renderCitationModal() {
+    const { id, version } = this.state.citationModalAtbd;
+    return (
+      <CitationModal
+        id={id}
+        version={version}
+        onClose={() => this.setState({
+          citationModalAtbd: { id: null, version: null }
+        })}
+      />
+    );
   }
 
   /* eslint-disable-next-line */
@@ -801,6 +871,8 @@ class AtbdView extends Component {
 
     if (!atbd) return null;
 
+    const atbdStatus = atbd.atbd_versions[0].status;
+
     return (
       <Inpage>
         <StickyContainer>
@@ -814,7 +886,7 @@ class AtbdView extends Component {
                   <InpageHeadline>
                     <InpageTitleWrapper>
                       <InpageTitle>{atbd.title}</InpageTitle>
-                      <StatusPill>{atbd.atbd_versions[0].status}</StatusPill>
+                      <StatusPill>{atbdStatus}</StatusPill>
                     </InpageTitleWrapper>
                     <InpageTagline>Viewing document</InpageTagline>
                   </InpageHeadline>
@@ -825,7 +897,6 @@ class AtbdView extends Component {
                         <OptionsTrigger
                           variation="achromic-plain"
                           title="Toggle menu options"
-                          disabled
                         >
                           Options
                         </OptionsTrigger>
@@ -833,12 +904,35 @@ class AtbdView extends Component {
                     >
                       <DropTitle>Document options</DropTitle>
                       <DropMenu role="menu" iconified>
-                        <DocumentActionDelete
-                          title="Delete document"
-                          disabled
-                        >
-                          Delete
-                        </DocumentActionDelete>
+                        <li>
+                          <DocumentActionDuplicate
+                            title="Duplicate document"
+                            data-hook="dropdown:close"
+                            onClick={this.onDuplicateClick.bind(this, atbd)}
+                          >
+                            Duplicate
+                          </DocumentActionDuplicate>
+                        </li>
+                        <li>
+                          <DocumentActionCitation
+                            title="Get document citation"
+                            data-hook="dropdown:close"
+                            onClick={this.onCitationClick.bind(this, atbd)}
+                          >
+                            Citation
+                          </DocumentActionCitation>
+                        </li>
+                      </DropMenu>
+                      <DropMenu role="menu" iconified>
+                        <li>
+                          <DocumentActionDelete
+                            title="Delete document"
+                            data-hook="dropdown:close"
+                            onClick={this.onDeleteClick.bind(this, atbd)}
+                          >
+                            Delete
+                          </DocumentActionDelete>
+                        </li>
                       </DropMenu>
                     </Dropdown>
                     <DownloadButton
@@ -851,17 +945,19 @@ class AtbdView extends Component {
                     >
                       Download PDF
                     </DownloadButton>
-                    <EditButton
-                      variation="achromic-plain"
-                      title="Edit document"
-                      onClick={() => visitLink(
-                        `/atbdsedit/${
-                          atbd.atbd_id
-                        }/drafts/1/identifying_information`
-                      )}
-                    >
-                      Edit
-                    </EditButton>
+                    {atbdStatus === 'Draft' && (
+                      <EditButton
+                        variation="achromic-plain"
+                        title="Edit document"
+                        onClick={() => visitLink(
+                          `/atbdsedit/${
+                            atbd.atbd_id
+                          }/drafts/1/identifying_information`
+                        )}
+                      >
+                        Edit
+                      </EditButton>
+                    )}
                   </InpageToolbar>
                 </InpageHeaderInner>
               </InpageHeader>
@@ -869,6 +965,7 @@ class AtbdView extends Component {
           </Sticky>
           <InpageBody>
             <InpageBodyInner>
+              {this.renderCitationModal()}
               <AtbdContent>
                 <AtbdMeta>
                   <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
@@ -910,6 +1007,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = {
+  deleteAtbdAction: deleteAtbd,
+  copyAtbdAction: copyAtbd,
   serializeDocumentAction: serializeDocument,
   visitLink: push
 };

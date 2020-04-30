@@ -95,6 +95,22 @@ export function createAtbd() {
   };
 }
 
+export function copyAtbd(atbd_id) {
+  return {
+    [RSAA]: {
+      endpoint: `${BASE_URL}/rpc/copy_atbd`,
+      method: 'POST',
+      body: JSON.stringify({ originalid: atbd_id }),
+      headers: returnObjectHeaders,
+      types: [
+        types.COPY_ATBD,
+        types.COPY_ATBD_SUCCESS,
+        types.COPY_ATBD_FAIL
+      ]
+    }
+  };
+}
+
 export function deleteAtbd(atbd_id) {
   return {
     [RSAA]: {
@@ -266,7 +282,7 @@ export function fetchAtbdVersionVariables(versionObject) {
 export function fetchAtbds(filterStr = '') {
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?select=*,contacts(*),atbd_versions(atbd_id, atbd_version, status)${filterStr}`,
+      endpoint: `${BASE_URL}/rpc/search_text?${filterStr}`,
       method: 'GET',
       types: [
         types.FETCH_ATBDS,

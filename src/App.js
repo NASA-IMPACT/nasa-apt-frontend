@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router';
 import { ToastContainer, toast } from 'react-toastify';
+import ReactGA from 'react-ga';
 
 import styled, { ThemeProvider } from 'styled-components';
 import theme from './styles/theme/theme';
@@ -40,6 +41,13 @@ import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
 import OverlayLoaderConnector from './components/common/OverlayLoaderConnector';
+
+// Google analytics
+if (process.env.REACT_APP_GA_TRACKING) {
+  ReactGA.initialize(process.env.REACT_APP_GA_TRACKING);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+  history.listen(location => ReactGA.pageview(location.pathname + location.search));
+}
 
 const Page = styled.div`
   display: grid;
@@ -98,8 +106,9 @@ const App = () => (
                   component={UhOh}
                 />
                 <Route exact path="/help" component={Help} />
+                <Route path="/help/:page_id" component={Help} />
                 <Route exact path="/about" component={About} />
-                <Route exact path="/sandbox" component={Sandbox} />
+                <Route path="/sandbox" component={Sandbox} />
                 <Route path="*" component={UhOh} />
               </Switch>
             </PageBody>

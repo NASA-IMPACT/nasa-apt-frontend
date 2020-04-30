@@ -3,7 +3,8 @@ import { PropTypes as T } from 'prop-types';
 import styled from 'styled-components/macro';
 import { themeVal } from '../../styles/utils/general';
 
-const SearchHighlight = styled.em`
+const SearchHighlight = styled.mark`
+  font-style: italic;
   background-color: ${themeVal('color.warning')};
 `;
 
@@ -16,14 +17,31 @@ const TextHighlight = ({
   if (!value || disabled) return children;
   const El = highlightEl || SearchHighlight;
 
-  return children
-    .split(value)
-    .reduce((acc, v, i) => [
-      ...acc,
-      // eslint-disable-next-line
-      <El key={i}>{value}</El>,
-      v
-    ]);
+  // Highlight is done index based because it has to take case insensitive
+  // searches into account.
+  const regex = new RegExp(value, 'ig');
+  /* eslint-disable-next-line prefer-const */
+  let highlighted = [];
+  let workingIdx = 0;
+  let m;
+  /* eslint-disable-next-line no-cond-assign */
+  while ((m = regex.exec(children)) !== null) {
+    // Prevent infinite loops with zero-width matches.
+    if (m.index === regex.lastIndex) regex.lastIndex++;
+
+    // Store string since last match.
+    highlighted.push(children.substring(workingIdx, m.index));
+    // Highlight word.
+    highlighted.push((
+      <El key={m.index}>{children.substring(m.index, m.index + value.length)}</El>
+    ));
+    // Move index forward.
+    workingIdx = m.index + value.length;
+  }
+  // Add last piece. From working index to the end.
+  highlighted.push(children.substring(workingIdx));
+
+  return highlighted;
 };
 
 TextHighlight.propTypes = {

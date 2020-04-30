@@ -5,7 +5,7 @@ import cloneDeep from 'lodash.clonedeep';
 
 import { Inpage } from '../common/Inpage';
 import EditPage from '../common/EditPage';
-import AddButton from '../../styles/button/add';
+import AddBtn from '../../styles/button/add';
 
 import ReferenceFormWrapper from './FormWrapper';
 import UploadBibtexModal from './UploadBibtexModal';
@@ -119,8 +119,8 @@ export class References extends React.Component {
         <Inpage>
           <EditPage title={title || ''} id={atbd_id} step={3}>
             <h2>References</h2>
-            <AddButton
-              variation="base-plain"
+            <AddBtn
+              glspLeft={-1}
               onClick={() => {
                 this.setState({
                   showUploadBibtexModal: true
@@ -128,7 +128,7 @@ export class References extends React.Component {
               }}
             >
               Upload Bibtex file
-            </AddButton>
+            </AddBtn>
 
             <p>
               Please remove any references that are no longer attached to this
@@ -160,9 +160,9 @@ export class References extends React.Component {
               />
             ))}
             {!references.length && <p>No references attached.</p>}
-            <AddButton variation="base-plain" onClick={this.addReference}>
+            <AddBtn glspLeft={-2} onClick={this.addReference}>
               Add a reference
-            </AddButton>
+            </AddBtn>
           </EditPage>
 
           <UploadBibtexModal

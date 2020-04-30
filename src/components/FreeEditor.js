@@ -40,6 +40,7 @@ import {
   renderMark
 } from './common/slateEditor/utils';
 import ReferenceNode from './common/slateEditor/ReferenceNode';
+import SaveFormButton from '../styles/button/save-form';
 
 const equation = 'equation';
 const paragraph = 'paragraph';
@@ -61,6 +62,7 @@ const EditorStatus = styled.div`
     ? multiply(themeVal('layout.border'), 2)
     : themeVal('layout.border')};
   margin-bottom: 1rem;
+  width: 100%;
 `;
 
 const EditorContainer = styled.div`
@@ -742,9 +744,9 @@ export class FreeEditor extends React.Component {
           </EditorContainer>
         </EditorStatus>
         {!inlineSaveBtn && (
-          <Button onClick={save} variation="base-raised-light" size="large">
+          <SaveFormButton onClick={save}>
             Save
-          </Button>
+          </SaveFormButton>
         )}
       </div>
     );
@@ -761,6 +763,10 @@ FreeEditor.propTypes = {
 };
 
 const StyledFreeEditor = styled(FreeEditor)`
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
   table {
     width: 100%;
     border-collapse: collapse;

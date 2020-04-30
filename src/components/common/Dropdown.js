@@ -482,15 +482,15 @@ export const DropMenuItem = styled.a`
   color: ${themeVal('type.base.color')};
   transition: all 0.16s ease 0s;
 
+  &:visited {
+    color: inherit;
+  }
+
   &:hover,
   &:focus {
     color: ${themeVal('color.link')};
     background-color: ${_rgba(themeVal('color.link'), 0.12)};
     opacity: 1;
-  }
-
-  &:visited {
-    color: inherit;
   }
 
   ${({ active }) => active && css`

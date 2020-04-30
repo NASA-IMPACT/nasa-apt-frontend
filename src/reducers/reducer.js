@@ -185,7 +185,18 @@ export default function (state = initialState, action) {
 
     case actions.FETCH_ATBDS_SUCCESS: {
       const { payload } = action;
-      return { ...state, atbds: [...payload] };
+      return {
+        ...state,
+        atbds: [
+          ...payload.map((a) => {
+            if (!a.contacts) return a;
+            return {
+              ...a,
+              contacts: a.contacts.filter(Boolean)
+            };
+          })
+        ]
+      };
     }
 
     case actions.FETCH_CONTACTS_SUCCESS: {
@@ -201,6 +212,28 @@ export default function (state = initialState, action) {
     case actions.FETCH_ATBD_SUCCESS: {
       const { payload } = action;
       return { ...state, selectedAtbd: normalizeSelectedAtbd(payload) };
+    }
+
+    case actions.UPDATE_ATBD_VERSION_SUCCESS: {
+      // Update the atbd version inside the atbds array.
+      const atbdIdx = (state.atbds || []).findIndex(a => a.atbd_id === action.payload.atbd_id);
+      if (atbdIdx === -1) return state;
+      const versionIdx = state.atbds[atbdIdx].atbd_versions.findIndex(v => v.atbd_version === action.payload.atbd_version);
+      if (versionIdx === -1) return state;
+      return {
+        ...state,
+        atbds: Object.assign([], state.atbds, {
+          [atbdIdx]: {
+            ...state.atbds[atbdIdx],
+            atbd_versions: Object.assign([], state.atbds[atbdIdx].atbd_versions, {
+              [versionIdx]: {
+                ...state.atbds[atbdIdx].atbd_versions[versionIdx],
+                ...action.payload
+              }
+            })
+          }
+        })
+      };
     }
 
     case actions.CREATE_CONTACT_GROUP_SUCCESS:
