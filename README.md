@@ -72,3 +72,41 @@ const icon = styled.div`
    }
 `
 ```
+
+## Environments
+There are currently 2 environments defined for NASA-APT, which follow specific branches
+- Staging (`develop`): http://nasa-apt-staging-application.s3-website-us-east-1.amazonaws.com
+- Production (`master`): http://nasa-apt-application.s3-website-us-east-1.amazonaws.com/
+
+**The deployment process is automated and handled by Circle CI.**
+
+## Releases
+
+**A new release should be created every time there's a merge to master.**
+
+Releases are tied to a version number and created manually using GH's releases page.  
+The version in the `package.json` should be increased according to [semver](https://semver.org/) and the release tag should follow the format `v<major>.<minor>.<patch>`, ex: `v2.0.1`.  
+The release description should have a [changelog](https://gist.github.com/vgeorge/e6fd828987b2f7d62a447df2bd132c4a) with "Features", "Improvements" and "Fixes".
+
+**The release description should also include the require version of the [backend](https://github.com/developmentseed/nasa-apt).**
+
+Example:
+```
+# Changelog
+
+Requires backend v0.2.0
+
+## 🎉 Features
+- Amazing new feature
+
+## 🚀 Improvements
+- Improve existent feature
+
+## 🐛 Fixes
+- Fix weird bug
+```
+
+
+# License
+
+This project is licensed under **The MIT License (MIT)**, see the [LICENSE](LICENSE.md) file for more details.
