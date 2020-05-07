@@ -284,7 +284,7 @@ export class FreeEditor extends React.Component {
             object: 'text',
             leaves: [
               {
-                text: '\\'
+                text: '\\LaTeX~equation'
               }
             ]
           }
