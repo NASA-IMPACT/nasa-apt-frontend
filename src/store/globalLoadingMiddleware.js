@@ -10,7 +10,8 @@ const globalLoadingMiddleware = store => next => async (action) => {
     'SERIALIZE_PDF',
     'SERIALIZE_HTML',
     'CHECK_PDF',
-    'CHECK_HTML'
+    'CHECK_HTML',
+    'ATBD_ALIAS_COUNT'
   ];
 
   // Get all the actions of the async type by checking if they end in _SUCCESS

@@ -287,7 +287,7 @@ class AtbdList extends React.Component {
 
   renderAtbdTableRow(atbd) {
     const {
-      atbd_id, title, atbd_versions, contacts
+      atbd_id, title, alias, atbd_versions, contacts
     } = atbd;
     const { searchValue } = this.state;
 
@@ -303,7 +303,7 @@ class AtbdList extends React.Component {
           <StatusPill>{status}</StatusPill>
         </td>
         <DocTableBodyThTitle scope="row">
-          <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
+          <Link to={`/atbds/${alias}`} title="View this ATBD">
             <strong>
               <TextHighlight value={searchValue} disabled={!title}>
                 {title || 'Untitled Document'}
@@ -341,7 +341,7 @@ class AtbdList extends React.Component {
                 <DocTableActionView
                   as={Link}
                   title="View document"
-                  to={`/atbds/${atbd_id}`}
+                  to={`/atbds/${alias}`}
                 >
                   View
                 </DocTableActionView>

@@ -264,7 +264,7 @@ class AtbdView extends Component {
     const { visitLink, copyAtbdAction } = this.props;
     const res = await copyAtbdAction(atbd_id);
     if (!res.error) {
-      visitLink(`/atbds/${res.payload.new_id}`);
+      visitLink(`/atbds/${res.payload.created_atbd.alias}`);
     }
   }
 

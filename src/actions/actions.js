@@ -142,6 +142,21 @@ export function updateAtbd(atbd_id, document) {
   });
 }
 
+export function fetchAtbdAliasCount(atbd_id, alias) {
+  return dispatch => dispatch({
+    [RSAA]: {
+      endpoint: `${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.like.${encodeURIComponent(alias)}-*)&select=count.id`,
+      method: 'GET',
+      headers: returnObjectHeaders,
+      types: [
+        types.ATBD_ALIAS_COUNT,
+        types.ATBD_ALIAS_COUNT_SUCCESS,
+        types.ATBD_ALIAS_COUNT_FAIL
+      ]
+    }
+  });
+}
+
 export function fetchCitation(versionObject) {
   const { atbd_id, atbd_version } = versionObject;
   return {
@@ -294,9 +309,13 @@ export function fetchAtbds(filterStr = '') {
 }
 
 export function fetchAtbd(atbd_id) {
+  /* eslint-disable-next-line no-restricted-globals */
+  const query = isNaN(parseInt(atbd_id, 10))
+    ? `alias=eq.${encodeURIComponent(atbd_id)}`
+    : `atbd_id=eq.${atbd_id}`;
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)`,
+      endpoint: `${BASE_URL}/atbds?${query}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)&limit=1`,
       method: 'GET',
       headers: { Accept: 'application/vnd.pgrst.object+json' },
       types: [
