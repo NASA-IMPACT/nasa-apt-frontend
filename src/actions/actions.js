@@ -143,11 +143,30 @@ export function updateAtbd(atbd_id, document) {
 }
 
 export function fetchAtbdAliasCount(atbd_id, alias) {
+  const encAl = encodeURIComponent(alias);
   return dispatch => dispatch({
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.like.${encodeURIComponent(alias)}-*)&select=count.id`,
+      endpoint: `${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.like.${encAl}*)&select=count.id`,
       method: 'GET',
       headers: returnObjectHeaders,
+      fetch: async (...args) => {
+        // Check if the current typed alias exists. If it doesn't there's no
+        // need for the wildcard check.
+        const existsRes = await fetch(`${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.eq.${encAl})&select=count.id`);
+        const existsCount = await existsRes.json();
+
+        if (existsCount[0].count === 0) {
+          return new Response(existsCount, {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+        }
+
+        // Fetch as usual if not found.
+        return fetch(...args);
+      },
       types: [
         types.ATBD_ALIAS_COUNT,
         types.ATBD_ALIAS_COUNT_SUCCESS,
