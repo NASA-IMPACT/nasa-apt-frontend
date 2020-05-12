@@ -68,6 +68,10 @@ export class IdentifyingInformation extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.checkAliasDebounced.cancel();
+  }
+
   async getValidAlias(alias) {
     const {
       fetchAtbdAliasCount: fetchCount,
