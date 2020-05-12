@@ -312,6 +312,7 @@ Contacts.propTypes = {
   allContactGroups: PropTypes.array,
   selectedAtbd: PropTypes.shape({
     atbd_id: PropTypes.number.isRequired,
+    alias: PropTypes.string,
     contacts: PropTypes.array,
     contact_groups: PropTypes.array,
     title: PropTypes.string,

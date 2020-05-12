@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
+
 import { themeVal, stylizeFunction } from '../../styles/utils/general';
 import { divide } from '../../styles/utils/math';
 import { antialiased } from '../../styles/helpers';
@@ -39,7 +41,6 @@ import {
 import Prose from '../../styles/type/prose';
 
 import Dropdown, { DropTitle, DropMenu, DropMenuItem } from './Dropdown';
-import { Link } from 'react-router-dom';
 
 const _rgba = stylizeFunction(rgba);
 
