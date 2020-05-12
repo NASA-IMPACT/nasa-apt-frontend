@@ -44,6 +44,7 @@ export function Introduction(props) {
       <EditPage
         title={title || ''}
         id={atbd_id}
+        alias={atbd.alias}
         step={4}
         numSteps={7}
       >

@@ -68,6 +68,10 @@ export class IdentifyingInformation extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.checkAliasDebounced.cancel();
+  }
+
   async getValidAlias(alias) {
     const {
       fetchAtbdAliasCount: fetchCount,
@@ -168,7 +172,7 @@ export class IdentifyingInformation extends Component {
 
       return (
         <Inpage>
-          <EditPage title={title || ''} id={atbd_id} step={1}>
+          <EditPage title={title || ''} id={atbd_id} alias={alias} step={1}>
             <h2>Identifying Information</h2>
 
             <Form>

@@ -303,7 +303,7 @@ class AtbdList extends React.Component {
           <StatusPill>{status}</StatusPill>
         </td>
         <DocTableBodyThTitle scope="row">
-          <Link to={`/atbds/${alias}`} title="View this ATBD">
+          <Link to={`/atbds/${alias || atbd_id}`} title="View this ATBD">
             <strong>
               <TextHighlight value={searchValue} disabled={!title}>
                 {title || 'Untitled Document'}
@@ -341,7 +341,7 @@ class AtbdList extends React.Component {
                 <DocTableActionView
                   as={Link}
                   title="View document"
-                  to={`/atbds/${alias}`}
+                  to={`/atbds/${alias || atbd_id}`}
                 >
                   View
                 </DocTableActionView>

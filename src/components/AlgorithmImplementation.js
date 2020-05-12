@@ -53,7 +53,8 @@ function AlgorithmImplementation(props) {
 
     const {
       title,
-      atbd_id
+      atbd_id,
+      alias
     } = atbd;
 
     const {
@@ -68,6 +69,7 @@ function AlgorithmImplementation(props) {
         <EditPage
           title={title || ''}
           id={atbd_id}
+          alias={alias}
           step={7}
         >
           <h2>Algorithm Implementation</h2>

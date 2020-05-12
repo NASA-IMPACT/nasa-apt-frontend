@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { StickyContainer, Sticky } from 'react-sticky';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
+
 import { themeVal, stylizeFunction } from '../../styles/utils/general';
 import { divide } from '../../styles/utils/math';
 import { antialiased } from '../../styles/helpers';
@@ -107,9 +109,17 @@ const ItemCount = styled.span`
   margin-right: 0.5rem;
 `;
 
+const InpageLinkedTitle = styled(Link)`
+  display: block;
+
+  &, &:visited {
+    color: inherit;
+  }
+`;
+
 const EditPage = (props) => {
   const {
-    title, step, id, children
+    title, step, id, alias, children
   } = props;
 
   const version = 1;
@@ -159,7 +169,12 @@ const EditPage = (props) => {
             >
               <InpageHeaderInner>
                 <InpageHeadline>
-                  <InpageTitle>{title || 'Untitled Document'}</InpageTitle>
+                  <InpageLinkedTitle
+                    to={`/atbds/${alias || id}`}
+                    title="View rendered ATBD"
+                  >
+                    <InpageTitle>{title || 'Untitled Document'}</InpageTitle>
+                  </InpageLinkedTitle>
                   <InpageTagline>Editing document</InpageTagline>
                 </InpageHeadline>
                 <InpageToolbar>
@@ -232,6 +247,7 @@ EditPage.propTypes = {
   title: PropTypes.string.isRequired,
   step: PropTypes.number,
   id: PropTypes.number,
+  alias: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
