@@ -39,6 +39,7 @@ import {
 import Prose from '../../styles/type/prose';
 
 import Dropdown, { DropTitle, DropMenu, DropMenuItem } from './Dropdown';
+import { Link } from 'react-router-dom';
 
 const _rgba = stylizeFunction(rgba);
 
@@ -107,9 +108,17 @@ const ItemCount = styled.span`
   margin-right: 0.5rem;
 `;
 
+const InpageLinkedTitle = styled(Link)`
+  display: block;
+
+  &, &:visited {
+    color: inherit;
+  }
+`;
+
 const EditPage = (props) => {
   const {
-    title, step, id, children
+    title, step, id, alias, children
   } = props;
 
   const version = 1;
@@ -159,7 +168,12 @@ const EditPage = (props) => {
             >
               <InpageHeaderInner>
                 <InpageHeadline>
-                  <InpageTitle>{title || 'Untitled Document'}</InpageTitle>
+                  <InpageLinkedTitle
+                    to={`/atbds/${alias || id}`}
+                    title="View rendered ATBD"
+                  >
+                    <InpageTitle>{title || 'Untitled Document'}</InpageTitle>
+                  </InpageLinkedTitle>
                   <InpageTagline>Editing document</InpageTagline>
                 </InpageHeadline>
                 <InpageToolbar>
@@ -232,6 +246,7 @@ EditPage.propTypes = {
   title: PropTypes.string.isRequired,
   step: PropTypes.number,
   id: PropTypes.number,
+  alias: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node

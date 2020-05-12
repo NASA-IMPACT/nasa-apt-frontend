@@ -36,7 +36,8 @@ export function AlgorithmUsage(props) {
 
   const {
     atbd_id,
-    title
+    title,
+    alias
   } = atbd;
 
   return (
@@ -44,6 +45,7 @@ export function AlgorithmUsage(props) {
       <EditPage
         title={title || ''}
         id={atbd_id}
+        alias={alias}
         step={6}
         numSteps={7}
       >

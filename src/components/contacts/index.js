@@ -252,7 +252,7 @@ class Contacts extends React.Component {
     const { allContacts, allContactGroups, selectedAtbd } = this.props;
     if (!selectedAtbd) return null;
 
-    const { atbd_id, title } = selectedAtbd;
+    const { atbd_id, title, alias } = selectedAtbd;
     const { contacts } = this.state;
 
     if (!contacts) return null;
@@ -274,7 +274,7 @@ class Contacts extends React.Component {
 
     return (
       <Inpage>
-        <EditPage title={title || ''} id={atbd_id} step={2}>
+        <EditPage title={title || ''} id={atbd_id} alias={alias} step={2}>
           <h2>Contacts</h2>
           {contacts.map((d, i) => (
             <ContactFormWrapper
