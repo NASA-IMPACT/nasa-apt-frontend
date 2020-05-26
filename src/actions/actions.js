@@ -1,8 +1,9 @@
 /* global File, FormData, fetch, DOMParser, Response, Blob */
 import { RSAA } from 'redux-api-middleware';
 import uuid from 'uuid/v1';
-import types from '../constants/action_types';
 import qs from 'qs';
+
+import types from '../constants/action_types';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 const s3Uri = process.env.REACT_APP_S3_URI;
