@@ -2,6 +2,7 @@
 import { RSAA } from 'redux-api-middleware';
 import uuid from 'uuid/v1';
 import types from '../constants/action_types';
+import qs from 'qs';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 const s3Uri = process.env.REACT_APP_S3_URI;
@@ -178,10 +179,17 @@ export function fetchAtbdAliasCount(atbd_id, alias) {
 
 export function fetchCitation(versionObject) {
   const { atbd_id, atbd_version } = versionObject;
+  const params = {
+    select: '*',
+    atbd_id: `eq.${atbd_id}`,
+    atbd_version: `eq.${atbd_version}`,
+    order: 'citation_id.desc',
+    limit: 1
+  };
+
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/citations?atbd_id=eq.${atbd_id}&`
-        + `atbd_version=eq.${atbd_version}&select=*`,
+      endpoint: `${BASE_URL}/citations?${qs.stringify(params)}`,
       method: 'GET',
       headers: returnObjectHeaders,
       types: [
