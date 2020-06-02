@@ -177,6 +177,7 @@ class AtbdView extends Component {
   static propTypes = {
     atbd: T.object,
     atbdVersion: T.object,
+    atbdCitation: T.object,
     serializingAtbdVersion: T.object,
     serializeDocumentAction: T.func,
     deleteAtbdAction: T.func,
@@ -452,9 +453,11 @@ class AtbdView extends Component {
     return (
       <React.Fragment key={data.id}>
         <h4>Url</h4>
-        <p><a href={data.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{data.url}</a></p>
+        <p itemProp="distribution" itemScope itemType="https://schema.org/DataDownload">
+          <a href={data.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab" itemProp="contentUrl">{data.url}</a>
+        </p>
         <h4>Description</h4>
-        <Prose>
+        <Prose itemProp="description">
           {this.renderReadOnlyEditor(data.description)}
         </Prose>
       </React.Fragment>
@@ -639,14 +642,17 @@ class AtbdView extends Component {
           label: `Entry #${idx + 1}`,
           id: `algo-implementations-${idx + 1}`,
           renderer: el => (
-            <React.Fragment key={el.id}>
-              <h2 id={el.id}>{el.label}</h2>
-              {this.renderUrlDescriptionField({
-                id: o.algorithm_implementation_id,
-                url: o.access_url,
-                description: o.execution_description
-              })}
-            </React.Fragment>
+            <div key={el.id} itemProp="hasPart" itemScope itemType="https://schema.org/CreativeWork">
+              <h2 id={el.id} itemProp="name">{el.label}</h2>
+              <h4>Url</h4>
+              <p>
+                <a href={o.access_url} target="_blank" rel="noopener noreferrer" title="Open url in new tab" itemProp="url">{o.access_url}</a>
+              </p>
+              <h4>Description</h4>
+              <Prose itemProp="description">
+                {this.renderReadOnlyEditor(o.execution_description)}
+              </Prose>
+            </div>
           )
         }))
       },
@@ -719,14 +725,14 @@ class AtbdView extends Component {
               label: `Entry #${idx + 1}`,
               id: `data-access-input-${idx + 1}`,
               renderer: el => (
-                <React.Fragment key={el.id}>
-                  <h2 id={el.id}>{el.label}</h2>
+                <div key={el.id} itemScope itemType="https://schema.org/Dataset">
+                  <h2 id={el.id} itemProp="name">{el.label}</h2>
                   {this.renderUrlDescriptionField({
                     id: o.data_access_input_data_id,
                     url: o.access_url,
                     description: o.description
                   })}
-                </React.Fragment>
+                </div>
               )
             }))
           },
@@ -738,14 +744,14 @@ class AtbdView extends Component {
               label: `Entry #${idx + 1}`,
               id: `data-access-output-${idx + 1}`,
               renderer: el => (
-                <React.Fragment key={el.id}>
-                  <h2 id={el.id}>{el.label}</h2>
+                <div key={el.id} itemScope itemType="https://schema.org/Dataset">
+                  <h2 id={el.id} itemProp="name">{el.label}</h2>
                   {this.renderUrlDescriptionField({
                     id: o.data_access_output_data_id,
                     url: o.access_url,
                     description: o.description
                   })}
-                </React.Fragment>
+                </div>
               )
             }))
           },
@@ -757,14 +763,14 @@ class AtbdView extends Component {
               label: `Entry #${idx + 1}`,
               id: `data-access-related-urls-${idx + 1}`,
               renderer: el => (
-                <React.Fragment key={el.id}>
-                  <h2 id={el.id}>{el.label}</h2>
+                <div key={el.id} itemScope itemType="https://schema.org/Dataset">
+                  <h2 id={el.id} itemProp="name">{el.label}</h2>
                   {this.renderUrlDescriptionField({
                     id: o.data_access_related_url_id,
                     url: o.url,
                     description: o.description
                   })}
-                </React.Fragment>
+                </div>
               )
             }))
           }
@@ -784,25 +790,30 @@ class AtbdView extends Component {
                 ? (
                   <AtbdContactList>
                     {contacts.map(contact => (
-                      <li key={contact.contact_id || contact.contact_group_id}>
-                        <h2>{contact.contact_group_id ? 'Group: ' : ''}{contact.displayName}</h2>
+                      <li
+                        key={contact.contact_id || contact.contact_group_id}
+                        itemScope
+                        itemType={contact.contact_group_id ? 'https://schema.org/Organization' : 'https://schema.org/ContactPoint'}
+                      >
+                        <link itemProp="additionalType" href="http://schema.org/ContactPoint" />
+                        <h2>{contact.contact_group_id ? 'Group: ' : ''}<span itemProp="name">{contact.displayName}</span></h2>
                         <Dl type="horizontal">
                           {!!contact.roles.length && (
                             <React.Fragment>
                               <dt>Roles</dt>
-                              <dd>{contact.roles.join(', ')}</dd>
+                              <dd itemProp="contactType">{contact.roles.join(', ')}</dd>
                             </React.Fragment>
                           )}
                           {contact.url && (
                             <React.Fragment>
                               <dt>Url</dt>
-                              <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab">{contact.url}</a></dd>
+                              <dd><a href={contact.url} target="_blank" rel="noopener noreferrer" title="Open url in new tab" itemProp="url">{contact.url}</a></dd>
                             </React.Fragment>
                           )}
                           {contact.uuid && (
                             <React.Fragment>
                               <dt>UUID</dt>
-                              <dd>{contact.uuid}</dd>
+                              <dd itemProp="identifier">{contact.uuid}</dd>
                             </React.Fragment>
                           )}
                         </Dl>
@@ -811,7 +822,7 @@ class AtbdView extends Component {
                         <Dl type="horizontal">
                           {contact.mechanisms.map(m => (
                             <React.Fragment key={`${m.mechanism_type}-${m.mechanism_value}`}>
-                              <dt>{m.mechanism_type}</dt>
+                              <dt itemProp="contactOption">{m.mechanism_type}</dt>
                               <dd>{m.mechanism_value}</dd>
                             </React.Fragment>
                           ))}
@@ -866,12 +877,20 @@ class AtbdView extends Component {
         serializePdfFail,
         pdf
       },
-      visitLink
+      visitLink,
+      atbdCitation: storedAtbdCitation
     } = this.props;
 
     if (!atbd) return null;
 
     const atbdStatus = atbd.atbd_versions[0].status;
+
+    // If we're navigation from another ATBD and there's no citation, the state
+    // will contain the previous one. If that's the case, set as null.
+    const atbdCitation = storedAtbdCitation
+      && storedAtbdCitation.atbd_id === atbd.atbd_id
+      ? storedAtbdCitation
+      : null;
 
     return (
       <Inpage>
@@ -966,16 +985,52 @@ class AtbdView extends Component {
           <InpageBody>
             <InpageBodyInner>
               {this.renderCitationModal()}
-              <AtbdContent>
+              <AtbdContent itemScope itemType="https://schema.org/CreativeWork">
                 <AtbdMeta>
-                  <AtbdMetaTitle>{atbd.title}</AtbdMetaTitle>
+                  <AtbdMetaTitle itemProp="name">{atbd.title}</AtbdMetaTitle>
                   <AtbdMetaDetails type="horizontal">
                     <dt>Version</dt>
-                    <dd>{atbd.atbd_versions[0].atbd_version}</dd>
-                    <dt>Date</dt>
-                    <dd>10 Feb, 2019</dd>
-                    <dt>Authors</dt>
-                    <dd>Name</dd>
+                    <dd itemProp="version">{atbd.atbd_versions[0].atbd_version}</dd>
+                    {atbdCitation && atbdCitation.creators && (
+                      <>
+                        <dt>Creators</dt>
+                        <dd>
+                          <span itemProp="creator" itemScope itemType="http://schema.org/Person">{atbdCitation.creators}</span>
+                        </dd>
+                      </>
+                    )}
+                    {atbdCitation && atbdCitation.editors && (
+                      <>
+                        <dt>Editors</dt>
+                        <dd>
+                          <span itemProp="editor" itemScope itemType="http://schema.org/Person">{atbdCitation.editors}</span>
+                        </dd>
+                      </>
+                    )}
+                    {atbdCitation && atbdCitation.release_date && (
+                      <>
+                        <dt>Release Date</dt>
+                        <dd>
+                          <span itemProp="datePublished">{atbdCitation.release_date}</span>
+                        </dd>
+                      </>
+                    )}
+                    {atbdCitation && atbdCitation.publisher && (
+                      <>
+                        <dt>Publisher</dt>
+                        <dd>
+                          <span itemProp="publisher">{atbdCitation.publisher}</span>
+                        </dd>
+                      </>
+                    )}
+                    {atbdCitation && atbdCitation.online_resource && (
+                      <>
+                        <dt>Url</dt>
+                        <dd>
+                          <span itemProp="url">{atbdCitation.online_resource}</span>
+                        </dd>
+                      </>
+                    )}
                   </AtbdMetaDetails>
                 </AtbdMeta>
 
@@ -993,13 +1048,15 @@ const mapStateToProps = (state) => {
   const {
     selectedAtbd,
     serializingAtbdVersion,
-    atbdVersion
+    atbdVersion,
+    atbdCitation
   } = state.application;
 
   const { atbd_id } = selectedAtbd || {};
   return {
     atbdVersion,
     atbd: selectedAtbd,
+    atbdCitation,
     serializingAtbdVersion: serializingAtbdVersion && atbd_id && serializingAtbdVersion[atbd_id]
       ? serializingAtbdVersion[atbd_id]
       : {}
