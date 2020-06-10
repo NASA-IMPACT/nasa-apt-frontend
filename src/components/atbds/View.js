@@ -5,13 +5,11 @@ import T from 'prop-types';
 import styled from 'styled-components/macro';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { connect } from 'react-redux';
-import { toast } from 'react-toastify';
 import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
 import {
-  serializeDocument,
   deleteAtbd,
   copyAtbd
 } from '../../actions/actions';
@@ -39,7 +37,6 @@ import Dropdown, {
 // Styled components
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
-import toasts from '../common/toasts';
 import Table from '../../styles/table';
 import Dl from '../../styles/type/definition-list';
 import { themeVal } from '../../styles/utils/general';
@@ -48,6 +45,7 @@ import StatusPill from '../common/StatusPill';
 import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import CitationModal from './CitationModal';
 
+import { getDownloadPDFURL } from '../../utils/utils';
 
 const OptionsTrigger = styled(Button)`
   &::before {
@@ -179,7 +177,6 @@ class AtbdView extends Component {
     atbdVersion: T.object,
     atbdCitation: T.object,
     serializingAtbdVersion: T.object,
-    serializeDocumentAction: T.func,
     deleteAtbdAction: T.func,
     fetchAtbdAction: T.func,
     copyAtbdAction: T.func,
@@ -204,49 +201,6 @@ class AtbdView extends Component {
         version: null
       }
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {
-      serializeDocumentAction,
-      serializingAtbdVersion: {
-        isSerializingPdf: wasSerializingPdf
-      }
-    } = this.props;
-
-    const {
-      atbd,
-      serializingAtbdVersion: {
-        isSerializingPdf,
-        pdf,
-        serializePdfFail
-      }
-    } = nextProps;
-
-    // Start serialization, if is not already started
-    if (atbd && !isSerializingPdf && !pdf && !serializePdfFail) {
-      this.pdfCreationToast = toasts.info('PDF document is being created', {
-        autoClose: false
-      });
-      serializeDocumentAction({
-        atbd_id: atbd.atbd_id,
-        atbd_version: atbd.atbd_versions[0].atbd_version
-      });
-    }
-
-    // Serialization was finished, hide loading.
-    if (wasSerializingPdf && !isSerializingPdf) {
-      toast.dismiss(this.pdfCreationToast);
-      if (pdf) {
-        toasts.success('PDF document ready');
-      } else {
-        toasts.error('PDF creation failed. Try again later');
-      }
-    }
-  }
-
-  componentWillUnmount() {
-    toast.dismiss(this.pdfCreationToast);
   }
 
   async onDeleteClick({ title, atbd_id }, e) {
@@ -872,17 +826,12 @@ class AtbdView extends Component {
   render() {
     const {
       atbd,
-      serializingAtbdVersion: {
-        isSerializingPdf,
-        serializePdfFail,
-        pdf
-      },
       visitLink,
       atbdCitation: storedAtbdCitation
     } = this.props;
 
     if (!atbd) return null;
-
+    const pdfURL = getDownloadPDFURL(atbd);
     const atbdStatus = atbd.atbd_versions[0].status;
 
     // If we're navigation from another ATBD and there's no citation, the state
@@ -959,8 +908,7 @@ class AtbdView extends Component {
                       title="Download document as PDF"
                       as="a"
                       target="_blank"
-                      href={pdf}
-                      disabled={isSerializingPdf || serializePdfFail}
+                      href={pdfURL}
                     >
                       Download PDF
                     </DownloadButton>
@@ -1047,26 +995,20 @@ class AtbdView extends Component {
 const mapStateToProps = (state) => {
   const {
     selectedAtbd,
-    serializingAtbdVersion,
     atbdVersion,
     atbdCitation
   } = state.application;
 
-  const { atbd_id } = selectedAtbd || {};
   return {
     atbdVersion,
     atbd: selectedAtbd,
     atbdCitation,
-    serializingAtbdVersion: serializingAtbdVersion && atbd_id && serializingAtbdVersion[atbd_id]
-      ? serializingAtbdVersion[atbd_id]
-      : {}
   };
 };
 
 const mapDispatch = {
   deleteAtbdAction: deleteAtbd,
   copyAtbdAction: copyAtbd,
-  serializeDocumentAction: serializeDocument,
   visitLink: push
 };
 
