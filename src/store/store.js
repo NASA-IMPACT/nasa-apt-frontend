@@ -9,7 +9,6 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 
 import reducer from '../reducers/reducer';
 import locationMiddleware from './locationMiddleware';
-import serializeMiddleware from './serializeMiddleware';
 import toastNotificationMiddleware from './toastNotificationMiddleware';
 import globalLoadingMiddleware from './globalLoadingMiddleware';
 
@@ -33,7 +32,6 @@ const store = createStore(
       thunk,
       apiMiddleware,
       locationMiddleware,
-      serializeMiddleware,
       toastNotificationMiddleware,
       globalLoadingMiddleware,
       logger

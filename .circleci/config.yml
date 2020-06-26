@@ -45,21 +45,17 @@ jobs:
           name: Building site
           command: |
             if [ "${CIRCLE_BRANCH}" == "${DEVELOPMENT_BRANCH}" ]; then
-              echo "export REACT_APP_ATBD_JSON_BUCKET=${REACT_APP_ATBD_JSON_BUCKET_STAGING}" >> $BASH_ENV
-              echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_STAGING}" >> $BASH_ENV
               echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_STAGING}" >> $BASH_ENV
               echo "export REACT_APP_API_URL=${REACT_APP_API_URL_STAGING}" >> $BASH_ENV
-              echo "export REACT_APP_ATBD_BUCKET_WEBSITE=${REACT_APP_ATBD_BUCKET_WEBSITE_STAGING}" >> $BASH_ENV
               echo "export REACT_APP_GA_TRACKING=${REACT_APP_GA_TRACKING_STAGING}" >> $BASH_ENV
+              echo "export REACT_APP_PDF_SERVICE_ENDPOINT=${REACT_APP_PDF_SERVICE_ENDPOINT_STAGING}" >> $BASH_ENV
               source $BASH_ENV
               yarn build
             elif [ "${CIRCLE_BRANCH}" == "${PRODUCTION_BRANCH}" ]; then
-              echo "export REACT_APP_ATBD_JSON_BUCKET=${REACT_APP_ATBD_JSON_BUCKET_PRODUCTION}" >> $BASH_ENV
-              echo "export REACT_APP_ATBD_BUCKET=${REACT_APP_ATBD_BUCKET_PRODUCTION}" >> $BASH_ENV
               echo "export REACT_APP_FIGURES_BUCKET=${REACT_APP_FIGURES_BUCKET_PRODUCTION}" >> $BASH_ENV
               echo "export REACT_APP_API_URL=${REACT_APP_API_URL_PRODUCTION}" >> $BASH_ENV
-              echo "export REACT_APP_ATBD_BUCKET_WEBSITE=${REACT_APP_ATBD_BUCKET_WEBSITE_PRODUCTION}" >> $BASH_ENV
               echo "export REACT_APP_GA_TRACKING=${REACT_APP_GA_TRACKING_PRODUCTION}" >> $BASH_ENV
+              echo "export REACT_APP_PDF_SERVICE_ENDPOINT=${REACT_APP_PDF_SERVICE_ENDPOINT_PRODUCTION}" >> $BASH_ENV
               source $BASH_ENV
               yarn build
             else
