@@ -9,8 +9,12 @@ ATBDs provide data users with the physical theory, mathematical procedures, and 
 ### 1.2 Components of the Algorithm Publication Tool
 The main goal of APT is to modernize NASA Earth science documentation by developing a web-based interface to address scientific documentation needs by standardizing and simplifying the process of writing, publishing, and searching for ATBDs. This is partially accomplished by moving from a static to dynamic model of documentation with intelligent connections to software, data, and other supporting resources to improve transparency and promote scientific reproducibility. APT provides a single-entry point for writing and updating ATBDs and a centralized document repository to enable users to access and view ATBDs (Figure 1).
 
-![Figure 1](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure1_APT_components.png)
-*Figure 1. APT Components: an ATBD metadata model, database and front-end tool, and centralized repository for finding ATBDs.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure1_APT_components.png' alt='Figure 1' />
+  <figcaption>
+    Figure 1. APT Components: an ATBD metadata model, database and front-end tool, and centralized repository for finding ATBDs.
+  </figcaption>
+</figure>
 
 The three components of the APT include a metadata model, front-end tool and supporting content database, and document repository. First, the APT envisions ATBDs as structured metadata and not just documents. This means that component metadata is reusable across different ATBDs, which promotes consistency and standardization while reducing human input. For example, the APT encourages authors to use existing data, such as citation information, instead of manually inputting this information in an ATBD. Thus, this reduces the potential for errors. Also, data products and source code are often dynamic, yet it is difficult to update static documents. Another benefit of the metadata model is that it makes information dynamic so that it is easier to update ATBDs. Finally, the metadata model provides ATBDs in machine readable formats which increases the discoverability of these documents.
 
@@ -24,8 +28,12 @@ This section provides explanations of the features of the APT, namely the ATBD a
 ### 2.1 Main Landing Page
 This section provides an overview and describes APT’s pages and features (Figure 2).
 
-![Figure 2](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure2_LandingPage.png)
-*Figure 2. Overview of APT’s landing page. Note: Outlined and labelled pages and features correspond to the numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure2_LandingPage.png' alt='Figure 2' />
+  <figcaption>
+    Figure 2. Overview of APT’s landing page. Note: Outlined and labelled pages and features correspond to the numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. NASA APT – Persistent button which redirects users to the APT landing page.
 2. Documents Status – Dropdown list feature that allows users to sort on publication status. Options include All [default], draft [documents that are still in progress], or published [completed ATBDs].
@@ -42,8 +50,12 @@ From the APT Landing Page, users have three main navigation options:
 ### 2.2 Writing an ATBD Using APT
 The APT’s authoring pages support fast navigation through the two features shown in Figure 3, and is described below. Also, note that the APT automatically saves ATBD drafts if an author exits the tool. However, content not saved (i.e., clicking the “Save” button) will not be automatically saved. For example, authors must click the save button after entering the ATBD title in order to save the title to the document.
 
-![Figure 3](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure3_ATBDWritingSteps.png)
-*Figure 3. Navigation features associated with creating an ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure3_ATBDWritingSteps.png' alt='Figure 3' />
+  <figcaption>
+    Figure 3. Navigation features associated with creating an ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Select Step drop down menu – The dropdown list feature allows ATBD authors to quickly navigate between APT’s seven pages.
 2. Previous and Next – These buttons allow for quick navigation to the previous or next page while writing an ATBD.
@@ -53,16 +65,24 @@ The remainder of this section provides details for writing ATBDs using the APT. 
 #### 2.2.1 Identifying Information (Step 1)
 The first step prompts users to input unique information that identifies the new ATBD (Figure 4). The content provided in this section will be utilized to generate structured citations for the ATBD, and, ultimately, will be how end users come to identify the document.
 
-![Figure 4](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure4_IdentifyingInformation.png)
-*Figure 4. ATBD unique identifying information. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure4_IdentifyingInformation.png' alt='Figure 4' />
+  <figcaption>
+    Figure 4. ATBD unique identifying information. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Title – Authors should enter a descriptive, formal title of the ATBD. It is recommended that the title be as descriptive as possible while keeping acronyms to a minimum.
 2. Save – This button saves the ATBD title. Note: the APT uses this save feature throughout the tool.
 3. Information icon – This icon describes the expected information to be entered in the field. Simply hovering over the icon displays the information. Note: the APT uses this information icon throughout the tool.
 4. Add a citation – This button opens a citation form. Required fields include creator(s), title, and release date. However, authors should include as much information as possible to reference the ATBD. Figure 5 shows all the fields associated with adding a citation.
 
-![Figure 5](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure5_Citation.png)
-*Figure 5. ATBD citation information. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure5_Citation.png' alt='Figure 5' />
+  <figcaption>
+    Figure 5. ATBD citation information. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Creators – Enter the name of the individual(s) or organization responsible for authoring the ATBD (required field).
 2. Editors – Provide the name of the individual(s) or organization responsible for editing and publishing the ATBD (optional field).
@@ -79,19 +99,31 @@ The first step prompts users to input unique information that identifies the new
 #### 2.2.2 Contact Information (Step 2)
 The second step requests contact information for the individual, or group, responsible for fielding user questions regarding the ATBD (Figure 6). The APT stores information from all published documents, which authors can retrieve and use in other documents. Therefore, authors have the option to search for existing contact information stored in the APT and should use this information whenever possible instead of entering information manually. This ensures that information is consistent across all documents which is an advantage of the APT.
 
-![Figure 6](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure6_AddContacts.png)
-*Figure 6. Individual or group contact information. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure6_AddContacts.png' alt='Figure 6' />
+  <figcaption>
+    Figure 6. Individual or group contact information. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Add a contact – This feature allows authors to add ATBD contact information. Once selected, users have the option to search for an existing contact or create a new contact (Figure 7).
 
-![Figure 7](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure7_SearchContact.png)
-*Figure 7. Select or create a new contact. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure7_SearchContact.png' alt='Figure 7' />
+  <figcaption>
+    Figure 7. Select or create a new contact. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Select or create contact – This opens a dropdown list feature that allows authors to either search for an existing contact or create a new one. As noted above, authors should use existing contact information whenever possible to promote consistency.
 2. ontact drop down list – Search for an existing contact using the search bar or create new contact by selecting “Create new contact.” The APT automatically populates the contact information fields when authors select an existing contact. Otherwise, authors must manually enter in contact information (Figure 8a and Figure 8b).
 
-![Figure 8a](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure8a_ContactInfo.png)
-*Figure 8a. Required and optional fields for creating a new ATBD contact (if type is “Person”). Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure8a_ContactInfo.png' alt='Figure 8a' />
+  <figcaption>
+    Figure 8a. Required and optional fields for creating a new ATBD contact (if type is “Person”). Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Delete – Clicking the delete icon deletes the contact from the ATBD.
 2. Type – Choose whether the contact is a Person or Group. The fields below (i.e., numbers 3-5) are available if Person (see Figure 8b for Group) is selected
@@ -104,8 +136,12 @@ The second step requests contact information for the individual, or group, respo
 9. Create and attach contact to ATBD – This button uses the provided contact information to create the new contact and attaches this information to the ATBD.
 10. Add a contact – This button creates an additional contact.
 
-![Figure 8b](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure8b_contactinfo.png)
-*Figure 8b. Required and optional fields for creating a new ATBD contact (if type is “Group”). Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure8b_contactinfo.png' alt='Figure 8b' />
+  <figcaption>
+    Figure 8b. Required and optional fields for creating a new ATBD contact (if type is “Group”). Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Delete – Clicking the delete icon deletes the contact from the ATBD.
 2. Type – Choose whether the contact is a Person or Group. The field below (i.e., number 3) is available if Group (see Figure 8a for Person) is selected
@@ -118,21 +154,33 @@ The second step requests contact information for the individual, or group, respo
 #### 2.2.3 References (Step 3)
 There are two options for adding references to the ATBD (Figure 9), (1) import as a Bibtex file or (2) enter the information manually.
 
-![Figure 9](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure9_AddReference.png)
-*Figure 9. Two options to add references to the ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure9_AddReference.png' alt='Figure 9' />
+  <figcaption>
+    Figure 9. Two options to add references to the ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Upload BibTex file – This button uploads one or more references using BibTeX files (Figure 10). A BibTeX file will not upload if the file does not include the minimum required information or if the file contains an error. The required information varies by reference entry type.
 2. Add a reference – This button allows authors to manually enter citation information for one or more references (Figure 11).
 
-![Figure 10](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure10_ImportReference.png)
-*Figure 10. Dialog box to import a Bibtex file. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure10_ImportReference.png' alt='Figure 10' />
+  <figcaption>
+    Figure 10. Dialog box to import a Bibtex file. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Choose File – To upload a BibTeX file, click on “Choose File” under the “Select a bibtex file” to import. Then, navigate to the desired BibTeX file.
 2. Cancel – Clicking the “Cancel” button will stop the BibTeX file import.
 3. Proceed – After selecting the Bibtex file, clicking “Proceed” imports the BibTex file into the ATBD.
 
-![Figure 11](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure11_ReferenceInfo.png)
-*Figure 11. Form to manually enter reference information. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure11_ReferenceInfo.png' alt='Figure 11' />
+  <figcaption>
+    Figure 11. Form to manually enter reference information. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Title – State the title of the reference.
 2. Authors – Provide the name of the author(s) of the reference.
@@ -156,8 +204,12 @@ There are two options for adding references to the ATBD (Figure 9), (1) import a
 This step provides a brief introduction and historical perspective to the ATBD (Figure 12). The introduction should provide users with a concise overview of the algorithm, including its derived quantities, scientific importance, and intended applications. Authors should explain the history and foundation regarding the development of the algorithm and a brief summary of the algorithm’s output data products. End users will use this content to understand the value and applicability of this data product.
 These free-text fields utilize a rich content editor that automatically formats the introduction. The APT utilizes LaTeX to build and insert tables, figures, references, and equations into these fields.
 
-![Figure 12](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure12_ATBDIntroduction.png)
-*Figure 12. Introduction to the ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure12_ATBDIntroduction.png' alt='Figure 12' />
+  <figcaption>
+    Figure 12. Introduction to the ATBD. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Bulleted List – This button inserts a bulleted list into the text box.
 2. Numbered List – This button inserts a numbered list into the text box.
@@ -175,32 +227,48 @@ These free-text fields utilize a rich content editor that automatically formats 
 #### 2.2.5 Algorithm Description (Step 5)
 This step first describes the scientific and mathematical theories and assumptions associated with the algorithm(s). The scientific theory and assumptions describe the scientific background that permits deriving parameters from the observations (Figure 15). Authors should also provide the underlying mathematical logic, including any assumptions, simplifications, and approximations behind the algorithms (Figure 16). The second aspect of this step identifies the algorithm’s input and output variables, including names and units used to report these variables (Figure 17 and 18). The content provided in this step gives end users the needed information to understand the theoretical background of the algorithm(s). Note: refer to Figure 12 for descriptions of the rich content editor.
 
-![Figure 13](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure13_ScientificTheory.png)
-*Figure 13. Insert the scientific theory and assumptions associated with the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure13_ScientificTheory.png' alt='Figure 13' />
+  <figcaption>
+    Figure 13. Insert the scientific theory and assumptions associated with the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Describe the Scientific Theory – Provide a description of the principles essential to the product’s retrieval. This should include a description of the physics and associated observed geophysical phenomenon.
 2. Save – This button saves the description of the scientific theory to the ATBD.
 3. Scientific Theory Assumptions – Describe any scientific or physical assumptions made in deriving the algorithm.
 4. Save – This button saves the scientific theory assumptions to the ATBD.
 
-![Figure 14](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure14_MathematicalTheory.png)
-*Figure 14. Insert the mathematical theory and assumptions associated with the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure14_MathematicalTheory.png' alt='Figure 14' />
+  <figcaption>
+    Figure 14. Insert the mathematical theory and assumptions associated with the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Describe the Mathematical Theory – Describe the mathematical theory that is essential to the algorithm’s development.
 2. Save – This button saves the mathematical theory description to the ATBD.
 3. Mathematical Theory Assumptions – Provide a description of any mathematical assumptions, simplifications, and approximations made when deriving the algorithm.
 4. Save – This button saves the mathematical theory assumptions to the ATBD.
 
-![Figure 15](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure15_InputVariables.png)
-*Figure 15. Variable(s) that are used in the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure15_InputVariables.png' alt='Figure 15' />
+  <figcaption>
+    Figure 15. Variable(s) that are used in the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Name – Provide the name of the variable that is input into the algorithm as it is named in the data.
 2. Long Name – Report the expanded name of the input variable.
 3. Unit – Provide the unit used to report the input variable.  For example, atmospheric pressure could be reported using hectopascals (hPa).
 4. Add Algorithm Variable – Clicking this button adds the provided input variable into the ATBD.
 
-![Figure 16](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure16_OutputVariables.png)
-*Figure 16. Variable(s) that are used in the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure16_OutputVariables.png' alt='Figure 16' />
+  <figcaption>
+    Figure 16. Variable(s) that are used in the algorithm. Note: Outlined and labelled features correspond to the numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Name – Provide the name of the variable that is output from the algorithm as it is named in the data.
 2. Long Name – Provide the expanded name of the output variable.
@@ -210,14 +278,22 @@ This step first describes the scientific and mathematical theories and assumptio
 #### 2.2.6 Algorithm Usage (Step 6)
 This step describes the intended use of the algorithm’s output data and the validation process to assess the quality of the algorithm(s). ATBD authors should discuss any constraints or limitations for using the output data (Figure 17). Also, provide the validation methods used to determine uncertainties and errors associated with the algorithm’s output data and report the results, including any errors and uncertainties associated with the output data (Figure 18). If known, state the source of the uncertainties. This content shows end users the reliability of the algorithm and its output data. Also, refer to Figure 12 for descriptions of the rich content editor.
 
-![Figure 17](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure17_AlgorithmUsage.png)
-*Figure 17. Limitations and constraints for using the output data derived by the algorithm. Note: Outlined and labelled features correspond to numbered descriptions in text.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure17_AlgorithmUsage.png' alt='Figure 17' />
+  <figcaption>
+    Figure 17. Limitations and constraints for using the output data derived by the algorithm. Note: Outlined and labelled features correspond to numbered descriptions in text.
+  </figcaption>
+</figure>
 
 1. Describe the Algorithm Constraints – Provide the constraints and limitations for using the algorithm output data.
 2. Save – This button saves the described algorithm constraints.
 
-![Figure 18](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure18_PerformanceAssessment.png)
-*Figure 18. Performance assessment of the algorithm. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure18_PerformanceAssessment.png' alt='Figure 18' />
+  <figcaption>
+    Figure 18. Performance assessment of the algorithm. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Validation Methods – Describe the scientific methods utilized to validate the algorithm. The details provided should match the current algorithm’s maturity.
 2. Save – This button saves the described validation method.
@@ -229,36 +305,56 @@ This step describes the intended use of the algorithm’s output data and the va
 #### 2.2.7 Algorithm Implementation (Step 7)
 This step discusses the process of implementing the algorithm(s) and accessing relevant data. The algorithm implementation section directs end users to the algorithm’s source code and relevant information to execute the source code (Figure 19 and 20). Similarly, provide access URLs to the algorithm’s input and output data (Figure 21 and 22) and any alternative data access mechanisms (Figure 23). This content promotes transparency and makes it possible for end users to reproduce the product. Note: refer to Figure 12 for descriptions of the rich content editor.
 
-![Figure 19](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure19_AlgorithmImplementation.png)
-*Figure 19. Information related to implementing the algorithm. Note: Outlined and labelled features correspond to the numbered description in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure19_AlgorithmImplementation.png' alt='Figure 19' />
+  <figcaption>
+    Figure 19. Information related to implementing the algorithm. Note: Outlined and labelled features correspond to the numbered description in text below.
+  </figcaption>
+</figure>
 
 1. Add – This button creates new fields to add information regarding algorithm implementation.
 
-![Figure 20](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure20_AlgorithmImplementationInfo.png)
-*Figure 20. Algorithm implementation is described and added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure20_AlgorithmImplementationInfo.png' alt='Figure 20' />
+  <figcaption>
+    Figure 20. Algorithm implementation is described and added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. URL – Provide an URL that directs users to the algorithm implementation source code.
 2. Description – Describe relevant information needed to execute the algorithm implementation source code. This may include, but not be limited to, execution instructions, memory requirements, programming languages, and dependencies.
 3. Save – This button saves the algorithm implementation to the ATBD.
 
-![Figure 21](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure21_DataAccessInput.png)
-*Figure 21. Data input access is added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure21_DataAccessInput.png' alt='Figure 21' />
+  <figcaption>
+    Figure 21. Data input access is added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. URL – Provide an algorithm data input access URL into this field. This should link to data input and used in the algorithm.
 2. Description – Enter a description of the method to access the data.
 3. Save – This button saves the input data access URL and description to the ATBD.
 4. Add – This button allows for additional access URLs to the algorithm data inputs to be included in the ATBD. Provide access to all the data inputs used in the algorithm(s).
 
-![Figure 22](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure22_DataAccessOutput.png)
-*Figure 22. Data output access is added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure22_DataAccessOutput.png' alt='Figure 22' />
+  <figcaption>
+    Figure 22. Data output access is added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. URL – Add an algorithm output data access URL into this field. This should link to the output data from the algorithm.
 2. Description – Enter a brief description of the data access method. This should provide context for users on how to access the data.
 3. Save – This button saves the output data access URL and description to the ATBD.
 4. Add – This button allows for additional data access output URLs to be included in the ATBD.  Be sure to include all output data from the algorithm(s).
 
-![Figure 23](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure23_DataAccessRelatedURLs.png)
-*Figure 23. New data access related URLs added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure23_DataAccessRelatedURLs.png' alt='Figure 23' />
+  <figcaption>
+    Figure 23. New data access related URLs added to the ATBD. Note: Outlined and numbered features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. URL – Enter alternative data access mechanisms, such as links to machine services, ordering services, and DAAC websites into this field.
 2. Description – Enter a brief description of the provided alternative data access URL.
@@ -268,8 +364,12 @@ This step discusses the process of implementing the algorithm(s) and accessing r
 #### 2.2.8 Inserting Tables and Uploading Figures
 A LaTeX backend enables entry of rich content (e.g., tables, figures, references, and equations) that is necessary for scientific writing. Figures 24 and 25 show examples of inserting tables and uploading figures into an ATBD, respectively, using the APT’s rich content editor. Inserting tables and figures is a relatively straightforward process; however, inserting equations using the equation editor requires knowledge of LaTeX mathematical commands. For guidance on inserting equations in the APT, see the “LaTeX Help Manual for the Algorithm Publication Tool (APT).” The use of a LaTeX backend allows authors to focus on writing scientific content and not formatting the document.
 
-![Figure 24](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure24_FigureUpload.png)
-*Figure 24. Insert tables using the rich content editor. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure24_FigureUpload.png' alt='Figure 24' />
+  <figcaption>
+    Figure 24. Insert tables using the rich content editor. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Insert Table – This button inserts a table into the ATBD.
 2. Add/Remove Rows – The minus sign (-) removes a row from the table while the plus sign (+) adds a row to the table.
@@ -278,8 +378,12 @@ A LaTeX backend enables entry of rich content (e.g., tables, figures, references
 5. Delete – Clicking this icon deletes the table.
 6. Save – Clicking this button saves the content into the ATBD.
 
-![Figure 25](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/FIgure25_InsertingTable.png)
-*Figure 25. Upload figures using the rich content editor. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/FIgure25_InsertingTable.png' alt='Figure 25' />
+  <figcaption>
+    Figure 25. Upload figures using the rich content editor. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Upload an Image – Use this button to select the desired figure(s) to upload.  Note that the figure must be in an image format.
 2. Image Caption – Enter the desired figure caption in this box.
@@ -288,16 +392,24 @@ A LaTeX backend enables entry of rich content (e.g., tables, figures, references
 #### 2.2.9 Editing and Publishing ATBDs
 Navigating back to the Documents page after creating an ATBD provides additional actions that are described below (Figure 26). These include viewing ATBD status, titles, authors, and document actions (e.g., viewing, editing, publishing and deleting documents). Selecting an ATBD provides another set of features, including additional options, PDF downloading, and document editing (Figure 27). These actions allow ATBD authors to quickly perform additional actions on their documents.
 
-![Figure 26](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure26_DocumentActions.png)
-*Figure 26. Actions to perform on created ATBDs. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure26_DocumentActions.png' alt='Figure 26' />
+  <figcaption>
+    Figure 26. Actions to perform on created ATBDs. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Status – This feature describes the current status of the ATBD.  Options include draft [document still in progress] or published [document is complete].
 2. Title – This feature displays the title of the ATBD.
 3. Menu icon – Clicking on this icon displays a dropdown list of actions to potentially perform on the document (see list of actions below).
 4. Document Actions – Dropdown list feature of actions that authors can perform on the ATBD. The options include view, edit, publish, or delete the ATBD.
 
-![Figure 27](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure27_ViewingDocument.png)
-*Figure 27. Options for creating ATBDs. Note: Outlined and labelled features correspond to numbered descriptions in text below.*
+<figure>
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure27_ViewingDocument.png' alt='Figure 27' />
+  <figcaption>
+    Figure 27. Options for creating ATBDs. Note: Outlined and labelled features correspond to numbered descriptions in text below.
+  </figcaption>
+</figure>
 
 1. Viewing Document – This feature describes the current status of ATBD. Options include draft [documents that are still in progress] or published [completed ATBDs].
 2. Options – This button opens a dropdown feature list that includes duplicate the document, get the document citation, or delete the document.
