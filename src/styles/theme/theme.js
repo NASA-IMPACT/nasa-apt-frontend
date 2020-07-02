@@ -42,7 +42,7 @@ const type = {
     color: tint(0.16, color.base),
     family: '"Open Sans", sans-serif',
     style: 'normal',
-    weight: 300,
+    weight: 400,
     light: 300,
     regular: 400,
     medium: 400,

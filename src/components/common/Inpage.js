@@ -68,7 +68,7 @@ export const InpageTagline = styled.p`
   order: -1;
   font-size: 0.875rem;
   line-height: 1rem;
-  color: ${_rgba('#FFFFFF', 0.64)};
+  color: ${_rgba('#FFFFFF', 0.80)};
 `;
 
 export const InpageFilters = styled.div`
@@ -91,7 +91,7 @@ export const FilterItem = styled.div`
 export const FilterLabel = styled.h6`
   ${headingAlt()}
   font-size: 0.875rem;
-  color: ${_rgba('#FFFFFF', 0.64)};
+  color: ${_rgba('#FFFFFF', 0.80)};
   margin-right: 0.5rem;
 `;
 
