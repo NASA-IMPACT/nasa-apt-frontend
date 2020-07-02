@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import T from 'prop-types';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -14,6 +15,20 @@ import {
 } from '../common/Inpage';
 import Prose from '../../styles/type/prose';
 import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
+
+const HelpProse = styled(Prose)`
+  max-width: 50rem;
+
+  img {
+    max-width: 100%;
+  }
+
+  figcaption {
+    width: 80%;
+    margin: 0 auto;
+    font-style: italic;
+  }
+`;
 
 class Help extends Component {
   constructor(props) {
@@ -86,7 +101,7 @@ class Help extends Component {
         </InpageHeader>
         <InpageBody>
           <InpageBodyInner>
-            <Prose dangerouslySetInnerHTML={{ __html: this.state.data }} />
+            <HelpProse dangerouslySetInnerHTML={{ __html: this.state.data }} />
           </InpageBodyInner>
         </InpageBody>
       </Inpage>
