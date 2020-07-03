@@ -37,6 +37,7 @@ import AlgorithmImplementation from './components/AlgorithmImplementation';
 import References from './components/references';
 import Help from './components/help';
 import About from './components/about';
+import Search from './components/search';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
@@ -108,6 +109,7 @@ const App = () => (
                 <Route exact path="/help" component={Help} />
                 <Route path="/help/:page_id" component={Help} />
                 <Route exact path="/about" component={About} />
+                <Route exact path="/search" component={Search} />
                 <Route path="/sandbox" component={Sandbox} />
                 <Route path="*" component={UhOh} />
               </Switch>
