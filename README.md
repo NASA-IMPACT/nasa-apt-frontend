@@ -109,4 +109,4 @@ Requires backend v0.2.0
 
 # License
 
-This project is licensed under **The MIT License (MIT)**, see the [LICENSE](LICENSE.md) file for more details.
+This project is licensed under **The MIT License (MIT)**, see the [LICENSE](LICENSE) file for more details.
