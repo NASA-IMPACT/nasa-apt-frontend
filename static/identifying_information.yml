@@ -1,4 +1,5 @@
 title: The descriptive formal title of the ATBD.
+alias: An alias to use in the url for the ATBD.
 doi: The DOI that identifies the ATBD.
 doi_authority: The organization that is responsible for creating the DOI.
 

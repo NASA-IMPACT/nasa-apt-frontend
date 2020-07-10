@@ -45,10 +45,12 @@ const locationMiddleware = store => next => async (action) => {
       } else {
         // Route /atbds/:atbd_id
         const res = await store.dispatch(actions.fetchAtbd(pathComponents[2]));
-        store.dispatch(actions.fetchEntireAtbdVersion({
+        const versionDef = {
           atbd_id: res.payload.atbd_id,
           atbd_version: res.payload.atbd_versions[0].atbd_version
-        }));
+        };
+        store.dispatch(actions.fetchEntireAtbdVersion(versionDef));
+        store.dispatch(actions.fetchCitation(versionDef));
       }
     }
     if (pathComponents[1] === atbdsedit) {

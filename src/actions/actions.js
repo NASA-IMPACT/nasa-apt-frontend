@@ -1,14 +1,13 @@
 /* global File, FormData, fetch, DOMParser, Response, Blob */
 import { RSAA } from 'redux-api-middleware';
 import uuid from 'uuid/v1';
+import qs from 'qs';
+
 import types from '../constants/action_types';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 const s3Uri = process.env.REACT_APP_S3_URI;
 const figuresBucket = process.env.REACT_APP_FIGURES_BUCKET;
-const jsonBucket = process.env.REACT_APP_ATBD_JSON_BUCKET;
-const atbdBucket = process.env.REACT_APP_ATBD_BUCKET;
-const atbdBucketWebsite = process.env.REACT_APP_ATBD_BUCKET_WEBSITE;
 
 const returnObjectHeaders = {
   'Content-Type': 'application/json',
@@ -142,12 +141,53 @@ export function updateAtbd(atbd_id, document) {
   });
 }
 
+export function fetchAtbdAliasCount(atbd_id, alias) {
+  const encAl = encodeURIComponent(alias);
+  return dispatch => dispatch({
+    [RSAA]: {
+      endpoint: `${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.like.${encAl}*)&select=count.id`,
+      method: 'GET',
+      headers: returnObjectHeaders,
+      fetch: async (...args) => {
+        // Check if the current typed alias exists. If it doesn't there's no
+        // need for the wildcard check.
+        const existsRes = await fetch(`${BASE_URL}/atbds?and=(atbd_id.not.eq.${atbd_id},alias.eq.${encAl})&select=count.id`);
+        const existsCount = await existsRes.json();
+
+        if (existsCount[0].count === 0) {
+          return new Response(existsCount, {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+        }
+
+        // Fetch as usual if not found.
+        return fetch(...args);
+      },
+      types: [
+        types.ATBD_ALIAS_COUNT,
+        types.ATBD_ALIAS_COUNT_SUCCESS,
+        types.ATBD_ALIAS_COUNT_FAIL
+      ]
+    }
+  });
+}
+
 export function fetchCitation(versionObject) {
   const { atbd_id, atbd_version } = versionObject;
+  const params = {
+    select: '*',
+    atbd_id: `eq.${atbd_id}`,
+    atbd_version: `eq.${atbd_version}`,
+    order: 'citation_id.desc',
+    limit: 1
+  };
+
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/citations?atbd_id=eq.${atbd_id}&`
-        + `atbd_version=eq.${atbd_version}&select=*`,
+      endpoint: `${BASE_URL}/citations?${qs.stringify(params)}`,
       method: 'GET',
       headers: returnObjectHeaders,
       types: [
@@ -294,9 +334,13 @@ export function fetchAtbds(filterStr = '') {
 }
 
 export function fetchAtbd(atbd_id) {
+  /* eslint-disable-next-line no-restricted-globals */
+  const query = isNaN(parseInt(atbd_id, 10))
+    ? `alias=eq.${encodeURIComponent(atbd_id)}`
+    : `atbd_id=eq.${atbd_id}`;
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/atbds?atbd_id=eq.${atbd_id}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)`,
+      endpoint: `${BASE_URL}/atbds?${query}&select=*,contacts(*),contact_groups(*),atbd_versions(atbd_id, atbd_version, status)&limit=1`,
       method: 'GET',
       headers: { Accept: 'application/vnd.pgrst.object+json' },
       types: [
@@ -763,16 +807,11 @@ export function uploadFile(file) {
       endpoint: `${s3Uri}/${figuresBucket}`,
       method: 'POST',
       fetch: async (...args) => {
-        let location;
         const res = await fetch(...args);
-        // Localstack doesn't support key return yet.
-        if (res.status === 200) {
-          location = `${s3Uri}/${figuresBucket}/${keyedFile.name}`;
-        } else {
-          const text = await res.text();
-          const xml = new DOMParser().parseFromString(text, 'application/xml');
-          location = xml.getElementsByTagName('Location')[0].textContent;
+        if (!res.ok) {
+          throw new Error(res.statusText);
         }
+        const location = `${s3Uri}/${figuresBucket}/${keyedFile.name}`;
         return new Response(
           JSON.stringify({
             location
@@ -807,132 +846,6 @@ export function fetchStatic() {
         types.FETCH_STATIC,
         types.FETCH_STATIC_SUCCESS,
         types.FETCH_STATIC_FAIL
-      ]
-    }
-  };
-}
-
-export function uploadJson(json) {
-  const id = uuid();
-  const { atbd_id, atbd_version } = json;
-  const keyedFileName = `ATBD_${atbd_id}v${atbd_version}_${id}.json`;
-  const jsonString = JSON.stringify(json);
-  const blob = new Blob([jsonString], { type: 'application/json' });
-  const keyedFile = new File([blob], keyedFileName, { type: blob.type });
-  const data = new FormData();
-  data.append('success_action_status', '201');
-  data.append('Content-Type', keyedFile.type);
-  data.append('acl', 'public-read');
-  data.append('key', keyedFile.name);
-  data.append('file', keyedFile);
-  return {
-    [RSAA]: {
-      endpoint: `${s3Uri}/${jsonBucket}`,
-      method: 'POST',
-      fetch: async (...args) => {
-        let location;
-        const res = await fetch(...args);
-        // Localstack doesn't support key return yet.
-        if (res.status === 200) {
-          location = `${s3Uri}/${jsonBucket}/${keyedFile.name}`;
-        } else {
-          const text = await res.text();
-          const xml = new DOMParser().parseFromString(text, 'application/xml');
-          location = xml.getElementsByTagName('Location')[0].textContent;
-        }
-        return new Response(
-          JSON.stringify({
-            location
-          }),
-          {
-            status: res.status,
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        );
-      },
-      headers: {
-        'Content-Length': keyedFile.size
-      },
-      body: data,
-      types: [
-        types.UPLOAD_JSON,
-        types.UPLOAD_JSON_SUCCESS,
-        types.UPLOAD_JSON_FAIL
-      ],
-    },
-  };
-}
-
-export function serializeDocument(versionObject) {
-  return {
-    type: types.SERIALIZE_DOCUMENT,
-    payload: versionObject
-  };
-}
-
-export function checkPdf(key, { atbd_id }) {
-  return {
-    [RSAA]: {
-      endpoint: `${s3Uri}/${atbdBucket}/${key}.pdf`,
-      method: 'HEAD',
-      fetch: async (...args) => {
-        let response;
-        const res = await fetch(...args);
-        if (res.status === 200) {
-          const location = `${s3Uri}/${atbdBucket}/${key}.pdf`;
-          response = new Response(
-            JSON.stringify({ location, atbd_id }),
-            {
-              status: res.status,
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-        } else {
-          response = res;
-        }
-        return response;
-      },
-      types: [
-        types.CHECK_PDF,
-        types.SERIALIZE_PDF_SUCCESS,
-        types.CHECK_PDF_FAIL
-      ]
-    }
-  };
-}
-
-export function checkHtml(key, { atbd_id }) {
-  return {
-    [RSAA]: {
-      endpoint: `${s3Uri}/${atbdBucket}/${key}/index.html`,
-      method: 'HEAD',
-      fetch: async (...args) => {
-        let response;
-        const res = await fetch(...args);
-        if (res.status === 200) {
-          const location = `${atbdBucketWebsite}/${key}/`;
-          response = new Response(
-            JSON.stringify({ location, atbd_id }),
-            {
-              status: res.status,
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-        } else {
-          response = res;
-        }
-        return response;
-      },
-      types: [
-        types.CHECK_HTML,
-        types.SERIALIZE_HTML_SUCCESS,
-        types.CHECK_HTML_FAIL
       ]
     }
   };

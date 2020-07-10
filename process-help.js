@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const MarkdownIt = require('markdown-it');
 
-const mdRenderer = new MarkdownIt();
+const mdRenderer = new MarkdownIt({ html: true });
 
 async function main() {
   const docs = path.join(__dirname, 'help-documentation');

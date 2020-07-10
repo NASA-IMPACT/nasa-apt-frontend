@@ -62,6 +62,7 @@ export const AlgorithmDescription = (props) => {
         <EditPage
           title={title || ''}
           id={atbd_id}
+          alias={atbd.alias}
           step={5}
         >
           <h2>Algorithm Description</h2>

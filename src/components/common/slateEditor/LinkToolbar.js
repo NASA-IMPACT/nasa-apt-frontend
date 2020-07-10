@@ -3,7 +3,7 @@ import { PropTypes as T } from 'prop-types';
 import { Popper } from 'react-popper';
 import styled from 'styled-components/macro';
 import { rgba } from 'polished';
-import collecticon from '../../../styles/collecticons';
+
 import FormInput from '../../../styles/form/input';
 import Button from '../../../styles/button/button';
 import ButtonGroup from '../../../styles/button/group';
@@ -16,18 +16,11 @@ const UrlInput = styled(FormInput)`
   width: 20rem;
 `;
 
-const makeLinkEditorButton = icon => styled(Button).attrs({
+const LinkEditorButton = styled(Button).attrs({
   hideText: true,
   variation: 'base-raised-light',
   size: 'large'
-})`
-  ::before {
-    ${collecticon(icon)}
-  }
-`;
-
-const ConfirmButton = makeLinkEditorButton('tick--small');
-const DeleteButton = makeLinkEditorButton('trash-bin');
+})``;
 
 const LinkEditorWrapper = styled.div`
   display: flex;
@@ -43,8 +36,7 @@ const LinkEditorWrapper = styled.div`
     border-bottom-left-radius: 0;
   }
 
-  ${ConfirmButton},
-  ${DeleteButton} {
+  ${LinkEditorButton} {
     box-shadow: inset 0 1px 0 0px ${_rgba(themeVal('color.base'), 0.16)},
       inset 0 -1px 0 0px ${_rgba(themeVal('color.base'), 0.16)},
       inset -1px 0px 0 0px ${_rgba(themeVal('color.base'), 0.16)};
@@ -223,8 +215,20 @@ export class LinkEditor extends React.Component {
           ref={this.inputRef}
         />
         <ButtonGroup orientation="horizontal">
-          <ConfirmButton onClick={onConfirmClick} title="Insert link">Insert Link</ConfirmButton>
-          <DeleteButton onClick={onDeleteClick} title="Remove link">Remove Link</DeleteButton>
+          <LinkEditorButton
+            onClick={onConfirmClick}
+            title="Insert link"
+            useIcon="tick--small"
+          >
+            Insert Link
+          </LinkEditorButton>
+          <LinkEditorButton
+            onClick={onDeleteClick}
+            title="Remove link"
+            useIcon="trash-bin"
+          >
+            Remove Link
+          </LinkEditorButton>
         </ButtonGroup>
       </LinkEditorWrapper>
     );

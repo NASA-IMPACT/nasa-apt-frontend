@@ -112,68 +112,6 @@ const handleLoading = (state, action) => {
   }
 };
 
-const handleSerialize = (stateSlice = {}, action) => {
-  const { type, payload } = action;
-  const { atbd_id } = payload;
-
-  if (type === actions.SERIALIZE_DOCUMENT) {
-    return {
-      ...stateSlice,
-      [atbd_id]: {
-        atbd_id,
-        pdf: null,
-        html: null,
-        isSerializingHtml: true,
-        isSerializingPdf: true,
-        serializeHtmlFail: false,
-        serializePdfFail: false
-      }
-    };
-  }
-  if (type === actions.SERIALIZE_HTML_SUCCESS) {
-    return {
-      ...stateSlice,
-      [atbd_id]: {
-        ...stateSlice[atbd_id],
-        html: payload.location,
-        isSerializingHtml: false
-      }
-    };
-  }
-  if (type === actions.SERIALIZE_HTML_FAIL) {
-    return {
-      ...stateSlice,
-      [atbd_id]: {
-        ...stateSlice[atbd_id],
-        html: null,
-        isSerializingHtml: false,
-        serializeHtmlFail: true,
-      }
-    };
-  }
-  if (type === actions.SERIALIZE_PDF_SUCCESS) {
-    return {
-      ...stateSlice,
-      [atbd_id]: {
-        ...stateSlice[atbd_id],
-        pdf: payload.location,
-        isSerializingPdf: false
-      }
-    };
-  }
-  if (type === actions.SERIALIZE_PDF_FAIL) {
-    return {
-      ...stateSlice,
-      [atbd_id]: {
-        ...stateSlice[atbd_id],
-        pdf: null,
-        isSerializingPdf: false,
-        serializePdfFail: true,
-      }
-    };
-  }
-};
-
 export default function (state = initialState, action) {
   switch (action.type) {
     case actions.FETCH_ALGORITHM_VARIABLES_SUCCESS:
@@ -466,17 +404,6 @@ export default function (state = initialState, action) {
     case actions.HIDE_LOADING:
     case actions.CLEAR_LOADING: {
       return handleLoading(state, action);
-    }
-
-    case actions.SERIALIZE_DOCUMENT:
-    case actions.SERIALIZE_HTML_SUCCESS:
-    case actions.SERIALIZE_PDF_FAIL:
-    case actions.SERIALIZE_PDF_SUCCESS:
-    case actions.SERIALIZE_HTML_FAIL: {
-      return {
-        ...state,
-        serializingAtbdVersion: handleSerialize(state.serializingAtbdVersion, action)
-      };
     }
 
     default:

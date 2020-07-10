@@ -9,6 +9,7 @@ const types = createTypes([
   ...async('DELETE_ATBD'),
   ...async('COPY_ATBD'),
   ...async('UPDATE_ATBD'),
+  ...async('ATBD_ALIAS_COUNT'),
   ...async('CREATE_ATBD_VERSION'),
   ...async('UPDATE_ATBD_VERSION'),
   ...async('FETCH_ATBD_VERSION'),
@@ -53,12 +54,7 @@ const types = createTypes([
   ...async('DELETE_REFERENCE'),
   ...async('UPLOAD_FILE'),
   ...async('FETCH_STATIC'),
-  ...async('UPLOAD_JSON'),
-  ...async('SERIALIZE_DOCUMENT'),
-  ...async('SERIALIZE_PDF'),
-  ...async('SERIALIZE_HTML'),
-  ...async('CHECK_PDF'),
-  ...async('CHECK_HTML'),
+
 
   'SET_ACTIVE_REFERENCE',
 

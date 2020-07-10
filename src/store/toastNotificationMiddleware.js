@@ -62,7 +62,7 @@ const toastNotificationMiddleware = (/* store */) => next => async (action) => {
     if (type === `UPDATE_${a}_FAIL`) {
       toasts.error(label.updateSuccess
         ? label.updateSuccess
-        : `An error occurred while updated the ${label}`, { autoClose: false });
+        : `An error occurred while updating the ${label}`, { autoClose: false });
     }
     if (type === `DELETE_${a}_SUCCESS`) {
       toasts.success(label.deleteSuccess

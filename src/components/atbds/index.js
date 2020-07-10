@@ -287,7 +287,7 @@ class AtbdList extends React.Component {
 
   renderAtbdTableRow(atbd) {
     const {
-      atbd_id, title, atbd_versions, contacts
+      atbd_id, title, alias, atbd_versions, contacts
     } = atbd;
     const { searchValue } = this.state;
 
@@ -303,7 +303,7 @@ class AtbdList extends React.Component {
           <StatusPill>{status}</StatusPill>
         </td>
         <DocTableBodyThTitle scope="row">
-          <Link to={`/atbds/${atbd_id}`} title="View this ATBD">
+          <Link to={`/atbds/${alias || atbd_id}`} title="View this ATBD">
             <strong>
               <TextHighlight value={searchValue} disabled={!title}>
                 {title || 'Untitled Document'}
@@ -341,12 +341,12 @@ class AtbdList extends React.Component {
                 <DocTableActionView
                   as={Link}
                   title="View document"
-                  to={`/atbds/${atbd_id}`}
+                  to={`/atbds/${alias || atbd_id}`}
                 >
                   View
                 </DocTableActionView>
               </li>
-              {status === 'Draft' ? (
+              {status === 'Draft' && (
                 <React.Fragment>
                   <li>
                     <DocTableActionEdit
@@ -367,17 +367,16 @@ class AtbdList extends React.Component {
                     </DocTableActionPublish>
                   </li>
                 </React.Fragment>
-              ) : (
-                <li>
-                  <DocTableActionDuplicate
-                    title="Duplicate document"
-                    data-hook="dropdown:close"
-                    onClick={this.onDuplicateClick.bind(this, atbd)}
-                  >
-                    Duplicate
-                  </DocTableActionDuplicate>
-                </li>
               )}
+              <li>
+                <DocTableActionDuplicate
+                  title="Duplicate document"
+                  data-hook="dropdown:close"
+                  onClick={this.onDuplicateClick.bind(this, atbd)}
+                >
+                  Duplicate
+                </DocTableActionDuplicate>
+              </li>
               <li>
                 <DocTableActionCitation
                   title="Get document citation"

@@ -114,10 +114,10 @@ export class References extends React.Component {
     const { newReferences, showUploadBibtexModal } = this.state;
     if (atbdVersion) {
       const { atbd, atbd_id } = atbdVersion;
-      const { title } = atbd;
+      const { title, alias } = atbd;
       return (
         <Inpage>
-          <EditPage title={title || ''} id={atbd_id} step={3}>
+          <EditPage title={title || ''} id={atbd_id} alias={alias} step={3}>
             <h2>References</h2>
             <AddBtn
               glspLeft={-1}
