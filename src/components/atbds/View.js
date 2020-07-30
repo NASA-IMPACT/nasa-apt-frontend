@@ -104,7 +104,7 @@ const AtbdSectionBody = styled.div`
 `;
 
 const AtbdContent = styled(Prose)`
-  max-width: 44rem;
+  max-width: 48rem;
   margin: 0 auto;
 `;
 
