@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 const MarkdownIt = require('markdown-it');
+const yamlFront = require('yaml-front-matter');
 
 const mdRenderer = new MarkdownIt({ html: true });
 
@@ -24,13 +25,15 @@ async function main() {
 
     try {
       const mdContent = fs.readFileSync(path.join(docs, f), 'utf8');
-      const rendered = mdRenderer.render(mdContent);
+      const data = yamlFront.loadFront(mdContent);
+      const rendered = mdRenderer.render(data.__content);
       fs.writeFileSync(
         path.join(__dirname, `public/docs/${id}.json`),
-        JSON.stringify({ content: rendered })
+        JSON.stringify({ title: data.title, content: rendered })
       );
       pageIndex.push({
         id,
+        title: data.title,
         url: `/docs/${id}.json`,
       });
     } catch (e) {
