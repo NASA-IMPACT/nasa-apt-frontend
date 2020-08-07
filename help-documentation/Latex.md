@@ -144,6 +144,6 @@ Thus far, this guide has shown how to insert simple mathematical expressions and
 </figure>
 
 ## 3. LaTeX Help References
-LaTeX math and equations. (2017, October 7). LaTeX-tutorial.com. https://www.latex-tutorial.com/tutorials/amsmath/
+LaTeX Math and Equations. (2017, October 7). LaTeX-tutorial.com. https://www.latex-tutorial.com/tutorials/amsmath/
 
 Mathematical Expressions. (2020). Overleaf. https://www.overleaf.com/learn/latex/Mathematical_expressions 
