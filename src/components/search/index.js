@@ -86,13 +86,17 @@ const SearchFilter = styled.div`
 const SearchResultsList = styled.ul`
   display: grid;
   grid-gap: ${glsp(2)};
+`;
 
-  li {
-    width: max-content;
+const SearchResult = styled.article`
+  > *:not(:last-child) {
+    margin-bottom: ${glsp()};
   }
 `;
 
-const SearchResult = styled.article``;
+const ResultLink = styled(Link)`
+  display: inline-block;
+`;
 
 const ResultHeader = styled.header``;
 
@@ -113,6 +117,15 @@ const ResultHeadline = styled.div`
 const ResultAuthors = styled.p`
   margin-top: ${glsp(0.5)};
   font-size: 0.875rem;
+`;
+
+const ResultBody = styled.div`
+  max-width: 40rem;
+
+  em {
+    font-style: italic;
+    background-color: ${themeVal('color.warning')};
+  }
 `;
 
 const atbdStatusOptions = [
@@ -243,7 +256,7 @@ class Search extends Component {
             <SearchResultsList>
               <li>
                 <SearchResult>
-                  <Link to="/atbds/1" title="View this ATBD">
+                  <ResultLink to="/atbds/1" title="View this ATBD">
                     <ResultHeader>
                       <ResultHeadline>
                         <StatusPill>Draft</StatusPill>
@@ -253,12 +266,12 @@ class Search extends Component {
                         By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
                       </ResultAuthors>
                     </ResultHeader>
-                  </Link>
+                  </ResultLink>
                 </SearchResult>
               </li>
               <li>
                 <SearchResult>
-                  <Link to="/atbds/1" title="View this ATBD">
+                  <ResultLink to="/atbds/1" title="View this ATBD">
                     <ResultHeader>
                       <ResultHeadline>
                         <StatusPill>Draft</StatusPill>
@@ -268,7 +281,10 @@ class Search extends Component {
                         By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
                       </ResultAuthors>
                     </ResultHeader>
-                  </Link>
+                  </ResultLink>
+                  <ResultBody>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. <em>Iste</em> praesentium assumenda tenetur provident distinctio quasi nulla error labore eos perferendis laudantium, et consequatur odit minus, iure, nam cupiditate unde. Praesentium?
+                  </ResultBody>
                 </SearchResult>
               </li>
             </SearchResultsList>
