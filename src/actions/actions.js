@@ -352,6 +352,22 @@ export function fetchAtbd(atbd_id) {
   };
 }
 
+export function searchAtbds() {
+  console.log('search');
+  //do the search
+  return {
+    [RSAA]: {
+      endpoint: `${BASE_URL}/rpc/search_text?${''}`,
+      method: 'GET',
+      types: [
+        types.SEARCH_ATBDS,
+        types.SEARCH_ATBDS_SUCCESS,
+        types.SEARCH_ATBDS_FAIL
+      ]
+    }
+  };
+}
+
 export function fetchContacts() {
   return {
     [RSAA]: {

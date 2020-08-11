@@ -3,6 +3,7 @@ import actions from '../constants/action_types';
 
 const initialState = {
   atbds: [],
+  searchResults: [],
   contacts: [],
   contact_groups: [],
   references: [],
@@ -135,6 +136,14 @@ export default function (state = initialState, action) {
           })
         ]
       };
+    }
+
+    case actions.SEARCH_ATBDS_SUCCESS: {
+      const { payload } = action;
+      return {
+        ...state,
+        searchResults: payload
+      }
     }
 
     case actions.FETCH_CONTACTS_SUCCESS: {

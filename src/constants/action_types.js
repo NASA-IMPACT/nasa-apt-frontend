@@ -55,6 +55,7 @@ const types = createTypes([
   ...async('UPLOAD_FILE'),
   ...async('FETCH_STATIC'),
 
+  ...async('SEARCH_ATBDS'),
 
   'SET_ACTIVE_REFERENCE',
 

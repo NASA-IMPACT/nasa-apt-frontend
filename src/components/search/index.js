@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
+import {
+  searchAtbds
+} from '../../actions/actions';
+
 
 import {
   Inpage,
@@ -179,6 +183,7 @@ class Search extends Component {
   }
 
   onSearch() {
+    const { searchAtbds: search } = this.props;
     this.setState(
       state => ({ searchValue: state.searchCurrent }),
       () => {
@@ -186,6 +191,7 @@ class Search extends Component {
         this.props.push({ search: qString });
       }
     );
+    search()
   }
 
   render() {
@@ -304,12 +310,14 @@ class Search extends Component {
 Search.propTypes = {
   location: T.object,
   push: T.func,
+  searchAtbds: T.func.isRequired
 };
 
 const mapStateToProps = (state) => {};
 
 const mapDispatch = {
   push,
+  searchAtbds
 };
 
 export default connect(mapStateToProps, mapDispatch)(Search);
