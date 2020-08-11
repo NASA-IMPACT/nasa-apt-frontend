@@ -189,9 +189,9 @@ class Search extends Component {
       () => {
         const qString = this.qsState.getQs(this.state);
         this.props.push({ search: qString });
+        search(this.state.searchValue);
       }
     );
-    search()
   }
 
   render() {

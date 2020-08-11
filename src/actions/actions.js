@@ -6,6 +6,8 @@ import qs from 'qs';
 import types from '../constants/action_types';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PDF_SERVICE_ENDPOINT = process.env.REACT_APP_PDF_SERVICE_ENDPOINT;
+
 const s3Uri = process.env.REACT_APP_S3_URI;
 const figuresBucket = process.env.REACT_APP_FIGURES_BUCKET;
 
@@ -352,13 +354,22 @@ export function fetchAtbd(atbd_id) {
   };
 }
 
-export function searchAtbds() {
-  console.log('search');
-  //do the search
+export function searchAtbds(query) {
+  // do the search
   return {
     [RSAA]: {
-      endpoint: `${BASE_URL}/rpc/search_text?${''}`,
-      method: 'GET',
+      endpoint: `${PDF_SERVICE_ENDPOINT}/search`,
+      method: 'POST',
+      body: JSON.stringify({
+        query: {
+          simple_query_string: {
+            query
+          }
+        }
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
       types: [
         types.SEARCH_ATBDS,
         types.SEARCH_ATBDS_SUCCESS,

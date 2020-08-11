@@ -143,7 +143,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         searchResults: payload
-      }
+      };
     }
 
     case actions.FETCH_CONTACTS_SUCCESS: {
