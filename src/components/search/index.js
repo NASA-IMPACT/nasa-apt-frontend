@@ -355,7 +355,8 @@ class Search extends Component {
 Search.propTypes = {
   location: T.object,
   push: T.func,
-  searchAtbds: T.func.isRequired
+  searchAtbds: T.func.isRequired,
+  searchResults: T.object
 };
 
 const mapStateToProps = (state) => {

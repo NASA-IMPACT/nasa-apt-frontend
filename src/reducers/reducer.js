@@ -3,7 +3,7 @@ import actions from '../constants/action_types';
 
 const initialState = {
   atbds: [],
-  searchResults: [],
+  searchResults: {},
   contacts: [],
   contact_groups: [],
   references: [],
