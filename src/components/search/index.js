@@ -195,8 +195,8 @@ class Search extends Component {
   }
 
   render() {
-    const resultCount = 2;
-    const searchTerm = 'searchValue';
+    const { searchValue } = this.state;
+    const searchResults = (this.props.searchResults.hits && this.props.searchResults.hits.hits);
 
     return (
       <Inpage>
@@ -254,46 +254,48 @@ class Search extends Component {
               </SearchFilterGroup>
             </SearchControls>
 
-            <ResultsHeading>
-              Showing {resultCount} result{resultCount > 1 ? 's' : ''} for{' '}
-              <em>{searchTerm}</em>
-            </ResultsHeading>
 
-            <SearchResultsList>
-              <li>
-                <SearchResult>
-                  <ResultLink to="/atbds/1" title="View this ATBD">
-                    <ResultHeader>
-                      <ResultHeadline>
-                        <StatusPill>Draft</StatusPill>
-                        <h1>Untitled Document</h1>
-                      </ResultHeadline>
-                      <ResultAuthors>
-                        By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
-                      </ResultAuthors>
-                    </ResultHeader>
-                  </ResultLink>
-                </SearchResult>
-              </li>
-              <li>
-                <SearchResult>
-                  <ResultLink to="/atbds/1" title="View this ATBD">
-                    <ResultHeader>
-                      <ResultHeadline>
-                        <StatusPill>Draft</StatusPill>
-                        <h1>Untitled Document</h1>
-                      </ResultHeadline>
-                      <ResultAuthors>
-                        By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
-                      </ResultAuthors>
-                    </ResultHeader>
-                  </ResultLink>
-                  <ResultBody>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. <em>Iste</em> praesentium assumenda tenetur provident distinctio quasi nulla error labore eos perferendis laudantium, et consequatur odit minus, iure, nam cupiditate unde. Praesentium?
-                  </ResultBody>
-                </SearchResult>
-              </li>
-            </SearchResultsList>
+            {searchResults && (
+              <>
+                <ResultsHeading>
+                  Showing {searchResults.length} result{searchResults.length > 1 ? 's' : ''} for{' '}
+                  <em>{searchValue}</em>
+                </ResultsHeading>
+
+                <SearchResultsList>
+                  <li>
+                    {
+                  searchResults
+                    .sort((a, b) => a._score - b._score)
+                    .map((res) => {
+                      const { atbd_id, status, title } = res._source;
+                      return (
+                        <SearchResult key={atbd_id}>
+                          <ResultLink to={`/atbds/${atbd_id}`} title="View this ATBD">
+                            <ResultHeader>
+                              <ResultHeadline>
+                                <StatusPill>{status}</StatusPill>
+                                <h1>{`${title} ${res._score}`}</h1>
+                              </ResultHeadline>
+
+                              <ResultAuthors>
+                            By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
+                              </ResultAuthors>
+
+                            </ResultHeader>
+                            <ResultBody>
+                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. <em>Iste</em> praesentium assumenda tenetur provident distinctio quasi nulla error labore eos perferendis laudantium, et consequatur odit minus, iure, nam cupiditate unde. Praesentium?
+                            </ResultBody>
+
+                          </ResultLink>
+                        </SearchResult>
+                      );
+                    })
+                }
+                  </li>
+                </SearchResultsList>
+              </>
+            )}
 
             <NoResultsMessage>
               <p>
@@ -313,7 +315,15 @@ Search.propTypes = {
   searchAtbds: T.func.isRequired
 };
 
-const mapStateToProps = (state) => {};
+const mapStateToProps = (state) => {
+  const {
+    searchResults
+  } = state.application;
+
+  return {
+    searchResults
+  };
+};
 
 const mapDispatch = {
   push,
