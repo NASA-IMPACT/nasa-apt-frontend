@@ -267,20 +267,31 @@ class Search extends Component {
                     {
                   searchResults
                     .sort((a, b) => a._score - b._score)
+                    .filter(res => this.state.status === 'all' || res._source.status === this.state.status)
                     .map((res) => {
-                      const { atbd_id, status, title } = res._source;
+                      const {
+                        atbd_id, status, title, contacts
+                      } = res._source;
                       return (
                         <SearchResult key={atbd_id}>
                           <ResultLink to={`/atbds/${atbd_id}`} title="View this ATBD">
                             <ResultHeader>
                               <ResultHeadline>
                                 <StatusPill>{status}</StatusPill>
-                                <h1>{`${title} ${res._score}`}</h1>
+                                <h1>{`${title}`}</h1>
                               </ResultHeadline>
 
+                              {contacts && (
                               <ResultAuthors>
-                            By: <span>Leonardo Davinci</span>, <span>Brad Wayne</span>
+                                <span>By:</span>
+                                {contacts.map(({ first_name, last_name }, i) => (
+                                  <React.Fragment key={first_name + last_name}>
+                                    <span> {first_name}</span> <span>{last_name}</span>{i < (contacts.length - 1) && ','}
+                                  </React.Fragment>
+                                ))}
                               </ResultAuthors>
+                              )
+                              }
 
                             </ResultHeader>
                             <ResultBody>
