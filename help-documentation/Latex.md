@@ -1,3 +1,6 @@
+---
+title: Latex
+---
 # LaTeX Help Manual for the Algorithm Publication Tool (APT)
 
 ## 1. Introduction
