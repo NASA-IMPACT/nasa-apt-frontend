@@ -194,9 +194,23 @@ class Search extends Component {
     );
   }
 
+  filterResults(results) {
+    return results
+      .filter((res) => {
+        const checkStatus = this.state.status === 'all' || res._source.status === this.state.status;
+
+        let [{ release_date }] = res._source.citations || [{}];
+        release_date = release_date ? new Date(release_date).getFullYear() : 'Undefined';
+
+        const checkYear = this.state.year === 'all' || `${release_date}` === `${this.state.year}`;
+
+        return checkYear && checkStatus;
+      });
+  }
+
   render() {
     const { searchValue } = this.state;
-    const searchResults = (this.props.searchResults.hits && this.props.searchResults.hits.hits);
+    const searchResults = (this.props.searchResults.hits && this.filterResults(this.props.searchResults.hits.hits));
 
     return (
       <Inpage>
@@ -230,8 +244,22 @@ class Search extends Component {
               <SearchFilterGroup>
                 <SearchFilter>
                   <FormLabel>Year</FormLabel>
-                  <FormSelect size="small">
-                    <option>All</option>
+                  <FormSelect
+                    size="small"
+                    id="search-year"
+                    name="search-year"
+                    value={this.state.year}
+                    onChange={this.onSelectChange.bind(this, 'year')}
+                  >
+                    <option value="all">All</option>
+                    {
+                      searchResults && searchResults.map((res) => {
+                        const [{ release_date }] = res._source.citations || [{}];
+                        return new Date(release_date).getFullYear() || 'Undefined';
+                      })
+                        .filter((d, ind, arr) => arr.indexOf(d) === ind)
+                        .map(d => <option>{d}</option>)
+                    }
                   </FormSelect>
                 </SearchFilter>
                 <SearchFilter>
@@ -262,12 +290,12 @@ class Search extends Component {
                   <em>{searchValue}</em>
                 </ResultsHeading>
 
-                <SearchResultsList>
-                  <li>
-                    {
+                { searchResults.length ? (
+                  <SearchResultsList>
+                    <li>
+                      {
                   searchResults
                     .sort((a, b) => a._score - b._score)
-                    .filter(res => this.state.status === 'all' || res._source.status === this.state.status)
                     .map((res) => {
                       const {
                         atbd_id, status, title, contacts
@@ -303,16 +331,20 @@ class Search extends Component {
                       );
                     })
                 }
-                  </li>
-                </SearchResultsList>
+                    </li>
+                  </SearchResultsList>
+                )
+                  : (
+                    <NoResultsMessage>
+                      <p>
+                        There are no results for the current search/filters criteria.
+                      </p>
+                    </NoResultsMessage>
+                  )}
+
               </>
             )}
 
-            <NoResultsMessage>
-              <p>
-                There are no results for the current search/filters criteria.
-              </p>
-            </NoResultsMessage>
           </InpageBodyInner>
         </InpageBody>
       </Inpage>
