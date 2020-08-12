@@ -174,6 +174,12 @@ class Search extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.state.searchValue !== '') {
+      this.onSearch();
+    }
+  }
+
   onSearchChange(e) {
     this.setState({ searchCurrent: e.target.value });
   }
