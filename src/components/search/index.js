@@ -193,14 +193,20 @@ class Search extends Component {
     this.setState(
       state => ({ searchValue: state.searchCurrent }),
       () => {
+        const {searchValue: query, year, status} = this.state
         const qString = this.qsState.getQs(this.state);
         this.props.push({ search: qString });
-        search(this.state.searchValue);
+        search({
+          query,
+          year,
+          status: status === 'all' ? 'draft OR published' : status.toLowerCase()
+        });
       }
     );
   }
 
   filterResults(results) {
+    return results
     return results
       .filter((res) => {
         const checkStatus = this.state.status === 'all' || res._source.status === this.state.status;

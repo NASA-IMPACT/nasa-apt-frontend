@@ -354,18 +354,39 @@ export function fetchAtbd(atbd_id) {
   };
 }
 
-export function searchAtbds(query) {
+export function searchAtbds(searchQuery) {
   // do the search
+  const { query, year, status } = searchQuery;
+
+  const elasticQuery = {
+    bool: {
+      must: [
+        {
+          multi_match: {
+            query
+          }
+        }
+      ],
+      filter: [
+        { match: { status } },
+      ]
+    }
+  };
+
+
+  if (year !== 'all') {
+    elasticQuery.bool.filter.push(
+      { match: { 'citations.release_date': year } }
+    );
+  }
+
   return {
     [RSAA]: {
       endpoint: `${PDF_SERVICE_ENDPOINT}/search`,
       method: 'POST',
       body: JSON.stringify({
-        query: {
-          simple_query_string: {
-            query
-          }
-        }
+        query: elasticQuery,
+        highlight: { fields: { '*': {} } }
       }),
       headers: {
         'Content-Type': 'application/json',
