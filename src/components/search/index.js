@@ -323,7 +323,7 @@ class Search extends Component {
                             </ResultHeader>
 
                             {Object.keys(highlight)
-                              .filter(key => key !== 'status' && key !== 'citations.release_date')
+                              .filter(key => key !== 'status' && key !== 'citations.release_date' && key !== 'title')
                               .map(key => (
                                 <ResultBody>
                                   <div dangerouslySetInnerHTML={{ __html: highlight[key].join(' ') }} />
