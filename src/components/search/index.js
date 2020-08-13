@@ -144,7 +144,7 @@ const atbdStatusOptions = [
 ];
 
 const currentYear = new Date().getFullYear();
-const atbdYearOptions = new Array(20).fill(0).map((e, i) => currentYear - i);
+const atbdYearOptions = [...new Array(20).fill(0).map((e, i) => `${currentYear - i}`), 'All'];
 
 class Search extends Component {
   constructor(props) {
@@ -170,13 +170,12 @@ class Search extends Component {
       },
     });
 
-    console.log(atbdYearOptions)
-
     const state = this.qsState.getState(props.location.search.substr(1));
     this.state = {
       ...state,
       // Value currently on the search field.
       searchCurrent: state.searchValue,
+
     };
   }
 
@@ -211,24 +210,9 @@ class Search extends Component {
     );
   }
 
-  filterResults(results) {
-    return results;
-    return results
-      .filter((res) => {
-        const checkStatus = this.state.status === 'all' || res._source.status === this.state.status;
-
-        let [{ release_date }] = res._source.citations || [{}];
-        release_date = release_date ? new Date(release_date).getFullYear() : 'Undefined';
-
-        const checkYear = this.state.year === 'all' || `${release_date}` === `${this.state.year}`;
-
-        return checkYear && checkStatus;
-      });
-  }
-
   render() {
     const { searchValue } = this.state;
-    const searchResults = (this.props.searchResults.hits && this.filterResults(this.props.searchResults.hits.hits));
+    const searchResults = (this.props.searchResults.hits && this.props.searchResults.hits.hits);
 
     return (
       <Inpage>
@@ -273,14 +257,6 @@ class Search extends Component {
                     {
                       atbdYearOptions.map(e => <option value={e}>{e}</option>)
                     }
-                    {/*
-                      searchResults && searchResults.map((res) => {
-                        const [{ release_date }] = res._source.citations || [{}];
-                        return new Date(release_date).getFullYear() || 'Undefined';
-                      })
-                        .filter((d, ind, arr) => arr.indexOf(d) === ind)
-                        .map(d => <option>{d}</option>)
-                        */}
                   </FormSelect>
                 </SearchFilter>
                 <SearchFilter>
