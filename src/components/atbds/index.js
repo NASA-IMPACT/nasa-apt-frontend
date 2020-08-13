@@ -240,7 +240,7 @@ class AtbdList extends React.Component {
   onSearch(searchValue) {
     this.setState({ searchValue }, () => {
       const qString = this.qsState.getQs(this.state);
-      this.props.push({ search: qString });
+      this.props.push({ pathname: '/search', search: qString });
     });
   }
 
@@ -255,6 +255,7 @@ class AtbdList extends React.Component {
       }),
       () => {
         const qString = this.qsState.getQs(this.state);
+
         this.props.push({ search: qString });
       }
     );
