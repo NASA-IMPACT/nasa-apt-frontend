@@ -297,6 +297,8 @@ class Search extends Component {
                       const {
                         atbd_id, status, title, contacts
                       } = res._source;
+                      const { highlight } = res;
+
                       return (
                         <SearchResult key={atbd_id}>
                           <ResultLink to={`/atbds/${atbd_id}`} title="View this ATBD">
@@ -319,10 +321,14 @@ class Search extends Component {
                               }
 
                             </ResultHeader>
-                            <ResultBody>
-                            Lorem, ipsum dolor sit amet consectetur adipisicing elit. <em>Iste</em> praesentium assumenda tenetur provident distinctio quasi nulla error labore eos perferendis laudantium, et consequatur odit minus, iure, nam cupiditate unde. Praesentium?
-                            </ResultBody>
 
+                            {Object.keys(highlight)
+                              .filter(key => key !== 'status' && key !== 'citations.release_date')
+                              .map(key => (
+                                <ResultBody>
+                                  <div dangerouslySetInnerHTML={{ __html: highlight[key].join(' ') }} />
+                                </ResultBody>
+                              ))}
                           </ResultLink>
                         </SearchResult>
                       );
