@@ -143,6 +143,9 @@ const atbdStatusOptions = [
   },
 ];
 
+const currentYear = new Date().getFullYear();
+const atbdYearOptions = new Array(20).fill(0).map((e, i) => currentYear - i);
+
 class Search extends Component {
   constructor(props) {
     super(props);
@@ -159,12 +162,15 @@ class Search extends Component {
       year: {
         accessor: 'year',
         default: 'all',
+        validator: atbdYearOptions
       },
       search: {
         accessor: 'searchValue',
         default: '',
       },
     });
+
+    console.log(atbdYearOptions)
 
     const state = this.qsState.getState(props.location.search.substr(1));
     this.state = {
@@ -193,7 +199,7 @@ class Search extends Component {
     this.setState(
       state => ({ searchValue: state.searchCurrent }),
       () => {
-        const {searchValue: query, year, status} = this.state
+        const { searchValue: query, year, status } = this.state;
         const qString = this.qsState.getQs(this.state);
         this.props.push({ search: qString });
         search({
@@ -206,7 +212,7 @@ class Search extends Component {
   }
 
   filterResults(results) {
-    return results
+    return results;
     return results
       .filter((res) => {
         const checkStatus = this.state.status === 'all' || res._source.status === this.state.status;
@@ -265,13 +271,16 @@ class Search extends Component {
                   >
                     <option value="all">All</option>
                     {
+                      atbdYearOptions.map(e => <option value={e}>{e}</option>)
+                    }
+                    {/*
                       searchResults && searchResults.map((res) => {
                         const [{ release_date }] = res._source.citations || [{}];
                         return new Date(release_date).getFullYear() || 'Undefined';
                       })
                         .filter((d, ind, arr) => arr.indexOf(d) === ind)
                         .map(d => <option>{d}</option>)
-                    }
+                        */}
                   </FormSelect>
                 </SearchFilter>
                 <SearchFilter>

@@ -373,7 +373,6 @@ export function searchAtbds(searchQuery) {
     }
   };
 
-
   if (year !== 'all') {
     elasticQuery.bool.filter.push(
       { match: { 'citations.release_date': year } }
