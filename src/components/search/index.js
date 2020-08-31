@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { push } from 'connected-react-router';
-import {
-  searchAtbds
-} from '../../actions/actions';
-
+import { searchAtbds } from '../../actions/actions';
 
 import {
   Inpage,
@@ -28,6 +25,7 @@ import collecticon from '../../styles/collecticons';
 import { glsp } from '../../styles/utils/theme-values';
 import { themeVal } from '../../styles/utils/general';
 import QsState from '../../utils/qs-state';
+import TextHighlight from '../common/TextHighlight';
 
 const ResultsHeading = styled.h2`
   margin-bottom: 2rem;
@@ -100,6 +98,16 @@ const SearchResult = styled.article`
 
 const ResultLink = styled(Link)`
   display: inline-block;
+
+  &,
+  &:active,
+  &:visited {
+    color: inherit;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: ${glsp()};
+  }
 `;
 
 const ResultHeader = styled.header``;
@@ -144,7 +152,9 @@ const atbdStatusOptions = [
 ];
 
 const currentYear = new Date().getFullYear();
-const atbdYearOptions = [...new Array(20).fill(0).map((e, i) => `${currentYear - i}`), 'All'];
+const atbdYearOptions = new Array(20)
+  .fill(0)
+  .map((e, i) => `${currentYear - i}`);
 
 class Search extends Component {
   constructor(props) {
@@ -162,7 +172,7 @@ class Search extends Component {
       year: {
         accessor: 'year',
         default: 'all',
-        validator: atbdYearOptions
+        validator: atbdYearOptions,
       },
       search: {
         accessor: 'searchValue',
@@ -175,7 +185,6 @@ class Search extends Component {
       ...state,
       // Value currently on the search field.
       searchCurrent: state.searchValue,
-
     };
   }
 
@@ -204,7 +213,8 @@ class Search extends Component {
         search({
           query,
           year,
-          status: status === 'all' ? 'draft OR published' : status.toLowerCase()
+          status:
+            status === 'all' ? 'draft OR published' : status.toLowerCase(),
         });
       }
     );
@@ -212,7 +222,7 @@ class Search extends Component {
 
   render() {
     const { searchValue } = this.state;
-    const searchResults = (this.props.searchResults.hits && this.props.searchResults.hits.hits);
+    const searchResults = this.props.searchResults.hits && this.props.searchResults.hits.hits;
 
     return (
       <Inpage>
@@ -254,9 +264,9 @@ class Search extends Component {
                     onChange={this.onSelectChange.bind(this, 'year')}
                   >
                     <option value="all">All</option>
-                    {
-                      atbdYearOptions.map(e => <option value={e}>{e}</option>)
-                    }
+                    {atbdYearOptions.map(e => (
+                      <option key={e} value={e}>{e}</option>
+                    ))}
                   </FormSelect>
                 </SearchFilter>
                 <SearchFilter>
@@ -279,75 +289,91 @@ class Search extends Component {
               </SearchFilterGroup>
             </SearchControls>
 
-
             {searchResults && (
               <>
                 <ResultsHeading>
-                  Showing {searchResults.length} result{searchResults.length > 1 ? 's' : ''} for{' '}
+                  Showing {searchResults.length} result
+                  {searchResults.length > 1 ? 's' : ''} for{' '}
                   <em>{searchValue}</em>
                 </ResultsHeading>
 
-                { searchResults.length ? (
+                {searchResults.length ? (
                   <SearchResultsList>
-                    <li>
-                      {
-                  searchResults
-                    .sort((a, b) => a._score - b._score)
-                    .map((res) => {
-                      const {
-                        atbd_id, status, title, contacts
-                      } = res._source;
-                      const { highlight } = res;
+                    {searchResults
+                      .sort((a, b) => a._score - b._score)
+                      .map((res) => {
+                        const {
+                          atbd_id,
+                          status,
+                          title,
+                          contacts,
+                        } = res._source;
+                        const { highlight } = res;
 
-                      return (
-                        <SearchResult key={atbd_id}>
-                          <ResultLink to={`/atbds/${atbd_id}`} title="View this ATBD">
-                            <ResultHeader>
-                              <ResultHeadline>
-                                <StatusPill>{status}</StatusPill>
-                                <h1>{`${title}`}</h1>
-                              </ResultHeadline>
+                        return (
+                          <li key={atbd_id}>
+                            <SearchResult>
+                              <ResultLink
+                                to={`/atbds/${atbd_id}`}
+                                title="View this ATBD"
+                              >
+                                <ResultHeader>
+                                  <ResultHeadline>
+                                    <StatusPill>{status}</StatusPill>
+                                    <h1>
+                                      {title ? (
+                                        <TextHighlight value={searchValue}>
+                                          {title}
+                                        </TextHighlight>
+                                      ) : (
+                                        'Untitled Document'
+                                      )}
+                                    </h1>
+                                  </ResultHeadline>
 
-                              {contacts && (
-                              <ResultAuthors>
-                                <span>By:</span>
-                                {contacts.map(({ first_name, last_name }, i) => (
-                                  <React.Fragment key={first_name + last_name}>
-                                    <span> {first_name}</span> <span>{last_name}</span>{i < (contacts.length - 1) && ','}
-                                  </React.Fragment>
-                                ))}
-                              </ResultAuthors>
-                              )
-                              }
+                                  {contacts && (
+                                    <ResultAuthors>
+                                      <span>By: </span>
+                                      <TextHighlight value={searchValue}>
+                                        {contacts.map(
+                                          ({ first_name, last_name }) => `${first_name} ${last_name}`
+                                        ).join(', ')}
+                                      </TextHighlight>
+                                    </ResultAuthors>
+                                  )}
+                                </ResultHeader>
 
-                            </ResultHeader>
-
-                            {Object.keys(highlight)
-                              .filter(key => key !== 'status' && key !== 'citations.release_date' && key !== 'title')
-                              .map(key => (
-                                <ResultBody>
-                                  <div dangerouslySetInnerHTML={{ __html: highlight[key].join(' ') }} />
-                                </ResultBody>
-                              ))}
-                          </ResultLink>
-                        </SearchResult>
-                      );
-                    })
-                }
-                    </li>
+                                {Object.keys(highlight)
+                                  .filter(
+                                    key => key !== 'status'
+                                      && key !== 'citations.release_date'
+                                      && key !== 'title'
+                                  )
+                                  .map(key => (
+                                    <ResultBody key={key}>
+                                      <div
+                                        dangerouslySetInnerHTML={{
+                                          __html: highlight[key].join(' '),
+                                        }}
+                                      />
+                                    </ResultBody>
+                                  ))}
+                              </ResultLink>
+                            </SearchResult>
+                          </li>
+                        );
+                      })}
                   </SearchResultsList>
-                )
-                  : (
-                    <NoResultsMessage>
-                      <p>
-                        There are no results for the current search/filters criteria.
-                      </p>
-                    </NoResultsMessage>
-                  )}
-
+                ) : (
+                  <NoResultsMessage>
+                    <p>
+                      There are no results for the current search/filters
+                      criteria.
+                    </p>
+                  </NoResultsMessage>
+                )}
               </>
             )}
-
           </InpageBodyInner>
         </InpageBody>
       </Inpage>
@@ -359,22 +385,20 @@ Search.propTypes = {
   location: T.object,
   push: T.func,
   searchAtbds: T.func.isRequired,
-  searchResults: T.object
+  searchResults: T.object,
 };
 
 const mapStateToProps = (state) => {
-  const {
-    searchResults
-  } = state.application;
+  const { searchResults } = state.application;
 
   return {
-    searchResults
+    searchResults,
   };
 };
 
 const mapDispatch = {
   push,
-  searchAtbds
+  searchAtbds,
 };
 
 export default connect(mapStateToProps, mapDispatch)(Search);
