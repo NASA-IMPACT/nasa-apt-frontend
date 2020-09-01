@@ -18,6 +18,7 @@ import {
 import FormInput from '../../styles/form/input';
 import FormSelect from '../../styles/form/select';
 import FormLabel from '../../styles/form/label';
+import Form from '../../styles/form/form';
 import Button from '../../styles/button/button';
 import StatusPill from '../common/StatusPill';
 
@@ -54,7 +55,7 @@ const SearchControls = styled.div`
   }
 `;
 
-const SearchBox = styled.div`
+const SearchBox = styled(Form)`
   display: flex;
   align-items: center;
 
@@ -236,7 +237,12 @@ class Search extends Component {
         <InpageBody>
           <InpageBodyInner>
             <SearchControls>
-              <SearchBox>
+              <SearchBox
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  this.onSearch();
+                }}
+              >
                 <FormInput
                   id="search-term"
                   name="search-term"
@@ -246,6 +252,7 @@ class Search extends Component {
                   onChange={this.onSearchChange}
                 />
                 <Button
+                  type="submit"
                   useIcon="magnifier-right"
                   variation="primary-raised-light"
                   onClick={this.onSearch}
