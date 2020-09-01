@@ -356,15 +356,32 @@ class Search extends Component {
                                       && key !== 'citations.release_date'
                                       && key !== 'title'
                                   )
-                                  .map(key => (
-                                    <ResultBody key={key}>
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html: highlight[key].join(' '),
-                                        }}
-                                      />
-                                    </ResultBody>
-                                  ))}
+                                  .reduce((accum, key, i) => {
+                                    if (i < 2) {
+                                      accum.push(
+                                        <ResultBody key={key}>
+                                          <div
+                                            dangerouslySetInnerHTML={{
+                                              __html: highlight[key].join(' '),
+                                            }}
+                                          />
+                                        </ResultBody>
+                                      );
+                                    } else if (i === 2) {
+                                      accum.push(1);
+                                    } else {
+                                      /* eslint-disable-next-line */
+                                      accum[2] += 1;
+                                    }
+                                    return accum;
+                                  }, [])
+                                  .map((el) => {
+                                    if (Number(el) === el) {
+                                      return <div key="otherMatches"><em>{`matches also found in ${el} other fields`}</em></div>;
+                                    }
+                                    return el;
+                                  })
+                                }
                               </ResultLink>
                             </SearchResult>
                           </li>
