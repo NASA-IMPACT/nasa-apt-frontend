@@ -141,6 +141,11 @@ const ResultBody = styled.div`
   }
 `;
 
+const ResultKey = styled.div`
+  font-weight: bold;
+  text-transform: capitalize;
+`;
+
 const atbdStatusOptions = [
   {
     id: 'Draft',
@@ -360,6 +365,7 @@ class Search extends Component {
                                     if (i < 2) {
                                       accum.push(
                                         <ResultBody key={key}>
+                                          <ResultKey>{key.split('.')[0].replace(/_/g, ' ')}</ResultKey>
                                           <div
                                             dangerouslySetInnerHTML={{
                                               __html: highlight[key].join(' '),
