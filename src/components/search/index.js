@@ -377,7 +377,7 @@ class Search extends Component {
                                   }, [])
                                   .map((el) => {
                                     if (Number(el) === el) {
-                                      return <div key="otherMatches"><em>{`matches also found in ${el} other fields`}</em></div>;
+                                      return <div key="otherMatches"><em>matches also found in {el} other fields</em></div>;
                                     }
                                     return el;
                                   })
