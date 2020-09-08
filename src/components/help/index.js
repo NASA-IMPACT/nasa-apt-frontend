@@ -26,7 +26,8 @@ import { stylizeFunction } from '../../styles/utils/general';
 const _rgba = stylizeFunction(rgba);
 
 const HelpProse = styled(Prose)`
-  max-width: 50rem;
+  max-width: 48rem;
+  margin: 0 auto;
 
   img {
     max-width: 100%;
