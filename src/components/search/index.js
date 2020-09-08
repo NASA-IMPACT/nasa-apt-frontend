@@ -141,9 +141,10 @@ const ResultBody = styled.div`
   }
 `;
 
-const ResultKey = styled.div`
+const ResultKey = styled.h2`
   font-weight: bold;
   text-transform: capitalize;
+  font-size: 0.875rem;
 `;
 
 const atbdStatusOptions = [
