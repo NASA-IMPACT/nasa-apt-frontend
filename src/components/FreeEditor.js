@@ -766,6 +766,7 @@ const StyledFreeEditor = styled(FreeEditor)`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  min-width: 0;
 
   table {
     width: 100%;
