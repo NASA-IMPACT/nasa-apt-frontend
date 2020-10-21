@@ -11,7 +11,8 @@ import { BlockMath } from 'react-katex';
 
 import {
   deleteAtbd,
-  copyAtbd
+  copyAtbd,
+  updateAtbdVersion
 } from '../../actions/actions';
 
 // Components
@@ -65,6 +66,12 @@ const DocumentActionDuplicate = styled(DropMenuItem)`
   }
 `;
 
+const DocumentActionPublish = styled(DropMenuItem)`
+  &::before {
+    ${collecticon('arrow-up-right')}
+  }
+`;
+
 const DocumentActionCitation = styled(DropMenuItem)`
   &::before {
     ${collecticon('quote-left')}
@@ -97,7 +104,7 @@ const AtbdSectionBody = styled.div`
 `;
 
 const AtbdContent = styled(Prose)`
-  max-width: 44rem;
+  max-width: 48rem;
   margin: 0 auto;
 `;
 
@@ -180,6 +187,7 @@ class AtbdView extends Component {
     deleteAtbdAction: T.func,
     fetchAtbdAction: T.func,
     copyAtbdAction: T.func,
+    updateAtbdVersionAction: T.func,
     match: T.object,
     visitLink: T.func
   };
@@ -220,6 +228,17 @@ class AtbdView extends Component {
     const res = await copyAtbdAction(atbd_id);
     if (!res.error) {
       visitLink(`/atbds/${res.payload.created_atbd.alias}`);
+    }
+  }
+
+  async onPublishClick(atbd, e) {
+    e.preventDefault();
+    const { visitLink, updateAtbdVersionAction } = this.props;
+    const { atbd_version } = atbd.atbd_versions[0];
+    /* eslint-disable-next-line react/destructuring-assignment */
+    const res = await updateAtbdVersionAction(atbd.atbd_id, atbd_version, { status: 'Published' });
+    if (!res.error) {
+      visitLink(`/atbds/${atbd.alias}`);
     }
   }
 
@@ -872,6 +891,17 @@ class AtbdView extends Component {
                     >
                       <DropTitle>Document options</DropTitle>
                       <DropMenu role="menu" iconified>
+                        {atbdStatus === 'Draft' && (
+                          <li>
+                            <DocumentActionPublish
+                              title="Publish document"
+                              data-hook="dropdown:close"
+                              onClick={this.onPublishClick.bind(this, atbd)}
+                            >
+                              Publish
+                            </DocumentActionPublish>
+                          </li>
+                        )}
                         <li>
                           <DocumentActionDuplicate
                             title="Duplicate document"
@@ -1007,6 +1037,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = {
+  updateAtbdVersionAction: updateAtbdVersion,
   deleteAtbdAction: deleteAtbd,
   copyAtbdAction: copyAtbd,
   visitLink: push

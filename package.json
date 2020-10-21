@@ -1,7 +1,7 @@
 {
   "name": "apt-frontend",
   "description": "Interface for the Algorithm Publication Tool",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Development Seed",
     "url": "https://developmentseed.org"
@@ -29,7 +29,6 @@
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
     "lodash.set": "^4.3.2",
-    "markdown-it": "^10.0.0",
     "object-path": "^0.11.4",
     "polished": "^2.3.3",
     "prop-types": "^15.7.2",
@@ -99,10 +98,12 @@
     "eslint-plugin-react": "^7.12.4",
     "fs-extra": "^9.0.0",
     "js-yaml": "^3.13.1",
+    "markdown-it": "^10.0.0",
     "proxyquire": "^2.1.0",
     "sinon": "^7.2.4",
     "surge": "^0.21.3",
     "tape": "^4.10.1",
-    "watch": "^1.0.2"
+    "watch": "^1.0.2",
+    "yaml-front-matter": "^4.1.0"
   }
 }

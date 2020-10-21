@@ -347,7 +347,7 @@ class AtbdList extends React.Component {
                   View
                 </DocTableActionView>
               </li>
-              {status === 'Draft' ? (
+              {status === 'Draft' && (
                 <React.Fragment>
                   <li>
                     <DocTableActionEdit
@@ -368,17 +368,16 @@ class AtbdList extends React.Component {
                     </DocTableActionPublish>
                   </li>
                 </React.Fragment>
-              ) : (
-                <li>
-                  <DocTableActionDuplicate
-                    title="Duplicate document"
-                    data-hook="dropdown:close"
-                    onClick={this.onDuplicateClick.bind(this, atbd)}
-                  >
-                    Duplicate
-                  </DocTableActionDuplicate>
-                </li>
               )}
+              <li>
+                <DocTableActionDuplicate
+                  title="Duplicate document"
+                  data-hook="dropdown:close"
+                  onClick={this.onDuplicateClick.bind(this, atbd)}
+                >
+                  Duplicate
+                </DocTableActionDuplicate>
+              </li>
               <li>
                 <DocTableActionCitation
                   title="Get document citation"

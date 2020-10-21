@@ -30,7 +30,7 @@ import Button from '../styles/button/button';
 import AddBtn from '../styles/button/add';
 import SaveFormButton from '../styles/button/save-form';
 
-const toAliasFormat = v => deburr(v).toLowerCase().replace(/[^a-z1-9-]/g, '-');
+const toAliasFormat = v => deburr(v).toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
 export class IdentifyingInformation extends Component {
   constructor(props) {
