@@ -493,7 +493,8 @@ export const DropMenuItem = styled.a`
     opacity: 1;
   }
 
-  ${({ active }) => active && css`
+  ${({ active }) => active ? '&, &:visited,' : ''}
+  &.active, &.active:visited {
     color: inherit;
 
     &::after {
@@ -508,7 +509,7 @@ export const DropMenuItem = styled.a`
       width: 1.5rem;
       text-align: center;
     }
-  `}
+  }
 `;
 
 export const DropInset = styled.div`
