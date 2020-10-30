@@ -9,6 +9,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 
 import reducer from '../reducers/reducer';
 import locationMiddleware from './locationMiddleware';
+import authMiddleware from './authMiddleware';
 import toastNotificationMiddleware from './toastNotificationMiddleware';
 import globalLoadingMiddleware from './globalLoadingMiddleware';
 
@@ -31,6 +32,7 @@ const store = createStore(
       routerMiddleware(history),
       thunk,
       apiMiddleware,
+      authMiddleware,
       locationMiddleware,
       toastNotificationMiddleware,
       globalLoadingMiddleware,

@@ -57,6 +57,10 @@ const types = createTypes([
 
   ...async('SEARCH_ATBDS'),
 
+  ...async('FETCH_LOGGED_USER'),
+  'LOGOUT_USER',
+  'STORE_USER_TOKEN',
+
   'SET_ACTIVE_REFERENCE',
 
   'SHOW_LOADING',

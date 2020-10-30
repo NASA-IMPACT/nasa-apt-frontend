@@ -924,3 +924,33 @@ export function clearLoading() {
     type: types.CLEAR_LOADING
   };
 }
+
+export function getLoggedUserData() {
+  return (dispatch, getState) => dispatch({
+    [RSAA]: {
+      endpoint: `${BASE_URL}/attrs`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${getState().application.user.token}`
+      },
+      types: [
+        types.FETCH_LOGGED_USER,
+        types.FETCH_LOGGED_USER_SUCCESS,
+        types.FETCH_LOGGED_USER_FAIL
+      ]
+    }
+  });
+}
+
+export function logoutUser() {
+  return {
+    type: types.LOGOUT_USER
+  };
+}
+
+export function storeUserToken(token) {
+  return {
+    type: types.STORE_USER_TOKEN,
+    payload: token
+  };
+}

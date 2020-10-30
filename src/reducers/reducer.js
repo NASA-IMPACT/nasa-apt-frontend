@@ -16,7 +16,11 @@ const initialState = {
   t: undefined,
   // Store what actions are triggering a loading.
   // The will be added/removed as loadings are triggered.
-  globalLoading: []
+  globalLoading: [],
+  user: {
+    status: 'not-logged',
+    token: localStorage.getItem('token')
+  }
 };
 
 const deleteAtbdVersionChildItem = (idKey, tableName, state, action) => {
@@ -413,6 +417,46 @@ export default function (state = initialState, action) {
     case actions.HIDE_LOADING:
     case actions.CLEAR_LOADING: {
       return handleLoading(state, action);
+    }
+
+    case actions.FETCH_LOGGED_USER: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          status: 'validating'
+        }
+      };
+    }
+
+    case actions.FETCH_LOGGED_USER_SUCCESS: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          status: 'logged'
+        }
+      };
+    }
+    case actions.LOGOUT_USER:
+    case actions.FETCH_LOGGED_USER_FAIL: {
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        user: {
+          ...initialState.user,
+          token: null
+        }
+      };
+    }
+    case actions.STORE_USER_TOKEN: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          token: action.payload
+        }
+      };
     }
 
     default:
