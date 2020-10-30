@@ -447,13 +447,15 @@ class AtbdList extends React.Component {
   }
 
   render() {
-    const { createAtbd: create } = this.props;
+    const { createAtbd: create, user } = this.props;
     const {
       filter: { status: filterStatus },
       searchCurrent,
       searchValue
     } = this.state;
     const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
+
+    const isUserLogged = user.status === 'logged';
 
     return (
       <Inpage>
@@ -527,14 +529,16 @@ class AtbdList extends React.Component {
                       value={searchCurrent}
                       lastSearch={searchValue}
                     />
-                    <Button
-                      variation="achromic-plain"
-                      useIcon="plus"
-                      title="Create new document"
-                      onClick={create}
-                    >
-                      Create
-                    </Button>
+                    {isUserLogged && (
+                      <Button
+                        variation="achromic-plain"
+                        useIcon="plus"
+                        title="Create new document"
+                        onClick={create}
+                      >
+                        Create
+                      </Button>
+                    )}
                   </InpageToolbar>
                 </InpageHeaderInner>
               </InpageHeader>
@@ -562,12 +566,13 @@ AtbdList.propTypes = {
   createAtbd: PropTypes.func.isRequired,
   deleteAtbd: PropTypes.func.isRequired,
   updateAtbdVersion: PropTypes.func.isRequired,
-  copyAtbdAction: PropTypes.func.isRequired
+  copyAtbdAction: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  const { atbds } = state.application;
-  return { atbds };
+  const { atbds, user } = state.application;
+  return { atbds, user };
 };
 
 const mapDispatch = {
