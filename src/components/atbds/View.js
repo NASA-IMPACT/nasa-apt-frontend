@@ -189,7 +189,8 @@ class AtbdView extends Component {
     copyAtbdAction: T.func,
     updateAtbdVersionAction: T.func,
     match: T.object,
-    visitLink: T.func
+    visitLink: T.func,
+    isUserLogged: T.bool
   };
 
   constructor(props) {
@@ -846,7 +847,8 @@ class AtbdView extends Component {
     const {
       atbd,
       visitLink,
-      atbdCitation: storedAtbdCitation
+      atbdCitation: storedAtbdCitation,
+      isUserLogged
     } = this.props;
 
     if (!atbd) return null;
@@ -891,7 +893,7 @@ class AtbdView extends Component {
                     >
                       <DropTitle>Document options</DropTitle>
                       <DropMenu role="menu" iconified>
-                        {atbdStatus === 'Draft' && (
+                        {atbdStatus === 'Draft' && isUserLogged && (
                           <li>
                             <DocumentActionPublish
                               title="Publish document"
@@ -902,15 +904,17 @@ class AtbdView extends Component {
                             </DocumentActionPublish>
                           </li>
                         )}
-                        <li>
-                          <DocumentActionDuplicate
-                            title="Duplicate document"
-                            data-hook="dropdown:close"
-                            onClick={this.onDuplicateClick.bind(this, atbd)}
-                          >
-                            Duplicate
-                          </DocumentActionDuplicate>
-                        </li>
+                        {isUserLogged && (
+                          <li>
+                            <DocumentActionDuplicate
+                              title="Duplicate document"
+                              data-hook="dropdown:close"
+                              onClick={this.onDuplicateClick.bind(this, atbd)}
+                            >
+                              Duplicate
+                            </DocumentActionDuplicate>
+                          </li>
+                        )}
                         <li>
                           <DocumentActionCitation
                             title="Get document citation"
@@ -921,17 +925,19 @@ class AtbdView extends Component {
                           </DocumentActionCitation>
                         </li>
                       </DropMenu>
-                      <DropMenu role="menu" iconified>
-                        <li>
-                          <DocumentActionDelete
-                            title="Delete document"
-                            data-hook="dropdown:close"
-                            onClick={this.onDeleteClick.bind(this, atbd)}
-                          >
-                            Delete
-                          </DocumentActionDelete>
-                        </li>
-                      </DropMenu>
+                      {isUserLogged && (
+                        <DropMenu role="menu" iconified>
+                          <li>
+                            <DocumentActionDelete
+                              title="Delete document"
+                              data-hook="dropdown:close"
+                              onClick={this.onDeleteClick.bind(this, atbd)}
+                            >
+                              Delete
+                            </DocumentActionDelete>
+                          </li>
+                        </DropMenu>
+                      )}
                     </Dropdown>
                     <DownloadButton
                       variation="achromic-plain"
@@ -942,7 +948,7 @@ class AtbdView extends Component {
                     >
                       Download PDF
                     </DownloadButton>
-                    {atbdStatus === 'Draft' && (
+                    {atbdStatus === 'Draft' && isUserLogged && (
                       <EditButton
                         variation="achromic-plain"
                         title="Edit document"
@@ -1026,13 +1032,15 @@ const mapStateToProps = (state) => {
   const {
     selectedAtbd,
     atbdVersion,
-    atbdCitation
+    atbdCitation,
+    user
   } = state.application;
 
   return {
     atbdVersion,
     atbd: selectedAtbd,
     atbdCitation,
+    isUserLogged: user.status === 'logged'
   };
 };
 
