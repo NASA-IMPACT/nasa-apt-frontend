@@ -10,7 +10,7 @@ import { getLoggedUserData, logoutUser } from '../../actions/actions';
 import { visuallyHidden } from '../../styles/helpers';
 import { themeVal } from '../../styles/utils/general';
 
-const BASE_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 const TriggerButton = styled(Button)`
   position: relative;
@@ -65,6 +65,13 @@ class AuthBox extends React.PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const tk = this.props.user.token;
+    if (prevProps.user.token !== tk && tk) {
+      this.props.getLoggedUserData();
+    }
+  }
+
   renderContent() {
     const { status } = this.props.user;
 
@@ -78,7 +85,7 @@ class AuthBox extends React.PureComponent {
 
           <Button
             forwardedAs="a"
-            href={`${BASE_URL}/sso?return_to=${loc}/authorize`}
+            href={`${API_URL}/sso?return_to=${loc}/authorize`}
             size="medium"
             variation="primary-raised-dark"
             box="block"
@@ -99,12 +106,17 @@ class AuthBox extends React.PureComponent {
 
         <Button
           forwardedAs="a"
-          href={`${BASE_URL}/slo?return_to=${loc}`}
+          href={`${API_URL}/slo?return_to=${loc}`}
           size="medium"
           variation="primary-raised-dark"
           box="block"
-          onClick={() => {
+          onClick={(e) => {
+            // The location has to be manually set because otherwise the
+            // "logoutUser" will make the button change and the login url will
+            // be picked up by the click event instead.
+            e.preventDefault();
             this.props.logoutUser();
+            window.location = `${API_URL}/slo?return_to=${loc}`;
           }}
         >
           Logout
