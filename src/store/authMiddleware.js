@@ -16,6 +16,7 @@ const authMiddleware = store => next => async (action) => {
       const { token, error } = qs.parse(search.substring(1));
 
       if (error || !token) {
+        /* eslint-disable-next-line no-console */
         console.log('Error logging in', error || 'Missing token');
         toasts.error('An error occurred trying to login');
       } else {
