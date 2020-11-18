@@ -85,7 +85,7 @@ class AuthBox extends React.PureComponent {
 
           <Button
             forwardedAs="a"
-            href={`${API_URL}/sso?return_to=${loc}/authorize`}
+            href={`${API_URL}/saml/sso?return_to=${loc}/authorize`}
             size="medium"
             variation="primary-raised-dark"
             box="block"
@@ -106,7 +106,7 @@ class AuthBox extends React.PureComponent {
 
         <Button
           forwardedAs="a"
-          href={`${API_URL}/slo?return_to=${loc}`}
+          href={`${API_URL}/saml/slo?return_to=${loc}`}
           size="medium"
           variation="primary-raised-dark"
           box="block"
@@ -116,7 +116,7 @@ class AuthBox extends React.PureComponent {
             // be picked up by the click event instead.
             e.preventDefault();
             this.props.logoutUser();
-            window.location = `${API_URL}/slo?return_to=${loc}`;
+            window.location = e.currentTarget.href;
           }}
         >
           Logout

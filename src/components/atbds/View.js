@@ -851,7 +851,7 @@ class AtbdView extends Component {
       isUserLogged
     } = this.props;
 
-    if (!atbd) return null;
+    if (!atbd || !atbd.atbd_versions || !atbd.atbd_versions.length) return null;
     const pdfURL = getDownloadPDFURL(atbd);
     const atbdStatus = atbd.atbd_versions[0].status;
 
@@ -874,7 +874,7 @@ class AtbdView extends Component {
                 <InpageHeaderInner>
                   <InpageHeadline>
                     <InpageTitleWrapper>
-                      <InpageTitle>{atbd.title}</InpageTitle>
+                      <InpageTitle>{atbd.title || 'Untitled Document'}</InpageTitle>
                       <StatusPill>{atbdStatus}</StatusPill>
                     </InpageTitleWrapper>
                     <InpageTagline>Viewing document</InpageTagline>

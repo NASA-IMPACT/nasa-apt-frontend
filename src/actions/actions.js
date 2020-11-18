@@ -968,7 +968,7 @@ export function clearLoading() {
 export function getLoggedUserData() {
   return (dispatch, getState) => dispatch({
     [RSAA]: {
-      endpoint: `${BASE_URL}/attrs`,
+      endpoint: `${BASE_URL}/saml/attrs`,
       method: 'GET',
       headers: attachAuthToken(getState()),
       types: [
