@@ -231,6 +231,8 @@ class Search extends Component {
     const { searchValue } = this.state;
     const searchResults = this.props.searchResults.hits && this.props.searchResults.hits.hits;
 
+    const isUserLogged = this.props.user.status === 'logged';
+
     return (
       <Inpage>
         <InpageHeader>
@@ -288,7 +290,8 @@ class Search extends Component {
                     id="search-status"
                     name="search-status"
                     size="small"
-                    value={this.state.status}
+                    value={isUserLogged ? this.state.status : 'Published'}
+                    disabled={!isUserLogged}
                     onChange={this.onSelectChange.bind(this, 'status')}
                   >
                     <option value="all">All</option>
@@ -417,12 +420,14 @@ Search.propTypes = {
   push: T.func,
   searchAtbds: T.func.isRequired,
   searchResults: T.object,
+  user: T.object,
 };
 
 const mapStateToProps = (state) => {
-  const { searchResults } = state.application;
+  const { searchResults, user } = state.application;
 
   return {
+    user,
     searchResults,
   };
 };
