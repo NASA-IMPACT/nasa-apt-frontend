@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import ContactFormWrapper from './ContactFormWrapper';
 import { Inpage } from '../common/Inpage';
-import EditPage from '../common/EditPage';
+import EditPage, { getAtbdStep } from '../common/EditPage';
 import AddBtn from '../../styles/button/add';
 
 import {
@@ -272,10 +272,11 @@ class Contacts extends React.Component {
       }
     ];
 
+    const { step, stepNum } = getAtbdStep('contacts');
     return (
       <Inpage>
-        <EditPage title={title || ''} id={atbd_id} alias={alias} step={2}>
-          <h2>Contacts</h2>
+        <EditPage title={title || ''} id={atbd_id} alias={alias} step={stepNum}>
+          <h2>{step.display}</h2>
           {contacts.map((d, i) => (
             <ContactFormWrapper
               key={d.id || `new-${i}`}

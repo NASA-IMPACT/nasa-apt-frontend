@@ -23,7 +23,7 @@ import {
   InpageTagline,
   InpageToolbar,
   InpageBody,
-  InpageBodyInner
+  InpageBodyInner,
 } from './Inpage';
 
 import {
@@ -35,7 +35,8 @@ import {
   algorithm_description,
   algorithm_usage,
   algorithm_implementation,
-  references
+  references,
+  journal_details,
 } from '../../constants/routes';
 
 import Prose from '../../styles/type/prose';
@@ -112,10 +113,61 @@ const ItemCount = styled.span`
 const InpageLinkedTitle = styled(Link)`
   display: block;
 
-  &, &:visited {
+  &,
+  &:visited {
     color: inherit;
   }
 `;
+
+export const atbdSteps = [
+  {
+    id: 'identifying_information',
+    display: 'Identifying information',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${identifying_information}`,
+  },
+  {
+    id: 'contacts',
+    display: 'Contact information',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}`,
+  },
+  {
+    id: 'references',
+    display: 'References',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${references}`,
+  },
+  {
+    id: 'introduction',
+    display: 'Introduction',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}`,
+  },
+  {
+    id: 'algorithm_description',
+    display: 'Algorithm description',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_description}`,
+  },
+  {
+    id: 'algorithm_usage',
+    display: 'Algorithm usage',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_usage}`,
+  },
+  {
+    id: 'algorithm_implementation',
+    display: 'Algorithm implementation',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}`,
+  }
+];
+
+export const getAtbdStep = (id) => {
+  const s = atbdSteps.findIndex(v => v.id === id);
+  if (s < 0) {
+    throw new Error(`Step with id ${id} not found`);
+  }
+
+  return {
+    stepNum: s + 1,
+    step: atbdSteps[s]
+  };
+};
 
 const EditPage = (props) => {
   const {
@@ -124,38 +176,7 @@ const EditPage = (props) => {
 
   const version = 1;
 
-  const items = [
-    {
-      display: 'Identifying information',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${identifying_information}`
-    },
-    {
-      display: 'Contact information',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${contacts}`
-    },
-    {
-      display: 'References',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${references}`
-    },
-    {
-      display: 'Introduction',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${introduction}`
-    },
-    {
-      display: 'Algorithm description',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_description}`
-    },
-    {
-      display: 'Algorithm usage',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_usage}`
-    },
-    {
-      display: 'Algorithm implementation',
-      link: `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}`
-    }
-  ];
-
-  const numSteps = items.length;
+  const numSteps = atbdSteps.length;
   const stepCount = `Step ${step} of ${numSteps}`;
 
   return (
@@ -187,16 +208,18 @@ const EditPage = (props) => {
                           variation="achromic-plain"
                           title="Toggle menu options"
                         >
-                          {items[step - 1].display}
+                          {atbdSteps[step - 1].display}
                         </StepDropTrigger>
 )}
                     >
                       <DropTitle>Select step</DropTitle>
                       <DropMenu role="menu" selectable>
-                        {items.map((d, i) => (
+                        {atbdSteps.map((d, i) => (
                           <li key={d.display}>
                             <StepDropMenuItem
-                              onClick={() => d.link && props.push(d.link)}
+                              onClick={() => d.link(id, version)
+                                && props.push(d.link(id, version))
+                              }
                               active={i === step - 1}
                             >
                               <ItemCount>{i + 1}</ItemCount>
@@ -211,7 +234,8 @@ const EditPage = (props) => {
                   <PrevButton
                     variation="achromic-plain"
                     title="View previous step"
-                    onClick={() => items[step - 2].link && props.push(items[step - 2].link)
+                    onClick={() => atbdSteps[step - 2].link(id, version)
+                      && props.push(atbdSteps[step - 2].link(id, version))
                     }
                     disabled={step === 1}
                   >
@@ -221,9 +245,10 @@ const EditPage = (props) => {
                   <NextButton
                     variation="achromic-plain"
                     title="View next step"
-                    onClick={() => items[step].link && props.push(items[step].link)
+                    onClick={() => atbdSteps[step].link(id, version)
+                      && props.push(atbdSteps[step].link(id, version))
                     }
-                    disabled={step === 7}
+                    disabled={step === atbdSteps.length}
                   >
                     {' '}
                     Next
@@ -250,15 +275,12 @@ EditPage.propTypes = {
   alias: PropTypes.string,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node
+    PropTypes.node,
   ]),
-  push: PropTypes.func
+  push: PropTypes.func,
 };
 
 const mapStateToProps = () => ({});
 const mapDispatch = { push };
 
-export default connect(
-  mapStateToProps,
-  mapDispatch
-)(EditPage);
+export default connect(mapStateToProps, mapDispatch)(EditPage);

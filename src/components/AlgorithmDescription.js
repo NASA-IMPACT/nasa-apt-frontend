@@ -12,7 +12,7 @@ import FreeEditor from './FreeEditor';
 import AlgorithmVariables from './AlgorithmVariables';
 import AlgorithmVariableForm from './AlgorithmVariableForm';
 import { Inpage } from './common/Inpage';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import InfoButton from './common/InfoButton';
 import Form from '../styles/form/form';
 import FormToolbar from '../styles/form/toolbar';
@@ -57,15 +57,16 @@ export const AlgorithmDescription = (props) => {
     } = atbdVersion;
     const title = atbd && atbd.title;
 
+    const { step, stepNum } = getAtbdStep('algorithm_description');
     return (
       <Inpage>
         <EditPage
           title={title || ''}
           id={atbd_id}
           alias={atbd.alias}
-          step={5}
+          step={stepNum}
         >
-          <h2>Algorithm Description</h2>
+          <h2>{step.display}</h2>
           <Form>
             <FormFieldset>
               <FormFieldsetHeader>
@@ -156,96 +157,96 @@ export const AlgorithmDescription = (props) => {
                 </FormGroup>
               </FormFieldsetBody>
             </FormFieldset>
+
+            <FormFieldset>
+              <FormFieldsetHeader>
+                <FormLegend>Input Variables</FormLegend>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                <FormGroupHeader>
+                  <FormLabel>Existing input variables</FormLabel>
+                </FormGroupHeader>
+                <FormGroupBody>
+                  <AlgorithmVariables
+                    schemaKey="algorithm_input_variable"
+                    variables={algorithm_input_variables}
+                    deleteVariable={deleteInputVariable}
+                  />
+                </FormGroupBody>
+
+                <FormGroupHeader>
+                  <FormLabel>Add an input variable</FormLabel>
+                </FormGroupHeader>
+
+                <FormGroupBody>
+                  <FormFieldset>
+                    <FormFieldsetHeader>
+                      <FormLegend>New input variable</FormLegend>
+                    </FormFieldsetHeader>
+                    <FormFieldsetBody>
+                      <AlgorithmVariableForm
+                        schemaKey="algorithm_input_variable"
+                        atbd_id={atbd_id}
+                        atbd_version={atbd_version}
+                        create={(data) => { createInputVariable(data); }}
+                        t={{
+                          name: t.input_variable_name,
+                          long_name: t.input_variable_long_name,
+                          unit: t.input_variable_unit
+                        }}
+                      />
+                    </FormFieldsetBody>
+                  </FormFieldset>
+                </FormGroupBody>
+
+              </FormFieldsetBody>
+            </FormFieldset>
+
+            <FormFieldset>
+              <FormFieldsetHeader>
+                <FormLegend>Output variables</FormLegend>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                <FormGroupHeader>
+                  <FormLabel>Existing output variables</FormLabel>
+                </FormGroupHeader>
+                <FormGroupBody>
+                  <AlgorithmVariables
+                    schemaKey="algorithm_output_variable"
+                    variables={algorithm_output_variables}
+                    deleteVariable={deleteOutputVariable}
+                  />
+                </FormGroupBody>
+                <FormGroupHeader>
+                  <FormLabel>Add an output variable</FormLabel>
+                </FormGroupHeader>
+
+                <FormGroupBody>
+                  <FormFieldset>
+                    <FormFieldsetHeader>
+                      <FormLegend>New output variable</FormLegend>
+                    </FormFieldsetHeader>
+                    <FormFieldsetBody>
+                      <FormGroupHeader>
+                        <FormLabel>Add an output variable</FormLabel>
+                      </FormGroupHeader>
+                      <AlgorithmVariableForm
+                        schemaKey="algorithm_output_variable"
+                        atbd_id={atbd_id}
+                        atbd_version={atbd_version}
+                        create={(data) => { createOutputVariable(data); }}
+                        t={{
+                          name: t.output_variable_name,
+                          long_name: t.output_variable_long_name,
+                          unit: t.output_variable_unit
+                        }}
+                      />
+                    </FormFieldsetBody>
+                  </FormFieldset>
+                </FormGroupBody>
+              </FormFieldsetBody>
+            </FormFieldset>
           </Form>
-
-          <FormFieldset>
-            <FormFieldsetHeader>
-              <FormLegend>Input Variables</FormLegend>
-            </FormFieldsetHeader>
-            <FormFieldsetBody>
-              <FormGroupHeader>
-                <FormLabel>Existing input variables</FormLabel>
-              </FormGroupHeader>
-              <FormGroupBody>
-                <AlgorithmVariables
-                  schemaKey="algorithm_input_variable"
-                  variables={algorithm_input_variables}
-                  deleteVariable={deleteInputVariable}
-                />
-              </FormGroupBody>
-
-              <FormGroupHeader>
-                <FormLabel>Add an input variable</FormLabel>
-              </FormGroupHeader>
-
-              <FormGroupBody>
-                <FormFieldset>
-                  <FormFieldsetHeader>
-                    <FormLegend>New input variable</FormLegend>
-                  </FormFieldsetHeader>
-                  <FormFieldsetBody>
-                    <AlgorithmVariableForm
-                      schemaKey="algorithm_input_variable"
-                      atbd_id={atbd_id}
-                      atbd_version={atbd_version}
-                      create={(data) => { createInputVariable(data); }}
-                      t={{
-                        name: t.input_variable_name,
-                        long_name: t.input_variable_long_name,
-                        unit: t.input_variable_unit
-                      }}
-                    />
-                  </FormFieldsetBody>
-                </FormFieldset>
-              </FormGroupBody>
-
-            </FormFieldsetBody>
-          </FormFieldset>
-
-          <FormFieldset>
-            <FormFieldsetHeader>
-              <FormLegend>Output variables</FormLegend>
-            </FormFieldsetHeader>
-            <FormFieldsetBody>
-              <FormGroupHeader>
-                <FormLabel>Existing output variables</FormLabel>
-              </FormGroupHeader>
-              <FormGroupBody>
-                <AlgorithmVariables
-                  schemaKey="algorithm_output_variable"
-                  variables={algorithm_output_variables}
-                  deleteVariable={deleteOutputVariable}
-                />
-              </FormGroupBody>
-              <FormGroupHeader>
-                <FormLabel>Add an output variable</FormLabel>
-              </FormGroupHeader>
-
-              <FormGroupBody>
-                <FormFieldset>
-                  <FormFieldsetHeader>
-                    <FormLegend>New output variable</FormLegend>
-                  </FormFieldsetHeader>
-                  <FormFieldsetBody>
-                    <FormGroupHeader>
-                      <FormLabel>Add an output variable</FormLabel>
-                    </FormGroupHeader>
-                    <AlgorithmVariableForm
-                      schemaKey="algorithm_output_variable"
-                      atbd_id={atbd_id}
-                      atbd_version={atbd_version}
-                      create={(data) => { createOutputVariable(data); }}
-                      t={{
-                        name: t.output_variable_name,
-                        long_name: t.output_variable_long_name,
-                        unit: t.output_variable_unit
-                      }}
-                    />
-                  </FormFieldsetBody>
-                </FormFieldset>
-              </FormGroupBody>
-            </FormFieldsetBody>
-          </FormFieldset>
 
         </EditPage>
       </Inpage>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import cloneDeep from 'lodash.clonedeep';
 
 import { Inpage } from '../common/Inpage';
-import EditPage from '../common/EditPage';
+import EditPage, { getAtbdStep } from '../common/EditPage';
 import AddBtn from '../../styles/button/add';
 
 import ReferenceFormWrapper from './FormWrapper';
@@ -115,10 +115,16 @@ export class References extends React.Component {
     if (atbdVersion) {
       const { atbd, atbd_id } = atbdVersion;
       const { title, alias } = atbd;
+      const { step, stepNum } = getAtbdStep('references');
       return (
         <Inpage>
-          <EditPage title={title || ''} id={atbd_id} alias={alias} step={3}>
-            <h2>References</h2>
+          <EditPage
+            title={title || ''}
+            id={atbd_id}
+            alias={alias}
+            step={stepNum}
+          >
+            <h2>{step.display}</h2>
             <AddBtn
               glspLeft={-1}
               onClick={() => {

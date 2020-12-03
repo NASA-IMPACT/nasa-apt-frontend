@@ -7,7 +7,7 @@ import debounce from 'lodash.debounce';
 import { updateAtbd, fetchAtbdAliasCount } from '../actions/actions';
 
 import CitationForm from './CitationForm';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import { Inpage } from './common/Inpage';
 import InfoButton from './common/InfoButton';
 import Form from '../styles/form/form';
@@ -170,10 +170,16 @@ export class IdentifyingInformation extends Component {
 
       const { title, alias, atbd_id } = atbd;
 
+      const { step, stepNum } = getAtbdStep('identifying_information');
       return (
         <Inpage>
-          <EditPage title={title || ''} id={atbd_id} alias={alias} step={1}>
-            <h2>Identifying Information</h2>
+          <EditPage
+            title={title || ''}
+            id={atbd_id}
+            alias={alias}
+            step={stepNum}
+          >
+            <h2>{step.display}</h2>
 
             <Form>
               <FormFieldset>

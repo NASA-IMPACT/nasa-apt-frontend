@@ -6,7 +6,7 @@ import { updateAtbdVersion } from '../actions/actions';
 import FreeEditor from './FreeEditor';
 import { Inpage } from './common/Inpage';
 import InfoButton from './common/InfoButton';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import Form from '../styles/form/form';
 import FormToolbar from '../styles/form/toolbar';
 import {
@@ -40,16 +40,16 @@ export function AlgorithmUsage(props) {
     alias
   } = atbd;
 
+  const { step, stepNum } = getAtbdStep('algorithm_usage');
   return (
     <Inpage>
       <EditPage
         title={title || ''}
         id={atbd_id}
         alias={alias}
-        step={6}
-        numSteps={7}
+        step={stepNum}
       >
-        <h2>Algorithm Usage</h2>
+        <h2>{step.display}</h2>
         <Form>
           <FormFieldset>
             <FormFieldsetHeader>

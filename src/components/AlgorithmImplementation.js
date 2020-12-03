@@ -22,7 +22,7 @@ import {
 import {
   Inpage
 } from './common/Inpage';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import ImplementationForm from './ImplementationForm';
 
 function AlgorithmImplementation(props) {
@@ -64,15 +64,16 @@ function AlgorithmImplementation(props) {
       data_access_related_urls
     } = atbdVersion;
 
+    const { step, stepNum } = getAtbdStep('algorithm_implementation');
     return (
       <Inpage>
         <EditPage
           title={title || ''}
           id={atbd_id}
           alias={alias}
-          step={7}
+          step={stepNum}
         >
-          <h2>Algorithm Implementation</h2>
+          <h2>{step.display}</h2>
           <ImplementationForm
             title="Algorithm Implementation"
             id="implementations-form"
