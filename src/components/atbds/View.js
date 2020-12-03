@@ -48,45 +48,9 @@ import CitationModal from './CitationModal';
 
 import { getDownloadPDFURL } from '../../utils/utils';
 
-const OptionsTrigger = styled(Button)`
+const DropMenuItemIconified = styled(DropMenuItem)`
   &::before {
-    ${collecticon('ellipsis-vertical')}
-  }
-`;
-
-const DocumentActionDelete = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('trash-bin')}
-  }
-`;
-
-const DocumentActionDuplicate = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('pages')}
-  }
-`;
-
-const DocumentActionPublish = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('arrow-up-right')}
-  }
-`;
-
-const DocumentActionCitation = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('quote-left')}
-  }
-`;
-
-const DownloadButton = styled(Button)`
-  &::before {
-    ${collecticon('download-2')};
-  }
-`;
-
-const EditButton = styled(Button)`
-  &::before {
-    ${collecticon('pencil')};
+    ${({ useIcon }) => collecticon(useIcon)}
   }
 `;
 
@@ -852,7 +816,6 @@ class AtbdView extends Component {
     } = this.props;
 
     if (!atbd || !atbd.atbd_versions || !atbd.atbd_versions.length) return null;
-    const pdfURL = getDownloadPDFURL(atbd);
     const atbdStatus = atbd.atbd_versions[0].status;
 
     // If we're navigation from another ATBD and there's no citation, the state
@@ -883,75 +846,112 @@ class AtbdView extends Component {
                     <Dropdown
                       alignment="right"
                       triggerElement={(
-                        <OptionsTrigger
+                        <Button
                           variation="achromic-plain"
-                          title="Toggle menu options"
+                          title="Toggle ATDB options"
+                          useIcon="ellipsis-vertical"
                         >
                           Options
-                        </OptionsTrigger>
+                        </Button>
                       )}
                     >
                       <DropTitle>Document options</DropTitle>
                       <DropMenu role="menu" iconified>
                         {atbdStatus === 'Draft' && isUserLogged && (
                           <li>
-                            <DocumentActionPublish
+                            <DropMenuItemIconified
                               title="Publish document"
                               data-hook="dropdown:close"
+                              useIcon="arrow-up-right"
                               onClick={this.onPublishClick.bind(this, atbd)}
                             >
                               Publish
-                            </DocumentActionPublish>
+                            </DropMenuItemIconified>
                           </li>
                         )}
                         {isUserLogged && (
                           <li>
-                            <DocumentActionDuplicate
+                            <DropMenuItemIconified
                               title="Duplicate document"
                               data-hook="dropdown:close"
+                              useIcon="pages"
                               onClick={this.onDuplicateClick.bind(this, atbd)}
                             >
                               Duplicate
-                            </DocumentActionDuplicate>
+                            </DropMenuItemIconified>
                           </li>
                         )}
                         <li>
-                          <DocumentActionCitation
+                          <DropMenuItemIconified
                             title="Get document citation"
                             data-hook="dropdown:close"
+                            useIcon="quote-left"
                             onClick={this.onCitationClick.bind(this, atbd)}
                           >
                             Citation
-                          </DocumentActionCitation>
+                          </DropMenuItemIconified>
                         </li>
                       </DropMenu>
                       {isUserLogged && (
                         <DropMenu role="menu" iconified>
                           <li>
-                            <DocumentActionDelete
+                            <DropMenuItemIconified
                               title="Delete document"
                               data-hook="dropdown:close"
+                              useIcon="trash-bin"
                               onClick={this.onDeleteClick.bind(this, atbd)}
                             >
                               Delete
-                            </DocumentActionDelete>
+                            </DropMenuItemIconified>
                           </li>
                         </DropMenu>
                       )}
                     </Dropdown>
-                    <DownloadButton
-                      variation="achromic-plain"
-                      title="Download document as PDF"
-                      as="a"
-                      target="_blank"
-                      href={pdfURL}
+                    <Dropdown
+                      alignment="right"
+                      triggerElement={(
+                        <Button
+                          variation="achromic-plain"
+                          title="Toggle ATDB download options"
+                          useIcon="download-2"
+                        >
+                          Download
+                        </Button>
+                      )}
                     >
-                      Download PDF
-                    </DownloadButton>
+                      <DropTitle>Download options</DropTitle>
+                      <DropMenu role="menu" iconified>
+                        <li>
+                          <DropMenuItemIconified
+                            title="Download document as PDF"
+                            data-hook="dropdown:close"
+                            useIcon="page"
+                            as="a"
+                            target="_blank"
+                            href={getDownloadPDFURL(atbd)}
+                          >
+                            Document PDF
+                          </DropMenuItemIconified>
+                        </li>
+                        <li>
+                          <DropMenuItemIconified
+                            title="Download document as journal PDF"
+                            data-hook="dropdown:close"
+                            useIcon="page-label"
+                            as="a"
+                            target="_blank"
+                            href={getDownloadPDFURL(atbd, { journal: true })}
+                          >
+                            Journal PDF
+                          </DropMenuItemIconified>
+                        </li>
+                      </DropMenu>
+                    </Dropdown>
                     {atbdStatus === 'Draft' && isUserLogged && (
-                      <EditButton
+                      <Button
                         variation="achromic-plain"
                         title="Edit document"
+                        useIcon="pencil"
                         onClick={() => visitLink(
                           `/atbdsedit/${
                             atbd.atbd_id
@@ -959,7 +959,7 @@ class AtbdView extends Component {
                         )}
                       >
                         Edit
-                      </EditButton>
+                      </Button>
                     )}
                   </InpageToolbar>
                 </InpageHeaderInner>
