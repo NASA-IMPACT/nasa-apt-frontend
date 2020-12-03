@@ -154,6 +154,11 @@ export const atbdSteps = [
     id: 'algorithm_implementation',
     display: 'Algorithm implementation',
     link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${algorithm_implementation}`,
+  },
+  {
+    id: 'journal_details',
+    display: 'Journal details',
+    link: (id, version) => `/${atbdsedit}/${id}/${drafts}/${version}/${journal_details}`,
   }
 ];
 
@@ -210,7 +215,7 @@ const EditPage = (props) => {
                         >
                           {atbdSteps[step - 1].display}
                         </StepDropTrigger>
-)}
+                      )}
                     >
                       <DropTitle>Select step</DropTitle>
                       <DropMenu role="menu" selectable>
