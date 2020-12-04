@@ -13,7 +13,7 @@ ATBDs provide data users with the physical theory, mathematical procedures, and 
 The main goal of APT is to modernize NASA Earth science documentation by developing a web-based interface to address scientific documentation needs by standardizing and simplifying the process of writing, publishing, and searching for ATBDs. This is partially accomplished by moving from a static to dynamic model of documentation with intelligent connections to software, data, and other supporting resources to improve transparency and promote scientific reproducibility. APT provides a single-entry point for writing and updating ATBDs and a centralized document repository to enable users to access and view ATBDs (Figure 1).
 
 <figure>
-  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure1_APT_components.png' alt='Figure 1' />
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Fig1_APTcomponents.png' alt='Figure 1' />
   <figcaption>
     Figure 1. APT Components: an ATBD metadata model, database and front-end tool, and centralized repository for finding ATBDs.
   </figcaption>
@@ -90,7 +90,7 @@ The first step prompts users to input unique information that identifies the new
 5. **Add a citation** – This button opens a citation form. Required fields include creator(s), title, and release date. However, authors should include as much information as possible to reference the ATBD. Figure 6 shows all the fields associated with adding a citation.
 
 <figure>
-  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Figure5_Citation.png' alt='Figure 6' />
+  <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Fig6_Citation.png' alt='Figure 6' />
   <figcaption>
     Figure 6. ATBD citation information. Note: Outlined and labelled features correspond to numbered descriptions in text below.
   </figcaption>
