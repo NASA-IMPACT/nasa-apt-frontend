@@ -49,7 +49,7 @@ This section provides an overview and describes APT’s pages and features (Figu
 <figure>
   <img src='https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Fig3_HelpCenter.png' alt='Figure 3' />
   <figcaption>
-    Figure 3. Help center for the APT user documentation. Outliined and labelled pages and features correspond to the numbered descriptions in text below.
+    Figure 3. Help center for the APT user documentation. Outlined and labelled pages and features correspond to the numbered descriptions in text below.
   </figcaption>
 </figure>
 
