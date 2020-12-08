@@ -315,8 +315,8 @@ class AtbdView extends Component {
         return <BlockMath math={node.text} />;
       case 'image': {
         let src = node.data.get('src');
-        if (process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-          src = src.replace("localstack", "localhost")
+        if (process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+          src = src.replace('localstack', 'localhost');
         }
         const caption = node.data.get('caption');
         return (
@@ -824,8 +824,8 @@ class AtbdView extends Component {
                 return ref ? (
                   <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] <em>{ref.authors}</em> {ref.title}</li>
                 ) : (
-                    <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] Reference not found</li>
-                  );
+                  <li key={o.id} id={`reference-${o.id}`}>[{idx + 1}] Reference not found</li>
+                );
               })}
             </ol>
           </AtbdSection>
@@ -951,7 +951,7 @@ class AtbdView extends Component {
                         title="Edit document"
                         onClick={() => visitLink(
                           `/atbdsedit/${
-                          atbd.atbd_id
+                            atbd.atbd_id
                           }/drafts/1/identifying_information`
                         )}
                       >
