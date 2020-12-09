@@ -14,10 +14,10 @@ In the project directory, you can run:
 
 `yarn start`
 
-Runs the app in the development mode.<br>
+Runs the app in the development mode.  
 Open [http://localhost:3006](http://localhost:3006) to view it in the browser.
 
-The page will reload if you make edits.<br>
+The page will reload if you make edits.  
 
 `yarn test`
 
@@ -25,16 +25,23 @@ Runs the tap based unit tests.
 
 `yarn run build`
 
-Builds the app for production to the `build` folder.<br>
+Builds the app for production to the `build` folder.  
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br>
+The build is minified and the filenames include the hashes.  
 Your app is ready to be deployed!
 
-The following environment variables are required.  You can copy and rename `.env.sample` to `.env` for use as a template.<br>
-`PORT=3006`<br>
-`SKIP_PREFLIGHT_CHECK=true`<br>
-`REACT_APP_API_URL` The URL with port of the stac compliant api.<br>
+The following environment variables are required.  You can copy and rename `.env.sample` to `.env` for use as a template.  
+`PORT=3006`  
+`SKIP_PREFLIGHT_CHECK=true`  
+`REACT_APP_API_URL` The URL with port of the stac compliant api.  
+
+### Building with custom base path
+If the webapp is not going to be hosted at the root, the base path needs to be set through `PUBLIC_URL` before building.
+Example:
+```
+PUBLIC_URL='https://example.com/apt' yarn build
+```
 
 ### Design Approach
 
