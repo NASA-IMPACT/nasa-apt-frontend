@@ -9,12 +9,6 @@ import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
-import {
-  deleteAtbd,
-  copyAtbd,
-  updateAtbdVersion
-} from '../../actions/actions';
-
 // Components
 import {
   Inpage,
@@ -34,18 +28,22 @@ import Dropdown, {
   DropMenu,
   DropMenuItem
 } from '../common/Dropdown';
-
-// Styled components
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
 import Table from '../../styles/table';
 import Dl from '../../styles/type/definition-list';
-import { themeVal } from '../../styles/utils/general';
-import { multiply } from '../../styles/utils/math';
 import StatusPill from '../common/StatusPill';
-import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import CitationModal from './CitationModal';
 
+
+import {
+  deleteAtbd,
+  copyAtbd,
+  updateAtbdVersion
+} from '../../actions/actions';
+import { themeVal } from '../../styles/utils/general';
+import { glsp } from '../../styles/utils/theme-values';
+import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import { getDownloadPDFURL } from '../../utils/utils';
 
 const DropMenuItemIconified = styled(DropMenuItem)`
@@ -58,12 +56,12 @@ const AtbdSectionHeader = styled.header``;
 const AtbdSectionTitle = styled.h1``;
 const AtbdSectionBody = styled.div`
   h2, h3 {
-    margin-top: ${multiply(themeVal('layout.space'), 2)};
-    margin-bottom: ${themeVal('layout.space')};
+    margin-top: ${glsp(2)};
+    margin-bottom: ${glsp()};
   }
 
   table {
-    margin-bottom: ${themeVal('layout.space')};
+    margin-bottom: ${glsp()};
   }
 `;
 
@@ -94,18 +92,18 @@ AtbdSectionBase.propTypes = {
 };
 const AtbdSection = styled(AtbdSectionBase)`
   &:not(:last-child) {
-    padding-bottom: ${multiply(themeVal('layout.space'), 3)};
-    margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+    padding-bottom: ${glsp(3)};
+    margin-bottom: ${glsp(3)};
     border-bottom: 1px solid ${themeVal('color.shadow')};
   }
 `;
 
 const AtbdMeta = styled.div`
-  margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+  margin-bottom: ${glsp(3)};
 `;
 
 const AtbdMetaTitle = styled.h2`
-  margin-bottom: ${themeVal('layout.space')};
+  margin-bottom: ${glsp()};
 `;
 
 const AtbdMetaDetails = styled(Dl)``;
@@ -113,7 +111,7 @@ const AtbdMetaDetails = styled(Dl)``;
 const AtbdIndex = styled.nav``;
 
 const AtbdIndexTitle = styled.h2`
-  margin-bottom: ${themeVal('layout.space')};
+  margin-bottom: ${glsp()};
 `;
 
 const AtbdIndexMenu = styled.ol`
@@ -140,6 +138,36 @@ const AtbdContactList = styled.ul`
     list-style: none;
     margin-left: 0;
   }
+`;
+
+const AtbdFigure = styled.figure`
+  display: block;
+  text-align: center;
+  max-width: 100%;
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  figcaption {
+    font-style: italic;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: ${glsp(0.5)};
+  }
+`;
+
+const TableContainer = styled.div`
+  & > *:not(:last-child) {
+    margin-bottom: ${glsp(0.5)};
+  }
+`;
+
+const TableCaption = styled.p`
+  font-style: italic;
+  text-align: center;
 `;
 
 class AtbdView extends Component {
@@ -282,13 +310,14 @@ class AtbdView extends Component {
         const src = node.data.get('src');
         const caption = node.data.get('caption');
         return (
-          <figure>
+          <AtbdFigure>
             <img src={src} alt={caption} />
             <figcaption>{caption}</figcaption>
-          </figure>
+          </AtbdFigure>
         );
       }
       case 'table': {
+        const caption = node.data.get('caption');
         const headers = !node.data.get('headless');
         const rows = children;
         const split = (!headers || !rows || !rows.length || rows.length === 1)
@@ -299,10 +328,13 @@ class AtbdView extends Component {
           };
 
         return (
-          <Table {...attributes}>
-            {headers && <thead>{split.header}</thead>}
-            <tbody>{split.rows}</tbody>
-          </Table>
+          <TableContainer>
+            <Table {...attributes}>
+              {headers && <thead>{split.header}</thead>}
+              <tbody>{split.rows}</tbody>
+            </Table>
+            {caption && <TableCaption>{caption}</TableCaption>}
+          </TableContainer>
         );
       }
       case 'table_row':
