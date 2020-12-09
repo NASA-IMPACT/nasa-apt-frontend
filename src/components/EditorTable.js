@@ -208,7 +208,11 @@ class EditorTable extends React.Component {
     const currentValue = node.data.get('caption');
     const caption = window.prompt('Insert caption', currentValue);
     if (caption !== null) {
-      editor.setNodeByKey(node.key, { data: { caption: caption.trim() } });
+      const data = {
+        ...node.data.toObject(),
+        caption: caption.trim()
+      };
+      editor.setNodeByKey(node.key, { data });
     }
   }
 
