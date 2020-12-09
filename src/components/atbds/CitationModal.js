@@ -215,7 +215,7 @@ class CitationModal extends React.Component {
                     variation="primary-raised-light"
                     onClick={this.downloadBibtex}
                   >
-                      Download Bibtex
+                    Download Bibtex
                   </Button>
                 </BibtexSection>
                 )}
@@ -239,7 +239,7 @@ class CitationModal extends React.Component {
             {!!missingFields.length && (
             <MissingFieldsInfo>
               <p>
-                  The following fields did not have data and were not included:
+                The following fields did not have data and were not included:
               </p>
               <ul>
                 {missingFields.map(f => (
@@ -247,15 +247,15 @@ class CitationModal extends React.Component {
                 ))}
               </ul>
               <p>
-                  For a Draft ATBD, the citation information can be edited
-                  through the{' '}
+                For a Draft ATBD, the citation information can be edited
+                through the{' '}
                 <Link
                   to={`/atbdsedit/${id}/drafts/${version}/identifying_information`}
                   title="Edit ATBD identifying information"
                 >
-                    identifying information
+                  identifying information
                 </Link>{' '}
-                  form.
+                form.
               </p>
             </MissingFieldsInfo>
             )}

@@ -189,7 +189,7 @@ export class ReferenceModalEditor extends Component {
                   {!selectedReference && (
                   <FormHelper>
                     <FormHelperMessage>
-                        Please select a new or existing reference.
+                      Please select a new or existing reference.
                     </FormHelperMessage>
                   </FormHelper>
                   )}
