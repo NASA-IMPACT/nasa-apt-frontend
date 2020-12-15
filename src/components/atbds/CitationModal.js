@@ -180,7 +180,7 @@ class CitationModal extends React.Component {
           <ModalHeader>
             <ModalTitle>ATBD Citation</ModalTitle>
           </ModalHeader>
-)}
+        )}
         bodyComponent={(
           <CitationModalBody>
             {citation ? (
@@ -208,16 +208,16 @@ class CitationModal extends React.Component {
                 </FormCheckableGroup>
                 {format === 'text' && <CopyField value={citationText} />}
                 {format === 'bibtex' && (
-                <BibtexSection>
-                  <Button
-                    title="Download Bibtex file"
-                    useIcon="download-2"
-                    variation="primary-raised-light"
-                    onClick={this.downloadBibtex}
-                  >
+                  <BibtexSection>
+                    <Button
+                      title="Download Bibtex file"
+                      useIcon="download-2"
+                      variation="primary-raised-light"
+                      onClick={this.downloadBibtex}
+                    >
                       Download Bibtex
-                  </Button>
-                </BibtexSection>
+                    </Button>
+                  </BibtexSection>
                 )}
               </Form>
             ) : (
@@ -237,30 +237,30 @@ class CitationModal extends React.Component {
               </MissingFieldsInfo>
             )}
             {!!missingFields.length && (
-            <MissingFieldsInfo>
-              <p>
+              <MissingFieldsInfo>
+                <p>
                   The following fields did not have data and were not included:
-              </p>
-              <ul>
-                {missingFields.map(f => (
-                  <li key={f.id}>{f.label}</li>
-                ))}
-              </ul>
-              <p>
+                </p>
+                <ul>
+                  {missingFields.map(f => (
+                    <li key={f.id}>{f.label}</li>
+                  ))}
+                </ul>
+                <p>
                   For a Draft ATBD, the citation information can be edited
                   through the{' '}
-                <Link
-                  to={`/atbdsedit/${id}/drafts/${version}/identifying_information`}
-                  title="Edit ATBD identifying information"
-                >
+                  <Link
+                    to={`/atbdsedit/${id}/drafts/${version}/identifying_information`}
+                    title="Edit ATBD identifying information"
+                  >
                     identifying information
-                </Link>{' '}
+                  </Link>{' '}
                   form.
-              </p>
-            </MissingFieldsInfo>
+                </p>
+              </MissingFieldsInfo>
             )}
           </CitationModalBody>
-)}
+        )}
       />
     );
   }
