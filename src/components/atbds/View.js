@@ -472,7 +472,9 @@ class AtbdView extends Component {
       algorithm_implementations,
       data_access_input_data,
       data_access_output_data,
-      data_access_related_urls
+      data_access_related_urls,
+      journal_discussion,
+      journal_acknowledgements
     } = atbdVersion;
 
     // When the section that's being rendered is a list of items we only need
@@ -824,6 +826,42 @@ class AtbdView extends Component {
             </ol>
           </AtbdSection>
         ) : null
+      },
+      {
+        label: 'Journal Details',
+        id: 'journal-details',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            <em>If provided, the journal details are included only in the Journal PDF.</em>
+            {el.children.map(child => child.renderer(child))}
+          </AtbdSection>
+        ),
+        children: [
+          {
+            label: 'Acknowledgements',
+            id: 'acknowledgements',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h3 id={el.id}>{el.label}</h3>
+                <Prose>
+                  {this.renderReadOnlyEditor(journal_acknowledgements)}
+                </Prose>
+              </React.Fragment>
+            )
+          },
+          {
+            label: 'Discussion',
+            id: 'discussion',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h3 id={el.id}>{el.label}</h3>
+                <Prose>
+                  {this.renderReadOnlyEditor(journal_discussion)}
+                </Prose>
+              </React.Fragment>
+            )
+          }
+        ]
       }
     ];
 
