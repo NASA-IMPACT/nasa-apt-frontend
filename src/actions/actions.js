@@ -6,7 +6,8 @@ import qs from 'qs';
 import types from '../constants/action_types';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
-const PDF_SERVICE_ENDPOINT = process.env.REACT_APP_PDF_SERVICE_ENDPOINT;
+const FASTAPI_URL = process.env.REACT_APP_FASTAPI_URL;
+const AUTH_URL = process.env.REACT_APP_AUTH_URL;
 
 const s3Uri = process.env.REACT_APP_S3_URI;
 const figuresBucket = process.env.REACT_APP_FIGURES_BUCKET;
@@ -407,7 +408,7 @@ export function searchAtbds(searchQuery) {
 
   return (dispatch, getState) => dispatch({
     [RSAA]: {
-      endpoint: `${PDF_SERVICE_ENDPOINT}/search`,
+      endpoint: `${FASTAPI_URL}/search`,
       method: 'POST',
       body: JSON.stringify({
         query: elasticQuery,
@@ -968,7 +969,7 @@ export function clearLoading() {
 export function getLoggedUserData() {
   return (dispatch, getState) => dispatch({
     [RSAA]: {
-      endpoint: `${BASE_URL}/saml/attrs`,
+      endpoint: `${AUTH_URL}/saml/attrs`,
       method: 'GET',
       headers: attachAuthToken(getState()),
       types: [

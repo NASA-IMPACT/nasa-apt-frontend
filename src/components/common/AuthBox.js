@@ -10,7 +10,7 @@ import { getLoggedUserData, logoutUser } from '../../actions/actions';
 import { visuallyHidden } from '../../styles/helpers';
 import { themeVal } from '../../styles/utils/general';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const AUTH_URL = process.env.REACT_APP_AUTH_URL;
 
 const TriggerButton = styled(Button)`
   position: relative;
@@ -85,7 +85,7 @@ class AuthBox extends React.PureComponent {
 
           <Button
             forwardedAs="a"
-            href={`${API_URL}/saml/sso?return_to=${loc}/authorize`}
+            href={`${AUTH_URL}/saml/sso?return_to=${loc}/authorize`}
             size="medium"
             variation="primary-raised-dark"
             box="block"
@@ -106,7 +106,7 @@ class AuthBox extends React.PureComponent {
 
         <Button
           forwardedAs="a"
-          href={`${API_URL}/saml/slo?return_to=${loc}`}
+          href={`${AUTH_URL}/saml/slo?return_to=${loc}`}
           size="medium"
           variation="primary-raised-dark"
           box="block"

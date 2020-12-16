@@ -15,7 +15,7 @@ export function downloadTextFile(filename, text) {
   document.body.removeChild(element);
 }
 
-const pdfServiceEndpoint = process.env.REACT_APP_PDF_SERVICE_ENDPOINT;
+const pdfServiceEndpoint = process.env.REACT_APP_FASTAPI_URL;
 
 /**
  * Generate PDF url using either the atbd id or the alias.
