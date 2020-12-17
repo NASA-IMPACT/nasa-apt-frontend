@@ -12,7 +12,7 @@ import FreeEditor from './FreeEditor';
 import AlgorithmVariables from './AlgorithmVariables';
 import AlgorithmVariableForm from './AlgorithmVariableForm';
 import { Inpage } from './common/Inpage';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import InfoButton from './common/InfoButton';
 import Form from '../styles/form/form';
 import FormToolbar from '../styles/form/toolbar';
@@ -57,15 +57,16 @@ export const AlgorithmDescription = (props) => {
     } = atbdVersion;
     const title = atbd && atbd.title;
 
+    const { step, stepNum } = getAtbdStep('algorithm_description');
     return (
       <Inpage>
         <EditPage
           title={title || ''}
           id={atbd_id}
           alias={atbd.alias}
-          step={5}
+          step={stepNum}
         >
-          <h2>Algorithm Description</h2>
+          <h2>{step.display}</h2>
           <Form>
             <FormFieldset>
               <FormFieldsetHeader>
@@ -220,7 +221,6 @@ export const AlgorithmDescription = (props) => {
               <FormGroupHeader>
                 <FormLabel>Add an output variable</FormLabel>
               </FormGroupHeader>
-
               <FormGroupBody>
                 <FormFieldset>
                   <FormFieldsetHeader>

@@ -5,7 +5,7 @@ import { updateAtbdVersion } from '../actions/actions';
 
 import FreeEditor from './FreeEditor';
 import { Inpage } from './common/Inpage';
-import EditPage from './common/EditPage';
+import EditPage, { getAtbdStep } from './common/EditPage';
 import InfoButton from './common/InfoButton';
 import Form from '../styles/form/form';
 import FormToolbar from '../styles/form/toolbar';
@@ -39,16 +39,16 @@ export function Introduction(props) {
 
   const title = atbd && atbd.title;
 
+  const { step, stepNum } = getAtbdStep('introduction');
   return (
     <Inpage>
       <EditPage
         title={title || ''}
         id={atbd_id}
         alias={atbd.alias}
-        step={4}
-        numSteps={7}
+        step={stepNum}
       >
-        <h2>Introduction</h2>
+        <h2>{step.display}</h2>
         <Form>
           <FormFieldset>
             <FormFieldsetHeader>

@@ -240,7 +240,7 @@ class AtbdList extends React.Component {
   onSearch(searchValue) {
     this.setState({ searchValue }, () => {
       const qString = this.qsState.getQs(this.state);
-      this.props.push({ search: qString });
+      this.props.push({ pathname: '/search', search: qString });
     });
   }
 
@@ -255,6 +255,7 @@ class AtbdList extends React.Component {
       }),
       () => {
         const qString = this.qsState.getQs(this.state);
+
         this.props.push({ search: qString });
       }
     );
@@ -286,6 +287,7 @@ class AtbdList extends React.Component {
   }
 
   renderAtbdTableRow(atbd) {
+    const { isUserLogged } = this.props;
     const {
       atbd_id, title, alias, atbd_versions, contacts
     } = atbd;
@@ -346,7 +348,7 @@ class AtbdList extends React.Component {
                   View
                 </DocTableActionView>
               </li>
-              {status === 'Draft' && (
+              {status === 'Draft' && isUserLogged && (
                 <React.Fragment>
                   <li>
                     <DocTableActionEdit
@@ -368,15 +370,17 @@ class AtbdList extends React.Component {
                   </li>
                 </React.Fragment>
               )}
-              <li>
-                <DocTableActionDuplicate
-                  title="Duplicate document"
-                  data-hook="dropdown:close"
-                  onClick={this.onDuplicateClick.bind(this, atbd)}
-                >
-                  Duplicate
-                </DocTableActionDuplicate>
-              </li>
+              { isUserLogged && (
+                <li>
+                  <DocTableActionDuplicate
+                    title="Duplicate document"
+                    data-hook="dropdown:close"
+                    onClick={this.onDuplicateClick.bind(this, atbd)}
+                  >
+                    Duplicate
+                  </DocTableActionDuplicate>
+                </li>
+              )}
               <li>
                 <DocTableActionCitation
                   title="Get document citation"
@@ -387,17 +391,19 @@ class AtbdList extends React.Component {
                 </DocTableActionCitation>
               </li>
             </DropMenu>
-            <DropMenu role="menu" iconified>
-              <li>
-                <DocTableActionDelete
-                  title="Delete document"
-                  disabled
-                  onClick={this.onDeleteClick.bind(this, atbd)}
-                >
-                  Delete
-                </DocTableActionDelete>
-              </li>
-            </DropMenu>
+            { isUserLogged && (
+              <DropMenu role="menu" iconified>
+                <li>
+                  <DocTableActionDelete
+                    title="Delete document"
+                    disabled
+                    onClick={this.onDeleteClick.bind(this, atbd)}
+                  >
+                    Delete
+                  </DocTableActionDelete>
+                </li>
+              </DropMenu>
+            )}
           </Dropdown>
         </DocTableBodyTdActions>
       </tr>
@@ -445,14 +451,90 @@ class AtbdList extends React.Component {
     );
   }
 
-  render() {
-    const { createAtbd: create } = this.props;
+  renderFilterOptions() {
+    const { isUserLogged } = this.props;
     const {
-      filter: { status: filterStatus },
+      filter: { status: filterStatus }
+    } = this.state;
+    const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
+
+    if (!isUserLogged) {
+      return (
+        <InpageFilters>
+          <FilterItem>
+            <FilterLabel>Status</FilterLabel>
+            <Button
+              variation="achromic-plain"
+              useIcon="chevron-down--small"
+              title="Toggle menu options"
+              disabled
+            >
+              Published
+            </Button>
+          </FilterItem>
+        </InpageFilters>
+      );
+    }
+
+    return (
+      <InpageFilters>
+        <FilterItem>
+          <FilterLabel>Status</FilterLabel>
+          <Dropdown
+            alignment="left"
+            triggerElement={(
+              <Button
+                variation="achromic-plain"
+                useIcon="chevron-down--small"
+                title="Toggle menu options"
+              >
+                {activeFilter.label || 'All'}
+              </Button>
+            )}
+          >
+            <DropTitle>Select status</DropTitle>
+            <DropMenu role="menu" selectable>
+              <li>
+                <DropMenuItem
+                  active={filterStatus === 'all'}
+                  onClick={this.setFilterValue.bind(
+                    this,
+                    'status',
+                    'all'
+                  )}
+                  data-hook="dropdown:close"
+                >
+                  All
+                </DropMenuItem>
+              </li>
+              {atbdStatusOptions.map(o => (
+                <li key={o.id}>
+                  <DropMenuItem
+                    active={filterStatus === o.id}
+                    onClick={this.setFilterValue.bind(
+                      this,
+                      'status',
+                      o.id
+                    )}
+                    data-hook="dropdown:close"
+                  >
+                    {o.label}
+                  </DropMenuItem>
+                </li>
+              ))}
+            </DropMenu>
+          </Dropdown>
+        </FilterItem>
+      </InpageFilters>
+    );
+  }
+
+  render() {
+    const { createAtbd: create, isUserLogged } = this.props;
+    const {
       searchCurrent,
       searchValue
     } = this.state;
-    const activeFilter = atbdStatusOptions.find(o => o.id === filterStatus) || {};
 
     return (
       <Inpage>
@@ -469,55 +551,7 @@ class AtbdList extends React.Component {
                   </InpageHeadline>
                   <VerticalDivider />
 
-                  <InpageFilters>
-                    <FilterItem>
-                      <FilterLabel>Status</FilterLabel>
-                      <Dropdown
-                        alignment="left"
-                        triggerElement={(
-                          <Button
-                            variation="achromic-plain"
-                            useIcon="chevron-down--small"
-                            title="Toggle menu options"
-                          >
-                            {activeFilter.label || 'All'}
-                          </Button>
-                        )}
-                      >
-                        <DropTitle>Select status</DropTitle>
-                        <DropMenu role="menu" selectable>
-                          <li>
-                            <DropMenuItem
-                              active={filterStatus === 'all'}
-                              onClick={this.setFilterValue.bind(
-                                this,
-                                'status',
-                                'all'
-                              )}
-                              data-hook="dropdown:close"
-                            >
-                              All
-                            </DropMenuItem>
-                          </li>
-                          {atbdStatusOptions.map(o => (
-                            <li key={o.id}>
-                              <DropMenuItem
-                                active={filterStatus === o.id}
-                                onClick={this.setFilterValue.bind(
-                                  this,
-                                  'status',
-                                  o.id
-                                )}
-                                data-hook="dropdown:close"
-                              >
-                                {o.label}
-                              </DropMenuItem>
-                            </li>
-                          ))}
-                        </DropMenu>
-                      </Dropdown>
-                    </FilterItem>
-                  </InpageFilters>
+                  {this.renderFilterOptions()}
 
                   <InpageToolbar>
                     <SearchControl
@@ -526,14 +560,16 @@ class AtbdList extends React.Component {
                       value={searchCurrent}
                       lastSearch={searchValue}
                     />
-                    <Button
-                      variation="achromic-plain"
-                      useIcon="plus"
-                      title="Create new document"
-                      onClick={create}
-                    >
-                      Create
-                    </Button>
+                    {isUserLogged && (
+                      <Button
+                        variation="achromic-plain"
+                        useIcon="plus"
+                        title="Create new document"
+                        onClick={create}
+                      >
+                        Create
+                      </Button>
+                    )}
                   </InpageToolbar>
                 </InpageHeaderInner>
               </InpageHeader>
@@ -561,12 +597,13 @@ AtbdList.propTypes = {
   createAtbd: PropTypes.func.isRequired,
   deleteAtbd: PropTypes.func.isRequired,
   updateAtbdVersion: PropTypes.func.isRequired,
-  copyAtbdAction: PropTypes.func.isRequired
+  copyAtbdAction: PropTypes.func.isRequired,
+  isUserLogged: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
-  const { atbds } = state.application;
-  return { atbds };
+  const { atbds, user } = state.application;
+  return { atbds, isUserLogged: user.status === 'logged' };
 };
 
 const mapDispatch = {

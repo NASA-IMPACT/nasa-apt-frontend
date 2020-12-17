@@ -187,11 +187,11 @@ export class ReferenceModalEditor extends Component {
                     onChange={onSelectChange}
                   />
                   {!selectedReference && (
-                  <FormHelper>
-                    <FormHelperMessage>
-                      Please select a new or existing reference.
-                    </FormHelperMessage>
-                  </FormHelper>
+                    <FormHelper>
+                      <FormHelperMessage>
+                        Please select a new or existing reference.
+                      </FormHelperMessage>
+                    </FormHelper>
                   )}
                 </FormGroup>
                 {selectedReference === 'NEW' && (

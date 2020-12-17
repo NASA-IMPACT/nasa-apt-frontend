@@ -21,6 +21,7 @@ import {
   algorithm_usage,
   algorithm_implementation,
   references,
+  journal_details,
   error
 } from './constants/routes';
 import PageHeader from './components/common/PageHeader';
@@ -35,8 +36,10 @@ import AlgorithmDescription from './components/AlgorithmDescription';
 import AlgorithmUsage from './components/AlgorithmUsage';
 import AlgorithmImplementation from './components/AlgorithmImplementation';
 import References from './components/references';
+import JournalDetails from './components/JournalDetails';
 import Help from './components/help';
 import About from './components/about';
+import Search from './components/search';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
@@ -102,12 +105,17 @@ const App = () => (
                   component={References}
                 />
                 <Route
+                  path={`/${atbdsedit}/:atbd_id/${drafts}/:atbd_version/${journal_details}`}
+                  component={JournalDetails}
+                />
+                <Route
                   path={`/${error}`}
                   component={UhOh}
                 />
                 <Route exact path="/help" component={Help} />
                 <Route path="/help/:page_id" component={Help} />
                 <Route exact path="/about" component={About} />
+                <Route exact path="/search" component={Search} />
                 <Route path="/sandbox" component={Sandbox} />
                 <Route path="*" component={UhOh} />
               </Switch>

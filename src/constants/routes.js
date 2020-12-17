@@ -9,3 +9,4 @@ export const algorithm_usage = 'algorithm_usage';
 export const algorithm_implementation = 'algorithm_implementation';
 export const references = 'references';
 export const error = 'error';
+export const journal_details = 'journal_details';
