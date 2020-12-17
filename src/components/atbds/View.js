@@ -307,7 +307,10 @@ class AtbdView extends Component {
       case 'equation':
         return <BlockMath math={node.text} />;
       case 'image': {
-        const src = node.data.get('src');
+        let src = node.data.get('src');
+        if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+          src = src.replace('localstack', 'localhost');
+        }
         const caption = node.data.get('caption');
         return (
           <AtbdFigure>
