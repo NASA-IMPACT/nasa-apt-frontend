@@ -13,6 +13,7 @@
     "**/katex": "0.12.0"
   },
   "dependencies": {
+    "@babel/helper-regex": "^7.10.5",
     "babel-plugin-macros": "^2.5.1",
     "citation-js": "^0.4.10",
     "clipboard": "^2.0.6",
