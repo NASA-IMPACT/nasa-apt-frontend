@@ -9,12 +9,6 @@ import { Value } from 'slate';
 import { Editor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
-import {
-  deleteAtbd,
-  copyAtbd,
-  updateAtbdVersion
-} from '../../actions/actions';
-
 // Components
 import {
   Inpage,
@@ -34,59 +28,27 @@ import Dropdown, {
   DropMenu,
   DropMenuItem
 } from '../common/Dropdown';
-
-// Styled components
 import Button from '../../styles/button/button';
 import collecticon from '../../styles/collecticons';
 import Table from '../../styles/table';
 import Dl from '../../styles/type/definition-list';
-import { themeVal } from '../../styles/utils/general';
-import { multiply } from '../../styles/utils/math';
 import StatusPill from '../common/StatusPill';
-import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import CitationModal from './CitationModal';
 
+
+import {
+  deleteAtbd,
+  copyAtbd,
+  updateAtbdVersion
+} from '../../actions/actions';
+import { themeVal } from '../../styles/utils/general';
+import { glsp } from '../../styles/utils/theme-values';
+import { confirmDeleteDoc } from '../common/ConfirmationPrompt';
 import { getDownloadPDFURL } from '../../utils/utils';
 
-const OptionsTrigger = styled(Button)`
+const DropMenuItemIconified = styled(DropMenuItem)`
   &::before {
-    ${collecticon('ellipsis-vertical')}
-  }
-`;
-
-const DocumentActionDelete = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('trash-bin')}
-  }
-`;
-
-const DocumentActionDuplicate = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('pages')}
-  }
-`;
-
-const DocumentActionPublish = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('arrow-up-right')}
-  }
-`;
-
-const DocumentActionCitation = styled(DropMenuItem)`
-  &::before {
-    ${collecticon('quote-left')}
-  }
-`;
-
-const DownloadButton = styled(Button)`
-  &::before {
-    ${collecticon('download-2')};
-  }
-`;
-
-const EditButton = styled(Button)`
-  &::before {
-    ${collecticon('pencil')};
+    ${({ useIcon }) => collecticon(useIcon)}
   }
 `;
 
@@ -94,12 +56,12 @@ const AtbdSectionHeader = styled.header``;
 const AtbdSectionTitle = styled.h1``;
 const AtbdSectionBody = styled.div`
   h2, h3 {
-    margin-top: ${multiply(themeVal('layout.space'), 2)};
-    margin-bottom: ${themeVal('layout.space')};
+    margin-top: ${glsp(2)};
+    margin-bottom: ${glsp()};
   }
 
   table {
-    margin-bottom: ${themeVal('layout.space')};
+    margin-bottom: ${glsp()};
   }
 `;
 
@@ -130,18 +92,18 @@ AtbdSectionBase.propTypes = {
 };
 const AtbdSection = styled(AtbdSectionBase)`
   &:not(:last-child) {
-    padding-bottom: ${multiply(themeVal('layout.space'), 3)};
-    margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+    padding-bottom: ${glsp(3)};
+    margin-bottom: ${glsp(3)};
     border-bottom: 1px solid ${themeVal('color.shadow')};
   }
 `;
 
 const AtbdMeta = styled.div`
-  margin-bottom: ${multiply(themeVal('layout.space'), 3)};
+  margin-bottom: ${glsp(3)};
 `;
 
 const AtbdMetaTitle = styled.h2`
-  margin-bottom: ${themeVal('layout.space')};
+  margin-bottom: ${glsp()};
 `;
 
 const AtbdMetaDetails = styled(Dl)``;
@@ -149,7 +111,7 @@ const AtbdMetaDetails = styled(Dl)``;
 const AtbdIndex = styled.nav``;
 
 const AtbdIndexTitle = styled.h2`
-  margin-bottom: ${themeVal('layout.space')};
+  margin-bottom: ${glsp()};
 `;
 
 const AtbdIndexMenu = styled.ol`
@@ -178,6 +140,36 @@ const AtbdContactList = styled.ul`
   }
 `;
 
+const AtbdFigure = styled.figure`
+  display: block;
+  text-align: center;
+  max-width: 100%;
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  figcaption {
+    font-style: italic;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: ${glsp(0.5)};
+  }
+`;
+
+const TableContainer = styled.div`
+  & > *:not(:last-child) {
+    margin-bottom: ${glsp(0.5)};
+  }
+`;
+
+const TableCaption = styled.p`
+  font-style: italic;
+  text-align: center;
+`;
+
 class AtbdView extends Component {
   static propTypes = {
     atbd: T.object,
@@ -189,7 +181,8 @@ class AtbdView extends Component {
     copyAtbdAction: T.func,
     updateAtbdVersionAction: T.func,
     match: T.object,
-    visitLink: T.func
+    visitLink: T.func,
+    isUserLogged: T.bool
   };
 
   constructor(props) {
@@ -314,16 +307,20 @@ class AtbdView extends Component {
       case 'equation':
         return <BlockMath math={node.text} />;
       case 'image': {
-        const src = node.data.get('src');
+        let src = node.data.get('src');
+        if (process.env.NODE_ENV && process.env.NODE_ENV === 'development') {
+          src = src.replace('localstack', 'localhost');
+        }
         const caption = node.data.get('caption');
         return (
-          <figure>
+          <AtbdFigure>
             <img src={src} alt={caption} />
             <figcaption>{caption}</figcaption>
-          </figure>
+          </AtbdFigure>
         );
       }
       case 'table': {
+        const caption = node.data.get('caption');
         const headers = !node.data.get('headless');
         const rows = children;
         const split = (!headers || !rows || !rows.length || rows.length === 1)
@@ -334,10 +331,13 @@ class AtbdView extends Component {
           };
 
         return (
-          <Table {...attributes}>
-            {headers && <thead>{split.header}</thead>}
-            <tbody>{split.rows}</tbody>
-          </Table>
+          <TableContainer>
+            <Table {...attributes}>
+              {headers && <thead>{split.header}</thead>}
+              <tbody>{split.rows}</tbody>
+            </Table>
+            {caption && <TableCaption>{caption}</TableCaption>}
+          </TableContainer>
         );
       }
       case 'table_row':
@@ -475,7 +475,9 @@ class AtbdView extends Component {
       algorithm_implementations,
       data_access_input_data,
       data_access_output_data,
-      data_access_related_urls
+      data_access_related_urls,
+      journal_discussion,
+      journal_acknowledgements
     } = atbdVersion;
 
     // When the section that's being rendered is a list of items we only need
@@ -827,6 +829,42 @@ class AtbdView extends Component {
             </ol>
           </AtbdSection>
         ) : null
+      },
+      {
+        label: 'Journal Details',
+        id: 'journal-details',
+        renderer: el => (
+          <AtbdSection key={el.id} id={el.id} title={el.label}>
+            <em>If provided, the journal details are included only in the Journal PDF.</em>
+            {el.children.map(child => child.renderer(child))}
+          </AtbdSection>
+        ),
+        children: [
+          {
+            label: 'Acknowledgements',
+            id: 'acknowledgements',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h3 id={el.id}>{el.label}</h3>
+                <Prose>
+                  {this.renderReadOnlyEditor(journal_acknowledgements)}
+                </Prose>
+              </React.Fragment>
+            )
+          },
+          {
+            label: 'Discussion',
+            id: 'discussion',
+            renderer: el => (
+              <React.Fragment key={el.id}>
+                <h3 id={el.id}>{el.label}</h3>
+                <Prose>
+                  {this.renderReadOnlyEditor(journal_discussion)}
+                </Prose>
+              </React.Fragment>
+            )
+          }
+        ]
       }
     ];
 
@@ -846,11 +884,11 @@ class AtbdView extends Component {
     const {
       atbd,
       visitLink,
-      atbdCitation: storedAtbdCitation
+      atbdCitation: storedAtbdCitation,
+      isUserLogged
     } = this.props;
 
-    if (!atbd) return null;
-    const pdfURL = getDownloadPDFURL(atbd);
+    if (!atbd || !atbd.atbd_versions || !atbd.atbd_versions.length) return null;
     const atbdStatus = atbd.atbd_versions[0].status;
 
     // If we're navigation from another ATBD and there's no citation, the state
@@ -872,7 +910,7 @@ class AtbdView extends Component {
                 <InpageHeaderInner>
                   <InpageHeadline>
                     <InpageTitleWrapper>
-                      <InpageTitle>{atbd.title}</InpageTitle>
+                      <InpageTitle>{atbd.title || 'Untitled Document'}</InpageTitle>
                       <StatusPill>{atbdStatus}</StatusPill>
                     </InpageTitleWrapper>
                     <InpageTagline>Viewing document</InpageTagline>
@@ -881,71 +919,112 @@ class AtbdView extends Component {
                     <Dropdown
                       alignment="right"
                       triggerElement={(
-                        <OptionsTrigger
+                        <Button
                           variation="achromic-plain"
-                          title="Toggle menu options"
+                          title="Toggle ATDB options"
+                          useIcon="ellipsis-vertical"
                         >
                           Options
-                        </OptionsTrigger>
+                        </Button>
                       )}
                     >
                       <DropTitle>Document options</DropTitle>
                       <DropMenu role="menu" iconified>
-                        {atbdStatus === 'Draft' && (
+                        {atbdStatus === 'Draft' && isUserLogged && (
                           <li>
-                            <DocumentActionPublish
+                            <DropMenuItemIconified
                               title="Publish document"
                               data-hook="dropdown:close"
+                              useIcon="arrow-up-right"
                               onClick={this.onPublishClick.bind(this, atbd)}
                             >
                               Publish
-                            </DocumentActionPublish>
+                            </DropMenuItemIconified>
+                          </li>
+                        )}
+                        {isUserLogged && (
+                          <li>
+                            <DropMenuItemIconified
+                              title="Duplicate document"
+                              data-hook="dropdown:close"
+                              useIcon="pages"
+                              onClick={this.onDuplicateClick.bind(this, atbd)}
+                            >
+                              Duplicate
+                            </DropMenuItemIconified>
                           </li>
                         )}
                         <li>
-                          <DocumentActionDuplicate
-                            title="Duplicate document"
-                            data-hook="dropdown:close"
-                            onClick={this.onDuplicateClick.bind(this, atbd)}
-                          >
-                            Duplicate
-                          </DocumentActionDuplicate>
-                        </li>
-                        <li>
-                          <DocumentActionCitation
+                          <DropMenuItemIconified
                             title="Get document citation"
                             data-hook="dropdown:close"
+                            useIcon="quote-left"
                             onClick={this.onCitationClick.bind(this, atbd)}
                           >
                             Citation
-                          </DocumentActionCitation>
+                          </DropMenuItemIconified>
                         </li>
                       </DropMenu>
+                      {isUserLogged && (
+                        <DropMenu role="menu" iconified>
+                          <li>
+                            <DropMenuItemIconified
+                              title="Delete document"
+                              data-hook="dropdown:close"
+                              useIcon="trash-bin"
+                              onClick={this.onDeleteClick.bind(this, atbd)}
+                            >
+                              Delete
+                            </DropMenuItemIconified>
+                          </li>
+                        </DropMenu>
+                      )}
+                    </Dropdown>
+                    <Dropdown
+                      alignment="right"
+                      triggerElement={(
+                        <Button
+                          variation="achromic-plain"
+                          title="Toggle ATDB download options"
+                          useIcon="download-2"
+                        >
+                          Download
+                        </Button>
+                      )}
+                    >
+                      <DropTitle>Download options</DropTitle>
                       <DropMenu role="menu" iconified>
                         <li>
-                          <DocumentActionDelete
-                            title="Delete document"
+                          <DropMenuItemIconified
+                            title="Download document as PDF"
                             data-hook="dropdown:close"
-                            onClick={this.onDeleteClick.bind(this, atbd)}
+                            useIcon="page"
+                            as="a"
+                            target="_blank"
+                            href={getDownloadPDFURL(atbd)}
                           >
-                            Delete
-                          </DocumentActionDelete>
+                            Document PDF
+                          </DropMenuItemIconified>
+                        </li>
+                        <li>
+                          <DropMenuItemIconified
+                            title="Download document as journal PDF"
+                            data-hook="dropdown:close"
+                            useIcon="page-label"
+                            as="a"
+                            target="_blank"
+                            href={getDownloadPDFURL(atbd, { journal: true })}
+                          >
+                            Journal PDF
+                          </DropMenuItemIconified>
                         </li>
                       </DropMenu>
                     </Dropdown>
-                    <DownloadButton
-                      variation="achromic-plain"
-                      title="Download document as PDF"
-                      as="a"
-                      target="_blank"
-                      href={pdfURL}
-                    >
-                      Download PDF
-                    </DownloadButton>
-                    {atbdStatus === 'Draft' && (
-                      <EditButton
+                    {atbdStatus === 'Draft' && isUserLogged && (
+                      <Button
                         variation="achromic-plain"
                         title="Edit document"
+                        useIcon="pencil"
                         onClick={() => visitLink(
                           `/atbdsedit/${
                             atbd.atbd_id
@@ -953,7 +1032,7 @@ class AtbdView extends Component {
                         )}
                       >
                         Edit
-                      </EditButton>
+                      </Button>
                     )}
                   </InpageToolbar>
                 </InpageHeaderInner>
@@ -1026,13 +1105,15 @@ const mapStateToProps = (state) => {
   const {
     selectedAtbd,
     atbdVersion,
-    atbdCitation
+    atbdCitation,
+    user
   } = state.application;
 
   return {
     atbdVersion,
     atbd: selectedAtbd,
     atbdCitation,
+    isUserLogged: user.status === 'logged'
   };
 };
 

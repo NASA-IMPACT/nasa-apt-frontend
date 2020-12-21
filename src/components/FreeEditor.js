@@ -470,13 +470,8 @@ export class FreeEditor extends React.Component {
       case 'equation':
         return <EquationEditor {...props} />;
       case 'image': {
-        const src = node.data.get('src');
-        const caption = node.data.get('caption');
         return (
-          <figure>
-            <EditorImage isFocused={isFocused} src={src} {...attributes} />
-            <figcaption>{caption}</figcaption>
-          </figure>
+          <EditorImage editor={this.editor} {...props} />
         );
       }
       case 'table': {
@@ -766,6 +761,7 @@ const StyledFreeEditor = styled(FreeEditor)`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  min-width: 0;
 
   table {
     width: 100%;

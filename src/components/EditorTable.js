@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components/macro';
 import collecticon from '../styles/collecticons';
 import { themeVal } from '../styles/utils/general';
 import { getClosestNode, getCurrentSelectionRange } from './common/slateEditor/utils';
+import { glsp } from '../styles/utils/theme-values';
 
 import Button from '../styles/button/button';
 import ButtonGroup from '../styles/button/group';
@@ -95,6 +96,11 @@ const TableContainer = styled.div`
   ${controlsTableHighlights}
 `;
 
+const TableCaption = styled.p`
+  font-style: italic;
+  text-align: center;
+`;
+
 const TableActionsTopRight = styled.div`
   position: absolute;
   right: 0;
@@ -102,6 +108,10 @@ const TableActionsTopRight = styled.div`
   
   ${controlsVisibility}
   transition: visibility 0.12s ease 0s, opacity 0.24s ease 0s;
+
+  > *:not(:last-child) {
+    margin-right: ${glsp(0.5)};
+  }
 `;
 
 const TableActionsTopLeft = styled.div`
@@ -123,33 +133,15 @@ const TableActionsLeft = styled.div`
   transition: visibility 0.12s ease 0s, opacity 0.24s ease 0s, top 0.24s ease 0s;
 `;
 
-const RemoveBtn = styled(Button).attrs({
+const SmallBtn = styled(Button).attrs(props => ({
   variation: 'base-raised-light',
   size: 'small',
-  hideText: true
-})`
+  hideText: props.hideText !== undefined
+    ? props.hideText
+    : true
+}))`
   ::before {
-    ${collecticon('trash-bin')}
-  }
-`;
-
-const MinusBtn = styled(Button).attrs({
-  variation: 'base-raised-light',
-  size: 'small',
-  hideText: true
-})`
-  ::before {
-    ${collecticon('minus--small')}
-  }
-`;
-
-const PlusBtn = styled(Button).attrs({
-  variation: 'base-raised-light',
-  size: 'small',
-  hideText: true
-})`
-  ::before {
-    ${collecticon('plus--small')}
+    ${({ useIcon }) => collecticon(useIcon)}
   }
 `;
 
@@ -166,6 +158,7 @@ class EditorTable extends React.Component {
     };
 
     this.onMouseOut = this.onMouseOut.bind(this);
+    this.editCaption = this.editCaption.bind(this);
   }
 
 
@@ -210,6 +203,19 @@ class EditorTable extends React.Component {
     });
   }
 
+  editCaption() {
+    const { editor, node } = this.props;
+    const currentValue = node.data.get('caption');
+    const caption = window.prompt('Insert caption', currentValue);
+    if (caption !== null) {
+      const data = {
+        ...node.data.toObject(),
+        caption: caption.trim()
+      };
+      editor.setNodeByKey(node.key, { data });
+    }
+  }
+
   renderActions() {
     const {
       remove,
@@ -230,7 +236,8 @@ class EditorTable extends React.Component {
     return (
       <div contentEditable={false}>
         <TableActionsTopRight isHidden={hidden}>
-          <RemoveBtn
+          <SmallBtn
+            useIcon="trash-bin"
             onClick={(e) => { this.onMouseOut(); remove(e); }}
             /* eslint-disable-next-line react/jsx-no-bind */
             onMouseOver={this.onMouseOver.bind(this, 'table-remove')}
@@ -240,12 +247,20 @@ class EditorTable extends React.Component {
             onBlur={this.onMouseOut}
           >
             Remove
-          </RemoveBtn>
+          </SmallBtn>
+          <SmallBtn
+            useIcon="pencil"
+            hideText={false}
+            onClick={() => { this.editCaption(); }}
+          >
+            Caption
+          </SmallBtn>
         </TableActionsTopRight>
 
         <TableActionsTopLeft leftPos={cellDelta.left} isHidden={hidden}>
           <ButtonGroup orientation="horizontal">
-            <MinusBtn
+            <SmallBtn
+              useIcon="minus--small"
               onClick={(e) => { this.onMouseOut(); removeColumn(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'col-remove')}
@@ -255,8 +270,9 @@ class EditorTable extends React.Component {
               onBlur={this.onMouseOut}
             >
               Remove column
-            </MinusBtn>
-            <PlusBtn
+            </SmallBtn>
+            <SmallBtn
+              useIcon="plus--small"
               onClick={(e) => { this.onMouseOut(); insertColumn(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'col-add')}
@@ -266,13 +282,14 @@ class EditorTable extends React.Component {
               onBlur={this.onMouseOut}
             >
               Add column
-            </PlusBtn>
+            </SmallBtn>
           </ButtonGroup>
         </TableActionsTopLeft>
 
         <TableActionsLeft topPos={cellDelta.top} isHidden={hidden}>
           <ButtonGroup orientation="vertical">
-            <MinusBtn
+            <SmallBtn
+              useIcon="minus--small"
               onClick={(e) => { this.onMouseOut(); removeRow(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'row-remove')}
@@ -282,8 +299,9 @@ class EditorTable extends React.Component {
               onBlur={this.onMouseOut}
             >
               Remove row
-            </MinusBtn>
-            <PlusBtn
+            </SmallBtn>
+            <SmallBtn
+              useIcon="plus--small"
               onClick={(e) => { this.onMouseOut(); insertRow(e); }}
               /* eslint-disable-next-line react/jsx-no-bind */
               onMouseOver={this.onMouseOver.bind(this, 'row-add')}
@@ -293,7 +311,7 @@ class EditorTable extends React.Component {
               onBlur={this.onMouseOut}
             >
               Add row
-            </PlusBtn>
+            </SmallBtn>
           </ButtonGroup>
         </TableActionsLeft>
       </div>
@@ -301,8 +319,9 @@ class EditorTable extends React.Component {
   }
 
   render() {
-    const { attributes, children } = this.props;
+    const { attributes, children, node } = this.props;
     const { rowIdx, cellIdx, action } = this.state;
+    const caption = node.data.get('caption');
 
     return (
       <TableContainer rowIdx={rowIdx} cellIdx={cellIdx} activeAction={action}>
@@ -310,13 +329,16 @@ class EditorTable extends React.Component {
         <table ref={this.tableRef}>
           <tbody {...attributes}>{children}</tbody>
         </table>
+        {caption && <TableCaption contentEditable={false}>{caption}</TableCaption>}
       </TableContainer>
     );
   }
 }
 
 EditorTable.propTypes = {
+  editor: PropTypes.object,
   children: PropTypes.node,
+  node: PropTypes.object,
   attributes: PropTypes.object.isRequired,
   isFocused: PropTypes.bool,
   remove: PropTypes.func.isRequired,

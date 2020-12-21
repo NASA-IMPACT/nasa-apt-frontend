@@ -22,14 +22,12 @@ import {
 import FormLegend from '../styles/form/legend';
 import FormLabel from '../styles/form/label';
 
-export function AlgorithmUsage(props) {
+export function JournalDetails(props) {
   const {
     atbd,
     atbd_version,
-    methods,
-    uncertainties,
-    errors,
-    constraints,
+    discussion,
+    acknowledgements,
     updateAtbdVersion: update,
     t
   } = props;
@@ -40,7 +38,7 @@ export function AlgorithmUsage(props) {
     alias
   } = atbd;
 
-  const { step, stepNum } = getAtbdStep('algorithm_usage');
+  const { step, stepNum } = getAtbdStep('journal_details');
   return (
     <Inpage>
       <EditPage
@@ -50,25 +48,54 @@ export function AlgorithmUsage(props) {
         step={stepNum}
       >
         <h2>{step.display}</h2>
+
+        <p>The journal details will only be included in the Journal PDF export.</p>
+
         <Form>
           <FormFieldset>
             <FormFieldsetHeader>
-              <FormLegend>Constraints</FormLegend>
+              <FormLegend>Discussion</FormLegend>
             </FormFieldsetHeader>
             <FormFieldsetBody>
               <FormGroup>
                 <FormGroupHeader>
-                  <FormLabel>Describe the algorithm constraints</FormLabel>
+                  <FormLabel>List discussion points</FormLabel>
                   <FormToolbar>
-                    <InfoButton text={t.constraints} />
+                    <InfoButton text={t.discussion} />
                   </FormToolbar>
                 </FormGroupHeader>
                 <FormGroupBody>
                   <FreeEditor
-                    initialValue={constraints}
+                    initialValue={discussion}
                     save={(document) => {
                       update(atbd_id, atbd_version, {
-                        algorithm_usage_constraints: document
+                        journal_discussion: document
+                      });
+                    }}
+                  />
+                </FormGroupBody>
+              </FormGroup>
+            </FormFieldsetBody>
+          </FormFieldset>
+
+          <FormFieldset>
+            <FormFieldsetHeader>
+              <FormLegend>Acknowledgements</FormLegend>
+            </FormFieldsetHeader>
+            <FormFieldsetBody>
+              <FormGroup>
+                <FormGroupHeader>
+                  <FormLabel>List of acknowledgements</FormLabel>
+                  <FormToolbar>
+                    <InfoButton text={t.acknowledgements} />
+                  </FormToolbar>
+                </FormGroupHeader>
+                <FormGroupBody>
+                  <FreeEditor
+                    initialValue={acknowledgements}
+                    save={(document) => {
+                      update(atbd_id, atbd_version, {
+                        journal_acknowledgements: document
                       });
                     }}
                   />
@@ -78,82 +105,16 @@ export function AlgorithmUsage(props) {
           </FormFieldset>
         </Form>
 
-        <h2>Performance Assessment</h2>
-        <Form>
-          <FormFieldset>
-            <FormFieldsetHeader>
-              <FormLegend>Validation</FormLegend>
-            </FormFieldsetHeader>
-            <FormFieldsetBody>
-              <FormGroup>
-                <FormGroupHeader>
-                  <FormLabel>Validation methods</FormLabel>
-                  <FormToolbar>
-                    <InfoButton text={t.validation_methods} />
-                  </FormToolbar>
-                </FormGroupHeader>
-                <FormGroupBody>
-                  <FreeEditor
-                    initialValue={methods}
-                    save={(document) => {
-                      update(atbd_id, atbd_version, {
-                        performance_assessment_validation_methods: document
-                      });
-                    }}
-                  />
-                </FormGroupBody>
-              </FormGroup>
-              <FormGroup>
-                <FormGroupHeader>
-                  <FormLabel>Uncertainties</FormLabel>
-                  <FormToolbar>
-                    <InfoButton text={t.validation_uncertainties} />
-                  </FormToolbar>
-                </FormGroupHeader>
-                <FormGroupBody>
-                  <FreeEditor
-                    initialValue={uncertainties}
-                    save={(document) => {
-                      update(atbd_id, atbd_version, {
-                        performance_assessment_validation_uncertainties: document
-                      });
-                    }}
-                  />
-                </FormGroupBody>
-              </FormGroup>
-              <FormGroup>
-                <FormGroupHeader>
-                  <FormLabel>Errors</FormLabel>
-                  <FormToolbar>
-                    <InfoButton text={t.validation_errors} />
-                  </FormToolbar>
-                </FormGroupHeader>
-                <FormGroupBody>
-                  <FreeEditor
-                    initialValue={errors}
-                    save={(document) => {
-                      update(atbd_id, atbd_version, {
-                        performance_assessment_validation_errors: document
-                      });
-                    }}
-                  />
-                </FormGroupBody>
-              </FormGroup>
-            </FormFieldsetBody>
-          </FormFieldset>
-        </Form>
       </EditPage>
     </Inpage>
   );
 }
 
-AlgorithmUsage.propTypes = {
+JournalDetails.propTypes = {
   atbd: PropTypes.object,
   atbd_version: PropTypes.number,
-  methods: PropTypes.object,
-  uncertainties: PropTypes.object,
-  errors: PropTypes.object,
-  constraints: PropTypes.object,
+  discussion: PropTypes.object,
+  acknowledgements: PropTypes.object,
   updateAtbdVersion: PropTypes.func.isRequired,
   t: PropTypes.object
 };
@@ -165,14 +126,12 @@ const mapStateToProps = (state) => {
   return {
     atbd,
     atbd_version: atbdVersion.atbd_version,
-    methods: atbdVersion.performance_assessment_validation_methods,
-    uncertainties: atbdVersion.performance_assessment_validation_uncertainties,
-    errors: atbdVersion.performance_assessment_validation_errors,
-    constraints: atbdVersion.algorithm_usage_constraints,
-    t: app.t ? app.t.algorithm_usage : {}
+    discussion: atbdVersion.journal_discussion,
+    acknowledgements: atbdVersion.journal_acknowledgements,
+    t: app.t ? app.t.journal_details : {}
   };
 };
 
 const mapDispatchToProps = { updateAtbdVersion };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlgorithmUsage);
+export default connect(mapStateToProps, mapDispatchToProps)(JournalDetails);

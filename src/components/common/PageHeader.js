@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { Link, withRouter, NavLink } from 'react-router-dom';
+
+import Constrainer from '../../styles/constrainer';
+import AuthBox from './AuthBox';
+
 import { antialiased } from '../../styles/helpers';
 import { themeVal } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
-import Constrainer from '../../styles/constrainer';
-
+import { VerticalDivider } from '../../styles/divider';
 
 const PageHead = styled.header`
   ${antialiased()}
@@ -54,6 +57,10 @@ const PageTitle = styled.h1`
 const PageNav = styled.nav`
   display: flex;
   margin: 0 0 0 auto;
+
+  ${VerticalDivider} {
+    height: 1.5rem;
+  }
 `;
 
 const GlobalMenu = styled.ul`
@@ -104,6 +111,8 @@ class PageHeader extends React.PureComponent {
               <li><NavLink exact to="/about" title="View About APT page"><span>About</span></NavLink></li>
               <li><NavLink to="/help" title="View Help page"><span>Help</span></NavLink></li>
             </GlobalMenu>
+            <VerticalDivider />
+            <AuthBox />
           </PageNav>
         </PageHeadInner>
       </PageHead>

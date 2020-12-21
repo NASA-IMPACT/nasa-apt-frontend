@@ -15,16 +15,26 @@ export function downloadTextFile(filename, text) {
   document.body.removeChild(element);
 }
 
-const pdfServiceEndpoint = process.env.REACT_APP_PDF_SERVICE_ENDPOINT;
+const pdfServiceEndpoint = process.env.REACT_APP_FASTAPI_URL;
 
 /**
  * Generate PDF url using either the atbd id or the alias.
- * @param atbd
+ *
+ * @param {object} atbd The atbd for which to get the URL.
+ * @param {object} options Options for the url generation.
+ * @param {bool} options.journal Whether the url is for a journal PDF or not.
+ *
  * @returns {string}
  */
-export function getDownloadPDFURL(atbd) {
+export function getDownloadPDFURL(atbd, options = {}) {
   const { atbd_id: id, alias } = atbd;
-  return alias
-    ? `${pdfServiceEndpoint}/atbds/alias/${alias}.pdf`
-    : `${pdfServiceEndpoint}/atbds/id/${id}.pdf`;
+  // Urls:
+  // normal: atbds/<alias/alias | id/id>.pdf
+  // journal: atbds/journal/<alias/alias | id/id>.pdf
+  let url = `${pdfServiceEndpoint}/atbds`;
+
+  if (options.journal) url += '/journal';
+  return url += alias
+    ? `/alias/${alias}.pdf`
+    : `/id/${id}.pdf`;
 }

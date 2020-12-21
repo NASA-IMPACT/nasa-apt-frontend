@@ -45,6 +45,8 @@ const locationMiddleware = store => next => async (action) => {
       } else {
         // Route /atbds/:atbd_id
         const res = await store.dispatch(actions.fetchAtbd(pathComponents[2]));
+        if (!res.payload.atbd_versions.length) return store.dispatch(push(`/${error}`));
+
         const versionDef = {
           atbd_id: res.payload.atbd_id,
           atbd_version: res.payload.atbd_versions[0].atbd_version

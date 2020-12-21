@@ -17,13 +17,26 @@ function setup() {
   global.navigator = {
     userAgent: 'node.js',
   };
-  global.requestAnimationFrame = callback => (
-    setTimeout(callback, 0)
-  );
-  global.cancelAnimationFrame = id => (
-    clearTimeout(id)
-  );
+  global.requestAnimationFrame = callback => setTimeout(callback, 0);
+  global.cancelAnimationFrame = id => clearTimeout(id);
+
+  const localStorageMock = () => {
+    let store = {};
+    return {
+      getItem: key => store[key],
+      setItem: (key, value) => {
+        store[key] = value.toString();
+      },
+      clear: () => {
+        store = {};
+      },
+      removeItem: (key) => {
+        delete store[key];
+      },
+    };
+  };
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock() });
   copyProps(window, global);
 }
 
-export default setup;
+module.exports = setup;

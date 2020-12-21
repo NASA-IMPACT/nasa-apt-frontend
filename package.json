@@ -1,7 +1,7 @@
 {
   "name": "apt-frontend",
   "description": "Interface for the Algorithm Publication Tool",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "author": {
     "name": "Development Seed",
     "url": "https://developmentseed.org"
@@ -9,9 +9,11 @@
   "license": "MIT",
   "private": true,
   "resolutions": {
-    "react-router": "4.3.1"
+    "react-router": "4.3.1",
+    "**/katex": "0.12.0"
   },
   "dependencies": {
+    "@babel/helper-regex": "^7.10.5",
     "babel-plugin-macros": "^2.5.1",
     "citation-js": "^0.4.10",
     "clipboard": "^2.0.6",
@@ -21,7 +23,7 @@
     "immutable": "^4.0.0-rc.12",
     "is-url": "^1.2.4",
     "jsonschema": "^1.2.4",
-    "katex": "^0.10.1",
+    "katex": "^0.12.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.deburr": "^4.1.0",
