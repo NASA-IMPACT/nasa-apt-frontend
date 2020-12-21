@@ -81,6 +81,9 @@ const icon = styled.div`
 ```
 
 ## Environments
+
+_This environment list is deprecated_
+
 There are currently 2 environments defined for NASA-APT, which follow specific branches
 - Staging (`develop`): http://nasa-apt-staging-application.s3-website-us-east-1.amazonaws.com
 - Production (`master`): http://nasa-apt-application.s3-website-us-east-1.amazonaws.com/
