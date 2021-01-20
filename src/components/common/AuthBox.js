@@ -76,7 +76,7 @@ class AuthBox extends React.PureComponent {
     const { status } = this.props.user;
 
     const { protocol, host } = window.location;
-    const loc = `${protocol}//${host}`;
+    const loc = process.env.PUBLIC_URL || `${protocol}//${host}`;
 
     if (status === 'not-logged') {
       return (
