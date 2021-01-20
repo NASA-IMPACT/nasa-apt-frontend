@@ -25,7 +25,7 @@ class PageFooter extends React.PureComponent {
     return (
       <PageFoot>
         <PageFootInner>
-          <p>2019 © NASA. All rights reserved</p>
+          <p>{(new Date()).getFullYear()} © NASA. All rights reserved</p>
         </PageFootInner>
       </PageFoot>
     );
