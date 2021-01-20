@@ -9,6 +9,7 @@ import Button from '../../styles/button/button';
 import { getLoggedUserData, logoutUser } from '../../actions/actions';
 import { visuallyHidden } from '../../styles/helpers';
 import { themeVal } from '../../styles/utils/general';
+import { getAppURL } from '../../store/store';
 
 const AUTH_URL = process.env.REACT_APP_AUTH_URL;
 
@@ -75,8 +76,8 @@ class AuthBox extends React.PureComponent {
   renderContent() {
     const { status } = this.props.user;
 
-    const { protocol, host } = window.location;
-    const loc = process.env.PUBLIC_URL || `${protocol}//${host}`;
+    // Remove trailing url if exists.
+    const loc = getAppURL().cleanHref;
 
     if (status === 'not-logged') {
       return (
