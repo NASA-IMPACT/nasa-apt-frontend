@@ -22,8 +22,11 @@ import { showGlobalLoading, hideGlobalLoading } from '../common/OverlayLoader';
 import Dropdown, { DropMenu, DropTitle, DropMenuItem } from '../common/Dropdown';
 import { headingAlt } from '../../styles/type/heading';
 import { stylizeFunction } from '../../styles/utils/general';
+import { getAppURL } from '../../store/store';
 
 const _rgba = stylizeFunction(rgba);
+
+const BASE_URL = getAppURL().cleanHref;
 
 const HelpProse = styled(Prose)`
   max-width: 48rem;
@@ -89,7 +92,7 @@ class Help extends Component {
       return this.state.pagesIndex;
     }
     try {
-      const response = await fetch('/docs/index.json');
+      const response = await fetch(`${BASE_URL}/docs/index.json`);
       const pagesIndex = await response.json();
       this.setState({ pagesIndex });
       return pagesIndex;
@@ -109,7 +112,7 @@ class Help extends Component {
       if (!page) {
         return this.props.redirect('/uhoh');
       }
-      const response = await fetch(page.url);
+      const response = await fetch(BASE_URL + page.url);
       const pageData = await response.json();
       this.setState({
         data: pageData.content,

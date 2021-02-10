@@ -19,7 +19,18 @@ const logger = createLogger({
   predicate: () => (process.env.NODE_ENV !== 'production')
 });
 
-export const history = createBrowserHistory({ basename: process.env.PUBLIC_URL });
+export const getAppURL = () => {
+  const { protocol, host } = window.location;
+  const publicUrl = process.env.PUBLIC_URL;
+  const baseUrl = publicUrl.match(/https?:\/\//) ? publicUrl : `${protocol}//${host}/${publicUrl}`;
+
+  // Remove trailing url if exists.
+  const url = new URL(baseUrl.replace(/\/$/, ''));
+  url.cleanHref = url.href.replace(/\/$/, '');
+  return url;
+};
+
+export const history = createBrowserHistory({ basename: getAppURL().pathname });
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose : compose;
 
 const store = createStore(
