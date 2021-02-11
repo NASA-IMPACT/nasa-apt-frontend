@@ -177,6 +177,8 @@ export class ReferenceModalEditor extends Component {
       }
     }
 
+    const isMac = navigator.appVersion.indexOf('Mac') !== -1;
+
     return (
       <Fragment>
         <Modal
@@ -258,7 +260,7 @@ export class ReferenceModalEditor extends Component {
           size="large"
           disabled={disabled}
           hideText
-          data-tip="Reference"
+          data-tip={`Reference (${isMac ? '⌘' : 'ctrl'} + e)`}
         >
           Reference
         </ReferenceBtn>
@@ -290,5 +292,7 @@ const mapDispatch = {
 
 export default connect(
   mapStateToProps,
-  mapDispatch
+  mapDispatch,
+  null,
+  { forwardRef: true }
 )(ReferenceModalEditor);
