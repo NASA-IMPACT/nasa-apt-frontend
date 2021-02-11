@@ -358,11 +358,28 @@ export class FreeEditor extends React.Component {
   }
 
   insertReference(newReference) {
-    const { publication_reference_id: id, title: name } = newReference;
+    const { publication_reference_id: id } = newReference;
+
+    const createRefTitle = (d) => {
+      const title = d.title || 'no title';
+      const year = d.year || 'no year';
+      const authors = d.authors
+        ? d.authors
+          .split(',')
+          .map((author) => {
+            const names = author.trim().split(' ');
+            return names[names.length - 1];
+          })
+          .join(', ')
+        : 'no authors';
+
+      return `${authors}, ${year}, ${title}`;
+    };
+
     this.editor
       .insertInline({
         type: reference,
-        data: { id, name },
+        data: { id, name: createRefTitle(newReference) },
         nodes: [
           {
             object: 'text',
