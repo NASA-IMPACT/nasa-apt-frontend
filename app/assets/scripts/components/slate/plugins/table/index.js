@@ -1,5 +1,6 @@
 import { modKey } from '../common/utils';
 
+// Definition for the toolbar and keyboard shortcut.
 export const toolbarTable = {
   id: 'table',
   icon: 'table',

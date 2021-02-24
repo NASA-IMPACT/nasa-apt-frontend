@@ -1,5 +1,4 @@
 import {
-  DEFAULTS_LIST,
   DEFAULTS_PARAGRAPH,
   isBlockAboveEmpty,
   isSelectionAtBlockStart,
@@ -7,6 +6,7 @@ import {
 } from '@udecode/slate-plugins';
 
 // This is disabled for now.
+// This is used to change the block type when certain conditions are met.
 // I'd use this on lists, but they have this built in.
 const resetBlockTypesCommonRule = {
   types: [],

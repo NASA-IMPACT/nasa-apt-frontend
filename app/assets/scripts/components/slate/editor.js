@@ -5,11 +5,11 @@ import ReactTooltip from 'react-tooltip';
 
 import EditorToolbar from './editor-toolbar';
 import DebugPanel from './debug-panel';
+
 // Slate custom plugins.
 // See slate/plugins/README
 import { EditableWithPlugins, pipe } from './plugins/common';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
-// import { ResetBlockTypePlugin } from './plugins/reset-block-type';
 import { ParagraphPlugin } from './plugins/paragraph';
 import {
   ListPlugin,
@@ -24,18 +24,16 @@ import {
   insertEquation,
   toolbarEquation
 } from './plugins/equation';
-// import { withInlineVoid } from '@udecode/slate-plugins';
 
 const plugins = [
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,
-  // ResetBlockTypePlugin,
   SoftBreakPlugin,
   ExitBreakPlugin
 ];
 
-const withPlugins = [withReact, withList /*, withInlineVoid({ plugins })*/];
+const withPlugins = [withReact, withList];
 
 export default function FullEditor() {
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);

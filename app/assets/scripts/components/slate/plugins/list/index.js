@@ -48,7 +48,9 @@ const pluginOptions = {
   }
 };
 
-// Recreation of ListPlugin to include additional keyDown.
+// Plugin definition for slate-plugins framework.
+// This is a recreation of the ListPlugin to include additional keyboard
+// shortcuts.
 export const ListPlugin = {
   renderElement: renderElementList(pluginOptions),
   deserialize: deserializeList(pluginOptions),
@@ -67,14 +69,27 @@ export const ListPlugin = {
   }
 };
 
+// Function for list handling composition.
+// Re-export. See README.md for rationale.
 export const withList = withList$();
 
+/**
+ * Toggle an ordered list.
+ *
+ * @param {Editor} editor Slate editor instance.
+ */
 export const toggleOrderedList = (editor) =>
   toggleList(editor, { typeList: DEFAULTS_LIST.ol.type });
 
+/**
+ * Toggle an unordered list.
+ *
+ * @param {Editor} editor Slate editor instance.
+ */
 export const toggleUnorderedList = (editor) =>
   toggleList(editor, { typeList: DEFAULTS_LIST.ul.type });
 
+// Definition for the toolbar and keyboard shortcut.
 export const toolbarUl = {
   id: 'unordered-list',
   icon: 'list',
@@ -83,6 +98,7 @@ export const toolbarUl = {
   tip: (key) => `List (${modKey(key)})`
 };
 
+// Definition for the toolbar and keyboard shortcut.
 export const toolbarOl = {
   id: 'ordered-list',
   icon: 'list-numbered',

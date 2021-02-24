@@ -5,8 +5,14 @@ import { getRenderElement } from '@udecode/slate-plugins';
 import { modKey } from '../common/utils';
 import EquationEditor from './equation-editor';
 
+// Plugin type.
 export const EQUATION = 'equation';
 
+/**
+ * Insert an equation.
+ *
+ * @param {Editor} editor Slate editor instance.
+ */
 export const insertEquation = (editor) => {
   const node = {
     type: EQUATION,
@@ -23,21 +29,21 @@ export const insertEquation = (editor) => {
   });
 };
 
+// Plugin definition for slate-plugins framework.
 export const EquationPlugin = {
   renderElement: getRenderElement({
     type: EQUATION,
     component: EquationEditor
   }),
-  deserialize: () => {},
   onKeyDown: (e, editor) => {
     if (isHotkey(toolbarEquation.hotkey, e)) {
       e.preventDefault();
       insertEquation(editor);
     }
   }
-  // voidTypes: [EQUATION]
 };
 
+// Definition for the toolbar and keyboard shortcut.
 export const toolbarEquation = {
   id: 'equation',
   icon: 'pi',
