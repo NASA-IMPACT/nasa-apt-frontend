@@ -17,7 +17,8 @@ export function themeOverridesAPT(uiTheme) {
           medium: 2,
           large: 2,
           xlarge: 3
-        }
+        },
+        max: '960px'
       }
     },
     uiTheme
