@@ -16,7 +16,7 @@ export const EQUATION = 'equation';
 export const insertEquation = (editor) => {
   const node = {
     type: EQUATION,
-    children: [{ text: 'equation input' }]
+    children: [{ text: '\\LaTeX~equation' }]
   };
 
   Transforms.insertNodes(editor, node, {
