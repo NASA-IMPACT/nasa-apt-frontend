@@ -16,7 +16,7 @@ const _rgba = stylizeFunction(rgba);
 
 const HomeInpage = styled(Inpage)`
   position: relative;
-  padding: ${glsp(9, 0, 5, 0)};
+  padding: ${glsp(4, 0, 2, 0)};
   overflow: hidden;
 
   &::before {
@@ -37,7 +37,7 @@ const HomeInpage = styled(Inpage)`
     position left: min(56rem, 100vw)
     */
     left: calc((100vw - min(1280px, 100vw)) / 2 + min(56rem, 100vw));
-    top: 8rem;
+    top: 4rem;
   }
 `;
 
@@ -46,6 +46,7 @@ const HomeHeader = styled.header``;
 const HomeHeaderInner = styled(Constrainer)`
   display: grid;
   grid-gap: ${glsp(2)};
+  padding-top: 0;
   padding-bottom: 0;
 `;
 
