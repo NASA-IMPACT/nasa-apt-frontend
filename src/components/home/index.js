@@ -71,9 +71,8 @@ const Sep = styled.span`
   display: inline-flex;
   height: 100%;
   width: 0.125rem;
-  background: ${themeVal("color.base")};
+  background: ${_rgba(themeVal("color.base"), 0.16)};
   vertical-align: top;
-  opacity: 0.16;
   margin: 0 0.25rem;
 `;
 
@@ -102,7 +101,7 @@ const FocusBoxTitle = styled.h2`
   grid-gap: ${glsp()};
   font-size: 1.5rem;
   line-height: 2rem;
-  font-weight: ${themeVal('type.base.bold')};
+  font-weight: ${themeVal("type.base.bold")};
 
   &::before {
     ${({ useIcon }) => collecticon(useIcon)}
@@ -112,8 +111,9 @@ const FocusBoxTitle = styled.h2`
     width: 4rem;
     height: 4rem;
     font-size: 2rem;
-    background-color: ${_rgba(themeVal('color.primary'), 0.16)};
-    border-radius: ${themeVal('shape.rounded')};
+    color: ${themeVal("color.primary")};
+    background-color: ${_rgba(themeVal("color.primary"), 0.16)};
+    border-radius: ${themeVal("shape.rounded")};
   }
 `;
 
@@ -200,7 +200,7 @@ class Home extends Component {
               <li>
                 <FocusBox>
                   <FocusBoxTitle useIcon="wrench">
-                    User-friendly tools
+                    User-friendly<br /> tools
                   </FocusBoxTitle>
                   <FocusBoxContent>
                     Easily generate properly formatted equations, tables and
