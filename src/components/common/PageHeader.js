@@ -9,6 +9,7 @@ import { antialiased } from '../../styles/helpers';
 import { themeVal } from '../../styles/utils/general';
 import { multiply } from '../../styles/utils/math';
 import { VerticalDivider } from '../../styles/divider';
+import Button from '../../styles/button/button';
 
 const PageHead = styled.header`
   ${antialiased()}
@@ -95,6 +96,11 @@ const GlobalMenu = styled.ul`
   }
 `;
 
+const FeedbackButton = styled(Button)`
+  margin-right: ${multiply(themeVal('layout.space'), 0.5)};
+  margin-left: ${multiply(themeVal('layout.space'), -0.5)};
+`;
+
 class PageHeader extends React.PureComponent {
   render() {
     return (
@@ -112,6 +118,19 @@ class PageHeader extends React.PureComponent {
               <li><NavLink to="/help" title="View Help page"><span>Help</span></NavLink></li>
             </GlobalMenu>
             <VerticalDivider />
+
+            <FeedbackButton
+              variation="achromic-plain"
+              title="Give feedback about the application"
+              useIcon="speech-balloon"
+              size="small"
+              onClick={(e) => {
+                e.preventDefault();
+                window.feedback.showForm();
+              }}
+            >
+              Feedback
+            </FeedbackButton>
             <AuthBox />
           </PageNav>
         </PageHeadInner>
