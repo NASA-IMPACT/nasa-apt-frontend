@@ -16,7 +16,7 @@ const _rgba = stylizeFunction(rgba);
 
 const HomeInpage = styled(Inpage)`
   position: relative;
-  padding: ${glsp(4, 0, 2, 0)};
+  padding: ${glsp(6, 0, 4, 0)};
   overflow: hidden;
 
   &::before {
