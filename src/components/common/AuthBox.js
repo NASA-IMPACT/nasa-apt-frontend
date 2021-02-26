@@ -132,6 +132,7 @@ class AuthBox extends React.PureComponent {
         alignment="right"
         triggerElement={(
           <TriggerButton
+            id="login-box-trigger"
             variation="achromic-plain"
             title="Toggle profile box"
             useIcon="user"

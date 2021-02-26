@@ -22,7 +22,7 @@ import {
   algorithm_implementation,
   references,
   journal_details,
-  error
+  error,
 } from './constants/routes';
 import PageHeader from './components/common/PageHeader';
 import PageFooter from './components/common/PageFooter';
@@ -44,6 +44,7 @@ import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh';
 import { CloseButton } from './components/common/toasts';
 import OverlayLoaderConnector from './components/common/OverlayLoaderConnector';
+import Home from './components/home';
 
 // Google analytics
 if (process.env.REACT_APP_GA_TRACKING) {
@@ -74,6 +75,7 @@ const App = () => (
             <PageHeader />
             <PageBody>
               <Switch>
+                <Route path="/" exact component={Home} />
                 <Route path={`/${atbds}/:atbd_id`} component={AtbdView} />
                 <Route path={`/${atbds}`} component={AtbdIndex} />
                 <Route
@@ -108,10 +110,7 @@ const App = () => (
                   path={`/${atbdsedit}/:atbd_id/${drafts}/:atbd_version/${journal_details}`}
                   component={JournalDetails}
                 />
-                <Route
-                  path={`/${error}`}
-                  component={UhOh}
-                />
+                <Route path={`/${error}`} component={UhOh} />
                 <Route exact path="/help" component={Help} />
                 <Route path="/help/:page_id" component={Help} />
                 <Route exact path="/about" component={About} />
