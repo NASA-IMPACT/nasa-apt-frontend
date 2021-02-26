@@ -60,10 +60,23 @@ const HomeHeaderActions = styled.div`
 `;
 
 const HomeTitle = styled.h1`
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: ${themeVal('type.base.bold')};
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: ${themeVal("type.base.bold")};
+  margin: ${glsp(0, 0, 0.5, 0)};
 `;
+
+const Sep = styled.span`
+  font-size: 0;
+  display: inline-flex;
+  height: 100%;
+  width: 0.125rem;
+  background: ${themeVal("color.base")};
+  vertical-align: top;
+  opacity: 0.16;
+  margin: 0 0.25rem;
+`;
+
 
 const HomeLead = styled.p`
   font-size: 2rem;
@@ -132,7 +145,9 @@ class Home extends Component {
         <HomeHeader>
           <HomeHeaderInner>
             <HomeHeadline>
-              <HomeTitle>APT - The Algorithm Publication Tool</HomeTitle>
+              <HomeTitle>
+                APT <Sep>&mdash;</Sep> The Algorithm Publication Tool
+              </HomeTitle>
               <HomeLead>
                 Enabling open science by making it easier to write and find key
                 scientific documents
