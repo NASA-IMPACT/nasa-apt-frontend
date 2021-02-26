@@ -28,7 +28,7 @@ const HomeInpage = styled(Inpage)`
       `;
   }}
     display: block;
-    content: '';
+    content: "";
     width: 40rem;
     height: 55rem;
     position: absolute;
@@ -62,7 +62,7 @@ const HomeHeaderActions = styled.div`
 const HomeTitle = styled.h1`
   font-size: 1.25rem;
   line-height: 1.75rem;
-  font-weight: ${themeVal("type.base.bold")};
+  font-weight: ${themeVal('type.base.bold')};
   margin: ${glsp(0, 0, 0.5, 0)};
 `;
 
@@ -71,11 +71,10 @@ const Sep = styled.span`
   display: inline-flex;
   height: 100%;
   width: 0.125rem;
-  background: ${_rgba(themeVal("color.base"), 0.16)};
+  background: ${_rgba(themeVal('color.base'), 0.16)};
   vertical-align: top;
   margin: 0 0.25rem;
 `;
-
 
 const HomeLead = styled.p`
   font-size: 2rem;
@@ -101,7 +100,7 @@ const FocusBoxTitle = styled.h2`
   grid-gap: ${glsp()};
   font-size: 1.5rem;
   line-height: 2rem;
-  font-weight: ${themeVal("type.base.bold")};
+  font-weight: ${themeVal('type.base.bold')};
 
   &::before {
     ${({ useIcon }) => collecticon(useIcon)}
@@ -111,9 +110,9 @@ const FocusBoxTitle = styled.h2`
     width: 4rem;
     height: 4rem;
     font-size: 2rem;
-    color: ${themeVal("color.primary")};
-    background-color: ${_rgba(themeVal("color.primary"), 0.16)};
-    border-radius: ${themeVal("shape.rounded")};
+    color: ${themeVal('color.primary')};
+    background-color: ${_rgba(themeVal('color.primary'), 0.16)};
+    border-radius: ${themeVal('shape.rounded')};
   }
 `;
 
@@ -200,7 +199,8 @@ class Home extends Component {
               <li>
                 <FocusBox>
                   <FocusBoxTitle useIcon="wrench">
-                    User-friendly<br /> tools
+                    User-friendly
+                    <br /> tools
                   </FocusBoxTitle>
                   <FocusBoxContent>
                     Easily generate properly formatted equations, tables and
