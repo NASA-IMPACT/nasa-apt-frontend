@@ -24,11 +24,13 @@ import {
   insertEquation,
   toolbarEquation
 } from './plugins/equation';
+import { SubSectionPlugin } from './plugins/subsection';
 
 const plugins = [
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,
+  SubSectionPlugin,
   SoftBreakPlugin,
   ExitBreakPlugin
 ];

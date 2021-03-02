@@ -8,6 +8,7 @@ import { toolbarEquation } from './plugins/equation';
 import { toolbarImage } from './plugins/image';
 import { toolbarReference } from './plugins/reference';
 import { toolbarTable } from './plugins/table';
+import { toolbarSubSection } from './plugins/subsection';
 
 const blockActions = [
   toolbarUl,
@@ -15,7 +16,8 @@ const blockActions = [
   toolbarTable,
   toolbarEquation,
   toolbarImage,
-  toolbarReference
+  toolbarReference,
+  toolbarSubSection
 ];
 
 export const toolbarAction = (event) => {
