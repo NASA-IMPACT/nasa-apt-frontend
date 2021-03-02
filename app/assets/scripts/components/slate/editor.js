@@ -8,7 +8,7 @@ import DebugPanel from './debug-panel';
 
 // Slate custom plugins.
 // See slate/plugins/README
-import { EditableWithPlugins, pipe } from './plugins/common';
+import { EditableWithPlugins, EditorWrapper, pipe } from './plugins/common';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
@@ -46,12 +46,14 @@ export default function FullEditor() {
 
   // Render the Slate context.
   return (
-    <Slate editor={editor} value={value} onChange={(v) => setValue(v)}>
-      <DebugPanel value={value} onChange={(v) => setValue(v)} />
-      <ReactTooltip place='top' type='dark' effect='solid' />
+    <EditorWrapper>
+      <Slate editor={editor} value={value} onChange={(v) => setValue(v)}>
+        <DebugPanel value={value} onChange={(v) => setValue(v)} />
+        <ReactTooltip place='top' type='dark' effect='solid' />
 
-      <EditorToolbar plugins={plugins} />
-      <EditableWithPlugins plugins={plugins} />
-    </Slate>
+        <EditorToolbar plugins={plugins} />
+        <EditableWithPlugins plugins={plugins} />
+      </Slate>
+    </EditorWrapper>
   );
 }

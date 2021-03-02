@@ -1,8 +1,21 @@
 import React from 'react';
 import T from 'prop-types';
+import styled from 'styled-components';
 import { useSlate } from 'slate-react';
 import castArray from 'lodash.castarray';
-import { Toolbar, ToolbarLabel, ToolbarIconButton } from '@devseed-ui/toolbar';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import {
+  Toolbar as Toolbar$,
+  ToolbarLabel,
+  ToolbarIconButton
+} from '@devseed-ui/toolbar';
+
+import { modKey } from './plugins/common/utils';
+
+const Toolbar = styled(Toolbar$)`
+  background-color: ${themeVal('color.baseAlphaD')};
+  padding: ${glsp(0.25, 1)};
+`;
 
 // Display the toolbar buttons for the plugins that define a toolbar.
 export default function EditorToolbar(props) {
@@ -28,6 +41,21 @@ export default function EditorToolbar(props) {
           ))
         );
       }, [])}
+      <ToolbarLabel>Actions</ToolbarLabel>
+      <ToolbarIconButton
+        useIcon='arrow-semi-spin-ccw'
+        data-tip={`Undo (${modKey('mod+Z')})`}
+        onClick={() => {}}
+      >
+        Undo
+      </ToolbarIconButton>
+      <ToolbarIconButton
+        useIcon='arrow-semi-spin-cw'
+        data-tip={`Undo (${modKey('mod+Shift+Z')})`}
+        onClick={() => {}}
+      >
+        Redo
+      </ToolbarIconButton>
     </Toolbar>
   );
 }
