@@ -1,5 +1,6 @@
 import isHotkey from 'is-hotkey';
 import { Transforms } from 'slate';
+import castArray from 'lodash.castarray';
 import { getRenderElement } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
@@ -29,6 +30,16 @@ export const insertEquation = (editor) => {
   });
 };
 
+/**
+ * Callback on plugin use through shortcut or button
+ *
+ * @param {Editor} editor Slate editor instance.
+ * @param {String} btnId The button that triggered the use.
+ */
+export const onEquationUse = (editor) => {
+  insertEquation(editor);
+};
+
 // Plugin definition for slate-plugins framework.
 export const EquationPlugin = {
   renderElement: getRenderElement({
@@ -36,18 +47,20 @@ export const EquationPlugin = {
     component: EquationEditor
   }),
   onKeyDown: (e, editor) => {
-    if (isHotkey(toolbarEquation.hotkey, e)) {
-      e.preventDefault();
-      insertEquation(editor);
-    }
-  }
-};
-
-// Definition for the toolbar and keyboard shortcut.
-export const toolbarEquation = {
-  id: 'equation',
-  icon: 'pi',
-  hotkey: 'mod+J',
-  label: 'Equation',
-  tip: (key) => `Equation (${modKey(key)})`
+    castArray(EquationPlugin.toolbar).forEach((btn) => {
+      if (isHotkey(btn.hotkey, e)) {
+        e.preventDefault();
+        EquationPlugin.onUse(editor, btn.id);
+      }
+    });
+  },
+  // Definition for the toolbar and keyboard shortcut.
+  toolbar: {
+    id: EQUATION,
+    icon: 'pi',
+    hotkey: 'mod+J',
+    label: 'Equation',
+    tip: (key) => `Equation (${modKey(key)})`
+  },
+  onUse: onEquationUse
 };

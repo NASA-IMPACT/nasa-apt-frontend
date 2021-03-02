@@ -11,19 +11,8 @@ import DebugPanel from './debug-panel';
 import { EditableWithPlugins, pipe } from './plugins/common';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
-import {
-  ListPlugin,
-  toggleOrderedList,
-  toggleUnorderedList,
-  toolbarOl,
-  toolbarUl,
-  withList
-} from './plugins/list';
-import {
-  EquationPlugin,
-  insertEquation,
-  toolbarEquation
-} from './plugins/equation';
+import { ListPlugin, withList } from './plugins/list';
+import { EquationPlugin } from './plugins/equation';
 import { SubSectionPlugin } from './plugins/subsection';
 
 const plugins = [
@@ -55,28 +44,13 @@ export default function FullEditor() {
     }
   ]);
 
-  const onToolbarAction = (btnId) => {
-    console.log('toolbarBtn click', btnId);
-    switch (btnId) {
-      case toolbarUl.id:
-        toggleUnorderedList(editor);
-        break;
-      case toolbarOl.id:
-        toggleOrderedList(editor);
-        break;
-      case toolbarEquation.id:
-        insertEquation(editor);
-        break;
-    }
-  };
-
   // Render the Slate context.
   return (
     <Slate editor={editor} value={value} onChange={(v) => setValue(v)}>
       <DebugPanel value={value} onChange={(v) => setValue(v)} />
       <ReactTooltip place='top' type='dark' effect='solid' />
 
-      <EditorToolbar onAction={onToolbarAction} />
+      <EditorToolbar plugins={plugins} />
       <EditableWithPlugins plugins={plugins} />
     </Slate>
   );

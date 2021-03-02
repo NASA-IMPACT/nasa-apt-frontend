@@ -1,5 +1,6 @@
 import isHotkey from 'is-hotkey';
 import { Transforms } from 'slate';
+import castArray from 'lodash.castarray';
 import { getRenderElement } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
@@ -29,6 +30,16 @@ export const insertSubSection = (editor) => {
   });
 };
 
+/**
+ * Callback on plugin use through shortcut or button
+ *
+ * @param {Editor} editor Slate editor instance.
+ * @param {String} btnId The button that triggered the use.
+ */
+export const onSubsectionUse = (editor) => {
+  insertSubSection(editor);
+};
+
 // Plugin definition for slate-plugins framework.
 export const SubSectionPlugin = {
   renderElement: getRenderElement({
@@ -36,18 +47,19 @@ export const SubSectionPlugin = {
     component: SubSection
   }),
   onKeyDown: (e, editor) => {
-    if (isHotkey(toolbarSubSection.hotkey, e)) {
-      e.preventDefault();
-      insertSubSection(editor);
-    }
-  }
-};
-
-// Definition for the toolbar and keyboard shortcut.
-export const toolbarSubSection = {
-  id: SUB_SECTION,
-  icon: 'pilcrow',
-  hotkey: 'mod+L',
-  label: 'Sub Section',
-  tip: (key) => `Sub Section (${modKey(key)})`
+    castArray(SubSectionPlugin.toolbar).forEach((btn) => {
+      if (isHotkey(btn.hotkey, e)) {
+        e.preventDefault();
+        SubSectionPlugin.onUse(editor, btn.id);
+      }
+    });
+  },
+  toolbar: {
+    id: SUB_SECTION,
+    icon: 'pilcrow',
+    hotkey: 'mod+L',
+    label: 'Sub Section',
+    tip: (key) => `Sub Section (${modKey(key)})`
+  },
+  onUse: onSubsectionUse
 };

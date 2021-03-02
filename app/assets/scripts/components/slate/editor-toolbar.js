@@ -1,54 +1,37 @@
 import React from 'react';
-import isHotkey from 'is-hotkey';
 import T from 'prop-types';
+import { useSlate } from 'slate-react';
+import castArray from 'lodash.castarray';
 import { Toolbar, ToolbarLabel, ToolbarIconButton } from '@devseed-ui/toolbar';
 
-import { toolbarOl, toolbarUl } from './plugins/list';
-import { toolbarEquation } from './plugins/equation';
-import { toolbarImage } from './plugins/image';
-import { toolbarReference } from './plugins/reference';
-import { toolbarTable } from './plugins/table';
-import { toolbarSubSection } from './plugins/subsection';
-
-const blockActions = [
-  toolbarUl,
-  toolbarOl,
-  toolbarTable,
-  toolbarEquation,
-  toolbarImage,
-  toolbarReference,
-  toolbarSubSection
-];
-
-export const toolbarAction = (event) => {
-  for (const btn of blockActions) {
-    if (isHotkey(btn.hotkey, event)) {
-      return btn.id;
-    }
-  }
-  return null;
-};
-
+// Display the toolbar buttons for the plugins that define a toolbar.
 export default function EditorToolbar(props) {
-  const { onAction } = props;
+  const { plugins } = props;
+  const editor = useSlate();
 
   return (
     <Toolbar>
       <ToolbarLabel>Insert</ToolbarLabel>
-      {blockActions.map((btn) => (
-        <ToolbarIconButton
-          key={btn.id}
-          useIcon={btn.icon}
-          data-tip={btn.tip(btn.hotkey)}
-          onClick={() => onAction(btn.id)}
-        >
-          {btn.label}
-        </ToolbarIconButton>
-      ))}
+      {plugins.reduce((acc, p) => {
+        if (!p.toolbar) return acc;
+
+        return acc.concat(
+          castArray(p.toolbar).map((btn) => (
+            <ToolbarIconButton
+              key={btn.id}
+              useIcon={btn.icon}
+              data-tip={btn.tip(btn.hotkey)}
+              onClick={() => p.onUse(editor, btn.id)}
+            >
+              {btn.label}
+            </ToolbarIconButton>
+          ))
+        );
+      }, [])}
     </Toolbar>
   );
 }
 
 EditorToolbar.propTypes = {
-  onAction: T.func
+  plugins: T.array
 };

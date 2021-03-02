@@ -3,7 +3,6 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { Node } from 'slate';
 import { BlockMath } from 'react-katex';
-import { glsp } from '@devseed-ui/theme-provider';
 
 const EquationInput = styled.p`
   text-align: center;
