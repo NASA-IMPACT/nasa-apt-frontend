@@ -138,9 +138,25 @@ export class ReferenceModalEditor extends Component {
 
     const { references, disabled } = this.props;
 
+    const createRefTitle = (d) => {
+      const title = d.title || 'no title';
+      const year = d.year || 'no year';
+      const authors = d.authors
+        ? d.authors
+          .split(',')
+          .map((author) => {
+            const names = author.trim().split(' ');
+            return names[names.length - 1];
+          })
+          .join(', ')
+        : 'no authors';
+
+      return `${authors}, ${year}, ${title}`;
+    };
+
     const selectOptions = references.map(d => ({
       value: d.publication_reference_id,
-      label: d.title
+      label: createRefTitle(d),
     }));
 
     selectOptions.unshift({
@@ -160,6 +176,8 @@ export class ReferenceModalEditor extends Component {
         insertIsDisabled = !newReferenceForm.isValid;
       }
     }
+
+    const isMac = navigator.appVersion.indexOf('Mac') !== -1;
 
     return (
       <Fragment>
@@ -242,7 +260,7 @@ export class ReferenceModalEditor extends Component {
           size="large"
           disabled={disabled}
           hideText
-          data-tip="Reference"
+          data-tip={`Reference (${isMac ? '⌘' : 'ctrl'} + e)`}
         >
           Reference
         </ReferenceBtn>
@@ -274,5 +292,7 @@ const mapDispatch = {
 
 export default connect(
   mapStateToProps,
-  mapDispatch
+  mapDispatch,
+  null,
+  { forwardRef: true }
 )(ReferenceModalEditor);

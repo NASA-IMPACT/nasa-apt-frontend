@@ -133,6 +133,8 @@ export class FreeEditor extends React.Component {
     this.onUndoClick = this.onUndoClick.bind(this);
     this.onRedoClick = this.onRedoClick.bind(this);
 
+    this.referenceModalRef = React.createRef();
+
     this.setEditorReference = (editorValue) => {
       this.editor = editorValue;
     };
@@ -180,10 +182,20 @@ export class FreeEditor extends React.Component {
     }
     // List handling END
 
-    if (!event.metaKey) return next();
+    const isMac = navigator.appVersion.indexOf('Mac') !== -1;
+    if ((isMac && !event.metaKey) || (!isMac && !event.ctrlKey)) return next();
 
     let nextMark;
     switch (event.key) {
+      case 'e': {
+        if (this.referenceModalRef.current) {
+          event.preventDefault();
+          // Hackish way to show the modal since the button is inside the
+          // component.
+          this.referenceModalRef.current.setState({ activeModal: true });
+        }
+        return;
+      }
       case 'b': {
         nextMark = 'bold';
         break;
@@ -358,11 +370,28 @@ export class FreeEditor extends React.Component {
   }
 
   insertReference(newReference) {
-    const { publication_reference_id: id, title: name } = newReference;
+    const { publication_reference_id: id } = newReference;
+
+    const createRefTitle = (d) => {
+      const title = d.title || 'no title';
+      const year = d.year || 'no year';
+      const authors = d.authors
+        ? d.authors
+          .split(',')
+          .map((author) => {
+            const names = author.trim().split(' ');
+            return names[names.length - 1];
+          })
+          .join(', ')
+        : 'no authors';
+
+      return `${authors}, ${year}, ${title}`;
+    };
+
     this.editor
       .insertInline({
         type: reference,
-        data: { id, name },
+        data: { id, name: createRefTitle(newReference) },
         nodes: [
           {
             object: 'text',
@@ -690,6 +719,7 @@ export class FreeEditor extends React.Component {
                 />
 
                 <ReferenceModalEditor
+                  ref={this.referenceModalRef}
                   insertReference={this.insertReference}
                 />
 
