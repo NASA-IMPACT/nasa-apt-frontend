@@ -17,8 +17,8 @@ const lineHeightMapping = {
 
 const getHeadingColor = ({ variation, theme }) => {
   if (variation === 'base') return theme.type.base.color;
-  if (variation === 'primary') return theme.collor.primary;
-  if (variation === 'secondary') return theme.collor.secondary;
+  if (variation === 'primary') return theme.color.primary;
+  if (variation === 'secondary') return theme.color.secondary;
 
   return 'inherit';
 };
