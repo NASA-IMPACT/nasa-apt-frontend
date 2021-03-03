@@ -188,11 +188,9 @@ class Home extends Component {
                     Streamlined writing process
                   </FocusBoxTitle>
                   <FocusBoxContent>
-                    APT makes it easy to create compliant ATBDs by walking you
-                    through a standardized document template. Want to add
-                    additional content? APT lets you add additional information
-                    as needed APT’s centralized location makes it simple to
-                    collaborate with your team on writing.
+                    Easily create compliant and complete ATBDs using a
+                    standardized template. The APT&apos;s centralized location
+                    makes it simple to collaborate with the writing team.
                   </FocusBoxContent>
                 </FocusBox>
               </li>
@@ -203,10 +201,9 @@ class Home extends Component {
                     <br /> tools
                   </FocusBoxTitle>
                   <FocusBoxContent>
-                    Easily generate properly formatted equations, tables and
-                    figures using APT’s LaTex tools. Quickly format text using
-                    APT’s rich text editor. Efficiently manage references and
-                    citations using APT’s Bibtex citation manager.
+                    Easily format text and add equations, tables, figures and
+                    references using the APT&apos;s rich text editor, LaTex
+                    tools and Bibtex citation manager.
                   </FocusBoxContent>
                 </FocusBox>
               </li>
@@ -216,7 +213,8 @@ class Home extends Component {
                     Visually appealing documents
                   </FocusBoxTitle>
                   <FocusBoxContent>
-                    Preview selected ATBD as an HTML webpage or a PDF document.
+                    Preview a selected ATBD as an HTML webpage or a PDF
+                    document.
                   </FocusBoxContent>
                 </FocusBox>
               </li>
@@ -226,7 +224,9 @@ class Home extends Component {
                     Straightforward journal submission
                   </FocusBoxTitle>
                   <FocusBoxContent>
-                    Preview selected ATBD as an HTML webpage or a PDF document.
+                    Use a streamlined ATBD journal submission process with
+                    AGU&apos;s Earth and Space Science, a gold open access
+                    journal.
                   </FocusBoxContent>
                 </FocusBox>
               </li>
