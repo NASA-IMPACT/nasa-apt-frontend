@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@devseed-ui/button';
+import styled from 'styled-components';
 
 import App from '../../common/app';
 import FullEditor from '../../slate/editor';
@@ -14,9 +15,19 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 
+const InpageBodyScroll = styled(InpageBody)`
+  padding: 0;
+  overflow: auto;
+
+  ${Constrainer} {
+    padding-top: 3rem;
+    padding-bottom: 30rem;
+  }
+`;
+
 function SandboxEditor() {
   return (
-    <App pageTitle='Sandbox editor'>
+    <App pageTitle='Sandbox editor' hideFooter>
       <Inpage>
         <InpageHeader>
           <InpageHeaderInner>
@@ -28,11 +39,11 @@ function SandboxEditor() {
             </InpageActions>
           </InpageHeaderInner>
         </InpageHeader>
-        <InpageBody>
+        <InpageBodyScroll>
           <Constrainer>
             <FullEditor />
           </Constrainer>
-        </InpageBody>
+        </InpageBodyScroll>
       </Inpage>
     </App>
   );
