@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 import { Button } from '@devseed-ui/button';
+import PortalContainer from '../common/portal-container';
 
 const Panel = styled.section`
   position: fixed;
@@ -96,22 +97,30 @@ export default function DebugPanel(props) {
     }
   };
 
-  return createPortal(
-    <Panel>
-      <PanelHeader>
-        <h1>{name || 'Untitled editor'}</h1>
-        <Button
-          hideText
-          useIcon='xmark--small'
-          size='small'
-          onClick={onCloseClick}
-        >
-          Close
-        </Button>
-      </PanelHeader>
-      <textarea onChange={onTextareaChange} value={draftValue} />
-      <Message isInvalid={!!error}>{error || 'Document is valid.'}</Message>
-    </Panel>,
-    document.querySelector('#app-container')
+  return (
+    <PortalContainer>
+      <Panel>
+        <PanelHeader>
+          <h1>{name || 'Untitled editor'}</h1>
+          <Button
+            hideText
+            useIcon='xmark--small'
+            size='small'
+            onClick={onCloseClick}
+          >
+            Close
+          </Button>
+        </PanelHeader>
+        <textarea onChange={onTextareaChange} value={draftValue} />
+        <Message isInvalid={!!error}>{error || 'Document is valid.'}</Message>
+      </Panel>
+    </PortalContainer>
   );
 }
+
+DebugPanel.propTypes = {
+  value: T.array,
+  name: T.string,
+  onCloseClick: T.func,
+  onChange: T.func
+};
