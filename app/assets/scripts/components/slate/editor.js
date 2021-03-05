@@ -3,7 +3,7 @@ import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
 import ReactTooltip from 'react-tooltip';
 
-import EditorToolbar from './editor-toolbar';
+import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';
 import withDebugEditor from './plugins/debug-editor/with-debug-editor';
 import { hugeDoc } from './plugins/debug-editor/dummy';
 
@@ -54,6 +54,7 @@ export default function FullEditor() {
       <Slate editor={editor} value={value} onChange={(v) => setValue(v)}>
         <ReactTooltip place='top' type='dark' effect='solid' />
         <EditorToolbar plugins={plugins} />
+        <EditorFloatingToolbar plugins={plugins} />
 
         <EditableDebug
           plugins={plugins}

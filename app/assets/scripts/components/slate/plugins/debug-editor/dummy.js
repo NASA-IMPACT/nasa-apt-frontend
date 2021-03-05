@@ -59,6 +59,14 @@ export const hugeDoc = [
     ]
   },
   {
+    type: 'equation',
+    children: [
+      {
+        text: 'F_{app}(x) = \\sum_{n=1}^{\\infty} \\sqrt {2^{-n} \\cdot x}'
+      }
+    ]
+  },
+  {
     type: 'p',
     children: [
       {
