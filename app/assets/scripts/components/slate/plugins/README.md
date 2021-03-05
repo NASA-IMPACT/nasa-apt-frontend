@@ -88,3 +88,8 @@ export const PluginTemplate = {
   onUse: onPluginUse
 };
 ```
+
+## Loose notes
+
+**Toolbar button and focus**  
+Any button that interacts with the editor, link the toolbar and floating toolbar ones need to use `onMouseDown` with the `getPreventDefaultHandler` function to prevent the editor from loosing focus. If `click` is used, the editor would have to be refocused with `ReactEditor.focus(editor);` However this is critical for the floating toolbar, that gets hidden when the editor looses focus.

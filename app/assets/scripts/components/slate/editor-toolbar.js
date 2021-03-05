@@ -2,6 +2,9 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useSlate } from 'slate-react';
+import {
+  getPreventDefaultHandler,
+} from '@udecode/slate-plugins';
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import {
@@ -34,7 +37,7 @@ export default function EditorToolbar(props) {
               key={btn.id}
               useIcon={btn.icon}
               data-tip={btn.tip(btn.hotkey)}
-              onClick={() => p.onUse(editor, btn.id)}
+              onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
             >
               {btn.label}
             </ToolbarIconButton>
