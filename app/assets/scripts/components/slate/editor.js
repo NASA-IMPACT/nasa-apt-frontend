@@ -4,7 +4,8 @@ import { Slate, withReact } from 'slate-react';
 import ReactTooltip from 'react-tooltip';
 
 import EditorToolbar from './editor-toolbar';
-import DebugPanel from './debug-panel';
+import withDebugEditor from './plugins/debug-editor/with-debug-editor';
+import { hugeDoc } from './plugins/debug-editor/dummy';
 
 // Slate custom plugins.
 // See slate/plugins/README
@@ -26,6 +27,8 @@ const plugins = [
 
 const withPlugins = [withReact, withList];
 
+const EditableDebug = withDebugEditor(EditableWithPlugins);
+
 export default function FullEditor() {
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
@@ -36,6 +39,7 @@ export default function FullEditor() {
       // Root level has no type and is the first child of the Editor.
       // This is needed for the block breaks to work.
       children: [
+        ...hugeDoc,
         {
           type: 'p',
           children: [{ text: 'A line of text in a paragraph.' }]
@@ -48,11 +52,14 @@ export default function FullEditor() {
   return (
     <EditorWrapper>
       <Slate editor={editor} value={value} onChange={(v) => setValue(v)}>
-        <DebugPanel value={value} onChange={(v) => setValue(v)} />
         <ReactTooltip place='top' type='dark' effect='solid' />
-
         <EditorToolbar plugins={plugins} />
-        <EditableWithPlugins plugins={plugins} />
+
+        <EditableDebug
+          plugins={plugins}
+          value={value}
+          onChange={(v) => setValue(v)}
+        />
       </Slate>
     </EditorWrapper>
   );

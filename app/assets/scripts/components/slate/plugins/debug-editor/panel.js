@@ -3,9 +3,10 @@ import { createPortal } from 'react-dom';
 import styled, { css } from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
+import { Button } from '@devseed-ui/button';
 
-const Panel = styled.div`
-  position: absolute;
+const Panel = styled.section`
+  position: fixed;
   top: 0;
   bottom: 0;
   right: 0;
@@ -28,9 +29,28 @@ const Panel = styled.div`
   }
 `;
 
+const PanelHeader = styled.header`
+  display: flex;
+  z-index: 10;
+  margin: ${glsp(-1, -1, 0, -1)};
+  padding: ${glsp(0.5, 1)};
+  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+
+  h1 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  ${Button} {
+    margin-left: auto;
+  }
+`;
+
 const Message = styled.p`
-  padding: ${glsp(0.25)};
+  margin: ${glsp(1, -1, -1, -1)};
+  padding: ${glsp(0.5, 1)};
   box-shadow: ${themeVal('boxShadow.inset')};
+  box-shadow: 0 -1px 0 0 ${themeVal('color.baseAlphaC')};
 
   &::before {
     margin-right: ${glsp(0.25)};
@@ -55,7 +75,7 @@ const Message = styled.p`
 `;
 
 export default function DebugPanel(props) {
-  const { value, onChange } = props;
+  const { value, name, onCloseClick, onChange } = props;
 
   useEffect(() => {
     setDraftValue(JSON.stringify(value, null, '  '));
@@ -78,6 +98,17 @@ export default function DebugPanel(props) {
 
   return createPortal(
     <Panel>
+      <PanelHeader>
+        <h1>{name || 'Untitled editor'}</h1>
+        <Button
+          hideText
+          useIcon='xmark--small'
+          size='small'
+          onClick={onCloseClick}
+        >
+          Close
+        </Button>
+      </PanelHeader>
       <textarea onChange={onTextareaChange} value={draftValue} />
       <Message isInvalid={!!error}>{error || 'Document is valid.'}</Message>
     </Panel>,
