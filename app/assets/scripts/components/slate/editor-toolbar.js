@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useSlate } from 'slate-react';
@@ -20,17 +20,19 @@ import { Button } from '@devseed-ui/button';
 import PortalContainer from './plugins/common/portal-container';
 
 import { modKey } from './plugins/common/utils';
+import { LinkPlugin } from './plugins/link';
 
 const Toolbar = styled(Toolbar$)`
   background-color: ${themeVal('color.baseAlphaD')};
   padding: ${glsp(0.25, 1)};
 `;
 
-const FloatingToolbar = styled.div`
+export const FloatingToolbar = styled.div`
   position: absolute;
   z-index: 9999;
   white-space: nowrap;
   visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
+  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
   transition: top 75ms ease-out, left 75ms ease-out;
   background-color: ${themeVal('color.surface')};
   border-radius: ${themeVal('shape.rounded')};
@@ -86,15 +88,11 @@ EditorToolbar.propTypes = {
 };
 
 // Display the toolbar buttons for the plugins that define a toolbar.
-export function EditorFloatingToolbar() {
+export function EditorFloatingToolbar(props) {
   const editor = useSlate();
   const ref = useRef(null);
 
   const [hidden] = useBalloonShow({ editor, ref, hiddenDelay: 0 });
-  console.log(
-    '🚀 ~ file: editor-toolbar.js ~ line 88 ~ EditorFloatingToolbar ~ hidden',
-    hidden
-  );
   useBalloonMove({ editor, ref, direction: 'top' });
 
   return (
@@ -106,11 +104,21 @@ export function EditorFloatingToolbar() {
           B
         </Button>
         <Button>I</Button>
+        <Button
+          useIcon={LinkPlugin.floatToolbar.icon}
+          hideText
+          data-tip={LinkPlugin.floatToolbar.tip(LinkPlugin.floatToolbar.hotkey)}
+          onMouseDown={getPreventDefaultHandler(
+            props.onL,
+            editor,
+            LinkPlugin.floatToolbar.id
+          )}
+        >
+          {LinkPlugin.floatToolbar.label}
+        </Button>
       </FloatingToolbar>
     </PortalContainer>
   );
 }
 
-EditorToolbar.propTypes = {
-  plugins: T.array
-};
+EditorFloatingToolbar.propTypes = {};

@@ -4,7 +4,16 @@ export const hugeDoc = [
     children: [
       {
         text:
-          'The algorithm specified in this document is designed to derive footprint level canopy cover and vertical profile over vegetated areas between ~52°N and ~52°S.\nThe data product includes estimates of total canopy cover and PAI, vertical profiles of canopy cover and PAI, the vertical profile of Plant Area Volume Density and foliage height diversity. The GEDI Level 2A and 2B products will provide unprecedented dense spatial samplings of forest structure globally.'
+          'The algorithm specified in this document is designed to derive footprint level canopy cover and vertical '
+      },
+      {
+        type: 'a',
+        url: 'https://en.wikipedia.org/',
+        children: [{ text: 'profile over vegetated areas' }]
+      },
+      {
+        text:
+          ' between ~52°N and ~52°S.\nThe data product includes estimates of total canopy cover and PAI, vertical profiles of canopy cover and PAI, the vertical profile of Plant Area Volume Density and foliage height diversity. The GEDI Level 2A and 2B products will provide unprecedented dense spatial samplings of forest structure globally.'
       }
     ]
   },
