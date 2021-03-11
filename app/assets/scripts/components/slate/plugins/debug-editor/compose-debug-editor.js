@@ -9,9 +9,9 @@ import DebugPanel from './panel';
 let idCounter = 1;
 let panelInstances = [];
 
-export default function withDebugEditor(EditorComponent) {
+export default function composeDebugEditor(EditorComponent) {
   function DebugEditor(props) {
-    const { value, onChange, name, plugins, ...rest } = props;
+    const { value, onDebugChange, name, plugins, ...rest } = props;
 
     const [isDebugVisible, setDebugVisible] = useState(false);
     const id = useMemo(() => ++idCounter, []);
@@ -43,14 +43,14 @@ export default function withDebugEditor(EditorComponent) {
       onKeyDownDeps: [isDebugVisible]
     };
 
-    const showDebug = !!value && !!onChange && isDebugVisible;
+    const showDebug = !!value && !!onDebugChange && isDebugVisible;
     return (
       <>
         {showDebug && (
           <DebugPanel
             name={name}
             value={value}
-            onChange={onChange}
+            onChange={onDebugChange}
             onCloseClick={() => hide()}
           />
         )}
@@ -61,7 +61,7 @@ export default function withDebugEditor(EditorComponent) {
 
   DebugEditor.propTypes = {
     value: T.array,
-    onChange: T.func,
+    onDebugChange: T.func,
     name: T.string,
     plugins: T.array
   };

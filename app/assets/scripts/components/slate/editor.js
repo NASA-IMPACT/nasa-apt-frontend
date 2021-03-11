@@ -4,7 +4,7 @@ import { Slate, withReact } from 'slate-react';
 import ReactTooltip from 'react-tooltip';
 
 import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';
-import withDebugEditor from './plugins/debug-editor/with-debug-editor';
+import composeDebugEditor from './plugins/debug-editor/compose-debug-editor';
 import { hugeDoc } from './plugins/debug-editor/dummy';
 
 // Slate custom plugins.
@@ -27,7 +27,7 @@ import {
   EditorLinkToolbar
 } from './plugins/link';
 
-const EditableDebug = withDebugEditor(EditableWithPlugins);
+const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
 const plugins = [
   ParagraphPlugin,
@@ -85,7 +85,7 @@ export default function FullEditor() {
         <EditableDebug
           plugins={plugins}
           value={value}
-          onChange={(v) => setValue(v)}
+          onDebugChange={(v) => setValue(v)}
         />
       </Slate>
     </EditorWrapper>
