@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import T from 'prop-types';
 import { useSlate } from 'slate-react';
+import styled from 'styled-components';
 import { isUrl } from '@udecode/slate-plugins';
 import { Button } from '@devseed-ui/button';
 import {
@@ -15,7 +15,7 @@ import { FloatingToolbar } from '../../editor-toolbar';
 import PortalContainer from '../common/portal-container';
 import useRectFollow from '../common/use-rect-follow';
 import useOutsideClick from '../common/use-outside-click';
-import styled from 'styled-components';
+import { onLinkEditorAction as onAction } from '.';
 
 // Keeping transition: all breaks the focus. This happens because with
 // transition: all, the position also gets queued for animation, and the browser
@@ -25,10 +25,14 @@ const FormInput = styled(FormInput$)`
   transition: border 0.24s ease 0s;
 `;
 
-export function EditorLinkToolbar(props) {
+export function EditorLinkToolbar() {
   const editor = useSlate();
 
-  const { active, at, onAction, value } = props;
+  const {
+    visible: active,
+    selectionRect: at,
+    value
+  } = editor.linkEditor.getData();
 
   // Toolbar ref. Needed for outside click events and positioning.
   const ref = useRef(null);
@@ -41,14 +45,14 @@ export function EditorLinkToolbar(props) {
       // Cancel
       onAction(editor, 'cancel');
     }
-  }, [active, onAction]);
+  }, [active, editor]);
 
   const onFieldKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       // Confirm
       onAction(editor, 'confirm', { value: draftValue });
-    } else if (e.key === 'Esc') {
+    } else if (e.key === 'Escape') {
       e.preventDefault();
       // Cancel
       onAction(editor, 'cancel');
@@ -123,12 +127,3 @@ export function EditorLinkToolbar(props) {
     </PortalContainer>
   );
 }
-
-EditorLinkToolbar.propTypes = {
-  active: T.bool,
-  at: T.object,
-  onAction: T.func,
-  value: T.string
-};
-
-export default EditorLinkToolbar;

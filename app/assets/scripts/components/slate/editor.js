@@ -22,11 +22,10 @@ import { EquationPlugin } from './plugins/equation';
 import { SubSectionPlugin } from './plugins/subsection';
 import {
   LinkPlugin,
-  useLinkEditor,
   withLink,
-  withLinkEditor
+  withLinkEditor,
+  EditorLinkToolbar
 } from './plugins/link';
-import EditorLinkToolbar from './plugins/link/link-editor-toolbar';
 
 const EditableDebug = withDebugEditor(EditableWithPlugins);
 
@@ -68,15 +67,6 @@ export default function FullEditor() {
     }
   ]);
 
-  const {
-    isVisible: isLinkEditorVisible,
-    selectionRect: linkEditorSelectionRect,
-    value: linkEditorValue,
-    onActivate: onLinkEditorActivate,
-    onAction: onLinkEditorAction,
-    onChangeLinkEditor
-  } = useLinkEditor();
-
   // Render the Slate context.
   return (
     <EditorWrapper>
@@ -85,18 +75,12 @@ export default function FullEditor() {
         value={value}
         onChange={(v) => {
           setValue(v);
-          onChangeLinkEditor(editor);
         }}
       >
         <ReactTooltip place='top' type='dark' effect='solid' />
         <EditorToolbar plugins={plugins} />
-        <EditorFloatingToolbar plugins={plugins} onL={onLinkEditorActivate} />
-        <EditorLinkToolbar
-          at={linkEditorSelectionRect}
-          active={isLinkEditorVisible}
-          onAction={onLinkEditorAction}
-          value={linkEditorValue}
-        />
+        <EditorFloatingToolbar plugins={plugins} />
+        <EditorLinkToolbar />
 
         <EditableDebug
           plugins={plugins}
