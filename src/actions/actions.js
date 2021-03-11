@@ -890,7 +890,7 @@ export function uploadFile(file) {
   data.append('acl', 'public-read');
   data.append('key', keyedFile.name);
   data.append('file', keyedFile);
-  return (dispatch, getState) => dispatch({
+  return dispatch => dispatch({
     [RSAA]: {
       endpoint: `${s3Uri}/${figuresBucket}`,
       method: 'POST',
@@ -912,9 +912,9 @@ export function uploadFile(file) {
           }
         );
       },
-      headers: attachAuthToken(getState(), {
+      headers: {
         'Content-Length': keyedFile.size,
-      }),
+      },
       body: data,
       types: [
         types.UPLOAD_FILE,
