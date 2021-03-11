@@ -2,8 +2,8 @@ import { Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 import {
   ELEMENT_LINK,
+  getRenderElement,
   LinkPlugin as LinkPlugin$,
-  renderElementLink,
   unwrapNodes,
   upsertLinkAtSelection,
   withLink as withLink$
@@ -12,11 +12,12 @@ import isHotkey from 'is-hotkey';
 import castArray from 'lodash.castarray';
 
 import { modKey } from '../common/utils';
+import { LinkElement } from './link-element';
 
 export * from './with-link-editor';
 export * from './link-editor-toolbar';
 
-export const LINK = 'link';
+export const LINK = ELEMENT_LINK;
 
 // Function for link handling composition.
 // Re-export. See README.md for rationale.
@@ -52,7 +53,10 @@ export const onLinkUse = (editor) => {
 
 export const LinkPlugin = {
   ...LinkPlugin$(),
-  renderElement: renderElementLink(),
+  renderElement: getRenderElement({
+    type: LINK,
+    component: LinkElement
+  }),
   onKeyDown: (e, editor) => {
     // Ensure that all toolbar hotkeys run.
     castArray(LinkPlugin.floatToolbar).forEach((btn) => {
@@ -94,7 +98,7 @@ export const onLinkEditorAction = (editor, action, payload) => {
       {
         unwrapNodes(editor, {
           at: editor.linkEditor.getData().selection,
-          match: { type: ELEMENT_LINK }
+          match: { type: LINK }
         });
         // Reset the link editor to hide it.
         editor.linkEditor.reset();

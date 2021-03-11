@@ -11,3 +11,14 @@ export const modKey = (shortcut) => {
   const k = isMac ? '⌘' : 'Ctrl';
   return shortcut.replace(/^mod/, k);
 };
+
+/**
+ * Checks if the mod key was active in the event.
+ * Mac: ⌘
+ * Other: Ctrl
+ *
+ * @param {object} event React event
+ */
+export const isModKey = (event) => {
+  return isMac ? event.metaKey : event.ctrlKey;
+};
