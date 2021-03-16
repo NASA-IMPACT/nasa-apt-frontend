@@ -3,7 +3,9 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useSlate } from 'slate-react';
 import {
+  getNodes,
   getPreventDefaultHandler,
+  isSelectionExpanded,
   useBalloonMove,
   useBalloonShow
 } from '@udecode/slate-plugins';
@@ -17,6 +19,8 @@ import {
 import { Button } from '@devseed-ui/button';
 
 import PortalContainer from './plugins/common/portal-container';
+import { SUB_SECTION } from './plugins/subsection';
+import { EQUATION } from './plugins/equation';
 
 import { modKey } from './plugins/common/utils';
 
@@ -85,13 +89,55 @@ EditorToolbar.propTypes = {
   plugins: T.array
 };
 
+// Blocks where selection related actions like inserting links and/or marks are
+// not allowed.
+export const SELECTION_ACTIONS_DISABLED_BLOCKS = [EQUATION, SUB_SECTION];
+
+/**
+ * Tests whether the current selection is a valid one for selection actions like
+ * inserting links and/or marks. A selection is valid if it does not intersect
+ * disallowed blocks.
+ *
+ * @param {Editor} editor The slate editor instance
+ * @returns boolean
+ */
+export function isSelectionActionAllowed(editor) {
+  if (!isSelectionExpanded(editor)) return false;
+
+  const selectionBlocks = [
+    ...getNodes(editor, {
+      at: editor.selection,
+      match: { type: SELECTION_ACTIONS_DISABLED_BLOCKS }
+    })
+  ];
+
+  // If any of the exclude blocks are selected, it should be hidden.
+  if (selectionBlocks.length) return false;
+
+  return true;
+}
+
+const useBalloonShowExcludeBlocks = ({ editor, ref }) => {
+  const [hidden] = useBalloonShow({ editor, ref, hiddenDelay: 0 });
+
+  if (!isSelectionActionAllowed(editor)) {
+    // If the selection actions are not allowed, the toolbar should be hidden.
+    return true;
+  }
+
+  return hidden;
+};
+
 // Display the toolbar buttons for the plugins that define a toolbar.
 export function EditorFloatingToolbar(props) {
   const { plugins } = props;
   const editor = useSlate();
   const ref = useRef(null);
 
-  const [hidden] = useBalloonShow({ editor, ref, hiddenDelay: 0 });
+  const hidden = useBalloonShowExcludeBlocks({
+    editor,
+    ref
+  });
   useBalloonMove({ editor, ref, direction: 'top' });
 
   return (

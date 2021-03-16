@@ -13,6 +13,7 @@ import castArray from 'lodash.castarray';
 
 import { modKey } from '../common/utils';
 import { LinkElement } from './link-element';
+import { isSelectionActionAllowed } from '../../editor-toolbar';
 
 export * from './with-link-editor';
 export * from './link-editor-toolbar';
@@ -58,6 +59,11 @@ export const LinkPlugin = {
     component: LinkElement
   }),
   onKeyDown: (e, editor) => {
+    if (!isSelectionActionAllowed(editor)) {
+      // If the selection actions are not allowed, return.
+      return;
+    }
+
     // Ensure that all toolbar hotkeys run.
     castArray(LinkPlugin.floatToolbar).forEach((btn) => {
       if (isHotkey(btn.hotkey, e)) {
