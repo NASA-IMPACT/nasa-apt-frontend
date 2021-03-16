@@ -77,7 +77,7 @@ export default function FullEditor() {
           setValue(v);
         }}
       >
-        <ReactTooltip place='top' type='dark' effect='solid' />
+        <ReactTooltip place='top' effect='solid' />
         <EditorToolbar plugins={plugins} />
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />

@@ -6,6 +6,7 @@ import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
 
 import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
+import GlobalStyle from './styles/global';
 
 // Views
 import Home from './components/home';
@@ -32,6 +33,7 @@ function Root() {
     <Router history={history}>
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <CollecticonsGlobalStyle />
+        <GlobalStyle />
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/about' component={About} />
