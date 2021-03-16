@@ -19,10 +19,10 @@ import {
 import { Button } from '@devseed-ui/button';
 
 import PortalContainer from './plugins/common/portal-container';
+import { modKey } from './plugins/common/utils';
+import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
-
-import { modKey } from './plugins/common/utils';
 
 const Toolbar = styled(Toolbar$)`
   background-color: ${themeVal('color.baseAlphaD')};
@@ -153,6 +153,7 @@ export function EditorFloatingToolbar(props) {
                 useIcon={btn.icon}
                 hideText
                 data-tip={btn.tip(btn.hotkey)}
+                active={isMarkActive(editor, btn.id)}
                 onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
               >
                 {btn.label}

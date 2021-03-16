@@ -26,6 +26,10 @@ import {
   withLinkEditor,
   EditorLinkToolbar
 } from './plugins/link';
+import { BoldPlugin } from './plugins/bold';
+import { ItalicPlugin } from './plugins/italic';
+import { UnderlinePlugin } from './plugins/underline';
+import { SubSupScriptPlugin } from './plugins/subsupscript';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -35,6 +39,10 @@ const plugins = [
   EquationPlugin,
   SubSectionPlugin,
   LinkPlugin,
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  SubSupScriptPlugin,
   SoftBreakPlugin,
   ExitBreakPlugin
 ];
