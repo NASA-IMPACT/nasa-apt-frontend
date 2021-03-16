@@ -13,6 +13,7 @@ import {
   EditableWithPlugins,
   EditorWrapper,
   withInlineVoid,
+  withHistory,
   pipe
 } from './plugins/common';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
@@ -49,6 +50,7 @@ const plugins = [
 
 const withPlugins = [
   withReact,
+  withHistory,
   withInlineVoid({ plugins }),
   withList,
   withLink,

@@ -121,6 +121,7 @@
     "react-router-dom": "^5.2.0",
     "react-tooltip": "^4.2.14",
     "slate": "^0.59.0",
+    "slate-history": "^0.59.0",
     "slate-hyperscript": "^0.59.0",
     "slate-react": "^0.59.0",
     "styled-components": "^5.2.1"

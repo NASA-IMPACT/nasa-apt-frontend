@@ -1,4 +1,6 @@
-const isMac = navigator.appVersion.indexOf('Mac') !== -1;
+const IS_APPLE =
+  typeof window != 'undefined' &&
+  /Mac|iPod|iPhone|iPad/.test(window.navigator.platform);
 
 /**
  * Returns the correct shortcut text depending on the mod key.
@@ -8,7 +10,7 @@ const isMac = navigator.appVersion.indexOf('Mac') !== -1;
  * @param {string} shortcut Keyboard shortcut definition.
  */
 export const modKey = (shortcut) => {
-  const k = isMac ? '⌘' : 'Ctrl';
+  const k = IS_APPLE ? '⌘' : 'Ctrl';
   return shortcut.replace(/^mod/, k);
 };
 
@@ -20,5 +22,8 @@ export const modKey = (shortcut) => {
  * @param {object} event React event
  */
 export const isModKey = (event) => {
-  return isMac ? event.metaKey : event.ctrlKey;
+  return IS_APPLE ? event.metaKey : event.ctrlKey;
 };
+
+export const UNDO_HOTKEY = 'mod+Z';
+export const REDO_HOTKEY = IS_APPLE ? 'mod+Shift+Z' : 'mod+Y';

@@ -19,7 +19,7 @@ import {
 import { Button } from '@devseed-ui/button';
 
 import PortalContainer from './plugins/common/portal-container';
-import { modKey } from './plugins/common/utils';
+import { modKey, REDO_HOTKEY, UNDO_HOTKEY } from './plugins/common/utils';
 import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
@@ -69,15 +69,21 @@ export function EditorToolbar(props) {
       <ToolbarLabel>Actions</ToolbarLabel>
       <ToolbarIconButton
         useIcon='arrow-semi-spin-ccw'
-        data-tip={`Undo (${modKey('mod+Z')})`}
-        onClick={() => {}}
+        data-tip={`Undo (${modKey(UNDO_HOTKEY)})`}
+        disabled={!editor.canUndo()}
+        onClick={() => {
+          editor.undo();
+        }}
       >
         Undo
       </ToolbarIconButton>
       <ToolbarIconButton
         useIcon='arrow-semi-spin-cw'
-        data-tip={`Undo (${modKey('mod+Shift+Z')})`}
-        onClick={() => {}}
+        data-tip={`Redo (${modKey(REDO_HOTKEY)})`}
+        disabled={!editor.canRedo()}
+        onClick={() => {
+          editor.redo();
+        }}
       >
         Redo
       </ToolbarIconButton>
