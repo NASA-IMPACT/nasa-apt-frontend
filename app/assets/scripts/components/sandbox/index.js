@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import App from '../common/app';
-
+import Constrainer from '../../styles/constrainer';
 import {
   Inpage,
   InpageHeader,
@@ -11,7 +12,6 @@ import {
   InpageBody
 } from '../../styles/inpage';
 
-import Constrainer from '../../styles/constrainer';
 import Prose from '../../styles/typography/prose';
 
 const InpageBodyScroll = styled(InpageBody)`
@@ -24,19 +24,31 @@ const InpageBodyScroll = styled(InpageBody)`
   }
 `;
 
-function About() {
+function Sandbox() {
   return (
-    <App pageTitle='About'>
+    <App pageTitle='Sandbox'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>About</InpageTitle>
+            <InpageTitle>Sandbox</InpageTitle>
           </InpageHeadline>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
             <Prose>
-              <p>Hello world!</p>
+              <h6>Contents</h6>
+              <ul>
+                <li>
+                  <Link to='/sandbox/structure' title='View sandbox page'>
+                    Structure
+                  </Link>
+                </li>
+                <li>
+                  <Link to='/sandbox/editor' title='View sandbox page'>
+                    Editor
+                  </Link>
+                </li>
+              </ul>
             </Prose>
           </Constrainer>
         </InpageBodyScroll>
@@ -45,4 +57,4 @@ function About() {
   );
 }
 
-export default About;
+export default Sandbox;

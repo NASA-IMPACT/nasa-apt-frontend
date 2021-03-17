@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button } from '@devseed-ui/button';
 import styled from 'styled-components';
 
 import App from '../common/app';
-import Constrainer from '../../styles/constrainer';
+
 import {
   Inpage,
   InpageHeader,
@@ -12,6 +11,11 @@ import {
   InpageActions,
   InpageBody
 } from '../../styles/inpage';
+
+import { Button } from '@devseed-ui/button';
+
+import Constrainer from '../../styles/constrainer';
+import Prose from '../../styles/typography/prose';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -25,7 +29,7 @@ const InpageBodyScroll = styled(InpageBody)`
 
 function Documents() {
   return (
-    <App pageTitle='Sandbox editor' hideFooter>
+    <App pageTitle='Documents'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
@@ -39,7 +43,9 @@ function Documents() {
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
-            <p>Hello world!</p>
+            <Prose>
+              <p>Hello world!</p>
+            </Prose>
           </Constrainer>
         </InpageBodyScroll>
       </Inpage>

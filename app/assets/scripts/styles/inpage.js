@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import {
   glsp,
@@ -19,7 +19,7 @@ export const InpageHeader = styled.header`
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-  align-items: center;
+  align-items: end;
   background-color: ${themeVal('color.primary')};
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
@@ -64,11 +64,9 @@ export const InpageTitle = styled.h1`
 `;
 
 export const InpageSubtitle = styled.p`
-  position: absolute;
   font-size: 1rem;
-  line-height: 1.5rem;
+  line-height: 1.25rem;
   margin: 0;
-  transform: translate(0, calc(-100% + 0.25rem));
 `;
 
 export const InpageBody = styled.div`

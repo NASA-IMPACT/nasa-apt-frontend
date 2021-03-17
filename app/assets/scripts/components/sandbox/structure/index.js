@@ -1,18 +1,21 @@
 import React from 'react';
+import { Button } from '@devseed-ui/button';
 import styled from 'styled-components';
 
-import App from '../common/app';
+import App from '../../common/app';
 
 import {
   Inpage,
   InpageHeader,
   InpageHeadline,
   InpageTitle,
+  InpageSubtitle,
+  InpageActions,
   InpageBody
-} from '../../styles/inpage';
+} from '../../../styles/inpage';
 
-import Constrainer from '../../styles/constrainer';
-import Prose from '../../styles/typography/prose';
+import Constrainer from '../../../styles/constrainer';
+import Prose from '../../../styles/typography/prose';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -24,14 +27,20 @@ const InpageBodyScroll = styled(InpageBody)`
   }
 `;
 
-function About() {
+function SandboxStructure() {
   return (
-    <App pageTitle='About'>
+    <App pageTitle='Sandbox/Structure'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>About</InpageTitle>
+            <InpageSubtitle>Sandbox</InpageSubtitle>
+            <InpageTitle>Structure</InpageTitle>
           </InpageHeadline>
+          <InpageActions>
+            <Button to='/' variation='achromic-plain' title='Create new'>
+              Button
+            </Button>
+          </InpageActions>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
@@ -45,4 +54,4 @@ function About() {
   );
 }
 
-export default About;
+export default SandboxStructure;
