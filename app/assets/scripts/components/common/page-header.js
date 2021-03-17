@@ -122,6 +122,17 @@ function PageHeader() {
             <Button
               forwardedAs={StyledNavLink}
               exact
+              to='/documents'
+              variation='achromic-plain'
+              title='View the documents'
+            >
+              Documents
+            </Button>
+          </li>
+          <li>
+            <Button
+              forwardedAs={StyledNavLink}
+              exact
               to='/about'
               variation='achromic-plain'
               title='Learn more about the app'

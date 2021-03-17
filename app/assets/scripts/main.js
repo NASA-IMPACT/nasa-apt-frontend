@@ -10,6 +10,7 @@ import GlobalStyle from './styles/global';
 
 // Views
 import Home from './components/home';
+import Documents from './components/documents';
 import About from './components/about';
 import SandboxEditor from './components/sandbox/editor';
 
@@ -36,6 +37,7 @@ function Root() {
         <GlobalStyle />
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/documents' component={Documents} />
           <Route exact path='/about' component={About} />
           <Route exact path='/sandbox/editor' component={SandboxEditor} />
         </Switch>
