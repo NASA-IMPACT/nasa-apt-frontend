@@ -1,24 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom';
-import { glsp, themeVal, antialiased } from '@devseed-ui/theme-provider';
+import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { reveal } from '@devseed-ui/animation';
+import { Button } from '@devseed-ui/button';
+
+import { filterComponentProps } from '../../styles/utils/general';
 
 import config from '../../config';
-import Constrainer from '../../styles/constrainer';
 
 const { appTitle } = config;
 
-const PageHead = styled.header`
-  ${antialiased()}
-  padding: ${glsp(1, 0)};
+const PageHeaderSelf = styled.header`
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  align-items: center;
   background-color: ${themeVal('color.primary')};
   color: #fff;
+  animation: ${reveal} 0.32s ease 0s 1;
+  padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
+
+  ${media.mediumUp`
+    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
+    padding: ${glsp(1, themeVal('layout.gap.medium'))};
+  `}
 `;
 
-const PageHeadInner = styled(Constrainer)`
+const PageHeadline = styled.div`
   display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
+  flex-flow: column nowrap;
 `;
 
 const PageTitle = styled.h1`
@@ -53,64 +64,102 @@ const PageTitle = styled.h1`
 `;
 
 const PageNav = styled.nav`
-  display: flex;
-  margin: 0 0 0 auto;
-`;
-
-const GlobalMenu = styled.ul`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  margin: 0;
-  list-style: none;
+  display: inline-grid;
+  grid-gap: ${glsp()};
+  margin-left: auto;
 
   > * {
-    margin: ${glsp(0, 0, 0, 2)};
-  }
-
-  a {
-    position: relative;
-    font-weight: ${themeVal('type.base.regular')};
-    text-transform: uppercase;
-    color: inherit;
-
-    &.active {
-      font-weight: ${themeVal('type.base.bold')};
-    }
-  }
-
-  .active::before {
-    position: absolute;
-    bottom: -0.25rem;
-    width: 2rem;
-    height: 0.125rem;
-    background: #ffffff;
-    content: '';
+    grid-row: 1;
   }
 `;
+
+const MainMenu = styled.ul`
+  display: inline-grid;
+  grid-gap: ${glsp()};
+
+  > * {
+    grid-row: 1;
+  }
+`;
+
+const MetaMenu = styled.ul`
+  display: inline-grid;
+  grid-gap: ${glsp()};
+
+  > * {
+    grid-row: 1;
+  }
+`;
+
+// See documentation of filterComponentProp as to why this is
+const propsToFilter = [
+  'variation',
+  'size',
+  'hideText',
+  'useIcon',
+  'active',
+  'visuallyDisabled'
+];
+const StyledNavLink = filterComponentProps(NavLink, propsToFilter);
 
 function PageHeader() {
   return (
-    <PageHead role='banner'>
-      <PageHeadInner>
-        <div>
-          <PageTitle>
-            <Link to='/' title='Go to Homepage'>
-              {appTitle}
-            </Link>
-          </PageTitle>
-        </div>
-        <PageNav role='navigation'>
-          <GlobalMenu>
-            <li>
-              <NavLink exact to='/about' title='View About APT page'>
-                <span>About</span>
-              </NavLink>
-            </li>
-          </GlobalMenu>
-        </PageNav>
-      </PageHeadInner>
-    </PageHead>
+    <PageHeaderSelf role='banner'>
+      <PageHeadline>
+        <PageTitle>
+          <Link to='/' title='Visit the welcome page'>
+            {appTitle}
+          </Link>
+        </PageTitle>
+      </PageHeadline>
+      <PageNav role='navigation'>
+        <MainMenu>
+          <li>
+            <Button
+              forwardedAs={StyledNavLink}
+              exact
+              to='/'
+              variation='achromic-plain'
+              title='Visit the welcome page'
+            >
+              Welcome
+            </Button>
+          </li>
+          <li>
+            <Button
+              forwardedAs={StyledNavLink}
+              exact
+              to='/about'
+              variation='achromic-plain'
+              title='Learn more about the app'
+            >
+              About
+            </Button>
+          </li>
+        </MainMenu>
+        <MetaMenu>
+          <li>
+            <Button
+              variation='achromic-plain'
+              title='Leave feedback about the app'
+            >
+              Feedback
+            </Button>
+          </li>
+          <li>
+            <Button
+              forwardedAs={StyledNavLink}
+              exact
+              to='/signin'
+              variation='achromic-plain'
+              title='Sign in to the app'
+            >
+              Sign in
+            </Button>
+          </li>
+        </MetaMenu>
+      </PageNav>
+    </PageHeaderSelf>
   );
 }
 
