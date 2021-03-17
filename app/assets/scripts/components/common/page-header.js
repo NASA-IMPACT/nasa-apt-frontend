@@ -4,6 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import { filterComponentProps } from '../../styles/utils/general';
 
@@ -65,7 +66,8 @@ const PageTitle = styled.h1`
 
 const PageNav = styled.nav`
   display: inline-grid;
-  grid-gap: ${glsp()};
+  grid-gap: ${glsp(0.5)};
+  align-items: center;
   margin-left: auto;
 
   > * {
@@ -73,18 +75,9 @@ const PageNav = styled.nav`
   }
 `;
 
-const MainMenu = styled.ul`
+const GlobalMenu = styled.ul`
   display: inline-grid;
-  grid-gap: ${glsp()};
-
-  > * {
-    grid-row: 1;
-  }
-`;
-
-const MetaMenu = styled.ul`
-  display: inline-grid;
-  grid-gap: ${glsp()};
+  grid-gap: ${glsp(0.5)};
 
   > * {
     grid-row: 1;
@@ -113,7 +106,7 @@ function PageHeader() {
         </PageTitle>
       </PageHeadline>
       <PageNav role='navigation'>
-        <MainMenu>
+        <GlobalMenu>
           <li>
             <Button
               forwardedAs={StyledNavLink}
@@ -136,8 +129,9 @@ function PageHeader() {
               About
             </Button>
           </li>
-        </MainMenu>
-        <MetaMenu>
+        </GlobalMenu>
+        <VerticalDivider variation='light' />
+        <GlobalMenu>
           <li>
             <Button
               variation='achromic-plain'
@@ -157,7 +151,7 @@ function PageHeader() {
               Sign in
             </Button>
           </li>
-        </MetaMenu>
+        </GlobalMenu>
       </PageNav>
     </PageHeaderSelf>
   );
