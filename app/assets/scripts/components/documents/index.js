@@ -7,7 +7,6 @@ import Constrainer from '../../styles/constrainer';
 import {
   Inpage,
   InpageHeader,
-  InpageHeaderInner,
   InpageHeadline,
   InpageTitle,
   InpageActions,
@@ -29,14 +28,14 @@ function Documents() {
     <App pageTitle='Sandbox editor' hideFooter>
       <Inpage>
         <InpageHeader>
-          <InpageHeaderInner>
-            <InpageHeadline>
-              <InpageTitle>Editor</InpageTitle>
-            </InpageHeadline>
-            <InpageActions>
-              <Button>Some button</Button>
-            </InpageActions>
-          </InpageHeaderInner>
+          <InpageHeadline>
+            <InpageTitle>Documents</InpageTitle>
+          </InpageHeadline>
+          <InpageActions>
+            <Button to='/' variation='achromic-plain' title='Create new'>
+              Create new
+            </Button>
+          </InpageActions>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
