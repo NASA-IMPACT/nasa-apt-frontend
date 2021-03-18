@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { Button } from '@devseed-ui/button';
 
 import App from '../common/app';
-
 import {
   Inpage,
   InpageHeader,
@@ -11,11 +11,10 @@ import {
   InpageActions,
   InpageBody
 } from '../../styles/inpage';
-
-import { Button } from '@devseed-ui/button';
-
 import Constrainer from '../../styles/constrainer';
 import Prose from '../../styles/typography/prose';
+
+import { useAtbds } from '../../context/atbds-list';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -28,6 +27,13 @@ const InpageBodyScroll = styled(InpageBody)`
 `;
 
 function Documents() {
+  const context = useAtbds();
+  console.log("🚀 ~ file: index.js ~ line 11 ~ About ~ context", context);
+
+  useEffect(() => {
+    context.fetchAtbds();
+  }, []);
+
   return (
     <App pageTitle='Documents'>
       <Inpage>

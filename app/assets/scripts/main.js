@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -15,6 +16,9 @@ import About from './components/about';
 import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
 import SandboxStructure from './components/sandbox/structure';
+
+// Contexts
+import { AtbdsProvider } from './context/atbds-list';
 
 // Root component.
 function Root() {
@@ -37,14 +41,20 @@ function Root() {
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <CollecticonsGlobalStyle />
         <GlobalStyle />
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/documents' component={Documents} />
-          <Route exact path='/about' component={About} />
-          <Route exact path='/sandbox' component={Sandbox} />
-          <Route exact path='/sandbox/editor' component={SandboxEditor} />
-          <Route exact path='/sandbox/structure' component={SandboxStructure} />
-        </Switch>
+        <AtbdsProvider>
+          <Switch>
+            <Route exact path='/' component={Home} />
+            <Route exact path='/documents' component={Documents} />
+            <Route exact path='/about' component={About} />
+            <Route exact path='/sandbox' component={Sandbox} />
+            <Route exact path='/sandbox/editor' component={SandboxEditor} />
+            <Route
+              exact
+              path='/sandbox/structure'
+              component={SandboxStructure}
+            />
+          </Switch>
+        </AtbdsProvider>
       </DevseedUiThemeProvider>
     </Router>
   );
