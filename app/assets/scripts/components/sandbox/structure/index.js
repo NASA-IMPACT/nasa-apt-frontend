@@ -9,7 +9,9 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageSubtitle,
+  InpageMeta,
+  InpageHeadNav,
+  BreadcrumbMenu,
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
@@ -33,9 +35,30 @@ function SandboxStructure() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageSubtitle>Sandbox</InpageSubtitle>
             <InpageTitle>Structure</InpageTitle>
+            <InpageHeadNav>
+              <BreadcrumbMenu>
+                <li>
+                  <Button to='/' variation='achromic-plain' title='Create new'>
+                    V2.2
+                  </Button>
+                </li>
+                <li>
+                  <Button to='/' variation='achromic-plain' title='Create new'>
+                    Viewing
+                  </Button>
+                </li>
+              </BreadcrumbMenu>
+            </InpageHeadNav>
           </InpageHeadline>
+          <InpageMeta>
+            <dt>Under</dt>
+            <dd>Sandbox</dd>
+            <dt>Status</dt>
+            <dd>Draft: 56%</dd>
+            <dt>Discussion</dt>
+            <dd>2 unsolved threads</dd>
+          </InpageMeta>
           <InpageActions>
             <Button to='/' variation='achromic-plain' title='Create new'>
               Button
