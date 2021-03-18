@@ -1,52 +1,74 @@
 import styled from 'styled-components';
-import { themeVal, glsp, antialiased } from '@devseed-ui/theme-provider';
-import { Heading } from '@devseed-ui/typography';
 
-import Constrainer from './constrainer';
+import {
+  glsp,
+  media,
+  rgba,
+  themeVal,
+  truncated
+} from '@devseed-ui/theme-provider';
+import { reveal } from '@devseed-ui/animation';
 
-export const Inpage = styled.section`
+export const Inpage = styled.article`
   display: grid;
   height: 100%;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: min-content 1fr;
 `;
 
 export const InpageHeader = styled.header`
-  ${antialiased()}
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  align-items: end;
   background-color: ${themeVal('color.primary')};
   color: #fff;
-  box-shadow: 0 0 0 0 ${themeVal('color.baseAlphaD')};
-  z-index: 10;
-  transition: box-shadow 0.32s ease 0s;
-  clip-path: inset(0 0 -100vh 0);
-`;
+  animation: ${reveal} 0.32s ease 0s 1;
+  padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
+  box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)};
 
-export const InpageHeaderInner = styled(Constrainer)`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-end;
-  min-height: 5rem;
-  padding-top: ${glsp()};
-  padding-bottom: ${glsp()};
+  ${media.mediumUp`
+    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
+    padding: ${glsp(1, themeVal('layout.gap.medium'))};
+  `}
 `;
 
 export const InpageHeadline = styled.div`
   display: flex;
-  flex-flow: column;
-  min-width: 0;
+  flex-flow: column nowrap;
+  min-width: 0px;
 `;
 
 export const InpageActions = styled.div`
+  display: inline-grid;
+  grid-gap: ${glsp(0.5)};
+  align-items: center;
   margin-left: auto;
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
-export const InpageTitle = styled(Heading)`
-  font-size: 1.25rem;
-  line-height: 2.5rem;
+export const InpageTitleWrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  min-width: 0;
+  margin-bottom: ${glsp(1.5)};
+`;
+
+export const InpageTitle = styled.h1`
+  ${truncated()}
+  font-size: 1rem;
+  line-height: 2rem;
+  margin: 0;
+`;
+
+export const InpageSubtitle = styled.p`
+  font-size: 1rem;
+  line-height: 1.25rem;
   margin: 0;
 `;
 
 export const InpageBody = styled.div`
-  display: grid;
-  grid-gap: ${glsp(3)};
-  padding: ${glsp(3, 0)};
+  background: transparent;
 `;

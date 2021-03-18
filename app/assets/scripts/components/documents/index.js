@@ -8,8 +8,11 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
+  InpageActions,
   InpageBody
 } from '../../styles/inpage';
+
+import { Button } from '@devseed-ui/button';
 
 import Constrainer from '../../styles/constrainer';
 import Prose from '../../styles/typography/prose';
@@ -24,14 +27,19 @@ const InpageBodyScroll = styled(InpageBody)`
   }
 `;
 
-function About() {
+function Documents() {
   return (
-    <App pageTitle='About'>
+    <App pageTitle='Documents'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>About</InpageTitle>
+            <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
+          <InpageActions>
+            <Button to='/' variation='achromic-plain' title='Create new'>
+              Create new
+            </Button>
+          </InpageActions>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
@@ -45,4 +53,4 @@ function About() {
   );
 }
 
-export default About;
+export default Documents;

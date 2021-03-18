@@ -10,8 +10,11 @@ import GlobalStyle from './styles/global';
 
 // Views
 import Home from './components/home';
+import Documents from './components/documents';
 import About from './components/about';
+import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
+import SandboxStructure from './components/sandbox/structure';
 
 // Root component.
 function Root() {
@@ -36,8 +39,11 @@ function Root() {
         <GlobalStyle />
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route exact path='/documents' component={Documents} />
           <Route exact path='/about' component={About} />
+          <Route exact path='/sandbox' component={Sandbox} />
           <Route exact path='/sandbox/editor' component={SandboxEditor} />
+          <Route exact path='/sandbox/structure' component={SandboxStructure} />
         </Switch>
       </DevseedUiThemeProvider>
     </Router>

@@ -2,6 +2,8 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 
+import { reveal } from '@devseed-ui/animation';
+
 import MetaTags from './meta-tags';
 import PageHeader from './page-header';
 import PageFooter from './page-footer';
@@ -11,17 +13,15 @@ import config from '../../config';
 const { appTitle, appDescription } = config;
 
 const Page = styled.div`
-  min-height: 100vh;
-  max-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-rows: auto 1fr ${({ hideFooter }) => (hideFooter ? 0 : 'auto')};
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content auto;
+  grid-auto-rows: min-content;
+  min-height: 100vh;
 `;
 
 const PageBody = styled.main`
-  min-height: 0;
-  padding: 0;
-  margin: 0;
+  animation: ${reveal} 0.48s ease 0s 1;
 `;
 
 function App(props) {
