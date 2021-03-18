@@ -98,6 +98,7 @@
     "watchify": "^4.0.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@devseed-ui/animation": "^3.0.0",
     "@devseed-ui/button": "^3.0.0",
     "@devseed-ui/collecticons": "^2.0.0",
