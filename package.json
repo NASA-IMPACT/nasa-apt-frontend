@@ -39,7 +39,8 @@
           "plugins": [
             "babel-plugin-styled-components",
             "@babel/plugin-transform-spread",
-            "@babel/plugin-proposal-object-rest-spread"
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-proposal-optional-chaining"
           ]
         }
       ],
@@ -98,6 +99,7 @@
     "watchify": "^4.0.0"
   },
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
     "@babel/polyfill": "^7.12.1",
     "@devseed-ui/animation": "^3.0.0",
     "@devseed-ui/button": "^3.0.0",
