@@ -15,6 +15,7 @@ import Documents from './components/documents';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
+import SandboxForms from './components/sandbox/forms';
 import SandboxStructure from './components/sandbox/structure';
 import UhOh from './components/uhoh/index.js';
 
@@ -49,6 +50,7 @@ function Root() {
             <Route exact path='/about' component={About} />
             <Route exact path='/sandbox' component={Sandbox} />
             <Route exact path='/sandbox/editor' component={SandboxEditor} />
+            <Route exact path='/sandbox/forms' component={SandboxForms} />
             <Route
               exact
               path='/sandbox/structure'
