@@ -50,10 +50,7 @@ export const SECTION_STATUS_DEFAULT = SECTION_STATUS_MENU.items[0].id;
 export default function SectionFieldset(props) {
   const { children, label, status, onStatusChange } = props;
 
-  const triggerProps = useMemo(
-    () => ({ size: 'small', useIcon: ['chevron-down--small', 'after'] }),
-    []
-  );
+  const triggerProps = useMemo(() => ({ size: 'small' }), []);
 
   return (
     <FormFieldset>
@@ -65,6 +62,7 @@ export default function SectionFieldset(props) {
             menu={SECTION_STATUS_MENU}
             activeItem={status}
             dropTitle='Section status'
+            withChevron
             triggerProps={triggerProps}
             onSelect={onStatusChange}
           />

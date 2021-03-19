@@ -56,6 +56,7 @@ export default function DropdownMenu(props) {
     menu: menuInput,
     activeItem,
     dropTitle,
+    withChevron,
     triggerProps = {},
     triggerLabel,
     onSelect
@@ -78,6 +79,7 @@ export default function DropdownMenu(props) {
         <Button
           variation='base-plain'
           title='Open dropdown'
+          useIcon={withChevron && ['chevron-down--small', 'after']}
           {...triggerProps}
           {...props}
         >
@@ -122,6 +124,7 @@ export default function DropdownMenu(props) {
 
 DropdownMenu.propTypes = {
   menu: T.oneOfType([T.array, T.object]),
+  withChevron: T.bool,
   activeItem: T.string,
   dropTitle: T.string,
   triggerProps: T.object,
