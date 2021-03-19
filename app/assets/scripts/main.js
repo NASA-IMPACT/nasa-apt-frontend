@@ -16,6 +16,7 @@ import About from './components/about';
 import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
 import SandboxStructure from './components/sandbox/structure';
+import UhOh from './components/uhoh/index.js';
 
 // Contexts
 import { AtbdsProvider } from './context/atbds-list';
@@ -53,6 +54,7 @@ function Root() {
               path='/sandbox/structure'
               component={SandboxStructure}
             />
+            <Route path='*' component={UhOh} />
           </Switch>
         </AtbdsProvider>
       </DevseedUiThemeProvider>
