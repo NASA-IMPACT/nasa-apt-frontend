@@ -105,7 +105,7 @@
     "@devseed-ui/button": "^3.0.0",
     "@devseed-ui/collecticons": "^2.0.0",
     "@devseed-ui/dropdown": "^2.0.0",
-    "@devseed-ui/form": "^1.0.1",
+    "@devseed-ui/form": "^1.0.2",
     "@devseed-ui/theme-provider": "^3.0.0",
     "@devseed-ui/toolbar": "^2.0.0",
     "@devseed-ui/typography": "^1.0.0",

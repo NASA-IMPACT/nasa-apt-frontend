@@ -897,6 +897,14 @@
     "@devseed-ui/collecticons" "2.0.0"
     "@devseed-ui/theme-provider" "^3.0.0"
 
+"@devseed-ui/button@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@devseed-ui/button/-/button-3.0.1.tgz#67de5a7610ae7a1c232467faba5941b7e3d3dd63"
+  integrity sha512-B9e9VpLu/8CTa0b55+biZtvYArW4Se/zn074zVb4pR6qOGFqxWsPw5a+5D5KzQTuElY1gdJoER3BJOAIJXMxbg==
+  dependencies:
+    "@devseed-ui/collecticons" "2.0.0"
+    "@devseed-ui/theme-provider" "^3.0.0"
+
 "@devseed-ui/collecticons@2.0.0", "@devseed-ui/collecticons@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/collecticons/-/collecticons-2.0.0.tgz#206ea7c6770a4a8bf903e361f95d0acd3c05a02a"
@@ -914,13 +922,13 @@
     react-tether "^2.0.7"
     react-transition-group "^4.3.0"
 
-"@devseed-ui/form@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@devseed-ui/form/-/form-1.0.1.tgz#4f5d6742342a50f95ab8d71eca2e962f7cb19727"
-  integrity sha512-k1E+yowoGMjohI9aUdWUWMjfK1rjr7QiFBcWvPUlcWTr88SH2IjTuCAGyuM758oSMOKxFLQhivRThsR2o55m9w==
+"@devseed-ui/form@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@devseed-ui/form/-/form-1.0.2.tgz#0c2affa280749d6621f6932bc468bdd824129ba2"
+  integrity sha512-VFw/2u7zRYdkb3HlFgsvgyL1fJKbQQVXmS9loZo+3+0tWp5Abgg/fd9Nkwz8I6ddhvTwwDeLoComAPuolM4yFw==
   dependencies:
     "@devseed-ui/animation" "^3.0.0"
-    "@devseed-ui/button" "3.0.0"
+    "@devseed-ui/button" "3.0.1"
     "@devseed-ui/theme-provider" "^3.0.0"
     "@devseed-ui/typography" "1.0.0"
 
