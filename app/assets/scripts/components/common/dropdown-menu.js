@@ -11,7 +11,7 @@ import Dropdown, {
 const getMenuClickHandler = (fn, menuItem) => {
   return (event) => {
     // Prevent the default action unless is a link.
-    if (!menuItem.href) {
+    if (!menuItem.href && !menuItem.to) {
       event.preventDefault();
     }
     fn?.(menuItem.id, { menuItem, event });
