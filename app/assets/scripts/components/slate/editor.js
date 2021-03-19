@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
-import ReactTooltip from 'react-tooltip';
 
 import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';
 import composeDebugEditor from './plugins/debug-editor/compose-debug-editor';
@@ -87,7 +86,6 @@ export default function FullEditor() {
           setValue(v);
         }}
       >
-        <ReactTooltip place='top' effect='solid' />
         <EditorToolbar plugins={plugins} />
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />

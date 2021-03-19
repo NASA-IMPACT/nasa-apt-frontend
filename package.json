@@ -125,7 +125,7 @@
     "react-katex": "^2.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-tooltip": "^4.2.14",
+    "react-tippy": "^1.4.0",
     "slate": "^0.59.0",
     "slate-history": "^0.59.0",
     "slate-hyperscript": "^0.59.0",
