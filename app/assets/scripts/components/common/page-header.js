@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, NavLink } from 'react-router-dom';
 import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 
-import { filterComponentProps } from '../../styles/utils/general';
-
 import config from '../../config';
+import { Link, NavLink } from '../../styles/clean/link';
 
 const { appTitle } = config;
 
@@ -84,17 +82,6 @@ const GlobalMenu = styled.ul`
   }
 `;
 
-// See documentation of filterComponentProp as to why this is
-const propsToFilter = [
-  'variation',
-  'size',
-  'hideText',
-  'useIcon',
-  'active',
-  'visuallyDisabled'
-];
-const StyledNavLink = filterComponentProps(NavLink, propsToFilter);
-
 function PageHeader() {
   return (
     <PageHeaderSelf role='banner'>
@@ -109,7 +96,7 @@ function PageHeader() {
         <GlobalMenu>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/'
               variation='achromic-plain'
@@ -120,7 +107,7 @@ function PageHeader() {
           </li>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/documents'
               variation='achromic-plain'
@@ -131,7 +118,7 @@ function PageHeader() {
           </li>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/about'
               variation='achromic-plain'
@@ -153,7 +140,7 @@ function PageHeader() {
           </li>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/signin'
               variation='achromic-plain'
