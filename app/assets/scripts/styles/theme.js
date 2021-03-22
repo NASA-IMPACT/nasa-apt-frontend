@@ -1,12 +1,21 @@
 import defaultsDeep from 'lodash.defaultsdeep';
 
 export function themeOverridesAPT(uiTheme) {
+  const baseColor = '#2C3E50';
+
   return defaultsDeep(
     {
       color: {
-        baseDark: '#323232',
-        primary: '#2276AC',
-        secondary: '#2c3e50'
+        base: baseColor,
+        baseDark: baseColor,
+        primary: '#2276ac',
+        secondary: '#1b6390',
+        link: '#2276ac'
+      },
+      type: {
+        base: {
+          color: baseColor
+        }
       },
       layout: {
         // The gap is defined as a multiplier of the layout.space
@@ -17,8 +26,7 @@ export function themeOverridesAPT(uiTheme) {
           medium: 2,
           large: 2,
           xlarge: 3
-        },
-        max: '960px'
+        }
       }
     },
     uiTheme
