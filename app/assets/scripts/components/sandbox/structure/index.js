@@ -3,6 +3,7 @@ import { Button } from '@devseed-ui/button';
 import styled from 'styled-components';
 
 import App from '../../common/app';
+import Status from '../../common/status';
 
 import {
   Inpage,
@@ -13,7 +14,8 @@ import {
   InpageHeadNav,
   BreadcrumbMenu,
   InpageActions,
-  InpageBody
+  InpageBody,
+  InpageSubtitle
 } from '../../../styles/inpage';
 
 import Constrainer from '../../../styles/constrainer';
@@ -36,12 +38,10 @@ function SandboxStructure() {
         <InpageHeader>
           <InpageHeadline>
             <InpageTitle>Structure</InpageTitle>
-            <InpageHeadNav>
+            <InpageHeadNav role='navigation'>
               <BreadcrumbMenu>
                 <li>
-                  <Button to='/' variation='achromic-plain' title='Create new'>
-                    V2.2
-                  </Button>
+                  <strong>V1.0</strong>
                 </li>
                 <li>
                   <Button to='/' variation='achromic-plain' title='Create new'>
@@ -53,11 +53,17 @@ function SandboxStructure() {
           </InpageHeadline>
           <InpageMeta>
             <dt>Under</dt>
-            <dd>Sandbox</dd>
+            <InpageSubtitle as='dd'>Sandbox</InpageSubtitle>
             <dt>Status</dt>
-            <dd>Draft: 56%</dd>
+            <dd>
+              <Status status='draft' completeness={56} />
+            </dd>
             <dt>Discussion</dt>
-            <dd>2 unsolved threads</dd>
+            <dd>
+              <a href='#' title='View threads'>
+                2 unsolved threads
+              </a>
+            </dd>
           </InpageMeta>
           <InpageActions>
             <Button to='/' variation='achromic-plain' title='Create new'>
