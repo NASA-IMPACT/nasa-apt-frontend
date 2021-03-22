@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/developmentseed/nasa-apt-frontend",
   "scripts": {
-    "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"export default {\n  environment: 'development'\n};\" > app/assets/scripts/config/local.js",
+    "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"module.exports = {};\" > app/assets/scripts/config/local.js",
     "serve": "NODE_ENV=development gulp serve",
     "build": "NODE_ENV=production gulp",
     "stage": "NODE_ENV=staging gulp",
