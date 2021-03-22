@@ -74,9 +74,8 @@ export function createContexeedAPI({ name, useKey }) {
 
   const makeRequestAction = (fn) => {
     return (...args) => {
-      const opts = fn(...args);
+      const { stateKey, ...rest } = fn(...args);
 
-      const { stateKey, ...rest } = opts;
       return makeRequestThunk({
         ...rest,
         stateKey,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
@@ -7,6 +7,8 @@ import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import config from '../../config';
 import { Link, NavLink } from '../../styles/clean/link';
+import { useAuthToken, useUser } from '../../context/user';
+import { useHistory } from 'react-router';
 
 const { appTitle } = config;
 
@@ -83,6 +85,15 @@ const GlobalMenu = styled.ul`
 `;
 
 function PageHeader() {
+  const { expireToken } = useAuthToken();
+  const user = useUser();
+  const history = useHistory();
+
+  const onLogoutClick = useCallback(() => {
+    expireToken();
+    history.push('/');
+  }, [history, expireToken]);
+
   return (
     <PageHeaderSelf role='banner'>
       <PageHeadline>
@@ -139,15 +150,25 @@ function PageHeader() {
             </Button>
           </li>
           <li>
-            <Button
-              forwardedAs={NavLink}
-              exact
-              to='/signin'
-              variation='achromic-plain'
-              title='Sign in to the app'
-            >
-              Sign in
-            </Button>
+            {user.isLogged ? (
+              <Button
+                variation='achromic-plain'
+                title='Sign out of the app'
+                onClick={onLogoutClick}
+              >
+                Sign out
+              </Button>
+            ) : (
+              <Button
+                forwardedAs={NavLink}
+                exact
+                to='/signin'
+                variation='achromic-plain'
+                title='Sign in to the app'
+              >
+                Sign in
+              </Button>
+            )}
           </li>
         </GlobalMenu>
       </PageNav>

@@ -101,6 +101,8 @@
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.13.8",
     "@babel/polyfill": "^7.12.1",
+    "@casl/ability": "^5.2.2",
+    "@casl/react": "^2.2.2",
     "@devseed-ui/animation": "^3.0.0",
     "@devseed-ui/button": "^3.0.0",
     "@devseed-ui/collecticons": "^2.0.0",
