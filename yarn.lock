@@ -6086,6 +6086,11 @@ just-debounce@^1.0.0:
   resolved "https://registry.yarnpkg.com/just-debounce/-/just-debounce-1.0.0.tgz#87fccfaeffc0b68cd19d55f6722943f929ea35ea"
   integrity sha1-h/zPrv/AtozRnVX2cilD+SnqNeo=
 
+jwt-decode@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
+
 katex@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/katex/-/katex-0.9.0.tgz#26a7d082c21d53725422d2d71da9b2d8455fbd4a"
@@ -7753,6 +7758,13 @@ qs@6.2.3:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.2.3.tgz#1cfcb25c10a9b2b483053ff39f5dfc9233908cfe"
   integrity sha1-HPyyXBCpsrSDBT/zn138kjOQjP4=
+
+qs@^6.10.1:
+  version "6.10.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
+  integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
+  dependencies:
+    side-channel "^1.0.4"
 
 qs@~6.5.2:
   version "6.5.2"
