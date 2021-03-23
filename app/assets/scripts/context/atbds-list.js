@@ -2,12 +2,14 @@ import React, { createContext, useContext } from 'react';
 import T from 'prop-types';
 
 import { createContexeedAPI, useContexeedReducer } from '../utils/contexeed';
+import makeContexeedRequestWithToken from '../utils/contexeed-request-token';
+import { useAuthToken } from './user';
 
 // Create contexeed instance for the ATBD list.
 const atbdListContexeed = createContexeedAPI({ name: 'atbdList' });
 
 // Create dispatchable actions to fetch api data.
-const fetchAtbds = atbdListContexeed.makeRequestAction(() => ({
+const fetchAtbds = makeContexeedRequestWithToken(atbdListContexeed, () => ({
   url: '/atbds'
 }));
 
@@ -19,10 +21,11 @@ export const AtbdsProvider = (props) => {
   const { children } = props;
 
   const [state, dispatch] = useContexeedReducer(atbdListContexeed);
+  const { token } = useAuthToken();
 
   const contextValue = {
     state,
-    fetchAtbds: (...args) => dispatch(fetchAtbds(...args))
+    fetchAtbds: () => dispatch(fetchAtbds({ token }))
   };
 
   return (
