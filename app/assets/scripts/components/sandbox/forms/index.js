@@ -9,6 +9,7 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
+  InpageMeta,
   InpageBody
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
@@ -31,9 +32,12 @@ function SandboxForms() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageSubtitle>Sandbox</InpageSubtitle>
             <InpageTitle>Forms</InpageTitle>
           </InpageHeadline>
+          <InpageMeta>
+            <dt>Under</dt>
+            <InpageSubtitle as='dd'>Sandbox</InpageSubtitle>
+          </InpageMeta>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
