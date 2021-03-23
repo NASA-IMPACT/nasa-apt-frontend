@@ -10,6 +10,7 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
+  InpageMeta,
   InpageBody
 } from '../../../styles/inpage';
 
@@ -31,9 +32,12 @@ function SandboxEditor() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageSubtitle>Sandbox</InpageSubtitle>
             <InpageTitle>Editor</InpageTitle>
           </InpageHeadline>
+          <InpageMeta>
+            <dt>Under</dt>
+            <InpageSubtitle as='dd'>Sandbox</InpageSubtitle>
+          </InpageMeta>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
