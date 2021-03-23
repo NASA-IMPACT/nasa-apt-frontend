@@ -61,8 +61,9 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
   // not.
   return (state, action) => {
     const hasKey = typeof action.key !== 'undefined';
-    const newState = contexeedReducer(state, action);
+    const stateSlice = hasKey ? state[action.key] : state;
+    const newState = contexeedReducer(stateSlice, action);
 
-    return hasKey ? { ...state, [action.id]: newState } : newState;
+    return hasKey ? { ...state, [action.key]: newState } : newState;
   };
 }

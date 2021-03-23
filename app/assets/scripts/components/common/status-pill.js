@@ -35,21 +35,23 @@ const StatusSelf = styled.strong`
   }
 `;
 
-function Status(props) {
+function StatusPill(props) {
   const { status, completeness } = props;
 
   return (
     <StatusSelf value={completeness}>
       <span>
-        {status === 'draft' ? `Draft: ${completeness}%` : 'Published'}
+        {status.toLowerCase() === 'draft'
+          ? `Draft: ${completeness}%`
+          : 'Published'}
       </span>
     </StatusSelf>
   );
 }
 
-Status.propTypes = {
+StatusPill.propTypes = {
   status: T.string,
   completeness: T.number
 };
 
-export default Status;
+export default StatusPill;

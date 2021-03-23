@@ -3,7 +3,7 @@ import { Button } from '@devseed-ui/button';
 import styled from 'styled-components';
 
 import App from '../../common/app';
-import Status from '../../common/status';
+import StatusPill from '../../common/status-pill';
 
 import {
   Inpage,
@@ -56,7 +56,7 @@ function SandboxStructure() {
             <InpageSubtitle as='dd'>Sandbox</InpageSubtitle>
             <dt>Status</dt>
             <dd>
-              <Status status='draft' completeness={56} />
+              <StatusPill status='draft' completeness={56} />
             </dd>
             <dt>Discussion</dt>
             <dd>

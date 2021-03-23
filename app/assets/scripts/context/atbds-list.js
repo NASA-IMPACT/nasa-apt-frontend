@@ -22,9 +22,22 @@ export const AtbdsProvider = (props) => {
     }
   });
 
+  const { getState: getSingleAtbd, fetchSingleAtbd } = useContexeedApi({
+    name: 'atbdSingle',
+    useKey: true,
+    requests: {
+      fetchSingleAtbd: withRequestToken(token, ({ id, version }) => ({
+        url: `/atbds/${id}/versions/${version}`,
+        stateKey: `${id}/${version}`
+      }))
+    }
+  });
+
   const contextValue = {
     getAtbds,
     fetchAtbds,
+    getSingleAtbd,
+    fetchSingleAtbd
   };
 
   return (
@@ -53,8 +66,11 @@ const useCheckContext = (fnName) => {
 };
 
 export const useSingleAtbd = ({ id, version }) => {
-  // const { getSingleAtbd, fetchSingleAtbd } = useCheckContext('useSingleAtbd');
-  // return { getSingleAtbd, fetchSingleAtbd };
+  const { getSingleAtbd, fetchSingleAtbd } = useCheckContext('useSingleAtbd');
+  return {
+    atbd: getSingleAtbd(`${id}/${version}`),
+    fetchSingleAtbd: () => fetchSingleAtbd({ id, version })
+  };
 };
 
 export const useAtbds = () => {
