@@ -62,7 +62,7 @@ function SandboxStructure() {
             </InpageSubtitle>
             <dt>Status</dt>
             <dd>
-              <Status status='draft' completeness={56} />
+              <Status status='draft' completeness={64} />
             </dd>
             <dt>Discussion</dt>
             <dd>

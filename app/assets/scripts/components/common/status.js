@@ -11,6 +11,7 @@ const StatusSelf = styled.strong`
   width: 6rem;
   font-size: 0.75rem;
   font-weight: ${themeVal('type.base.bold')};
+  text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
   text-align: center;
   background-color: ${rgba(themeVal('color.base'), 0.32)};
