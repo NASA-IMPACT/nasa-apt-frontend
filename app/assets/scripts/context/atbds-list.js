@@ -1,17 +1,9 @@
 import React, { createContext, useContext } from 'react';
 import T from 'prop-types';
 
-import { createContexeedAPI, useContexeedReducer } from '../utils/contexeed';
-import makeContexeedRequestWithToken from '../utils/contexeed-request-token';
 import { useAuthToken } from './user';
-
-// Create contexeed instance for the ATBD list.
-const atbdListContexeed = createContexeedAPI({ name: 'atbdList' });
-
-// Create dispatchable actions to fetch api data.
-const fetchAtbds = makeContexeedRequestWithToken(atbdListContexeed, () => ({
-  url: '/atbds'
-}));
+import withRequestToken from '../utils/with-request-token';
+import { useContexeedApi } from '../utils/contexeed';
 
 // Context
 export const AtbdsContext = createContext(null);
@@ -19,13 +11,20 @@ export const AtbdsContext = createContext(null);
 // Context provider
 export const AtbdsProvider = (props) => {
   const { children } = props;
-
-  const [state, dispatch] = useContexeedReducer(atbdListContexeed);
   const { token } = useAuthToken();
 
+  const { getState: getAtbds, fetchAtbds } = useContexeedApi({
+    name: 'atbdList',
+    requests: {
+      fetchAtbds: withRequestToken(token, () => ({
+        url: '/atbds'
+      }))
+    }
+  });
+
   const contextValue = {
-    state,
-    fetchAtbds: () => dispatch(fetchAtbds({ token }))
+    getAtbds,
+    fetchAtbds,
   };
 
   return (
@@ -41,15 +40,24 @@ AtbdsProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the ATBD list context
-
-export const useAtbds = () => {
+const useCheckContext = (fnName) => {
   const context = useContext(AtbdsContext);
 
   if (!context) {
     throw new Error(
-      `The \`useAtbds\` hook must be used inside the <AtbdsContext> component's context.`
+      `The \`${fnName}\` hook must be used inside the <AtbdsContext> component's context.`
     );
   }
 
   return context;
+};
+
+export const useSingleAtbd = ({ id, version }) => {
+  // const { getSingleAtbd, fetchSingleAtbd } = useCheckContext('useSingleAtbd');
+  // return { getSingleAtbd, fetchSingleAtbd };
+};
+
+export const useAtbds = () => {
+  const { getAtbds, fetchAtbds } = useCheckContext('useAtbds');
+  return { atbds: getAtbds(), fetchAtbds };
 };

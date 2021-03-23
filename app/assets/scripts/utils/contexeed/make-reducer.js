@@ -21,35 +21,22 @@
  */
 export function makeReducer({ name: actionName, initialState, baseState }) {
   // Reducer function.
-  return (state, action) => {
-    const hasId = typeof action.id !== 'undefined';
-
+  const contexeedReducer = (state, action) => {
     switch (action.type) {
       case `invalidate/${actionName}`:
-        // When invalidating set the state to the initial value. If there's an
-        // id remove the key completely because that is the initial state.
-        if (hasId) {
-          /* eslint-disable-next-line no-unused-vars */
-          const { [action.id]: _, ...rest } = state;
-          return rest;
-        } else {
-          return initialState;
-        }
+        return initialState;
       case `request/${actionName}`: {
-        const localState = hasId ? state[action.id] : state;
-        const changeReq = {
+        return {
           ...baseState,
-          ...localState,
+          ...state,
           status: 'loading'
         };
-        return hasId ? { ...state, [action.id]: changeReq } : changeReq;
       }
       case `receive/${actionName}`: {
-        const localState = hasId ? state[action.id] : state;
         // eslint-disable-next-line prefer-const
         let st = {
           ...baseState,
-          ...localState,
+          ...state,
           receivedAt: action.receivedAt
         };
 
@@ -64,9 +51,18 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
           st.error = null;
         }
 
-        return hasId ? { ...state, [action.id]: st } : st;
+        return st;
       }
     }
     return state;
+  };
+
+  // Run the reducer and apply the state according to whether there's a key or
+  // not.
+  return (state, action) => {
+    const hasKey = typeof action.key !== 'undefined';
+    const newState = contexeedReducer(state, action);
+
+    return hasKey ? { ...state, [action.id]: newState } : newState;
   };
 }
