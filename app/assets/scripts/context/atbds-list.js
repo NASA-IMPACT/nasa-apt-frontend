@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import T from 'prop-types';
 
-import { createContexeedAPI, useReducerWithThunk } from '../utils/contexeed';
+import { createContexeedAPI, useContexeedReducer } from '../utils/contexeed';
 
 // Create contexeed instance for the ATBD list.
 const atbdListContexeed = createContexeedAPI({ name: 'atbdList' });
@@ -18,10 +18,7 @@ export const AtbdsContext = createContext(null);
 export const AtbdsProvider = (props) => {
   const { children } = props;
 
-  const [state, dispatch] = useReducerWithThunk(
-    atbdListContexeed.reducer,
-    atbdListContexeed.initialState
-  );
+  const [state, dispatch] = useContexeedReducer(atbdListContexeed);
 
   const contextValue = {
     state,

@@ -1,3 +1,8 @@
+/**
+ * Adds logging capabilities to a reducer function outputting prev/next state.
+ * @param {function} reducer The reducer function
+ * @returns function
+ */
 export function withReducerLogs(reducer) {
   /* eslint-disable no-console */
   return (state, action) => {

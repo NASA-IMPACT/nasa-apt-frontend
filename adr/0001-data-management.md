@@ -22,9 +22,7 @@ We need to store and access a list of ATBDs; each single ATBD and its content wh
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
-
-Chosen "Centralized data with React context" to avoid adding other dependencies and tech stacks to learn. It builds on top of practices used with Reduxeed so the learning curve shouldn't be too bad
+Chosen "Centralized data with React context" to avoid adding other dependencies and tech stacks to learn. It builds on top of practices used with Reduxeed so the learning curve shouldn't be too bad.
 
 ### Positive Consequences
 
