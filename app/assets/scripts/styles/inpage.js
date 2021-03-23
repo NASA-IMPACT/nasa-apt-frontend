@@ -121,6 +121,11 @@ export const InpageSubtitle = styled.p`
   font-size: 0.75rem;
   line-height: 1.25rem;
   margin: 0;
+
+  a {
+    display: block;
+    color: inherit;
+  }
 `;
 
 export const InpageBody = styled.div`

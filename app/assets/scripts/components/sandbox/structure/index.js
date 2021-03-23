@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import App from '../../common/app';
 import Status from '../../common/status';
 
+import { Link } from '../../../styles/clean/link';
+
 import {
   Inpage,
   InpageHeader,
@@ -53,7 +55,11 @@ function SandboxStructure() {
           </InpageHeadline>
           <InpageMeta>
             <dt>Under</dt>
-            <InpageSubtitle as='dd'>Sandbox</InpageSubtitle>
+            <InpageSubtitle as='dd'>
+              <Link to='/sandbox' title='Visit Sandbox hub'>
+                Sandbox
+              </Link>
+            </InpageSubtitle>
             <dt>Status</dt>
             <dd>
               <Status status='draft' completeness={56} />

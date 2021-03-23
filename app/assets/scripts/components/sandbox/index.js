@@ -37,18 +37,23 @@ function Sandbox() {
           <Constrainer>
             <Prose>
               <h6>Contents</h6>
-              <ul>
-                <li>
-                  <Link to='/sandbox/structure' title='View sandbox page'>
-                    Structure
-                  </Link>
-                </li>
+              <ol>
                 <li>
                   <Link to='/sandbox/editor' title='View sandbox page'>
                     Editor
                   </Link>
                 </li>
-              </ul>
+                <li>
+                  <Link to='/sandbox/forms' title='View sandbox page'>
+                    Forms
+                  </Link>
+                </li>
+                <li>
+                  <Link to='/sandbox/structure' title='View sandbox page'>
+                    Structure
+                  </Link>
+                </li>
+              </ol>
             </Prose>
           </Constrainer>
         </InpageBodyScroll>
