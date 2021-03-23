@@ -28,7 +28,6 @@ const InpageBodyScroll = styled(InpageBody)`
 
 function Documents() {
   const context = useAtbds();
-  console.log("🚀 ~ file: index.js ~ line 11 ~ About ~ context", context);
 
   useEffect(() => {
     context.fetchAtbds();

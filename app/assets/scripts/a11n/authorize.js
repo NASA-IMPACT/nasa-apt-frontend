@@ -26,6 +26,7 @@ function Authorize() {
     setToken(qsToken);
     // Ignoring dependencies because we'll only ever check this on mount. After
     // that a redirect will happen.
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   // A token is already set. Redirect to home
