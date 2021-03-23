@@ -14,7 +14,7 @@ const StatusSelf = styled.strong`
   text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
   text-align: center;
-  background-color: ${rgba(themeVal('color.base'), 0.32)};
+  background-color: ${rgba(themeVal('color.base'), 0.48)};
   border-radius: ${themeVal('shape.ellipsoid')};
   overflow: hidden;
 
@@ -27,7 +27,7 @@ const StatusSelf = styled.strong`
     width: ${({ value }) => `${value}%`};
     content: '';
     pointer-events: none;
-    background-color: ${rgba(themeVal('color.base'), 0.64)};
+    background-color: ${rgba(themeVal('color.base'), 0.32)};
   }
 
   > * {
