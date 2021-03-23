@@ -33,8 +33,8 @@ const Colophon = styled.p`
   time {
     font-size: 0.875rem;
     line-height: 1.5rem;
-    margin-left: ${glsp(0.5)};
-    padding-left: ${glsp(0.5)};
+    margin-left: ${glsp(1)};
+    padding-left: ${glsp(1)};
     box-shadow: inset 1px 0 0 0 ${rgba(themeVal('color.surface'), 0.16)};
   }
 `;
