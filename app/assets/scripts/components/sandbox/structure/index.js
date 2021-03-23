@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button } from '@devseed-ui/button';
 import styled from 'styled-components';
 
 import App from '../../common/app';
 import Status from '../../common/status';
 
 import { Link } from '../../../styles/clean/link';
+
+import { Button } from '@devseed-ui/button';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import {
   Inpage,
@@ -16,6 +18,7 @@ import {
   InpageHeadNav,
   BreadcrumbMenu,
   InpageActions,
+  InpageActionsBlock,
   InpageBody,
   InpageSubtitle
 } from '../../../styles/inpage';
@@ -39,7 +42,10 @@ function SandboxStructure() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>Structure</InpageTitle>
+            <InpageTitle>
+              GPM Integrated Multi-Satellite Retrievals for GPM (IMERG)
+              Algorithm Theoretical Basis Document
+            </InpageTitle>
             <InpageHeadNav role='navigation'>
               <BreadcrumbMenu>
                 <li>
@@ -73,7 +79,14 @@ function SandboxStructure() {
           </InpageMeta>
           <InpageActions>
             <Button to='/' variation='achromic-plain' title='Create new'>
-              Button
+              Button 1A
+            </Button>
+            <VerticalDivider variation='light' />
+            <Button to='/' variation='achromic-plain' title='Create new'>
+              Button 2A
+            </Button>
+            <Button to='/' variation='achromic-plain' title='Create new'>
+              Button 2B
             </Button>
           </InpageActions>
         </InpageHeader>
