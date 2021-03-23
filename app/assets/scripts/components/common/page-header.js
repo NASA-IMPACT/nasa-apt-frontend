@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { Link, NavLink } from 'react-router-dom';
 import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 
-import { filterComponentProps } from '../../styles/utils/general';
-
 import config from '../../config';
+import { Link, NavLink } from '../../styles/clean/link';
+import { useAuthToken, useUser } from '../../context/user';
+import { useHistory } from 'react-router';
 
 const { appTitle } = config;
 
@@ -84,18 +84,16 @@ const GlobalMenu = styled.ul`
   }
 `;
 
-// See documentation of filterComponentProp as to why this is
-const propsToFilter = [
-  'variation',
-  'size',
-  'hideText',
-  'useIcon',
-  'active',
-  'visuallyDisabled'
-];
-const StyledNavLink = filterComponentProps(NavLink, propsToFilter);
-
 function PageHeader() {
+  const { expireToken } = useAuthToken();
+  const user = useUser();
+  const history = useHistory();
+
+  const onLogoutClick = useCallback(() => {
+    expireToken();
+    history.push('/');
+  }, [history, expireToken]);
+
   return (
     <PageHeaderSelf role='banner'>
       <PageHeadline>
@@ -109,7 +107,7 @@ function PageHeader() {
         <GlobalMenu>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/'
               variation='achromic-plain'
@@ -120,7 +118,7 @@ function PageHeader() {
           </li>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/documents'
               variation='achromic-plain'
@@ -131,7 +129,7 @@ function PageHeader() {
           </li>
           <li>
             <Button
-              forwardedAs={StyledNavLink}
+              forwardedAs={NavLink}
               exact
               to='/about'
               variation='achromic-plain'
@@ -152,15 +150,25 @@ function PageHeader() {
             </Button>
           </li>
           <li>
-            <Button
-              forwardedAs={StyledNavLink}
-              exact
-              to='/signin'
-              variation='achromic-plain'
-              title='Sign in to the app'
-            >
-              Sign in
-            </Button>
+            {user.isLogged ? (
+              <Button
+                variation='achromic-plain'
+                title='Sign out of the app'
+                onClick={onLogoutClick}
+              >
+                Sign out
+              </Button>
+            ) : (
+              <Button
+                forwardedAs={NavLink}
+                exact
+                to='/signin'
+                variation='achromic-plain'
+                title='Sign in to the app'
+              >
+                Sign in
+              </Button>
+            )}
           </li>
         </GlobalMenu>
       </PageNav>

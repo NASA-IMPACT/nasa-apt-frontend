@@ -2,6 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 
 import { isModKey, modKey } from '../common/utils';
+import Tip from '../../../common/tooltip';
 
 export const LinkElement = ({
   attributes,
@@ -18,17 +19,21 @@ export const LinkElement = ({
   };
 
   return (
-    <a
-      {...attributes}
-      className={className}
-      href={element.url}
-      onClick={onClick}
-      data-tip={modKey('mod + Click to open url')}
-      data-place='bottom'
-      {...htmlAttributes}
+    <Tip
+      title={modKey('mod + Click to open url')}
+      position='bottom'
+      followCursor
     >
-      {children}
-    </a>
+      <a
+        {...attributes}
+        className={className}
+        href={element.url}
+        onClick={onClick}
+        {...htmlAttributes}
+      >
+        {children}
+      </a>
+    </Tip>
   );
 };
 

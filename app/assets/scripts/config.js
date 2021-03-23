@@ -1,4 +1,6 @@
-import defaultsDeep from 'lodash.defaultsdeep';
+// require is required to be able to load from gulpfile.
+const defaultsDeep = require('lodash.defaultsdeep');
+
 /*
  * App configuration.
  *
@@ -18,19 +20,18 @@ import defaultsDeep from 'lodash.defaultsdeep';
  *      polluting the repo.
  */
 
-var configurations = require('./config/*.js', { mode: 'hash' });
-var config = configurations.production || {};
+// The production config works as base.
+let config = require('./config/production');
 
 if (process.env.NODE_ENV === 'staging') {
-  config = defaultsDeep(configurations.staging, config);
+  config = defaultsDeep(require('./config/staging'), config);
 }
+
 if (process.env.NODE_ENV === 'development') {
-  config = defaultsDeep(configurations.local || {}, config);
+  config = defaultsDeep(require('./config/local'), config);
 }
 
 // ENV variables overrides.
-config.baseUrl = process.env.PUBLIC_URL || config.baseUrl;
+config.baseUrl = process.env.PUBLIC_URL || config.baseUrl || '';
 
-// The require doesn't play super well with es6 imports. It creates an internal
-// 'default' property. Export that.
-export default config.default;
+module.exports = config;

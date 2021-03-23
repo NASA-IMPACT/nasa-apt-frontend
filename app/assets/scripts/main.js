@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -14,7 +15,16 @@ import Documents from './components/documents';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
+import SandboxForms from './components/sandbox/forms';
 import SandboxStructure from './components/sandbox/structure';
+import UhOh from './components/uhoh/index';
+import SignIn from './a11n/signin';
+import Authorize from './a11n/authorize';
+
+// Contexts
+import { AtbdsProvider } from './context/atbds-list';
+import { UserProvider } from './context/user';
+import { AbilityProvider } from './a11n/index';
 
 // Root component.
 function Root() {
@@ -37,14 +47,28 @@ function Root() {
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <CollecticonsGlobalStyle />
         <GlobalStyle />
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/documents' component={Documents} />
-          <Route exact path='/about' component={About} />
-          <Route exact path='/sandbox' component={Sandbox} />
-          <Route exact path='/sandbox/editor' component={SandboxEditor} />
-          <Route exact path='/sandbox/structure' component={SandboxStructure} />
-        </Switch>
+        <AbilityProvider>
+          <UserProvider>
+            <AtbdsProvider>
+              <Switch>
+                <Route exact path='/' component={Home} />
+                <Route exact path='/documents' component={Documents} />
+                <Route exact path='/about' component={About} />
+                <Route exact path='/signin' component={SignIn} />
+                <Route exact path='/authorize' component={Authorize} />
+                <Route exact path='/sandbox' component={Sandbox} />
+                <Route exact path='/sandbox/editor' component={SandboxEditor} />
+                <Route exact path='/sandbox/forms' component={SandboxForms} />
+                <Route
+                  exact
+                  path='/sandbox/structure'
+                  component={SandboxStructure}
+                />
+                <Route path='*' component={UhOh} />
+              </Switch>
+            </AtbdsProvider>
+          </UserProvider>
+        </AbilityProvider>
       </DevseedUiThemeProvider>
     </Router>
   );

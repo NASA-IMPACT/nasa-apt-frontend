@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
-import reactTooltipStyles from './vendor/react-tooltip';
+import reactTippyStyles from './vendor/react-tippy';
 
 export default createGlobalStyle`
-  ${reactTooltipStyles()}
+  ${reactTippyStyles()}
 `;

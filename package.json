@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/developmentseed/nasa-apt-frontend",
   "scripts": {
-    "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"export default {\n  environment: 'development'\n};\" > app/assets/scripts/config/local.js",
+    "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"module.exports = {};\" > app/assets/scripts/config/local.js",
     "serve": "NODE_ENV=development gulp serve",
     "build": "NODE_ENV=production gulp",
     "stage": "NODE_ENV=staging gulp",
@@ -39,7 +39,8 @@
           "plugins": [
             "babel-plugin-styled-components",
             "@babel/plugin-transform-spread",
-            "@babel/plugin-proposal-object-rest-spread"
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-proposal-optional-chaining"
           ]
         }
       ],
@@ -98,29 +99,37 @@
     "watchify": "^4.0.0"
   },
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
+    "@babel/polyfill": "^7.12.1",
+    "@casl/ability": "^5.2.2",
+    "@casl/react": "^2.2.2",
     "@devseed-ui/animation": "^3.0.0",
     "@devseed-ui/button": "^3.0.0",
     "@devseed-ui/collecticons": "^2.0.0",
     "@devseed-ui/dropdown": "^2.0.0",
-    "@devseed-ui/form": "^1.0.1",
+    "@devseed-ui/form": "^1.0.2",
     "@devseed-ui/theme-provider": "^3.0.0",
     "@devseed-ui/toolbar": "^2.0.0",
     "@devseed-ui/typography": "^1.0.0",
     "@udecode/slate-plugins": "^0.73.0",
+    "axios": "^0.21.1",
     "clipboard": "^2.0.6",
     "history": "^4.10.0",
     "is-hotkey": "^0.2.0",
+    "jwt-decode": "^3.1.2",
     "lodash.castarray": "^4.4.0",
     "lodash.defaultsdeep": "^4.6.1",
+    "lodash.get": "^4.4.2",
     "polished": "^4.1.1",
     "prop-types": "^15.7.2",
+    "qs": "^6.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-katex": "^2.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-tooltip": "^4.2.14",
+    "react-tippy": "^1.4.0",
     "slate": "^0.59.0",
     "slate-history": "^0.59.0",
     "slate-hyperscript": "^0.59.0",
