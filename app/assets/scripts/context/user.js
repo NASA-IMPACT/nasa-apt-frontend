@@ -10,7 +10,19 @@ import jwt_decode from 'jwt-decode';
 
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 
-const initialTokenState = { token: null, expireAt: null };
+const LOCALSTORAGE_TOKEN_KEY = 'tokenData';
+
+const emptyTokenState = { token: null, expireAt: null };
+
+const initialTokenState = (() => {
+  const storedToken = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+  if (!storedToken) return emptyTokenState;
+  try {
+    return JSON.parse(storedToken);
+  } catch (error) {
+    return emptyTokenState;
+  }
+})();
 
 // Context
 export const UserContext = createContext(null);
@@ -29,7 +41,7 @@ export const UserProvider = (props) => {
 
       // Timer to expire the token
       timer = setTimeout(() => {
-        setTokenData(initialTokenState);
+        setTokenData(emptyTokenState);
         updateAbilityFor(ability, null);
       }, millis);
     }
@@ -46,6 +58,15 @@ export const UserProvider = (props) => {
   useEffect(() => {
     updateAbilityFor(ability, tokenData);
   }, [tokenData, ability]);
+
+  // Store token in localstorage.
+  useEffect(() => {
+    if (tokenData.token) {
+      localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, JSON.stringify(tokenData));
+    } else {
+      localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+    }
+  }, [tokenData]);
 
   const contextValue = {
     tokenData,
@@ -86,7 +107,7 @@ export const useAuthToken = () => {
         setTokenData({ token, expireAt: decoded.exp * 1000 });
       },
       expireToken: () => {
-        setTokenData(initialTokenState);
+        setTokenData(emptyTokenState);
       }
     }),
     [tokenData, setTokenData]
