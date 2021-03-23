@@ -12,11 +12,6 @@ const errorify = require('errorify');
 const historyApiFallback = require('connect-history-api-fallback');
 const through2 = require('through2');
 
-const {
-  appTitle,
-  appDescription
-} = require('./app/assets/scripts/config/production').default;
-
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
 // ---------------------------------------------------------------------------//
@@ -28,6 +23,8 @@ const baseurl = process.env.PUBLIC_URL || '';
 // Environment
 // Set the correct environment, which controls what happens in config.js
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+const { appTitle, appDescription } = require('./app/assets/scripts/config');
 
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
