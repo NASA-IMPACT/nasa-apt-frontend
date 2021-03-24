@@ -30,6 +30,7 @@ import DropdownMenu from '../../common/dropdown-menu';
 import { Link } from '../../../styles/clean/link';
 
 import { useAtbds } from '../../../context/atbds-list';
+import VersionsMenu from '../versions-menu';
 
 function Documents() {
   const { fetchAtbds, atbds } = useAtbds();
@@ -69,19 +70,7 @@ function Documents() {
             {atbds.status === 'succeeded' && atbds.data?.length && (
               <HubList>
                 {atbds.data.map((atbd) => {
-                  const atbdVersions = [...atbd.versions].reverse();
-                  const lastVersion = atbdVersions[0];
-
-                  const versionMenu = {
-                    id: 'versions',
-                    items: atbdVersions.map((v) => ({
-                      id: v.version,
-                      label: v.version,
-                      title: `View ${v.version} page`,
-                      as: Link,
-                      to: `/documents/${atbd.alias || atbd.id}/${v.version}`
-                    }))
-                  };
+                  const lastVersion = atbd.versions[atbd.versions.length - 1];
 
                   return (
                     <HubListItem key={atbd.id}>
@@ -101,11 +90,9 @@ function Documents() {
                             <HubEntryHeadNav role='navigation'>
                               <HubEntryBreadcrumbMenu>
                                 <li>
-                                  <DropdownMenu
-                                    menu={versionMenu}
-                                    triggerLabel={lastVersion.version}
-                                    withChevron
-                                    dropTitle='Atbd versions'
+                                  <VersionsMenu
+                                    atbdId={atbd.alias || atbd.id}
+                                    versions={atbd.versions}
                                   />
                                 </li>
                               </HubEntryBreadcrumbMenu>

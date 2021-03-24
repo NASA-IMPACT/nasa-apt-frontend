@@ -9,9 +9,10 @@ import {
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
-import { Link, NavLink } from '../../styles/clean/link';
+import { Link } from '../../styles/clean/link';
 import StatusPill from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
+import VersionsMenu from './versions-menu';
 
 export default function DocumentNavHeader(props) {
   const { title, atbdId, status, currentVersion, mode, versions } = props;
@@ -25,36 +26,19 @@ export default function DocumentNavHeader(props) {
           id: 'view',
           label: 'Viewing',
           title: `Switch to viewing mode`,
-          as: NavLink,
+          as: Link,
           to: `/documents/${atbdId}/${currentVersion}`
         },
         {
           id: 'edit',
           label: 'Editing',
           title: `Switch to editing mode`,
-          as: NavLink,
+          as: Link,
           to: `/documents/${atbdId}/${currentVersion}/edit`
         }
       ]
     }),
     [atbdId, currentVersion]
-  );
-
-  const atbdVersions = [...versions].reverse();
-
-  const versionMenu = useMemo(
-    () => ({
-      id: 'versions',
-      selectable: true,
-      items: atbdVersions.map((v) => ({
-        id: v.version,
-        label: v.version,
-        title: `View ${v.version} page`,
-        as: Link,
-        to: `/documents/${atbdId}/${v.version}`
-      }))
-    }),
-    [atbdId, atbdVersions]
   );
 
   const dropdownMenuTriggerProps = useMemo(
@@ -71,12 +55,11 @@ export default function DocumentNavHeader(props) {
         <InpageHeadNav role='navigation'>
           <BreadcrumbMenu>
             <li>
-              <DropdownMenu
-                menu={versionMenu}
-                activeItem={currentVersion}
-                triggerProps={dropdownMenuTriggerProps}
-                withChevron
-                dropTitle='Version'
+              <VersionsMenu
+                atbdId={atbdId}
+                versions={versions}
+                variation='achromic-plain'
+                currentVersion={currentVersion}
               />
             </li>
             <li>
