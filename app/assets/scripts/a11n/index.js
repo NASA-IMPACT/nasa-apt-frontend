@@ -6,7 +6,7 @@ import { ability, defineRulesFor } from './rules';
 // Context bound functions for CASL.
 // In the case of APT we only need one set of rules (Ability) and therefore we
 // can bound all the authorization functions to that Ability context.
-const AbilityContext = createContext();
+const AbilityContext = createContext(null);
 
 export const Can = createContextualCan(AbilityContext.Consumer);
 export const useContextualAbility = () => useAbility(AbilityContext);

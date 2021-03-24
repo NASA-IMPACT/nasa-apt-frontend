@@ -1,6 +1,7 @@
 import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
+import T from 'prop-types';
 import { Router, Route, Switch } from 'react-router-dom';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
@@ -103,3 +104,8 @@ function Composer(props) {
     children
   );
 }
+
+Composer.propTypes = {
+  components: T.array,
+  children: T.node
+};
