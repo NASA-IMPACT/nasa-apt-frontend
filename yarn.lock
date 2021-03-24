@@ -944,6 +944,14 @@
     "@devseed-ui/theme-provider" "^3.0.0"
     "@devseed-ui/typography" "1.0.0"
 
+"@devseed-ui/global-loading@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@devseed-ui/global-loading/-/global-loading-2.0.0.tgz#67373dd0be24393bbc683f8e1a67e6237b25f344"
+  integrity sha512-y+7+aoVEshZh+5QMi3n6Gi5CsOm047K5EwtnU1ppOq82/OIX39EisN5x8atADZAlr9FZggwltWmvB99ws5qjvg==
+  dependencies:
+    "@devseed-ui/collecticons" "2.0.0"
+    "@devseed-ui/theme-provider" "^3.0.0"
+
 "@devseed-ui/theme-provider@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/theme-provider/-/theme-provider-3.0.0.tgz#13b22818f5ab3dc11d99b82d21e11afbde3ff487"

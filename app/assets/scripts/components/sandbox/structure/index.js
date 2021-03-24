@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
-import Status from '../../common/status';
+import StatusPill from '../../common/status-pill';
 
 import { Link } from '../../../styles/clean/link';
 
@@ -67,7 +67,7 @@ function SandboxStructure() {
             </InpageSubtitle>
             <dt>Status</dt>
             <dd>
-              <Status status='draft' completeness={64} />
+              <StatusPill status='draft' completeness={56} />
             </dd>
             <dt>Discussion</dt>
             <dd>

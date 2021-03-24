@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 import { Router, Route, Switch } from 'react-router-dom';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
+import GlobalLoadingProvider from '@devseed-ui/global-loading';
 
 import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
@@ -12,6 +13,7 @@ import GlobalStyle from './styles/global';
 // Views
 import Home from './components/home';
 import Documents from './components/documents';
+import DocumentsView from './components/documents/single-view';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
@@ -47,12 +49,14 @@ function Root() {
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <CollecticonsGlobalStyle />
         <GlobalStyle />
+        <GlobalLoadingProvider />
         <AbilityProvider>
           <UserProvider>
             <AtbdsProvider>
               <Switch>
                 <Route exact path='/' component={Home} />
                 <Route exact path='/documents' component={Documents} />
+                <Route exact path='/documents/:id/:version' component={DocumentsView} />
                 <Route exact path='/about' component={About} />
                 <Route exact path='/signin' component={SignIn} />
                 <Route exact path='/authorize' component={Authorize} />
