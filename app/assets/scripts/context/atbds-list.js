@@ -27,8 +27,58 @@ export const AtbdsProvider = (props) => {
     useKey: true,
     requests: {
       fetchSingleAtbd: withRequestToken(token, ({ id, version }) => ({
-        url: `/atbds/${id}/versions/${version}`,
-        stateKey: `${id}/${version}`
+        stateKey: `${id}/${version}`,
+        // The __overrideData allows us to produce the data any way we like.
+        // Since this action needs to fetch data from 2 endpoints and combine it
+        // we can't use the conventional ways. The data returned is stored in
+        // the store.
+        __overrideData: async ({ axios, requestOptions }) => {
+          const [metaInfo, versionInfo] = await Promise.all([
+            axios({
+              ...requestOptions,
+              url: `/atbds/${id}`
+            }),
+            axios({
+              ...requestOptions,
+              url: `/atbds/${id}/versions/${version}`
+            })
+          ]);
+          // The responses of both endpoints are pretty similar. The first
+          // includes the meta information (no document) of all the versions,
+          // and the second includes the full document of the requested version.
+          // The whole ATBD has a structure like:
+
+          // interface ATBD {
+          //   id: Number
+          //   alias: String
+          //   created_by: String
+          //   created_at: Date
+          //   title: String
+          //   versions: [ATBDVersion]
+          // }
+
+          // interface ATBDVersion {
+          //   status: "Draft" | "Published"
+          //   published_by: String
+          //   published_at: Date
+          //   created_by: String
+          //   created_at: Date
+          //   major: Number
+          //   minor: Number
+          //   version: String
+          //   document: ATBDDocument
+          //   changelog: String
+          //   doi: String
+          // }
+
+          // We keep the response from the metaInfo, and append all the fields
+          // of the queried version.
+          return {
+            ...metaInfo.data,
+            // Despite being an array it only has 1 version, the one we queried.
+            ...versionInfo.data.versions[0]
+          };
+        }
       }))
     }
   });

@@ -5,19 +5,12 @@ import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../../common/app';
-import Status from '../../common/status-pill';
 
 import {
   Inpage,
   InpageHeader,
-  InpageHeadline,
-  InpageTitle,
-  InpageMeta,
-  InpageHeadNav,
-  BreadcrumbMenu,
   InpageActions,
-  InpageBody,
-  InpageSubtitle
+  InpageBody
 } from '../../../styles/inpage';
 
 import UhOh from '../../uhoh';
@@ -56,6 +49,7 @@ function DocumentView() {
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
+              status={atbd.data.status}
               currentVersion={version}
               versions={atbd.data.versions}
               mode='view'

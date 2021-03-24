@@ -14,7 +14,7 @@ import StatusPill from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 
 export default function DocumentNavHeader(props) {
-  const { title, atbdId, currentVersion, mode, versions } = props;
+  const { title, atbdId, status, currentVersion, mode, versions } = props;
 
   const documentModesMenu = useMemo(
     () => ({
@@ -96,7 +96,7 @@ export default function DocumentNavHeader(props) {
         <InpageSubtitle as='dd'>Documents</InpageSubtitle>
         <dt>Status</dt>
         <dd>
-          <StatusPill status='draft' completeness={56} />
+          <StatusPill status={status} completeness={80} />
         </dd>
       </InpageMeta>
     </>
@@ -105,6 +105,7 @@ export default function DocumentNavHeader(props) {
 
 DocumentNavHeader.propTypes = {
   title: T.string,
+  status: T.string,
   atbdId: T.string,
   currentVersion: T.string,
   versions: T.array,

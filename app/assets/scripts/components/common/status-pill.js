@@ -35,16 +35,14 @@ const StatusSelf = styled.strong`
   }
 `;
 
+const isDraft = (status) => status.toLowerCase() === 'draft';
+
 function StatusPill(props) {
   const { status, completeness } = props;
 
   return (
-    <StatusSelf value={completeness}>
-      <span>
-        {status.toLowerCase() === 'draft'
-          ? `Draft: ${completeness}%`
-          : 'Published'}
-      </span>
+    <StatusSelf value={isDraft(status) ? completeness : 100}>
+      <span>{isDraft(status) ? `Draft: ${completeness}%` : 'Published'}</span>
     </StatusSelf>
   );
 }
