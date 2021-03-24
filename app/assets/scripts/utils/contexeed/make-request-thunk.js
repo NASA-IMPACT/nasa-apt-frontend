@@ -20,6 +20,12 @@ import { axiosAPI } from '../axios';
  *                response should be cached. When defined the function will
  *                resolve immediately with dispatching the receive action. The
  *                request action is not dispatched if there's cached data.
+ * @param {func} opts.__overrideData By default we make a request to the api
+ * with the given options and then run the response through the mutator.
+ * Sometimes, however, it may be needed to have complete control over how the
+ * request is made. The __overrideData escape hatch allows us to produce the
+ * data anyway we need. The returned data will be sent to the receiveFn.
+ * Throwing an error causes the request to fail.
  *
  * @example
  * function fetchSearchResults () {
@@ -64,7 +70,8 @@ export function makeRequestThunk(opts) {
     receiveFn,
     __devDelay,
     stateKey,
-    mutator
+    mutator,
+    __overrideData
   } = opts;
 
   const axiosRequest = {
@@ -73,7 +80,26 @@ export function makeRequestThunk(opts) {
   };
 
   // Default mutator fn is to return the body.
-  const _mutator = mutator || ((response) => response.data);
+  const _mutator =
+    typeof mutator === 'function' ? mutator : async (response) => response.data;
+
+  // By default we make a request to the api with the given options and then run
+  // the response through the mutator. Sometimes, however, it may be needed to
+  // have complete control over how the request is made. The __overrideData
+  // escape hatch allows us to produce the data anyway we need. The returned
+  // data will be sent to the receiveFn. Throwing an error causes the request to
+  // fail.
+  const requestData =
+    typeof __overrideData === 'function'
+      ? async () =>
+          __overrideData({
+            axios: axiosAPI,
+            requestOptions: axiosRequest
+          })
+      : async () => {
+          const response = await axiosAPI(axiosRequest);
+          return _mutator(response);
+        };
 
   return async function (dispatch, state) {
     // Check if the cache is enabled.
@@ -89,8 +115,7 @@ export function makeRequestThunk(opts) {
 
     dispatch(requestFn());
     try {
-      const response = await axiosAPI(axiosRequest);
-      const content = _mutator(response);
+      const content = await requestData();
       if (__devDelay) await delay(__devDelay);
       return dispatch(receiveFn(content));
     } catch (error) {
