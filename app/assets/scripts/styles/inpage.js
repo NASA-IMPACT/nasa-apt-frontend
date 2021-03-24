@@ -136,12 +136,6 @@ export const InpageActions = styled.div`
   }
 `;
 
-export const InpageActionsBlock = styled.div`
-  margin-left: ${glsp(0.5)};
-  padding-left: ${glsp(0.5)};
-  box-shadow: inset 1px 0 0 0 ${rgba(themeVal('color.surface'), 0.16)};
-`;
-
 export const InpageBody = styled.div`
   background: transparent;
 `;

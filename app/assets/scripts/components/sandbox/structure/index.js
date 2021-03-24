@@ -18,7 +18,6 @@ import {
   InpageHeadNav,
   BreadcrumbMenu,
   InpageActions,
-  InpageActionsBlock,
   InpageBody,
   InpageSubtitle
 } from '../../../styles/inpage';
