@@ -21,10 +21,20 @@ export function parseBibtexFile(inputFile) {
 
     reader.onload = () => {
       try {
-        const { data } = new Cite(reader.result, { style: 'bibtex' });
-        resolve(data);
+        // Read from Bibtex format
+        const input = new Cite(reader.result, { style: 'bibtex' });
+
+        // Output as Bibtext JSON (default is CSL)
+        const items = input.get({
+          format: 'real',
+          type: 'json',
+          style: 'bibtex'
+        });
+
+        // Return properties
+        resolve(items);
       } catch (error) {
-        reject(new Error('Error parsing Bibtext file.'));
+        reject(new Error('Error parsing Bibtex file.'));
       }
     };
     reader.readAsText(inputFile);
@@ -32,67 +42,51 @@ export function parseBibtexFile(inputFile) {
 }
 
 export function bibtexToRef(input) {
-  // Property map from bibtex to ref
-  const propertyMap = {
-    address: {
-      key: 'publication_place'
+  const {
+    properties: {
+      address,
+      author,
+      doi,
+      edition,
+      isbn,
+      note,
+      number,
+      pages,
+      publisher,
+      report_number,
+      series,
+      title,
+      url,
+      volume,
+      year
     },
-    author: {
-      key: 'authors',
-      parse: data => data.map(author => `${author.given} ${author.family}`).join(', ')
-    },
-    doi: {
-      id: 'doi'
-    },
-    edition: {
-      key: 'edition'
-    },
-    isbn: {
-      key: 'isbn'
-    },
-    issue: {
-      key: 'issue'
-    },
-    pages: {
-      key: 'pages'
-    },
-    publisher: {
-      key: 'publisher'
-    },
-    notes: {
-      key: 'other_reference_details'
-    },
-    online_resource: {
-      key: 'online_resource'
-    },
-    report_number: {
-      key: 'report_number'
-    },
-    series: {
-      key: 'series'
-    },
-    title: {
-      key: 'title'
-    },
-    volume: {
-      key: 'volume'
-    },
-    year: {
-      key: 'year',
-      parse: parseInt
-    }
-  };
+    type
+  } = input;
+  const ref = {};
 
-  // Parse input object, adding properties from the map using custom parser
-  // if available.
-  return Object.keys(propertyMap).reduce((acc, bibtexKey) => {
-    const value = input[bibtexKey];
-    if (value) {
-      const { key, parse } = propertyMap[bibtexKey];
-      acc[key] = parse ? parse(value) : value;
+  if (typeof address !== 'undefined') ref.publication_place = address;
+  if (typeof author !== 'undefined') ref.authors = author;
+  if (typeof doi !== 'undefined') ref.doi = doi;
+  if (typeof edition !== 'undefined') ref.edition = edition;
+  if (typeof isbn !== 'undefined') ref.isbn = isbn;
+  if (typeof note !== 'undefined') ref.other_reference_details = note;
+  if (typeof number !== 'undefined') {
+    if (type === 'techreport') {
+      ref.report_number = number;
+    } else {
+      ref.issue = number;
     }
-    return acc;
-  }, {});
+  }
+  if (typeof pages !== 'undefined') ref.pages = pages;
+  if (typeof publisher !== 'undefined') ref.publisher = publisher;
+  if (typeof report_number !== 'undefined') ref.report_number = report_number;
+  if (typeof series !== 'undefined') ref.series = series;
+  if (typeof title !== 'undefined') ref.title = title;
+  if (typeof url !== 'undefined') ref.online_resource = url;
+  if (typeof volume !== 'undefined') ref.volume = volume;
+  if (typeof year !== 'undefined') ref.year = year;
+
+  return ref;
 }
 
 export async function bibtexItemsToRefs(bibtexItems) {
