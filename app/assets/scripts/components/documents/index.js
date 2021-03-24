@@ -111,15 +111,17 @@ function Documents() {
                               </HubEntryBreadcrumbMenu>
                             </HubEntryHeadNav>
                           </HubEntryHeadline>
-                          <HubEntryMeta>
-                            <dt>Status</dt>
-                            <dd>
-                              <StatusPill
-                                status={lastVersion.status}
-                                completeness={80}
-                              />
-                            </dd>
-                          </HubEntryMeta>
+                          {lastVersion.status === 'Draft' && (
+                            <HubEntryMeta>
+                              <dt>Status</dt>
+                              <dd>
+                                <StatusPill
+                                  status={lastVersion.status}
+                                  completeness={80}
+                                />
+                              </dd>
+                            </HubEntryMeta>
+                          )}
                           <HubEntryDetails>
                             <dt>By</dt>
                             <dd>George J. Huffman et al.</dd>
