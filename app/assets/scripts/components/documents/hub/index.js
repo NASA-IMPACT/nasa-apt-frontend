@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
-import App from '../common/app';
+import App from '../../common/app';
 import {
   Inpage,
   InpageHeader,
@@ -10,7 +10,7 @@ import {
   InpageTitle,
   InpageActions,
   InpageBody
-} from '../../styles/inpage';
+} from '../../../styles/inpage';
 import {
   HubList,
   HubListItem,
@@ -23,13 +23,13 @@ import {
   HubEntryHeadNav,
   HubEntryBreadcrumbMenu,
   HubEntryActions
-} from '../../styles/hub';
-import Constrainer from '../../styles/constrainer';
-import StatusPill from '../common/status-pill';
-import DropdownMenu from '../common/dropdown-menu';
-import { Link } from '../../styles/clean/link';
+} from '../../../styles/hub';
+import Constrainer from '../../../styles/constrainer';
+import StatusPill from '../../common/status-pill';
+import DropdownMenu from '../../common/dropdown-menu';
+import { Link } from '../../../styles/clean/link';
 
-import { useAtbds } from '../../context/atbds-list';
+import { useAtbds } from '../../../context/atbds-list';
 
 function Documents() {
   const { fetchAtbds, atbds } = useAtbds();

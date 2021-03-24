@@ -12,7 +12,7 @@ import GlobalStyle from './styles/global';
 
 // Views
 import Home from './components/home';
-import Documents from './components/documents';
+import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import About from './components/about';
 import Sandbox from './components/sandbox';
