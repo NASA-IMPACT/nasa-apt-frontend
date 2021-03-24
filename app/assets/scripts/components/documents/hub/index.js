@@ -38,6 +38,12 @@ function Documents() {
     fetchAtbds();
   }, []);
 
+  if (atbds.error) {
+    // This is a serious server error. By throwing it will be caught by the
+    // error boundary. There's no recovery from this error.
+    throw atbds.error;
+  }
+
   return (
     <App pageTitle='Documents'>
       {atbds.status === 'loading' && <GlobalLoading />}

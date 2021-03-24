@@ -36,8 +36,14 @@ function DocumentView() {
     fetchSingleAtbd();
   }, [id, version]);
 
-  if (atbd.error?.response.status === 404) {
+  const errCode = atbd.error?.response.status;
+
+  if (errCode === 400 || errCode === 404) {
     return <UhOh />;
+  } else if (errCode) {
+    // This is a serious server error. By throwing it will be caught by the
+    // error boundary. There's no recovery from this error.
+    throw atbd.error;
   }
 
   return (

@@ -120,7 +120,7 @@ export function makeRequestThunk(opts) {
       return dispatch(receiveFn(content));
     } catch (error) {
       if (__devDelay) await delay(__devDelay);
-      console.log('error', url, error.message); // eslint-disable-line
+      console.log('error', error.config?.url, error.message); // eslint-disable-line
       return dispatch(receiveFn(null, error));
     }
   };
