@@ -19,10 +19,6 @@ import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import About from './components/about';
 import Sandbox from './components/sandbox';
-import SandboxEditor from './components/sandbox/editor';
-import SandboxForms from './components/sandbox/forms';
-import SandboxStructure from './components/sandbox/structure';
-import SandboxInteractive from './components/sandbox/interactive';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
 import Authorize from './a11n/authorize';
@@ -73,15 +69,7 @@ function Root() {
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
-            <Route exact path='/sandbox' component={Sandbox} />
-            <Route exact path='/sandbox/editor' component={SandboxEditor} />
-            <Route exact path='/sandbox/forms' component={SandboxForms} />
-            <Route exact path='/sandbox/interactive' component={SandboxInteractive} />
-            <Route
-              exact
-              path='/sandbox/structure'
-              component={SandboxStructure}
-            />
+            <Route path='/sandbox' component={Sandbox} />
             <Route path='*' component={UhOh} />
           </Switch>
         </Composer>
