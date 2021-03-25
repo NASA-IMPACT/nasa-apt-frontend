@@ -14,8 +14,11 @@ import StatusPill from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
+import { useUser } from '../../context/user';
+
 export default function DocumentNavHeader(props) {
   const { title, atbdId, status, currentVersion, mode, versions } = props;
+  const { isLogged } = useUser();
 
   const documentModesMenu = useMemo(
     () => ({
@@ -62,15 +65,17 @@ export default function DocumentNavHeader(props) {
                 currentVersion={currentVersion}
               />
             </li>
-            <li>
-              <DropdownMenu
-                menu={documentModesMenu}
-                activeItem={mode}
-                triggerProps={dropdownMenuTriggerProps}
-                withChevron
-                dropTitle='Mode'
-              />
-            </li>
+            {isLogged && (
+              <li>
+                <DropdownMenu
+                  menu={documentModesMenu}
+                  activeItem={mode}
+                  triggerProps={dropdownMenuTriggerProps}
+                  withChevron
+                  dropTitle='Mode'
+                />
+              </li>
+            )}
           </BreadcrumbMenu>
         </InpageHeadNav>
       </InpageHeadline>
