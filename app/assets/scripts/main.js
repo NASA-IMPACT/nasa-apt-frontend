@@ -11,6 +11,7 @@ import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
 import GlobalStyle from './styles/global';
 import ErrorBoundary from './components/uhoh/fatal-error';
+import { ToastsContainer } from './components/common/toasts';
 
 // Views
 import Home from './components/home';
@@ -18,9 +19,6 @@ import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import About from './components/about';
 import Sandbox from './components/sandbox';
-import SandboxEditor from './components/sandbox/editor';
-import SandboxForms from './components/sandbox/forms';
-import SandboxStructure from './components/sandbox/structure';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
 import Authorize from './a11n/authorize';
@@ -71,17 +69,11 @@ function Root() {
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
-            <Route exact path='/sandbox' component={Sandbox} />
-            <Route exact path='/sandbox/editor' component={SandboxEditor} />
-            <Route exact path='/sandbox/forms' component={SandboxForms} />
-            <Route
-              exact
-              path='/sandbox/structure'
-              component={SandboxStructure}
-            />
+            <Route path='/sandbox' component={Sandbox} />
             <Route path='*' component={UhOh} />
           </Switch>
         </Composer>
+        <ToastsContainer />
       </DevseedUiThemeProvider>
     </Router>
   );

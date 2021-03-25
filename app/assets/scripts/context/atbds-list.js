@@ -22,7 +22,11 @@ export const AtbdsProvider = (props) => {
     }
   });
 
-  const { getState: getSingleAtbd, fetchSingleAtbd } = useContexeedApi({
+  const {
+    getState: getSingleAtbd,
+    fetchSingleAtbd,
+    createAtbd
+  } = useContexeedApi({
     name: 'atbdSingle',
     useKey: true,
     requests: {
@@ -79,6 +83,19 @@ export const AtbdsProvider = (props) => {
             ...versionInfo.data.versions[0]
           };
         }
+      })),
+      createAtbd: withRequestToken(token, () => ({
+        // Holder for the creation of a new ATBD since we don't have id yet.
+        stateKey: 'new',
+        url: '/atbds',
+        options: {
+          method: 'post',
+          data: {
+            // New ATBDS are created as Untitled. The user can change the title
+            // at a later stage.
+            title: 'Untitled Document'
+          }
+        }
       }))
     }
   });
@@ -87,7 +104,8 @@ export const AtbdsProvider = (props) => {
     getAtbds,
     fetchAtbds,
     getSingleAtbd,
-    fetchSingleAtbd
+    fetchSingleAtbd,
+    createAtbd
   };
 
   return (
@@ -124,6 +142,6 @@ export const useSingleAtbd = ({ id, version }) => {
 };
 
 export const useAtbds = () => {
-  const { getAtbds, fetchAtbds } = useCheckContext('useAtbds');
-  return { atbds: getAtbds(), fetchAtbds };
+  const { getAtbds, fetchAtbds, createAtbd } = useCheckContext('useAtbds');
+  return { atbds: getAtbds(), fetchAtbds, createAtbd };
 };

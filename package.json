@@ -131,6 +131,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-tippy": "^1.4.0",
+    "react-toastify": "^7.0.3",
     "slate": "^0.59.0",
     "slate-history": "^0.59.0",
     "slate-hyperscript": "^0.59.0",
