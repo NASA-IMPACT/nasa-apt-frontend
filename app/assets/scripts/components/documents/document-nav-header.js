@@ -89,7 +89,7 @@ export default function DocumentNavHeader(props) {
 DocumentNavHeader.propTypes = {
   title: T.string,
   status: T.string,
-  atbdId: T.string,
+  atbdId: T.oneOfType([T.string, T.number]),
   currentVersion: T.string,
   versions: T.array,
   mode: T.string

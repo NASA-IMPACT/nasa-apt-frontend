@@ -39,7 +39,7 @@ export default function VersionsMenu(props) {
 }
 
 VersionsMenu.propTypes = {
-  atbdId: T.string,
+  atbdId: T.oneOfType([T.string, T.number]),
   versions: T.array,
   variation: T.string,
   currentVersion: T.string
