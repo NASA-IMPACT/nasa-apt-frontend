@@ -11,6 +11,7 @@ import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
 import GlobalStyle from './styles/global';
 import ErrorBoundary from './components/uhoh/fatal-error';
+import { ToastsContainer } from './components/common/toasts';
 
 // Views
 import Home from './components/home';
@@ -21,6 +22,7 @@ import Sandbox from './components/sandbox';
 import SandboxEditor from './components/sandbox/editor';
 import SandboxForms from './components/sandbox/forms';
 import SandboxStructure from './components/sandbox/structure';
+import SandboxInteractive from './components/sandbox/interactive';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
 import Authorize from './a11n/authorize';
@@ -74,6 +76,7 @@ function Root() {
             <Route exact path='/sandbox' component={Sandbox} />
             <Route exact path='/sandbox/editor' component={SandboxEditor} />
             <Route exact path='/sandbox/forms' component={SandboxForms} />
+            <Route exact path='/sandbox/interactive' component={SandboxInteractive} />
             <Route
               exact
               path='/sandbox/structure'
@@ -82,6 +85,7 @@ function Root() {
             <Route path='*' component={UhOh} />
           </Switch>
         </Composer>
+        <ToastsContainer />
       </DevseedUiThemeProvider>
     </Router>
   );
