@@ -35,7 +35,11 @@ export default function VersionsMenu(props) {
     };
   }, [atbdId, versions, variation, currentVersion]);
 
-  return <DropdownMenu {...dropProps} withChevron dropTitle='Version' />;
+  return versions.length === 1 ? (
+    <strong>{versions[0].version}</strong>
+  ) : (
+    <DropdownMenu {...dropProps} withChevron dropTitle='Version' />
+  );
 }
 
 VersionsMenu.propTypes = {
