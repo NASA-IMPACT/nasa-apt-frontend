@@ -5,7 +5,6 @@ import {
   media,
   rgba,
   themeVal,
-  truncated,
   visuallyHidden
 } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
@@ -75,17 +74,6 @@ export const BreadcrumbMenu = styled.ul`
   }
 `;
 
-export const InpageActions = styled.div`
-  display: inline-grid;
-  grid-gap: ${glsp(0.5)};
-  align-items: center;
-  margin-left: auto;
-
-  > * {
-    grid-row: 1;
-  }
-`;
-
 export const InpageMeta = styled.dl`
   grid-row: 1;
   grid-column: 1 / -1;
@@ -110,10 +98,19 @@ export const InpageMeta = styled.dl`
 `;
 
 export const InpageTitle = styled.h1`
-  ${truncated()}
   font-size: 1.25rem;
   line-height: 2rem;
   margin: 0;
+  max-width: 24rem;
+  overflow: hidden;
+  white-space: nowrap;
+
+  /* Apply mask conditionally: container max-width (24rem) - mask size (3rem) */
+  mask-image: linear-gradient(
+    to right,
+    black calc(100% - ${glsp(3)}),
+    transparent 100%
+  );
 `;
 
 export const InpageSubtitle = styled.p`
@@ -121,6 +118,22 @@ export const InpageSubtitle = styled.p`
   font-size: 0.75rem;
   line-height: 1.25rem;
   margin: 0;
+
+  a {
+    display: block;
+    color: inherit;
+  }
+`;
+
+export const InpageActions = styled.div`
+  display: inline-grid;
+  grid-gap: ${glsp(0.5)};
+  align-items: center;
+  margin-left: auto;
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
 export const InpageBody = styled.div`

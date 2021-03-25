@@ -4,12 +4,15 @@ import styled from 'styled-components';
 import App from '../../common/app';
 import FullEditor from '../../slate/editor';
 
+import { Link } from '../../../styles/clean/link';
+
 import {
   Inpage,
   InpageHeader,
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
+  InpageMeta,
   InpageBody
 } from '../../../styles/inpage';
 
@@ -31,9 +34,16 @@ function SandboxEditor() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageSubtitle>Sandbox</InpageSubtitle>
             <InpageTitle>Editor</InpageTitle>
           </InpageHeadline>
+          <InpageMeta>
+            <dt>Under</dt>
+            <InpageSubtitle as='dd'>
+              <Link to='/sandbox' title='Visit Sandbox hub'>
+                Sandbox
+              </Link>
+            </InpageSubtitle>
+          </InpageMeta>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>

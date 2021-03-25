@@ -48,6 +48,7 @@ const EarthAnim = styled.div`
   width: 300px;
   height: 300px;
   background: url(${earthImage});
+  overflow: hidden;
 
   > div {
     width: 300px;

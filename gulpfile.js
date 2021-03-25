@@ -53,7 +53,13 @@ function serve() {
         '/node_modules': './node_modules'
       },
       ghostMode: false,
-      middleware: [historyApiFallback()]
+      middleware: [
+        historyApiFallback({
+          // Having the version in the url was being treated as a static file.
+          // Add a rewrite rule to account for that.
+          rewrites: [{ from: /.+\/v[0-9]+\.[0-9]+(\/.+)?/, to: '/index.html' }]
+        })
+      ]
     },
     rewriteRules: [
       {

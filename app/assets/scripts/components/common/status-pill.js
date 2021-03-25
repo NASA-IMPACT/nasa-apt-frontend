@@ -11,9 +11,10 @@ const StatusSelf = styled.strong`
   width: 6rem;
   font-size: 0.75rem;
   font-weight: ${themeVal('type.base.bold')};
+  text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
   text-align: center;
-  background-color: ${rgba(themeVal('color.base'), 0.32)};
+  background-color: ${rgba(themeVal('color.base'), 0.48)};
   border-radius: ${themeVal('shape.ellipsoid')};
   overflow: hidden;
 
@@ -26,7 +27,7 @@ const StatusSelf = styled.strong`
     width: ${({ value }) => `${value}%`};
     content: '';
     pointer-events: none;
-    background-color: ${rgba(themeVal('color.base'), 0.64)};
+    background-color: ${rgba(themeVal('color.base'), 0.32)};
   }
 
   > * {
@@ -35,21 +36,21 @@ const StatusSelf = styled.strong`
   }
 `;
 
-function Status(props) {
+const isDraft = (status) => status.toLowerCase() === 'draft';
+
+function StatusPill(props) {
   const { status, completeness } = props;
 
   return (
-    <StatusSelf value={completeness}>
-      <span>
-        {status === 'draft' ? `Draft: ${completeness}%` : 'Published'}
-      </span>
+    <StatusSelf value={isDraft(status) ? completeness : 100}>
+      <span>{isDraft(status) ? `Draft: ${completeness}%` : 'Published'}</span>
     </StatusSelf>
   );
 }
 
-Status.propTypes = {
+StatusPill.propTypes = {
   status: T.string,
   completeness: T.number
 };
 
-export default Status;
+export default StatusPill;
