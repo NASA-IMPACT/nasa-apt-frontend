@@ -25,6 +25,46 @@ CloseButton.propTypes = {
 
 export default toast;
 
+/**
+ * Creates a toast system so display in sequence.
+ * Starts with a default toast, which is non dismissible and then shows an error
+ * or success one.
+ *
+ * We're using an helper for this because we have to undo all the "blocking"
+ * when updating the toast.
+ *
+ * @param {string} msg Initial message
+ */
+export const createProcessToast = (msg) => {
+  const toastId = toast(msg, {
+    closeOnClick: false,
+    closeButton: false,
+    autoClose: false,
+    draggable: false
+  });
+
+  return {
+    success: (successMsg) =>
+      toast.update(toastId, {
+        type: toast.TYPE.SUCCESS,
+        render: successMsg,
+        closeOnClick: true,
+        closeButton: true,
+        autoClose: 3000,
+        draggable: true
+      }),
+    error: (errorMsg) =>
+      toast.update(toastId, {
+        type: toast.TYPE.ERROR,
+        render: errorMsg,
+        closeOnClick: true,
+        closeButton: true,
+        autoClose: 5000,
+        draggable: true
+      })
+  };
+};
+
 export const ToastsContainer = styled(ToastContainer).attrs({
   position: toast.POSITION.BOTTOM_RIGHT,
   closeButton: CloseButton

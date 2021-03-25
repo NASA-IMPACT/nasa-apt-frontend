@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -27,12 +28,15 @@ import {
 import Constrainer from '../../../styles/constrainer';
 import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
-
-import { useAtbds } from '../../../context/atbds-list';
 import VersionsMenu from '../versions-menu';
 
+import { useAtbds } from '../../../context/atbds-list';
+import { atbdView } from '../../../utils/url-creator';
+import { createProcessToast } from '../../common/toasts';
+
 function Documents() {
-  const { fetchAtbds, atbds } = useAtbds();
+  const { fetchAtbds, createAtbd, atbds } = useAtbds();
+  const history = useHistory();
 
   useEffect(() => {
     fetchAtbds();
@@ -44,6 +48,18 @@ function Documents() {
     throw atbds.error;
   }
 
+  const onCreateClick = async () => {
+    const processToast = createProcessToast('Creating new ATBD');
+    const result = await createAtbd();
+
+    if (result.error) {
+      processToast.error(`An error occurred: ${result.error.message}`);
+    } else {
+      processToast.success('ATBD successfully created');
+      history.push(atbdView(result.data));
+    }
+  };
+
   return (
     <App pageTitle='Documents'>
       {atbds.status === 'loading' && <GlobalLoading />}
@@ -53,7 +69,11 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <Button to='/' variation='achromic-plain' title='Create new'>
+            <Button
+              variation='achromic-plain'
+              title='Create new ATBD'
+              onClick={onCreateClick}
+            >
               Create new
             </Button>
           </InpageActions>
