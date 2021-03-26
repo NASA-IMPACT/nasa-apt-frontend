@@ -1,11 +1,17 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import {
+  glsp,
+  media,
+  themeVal,
+  visuallyHidden
+} from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import config from '../../config';
+import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
 import { useHistory } from 'react-router';
@@ -20,11 +26,11 @@ const PageHeaderSelf = styled.header`
   background-color: ${themeVal('color.primary')};
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
-  padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
+  padding: ${glsp(0.5, themeVal('layout.gap.xsmall'))};
 
   ${media.mediumUp`
     grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-    padding: ${glsp(1, themeVal('layout.gap.medium'))};
+    padding: ${glsp(0.75, themeVal('layout.gap.medium'))};
   `}
 `;
 
@@ -34,33 +40,72 @@ const PageHeadline = styled.div`
 `;
 
 const PageTitle = styled.h1`
+  margin: 0;
+`;
+
+const PageTitleLink = styled(Link)`
+  display: grid;
+  align-items: center;
+  grid-gap: ${glsp(0, 0.5)};
   font-size: 1.5rem;
   line-height: 1;
-  margin: 0;
-  font-weight: ${themeVal('type.heading.light')};
 
-  a {
+  &,
+  &:visited {
     color: inherit;
+  }
+
+  #nasa-logo-neg-mono {
+    opacity: 1;
+    transition: opacity 0.48s ease 0s;
+  }
+
+  #nasa-logo-pos {
+    transform: translate(0, -100%);
+    opacity: 0;
+    transition: opacity 0.48s ease 0s;
+  }
+
+  &:hover {
+    opacity: 1;
+
+    #nasa-logo-neg-mono {
+      opacity: 0;
+    }
+
+    #nasa-logo-pos {
+      opacity: 1;
+    }
+  }
+
+  svg {
+    grid-row: 1 / span 2;
+    width: auto;
+    height: 2.5rem;
+    transform: scale(1.125);
+  }
+
+  sup {
+    grid-row: 1;
     display: block;
-    background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo.png');
-    background-repeat: no-repeat;
-    padding: 1.5rem 0 0.25rem 4.5rem;
-    background-size: 215px 50px;
+    top: inherit;
+    font-size: 0.875rem;
+    line-height: 1rem;
+    font-weight: ${themeVal('type.base.extrabold')};
+    text-transform: uppercase;
+  }
 
-    &:hover {
-      background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_hover.png');
-    }
+  span {
+    ${visuallyHidden};
+  }
 
-    @media only screen and (-webkit-min-device-pixel-ratio: 1.3),
-      only screen and (-o-min-device-pixel-ratio: 1.3 / 1),
-      only screen and (min-resolution: 125dpi),
-      only screen and (min-resolution: 1.3dppx) {
-      background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_2x.png');
-
-      &:hover {
-        background-image: url('https://cdn.earthdata.nasa.gov/eui/latest/docs/assets/ed-logos/app-logo_hover_2x.png');
-      }
-    }
+  strong {
+    grid-row: 2;
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    font-weight: ${themeVal('type.base.light')};
+    letter-spacing: -0.025em;
   }
 `;
 
@@ -98,9 +143,13 @@ function PageHeader() {
     <PageHeaderSelf role='banner'>
       <PageHeadline>
         <PageTitle>
-          <Link to='/' title='Visit the welcome page'>
-            {appTitle}
-          </Link>
+          <PageTitleLink to='/' title='Visit the welcome page'>
+            <NasaLogo />
+            <sup>
+              <span>NASA</span> Earthdata<span>: </span>
+            </sup>
+            <strong>{appTitle}</strong>
+          </PageTitleLink>
         </PageTitle>
       </PageHeadline>
       <PageNav role='navigation'>
