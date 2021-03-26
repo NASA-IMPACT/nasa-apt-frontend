@@ -14,32 +14,28 @@ import {
 import Constrainer from '../../styles/constrainer';
 import Prose from '../../styles/typography/prose';
 
-const InpageBodyScroll = styled(InpageBody)`
+const HomeInpageHeader = styled(InpageHeader)`
+  max-height: 0;
   padding: 0;
-  overflow: auto;
-
-  ${Constrainer} {
-    padding-top: 3rem;
-    padding-bottom: 30rem;
-  }
+  overflow: hidden;
 `;
 
 function Home() {
   return (
     <App pageTitle='Welcome'>
       <Inpage>
-        <InpageHeader>
+        <HomeInpageHeader>
           <InpageHeadline>
             <InpageTitle>Welcome</InpageTitle>
           </InpageHeadline>
-        </InpageHeader>
-        <InpageBodyScroll>
+        </HomeInpageHeader>
+        <InpageBody>
           <Constrainer>
             <Prose>
               <p>Hello world!</p>
             </Prose>
           </Constrainer>
-        </InpageBodyScroll>
+        </InpageBody>
       </Inpage>
     </App>
   );
