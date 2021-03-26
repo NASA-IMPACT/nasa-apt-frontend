@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
+import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
 
@@ -18,6 +19,7 @@ import StepsMenu from './steps-menu';
 
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
+import Tip from '../../common/tooltip';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -52,35 +54,51 @@ function DocumentEdit() {
     return <UhOh />;
   }
 
+  // Explanation of step component structure.
+  // To facilitate form management each step has its own formik instance and
+  // manages the step specific data. This could be setup something like:
+  // App
+  //   Inpage
+  //     InpageHeader
+  //     InpageBody
+  //       Formik
+  //       -- Step form
+  //
+  // However we have a global save button that is in the header. Because of this
+  // the formik instance must wrap the whole inpage or we don't have access to
+  // the formContext for the save button.
+  // This can be solved having each step component render Formik, the inpage
+  // header and the step form. Instead of moving the InpageHeader to a separate
+  // component and include it on every component, it gets passed as a render
+  // prop.
+
   return (
     <App pageTitle='Document Edit'>
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
-        <Inpage>
-          <InpageHeader>
-            <DocumentNavHeader
-              atbdId={id}
-              title={atbd.data.title}
-              status={atbd.data.status}
-              currentVersion={version}
-              versions={atbd.data.versions}
-              mode='edit'
-            />
-            <InpageActions>
-              <StepsMenu
+        <StepComponent
+          atbd={atbd.data}
+          renderInpageHeader={() => (
+            <InpageHeader>
+              <DocumentNavHeader
                 atbdId={id}
+                title={atbd.data.title}
+                status={atbd.data.status}
                 currentVersion={version}
-                activeStep={step}
+                versions={atbd.data.versions}
+                mode='edit'
               />
-              <SaveButton />
-            </InpageActions>
-          </InpageHeader>
-          <InpageBodyScroll>
-            <Constrainer>
-              <StepComponent />
-            </Constrainer>
-          </InpageBodyScroll>
-        </Inpage>
+              <InpageActions>
+                <StepsMenu
+                  atbdId={id}
+                  currentVersion={version}
+                  activeStep={step}
+                />
+                <SaveButton />
+              </InpageActions>
+            </InpageHeader>
+          )}
+        />
       )}
     </App>
   );
@@ -90,9 +108,18 @@ export default DocumentEdit;
 
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
+  const formik = useFormikContext();
+  console.log('🚀 ~ file: index.js ~ line 110 ~ SaveButton ~ formik', formik);
+
   return (
-    <Button variation='primary-raised-light' title='Save current changes'>
-      Save
-    </Button>
+    <Tip
+      position='top-end'
+      title='There are unsaved changes'
+      open={formik.dirty}
+    >
+      <Button variation='primary-raised-light' title='Save current changes'>
+        Save
+      </Button>
+    </Tip>
   );
 };

@@ -6,11 +6,13 @@ import {
   FormGroupBody,
   FormLabel,
   FormInput,
-  FormHelper
+  FormHelper,
+  FormHelperMessage
 } from '@devseed-ui/form';
 import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
 
 import Tip from '../tooltip';
+import { Field } from 'formik';
 
 /**
  * From group input structure.
@@ -23,19 +25,24 @@ import Tip from '../tooltip';
  * @prop {string} inputVariation Styled input variation option
  * @prop {function} onChange On change event handler
  * @prop {string} placeholder Input placeholder value.
+ * @prop {string} description Field description shown in a tooltip
+ * @prop {node} helper Helper message shown below input.
  */
-export default function InputText(props) {
+export function InputText(props) {
   const {
     id,
-    name,
     label,
-    value,
     inputSize,
     inputVariation,
-    placeholder,
-    onChange,
     description,
-    helper
+    helper,
+    // All other props are passed directly to the input
+    // name,
+    // value,
+    // placeholder,
+    // onChange,
+    // onBlur
+    ...inputProps
   } = props;
 
   return (
@@ -56,12 +63,9 @@ export default function InputText(props) {
         <FormInput
           type='text'
           variation={inputVariation}
-          name={name}
           id={id}
           size={inputSize}
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
+          {...inputProps}
         />
         {helper && <FormHelper>{helper}</FormHelper>}
       </FormGroupBody>
@@ -79,5 +83,46 @@ InputText.propTypes = {
   placeholder: T.oneOfType([T.string, T.number]),
   onChange: T.func,
   description: T.string,
+  helper: T.node
+};
+
+/**
+ * InputText component for usage with Formik
+ *
+ * @prop {string} id Input field id
+ * @prop {string} name Input field name
+ * @prop {string} label Label for the input
+ * @prop {mixed} value Input value
+ * @prop {string} inputSize Styled input size option
+ * @prop {string} inputVariation Styled input variation option
+ * @prop {function} onChange On change event handler
+ * @prop {string} placeholder Input placeholder value
+ * @prop {string} description Field description shown in a tooltip
+ * @prop {node} helper Helper message shown below input.
+ */
+export function FormikInputText({ helper, ...props }) {
+  return (
+    <Field {...props}>
+      {({ field, meta }) => {
+        return (
+          <InputText
+            {...props}
+            {...field}
+            invalid={!!meta.touched && !!meta.error}
+            helper={
+              meta.touched && meta.error ? (
+                <FormHelperMessage invalid>{meta.error}</FormHelperMessage>
+              ) : (
+                helper
+              )
+            }
+          />
+        );
+      }}
+    </Field>
+  );
+}
+
+FormikInputText.propTypes = {
   helper: T.node
 };

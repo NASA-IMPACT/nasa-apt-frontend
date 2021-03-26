@@ -1,10 +1,12 @@
 import React from 'react'; /* eslint-disable react/display-name */
 
+import StepIdentifyingInformation from './step-identifying-information';
+
 export const STEPS = [
   {
     id: 'identifying_information',
     label: 'Identifying information',
-    StepComponent: () => <p>Identifying information coming soon!</p>
+    StepComponent: StepIdentifyingInformation
   },
   {
     id: 'contacts',

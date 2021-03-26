@@ -18,6 +18,7 @@ import VersionsMenu from './versions-menu';
 import { useUser } from '../../context/user';
 import { atbdEdit, atbdView } from '../../utils/url-creator';
 
+// Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentNavHeader(props) {
   const { title, atbdId, status, currentVersion, mode, versions } = props;
   const { isLogged } = useUser();
