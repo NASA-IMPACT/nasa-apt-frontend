@@ -29,12 +29,12 @@ const Colophon = styled.p`
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-end;
+  font-size: 0.875rem;
+  line-height: 1rem;
 
   time {
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-    margin-left: ${glsp(1)};
-    padding-left: ${glsp(1)};
+    margin-left: ${glsp(0.75)};
+    padding-left: ${glsp(0.75)};
     box-shadow: inset 1px 0 0 0 ${rgba(themeVal('color.surface'), 0.16)};
   }
 `;
@@ -43,13 +43,12 @@ const CreditsLink = styled.a`
   display: flex;
   flex-flow: row nowrap;
   align-items: flex-end;
+  font-weight: ${themeVal('type.base.regular')};
 
   strong {
-    font-size: 1rem;
-    line-height: 1.5rem;
-    font-weight: ${themeVal('type.base.regular')};
+    text-transform: uppercase;
+    font-weight: ${themeVal('type.base.extrabold')};
     letter-spacing: -0.0125em;
-    display: block;
   }
 `;
 
@@ -61,7 +60,9 @@ function PageFooter() {
           href='https://earthdata.nasa.gov/'
           title='Visit NASA Earthdata'
         >
-          <strong>NASA Earthdata</strong>
+          <span>
+            NASA <strong>Earthdata</strong>
+          </span>
           <time dateTime={new Date().getFullYear()}>
             {new Date().getFullYear()}
           </time>
