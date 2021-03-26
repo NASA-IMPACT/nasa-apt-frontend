@@ -28,6 +28,7 @@ import Authorize from './a11n/authorize';
 import { AtbdsProvider } from './context/atbds-list';
 import { UserProvider } from './context/user';
 import { AbilityProvider } from './a11n/index';
+import AccessRoute from './a11n/access-route.js';
 
 const composingComponents = [
   ErrorBoundary,
@@ -67,7 +68,8 @@ function Root() {
               path='/documents/:id/:version'
               component={DocumentsView}
             />
-            <Route
+            <AccessRoute
+              permission={['edit', 'atbd']}
               exact
               path='/documents/:id/:version/edit/:step?'
               component={DocumentsEdit}

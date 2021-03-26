@@ -9,6 +9,7 @@ import {
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
+import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import StatusPill from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
@@ -20,30 +21,35 @@ import { atbdEdit, atbdView } from '../../utils/url-creator';
 export default function DocumentNavHeader(props) {
   const { title, atbdId, status, currentVersion, mode, versions } = props;
   const { isLogged } = useUser();
+  const ability = useContextualAbility();
 
-  const documentModesMenu = useMemo(
-    () => ({
+  const canEditATBD = ability.can('edit', 'atbd');
+
+  const documentModesMenu = useMemo(() => {
+    const viewATBD = {
+      id: 'view',
+      label: 'Viewing',
+      title: `Switch to viewing mode`,
+      as: Link,
+      to: atbdView(atbdId, currentVersion)
+    };
+    return {
       id: 'mode',
       selectable: true,
-      items: [
-        {
-          id: 'view',
-          label: 'Viewing',
-          title: `Switch to viewing mode`,
-          as: Link,
-          to: atbdView(atbdId, currentVersion)
-        },
-        {
-          id: 'edit',
-          label: 'Editing',
-          title: `Switch to editing mode`,
-          as: Link,
-          to: atbdEdit(atbdId, currentVersion)
-        }
-      ]
-    }),
-    [atbdId, currentVersion]
-  );
+      items: canEditATBD
+        ? [
+            viewATBD,
+            {
+              id: 'edit',
+              label: 'Editing',
+              title: `Switch to editing mode`,
+              as: Link,
+              to: atbdEdit(atbdId, currentVersion)
+            }
+          ]
+        : [viewATBD]
+    };
+  }, [atbdId, currentVersion, canEditATBD]);
 
   const dropdownMenuTriggerProps = useMemo(
     () => ({
@@ -66,7 +72,7 @@ export default function DocumentNavHeader(props) {
                 currentVersion={currentVersion}
               />
             </li>
-            {isLogged && (
+            {isLogged && documentModesMenu.items.length > 1 && (
               <li>
                 <DropdownMenu
                   menu={documentModesMenu}
