@@ -15,6 +15,7 @@ import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
 import { useUser } from '../../context/user';
+import { atbdEdit, atbdView } from '../../utils/url-creator';
 
 export default function DocumentNavHeader(props) {
   const { title, atbdId, status, currentVersion, mode, versions } = props;
@@ -30,14 +31,14 @@ export default function DocumentNavHeader(props) {
           label: 'Viewing',
           title: `Switch to viewing mode`,
           as: Link,
-          to: `/documents/${atbdId}/${currentVersion}`
+          to: atbdView(atbdId, currentVersion)
         },
         {
           id: 'edit',
           label: 'Editing',
           title: `Switch to editing mode`,
           as: Link,
-          to: `/documents/${atbdId}/${currentVersion}/edit`
+          to: atbdEdit(atbdId, currentVersion)
         }
       ]
     }),

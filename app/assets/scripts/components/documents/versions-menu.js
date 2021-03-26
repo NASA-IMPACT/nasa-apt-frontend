@@ -4,6 +4,8 @@ import T from 'prop-types';
 import DropdownMenu from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
+import { atbdView } from '../../utils/url-creator';
+
 export default function VersionsMenu(props) {
   const { atbdId, versions, variation, currentVersion } = props;
 
@@ -19,7 +21,7 @@ export default function VersionsMenu(props) {
         label: v.version,
         title: `View ${v.version} page`,
         as: Link,
-        to: `/documents/${atbdId}/${v.version}`
+        to: atbdView(atbdId, v.version)
       }))
     };
 
