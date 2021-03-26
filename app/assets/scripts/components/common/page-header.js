@@ -26,11 +26,11 @@ const PageHeaderSelf = styled.header`
   background-color: ${themeVal('color.primary')};
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
-  padding: ${glsp(0.5, themeVal('layout.gap.xsmall'))};
+  padding: ${glsp(0.75, themeVal('layout.gap.xsmall'))};
 
   ${media.mediumUp`
     grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-    padding: ${glsp(0.75, themeVal('layout.gap.medium'))};
+    padding: ${glsp(1, themeVal('layout.gap.medium'))};
   `}
 `;
 
@@ -57,13 +57,13 @@ const PageTitleLink = styled(Link)`
 
   #nasa-logo-neg-mono {
     opacity: 1;
-    transition: opacity 0.48s ease 0s;
+    transition: all 0.32s ease 0s;
   }
 
   #nasa-logo-pos {
     transform: translate(0, -100%);
     opacity: 0;
-    transition: opacity 0.48s ease 0s;
+    transition: all 0.32s ease 0s;
   }
 
   &:hover {

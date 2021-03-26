@@ -15,7 +15,7 @@ const { appTitle, appDescription } = config;
 const Page = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: min-content auto;
+  grid-template-rows: min-content auto min-content;
   grid-auto-rows: min-content;
   min-height: 100vh;
 `;
