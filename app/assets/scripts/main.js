@@ -17,6 +17,7 @@ import { ToastsContainer } from './components/common/toasts';
 import Home from './components/home';
 import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
+import DocumentsEdit from './components/documents/single-edit';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
@@ -65,6 +66,11 @@ function Root() {
               exact
               path='/documents/:id/:version'
               component={DocumentsView}
+            />
+            <Route
+              exact
+              path='/documents/:id/:version/edit/:step?'
+              component={DocumentsEdit}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
