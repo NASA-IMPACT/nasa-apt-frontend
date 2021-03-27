@@ -120,6 +120,7 @@
     "is-hotkey": "^0.2.0",
     "jwt-decode": "^3.1.2",
     "lodash.castarray": "^4.4.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.deburr": "^4.1.0",
     "lodash.defaultsdeep": "^4.6.1",
     "lodash.get": "^4.4.2",
