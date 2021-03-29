@@ -1,6 +1,5 @@
-import get from 'lodash.get';
-
 import { axiosAPI } from '../axios';
+import { getStateSlice } from './utils';
 
 /**
  * Creates a thunk to perform a query to the given url dispatching the
@@ -9,23 +8,26 @@ import { axiosAPI } from '../axios';
  * @param {object} opts Options.
  * @param {string} opts.url Url to query.
  * @param {string} opts.options Options for the request. See `axios`
- *                 documentation.
+ * documentation.
  * @param {func} opts.requestFn Request action to dispatch.
  * @param {func} opts.receiveFn Receive action to dispatch.
- * @param {func} opts.mutator Callback to change the response before sending it
- *               to the receive function. Called with (response). Defaults to
- *               returning the body content.
+ * @param {func} opts.transformResponse Callback to change the response before
+ * sending it to the receive function. Called with (response). Defaults to
+ * returning the body content.
  * @param {func} opts.stateKey Path in the state to check for the data. Any
- *                format accepted by lodash.get. Controls whether or not the
- *                response should be cached. When defined the function will
- *                resolve immediately with dispatching the receive action. The
- *                request action is not dispatched if there's cached data.
+ * format accepted by lodash.get. Controls whether or not the response should be
+ * cached. When defined the function will resolve immediately with dispatching
+ * the receive action. The request action is not dispatched if there's cached
+ * data.
  * @param {func} opts.__overrideData By default we make a request to the api
- * with the given options and then run the response through the mutator.
- * Sometimes, however, it may be needed to have complete control over how the
- * request is made. The __overrideData escape hatch allows us to produce the
- * data anyway we need. The returned data will be sent to the receiveFn.
- * Throwing an error causes the request to fail.
+ * with the given options and then run the response through the
+ * transformResponse. Sometimes, however, it may be needed to have complete
+ * control over how the request is made. The __overrideData escape hatch allows
+ * us to produce the data anyway we need. The returned data will be sent to the
+ * receiveFn. Throwing an error causes the request to fail.
+ * @param {bool} opts.skipStateCheck Whether or not to check the state via the
+ * stateKey. Sometimes is it useful to have a state key, but do not check it,
+ * like for example a POST or DELETE request
  *
  * @example
  * function fetchSearchResults () {
@@ -70,7 +72,8 @@ export function makeRequestThunk(opts) {
     receiveFn,
     __devDelay,
     stateKey,
-    mutator,
+    skipStateCheck,
+    transformResponse,
     __overrideData
   } = opts;
 
@@ -80,36 +83,42 @@ export function makeRequestThunk(opts) {
   };
 
   // Default mutator fn is to return the body.
-  const _mutator =
-    typeof mutator === 'function' ? mutator : async (response) => response.data;
-
-  // By default we make a request to the api with the given options and then run
-  // the response through the mutator. Sometimes, however, it may be needed to
-  // have complete control over how the request is made. The __overrideData
-  // escape hatch allows us to produce the data anyway we need. The returned
-  // data will be sent to the receiveFn. Throwing an error causes the request to
-  // fail.
-  const requestData =
-    typeof __overrideData === 'function'
-      ? async () =>
-          __overrideData({
-            axios: axiosAPI,
-            requestOptions: axiosRequest
-          })
-      : async () => {
-          const response = await axiosAPI(axiosRequest);
-          return _mutator(response);
-        };
+  const _transformResponse =
+    typeof transformResponse === 'function'
+      ? transformResponse
+      : async (response) => response.data;
 
   return async function (dispatch, state) {
+    const { isSliced, stateSlice } = getStateSlice(state, stateKey);
+
+    // By default we make a request to the api with the given options and then run
+    // the response through the transformResponse. Sometimes, however, it may be needed to
+    // have complete control over how the request is made. The __overrideData
+    // escape hatch allows us to produce the data anyway we need. The returned
+    // data will be sent to the receiveFn. Throwing an error causes the request to
+    // fail.
+    const requestData =
+      typeof __overrideData === 'function'
+        ? async () =>
+            __overrideData({
+              axios: axiosAPI,
+              requestOptions: axiosRequest,
+              state: stateSlice
+            })
+        : async () => {
+            const response = await axiosAPI(axiosRequest);
+            return _transformResponse(response, stateSlice);
+          };
+
     // Check if the cache is enabled.
-    if (stateKey || stateKey === '') {
-      // Get the data from the state to see if it is valid.
-      // Empty array or string will look at the root
-      const pageState = stateKey.length ? get(state, stateKey) : state;
-      if (pageState && pageState.status === 'succeeded' && !pageState.error) {
+    if (isSliced && !skipStateCheck) {
+      if (
+        stateSlice &&
+        stateSlice.status === 'succeeded' &&
+        !stateSlice.error
+      ) {
         if (__devDelay) await delay(__devDelay);
-        return dispatch(receiveFn(pageState.data));
+        return dispatch(receiveFn(stateSlice.data));
       }
     }
 
