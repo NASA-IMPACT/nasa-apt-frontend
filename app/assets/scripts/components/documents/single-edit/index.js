@@ -1,18 +1,11 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
-import {
-  Inpage,
-  InpageHeader,
-  InpageActions,
-  InpageBody
-} from '../../../styles/inpage';
-import Constrainer from '../../../styles/constrainer';
+import { InpageHeader, InpageActions } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
 import StepsMenu from './steps-menu';
@@ -20,15 +13,6 @@ import StepsMenu from './steps-menu';
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import Tip from '../../common/tooltip';
-
-const InpageBodyScroll = styled(InpageBody)`
-  padding: 0;
-  overflow: auto;
-
-  ${Constrainer} {
-    padding-top: 3rem;
-  }
-`;
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -38,14 +22,19 @@ function DocumentEdit() {
     fetchSingleAtbd();
   }, [id, version]);
 
-  const errCode = atbd.error?.response.status;
+  // We only want to handle errors when the atbd request fails. Mutation errors,
+  // tracked by the `mutationStatus` property are handled in the submit
+  // handlers.
+  if (atbd.status === 'failed') {
+    const errCode = atbd.error?.response.status;
 
-  if (errCode === 400 || errCode === 404) {
-    return <UhOh />;
-  } else if (errCode) {
-    // This is a serious server error. By throwing it will be caught by the
-    // error boundary. There's no recovery from this error.
-    throw atbd.error;
+    if (errCode === 400 || errCode === 404) {
+      return <UhOh />;
+    } else if (atbd.error) {
+      // This is a serious server error. By throwing it will be caught by the
+      // error boundary. There's no recovery from this error.
+      throw atbd.error;
+    }
   }
 
   const { StepComponent } = getATBDEditStep(step);
@@ -77,6 +66,9 @@ function DocumentEdit() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <StepComponent
+          step={step}
+          id={id}
+          version={version}
           atbd={atbd.data}
           renderInpageHeader={() => (
             <InpageHeader>
@@ -108,16 +100,18 @@ export default DocumentEdit;
 
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
-  const formik = useFormikContext();
-  console.log('🚀 ~ file: index.js ~ line 110 ~ SaveButton ~ formik', formik);
+  const { dirty, isSubmitting, submitForm, status } = useFormikContext();
+  // status?.working is used to disable form submission when something is going
+  // on. An example is the alias existence checking.
 
   return (
-    <Tip
-      position='top-end'
-      title='There are unsaved changes'
-      open={formik.dirty}
-    >
-      <Button variation='primary-raised-light' title='Save current changes'>
+    <Tip position='top-end' title='There are unsaved changes' open={dirty}>
+      <Button
+        variation='primary-raised-light'
+        title='Save current changes'
+        disabled={isSubmitting || !dirty || status?.working}
+        onClick={submitForm}
+      >
         Save
       </Button>
     </Tip>
