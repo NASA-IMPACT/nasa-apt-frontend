@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { glsp, media, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 
 import App from '../common/app';
-
 import {
   Inpage,
   InpageHeader,
@@ -15,7 +13,6 @@ import {
   InpageTitle,
   InpageBody
 } from '../../styles/inpage';
-
 import UniversalGridder from '../../styles/universal-gridder';
 
 import { getAppURL } from '../../utils/history';
@@ -83,8 +80,6 @@ const Intro = styled.section`
     grid-gap: ${glsp(3)};
   `}
 `;
-
-const IntroHeader = styled.header``;
 
 const IntroTitle = styled(Heading)`
   font-size: 1.25rem;
@@ -168,8 +163,6 @@ const FocusBoxTitle = styled(Heading).attrs({
   }
 `;
 
-const FocusBoxContent = styled.div``;
-
 const Illu = styled.figure`
   position: relative;
   grid-column: content-start / content-end;
@@ -225,7 +218,7 @@ function Home() {
           <HomeContent>
             <HomeContentInner>
               <Intro>
-                <IntroHeader>
+                <header>
                   <IntroTitle>
                     APT <span>—</span> The Algorithm Publication Tool
                   </IntroTitle>
@@ -256,19 +249,19 @@ function Home() {
                       Or sign in to start creating
                     </SubAction>
                   </IntroActions>
-                </IntroHeader>
+                </header>
                 <FocusBoxList>
                   <li>
                     <FocusBox>
                       <FocusBoxTitle useIcon='pencil'>
                         Streamlined writing process
                       </FocusBoxTitle>
-                      <FocusBoxContent>
+                      <div>
                         Easily create compliant and complete ATBDs using a
                         standardized template. The APT&apos;s centralized
                         location makes it simple to collaborate with the writing
                         team.
-                      </FocusBoxContent>
+                      </div>
                     </FocusBox>
                   </li>
                   <li>
@@ -277,11 +270,11 @@ function Home() {
                         User-friendly
                         <br /> tools
                       </FocusBoxTitle>
-                      <FocusBoxContent>
+                      <div>
                         Easily format text and add equations, tables, figures
                         and references using the APT&apos;s rich text editor,
                         LaTex tools and Bibtex citation manager.
-                      </FocusBoxContent>
+                      </div>
                     </FocusBox>
                   </li>
                   <li>
@@ -289,10 +282,10 @@ function Home() {
                       <FocusBoxTitle useIcon='eye'>
                         Visually appealing documents
                       </FocusBoxTitle>
-                      <FocusBoxContent>
+                      <div>
                         Preview a selected ATBD as an HTML webpage or a PDF
                         document.
-                      </FocusBoxContent>
+                      </div>
                     </FocusBox>
                   </li>
                   <li>
@@ -300,11 +293,11 @@ function Home() {
                       <FocusBoxTitle useIcon='expand-top-right'>
                         Straightforward journal submission
                       </FocusBoxTitle>
-                      <FocusBoxContent>
+                      <div>
                         Use a streamlined ATBD journal submission process with
                         AGU&apos;s Earth and Space Science, a gold open access
                         journal.
-                      </FocusBoxContent>
+                      </div>
                     </FocusBox>
                   </li>
                 </FocusBoxList>
