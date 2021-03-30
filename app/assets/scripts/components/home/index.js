@@ -195,15 +195,12 @@ const Illu = styled.figure`
     top: 99%;
     left: 0;
     right: 0;
-    height: 1rem;
-    background-image: url('/assets/graphics/content/welcome-illu.svg');
-    background-position: left bottom;
-    background-repeat: no-repeat;
-    transform-origin: left top;
-    transform: scaleY(800);
+    height: 100vh;
+    background-image: url('/assets/graphics/layout/welcome-illu--pattern.svg');
+    background-repeat: repeat-y;
+    background-size: 100% auto;
     content: '';
     pointer-events: none;
-    background-size: 100%;
 
     ${media.largeUp`
       background-size: auto;
@@ -311,7 +308,7 @@ function Home() {
               <Illu>
                 <img
                   alt='Tree of knowledge illustration'
-                  src='/assets/graphics/content/welcome-illu.svg'
+                  src='/assets/graphics/layout/welcome-illu.svg'
                   width='640'
                   height='864'
                 />
