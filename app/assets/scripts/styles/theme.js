@@ -14,7 +14,8 @@ export function themeOverridesAPT(uiTheme) {
       },
       type: {
         base: {
-          color: baseColor
+          color: baseColor,
+          extrabold: '800'
         }
       },
       layout: {
