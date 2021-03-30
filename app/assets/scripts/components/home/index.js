@@ -18,6 +18,10 @@ import {
 
 import UniversalGridder from '../../styles/universal-gridder';
 
+import { getAppURL } from '../../utils/history';
+
+const loc = getAppURL().cleanHref;
+
 const HomeInpageHeader = styled(InpageHeader)`
   max-height: 0;
   padding: 0;
@@ -196,7 +200,7 @@ const Illu = styled.figure`
     left: 0;
     right: 0;
     height: 100vh;
-    background-image: url('/assets/graphics/layout/welcome-illu--pattern.svg');
+    background-image: url('${loc}/assets/graphics/layout/welcome-illu--pattern.svg');
     background-repeat: repeat-y;
     background-size: 100% auto;
     content: '';
@@ -308,7 +312,7 @@ function Home() {
               <Illu>
                 <img
                   alt='Tree of knowledge illustration'
-                  src='/assets/graphics/layout/welcome-illu.svg'
+                  src={`${loc}/assets/graphics/layout/welcome-illu.svg`}
                   width='640'
                   height='864'
                 />
