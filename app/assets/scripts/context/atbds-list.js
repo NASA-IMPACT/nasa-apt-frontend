@@ -128,7 +128,9 @@ export const AtbdsProvider = (props) => {
             if (contentResponse) {
               updatedData = {
                 ...updatedData,
-                ...contentResponse.data
+                // Despite being an array it only has 1 version, the one we queried.
+                // See not on fetchSingleAtbd
+                ...contentResponse.data.versions[0]
               };
             }
 

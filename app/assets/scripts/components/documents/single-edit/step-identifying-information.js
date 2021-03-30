@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import T from 'prop-types';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
-import { Heading } from '@devseed-ui/typography';
+import { Heading } from '@devseed-ui/typography';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
@@ -29,7 +29,12 @@ export default function StepIdentifyingInformation(props) {
   const onSubmit = useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const processToast = createProcessToast('Saving changes');
-      const result = await updateAtbd(values);
+      const result = await updateAtbd({
+        ...values,
+        // If the alias is submitted as empty string (""), the api fails with a
+        // 404 error.
+        alias: values.alias || null
+      });
       setSubmitting(false);
 
       if (result.error) {

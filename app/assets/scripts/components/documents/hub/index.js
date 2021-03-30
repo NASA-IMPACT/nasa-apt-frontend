@@ -32,7 +32,7 @@ import VersionsMenu from '../versions-menu';
 import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdView } from '../../../utils/url-creator';
+import { atbdEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { calculateAtbdCompleteness } from '../completeness';
 
@@ -58,7 +58,7 @@ function Documents() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('ATBD successfully created');
-      history.push(atbdView(result.data));
+      history.push(atbdEdit(result.data));
     }
   };
 
