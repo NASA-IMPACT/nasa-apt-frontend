@@ -40,7 +40,7 @@ export const atbdView = (atbd, version = 'last') => {
  *    If number, it is considered the version index to check in the versions array
  *    Otherwise is used as provided.
  */
-export const atbdEdit = (atbd, version = 'last', step) => {
+export const atbdEdit = (atbd, version = 'last', step = null) => {
   const stepVal = step ? `/${step}` : '';
 
   return `${atbdView(atbd, version)}/edit${stepVal}`;

@@ -5,19 +5,19 @@ import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../../common/app';
-
 import {
   Inpage,
   InpageHeader,
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
-
 import UhOh from '../../uhoh';
 import Constrainer from '../../../styles/constrainer';
 import Prose from '../../../styles/typography/prose';
-import { useSingleAtbd } from '../../../context/atbds-list';
 import DocumentNavHeader from '../document-nav-header';
+import AtbdActionsMenu from '../atbd-actions-menu';
+
+import { useSingleAtbd } from '../../../context/atbds-list';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -64,6 +64,14 @@ function DocumentView() {
               <Button to='/' variation='achromic-plain' title='Create new'>
                 Button
               </Button>
+              <AtbdActionsMenu
+                // In the case of a single ATBD the selected version data is
+                // merged with the ATBD meta and that's why both variables are
+                // the same.
+                atbd={atbd.data}
+                atbdVersion={atbd.data}
+                variation='achromic-plain'
+              />
             </InpageActions>
           </InpageHeader>
           <InpageBodyScroll>

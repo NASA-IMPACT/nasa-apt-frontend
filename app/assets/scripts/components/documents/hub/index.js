@@ -29,6 +29,7 @@ import Constrainer from '../../../styles/constrainer';
 import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
+import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdView } from '../../../utils/url-creator';
@@ -143,15 +144,10 @@ function Documents() {
                             </dd>
                           </HubEntryDetails>
                           <HubEntryActions>
-                            <Button
-                              to='/'
-                              variation='base-plain'
-                              useIcon='ellipsis-vertical'
-                              hideText
-                              title='Show options'
-                            >
-                              Options
-                            </Button>
+                            <AtbdActionsMenu
+                              atbd={atbd}
+                              atbdVersion={lastVersion}
+                            />
                           </HubEntryActions>
                         </HubEntryHeader>
                       </HubEntry>
