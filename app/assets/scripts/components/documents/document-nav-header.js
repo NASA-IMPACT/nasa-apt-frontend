@@ -20,7 +20,7 @@ import { atbdEdit, atbdView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentNavHeader(props) {
-  const { title, atbdId, status, currentVersion, mode, versions } = props;
+  const { title, atbdId, status, version, mode, versions } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -32,7 +32,7 @@ export default function DocumentNavHeader(props) {
       label: 'Viewing',
       title: `Switch to viewing mode`,
       as: Link,
-      to: atbdView(atbdId, currentVersion)
+      to: atbdView(atbdId, version)
     };
     return {
       id: 'mode',
@@ -45,12 +45,12 @@ export default function DocumentNavHeader(props) {
               label: 'Editing',
               title: `Switch to editing mode`,
               as: Link,
-              to: atbdEdit(atbdId, currentVersion)
+              to: atbdEdit(atbdId, version)
             }
           ]
         : [viewATBD]
     };
-  }, [atbdId, currentVersion, canEditATBD]);
+  }, [atbdId, version, canEditATBD]);
 
   const dropdownMenuTriggerProps = useMemo(
     () => ({
@@ -70,7 +70,7 @@ export default function DocumentNavHeader(props) {
                 atbdId={atbdId}
                 versions={versions}
                 variation='achromic-plain'
-                currentVersion={currentVersion}
+                version={version}
               />
             </li>
             {isLogged && documentModesMenu.items.length > 1 && (
@@ -103,7 +103,7 @@ DocumentNavHeader.propTypes = {
   title: T.string,
   status: T.string,
   atbdId: T.oneOfType([T.string, T.number]),
-  currentVersion: T.string,
+  version: T.string,
   versions: T.array,
   mode: T.string
 };

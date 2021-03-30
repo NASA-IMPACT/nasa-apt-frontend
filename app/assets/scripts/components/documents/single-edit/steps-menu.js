@@ -37,7 +37,7 @@ const StepMenuItem = styled(DropMenuItem)`
 `;
 
 export default function StepsMenu(props) {
-  const { activeStep, atbdId, currentVersion } = props;
+  const { activeStep, atbdId, version } = props;
 
   const activeStepItem = useMemo(() => getATBDEditStep(activeStep), [
     activeStep
@@ -74,7 +74,7 @@ export default function StepsMenu(props) {
                   title={`Go to step ${label}`}
                   active={id === activeStepItem.id}
                   data-dropdown='click.close'
-                  to={atbdEdit(atbdId, currentVersion, id)}
+                  to={atbdEdit(atbdId, version, id)}
                 >
                   <span>{label}</span>
                   <small>75% complete</small>
@@ -91,5 +91,5 @@ export default function StepsMenu(props) {
 StepsMenu.propTypes = {
   activeStep: T.string,
   atbdId: T.string,
-  currentVersion: T.string
+  version: T.string
 };

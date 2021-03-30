@@ -77,16 +77,12 @@ function DocumentEdit() {
                 atbdId={id}
                 title={atbd.data.title}
                 status={atbd.data.status}
-                currentVersion={version}
+                version={version}
                 versions={atbd.data.versions}
                 mode='edit'
               />
               <InpageActions>
-                <StepsMenu
-                  atbdId={id}
-                  currentVersion={version}
-                  activeStep={step}
-                />
+                <StepsMenu atbdId={id} version={version} activeStep={step} />
                 <SaveButton />
               </InpageActions>
             </InpageHeader>

@@ -56,7 +56,7 @@ function DocumentView() {
               atbdId={id}
               title={atbd.data.title}
               status={atbd.data.status}
-              currentVersion={version}
+              version={version}
               versions={atbd.data.versions}
               mode='view'
             />
