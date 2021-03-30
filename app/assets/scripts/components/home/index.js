@@ -32,9 +32,21 @@ const HomeContent = styled(UniversalGridder).attrs({
     largeUp: ['full-start', 'full-end']
   }
 })`
+  height: 100%;
+  align-items: center;
+  overflow: hidden;
+`;
+
+const HomeContentInner = styled(UniversalGridder).attrs({
+  as: 'div',
+  grid: {
+    smallUp: ['full-start', 'full-end'],
+    mediumUp: ['full-start', 'full-end'],
+    largeUp: ['full-start', 'full-end']
+  }
+})`
   padding: ${glsp(themeVal('layout.gap.xsmall'), 0)};
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-  height: 100%;
 
   ${media.mediumUp`
     padding: ${glsp(themeVal('layout.gap.medium'), 0)};
@@ -155,24 +167,13 @@ const FocusBoxTitle = styled(Heading).attrs({
 const FocusBoxContent = styled.div``;
 
 const Illu = styled.figure`
+  position: relative;
   grid-column: content-start / content-end;
-  align-self: end;
   justify-self: center;
-  overflow-x: hidden;
-  margin-bottom: -${glsp(themeVal('layout.gap.xsmall'))};
-
-  ${media.mediumUp`
-    margin-bottom: -${glsp(themeVal('layout.gap.medium'))};
-  `}
 
   ${media.largeUp`
-    margin-bottom: -${glsp(themeVal('layout.gap.large'))};
     grid-column: content-9 / full-end;
     justify-self: auto;
-  `}
-
-  ${media.xlargeUp`
-    margin-bottom: -${glsp(themeVal('layout.gap.xlarge'))};
   `}
 
   img {
@@ -188,6 +189,26 @@ const Illu = styled.figure`
       max-width: none;
     `}
   }
+
+  &::after {
+    position: absolute;
+    top: 99%;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    background-image: url('/assets/graphics/content/welcome-illu.svg');
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    transform-origin: left top;
+    transform: scaleY(800);
+    content: '';
+    pointer-events: none;
+    background-size: 100%;
+
+    ${media.largeUp`
+      background-size: auto;
+    `}
+  }
 `;
 
 function Home() {
@@ -201,98 +222,101 @@ function Home() {
         </HomeInpageHeader>
         <InpageBody>
           <HomeContent>
-            <Intro>
-              <IntroHeader>
-                <IntroTitle>
-                  APT <span>—</span> The Algorithm Publication Tool
-                </IntroTitle>
-                <IntroLead>
-                  <p>
-                    Enabling open science by making it easier to write and find
-                    key scientific documents.
-                  </p>
-                </IntroLead>
-                <IntroActions>
-                  <Button
-                    forwardedAs='a'
-                    href='/about'
-                    size='large'
-                    variation='primary-raised-light'
-                  >
-                    Learn more
-                  </Button>
-                  <Button
-                    forwardedAs='a'
-                    href='/documents'
-                    size='large'
-                    variation='primary-raised-dark'
-                  >
-                    Explore the documents
-                  </Button>
-                  <SubAction href='/signin' title='Sign in now'>
-                    Or sign in to start creating
-                  </SubAction>
-                </IntroActions>
-              </IntroHeader>
-              <FocusBoxList>
-                <li>
-                  <FocusBox>
-                    <FocusBoxTitle useIcon='pencil'>
-                      Streamlined writing process
-                    </FocusBoxTitle>
-                    <FocusBoxContent>
-                      Easily create compliant and complete ATBDs using a
-                      standardized template. The APT&apos;s centralized location
-                      makes it simple to collaborate with the writing team.
-                    </FocusBoxContent>
-                  </FocusBox>
-                </li>
-                <li>
-                  <FocusBox>
-                    <FocusBoxTitle useIcon='wrench'>
-                      User-friendly
-                      <br /> tools
-                    </FocusBoxTitle>
-                    <FocusBoxContent>
-                      Easily format text and add equations, tables, figures and
-                      references using the APT&apos;s rich text editor, LaTex
-                      tools and Bibtex citation manager.
-                    </FocusBoxContent>
-                  </FocusBox>
-                </li>
-                <li>
-                  <FocusBox>
-                    <FocusBoxTitle useIcon='eye'>
-                      Visually appealing documents
-                    </FocusBoxTitle>
-                    <FocusBoxContent>
-                      Preview a selected ATBD as an HTML webpage or a PDF
-                      document.
-                    </FocusBoxContent>
-                  </FocusBox>
-                </li>
-                <li>
-                  <FocusBox>
-                    <FocusBoxTitle useIcon='expand-top-right'>
-                      Straightforward journal submission
-                    </FocusBoxTitle>
-                    <FocusBoxContent>
-                      Use a streamlined ATBD journal submission process with
-                      AGU&apos;s Earth and Space Science, a gold open access
-                      journal.
-                    </FocusBoxContent>
-                  </FocusBox>
-                </li>
-              </FocusBoxList>
-            </Intro>
-            <Illu>
-              <img
-                alt='Tree of knowledge illustration'
-                src='/assets/graphics/content/welcome-illu.svg'
-                width='640'
-                height='864'
-              />
-            </Illu>
+            <HomeContentInner>
+              <Intro>
+                <IntroHeader>
+                  <IntroTitle>
+                    APT <span>—</span> The Algorithm Publication Tool
+                  </IntroTitle>
+                  <IntroLead>
+                    <p>
+                      Enabling open science by making it easier to write and
+                      find key scientific documents.
+                    </p>
+                  </IntroLead>
+                  <IntroActions>
+                    <Button
+                      forwardedAs='a'
+                      href='/about'
+                      size='large'
+                      variation='primary-raised-light'
+                    >
+                      Learn more
+                    </Button>
+                    <Button
+                      forwardedAs='a'
+                      href='/documents'
+                      size='large'
+                      variation='primary-raised-dark'
+                    >
+                      Explore the documents
+                    </Button>
+                    <SubAction href='/signin' title='Sign in now'>
+                      Or sign in to start creating
+                    </SubAction>
+                  </IntroActions>
+                </IntroHeader>
+                <FocusBoxList>
+                  <li>
+                    <FocusBox>
+                      <FocusBoxTitle useIcon='pencil'>
+                        Streamlined writing process
+                      </FocusBoxTitle>
+                      <FocusBoxContent>
+                        Easily create compliant and complete ATBDs using a
+                        standardized template. The APT&apos;s centralized
+                        location makes it simple to collaborate with the writing
+                        team.
+                      </FocusBoxContent>
+                    </FocusBox>
+                  </li>
+                  <li>
+                    <FocusBox>
+                      <FocusBoxTitle useIcon='wrench'>
+                        User-friendly
+                        <br /> tools
+                      </FocusBoxTitle>
+                      <FocusBoxContent>
+                        Easily format text and add equations, tables, figures
+                        and references using the APT&apos;s rich text editor,
+                        LaTex tools and Bibtex citation manager.
+                      </FocusBoxContent>
+                    </FocusBox>
+                  </li>
+                  <li>
+                    <FocusBox>
+                      <FocusBoxTitle useIcon='eye'>
+                        Visually appealing documents
+                      </FocusBoxTitle>
+                      <FocusBoxContent>
+                        Preview a selected ATBD as an HTML webpage or a PDF
+                        document.
+                      </FocusBoxContent>
+                    </FocusBox>
+                  </li>
+                  <li>
+                    <FocusBox>
+                      <FocusBoxTitle useIcon='expand-top-right'>
+                        Straightforward journal submission
+                      </FocusBoxTitle>
+                      <FocusBoxContent>
+                        Use a streamlined ATBD journal submission process with
+                        AGU&apos;s Earth and Space Science, a gold open access
+                        journal.
+                      </FocusBoxContent>
+                    </FocusBox>
+                  </li>
+                </FocusBoxList>
+              </Intro>
+              <Illu>
+                <img
+                  alt='Tree of knowledge illustration'
+                  src='/assets/graphics/content/welcome-illu.svg'
+                  width='640'
+                  height='864'
+                />
+              </Illu>
+            </HomeContentInner>
           </HomeContent>
         </InpageBody>
       </Inpage>
