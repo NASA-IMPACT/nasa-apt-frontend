@@ -34,6 +34,7 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
+import { calculateAtbdCompleteness } from '../completeness';
 
 function Documents() {
   const { fetchAtbds, createAtbd, atbds } = useAtbds();
@@ -98,6 +99,8 @@ function Documents() {
                 {atbds.data.map((atbd) => {
                   const lastVersion = atbd.versions[atbd.versions.length - 1];
 
+                  const { percent } = calculateAtbdCompleteness(lastVersion);
+
                   return (
                     <HubListItem key={atbd.id}>
                       <HubEntry>
@@ -130,7 +133,7 @@ function Documents() {
                               <dd>
                                 <StatusPill
                                   status={lastVersion.status}
-                                  completeness={80}
+                                  completeness={percent}
                                 />
                               </dd>
                             </HubEntryMeta>

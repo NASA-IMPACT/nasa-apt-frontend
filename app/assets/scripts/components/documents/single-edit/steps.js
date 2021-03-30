@@ -67,37 +67,58 @@ export const STEPS = [
   {
     id: 'contacts',
     label: 'Contact information',
-    StepComponent: () => <p>Contact information coming soon!</p>
+    StepComponent: () => <p>Contact information coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'references',
     label: 'References',
-    StepComponent: () => <p>References coming soon!</p>
+    StepComponent: () => <p>References coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'introduction',
     label: 'Introduction',
-    StepComponent: () => <p>Introduction coming soon!</p>
+    StepComponent: () => <p>Introduction coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'algorithm_description',
     label: 'Algorithm description',
-    StepComponent: () => <p>Algorithm description coming soon!</p>
+    StepComponent: () => <p>Algorithm description coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'algorithm_usage',
     label: 'Algorithm usage',
-    StepComponent: () => <p>Algorithm usage coming soon!</p>
+    StepComponent: () => <p>Algorithm usage coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'algorithm_implementation',
     label: 'Algorithm implementation',
-    StepComponent: () => <p>Algorithm implementation coming soon!</p>
+    StepComponent: () => <p>Algorithm implementation coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   },
   {
     id: 'journal_details',
     label: 'Journal details',
-    StepComponent: () => <p>Journal details coming soon!</p>
+    StepComponent: () => <p>Journal details coming soon!</p>,
+    getInitialValues: (atbd) => {
+      return {};
+    }
   }
 ];
 

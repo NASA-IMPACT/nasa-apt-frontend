@@ -18,6 +18,7 @@ import DocumentNavHeader from '../document-nav-header';
 import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
+import { calculateAtbdCompleteness } from '../completeness';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -46,6 +47,10 @@ function DocumentView() {
     throw atbd.error;
   }
 
+  const completeness = atbd.data
+    ? calculateAtbdCompleteness(atbd.data).percent
+    : 0;
+
   return (
     <App pageTitle='Document view'>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -58,6 +63,7 @@ function DocumentView() {
               status={atbd.data.status}
               version={version}
               versions={atbd.data.versions}
+              completeness={completeness}
               mode='view'
             />
             <InpageActions>

@@ -20,7 +20,15 @@ import { atbdEdit, atbdView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentNavHeader(props) {
-  const { title, atbdId, status, version, mode, versions } = props;
+  const {
+    title,
+    atbdId,
+    status,
+    version,
+    mode,
+    versions,
+    completeness
+  } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -92,7 +100,7 @@ export default function DocumentNavHeader(props) {
         <InpageSubtitle as='dd'>Documents</InpageSubtitle>
         <dt>Status</dt>
         <dd>
-          <StatusPill status={status} completeness={80} />
+          <StatusPill status={status} completeness={completeness} />
         </dd>
       </InpageMeta>
     </>
@@ -105,5 +113,6 @@ DocumentNavHeader.propTypes = {
   atbdId: T.oneOfType([T.string, T.number]),
   version: T.string,
   versions: T.array,
-  mode: T.string
+  mode: T.string,
+  completeness: T.number
 };

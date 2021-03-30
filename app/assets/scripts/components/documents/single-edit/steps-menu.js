@@ -10,9 +10,11 @@ import Dropdown, {
 } from '@devseed-ui/dropdown';
 import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 
+import { Link } from '../../../styles/clean/link';
+
 import { getATBDEditStep, STEPS } from './steps';
 import { atbdEdit } from '../../../utils/url-creator';
-import { Link } from '../../../styles/clean/link';
+import { calculateAtbdStepCompleteness } from '../completeness';
 
 // TODO: Remove once the ui library is updated.
 const ToolbarLabel = styled(ToolbarLabel$)`
@@ -37,7 +39,7 @@ const StepMenuItem = styled(DropMenuItem)`
 `;
 
 export default function StepsMenu(props) {
-  const { activeStep, atbdId, version } = props;
+  const { activeStep, atbdId, atbd } = props;
 
   const activeStepItem = useMemo(() => getATBDEditStep(activeStep), [
     activeStep
@@ -67,6 +69,11 @@ export default function StepsMenu(props) {
           {STEPS.map((step) => {
             const { id, label } = step;
 
+            const { complete, total, percent } = calculateAtbdStepCompleteness(
+              atbd,
+              step
+            );
+
             return (
               <li key={id}>
                 <StepMenuItem
@@ -74,10 +81,14 @@ export default function StepsMenu(props) {
                   title={`Go to step ${label}`}
                   active={id === activeStepItem.id}
                   data-dropdown='click.close'
-                  to={atbdEdit(atbdId, version, id)}
+                  to={atbdEdit(atbdId, atbd.version, id)}
                 >
                   <span>{label}</span>
-                  <small>75% complete</small>
+                  {!!total && (
+                    <small>
+                      {percent}% complete ({complete} of {total} sections)
+                    </small>
+                  )}
                 </StepMenuItem>
               </li>
             );
@@ -91,5 +102,5 @@ export default function StepsMenu(props) {
 StepsMenu.propTypes = {
   activeStep: T.string,
   atbdId: T.string,
-  version: T.string
+  atbd: T.object
 };

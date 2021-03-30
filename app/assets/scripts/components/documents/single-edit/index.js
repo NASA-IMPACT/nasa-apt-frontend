@@ -13,6 +13,7 @@ import StepsMenu from './steps-menu';
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import Tip from '../../common/tooltip';
+import { calculateAtbdCompleteness } from '../completeness';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -62,6 +63,10 @@ function DocumentEdit() {
   // component and include it on every component, it gets passed as a render
   // prop.
 
+  const completeness = atbd.data
+    ? calculateAtbdCompleteness(atbd.data).percent
+    : 0;
+
   return (
     <App pageTitle='Document Edit'>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -79,10 +84,11 @@ function DocumentEdit() {
                 status={atbd.data.status}
                 version={version}
                 versions={atbd.data.versions}
+                completeness={completeness}
                 mode='edit'
               />
               <InpageActions>
-                <StepsMenu atbdId={id} version={version} activeStep={step} />
+                <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
               </InpageActions>
             </InpageHeader>
