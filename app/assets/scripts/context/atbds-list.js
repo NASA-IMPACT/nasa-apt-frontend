@@ -107,7 +107,12 @@ export const AtbdsProvider = (props) => {
 
             // Content for the atbd is actually stored on the version.
             const contentUpdate = Object.keys(rest).length
-              ? Promise.resolve()
+              ? axios({
+                  ...requestOptions,
+                  url: `/atbds/${id}/versions/${version}`,
+                  method: 'post',
+                  data: rest
+                })
               : // Nothing to update.
                 Promise.resolve();
 
@@ -119,6 +124,13 @@ export const AtbdsProvider = (props) => {
             // Since the both responses return data that we need on the state we
             // have to merge them.
             let updatedData = state.data;
+
+            if (contentResponse) {
+              updatedData = {
+                ...updatedData,
+                ...contentResponse.data
+              };
+            }
 
             if (metaResponse) {
               updatedData = {

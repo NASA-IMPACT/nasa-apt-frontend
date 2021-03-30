@@ -37,7 +37,8 @@ function DocumentEdit() {
     }
   }
 
-  const { StepComponent } = getATBDEditStep(step);
+  const stepDefinition = getATBDEditStep(step);
+  const { StepComponent } = stepDefinition;
 
   if (!StepComponent) {
     return <UhOh />;
@@ -66,7 +67,7 @@ function DocumentEdit() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <StepComponent
-          step={step}
+          step={stepDefinition}
           id={id}
           version={version}
           atbd={atbd.data}
