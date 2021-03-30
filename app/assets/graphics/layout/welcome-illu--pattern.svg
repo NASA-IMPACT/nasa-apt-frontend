@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="640" height="16" viewBox="0 0 640 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <rect id="tree-patter" x="0" y="-0" width="640" height="16" style="fill:none;"/>
+    <clipPath id="_clip1">
+        <rect x="0" y="-0" width="640" height="16"/>
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <g id="group">
+            <path d="M336,16l0,-96c-0,-44.183 -35.817,-80 -80,-80l-24,-0c-26.51,0 -48,-21.49 -48,-48c0,-0 0,-208 0,-208l-32,-0c0,-0 0,127.592 0,208c0,44.183 35.817,80 80,80l24,-0c26.51,-0 48,21.49 48,48c0,0 0,96 0,96l32,-0Z" style="fill:rgb(23,85,124);"/>
+            <g id="page">
+                <g id="page-d__content">
+                </g>
+            </g>
+        </g>
+        <g id="group1" serif:id="group">
+            <path d="M336,16l0,-176c0,-26.51 21.49,-48 48,-48l120,-0c44.183,-0 80,-35.817 80,-80l0,-176l-32,0l0,176c-0,26.51 -21.49,48 -48,48l-120,-0c-44.183,0 -80,35.817 -80,80l0,176l32,-0Z" style="fill:rgb(23,85,124);"/>
+            <g id="page1" serif:id="page">
+                <g id="page-b__content">
+                </g>
+            </g>
+            <g id="page2" serif:id="page">
+            </g>
+        </g>
+        <g id="group2" serif:id="group">
+            <path d="M384,16l-0,-256c0,-21.217 -8.429,-41.566 -23.431,-56.569c-15.003,-15.002 -35.352,-23.431 -56.569,-23.431l-168,-0c-26.51,-0 -48,-21.49 -48,-48l0,-192l-32,-0l0,192c0,44.183 35.817,80 80,80l168,-0c12.73,0 24.939,5.057 33.941,14.059c9.002,9.002 14.059,21.211 14.059,33.941l-0,256l32,-0Z" style="fill:rgb(34,118,172);"/>
+            <g id="page3" serif:id="page">
+                <g id="page-c__content">
+                </g>
+            </g>
+            <g id="page4" serif:id="page">
+            </g>
+        </g>
+        <g id="group3" serif:id="group">
+            <rect x="304" y="-848" width="32" height="864" style="fill:rgb(34,118,172);"/>
+            <g id="page5" serif:id="page">
+                <g id="page-d__content1" serif:id="page-d__content">
+                </g>
+            </g>
+            <g id="page6" serif:id="page">
+            </g>
+            <g id="page7" serif:id="page">
+            </g>
+            <g id="page8" serif:id="page">
+                <g id="page-b__content1" serif:id="page-b__content">
+                </g>
+            </g>
+        </g>
+        <g id="group4" serif:id="group">
+            <path d="M336,16l-0,-96c0,-26.51 21.49,-48 48,-48l24,-0c21.217,0 41.566,-8.429 56.569,-23.431c15.002,-15.003 23.431,-35.352 23.431,-56.569c0,-0 0,-144 0,-144l-32,0l-0,144c0,12.73 -5.057,24.939 -14.059,33.941c-9.002,9.002 -21.211,14.059 -33.941,14.059l-24,-0c-44.183,-0 -80,35.817 -80,80l0,96l32,-0Z" style="fill:rgb(68,160,218);"/>
+            <g id="page9" serif:id="page">
+                <g id="page-a__content">
+                </g>
+            </g>
+        </g>
+        <g id="group5" serif:id="group">
+            <path d="M288,16l0,-352c-0,-12.73 5.057,-24.939 14.059,-33.941c9.002,-9.002 21.211,-14.059 33.941,-14.059l72,-0c21.217,0 41.566,-8.429 56.569,-23.431c15.002,-15.003 23.431,-35.352 23.431,-56.569l0,-224l-32,0l0,224c-0,12.73 -5.057,24.939 -14.059,33.941c-9.002,9.002 -21.211,14.059 -33.941,14.059l-72,-0c-21.217,-0 -41.566,8.429 -56.569,23.431c-15.002,15.003 -23.431,35.352 -23.431,56.569c0,0 0,352 0,352l32,0Z" style="fill:rgb(34,118,172);"/>
+            <g id="page10" serif:id="page">
+            </g>
+            <g id="page11" serif:id="page">
+                <g id="page-c__content1" serif:id="page-c__content">
+                </g>
+            </g>
+        </g>
+        <g id="group6" serif:id="group">
+            <path d="M336,16l0,-432c0,-21.217 -8.429,-41.566 -23.431,-56.569c-15.003,-15.002 -35.352,-23.431 -56.569,-23.431c-7.94,-0 -16.06,-0 -24,-0c-12.73,0 -24.939,-5.057 -33.941,-14.059c-9.002,-9.002 -14.059,-21.211 -14.059,-33.941l0,-176l-32,-0l0,176c0,21.217 8.429,41.566 23.431,56.569c15.003,15.002 35.352,23.431 56.569,23.431c7.94,-0 16.06,-0 24,-0c12.73,-0 24.939,5.057 33.941,14.059c9.002,9.002 14.059,21.211 14.059,33.941l-0,432l32,-0Z" style="fill:rgb(68,160,218);"/>
+            <g id="page12" serif:id="page">
+                <g id="page-a__content1" serif:id="page-a__content">
+                </g>
+            </g>
+            <g id="page13" serif:id="page">
+            </g>
+        </g>
+    </g>
+</svg>

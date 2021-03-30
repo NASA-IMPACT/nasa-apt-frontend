@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { glsp, themeVal, visuallyHidden } from '@devseed-ui/theme-provider';
 
 export const HubList = styled.ol`
@@ -60,7 +59,7 @@ export const HubEntryMeta = styled.dl`
   }
 
   dt {
-    ${visuallyHidden};
+    ${visuallyHidden}
   }
 
   a {
@@ -83,7 +82,7 @@ export const HubEntryDetails = styled.dl`
   }
 
   dt {
-    ${visuallyHidden};
+    ${visuallyHidden}
   }
 
   a {
