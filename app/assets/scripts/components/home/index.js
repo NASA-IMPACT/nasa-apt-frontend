@@ -14,8 +14,10 @@ import {
   InpageBody
 } from '../../styles/inpage';
 import UniversalGridder from '../../styles/universal-gridder';
+import { Link } from '../../styles/clean/link';
 
 import { getAppURL } from '../../utils/history';
+import { useUser } from '../../context/user';
 
 const loc = getAppURL().cleanHref;
 
@@ -105,12 +107,12 @@ const IntroLead = styled(Heading).attrs({ as: 'div' })`
 
 const IntroActions = styled.p`
   display: grid;
-  grid-auto-columns: min-content;
+  grid-template-columns: repeat(2, min-content);
   grid-gap: ${glsp(0.25, 1)};
   text-align: center;
 `;
 
-const SubAction = styled.a`
+const SubAction = styled(Link)`
   grid-column: 2;
   grid-row: 2;
 `;
@@ -206,6 +208,8 @@ const Illu = styled.figure`
 `;
 
 function Home() {
+  const { isLogged } = useUser();
+
   return (
     <App pageTitle='Welcome'>
       <Inpage>
@@ -230,24 +234,26 @@ function Home() {
                   </IntroLead>
                   <IntroActions>
                     <Button
-                      forwardedAs='a'
-                      href='/about'
+                      forwardedAs={Link}
+                      to='/about'
                       size='large'
                       variation='primary-raised-light'
                     >
                       Learn more
                     </Button>
                     <Button
-                      forwardedAs='a'
-                      href='/documents'
+                      forwardedAs={Link}
+                      to='/documents'
                       size='large'
                       variation='primary-raised-dark'
                     >
                       Explore the documents
                     </Button>
-                    <SubAction href='/signin' title='Sign in now'>
-                      Or sign in to start creating
-                    </SubAction>
+                    {!isLogged && (
+                      <SubAction to='/signin' title='Sign in now'>
+                        Or sign in to start creating
+                      </SubAction>
+                    )}
                   </IntroActions>
                 </header>
                 <FocusBoxList>
