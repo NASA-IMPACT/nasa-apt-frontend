@@ -8,7 +8,7 @@ import Tip from './tooltip';
 
 const PageFooterSelf = styled.footer`
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
   align-items: center;
   background-color: ${themeVal('color.primary')};
@@ -28,9 +28,9 @@ const PageFooterSelf = styled.footer`
 `;
 
 const Colophon = styled.p`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(min-content, max-content) 1fr;
+  grid-gap: ${glsp(1)};
   font-size: 0.875rem;
   line-height: 1rem;
 
@@ -54,15 +54,14 @@ const CreditsLink = styled.a`
   }
 `;
 
-const VersionInfo = styled.p`
+const VersionInfo = styled.span`
   margin-left: auto;
-  font-weight: ${themeVal('type.base.regular')};
-  font-size: 0.875rem;
+  opacity: 0.64;
 `;
 
 function PageFooter() {
   const nowDate = new Date();
-  const updateDate = new Date(process.env.APP_BUILD_TIME || nowDate.getTime());
+  const updateDate = new Date(+process.env.APP_BUILD_TIME || nowDate.getTime());
 
   return (
     <PageFooterSelf role='contentinfo'>
@@ -76,15 +75,15 @@ function PageFooter() {
           </span>
           <time dateTime={nowDate.getFullYear()}>{nowDate.getFullYear()}</time>
         </CreditsLink>
+        <Tip
+          tag={VersionInfo}
+          delay={1000}
+          position='top-end'
+          title={`Last update on ${format(updateDate, 'yyyy-MM-dd HH:mm:ss')}`}
+        >
+          v{process.env.APP_VERSION}
+        </Tip>
       </Colophon>
-      <Tip
-        tag={VersionInfo}
-        delay={1000}
-        position='top-end'
-        title={`Last update on ${format(updateDate, 'yyyy-MM-dd HH:mm:ss')}`}
-      >
-        v{process.env.APP_VERSION}
-      </Tip>
     </PageFooterSelf>
   );
 }
