@@ -13,6 +13,7 @@ import Constrainer from '../../../styles/constrainer';
 import Prose from '../../../styles/typography/prose';
 
 import toasts from '../../common/toasts';
+import { showConfirmationPrompt } from '../../common/confirmation-prompt';
 
 function SandboxInteractive() {
   return (
@@ -41,6 +42,16 @@ function SandboxInteractive() {
                 }}
               >
                 Toasts!
+              </Button>
+              <h2>Modals</h2>
+              <Button
+                variation='base-raised-light'
+                onClick={async () => {
+                  const result = await showConfirmationPrompt();
+                  console.log('result', result);
+                }}
+              >
+                Confirmation prompt
               </Button>
             </Prose>
           </Constrainer>

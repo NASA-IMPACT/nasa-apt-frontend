@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { Button } from '@devseed-ui/button';
@@ -19,6 +19,7 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
+import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -32,6 +33,19 @@ function DocumentView() {
   useEffect(() => {
     fetchSingleAtbd();
   }, [id, version]);
+
+  const onDocumentMenuAction = useCallback(
+    async (menuId) => {
+      if (menuId === 'delete') {
+        const res = await confirmDeleteAtbdVersion(
+          atbd.data?.title,
+          atbd.data?.version
+        );
+        console.log('res', res);
+      }
+    },
+    [atbd.data?.title, atbd.data?.version]
+  );
 
   const errCode = atbd.error?.response?.status;
 
@@ -73,6 +87,7 @@ function DocumentView() {
                 atbd={atbd.data}
                 atbdVersion={atbd.data}
                 variation='achromic-plain'
+                onSelect={onDocumentMenuAction}
               />
             </InpageActions>
           </InpageHeader>

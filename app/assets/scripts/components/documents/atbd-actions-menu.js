@@ -8,7 +8,7 @@ import { atbdEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
 export default function AtbdActionsMenu(props) {
-  const { atbd, atbdVersion, variation } = props;
+  const { atbd, atbdVersion, variation, onSelect } = props;
   const { isLogged } = useUser();
 
   const dropProps = useMemo(() => {
@@ -94,10 +94,13 @@ export default function AtbdActionsMenu(props) {
     };
   }, [variation, atbd, atbdVersion, isLogged]);
 
-  return <DropdownMenu {...dropProps} dropTitle='Options' />;
+  return (
+    <DropdownMenu {...dropProps} dropTitle='Options' onSelect={onSelect} />
+  );
 }
 
 AtbdActionsMenu.propTypes = {
+  onSelect: T.func,
   atbd: T.object,
   atbdVersion: T.object,
   variation: T.string

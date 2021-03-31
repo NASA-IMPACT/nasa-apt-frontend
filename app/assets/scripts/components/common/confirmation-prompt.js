@@ -177,3 +177,70 @@ export function showConfirmationPrompt(opts = {}) {
     });
   });
 }
+
+const deleteControls = ({ confirm, cancel }) => (
+  <React.Fragment>
+    <Button
+      variation='base-plain'
+      title='Cancel deletion'
+      useIcon='xmark--small'
+      onClick={cancel}
+    >
+      Cancel
+    </Button>
+    <Button
+      variation='danger-raised-dark'
+      title='Confirm deletion'
+      useIcon='trash-bin'
+      onClick={confirm}
+    >
+      Delete
+    </Button>
+  </React.Fragment>
+);
+
+/**
+ * Convenience method to show a delete confirmation prompt for a document.
+ * Will display a "Cancel/Delete" buttons and:
+ * title: 'Delete this document?'
+ * content: <p>The document <strong>{name}</strong> will be deleted.</p>
+ *
+ * @param {string} name Name of the document to delete
+ * @param {any} data Any extra data that the confirmation prompt should keep
+ *              track of. Useful to know what confirmation we're working with.
+ */
+export const confirmDeleteAtbd = async (name) => {
+  return showConfirmationPrompt({
+    title: 'Delete this document?',
+    content: (
+      <p>
+        The document <strong>{name}</strong> and all its versions will be
+        deleted.
+      </p>
+    ),
+    renderControls: deleteControls
+  });
+};
+
+/**
+ * Convenience method to show a delete confirmation prompt for a document.
+ * Will display a "Cancel/Delete" buttons and:
+ * title: 'Delete this document?'
+ * content: <p>The document <strong>{name}</strong> will be deleted.</p>
+ *
+ * @param {string} name Name of the document to delete
+ * @param {any} data Any extra data that the confirmation prompt should keep
+ *              track of. Useful to know what confirmation we're working with.
+ */
+export const confirmDeleteAtbdVersion = async (name, version) => {
+  return showConfirmationPrompt({
+    title: 'Delete this document version?',
+    content: (
+      <p>
+        The version <strong>{version}</strong> of document{' '}
+        <strong>{name}</strong> will be deleted.
+      </p>
+    ),
+    renderControls: deleteControls
+  });
+};

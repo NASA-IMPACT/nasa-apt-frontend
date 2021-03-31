@@ -952,6 +952,14 @@
     "@devseed-ui/collecticons" "2.0.0"
     "@devseed-ui/theme-provider" "^3.0.0"
 
+"@devseed-ui/modal@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@devseed-ui/modal/-/modal-3.0.0.tgz#3033dd9b6cba901d9babf106f047db0cad2f6b1b"
+  integrity sha512-SXfofVotfzGO4Qr+7l5S2940F7yKP10MrhpeYWmix30EJAe3j0v5qzVw1ep5AGsfS12ZLCRRLtG1i1S7wTdINQ==
+  dependencies:
+    "@devseed-ui/theme-provider" "^3.0.0"
+    react-transition-group "^4.3.0"
+
 "@devseed-ui/theme-provider@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/theme-provider/-/theme-provider-3.0.0.tgz#13b22818f5ab3dc11d99b82d21e11afbde3ff487"
