@@ -9,7 +9,7 @@ import {
   InpageTitle,
   InpageBody
 } from '../../../styles/inpage';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 
 import toasts from '../../common/toasts';
@@ -25,7 +25,7 @@ function SandboxInteractive() {
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             <Prose>
               <Button
                 variation='base-raised-light'
@@ -55,7 +55,7 @@ function SandboxInteractive() {
                 Confirmation prompt
               </Button>
             </Prose>
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>
