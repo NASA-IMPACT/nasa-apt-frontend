@@ -7,6 +7,7 @@ import { makeRequestThunk } from './make-request-thunk';
 import { useReducerWithThunk } from './use-reducer-thunk';
 import { axiosAPI } from '../axios';
 import { getStateSlice } from './utils';
+import { withReducerInterceptor } from './with-reducer-interceptor';
 
 // status: 'idle' | 'loading' | 'succeeded' | 'failed'
 const baseContexeedState = {
@@ -21,7 +22,7 @@ const baseContexeedState = {
 // from the parent. This triggers warning with eslint but it is accounted for.
 
 export function useContexeedApi(config, deps = []) {
-  const { name, useKey, requests = {}, mutations = {} } = config;
+  const { name, useKey, interceptor, requests = {}, mutations = {} } = config;
 
   // Memoize values
   const { initialState, reducer, actions } = useMemo(() => {
@@ -35,16 +36,19 @@ export function useContexeedApi(config, deps = []) {
     const initialState = useKey ? {} : baseContexeedState;
 
     const reducer = withReducerLogs(
-      makeReducer({
-        name,
-        // When creating the reducer we need the initial state, to be able to
-        // use the invalidate function.
-        initialState,
-        // The base state is used as the source for missing properties. We start
-        // from the base state and replace what's needed. In this way we ensure
-        // state consistency.
-        baseState: baseContexeedState
-      })
+      withReducerInterceptor(
+        makeReducer({
+          name,
+          // When creating the reducer we need the initial state, to be able to
+          // use the invalidate function.
+          initialState,
+          // The base state is used as the source for missing properties. We start
+          // from the base state and replace what's needed. In this way we ensure
+          // state consistency.
+          baseState: baseContexeedState
+        }),
+        interceptor
+      )
     );
 
     // Create the actions needed by the thunk (request and receive), and the
@@ -56,6 +60,7 @@ export function useContexeedApi(config, deps = []) {
       reducer,
       actions
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [...deps]);
 
   // useReducerWithThunk is the same as React's useReducer but with support for
@@ -73,6 +78,7 @@ export function useContexeedApi(config, deps = []) {
           [fnName]: (...args) => dispatch(fn(...args))
         };
       }, {}),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [dispatch, ...deps]
   );
 
@@ -87,6 +93,7 @@ export function useContexeedApi(config, deps = []) {
           [fnName]: (...args) => dispatch(fn(...args))
         };
       }, {}),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [dispatch, ...deps]
   );
 
@@ -119,6 +126,7 @@ export function useContexeedApi(config, deps = []) {
 
       return (useKey ? state[key] : state) || baseContexeedState;
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [state, ...deps]
   );
 
@@ -204,7 +212,8 @@ const makeMutationAction = (config, fnName, actions) => {
       const dispatchableActions = {
         request: (...args) => dispatch(callAction(request, args)),
         receive: (...args) => dispatch(callAction(receive, args)),
-        invalidate: () => dispatch(callAction(invalidate, args))
+        invalidate: () => dispatch(callAction(invalidate, args)),
+        dispatch
       };
 
       return mutation({

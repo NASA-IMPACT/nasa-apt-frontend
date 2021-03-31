@@ -14,6 +14,8 @@ const getFromObj = (obj, defaults) => {
   const { sections_completed = {}, ...remainingKeys } = defaults;
 
   return {
+    // The id of the atbd will never be changed but is useful to have present.
+    id: obj.id,
     ...Object.keys(remainingKeys).reduce((acc, key) => {
       const value = defaults[key];
       const source = get(obj, key);
@@ -68,7 +70,7 @@ export const STEPS = [
     id: 'contacts',
     label: 'Contact information',
     StepComponent: () => <p>Contact information coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -76,7 +78,7 @@ export const STEPS = [
     id: 'references',
     label: 'References',
     StepComponent: () => <p>References coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -84,7 +86,7 @@ export const STEPS = [
     id: 'introduction',
     label: 'Introduction',
     StepComponent: () => <p>Introduction coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -92,7 +94,7 @@ export const STEPS = [
     id: 'algorithm_description',
     label: 'Algorithm description',
     StepComponent: () => <p>Algorithm description coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -100,7 +102,7 @@ export const STEPS = [
     id: 'algorithm_usage',
     label: 'Algorithm usage',
     StepComponent: () => <p>Algorithm usage coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -108,7 +110,7 @@ export const STEPS = [
     id: 'algorithm_implementation',
     label: 'Algorithm implementation',
     StepComponent: () => <p>Algorithm implementation coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   },
@@ -116,7 +118,7 @@ export const STEPS = [
     id: 'journal_details',
     label: 'Journal details',
     StepComponent: () => <p>Journal details coming soon!</p>,
-    getInitialValues: (atbd) => {
+    getInitialValues: () => {
       return {};
     }
   }

@@ -75,6 +75,12 @@ interface ContexeedApiConfig {
    * False by default
    */
   useKey: boolean;
+  /** The interceptor is use to modify the action and/or the state before
+   * hitting the reducer. Can also be used to respond to custom actions */
+  interceptor: (
+    state: any,
+    action: { type: String }
+  ) => { state: any, action: { type: String } };
   /** List of request actions to create */
   requests: { [key: string]: ContexeedRequest };
   /** List of mutation actions to create. Mutations allow us to work with

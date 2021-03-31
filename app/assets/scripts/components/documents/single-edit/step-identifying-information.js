@@ -53,12 +53,12 @@ export default function StepIdentifyingInformation(props) {
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
+        resetForm({ values });
+        processToast.success('Changes saved');
         // Update the path in case the alias changed.
         if (values.alias) {
           history.replace(atbdEdit(values.alias, version, step.id));
         }
-        processToast.success('Changes saved');
-        resetForm({ values });
       }
     },
     [updateAtbd, history, version, step.id]
