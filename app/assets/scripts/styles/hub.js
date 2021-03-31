@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { glsp, themeVal, visuallyHidden } from '@devseed-ui/theme-provider';
+import {
+  glsp,
+  themeVal,
+  truncated,
+  visuallyHidden
+} from '@devseed-ui/theme-provider';
 
 export const HubList = styled.ol`
   background: transparent;
@@ -17,14 +22,19 @@ export const HubEntry = styled.article`
 
 export const HubEntryHeader = styled.header`
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 1fr minmax(min-content, max-content) minmax(
+      min-content,
+      max-content
+    );
   grid-gap: ${glsp(0, themeVal('layout.gap.xsmall'))};
 `;
 
 export const HubEntryHeadline = styled.div`
   display: inline-grid;
+  grid-auto-columns: minmax(min-content, max-content);
   grid-gap: ${glsp(1.25)};
   align-items: center;
+  min-width: 0px;
 
   > * {
     grid-row: 1;
@@ -32,12 +42,11 @@ export const HubEntryHeadline = styled.div`
 `;
 
 export const HubEntryTitle = styled.h1`
+  ${truncated()}
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: 0;
   max-width: 24rem;
-  overflow: hidden;
-  white-space: nowrap;
 
   a {
     display: block;
@@ -127,7 +136,6 @@ export const HubEntryActions = styled.div`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
   align-items: center;
-  margin-left: auto;
 
   > * {
     grid-row: 1;
