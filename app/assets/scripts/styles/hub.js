@@ -3,6 +3,7 @@ import { glsp, themeVal, visuallyHidden } from '@devseed-ui/theme-provider';
 
 export const HubList = styled.ol`
   background: transparent;
+  grid-column: content-start / content-end;
 `;
 
 export const HubListItem = styled.li`

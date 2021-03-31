@@ -9,7 +9,7 @@ import {
   InpageTitle,
   InpageBody
 } from '../styles/inpage';
-import Constrainer from '../styles/constrainer';
+import { ContentBlock } from '../styles/content-block';
 import Prose from '../styles/typography/prose';
 
 import config from '../config';
@@ -28,7 +28,7 @@ function SignIn() {
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             <Prose>
               <p>Login must be completed through Launchpad.</p>
               <p>You&apos;ll be redirected to login.</p>
@@ -36,13 +36,14 @@ function SignIn() {
               <Button
                 forwardedAs='a'
                 href={`${config.apiUrl}/saml/sso?return_to=${loc}/authorize`}
-                size='medium'
+                size='large'
                 variation='primary-raised-dark'
+                title='Sign in to your account'
               >
-                Login
+                Sign in
               </Button>
             </Prose>
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>

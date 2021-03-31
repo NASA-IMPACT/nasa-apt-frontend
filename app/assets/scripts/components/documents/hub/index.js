@@ -25,7 +25,7 @@ import {
   HubEntryBreadcrumbMenu,
   HubEntryActions
 } from '../../../styles/hub';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
@@ -81,7 +81,7 @@ function Documents() {
           </InpageActions>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             {atbds.status === 'succeeded' && !atbds.data?.length && (
               <div>
                 There are no documents. You can start by creating one.
@@ -159,7 +159,7 @@ function Documents() {
                 })}
               </HubList>
             )}
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>
