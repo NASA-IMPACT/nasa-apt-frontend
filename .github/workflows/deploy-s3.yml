@@ -10,7 +10,6 @@ on:
 
 env:
   NODE: 14
-  NODE_ENV: production
   DEPLOY_BUCKET: nasa-apt2-staging
 
 jobs:
@@ -49,7 +48,7 @@ jobs:
         run: yarn install
 
       - name: Build
-        run: yarn build
+        run: yarn stage
 
   deploy:
     runs-on: ubuntu-latest
