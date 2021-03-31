@@ -166,7 +166,6 @@ const FocusBoxTitle = styled(Heading).attrs({
 `;
 
 const Illu = styled.figure`
-  position: relative;
   grid-column: content-start / content-end;
   justify-self: center;
 
@@ -174,6 +173,11 @@ const Illu = styled.figure`
     grid-column: content-9 / full-end;
     justify-self: auto;
   `}
+`;
+
+const IlluInner = styled.div`
+  position: relative;
+  width: min-content;
 
   img {
     display: block;
@@ -185,25 +189,30 @@ const Illu = styled.figure`
     `}
 
     ${media.largeUp`
-      max-width: none;
+      max-width: 30rem;
     `}
+
+    ${media.xlargeUp`
+      max-width: 32rem;
+    `}
+
+    @media only screen and (min-width: 1920px) {
+      max-width: 40rem;
+    }
   }
 
   &::after {
     position: absolute;
     top: 99%;
     left: 0;
-    right: 0;
+    width: 100%;
     height: 100vh;
     background-image: url('${loc}/assets/graphics/layout/welcome-illu--pattern.svg');
     background-repeat: repeat-y;
     background-size: 100% auto;
     content: '';
     pointer-events: none;
-
-    ${media.largeUp`
-      background-size: auto;
-    `}
+    max-width: inherit;
   }
 `;
 
@@ -309,12 +318,14 @@ function Home() {
                 </FocusBoxList>
               </Intro>
               <Illu>
-                <img
-                  alt='Tree of knowledge illustration'
-                  src={`${loc}/assets/graphics/layout/welcome-illu.svg`}
-                  width='640'
-                  height='864'
-                />
+                <IlluInner>
+                  <img
+                    alt='Tree of knowledge illustration'
+                    src={`${loc}/assets/graphics/layout/welcome-illu.svg`}
+                    width='640'
+                    height='864'
+                  />
+                </IlluInner>
               </Illu>
             </HomeContentInner>
           </HomeContent>

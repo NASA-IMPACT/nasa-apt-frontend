@@ -25,10 +25,29 @@ export const AtbdsProvider = (props) => {
   const {
     getState: getSingleAtbd,
     fetchSingleAtbd,
-    createAtbd
+    createAtbd,
+    updateAtbd
   } = useContexeedApi({
     name: 'atbdSingle',
     useKey: true,
+    interceptor: (state, action) => {
+      // The statekey for a single atbd can be alias-version. This means that
+      // when the alias changes the key must updated as well. This code captures
+      // the action and does that.
+      switch (action.type) {
+        case 'move-key': {
+          const { [action.from]: prevKey, ...rest } = state;
+          return {
+            action,
+            state: {
+              ...rest,
+              [action.to]: prevKey
+            }
+          };
+        }
+      }
+      return { state, action };
+    },
     requests: {
       fetchSingleAtbd: withRequestToken(token, ({ id, version }) => ({
         stateKey: `${id}/${version}`,
@@ -50,31 +69,7 @@ export const AtbdsProvider = (props) => {
           // The responses of both endpoints are pretty similar. The first
           // includes the meta information (no document) of all the versions,
           // and the second includes the full document of the requested version.
-          // The whole ATBD has a structure like:
-
-          // interface ATBD {
-          //   id: Number
-          //   alias: String
-          //   created_by: String
-          //   created_at: Date
-          //   title: String
-          //   versions: [ATBDVersion]
-          // }
-
-          // interface ATBDVersion {
-          //   status: "Draft" | "Published"
-          //   published_by: String
-          //   published_at: Date
-          //   created_by: String
-          //   created_at: Date
-          //   major: Number
-          //   minor: Number
-          //   version: String
-          //   document: ATBDDocument
-          //   changelog: String
-          //   doi: String
-          // }
-
+          // The structure of an ATBD can be see in ./types.ts
           // We keep the response from the metaInfo, and append all the fields
           // of the queried version.
           return {
@@ -83,17 +78,126 @@ export const AtbdsProvider = (props) => {
             ...versionInfo.data.versions[0]
           };
         }
-      })),
+      }))
+    },
+    mutations: {
       createAtbd: withRequestToken(token, () => ({
         // Holder for the creation of a new ATBD since we don't have id yet.
         stateKey: 'new',
-        url: '/atbds',
-        options: {
-          method: 'post',
-          data: {
-            // New ATBDS are created as Untitled. The user can change the title
-            // at a later stage.
-            title: 'Untitled Document'
+        mutation: async ({ axios, requestOptions, actions }) => {
+          try {
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            const response = await axios({
+              ...requestOptions,
+              url: '/atbds',
+              method: 'post',
+              data: {
+                // New ATBDS are created as Untitled. The user can change the title
+                // at a later stage.
+                title: 'Untitled Document'
+              }
+            });
+
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(response.data);
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
+          }
+        }
+      })),
+      // Updating an ATBD is simple most of the times. The vast majority of the
+      // fields belong to an ATBD version and we'd use the versions endpoint.
+      // However when updating global fields like the tile or alias, we need to
+      // hit a separate endpoint just for those.
+      updateAtbd: withRequestToken(token, ({ id, version, data }) => ({
+        stateKey: `${id}/${version}`,
+        mutation: async ({ axios, requestOptions, state, actions }) => {
+          try {
+            // The id bound to the action function might be the alias or the
+            // numeric id. We need to use the numeric id to make the requests
+            // because the alias might be updated. If the alias update request
+            // finishes before the content update request, the content update
+            // would be looking at a non existent alias.
+            const { id: numericAtbdId, title, alias, ...rest } = data;
+
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            const metaUpdate =
+              // We have to update the title or alias and that requires a
+              // different endpoint.
+              title || alias
+                ? axios({
+                    ...requestOptions,
+                    url: `/atbds/${numericAtbdId}`,
+                    method: 'post',
+                    data: {
+                      title,
+                      alias
+                    }
+                  })
+                : // Nothing to update.
+                  Promise.resolve();
+
+            // Content for the atbd is actually stored on the version.
+            const contentUpdate = Object.keys(rest).length
+              ? axios({
+                  ...requestOptions,
+                  url: `/atbds/${numericAtbdId}/versions/${version}`,
+                  method: 'post',
+                  data: rest
+                })
+              : // Nothing to update.
+                Promise.resolve();
+
+            const [metaResponse, contentResponse] = await Promise.all([
+              metaUpdate,
+              contentUpdate
+            ]);
+
+            // Since the both responses return data that we need on the state we
+            // have to merge them.
+            let updatedData = state.data;
+
+            if (contentResponse) {
+              updatedData = {
+                ...updatedData,
+                // Despite being an array it only has 1 version, the one we queried.
+                // See not on fetchSingleAtbd
+                ...contentResponse.data.versions[0]
+              };
+            }
+
+            if (metaResponse) {
+              updatedData = {
+                ...updatedData,
+                title: metaResponse.data.title,
+                alias: metaResponse.data.alias
+              };
+            }
+
+            // Dispatch receive action. It is already dispatchable.
+            const updateResult = actions.receive(updatedData);
+
+            // The state key may have to change if the atbd alias changed.
+            const atbdId = metaResponse.data.alias || metaResponse.data.id;
+            const newKey = `${atbdId}/${version}`;
+
+            // Direct access to the dispatch function.
+            actions.dispatch({
+              type: 'move-key',
+              from: `${id}/${version}`,
+              to: newKey
+            });
+
+            // Ensure everything is correct, even the new key.
+            return { ...updateResult, key: newKey };
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
           }
         }
       }))
@@ -105,7 +209,8 @@ export const AtbdsProvider = (props) => {
     fetchAtbds,
     getSingleAtbd,
     fetchSingleAtbd,
-    createAtbd
+    createAtbd,
+    updateAtbd
   };
 
   return (
@@ -134,10 +239,14 @@ const useCheckContext = (fnName) => {
 };
 
 export const useSingleAtbd = ({ id, version }) => {
-  const { getSingleAtbd, fetchSingleAtbd } = useCheckContext('useSingleAtbd');
+  const { getSingleAtbd, fetchSingleAtbd, updateAtbd } = useCheckContext(
+    'useSingleAtbd'
+  );
+
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
-    fetchSingleAtbd: () => fetchSingleAtbd({ id, version })
+    fetchSingleAtbd: () => fetchSingleAtbd({ id, version }),
+    updateAtbd: (data) => updateAtbd({ id, version, data })
   };
 };
 

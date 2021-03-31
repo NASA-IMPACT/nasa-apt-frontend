@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import App from '../common/app';
 
@@ -11,18 +10,8 @@ import {
   InpageBody
 } from '../../styles/inpage';
 
-import Constrainer from '../../styles/constrainer';
+import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
-
-const InpageBodyScroll = styled(InpageBody)`
-  padding: 0;
-  overflow: auto;
-
-  ${Constrainer} {
-    padding-top: 3rem;
-    padding-bottom: 30rem;
-  }
-`;
 
 function About() {
   return (
@@ -33,13 +22,13 @@ function About() {
             <InpageTitle>About</InpageTitle>
           </InpageHeadline>
         </InpageHeader>
-        <InpageBodyScroll>
-          <Constrainer>
+        <InpageBody>
+          <ContentBlock>
             <Prose>
               <p>Hello world!</p>
             </Prose>
-          </Constrainer>
-        </InpageBodyScroll>
+          </ContentBlock>
+        </InpageBody>
       </Inpage>
     </App>
   );

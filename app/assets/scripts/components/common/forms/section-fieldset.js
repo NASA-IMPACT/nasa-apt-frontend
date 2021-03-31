@@ -11,6 +11,7 @@ import { headingAlt } from '@devseed-ui/typography';
 import { glsp } from '@devseed-ui/theme-provider';
 
 import DropdownMenu from '../dropdown-menu';
+import { useField } from 'formik';
 
 const StatusAction = styled.div`
   display: flex;
@@ -47,7 +48,7 @@ export const SECTION_STATUS_DEFAULT = SECTION_STATUS_MENU.items[0].id;
  * @prop {mixed} status Current section status
  * @prop {function} onStatusChange On change event handler for the status dropdown
  */
-export default function SectionFieldset(props) {
+export function SectionFieldset(props) {
   const { children, label, status, onStatusChange } = props;
 
   const triggerProps = useMemo(() => ({ size: 'small' }), []);
@@ -56,17 +57,19 @@ export default function SectionFieldset(props) {
     <FormFieldset>
       <FormFieldsetHeader>
         <FormLegend>{label}</FormLegend>
-        <StatusAction>
-          <StatusLabel>Marked as</StatusLabel>
-          <DropdownMenu
-            menu={SECTION_STATUS_MENU}
-            activeItem={status}
-            dropTitle='Section status'
-            withChevron
-            triggerProps={triggerProps}
-            onSelect={onStatusChange}
-          />
-        </StatusAction>
+        {status && (
+          <StatusAction>
+            <StatusLabel>Marked as</StatusLabel>
+            <DropdownMenu
+              menu={SECTION_STATUS_MENU}
+              activeItem={status}
+              dropTitle='Section status'
+              withChevron
+              triggerProps={triggerProps}
+              onSelect={onStatusChange}
+            />
+          </StatusAction>
+        )}
       </FormFieldsetHeader>
       <FormFieldsetBody>{children}</FormFieldsetBody>
     </FormFieldset>
@@ -78,4 +81,24 @@ SectionFieldset.propTypes = {
   label: T.string,
   status: T.string,
   onStatusChange: T.func
+};
+
+export function FormikSectionFieldset(props) {
+  const { sectionName } = props;
+
+  const [{ value }, , { setValue }] = useField(sectionName);
+
+  return (
+    <SectionFieldset
+      {...props}
+      status={value}
+      onStatusChange={(val) => setValue(val)}
+    />
+  );
+}
+
+FormikSectionFieldset.propTypes = {
+  children: T.node,
+  label: T.string,
+  sectionName: T.string
 };

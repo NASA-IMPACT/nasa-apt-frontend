@@ -22,6 +22,9 @@
 export function makeReducer({ name: actionName, initialState, baseState }) {
   // Reducer function.
   const contexeedReducer = (state, action) => {
+    // The status to update depends on whether is a mutation or not.
+    const statusKey = action.isMutation ? 'mutationStatus' : 'status';
+
     switch (action.type) {
       case `invalidate/${actionName}`:
         return initialState;
@@ -29,7 +32,7 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
         return {
           ...baseState,
           ...state,
-          status: 'loading'
+          [statusKey]: 'loading'
         };
       }
       case `receive/${actionName}`: {
@@ -41,12 +44,12 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
         };
 
         if (action.error) {
-          st.status = 'failed';
+          st[statusKey] = 'failed';
           st.error = action.error;
           // The data remains to what was previously set. This allows to keep
           // the data in the interface even if the request fails.
         } else {
-          st.status = 'succeeded';
+          st[statusKey] = 'succeeded';
           st.data = action.data;
           st.error = null;
         }

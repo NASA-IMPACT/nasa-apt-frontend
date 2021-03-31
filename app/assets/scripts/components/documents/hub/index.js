@@ -25,14 +25,16 @@ import {
   HubEntryBreadcrumbMenu,
   HubEntryActions
 } from '../../../styles/hub';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
+import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdView } from '../../../utils/url-creator';
+import { atbdEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
+import { calculateAtbdCompleteness } from '../completeness';
 
 function Documents() {
   const { fetchAtbds, createAtbd, atbds } = useAtbds();
@@ -56,7 +58,7 @@ function Documents() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('ATBD successfully created');
-      history.push(atbdView(result.data));
+      history.push(atbdEdit(result.data));
     }
   };
 
@@ -79,7 +81,7 @@ function Documents() {
           </InpageActions>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             {atbds.status === 'succeeded' && !atbds.data?.length && (
               <div>
                 There are no documents. You can start by creating one.
@@ -96,6 +98,8 @@ function Documents() {
               <HubList>
                 {atbds.data.map((atbd) => {
                   const lastVersion = atbd.versions[atbd.versions.length - 1];
+
+                  const { percent } = calculateAtbdCompleteness(lastVersion);
 
                   return (
                     <HubListItem key={atbd.id}>
@@ -129,7 +133,7 @@ function Documents() {
                               <dd>
                                 <StatusPill
                                   status={lastVersion.status}
-                                  completeness={80}
+                                  completeness={percent}
                                 />
                               </dd>
                             </HubEntryMeta>
@@ -143,15 +147,10 @@ function Documents() {
                             </dd>
                           </HubEntryDetails>
                           <HubEntryActions>
-                            <Button
-                              to='/'
-                              variation='base-plain'
-                              useIcon='ellipsis-vertical'
-                              hideText
-                              title='Show options'
-                            >
-                              Options
-                            </Button>
+                            <AtbdActionsMenu
+                              atbd={atbd}
+                              atbdVersion={lastVersion}
+                            />
                           </HubEntryActions>
                         </HubEntryHeader>
                       </HubEntry>
@@ -160,7 +159,7 @@ function Documents() {
                 })}
               </HubList>
             )}
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>

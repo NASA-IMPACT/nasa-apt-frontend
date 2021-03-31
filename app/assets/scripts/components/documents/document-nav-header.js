@@ -9,40 +9,56 @@ import {
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
+import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import StatusPill from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
 import { useUser } from '../../context/user';
+import { atbdEdit, atbdView } from '../../utils/url-creator';
 
+// Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentNavHeader(props) {
-  const { title, atbdId, status, currentVersion, mode, versions } = props;
+  const {
+    title,
+    atbdId,
+    status,
+    version,
+    mode,
+    versions,
+    completeness
+  } = props;
   const { isLogged } = useUser();
+  const ability = useContextualAbility();
 
-  const documentModesMenu = useMemo(
-    () => ({
+  const canEditATBD = ability.can('edit', 'atbd');
+
+  const documentModesMenu = useMemo(() => {
+    const viewATBD = {
+      id: 'view',
+      label: 'Viewing',
+      title: `Switch to viewing mode`,
+      as: Link,
+      to: atbdView(atbdId, version)
+    };
+    return {
       id: 'mode',
       selectable: true,
-      items: [
-        {
-          id: 'view',
-          label: 'Viewing',
-          title: `Switch to viewing mode`,
-          as: Link,
-          to: `/documents/${atbdId}/${currentVersion}`
-        },
-        {
-          id: 'edit',
-          label: 'Editing',
-          title: `Switch to editing mode`,
-          as: Link,
-          to: `/documents/${atbdId}/${currentVersion}/edit`
-        }
-      ]
-    }),
-    [atbdId, currentVersion]
-  );
+      items: canEditATBD
+        ? [
+            viewATBD,
+            {
+              id: 'edit',
+              label: 'Editing',
+              title: `Switch to editing mode`,
+              as: Link,
+              to: atbdEdit(atbdId, version)
+            }
+          ]
+        : [viewATBD]
+    };
+  }, [atbdId, version, canEditATBD]);
 
   const dropdownMenuTriggerProps = useMemo(
     () => ({
@@ -62,10 +78,10 @@ export default function DocumentNavHeader(props) {
                 atbdId={atbdId}
                 versions={versions}
                 variation='achromic-plain'
-                currentVersion={currentVersion}
+                version={version}
               />
             </li>
-            {isLogged && (
+            {isLogged && documentModesMenu.items.length > 1 && (
               <li>
                 <DropdownMenu
                   menu={documentModesMenu}
@@ -84,7 +100,7 @@ export default function DocumentNavHeader(props) {
         <InpageSubtitle as='dd'>Documents</InpageSubtitle>
         <dt>Status</dt>
         <dd>
-          <StatusPill status={status} completeness={80} />
+          <StatusPill status={status} completeness={completeness} />
         </dd>
       </InpageMeta>
     </>
@@ -95,7 +111,8 @@ DocumentNavHeader.propTypes = {
   title: T.string,
   status: T.string,
   atbdId: T.oneOfType([T.string, T.number]),
-  currentVersion: T.string,
+  version: T.string,
   versions: T.array,
-  mode: T.string
+  mode: T.string,
+  completeness: T.number
 };

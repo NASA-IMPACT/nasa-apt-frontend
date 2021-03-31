@@ -5,17 +5,24 @@ import { makeReducer } from './make-reducer';
 import { makeActions } from './make-actions';
 import { makeRequestThunk } from './make-request-thunk';
 import { useReducerWithThunk } from './use-reducer-thunk';
+import { axiosAPI } from '../axios';
+import { getStateSlice } from './utils';
+import { withReducerInterceptor } from './with-reducer-interceptor';
 
 // status: 'idle' | 'loading' | 'succeeded' | 'failed'
 const baseContexeedState = {
   status: 'idle',
+  mutationStatus: 'idle',
   receivedAt: null,
   error: null,
   data: null
 };
 
+// Power to the developer: The several hooks accept the `deps` which get passed
+// from the parent. This triggers warning with eslint but it is accounted for.
+
 export function useContexeedApi(config, deps = []) {
-  const { name, useKey, requests = {} } = config;
+  const { name, useKey, interceptor, requests = {}, mutations = {} } = config;
 
   // Memoize values
   const { initialState, reducer, actions } = useMemo(() => {
@@ -29,16 +36,19 @@ export function useContexeedApi(config, deps = []) {
     const initialState = useKey ? {} : baseContexeedState;
 
     const reducer = withReducerLogs(
-      makeReducer({
-        name,
-        // When creating the reducer we need the initial state, to be able to use
-        // the invalidate function.
-        initialState,
-        //The base state is used as the source for missing properties. We start
-        //from the base state and replace what's needed. In this way we ensure
-        //state consistency.
-        baseState: baseContexeedState
-      })
+      withReducerInterceptor(
+        makeReducer({
+          name,
+          // When creating the reducer we need the initial state, to be able to
+          // use the invalidate function.
+          initialState,
+          // The base state is used as the source for missing properties. We start
+          // from the base state and replace what's needed. In this way we ensure
+          // state consistency.
+          baseState: baseContexeedState
+        }),
+        interceptor
+      )
     );
 
     // Create the actions needed by the thunk (request and receive), and the
@@ -50,6 +60,7 @@ export function useContexeedApi(config, deps = []) {
       reducer,
       actions
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [...deps]);
 
   // useReducerWithThunk is the same as React's useReducer but with support for
@@ -67,11 +78,34 @@ export function useContexeedApi(config, deps = []) {
           [fnName]: (...args) => dispatch(fn(...args))
         };
       }, {}),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    [dispatch, ...deps]
+  );
+
+  // Create the dispatchable mutation actions from the functions defined in the
+  // configuration.
+  const mutationActions = useMemo(
+    () =>
+      Object.keys(mutations).reduce((acc, fnName) => {
+        const fn = makeMutationAction(config, fnName, actions);
+        return {
+          ...acc,
+          [fnName]: (...args) => dispatch(fn(...args))
+        };
+      }, {}),
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [dispatch, ...deps]
   );
 
   const invalidate = useCallback(
-    (...args) => dispatch(actions.invalidate(...args)),
+    (key) => {
+      if (useKey && !key) {
+        throw new Error(
+          `The contexeed \`${name}\` is setup to use a key (useKey), but you're using invalidate action without a key value.`
+        );
+      }
+      return dispatch(actions.invalidate(key));
+    },
     [dispatch, ...deps]
   );
 
@@ -92,11 +126,13 @@ export function useContexeedApi(config, deps = []) {
 
       return (useKey ? state[key] : state) || baseContexeedState;
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [state, ...deps]
   );
 
   return {
     ...requestActions,
+    ...mutationActions,
     invalidate,
     getState,
     rawState: state,
@@ -104,20 +140,28 @@ export function useContexeedApi(config, deps = []) {
   };
 }
 
+// Config example for contexeed:
+// {
+//   name: 'example',
+//   useKey: true,
+//   requests: {
+//     fetchSingleAtbd: ({id}) => ({
+//       url: `/atbds/${id}`,
+//       stateKey: `${id}`
+//     })
+//   },
+//   mutations: {
+//     updateAtbd: ({id}) => ({
+//       stateKey: `${id}`,
+//       mutation: () => {}
+//     })
+//   }
+// }
+
 const makeRequestAction = (config, fnName, actions) => {
   const { name, useKey, requests = {} } = config;
   const { request, receive } = actions;
-  // Config example:
-  // {
-  //   name: 'example',
-  //   useKey: true,
-  //   requests: {
-  //     fetchSingleAtbd: ({id}) => ({
-  //       url: `/atbds/${id}`,
-  //       stateKey: `${id}`
-  //     })
-  //   }
-  // }
+
   return (...args) => {
     // Extract the state key from the returned params.
     const { stateKey, ...rest } = requests[fnName](...args);
@@ -126,7 +170,7 @@ const makeRequestAction = (config, fnName, actions) => {
     // required.
     if (useKey && !stateKey) {
       throw new Error(
-        `The contexeed \`${name}\` is setup to use a key (useKey), but the requester \`${fnName}\` is not returning a stateKey.`
+        `The contexeed \`${name}\` is setup to use a key (useKey), but \`requests.${fnName}\` is not returning a stateKey.`
       );
     }
 
@@ -136,5 +180,48 @@ const makeRequestAction = (config, fnName, actions) => {
       requestFn: stateKey ? request.bind(null, stateKey) : request,
       receiveFn: stateKey ? receive.bind(null, stateKey) : receive
     });
+  };
+};
+
+const makeMutationAction = (config, fnName, actions) => {
+  const { name, useKey, mutations = {} } = config;
+  const { request, receive, invalidate } = actions;
+
+  return (...args) => {
+    // Extract the state key from the returned params.
+    const { stateKey, mutation, options } = mutations[fnName](...args);
+
+    // If the config defines this contexeed as `useKey`, the `stateKey` becomes
+    // required.
+    if (useKey && !stateKey) {
+      throw new Error(
+        `The contexeed \`${name}\` is setup to use a key (useKey), but \`mutations.${fnName}\` is not returning a stateKey.`
+      );
+    }
+
+    // Call the given action with the stateKey if is set.
+    const callAction = (actionFn, args) => {
+      const action = stateKey ? actionFn(stateKey, ...args) : actionFn(...args);
+      return { ...action, isMutation: true };
+    };
+
+    return async function (dispatch, state) {
+      const { stateSlice } = getStateSlice(state, stateKey);
+
+      // Actions for mutations have a isMutation key.
+      const dispatchableActions = {
+        request: (...args) => dispatch(callAction(request, args)),
+        receive: (...args) => dispatch(callAction(receive, args)),
+        invalidate: () => dispatch(callAction(invalidate, args)),
+        dispatch
+      };
+
+      return mutation({
+        axios: axiosAPI,
+        requestOptions: options,
+        state: stateSlice,
+        actions: dispatchableActions
+      });
+    };
   };
 };
