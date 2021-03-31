@@ -225,3 +225,36 @@ const makeMutationAction = (config, fnName, actions) => {
     };
   };
 };
+
+/**
+ * With a simple mutation this helper reduces boilerplate.
+ * Used as:
+ *
+ * mutation: simpleMutation({
+ *            url: `/atbds/${id}`,
+ *            method: 'delete'
+ *          })
+ *
+ * @param {object} params parameters for the request.
+ */
+export const simpleMutation = (params) => async ({
+  axios,
+  requestOptions,
+  actions
+}) => {
+  try {
+    // Dispatch request action. It is already dispatchable.
+    actions.request();
+
+    const response = await axios({
+      ...requestOptions,
+      ...params
+    });
+
+    // Dispatch receive action. It is already dispatchable.
+    return actions.receive(response.data);
+  } catch (error) {
+    // Dispatch receive action. It is already dispatchable.
+    return actions.receive(null, error);
+  }
+};

@@ -9,10 +9,11 @@ import {
   InpageTitle,
   InpageBody
 } from '../../../styles/inpage';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 
 import toasts from '../../common/toasts';
+import { showConfirmationPrompt } from '../../common/confirmation-prompt';
 
 function SandboxInteractive() {
   return (
@@ -24,7 +25,7 @@ function SandboxInteractive() {
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             <Prose>
               <Button
                 variation='base-raised-light'
@@ -42,8 +43,19 @@ function SandboxInteractive() {
               >
                 Toasts!
               </Button>
+              <h2>Modals</h2>
+              <Button
+                variation='base-raised-light'
+                onClick={async () => {
+                  const result = await showConfirmationPrompt();
+                  /* eslint-disable-next-line no-console */
+                  console.log('result', result);
+                }}
+              >
+                Confirmation prompt
+              </Button>
             </Prose>
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>

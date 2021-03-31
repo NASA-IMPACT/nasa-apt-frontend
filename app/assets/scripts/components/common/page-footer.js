@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import { format } from 'date-fns';
 import { glsp, media, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
+
+import Tip from './tooltip';
 
 const PageFooterSelf = styled.footer`
   display: grid;
@@ -26,9 +28,9 @@ const PageFooterSelf = styled.footer`
 `;
 
 const Colophon = styled.p`
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(min-content, max-content) 1fr;
+  grid-gap: ${glsp(1)};
   font-size: 0.875rem;
   line-height: 1rem;
 
@@ -52,7 +54,15 @@ const CreditsLink = styled.a`
   }
 `;
 
+const VersionInfo = styled.span`
+  margin-left: auto;
+  opacity: 0.64;
+`;
+
 function PageFooter() {
+  const nowDate = new Date();
+  const updateDate = new Date(+process.env.APP_BUILD_TIME || nowDate.getTime());
+
   return (
     <PageFooterSelf role='contentinfo'>
       <Colophon>
@@ -63,10 +73,16 @@ function PageFooter() {
           <span>
             NASA <strong>Earthdata</strong>
           </span>
-          <time dateTime={new Date().getFullYear()}>
-            {new Date().getFullYear()}
-          </time>
+          <time dateTime={nowDate.getFullYear()}>{nowDate.getFullYear()}</time>
         </CreditsLink>
+        <Tip
+          tag={VersionInfo}
+          delay={1000}
+          position='top-end'
+          title={`Last update on ${format(updateDate, 'yyyy-MM-dd HH:mm:ss')}`}
+        >
+          v{process.env.APP_VERSION}
+        </Tip>
       </Colophon>
     </PageFooterSelf>
   );

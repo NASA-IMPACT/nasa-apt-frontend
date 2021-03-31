@@ -12,6 +12,8 @@ import { themeOverridesAPT } from './styles/theme.js';
 import GlobalStyle from './styles/global';
 import ErrorBoundary from './components/uhoh/fatal-error';
 import { ToastsContainer } from './components/common/toasts';
+import AccessRoute from './a11n/access-route';
+import ConfirmationPrompt from './components/common/confirmation-prompt';
 
 // Views
 import Home from './components/home';
@@ -28,7 +30,6 @@ import Authorize from './a11n/authorize';
 import { AtbdsProvider } from './context/atbds-list';
 import { UserProvider } from './context/user';
 import { AbilityProvider } from './a11n/index';
-import AccessRoute from './a11n/access-route.js';
 
 const composingComponents = [
   ErrorBoundary,
@@ -59,6 +60,7 @@ function Root() {
         <CollecticonsGlobalStyle />
         <GlobalStyle />
         <GlobalLoadingProvider />
+        <ConfirmationPrompt />
         <Composer components={composingComponents}>
           <Switch>
             <Route exact path='/' component={Home} />

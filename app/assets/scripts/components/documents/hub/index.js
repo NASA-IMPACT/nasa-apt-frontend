@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -12,39 +12,27 @@ import {
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
-import {
-  HubList,
-  HubListItem,
-  HubEntry,
-  HubEntryHeader,
-  HubEntryHeadline,
-  HubEntryTitle,
-  HubEntryMeta,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryActions
-} from '../../../styles/hub';
+import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
-import StatusPill from '../../common/status-pill';
-import { Link } from '../../../styles/clean/link';
-import VersionsMenu from '../versions-menu';
-import AtbdActionsMenu from '../atbd-actions-menu';
+import AtbdHubEntry from './atbd-hub-entry';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdEdit } from '../../../utils/url-creator';
-import { createProcessToast } from '../../common/toasts';
-import { calculateAtbdCompleteness } from '../completeness';
+import toasts, { createProcessToast } from '../../common/toasts';
+import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
 
 function Documents() {
-  const { fetchAtbds, createAtbd, atbds } = useAtbds();
+  const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
   const history = useHistory();
 
   useEffect(() => {
     fetchAtbds();
   }, []);
 
-  if (atbds.error) {
+  // We only want to handle errors when the atbd request fails. Mutation errors,
+  // tracked by the `mutationStatus` property are handled in the submit
+  // handlers.
+  if (atbds.status === 'failed' && atbds.error) {
     // This is a serious server error. By throwing it will be caught by the
     // error boundary. There's no recovery from this error.
     throw atbds.error;
@@ -61,6 +49,23 @@ function Documents() {
       history.push(atbdEdit(result.data));
     }
   };
+
+  const onDocumentAction = useCallback(
+    async (atbd, menuId) => {
+      if (menuId === 'delete') {
+        const { result: confirmed } = await confirmDeleteAtbd(atbd.title);
+        if (confirmed) {
+          const result = await deleteFullAtbd({ id: atbd.id });
+          if (result.error) {
+            toasts.error(`An error occurred: ${result.error.message}`);
+          } else {
+            toasts.success('ATBD successfully deleted');
+          }
+        }
+      }
+    },
+    [deleteFullAtbd]
+  );
 
   return (
     <App pageTitle='Documents'>
@@ -96,67 +101,14 @@ function Documents() {
             )}
             {atbds.status === 'succeeded' && atbds.data?.length && (
               <HubList>
-                {atbds.data.map((atbd) => {
-                  const lastVersion = atbd.versions[atbd.versions.length - 1];
-
-                  const { percent } = calculateAtbdCompleteness(lastVersion);
-
-                  return (
-                    <HubListItem key={atbd.id}>
-                      <HubEntry>
-                        <HubEntryHeader>
-                          <HubEntryHeadline>
-                            <HubEntryTitle>
-                              <Link
-                                to={`/documents/${atbd.alias || atbd.id}/${
-                                  lastVersion.version
-                                }`}
-                                title='View document'
-                              >
-                                {atbd.title}
-                              </Link>
-                            </HubEntryTitle>
-                            <HubEntryHeadNav role='navigation'>
-                              <HubEntryBreadcrumbMenu>
-                                <li>
-                                  <VersionsMenu
-                                    atbdId={atbd.alias || atbd.id}
-                                    versions={atbd.versions}
-                                  />
-                                </li>
-                              </HubEntryBreadcrumbMenu>
-                            </HubEntryHeadNav>
-                          </HubEntryHeadline>
-                          {lastVersion.status === 'Draft' && (
-                            <HubEntryMeta>
-                              <dt>Status</dt>
-                              <dd>
-                                <StatusPill
-                                  status={lastVersion.status}
-                                  completeness={percent}
-                                />
-                              </dd>
-                            </HubEntryMeta>
-                          )}
-                          <HubEntryDetails>
-                            <dt>By</dt>
-                            <dd>George J. Huffman et al.</dd>
-                            <dt>On</dt>
-                            <dd>
-                              <time dateTime='2021-02-07'>Feb 7, 2021</time>
-                            </dd>
-                          </HubEntryDetails>
-                          <HubEntryActions>
-                            <AtbdActionsMenu
-                              atbd={atbd}
-                              atbdVersion={lastVersion}
-                            />
-                          </HubEntryActions>
-                        </HubEntryHeader>
-                      </HubEntry>
-                    </HubListItem>
-                  );
-                })}
+                {atbds.data.map((atbd) => (
+                  <HubListItem key={atbd.id}>
+                    <AtbdHubEntry
+                      atbd={atbd}
+                      onDocumentAction={onDocumentAction}
+                    />
+                  </HubListItem>
+                ))}
               </HubList>
             )}
           </ContentBlock>
