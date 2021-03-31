@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -20,6 +20,7 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
+import toasts from '../../common/toasts';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -28,7 +29,11 @@ const InpageBodyScroll = styled(InpageBody)`
 
 function DocumentView() {
   const { id, version } = useParams();
-  const { atbd, fetchSingleAtbd } = useSingleAtbd({ id, version });
+  const history = useHistory();
+  const { atbd, fetchSingleAtbd, deleteAtbdVersion } = useSingleAtbd({
+    id,
+    version
+  });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -37,24 +42,38 @@ function DocumentView() {
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
       if (menuId === 'delete') {
-        const res = await confirmDeleteAtbdVersion(
+        const { result: confirmed } = await confirmDeleteAtbdVersion(
           atbd.data?.title,
           atbd.data?.version
         );
-        console.log('res', res);
+
+        if (confirmed) {
+          const result = await deleteAtbdVersion();
+          if (result.error) {
+            toasts.error(`An error occurred: ${result.error.message}`);
+          } else {
+            toasts.success('ATBD successfully deleted');
+            history.push('/documents');
+          }
+        }
       }
     },
-    [atbd.data?.title, atbd.data?.version]
+    [atbd.data?.title, atbd.data?.version, deleteAtbdVersion, history]
   );
 
-  const errCode = atbd.error?.response?.status;
+  // We only want to handle errors when the atbd request fails. Mutation errors,
+  // tracked by the `mutationStatus` property are handled in the submit
+  // handlers.
+  if (atbd.status === 'failed') {
+    const errCode = atbd.error?.response.status;
 
-  if (errCode === 400 || errCode === 404) {
-    return <UhOh />;
-  } else if (atbd.error) {
-    // This is a serious server error. By throwing it will be caught by the
-    // error boundary. There's no recovery from this error.
-    throw atbd.error;
+    if (errCode === 400 || errCode === 404) {
+      return <UhOh />;
+    } else if (atbd.error) {
+      // This is a serious server error. By throwing it will be caught by the
+      // error boundary. There's no recovery from this error.
+      throw atbd.error;
+    }
   }
 
   const completeness = atbd.data

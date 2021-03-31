@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -14,21 +14,25 @@ import {
 } from '../../../styles/inpage';
 import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
+import AtbdHubEntry from './atbd-hub-entry';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdEdit } from '../../../utils/url-creator';
-import { createProcessToast } from '../../common/toasts';
-import AtbdHubEntry from './atbd-hub-entry';
+import toasts, { createProcessToast } from '../../common/toasts';
+import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
 
 function Documents() {
-  const { fetchAtbds, createAtbd, atbds } = useAtbds();
+  const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
   const history = useHistory();
 
   useEffect(() => {
     fetchAtbds();
   }, []);
 
-  if (atbds.error) {
+  // We only want to handle errors when the atbd request fails. Mutation errors,
+  // tracked by the `mutationStatus` property are handled in the submit
+  // handlers.
+  if (atbds.status === 'failed' && atbds.error) {
     // This is a serious server error. By throwing it will be caught by the
     // error boundary. There's no recovery from this error.
     throw atbds.error;
@@ -45,6 +49,23 @@ function Documents() {
       history.push(atbdEdit(result.data));
     }
   };
+
+  const onDocumentAction = useCallback(
+    async (atbd, menuId) => {
+      if (menuId === 'delete') {
+        const { result: confirmed } = await confirmDeleteAtbd(atbd.title);
+        if (confirmed) {
+          const result = await deleteFullAtbd({ id: atbd.id });
+          if (result.error) {
+            toasts.error(`An error occurred: ${result.error.message}`);
+          } else {
+            toasts.success('ATBD successfully deleted');
+          }
+        }
+      }
+    },
+    [deleteFullAtbd]
+  );
 
   return (
     <App pageTitle='Documents'>
@@ -82,7 +103,10 @@ function Documents() {
               <HubList>
                 {atbds.data.map((atbd) => (
                   <HubListItem key={atbd.id}>
-                    <AtbdHubEntry atbd={atbd} />
+                    <AtbdHubEntry
+                      atbd={atbd}
+                      onDocumentAction={onDocumentAction}
+                    />
                   </HubListItem>
                 ))}
               </HubList>

@@ -54,7 +54,7 @@ const CreditsLink = styled.a`
   }
 `;
 
-const VersionInfo = styled.div`
+const VersionInfo = styled.p`
   margin-left: auto;
   font-weight: ${themeVal('type.base.regular')};
   font-size: 0.875rem;
@@ -77,15 +77,14 @@ function PageFooter() {
           <time dateTime={nowDate.getFullYear()}>{nowDate.getFullYear()}</time>
         </CreditsLink>
       </Colophon>
-      <VersionInfo>
-        <Tip
-          delay={1000}
-          position='top-end'
-          title={`Last update on ${format(updateDate, 'yyyy-MM-dd HH:mm:ss')}`}
-        >
-          v{process.env.APP_VERSION}
-        </Tip>
-      </VersionInfo>
+      <Tip
+        tag={VersionInfo}
+        delay={1000}
+        position='top-end'
+        title={`Last update on ${format(updateDate, 'yyyy-MM-dd HH:mm:ss')}`}
+      >
+        v{process.env.APP_VERSION}
+      </Tip>
     </PageFooterSelf>
   );
 }

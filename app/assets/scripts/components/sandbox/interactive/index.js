@@ -48,6 +48,7 @@ function SandboxInteractive() {
                 variation='base-raised-light'
                 onClick={async () => {
                   const result = await showConfirmationPrompt();
+                  /* eslint-disable-next-line no-console */
                   console.log('result', result);
                 }}
               >

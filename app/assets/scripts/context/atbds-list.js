@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
 import T from 'prop-types';
 
 import { useAuthToken } from './user';
@@ -13,11 +13,34 @@ export const AtbdsProvider = (props) => {
   const { children } = props;
   const { token } = useAuthToken();
 
-  const { getState: getAtbds, fetchAtbds } = useContexeedApi({
+  const { getState: getAtbds, fetchAtbds, deleteFullAtbd } = useContexeedApi({
     name: 'atbdList',
     requests: {
       fetchAtbds: withRequestToken(token, () => ({
         url: '/atbds'
+      }))
+    },
+    mutations: {
+      deleteFullAtbd: withRequestToken(token, ({ id }) => ({
+        mutation: async ({ axios, requestOptions, state, actions }) => {
+          try {
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            await axios({
+              ...requestOptions,
+              url: `/atbds/${id}`,
+              method: 'delete'
+            });
+
+            // If this worked, remove the item from the atbd list.
+            const newData = state.data.filter((atbd) => atbd.id !== id);
+            return actions.receive(newData);
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
+          }
+        }
       }))
     }
   });
@@ -26,7 +49,8 @@ export const AtbdsProvider = (props) => {
     getState: getSingleAtbd,
     fetchSingleAtbd,
     createAtbd,
-    updateAtbd
+    updateAtbd,
+    deleteAtbdVersion
   } = useContexeedApi({
     name: 'atbdSingle',
     useKey: true,
@@ -35,7 +59,7 @@ export const AtbdsProvider = (props) => {
       // when the alias changes the key must updated as well. This code captures
       // the action and does that.
       switch (action.type) {
-        case 'move-key': {
+        case 'atbdSingle/move-key': {
           const { [action.from]: prevKey, ...rest } = state;
           return {
             action,
@@ -102,6 +126,29 @@ export const AtbdsProvider = (props) => {
 
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(response.data);
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
+          }
+        }
+      })),
+      deleteAtbdVersion: withRequestToken(token, ({ id, version }) => ({
+        // The statekey of an ATBD is id-version, but in this case we are
+        // deleting the whole atbd so there's no version
+        stateKey: `${id}/${version}`,
+        mutation: async ({ axios, requestOptions, actions }) => {
+          try {
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            await axios({
+              ...requestOptions,
+              url: `/atbds/${id}/versions/${version}`,
+              method: 'delete'
+            });
+
+            // If this worked, invalidate the state for this id-version
+            return actions.invalidate();
           } catch (error) {
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(null, error);
@@ -188,7 +235,7 @@ export const AtbdsProvider = (props) => {
 
             // Direct access to the dispatch function.
             actions.dispatch({
-              type: 'move-key',
+              type: 'atbdSingle/move-key',
               from: `${id}/${version}`,
               to: newKey
             });
@@ -210,7 +257,9 @@ export const AtbdsProvider = (props) => {
     getSingleAtbd,
     fetchSingleAtbd,
     createAtbd,
-    updateAtbd
+    updateAtbd,
+    deleteFullAtbd,
+    deleteAtbdVersion
   };
 
   return (
@@ -239,18 +288,36 @@ const useCheckContext = (fnName) => {
 };
 
 export const useSingleAtbd = ({ id, version }) => {
-  const { getSingleAtbd, fetchSingleAtbd, updateAtbd } = useCheckContext(
-    'useSingleAtbd'
-  );
+  const {
+    getSingleAtbd,
+    fetchSingleAtbd,
+    updateAtbd,
+    deleteAtbdVersion
+  } = useCheckContext('useSingleAtbd');
 
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
-    fetchSingleAtbd: () => fetchSingleAtbd({ id, version }),
-    updateAtbd: (data) => updateAtbd({ id, version, data })
+    fetchSingleAtbd: useCallback(() => fetchSingleAtbd({ id, version }), [
+      id,
+      version,
+      fetchSingleAtbd
+    ]),
+    updateAtbd: useCallback((data) => updateAtbd({ id, version, data }), [
+      id,
+      version,
+      updateAtbd
+    ]),
+    deleteAtbdVersion: useCallback(() => deleteAtbdVersion({ id, version }), [
+      id,
+      version,
+      deleteAtbdVersion
+    ])
   };
 };
 
 export const useAtbds = () => {
-  const { getAtbds, fetchAtbds, createAtbd } = useCheckContext('useAtbds');
-  return { atbds: getAtbds(), fetchAtbds, createAtbd };
+  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useCheckContext(
+    'useAtbds'
+  );
+  return { atbds: getAtbds(), fetchAtbds, createAtbd, deleteFullAtbd };
 };

@@ -19,23 +19,17 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { atbdView } from '../../../utils/url-creator';
 import { calculateAtbdCompleteness } from '../completeness';
-import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
 
 function AtbdHubEntry(props) {
-  const { atbd } = props;
+  const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
 
   const { percent } = calculateAtbdCompleteness(lastVersion);
 
-  const onAction = useCallback(
-    async (menuId) => {
-      if (menuId === 'delete') {
-        const res = await confirmDeleteAtbd(atbd.title);
-        console.log('res', res);
-      }
-    },
-    [atbd.title]
-  );
+  const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
+    onDocumentAction,
+    atbd
+  ]);
 
   return (
     <HubEntry>
@@ -89,7 +83,8 @@ function AtbdHubEntry(props) {
 }
 
 AtbdHubEntry.propTypes = {
-  atbd: T.object
+  atbd: T.object,
+  onDocumentAction: T.func
 };
 
 export default AtbdHubEntry;
