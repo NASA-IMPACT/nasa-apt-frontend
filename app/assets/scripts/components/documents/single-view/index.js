@@ -12,7 +12,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DocumentNavHeader from '../document-nav-header';
 import AtbdActionsMenu from '../atbd-actions-menu';
@@ -23,10 +23,6 @@ import { calculateAtbdCompleteness } from '../completeness';
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
-
-  ${Constrainer} {
-    padding-top: 3rem;
-  }
 `;
 
 function DocumentView() {
@@ -81,11 +77,11 @@ function DocumentView() {
             </InpageActions>
           </InpageHeader>
           <InpageBodyScroll>
-            <Constrainer>
+            <ContentBlock>
               <Prose>
                 <p>Hello world!</p>
               </Prose>
-            </Constrainer>
+            </ContentBlock>
           </InpageBodyScroll>
         </Inpage>
       )}

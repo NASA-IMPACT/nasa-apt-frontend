@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
+import styled from 'styled-components';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Heading } from '@devseed-ui/typography';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
-import Constrainer from '../../../styles/constrainer';
+import { ContentBlock } from '../../../styles/content-block';
 import { FormikInputText } from '../../common/forms/input-text';
 import {
   FormikSectionFieldset,
@@ -17,6 +18,18 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { createProcessToast } from '../../common/toasts';
 import { useHistory } from 'react-router';
 import { atbdEdit } from '../../../utils/url-creator';
+
+const FormBlock = styled(ContentBlock)`
+  grid-gap: 2rem;
+
+  > * {
+    grid-column: content-start / content-end;
+  }
+`;
+
+const FormBlockHeading = styled(Heading)`
+  margin: 0;
+`;
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -70,8 +83,8 @@ export default function StepIdentifyingInformation(props) {
       <Inpage>
         {renderInpageHeader()}
         <InpageBody>
-          <Constrainer>
-            <Heading>{step.label}</Heading>
+          <FormBlock>
+            <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <SectionFieldset label='General'>
                 <FormikInputText id='title' name='title' label='Title' />
@@ -139,7 +152,7 @@ export default function StepIdentifyingInformation(props) {
                 />
               </FormikSectionFieldset>
             </Form>
-          </Constrainer>
+          </FormBlock>
         </InpageBody>
       </Inpage>
     </Formik>
