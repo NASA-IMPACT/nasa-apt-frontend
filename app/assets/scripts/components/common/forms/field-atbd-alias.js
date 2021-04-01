@@ -198,7 +198,6 @@ export default function FieldAtbdAlias() {
     title,
     initialValues.title,
     initialValues.alias,
-    touched.title,
     touched.alias,
     checkAliasExist,
     setFieldValue,
