@@ -198,7 +198,6 @@ export default function FieldAtbdAlias() {
     title,
     initialValues.title,
     initialValues.alias,
-    touched.title,
     touched.alias,
     checkAliasExist,
     setFieldValue,
@@ -212,7 +211,6 @@ export default function FieldAtbdAlias() {
       label='Alias'
       value={alias}
       onBlur={(e) => {
-        checkAliasExist(toAliasFormat(e.target.value));
         // On blur check immediately.
         checkAliasExist.flush();
         handleBlur(e);

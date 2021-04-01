@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
 import { StickyInpageHeader, InpageActions } from '../../../styles/inpage';
+import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
 import StepsMenu from './steps-menu';
+import Tip from '../../common/tooltip';
 
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import Tip from '../../common/tooltip';
 import { calculateAtbdCompleteness } from '../completeness';
 
 function DocumentEdit() {
@@ -109,14 +109,14 @@ const SaveButton = () => {
 
   return (
     <Tip position='top-end' title='There are unsaved changes' open={dirty}>
-      <Button
-        variation='primary-raised-light'
+      <ButtonSecondary
         title='Save current changes'
         disabled={isSubmitting || !dirty || status?.working}
         onClick={submitForm}
+        useIcon='tick--small'
       >
         Save
-      </Button>
+      </ButtonSecondary>
     </Tip>
   );
 };

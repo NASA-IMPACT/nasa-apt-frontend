@@ -14,6 +14,7 @@ import {
 } from '../../../styles/inpage';
 import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
+import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
 
 import { useAtbds } from '../../../context/atbds-list';
@@ -76,13 +77,13 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <Button
-              variation='achromic-plain'
-              title='Create new ATBD'
+            <ButtonSecondary
+              title='Create new'
+              useIcon='plus--small'
               onClick={onCreateClick}
             >
               Create new
-            </Button>
+            </ButtonSecondary>
           </InpageActions>
         </StickyInpageHeader>
         <InpageBody>
@@ -91,9 +92,10 @@ function Documents() {
               <div>
                 There are no documents. You can start by creating one.
                 <Button
-                  to='/'
                   variation='primary-raised-dark'
                   title='Create new'
+                  useIcon='plus--small'
+                  onClick={onCreateClick}
                 >
                   Create new
                 </Button>

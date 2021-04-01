@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
-import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../../common/app';
@@ -96,9 +95,6 @@ function DocumentView() {
               mode='view'
             />
             <InpageActions>
-              <Button to='/' variation='achromic-plain' title='Create new'>
-                Button
-              </Button>
               <AtbdActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
