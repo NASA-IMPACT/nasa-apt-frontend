@@ -135,6 +135,7 @@
     "react-katex": "^2.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-sticky-el": "^2.0.6",
     "react-tippy": "^1.4.0",
     "react-toastify": "^7.0.3",
     "slate": "^0.59.0",

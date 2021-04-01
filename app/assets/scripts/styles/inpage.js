@@ -1,5 +1,5 @@
+import React from 'react';
 import styled from 'styled-components';
-
 import {
   glsp,
   media,
@@ -9,6 +9,8 @@ import {
 } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { headingAlt } from '@devseed-ui/typography';
+
+import StickyElement from '../components/common/sticky-element';
 
 export const Inpage = styled.article`
   display: grid;
@@ -139,3 +141,16 @@ export const InpageActions = styled.div`
 export const InpageBody = styled.div`
   background: transparent;
 `;
+
+// Wrapper component for Inpage header and sticky element.
+// All props are forwarded to InpageHeader
+const StickyElementZIndex = styled(StickyElement)`
+  z-index: 1000;
+`;
+export function StickyInpageHeader(props) {
+  return (
+    <StickyElementZIndex>
+      <InpageHeader {...props} />
+    </StickyElementZIndex>
+  );
+}
