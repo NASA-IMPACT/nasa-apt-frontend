@@ -16,6 +16,7 @@ import SandboxEditor from './editor';
 import SandboxForms from './forms';
 import SandboxInteractive from './interactive';
 import SandboxStructure from './structure';
+import SandboxStickyStructure from './structure/sticky';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -42,6 +43,11 @@ function Sandbox() {
         component={SandboxInteractive}
       />
       <Route exact path={`${path}/structure`} component={SandboxStructure} />
+      <Route
+        exact
+        path={`${path}/structure/sticky`}
+        component={SandboxStickyStructure}
+      />
       <Route>
         <App pageTitle='Sandbox'>
           <Inpage>
@@ -68,6 +74,14 @@ function Sandbox() {
                     <li>
                       <Link to={`${url}/structure`} title='View sandbox page'>
                         Structure
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to={`${url}/structure/sticky`}
+                        title='View sandbox page'
+                      >
+                        Structure sticky
                       </Link>
                     </li>
                     <li>

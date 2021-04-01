@@ -6,7 +6,7 @@ import { GlobalLoading } from '@devseed-ui/global-loading';
 import App from '../../common/app';
 import {
   Inpage,
-  InpageHeader,
+  StickyInpageHeader,
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
@@ -84,7 +84,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <InpageHeader>
+          <StickyInpageHeader>
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
@@ -105,7 +105,7 @@ function DocumentView() {
                 onSelect={onDocumentMenuAction}
               />
             </InpageActions>
-          </InpageHeader>
+          </StickyInpageHeader>
           <InpageBodyScroll>
             <ContentBlock>
               <Prose>
