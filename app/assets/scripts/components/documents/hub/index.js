@@ -78,11 +78,11 @@ function Documents() {
           </InpageHeadline>
           <InpageActions>
             <ButtonSecondary
-              title='Create new'
+              title='Create new document'
               useIcon='plus--small'
               onClick={onCreateClick}
             >
-              Create new
+              Create
             </ButtonSecondary>
           </InpageActions>
         </StickyInpageHeader>
@@ -93,11 +93,11 @@ function Documents() {
                 There are no documents. You can start by creating one.
                 <Button
                   variation='primary-raised-dark'
-                  title='Create new'
+                  title='Create new document'
                   useIcon='plus--small'
                   onClick={onCreateClick}
                 >
-                  Create new
+                  Create
                 </Button>
               </div>
             )}
