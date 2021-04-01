@@ -20,6 +20,8 @@ export const Inpage = styled.article`
 `;
 
 export const InpageHeader = styled.header`
+  position: relative;
+  z-index: 20;
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-gap: ${glsp(0, themeVal('layout.gap.xsmall'))};
@@ -28,7 +30,8 @@ export const InpageHeader = styled.header`
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
   padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
-  box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)};
+  box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)}, ${themeVal('boxShadow.elevationD')};
+  clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
 
   ${media.mediumUp`
     grid-gap: ${glsp(0, themeVal('layout.gap.medium'))};

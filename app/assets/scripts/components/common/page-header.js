@@ -19,6 +19,8 @@ import { useHistory } from 'react-router';
 const { appTitle } = config;
 
 const PageHeaderSelf = styled.header`
+  position: relative;
+  z-index: 10;
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
@@ -27,6 +29,7 @@ const PageHeaderSelf = styled.header`
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
   padding: ${glsp(0.75, themeVal('layout.gap.xsmall'))};
+  box-shadow: ${themeVal('boxShadow.elevationD')};
 
   ${media.mediumUp`
     grid-gap: ${glsp(themeVal('layout.gap.medium'))};
