@@ -3,7 +3,7 @@ import T from 'prop-types';
 
 import {
   InpageHeadline,
-  InpageTitle,
+  TruncatedInpageTitle,
   InpageMeta,
   InpageHeadNav,
   BreadcrumbMenu,
@@ -70,7 +70,7 @@ export default function DocumentNavHeader(props) {
   return (
     <>
       <InpageHeadline>
-        <InpageTitle>{title}</InpageTitle>
+        <TruncatedInpageTitle>{title}</TruncatedInpageTitle>
         <InpageHeadNav role='navigation'>
           <BreadcrumbMenu>
             <li>

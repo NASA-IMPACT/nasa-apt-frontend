@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import useDimensions from 'react-cool-dimensions';
 import {
   glsp,
   media,
@@ -91,7 +92,7 @@ export const InpageMeta = styled.dl`
   }
 
   dt {
-    ${visuallyHidden};
+    ${visuallyHidden}
   }
 
   a {
@@ -107,12 +108,18 @@ export const InpageTitle = styled.h1`
   overflow: hidden;
   white-space: nowrap;
 
-  /* Apply mask conditionally: container max-width (24rem) - mask size (3rem) */
-  mask-image: linear-gradient(
-    to right,
-    black calc(100% - ${glsp(3)}),
-    transparent 100%
-  );
+  ${({ shouldMask }) =>
+    shouldMask &&
+    css`
+      /* Apply mask conditionally: container max-width (24rem) - mask size (3rem) */
+      /* stylelint-disable function-calc-no-invalid */
+      mask-image: linear-gradient(
+        to right,
+        black calc(100% - ${glsp(3)}),
+        transparent 100%
+      );
+      /* stylelint-enable function-calc-no-invalid */
+    `}
 `;
 
 export const InpageSubtitle = styled.p`
@@ -153,4 +160,12 @@ export function StickyInpageHeader(props) {
       <InpageHeader {...props} />
     </StickyElementZIndex>
   );
+}
+
+// Wrapper component for Inpage Title applying the truncate mask after a certain
+// width. All props are forwarded to InpageTitle.
+export function TruncatedInpageTitle(props) {
+  const { ref, width } = useDimensions();
+
+  return <InpageTitle {...props} ref={ref} shouldMask={width > 352} />;
 }
