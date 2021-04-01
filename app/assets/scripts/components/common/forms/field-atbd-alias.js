@@ -212,7 +212,6 @@ export default function FieldAtbdAlias() {
       label='Alias'
       value={alias}
       onBlur={(e) => {
-        checkAliasExist(toAliasFormat(e.target.value));
         // On blur check immediately.
         checkAliasExist.flush();
         handleBlur(e);
