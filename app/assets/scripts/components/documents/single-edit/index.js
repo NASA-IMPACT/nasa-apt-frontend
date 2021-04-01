@@ -5,7 +5,7 @@ import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
-import { InpageHeader, InpageActions } from '../../../styles/inpage';
+import { StickyInpageHeader, InpageActions } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
 import StepsMenu from './steps-menu';
@@ -77,7 +77,7 @@ function DocumentEdit() {
           version={version}
           atbd={atbd.data}
           renderInpageHeader={() => (
-            <InpageHeader>
+            <StickyInpageHeader>
               <DocumentNavHeader
                 atbdId={id}
                 title={atbd.data.title}
@@ -91,7 +91,7 @@ function DocumentEdit() {
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
               </InpageActions>
-            </InpageHeader>
+            </StickyInpageHeader>
           )}
         />
       )}
