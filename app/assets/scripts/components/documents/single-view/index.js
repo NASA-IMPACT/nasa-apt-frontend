@@ -96,9 +96,6 @@ function DocumentView() {
               mode='view'
             />
             <InpageActions>
-              <Button to='/' variation='achromic-plain' title='Create new'>
-                Button
-              </Button>
               <AtbdActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
