@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
-import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../../common/app';
