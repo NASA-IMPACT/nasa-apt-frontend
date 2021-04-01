@@ -21,9 +21,25 @@ import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
 
+import Outline from './outline';
+
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
+`;
+
+const Paper = styled.div`
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  height: 100%;
+
+  > * {
+    grid-row: 1;
+  }
+`;
+
+const PaperContent = styled.div`
+  grid-column: content-start / content-end;
 `;
 
 function DocumentView() {
@@ -107,11 +123,16 @@ function DocumentView() {
             </InpageActions>
           </StickyInpageHeader>
           <InpageBodyScroll>
-            <ContentBlock>
-              <Prose>
-                <p>Hello world!</p>
-              </Prose>
-            </ContentBlock>
+            <Paper>
+              <Outline />
+              <ContentBlock>
+                <PaperContent>
+                  <Prose>
+                    <p>Hello world!</p>
+                  </Prose>
+                </PaperContent>
+              </ContentBlock>
+            </Paper>
           </InpageBodyScroll>
         </Inpage>
       )}
