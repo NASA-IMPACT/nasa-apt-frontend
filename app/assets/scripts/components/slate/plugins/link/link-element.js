@@ -3,6 +3,7 @@ import T from 'prop-types';
 
 import { isModKey, modKey } from '../common/utils';
 import Tip from '../../../common/tooltip';
+import { useReadOnly } from 'slate-react';
 
 export const LinkElement = ({
   attributes,
@@ -11,17 +12,21 @@ export const LinkElement = ({
   className,
   htmlAttributes
 }) => {
+  const readOnly = useReadOnly();
+
   const onClick = (e) => {
     // Follow the link on control click.
-    if (isModKey(e)) {
+    if (!readOnly && isModKey(e)) {
       window.open(element.url, '_blank');
     }
   };
 
   return (
     <Tip
-      title={modKey('mod + Click to open url')}
+      tag='span'
+      title={readOnly ? 'Visit page' : modKey('mod + Click to open url')}
       position='bottom'
+      disabled={readOnly}
       followCursor
     >
       <a

@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
+import T from 'prop-types';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
 
 import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';
 import composeDebugEditor from './plugins/debug-editor/compose-debug-editor';
-import { hugeDoc } from './plugins/debug-editor/dummy';
 
 // Slate custom plugins.
 // See slate/plugins/README
@@ -56,36 +56,15 @@ const withPlugins = [
   withLinkEditor
 ];
 
-export default function FullEditor() {
+export default function FullEditor(props) {
+  const { onChange, value } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
   window.editor = editor;
-
-  // Keep track of state for the value of the editor.
-  // Move up.
-  const [value, setValue] = useState([
-    {
-      // Root level has no type and is the first child of the Editor.
-      // This is needed for the block breaks to work.
-      children: [
-        ...hugeDoc,
-        {
-          type: 'p',
-          children: [{ text: 'A line of text in a paragraph.' }]
-        }
-      ]
-    }
-  ]);
 
   // Render the Slate context.
   return (
     <EditorWrapper>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={(v) => {
-          setValue(v);
-        }}
-      >
+      <Slate editor={editor} value={value} onChange={onChange}>
         <EditorToolbar plugins={plugins} />
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
@@ -93,9 +72,30 @@ export default function FullEditor() {
         <EditableDebug
           plugins={plugins}
           value={value}
-          onDebugChange={(v) => setValue(v)}
+          onDebugChange={onChange}
         />
       </Slate>
     </EditorWrapper>
   );
 }
+
+FullEditor.propTypes = {
+  onChange: T.func,
+  value: T.array
+};
+
+export function ReadEditor(props) {
+  const { value } = props;
+  const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
+
+  // Render the Slate context.
+  return (
+    <Slate editor={editor} value={value}>
+      <EditableWithPlugins plugins={plugins} value={value} readOnly />
+    </Slate>
+  );
+}
+
+ReadEditor.propTypes = {
+  value: T.array
+};
