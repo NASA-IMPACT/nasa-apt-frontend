@@ -1,8 +1,7 @@
 import React from 'react';
+import T from 'prop-types';
 import styled from 'styled-components';
-
 import { glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
-
 import { Heading } from '@devseed-ui/typography';
 
 import {
@@ -12,12 +11,13 @@ import {
   PanelTitle,
   PanelBody
 } from '../../../styles/panel';
+import { atbdContentSections } from './document-body';
 
 const OutlineSelf = styled(Panel).attrs({ as: 'nav' })`
   background: transparent;
 `;
 
-const OutlineMenu = styled.ol`
+const OutlineMenuSelf = styled.ol`
   background: transparent;
 `;
 
@@ -33,7 +33,51 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   &:visited {
     color: inherit;
   }
+
+  ${OutlineMenuSelf} ${OutlineMenuSelf} & {
+    padding-left: ${glsp(2.5)};
+  }
+
+  ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} & {
+    padding-left: ${glsp(3)};
+  }
+
+  ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} & {
+    padding-left: ${glsp(3.5)};
+  }
 `;
+
+const OutlineMenu = (props) => {
+  const { items } = props;
+
+  return items?.length ? (
+    <OutlineMenuSelf>
+      {items.map((item) => {
+        // User defined subsections.
+        const editorSubsections = item.editorSubsections?.() || [];
+        // Regular children.
+        const children = item.children || [];
+        const items = [...editorSubsections, ...children];
+
+        return (
+          <li key={item.id}>
+            <OutlineMenuLink
+              href={`#${item.id}`}
+              title={`Go to ${item.label} section`}
+            >
+              {item.label}
+            </OutlineMenuLink>
+            <OutlineMenu items={items} />
+          </li>
+        );
+      })}
+    </OutlineMenuSelf>
+  ) : null;
+};
+
+OutlineMenu.propTypes = {
+  items: T.array
+};
 
 export default function Outline() {
   return (
@@ -44,59 +88,7 @@ export default function Outline() {
         </PanelHeadline>
       </PanelHeader>
       <PanelBody>
-        <OutlineMenu>
-          <li>
-            <OutlineMenuLink href='#' title='Jump to item'>
-              Entry 1.0
-            </OutlineMenuLink>
-          </li>
-          <li>
-            <OutlineMenuLink href='#' title='Jump to item'>
-              Entry 2.0
-            </OutlineMenuLink>
-            <OutlineMenu>
-              <li>
-                <OutlineMenuLink href='#' title='Jump to item'>
-                  Entry 2.1
-                </OutlineMenuLink>
-              </li>
-              <li>
-                <OutlineMenuLink href='#' title='Jump to item'>
-                  Entry 2.2
-                </OutlineMenuLink>
-              </li>
-            </OutlineMenu>
-          </li>
-          <li>
-            <OutlineMenuLink href='#' title='Jump to item'>
-              Entry 3.0
-            </OutlineMenuLink>
-            <OutlineMenu>
-              <li>
-                <OutlineMenuLink href='#' title='Jump to item'>
-                  Entry 3.1
-                </OutlineMenuLink>
-              </li>
-              <li>
-                <OutlineMenuLink href='#' title='Jump to item'>
-                  Entry 3.2
-                </OutlineMenuLink>
-                <OutlineMenu>
-                  <li>
-                    <OutlineMenuLink href='#' title='Jump to item'>
-                      Entry 3.2.1
-                    </OutlineMenuLink>
-                  </li>
-                  <li>
-                    <OutlineMenuLink href='#' title='Jump to item'>
-                      Entry 3.2.2
-                    </OutlineMenuLink>
-                  </li>
-                </OutlineMenu>
-              </li>
-            </OutlineMenu>
-          </li>
-        </OutlineMenu>
+        <OutlineMenu items={atbdContentSections} />
       </PanelBody>
     </OutlineSelf>
   );
