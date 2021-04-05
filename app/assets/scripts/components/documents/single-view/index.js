@@ -22,6 +22,7 @@ import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
 
 import Outline from './outline';
+import DocumentBody from './document-body';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -128,7 +129,7 @@ function DocumentView() {
               <ContentBlock>
                 <PaperContent>
                   <Prose>
-                    <p>Hello world!</p>
+                    <DocumentBody atbd={atbd.data} />
                   </Prose>
                 </PaperContent>
               </ContentBlock>
