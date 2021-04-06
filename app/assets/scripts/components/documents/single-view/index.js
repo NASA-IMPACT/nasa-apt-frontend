@@ -125,7 +125,7 @@ function DocumentView() {
           </StickyInpageHeader>
           <InpageBodyScroll>
             <Paper>
-              <Outline />
+              <Outline atbd={atbd.data} />
               <ContentBlock>
                 <PaperContent>
                   <Prose>

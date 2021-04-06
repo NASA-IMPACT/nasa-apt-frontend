@@ -1,6 +1,5 @@
 import { Node } from 'slate';
 
-import { hugeDoc } from './plugins/debug-editor/dummy';
 import { SUB_SECTION } from './plugins/subsection';
 
 /**
@@ -11,6 +10,8 @@ import { SUB_SECTION } from './plugins/subsection';
  * @param {Object} document The field value in Slate editor format.
  */
 export function subsectionsFromSlateDocument(document) {
+  if (!Array.isArray(document)) return [];
+
   // Recursively get the subsections from a slate document.
   const extractSection = (items = []) => {
     return items.reduce((acc, i) => {
@@ -24,7 +25,7 @@ export function subsectionsFromSlateDocument(document) {
     }, []);
   };
 
-  const sections = extractSection(hugeDoc);
+  const sections = extractSection(document);
 
   return sections.map((section) => ({
     id: 'find-an-id',

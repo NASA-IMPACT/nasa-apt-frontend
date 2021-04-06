@@ -2,38 +2,49 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import * as Scroll from 'react-scroll';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
+
+import SafeReadEditor from '../../slate/safe-read-editor';
 
 import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
 
-const AtbdSectionBody = styled.div`
-  h2,
-  h3 {
-    margin-top: ${glsp(2)};
-    margin-bottom: ${glsp()};
-  }
+// The scroll element needed for the smooth scrolling and active navigation
+// links.
+const ScrollAnchor = Scroll.ScrollElement((props) => {
+  const { parentBindings, element: E = 'div', children, ...rest } = props;
+  return (
+    <E
+      {...rest}
+      ref={(el) => {
+        parentBindings.domNode = el;
+      }}
+    >
+      {children}
+    </E>
+  );
+});
 
-  table {
-    margin-bottom: ${glsp()};
-  }
-`;
-
+// Wrapper for each of the main sections.
 const AtbdSectionBase = ({ id, title, children, ...props }) => (
-  <section {...props}>
+  <ScrollAnchor name={id} element='section' {...props}>
     <header>
       <h1 id={id}>{title}</h1>
     </header>
-    <AtbdSectionBody>{children}</AtbdSectionBody>
-  </section>
+    <div>{children}</div>
+  </ScrollAnchor>
 );
 
-AtbdSectionBase.propTypes = {
-  title: T.string,
-  id: T.string,
-  children: T.node
-};
-
 const AtbdSection = styled(AtbdSectionBase)`
+  h1 {
+    font-size: 2rem !important;
+  }
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  h3 {
+    font-size: 1rem !important;
+  }
   &:not(:last-child) {
     padding-bottom: ${glsp(3)};
     margin-bottom: ${glsp(3)};
@@ -50,6 +61,12 @@ const childrenPassThrough = ({ element, children }) => (
   </AtbdSection>
 );
 
+/**
+ * Renders each element of the given array (by calling their `render` function)
+ * and its children.
+ * @param {array} elements Elements to render.
+ * @param {object} props Additional props to pass the element render function,
+ */
 const renderElements = (elements, props) =>
   elements
     ? elements.map((el) => {
@@ -74,19 +91,25 @@ export const atbdContentSections = [
   {
     label: 'Introduction',
     id: 'introduction',
-    editorSubsections: (atbd) => subsectionsFromSlateDocument(),
-    render: ({ element }) => (
+    editorSubsections: (document) => subsectionsFromSlateDocument(document.introduction),
+    render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Editor for {element.label}
+        <SafeReadEditor
+          value={document.introduction}
+          whenEmpty='No content available'
+        />
       </AtbdSection>
     )
   },
   {
     label: 'Historical Perspective',
     id: 'historic-prespective',
-    render: ({ element }) => (
+    render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Editor for {element.label}
+        <SafeReadEditor
+          value={document.historical_perspective}
+          whenEmpty='No content available'
+        />
       </AtbdSection>
     )
   },
@@ -98,22 +121,28 @@ export const atbdContentSections = [
       {
         label: 'Scientific Theory',
         id: 'sci-theory',
-        render: ({ element, children }) => (
-          <React.Fragment key={element.id}>
+        render: ({ element, document, children }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
             <h2 id={element.id}>{element.label}</h2>
-            Editor for {element.label}
+            <SafeReadEditor
+              value={document.scientific_theory}
+              whenEmpty='No content available'
+            />
             {children}
-          </React.Fragment>
+          </ScrollAnchor>
         ),
         children: [
           {
             label: 'Assumptions',
             id: 'sci-theory-assumptions',
-            render: ({ element }) => (
-              <React.Fragment key={element.id}>
+            render: ({ element, document }) => (
+              <ScrollAnchor id={element.id} key={element.id}>
                 <h3 id={element.id}>{element.label}</h3>
-                Editor for {element.label}
-              </React.Fragment>
+                <SafeReadEditor
+                  value={document.scientific_theory_assumptions}
+                  whenEmpty='No content available'
+                />
+              </ScrollAnchor>
             )
           }
         ]
@@ -121,22 +150,28 @@ export const atbdContentSections = [
       {
         label: 'Mathematical Theory',
         id: 'math-theory',
-        render: ({ element, children }) => (
-          <React.Fragment key={element.id}>
+        render: ({ element, document, children }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
             <h2 id={element.id}>{element.label}</h2>
-            Editor for {element.label}
+            <SafeReadEditor
+              value={document.mathematical_theory}
+              whenEmpty='No content available'
+            />
             {children}
-          </React.Fragment>
+          </ScrollAnchor>
         ),
         children: [
           {
             label: 'Assumptions',
             id: 'math-theory-assumptions',
-            render: ({ element }) => (
-              <React.Fragment key={element.id}>
+            render: ({ element, document }) => (
+              <ScrollAnchor id={element.id} key={element.id}>
                 <h3 id={element.id}>{element.label}</h3>
-                Editor for {element.label}
-              </React.Fragment>
+                <SafeReadEditor
+                  value={document.mathematical_theory_assumptions}
+                  whenEmpty='No content available'
+                />
+              </ScrollAnchor>
             )
           }
         ]
@@ -145,20 +180,20 @@ export const atbdContentSections = [
         label: 'Algorithm Input Variables',
         id: 'algo-input-var',
         render: ({ element }) => (
-          <React.Fragment key={element.id}>
+          <ScrollAnchor id={element.id} key={element.id}>
             <h2 id={element.id}>{element.label}</h2>
-            Editor for {element.label}
-          </React.Fragment>
+            List of variables will be coming soon.
+          </ScrollAnchor>
         )
       },
       {
         label: 'Algorithm Output Variables',
         id: 'algo-output-var',
         render: ({ element }) => (
-          <React.Fragment key={element.id}>
+          <ScrollAnchor id={element.id} key={element.id}>
             <h2 id={element.id}>{element.label}</h2>
-            Editor for {element.label}
-          </React.Fragment>
+            List of variables will be coming soon.
+          </ScrollAnchor>
         )
       }
     ]
@@ -203,61 +238,61 @@ export const atbdContentSections = [
   {
     label: 'Algorithm Usage Constraints',
     id: 'algo-usage-constraints',
-    render: ({ element }) => (
+    render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Editor for {element.label}
+        <SafeReadEditor
+          value={document.algorithm_usage_constraints}
+          whenEmpty='No content available'
+        />
       </AtbdSection>
     )
   },
-  // {
-  //   label: 'Performance Assessment Validation',
-  //   id: 'perf-assesment-validation',
-  //   render: childrenPassThrough,
-  //   children: [
-  //     {
-  //       label: 'Performance Assessment Validation Methods',
-  //       id: 'perf-assesment-validation-method',
-  //       render: (el) => (
-  //         <React.Fragment key={el.id}>
-  //           <h2 id={el.id}>{el.label}</h2>
-  //           <Prose>
-  //             {this.renderReadOnlyEditor(
-  //               performance_assessment_validation_methods
-  //             )}
-  //           </Prose>
-  //         </React.Fragment>
-  //       )
-  //     },
-  //     {
-  //       label: 'Performance Assessment Validation Uncertainties',
-  //       id: 'perf-assesment-validation-uncert',
-  //       render: (el) => (
-  //         <React.Fragment key={el.id}>
-  //           <h2 id={el.id}>{el.label}</h2>
-  //           <Prose>
-  //             {this.renderReadOnlyEditor(
-  //               performance_assessment_validation_uncertainties
-  //             )}
-  //           </Prose>
-  //         </React.Fragment>
-  //       )
-  //     },
-  //     {
-  //       label: 'Performance Assessment Validation Errors',
-  //       id: 'perf-assesment-validation-err',
-  //       render: (el) => (
-  //         <React.Fragment key={el.id}>
-  //           <h2 id={el.id}>{el.label}</h2>
-  //           <Prose>
-  //             {this.renderReadOnlyEditor(
-  //               performance_assessment_validation_errors
-  //             )}
-  //           </Prose>
-  //         </React.Fragment>
-  //       )
-  //     }
-  //   ]
-  // },
+  {
+    label: 'Performance Assessment Validation',
+    id: 'perf-assesment-validation',
+    render: childrenPassThrough,
+    children: [
+      {
+        label: 'Performance Assessment Validation Methods',
+        id: 'perf-assesment-validation-method',
+        render: ({ element, document }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
+            <h2 id={element.id}>{element.label}</h2>
+            <SafeReadEditor
+              value={document.performance_assessment_validation_methods}
+              whenEmpty='No content available'
+            />
+          </ScrollAnchor>
+        )
+      },
+      {
+        label: 'Performance Assessment Validation Uncertainties',
+        id: 'perf-assesment-validation-uncert',
+        render: ({ element, document }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
+            <h2 id={element.id}>{element.label}</h2>
+            <SafeReadEditor
+              value={document.performance_assessment_validation_uncertainties}
+              whenEmpty='No content available'
+            />
+          </ScrollAnchor>
+        )
+      },
+      {
+        label: 'Performance Assessment Validation Errors',
+        id: 'perf-assesment-validation-err',
+        render: ({ element, document }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
+            <h2 id={element.id}>{element.label}</h2>
+            <SafeReadEditor
+              value={document.performance_assessment_validation_errors}
+              whenEmpty='No content available'
+            />
+          </ScrollAnchor>
+        )
+      }
+    ]
+  },
   // {
   //   label: 'Data Access',
   //   id: 'data-access',
@@ -333,7 +368,7 @@ export const atbdContentSections = [
     id: 'contacts',
     render: ({ element }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Content for {element.label}
+        Content for {element.label} will arrive soon.
       </AtbdSection>
     )
     // render: (el) => {
@@ -422,7 +457,7 @@ export const atbdContentSections = [
     id: 'references',
     render: ({ element }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Content for {element.label}
+        Content for {element.label} will arrive soon.
       </AtbdSection>
     )
     // this.referenceIndex.length ? (
@@ -454,28 +489,34 @@ export const atbdContentSections = [
         <em>
           If provided, the journal details are included only in the Journal PDF.
         </em>
-        {children || 'Not Available'}
+        {children}
       </AtbdSection>
     ),
     children: [
       {
         label: 'Acknowledgements',
         id: 'acknowledgements',
-        render: ({ element }) => (
-          <React.Fragment key={element.id}>
+        render: ({ element, document }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
             <h3 id={element.id}>{element.label}</h3>
-            Editor for {element.label}
-          </React.Fragment>
+            <SafeReadEditor
+              value={document.journal_discussion}
+              whenEmpty='No content available'
+            />
+          </ScrollAnchor>
         )
       },
       {
         label: 'Discussion',
         id: 'discussion',
-        render: ({ element }) => (
-          <React.Fragment key={element.id}>
+        render: ({ element, document }) => (
+          <ScrollAnchor id={element.id} key={element.id}>
             <h3 id={element.id}>{element.label}</h3>
-            Editor for {element.label}
-          </React.Fragment>
+            <SafeReadEditor
+              value={document.journal_acknowledgements}
+              whenEmpty='No content available'
+            />
+          </ScrollAnchor>
         )
       }
     ]
@@ -485,7 +526,7 @@ export const atbdContentSections = [
 export default function DocumentBody(props) {
   const { atbd } = props;
   const document = atbd.document;
-  return renderElements(atbdContentSections, { atbd: document });
+  return renderElements(atbdContentSections, { document });
 }
 
 DocumentBody.propTypes = {

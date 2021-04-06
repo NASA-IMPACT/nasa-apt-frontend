@@ -1,6 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import * as Scroll from 'react-scroll';
 import { glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
@@ -29,6 +30,10 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   padding: ${glsp(0.5, themeVal('layout.gap.medium'))};
   margin: 0;
 
+  &.active {
+    background-color: red;
+  }
+
   &,
   &:visited {
     color: inherit;
@@ -47,27 +52,54 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   }
 `;
 
+// The scroll element needed for the smooth scrolling and active navigation
+// links.
+const ScrollLink = Scroll.ScrollLink(OutlineMenuLink);
+
+const OutlineMenuScrollLink = (props) => {
+  const { to, ...rest } = props;
+
+  return (
+    <ScrollLink
+      to={to}
+      href={`#${to}`}
+      spy={true}
+      hashSpy={true}
+      duration={500}
+      smooth={true}
+      offset={-96}
+      activeClass='active'
+      {...rest}
+    />
+  );
+};
+
+OutlineMenuScrollLink.propTypes = {
+  to: T.string
+};
+
+// Component to recursively render the outline menu.
 const OutlineMenu = (props) => {
-  const { items } = props;
+  const { items, atbdDocument = {} } = props;
 
   return items?.length ? (
     <OutlineMenuSelf>
       {items.map((item) => {
         // User defined subsections.
-        const editorSubsections = item.editorSubsections?.() || [];
+        const editorSubsections = item.editorSubsections?.(atbdDocument) || [];
         // Regular children.
         const children = item.children || [];
         const items = [...editorSubsections, ...children];
 
         return (
           <li key={item.id}>
-            <OutlineMenuLink
-              href={`#${item.id}`}
+            <OutlineMenuScrollLink
+              to={item.id}
               title={`Go to ${item.label} section`}
             >
               {item.label}
-            </OutlineMenuLink>
-            <OutlineMenu items={items} />
+            </OutlineMenuScrollLink>
+            <OutlineMenu items={items} atbdDocument={atbdDocument} />
           </li>
         );
       })}
@@ -76,10 +108,14 @@ const OutlineMenu = (props) => {
 };
 
 OutlineMenu.propTypes = {
-  items: T.array
+  items: T.array,
+  atbdDocument: T.object
 };
 
-export default function Outline() {
+// Outline panel component
+export default function Outline(props) {
+  const { atbd } = props;
+
   return (
     <OutlineSelf>
       <PanelHeader>
@@ -88,8 +124,12 @@ export default function Outline() {
         </PanelHeadline>
       </PanelHeader>
       <PanelBody>
-        <OutlineMenu items={atbdContentSections} />
+        <OutlineMenu items={atbdContentSections} atbdDocument={atbd.document} />
       </PanelBody>
     </OutlineSelf>
   );
 }
+
+Outline.propTypes = {
+  atbd: T.object
+};
