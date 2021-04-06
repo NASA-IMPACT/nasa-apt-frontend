@@ -229,19 +229,24 @@ export const AtbdsProvider = (props) => {
             // Dispatch receive action. It is already dispatchable.
             const updateResult = actions.receive(updatedData);
 
-            // The state key may have to change if the atbd alias changed.
-            const atbdId = metaResponse.data.alias || metaResponse.data.id;
-            const newKey = `${atbdId}/${version}`;
+            if (metaResponse) {
+              // The state key may have to change if the atbd alias changed.
+              const atbdId = metaResponse.data.alias || metaResponse.data.id;
+              const newKey = `${atbdId}/${version}`;
 
-            // Direct access to the dispatch function.
-            actions.dispatch({
-              type: 'atbdSingle/move-key',
-              from: `${id}/${version}`,
-              to: newKey
-            });
+              // Direct access to the dispatch function.
+              actions.dispatch({
+                type: 'atbdSingle/move-key',
+                from: `${id}/${version}`,
+                to: newKey
+              });
 
-            // Ensure everything is correct, even the new key.
-            return { ...updateResult, key: newKey };
+              // Ensure everything is correct, even the new key.
+              return { ...updateResult, key: newKey };
+            }
+
+            // Return the data receiving action.
+            return { ...updateResult };
           } catch (error) {
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(null, error);
