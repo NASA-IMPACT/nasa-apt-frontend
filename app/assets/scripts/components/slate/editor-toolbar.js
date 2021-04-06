@@ -18,6 +18,7 @@ import {
 } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
 
+import Tip from '../common/tooltip';
 import PortalContainer from './plugins/common/portal-container';
 import { modKey, REDO_HOTKEY, UNDO_HOTKEY } from './plugins/common/utils';
 import { isMarkActive } from './plugins/common/marks';
@@ -55,38 +56,40 @@ export function EditorToolbar(props) {
 
         return acc.concat(
           castArray(p.toolbar).map((btn) => (
-            <ToolbarIconButton
-              key={btn.id}
-              useIcon={btn.icon}
-              data-tip={btn.tip(btn.hotkey)}
-              onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-            >
-              {btn.label}
-            </ToolbarIconButton>
+            <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+              <ToolbarIconButton
+                useIcon={btn.icon}
+                onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
+              >
+                {btn.label}
+              </ToolbarIconButton>
+            </Tip>
           ))
         );
       }, [])}
       <ToolbarLabel>Actions</ToolbarLabel>
-      <ToolbarIconButton
-        useIcon='arrow-semi-spin-ccw'
-        data-tip={`Undo (${modKey(UNDO_HOTKEY)})`}
-        disabled={!editor.canUndo()}
-        onClick={() => {
-          editor.undo();
-        }}
-      >
-        Undo
-      </ToolbarIconButton>
-      <ToolbarIconButton
-        useIcon='arrow-semi-spin-cw'
-        data-tip={`Redo (${modKey(REDO_HOTKEY)})`}
-        disabled={!editor.canRedo()}
-        onClick={() => {
-          editor.redo();
-        }}
-      >
-        Redo
-      </ToolbarIconButton>
+      <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
+        <ToolbarIconButton
+          useIcon='arrow-semi-spin-ccw'
+          disabled={!editor.canUndo()}
+          onClick={() => {
+            editor.undo();
+          }}
+        >
+          Undo
+        </ToolbarIconButton>
+      </Tip>
+      <Tip title={`Redo (${modKey(REDO_HOTKEY)})`}>
+        <ToolbarIconButton
+          useIcon='arrow-semi-spin-cw'
+          disabled={!editor.canRedo()}
+          onClick={() => {
+            editor.redo();
+          }}
+        >
+          Redo
+        </ToolbarIconButton>
+      </Tip>
     </Toolbar>
   );
 }
@@ -154,16 +157,20 @@ export function EditorFloatingToolbar(props) {
 
           return acc.concat(
             castArray(p.floatToolbar).map((btn) => (
-              <Button
-                key={btn.id}
-                useIcon={btn.icon}
-                hideText
-                data-tip={btn.tip(btn.hotkey)}
-                active={isMarkActive(editor, btn.id)}
-                onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-              >
-                {btn.label}
-              </Button>
+              <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+                <Button
+                  useIcon={btn.icon}
+                  hideText
+                  active={isMarkActive(editor, btn.id)}
+                  onMouseDown={getPreventDefaultHandler(
+                    p.onUse,
+                    editor,
+                    btn.id
+                  )}
+                >
+                  {btn.label}
+                </Button>
+              </Tip>
             ))
           );
         }, [])}
