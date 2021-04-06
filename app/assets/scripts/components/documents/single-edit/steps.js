@@ -1,7 +1,10 @@
 import React from 'react'; /* eslint-disable react/display-name */
 import get from 'lodash.get';
 
+import { editorEmptyValue } from '../../slate/editor';
+
 import StepIdentifyingInformation from './step-identifying-information';
+import StepIntroduction from './step-introduction';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -17,12 +20,16 @@ const getFromObj = (obj, defaults) => {
     // The id of the atbd will never be changed but is useful to have present.
     id: obj.id,
     ...Object.keys(remainingKeys).reduce((acc, key) => {
-      const value = defaults[key];
+      const defValue = defaults[key];
       const source = get(obj, key);
-      const isObject = !Array.isArray(value) && value instanceof Object;
+      const isObject = !Array.isArray(defValue) && defValue instanceof Object;
+
+      // The fallback value can be changed with some tags. This is needed
+      // because values set as object are recursively computed.
+      const value = defValue === '<editor>' ? editorEmptyValue : defValue;
       return {
         ...acc,
-        [key]: isObject ? getFromObj(source || {}, value) : source || value
+        [key]: isObject ? getFromObj(source || {}, defValue) : source || value
       };
     }, {}),
     // The sections_completed must be handled slightly differently. Every time
@@ -85,9 +92,16 @@ export const STEPS = [
   {
     id: 'introduction',
     label: 'Introduction',
-    StepComponent: () => <p>Introduction coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepIntroduction,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        introduction: '<editor>',
+        historical_perspective: '<editor>',
+        sections_completed: {
+          introduction: 'incomplete',
+          historical_perspective: 'incomplete'
+        }
+      });
     }
   },
   {
