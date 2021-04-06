@@ -1,12 +1,10 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
-import styled from 'styled-components';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
-import { Heading } from '@devseed-ui/typography';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
-import { ContentBlock } from '../../../styles/content-block';
+import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
 import {
   FormikSectionFieldset,
@@ -18,18 +16,6 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { createProcessToast } from '../../common/toasts';
 import { useHistory } from 'react-router';
 import { atbdEdit } from '../../../utils/url-creator';
-
-const FormBlock = styled(ContentBlock)`
-  grid-gap: 2rem;
-
-  > * {
-    grid-column: content-start / content-end;
-  }
-`;
-
-const FormBlockHeading = styled(Heading)`
-  margin: 0;
-`;
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;

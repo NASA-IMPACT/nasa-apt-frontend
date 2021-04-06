@@ -91,7 +91,8 @@ export const atbdContentSections = [
   {
     label: 'Introduction',
     id: 'introduction',
-    editorSubsections: (document) => subsectionsFromSlateDocument(document.introduction),
+    editorSubsections: (document) =>
+      subsectionsFromSlateDocument(document.introduction),
     render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
