@@ -56,8 +56,21 @@ const withPlugins = [
   withLinkEditor
 ];
 
+export const editorEmptyValue = [
+  {
+    // Root level has no type and is the first and only child of the Editor.
+    // This is needed for the block breaks to work.
+    children: [
+      {
+        type: 'p',
+        children: [{ text: '' }]
+      }
+    ]
+  }
+];
+
 export default function FullEditor(props) {
-  const { onChange, value } = props;
+  const { id, onChange, value } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
   window.editor = editor;
 
@@ -70,6 +83,7 @@ export default function FullEditor(props) {
         <EditorLinkToolbar />
 
         <EditableDebug
+          id={id}
           plugins={plugins}
           value={value}
           onDebugChange={onChange}
@@ -80,22 +94,24 @@ export default function FullEditor(props) {
 }
 
 FullEditor.propTypes = {
+  id: T.string,
   onChange: T.func,
   value: T.array
 };
 
 export function ReadEditor(props) {
-  const { value } = props;
+  const { id, value } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
   // Render the Slate context.
   return (
     <Slate editor={editor} value={value}>
-      <EditableWithPlugins plugins={plugins} value={value} readOnly />
+      <EditableWithPlugins id={id} plugins={plugins} value={value} readOnly />
     </Slate>
   );
 }
 
 ReadEditor.propTypes = {
+  id: T.string,
   value: T.array
 };
