@@ -33,10 +33,12 @@ const Toolbar = styled(Toolbar$)`
 export const FloatingToolbar = styled.div`
   position: absolute;
   z-index: 9999;
+  top: 100%;
   white-space: nowrap;
-  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
   opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
-  transition: top 75ms ease-out, left 75ms ease-out;
+  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
+  transition: visibility 120ms linear, opacity 120ms ease-out,
+    left 75ms ease-out;
   background-color: ${themeVal('color.surface')};
   border-radius: ${themeVal('shape.rounded')};
   border: 1px solid ${themeVal('color.baseAlphaD')};
