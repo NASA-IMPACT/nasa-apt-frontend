@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import * as Scroll from 'react-scroll';
+import throttle from 'lodash.throttle';
 import { glsp, rgba, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
+import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import {
   Panel,
@@ -15,7 +17,14 @@ import {
 import { atbdContentSections } from './document-body';
 
 const OutlineSelf = styled(Panel).attrs({ as: 'nav' })`
-  background: transparent;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+
+  ${PanelBody} > * {
+    /* Ensure the shadow scrollbar takes up the full height */
+    flex: 1;
+  }
 `;
 
 const OutlineMenuSelf = styled.ol`
@@ -142,15 +151,70 @@ OutlineMenu.propTypes = {
 export default function Outline(props) {
   const { atbd } = props;
 
+  const headerElRef = useRef(null);
+  const footerElRef = useRef(null);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const positioner = throttle(() => {
+      // Get header reference if not defined. Our sticky outline will always sit
+      // below the sticky header.
+      if (!headerElRef.current) {
+        headerElRef.current = document.querySelector(
+          '[data-element="inpage-header"]'
+        );
+      }
+
+      // Get the footer reference if not defined. Our sticky outline will shrink
+      // when the footer approaches.
+      if (!footerElRef.current) {
+        footerElRef.current = document.querySelector('[data-element="footer"]');
+      }
+
+      const { top, height } = headerElRef.current.getBoundingClientRect();
+      const headerEnd = top + height;
+      elementRef.current.style.top = `${headerEnd}px`;
+
+      if (footerElRef.current) {
+        const { top } = footerElRef.current.getBoundingClientRect();
+        elementRef.current.style.bottom = `${Math.max(
+          0,
+          window.innerHeight - top
+        )}px`;
+      }
+    }, 16);
+
+    // Using requestAnimationFrame with a lodash throttle is the best way to
+    // ensure the outline position is appropriately calculated.
+    let rafId;
+    const rafRun = () => {
+      positioner();
+      rafId = requestAnimationFrame(rafRun);
+    };
+
+    rafRun();
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
+
   return (
-    <OutlineSelf>
+    <OutlineSelf ref={elementRef}>
       <PanelHeader>
         <PanelHeadline>
           <PanelTitle>Outline</PanelTitle>
         </PanelHeadline>
       </PanelHeader>
       <PanelBody>
-        <OutlineMenu items={atbdContentSections} atbdDocument={atbd.document} />
+        <ShadowScrollbar>
+          <OutlineMenu
+            items={atbdContentSections}
+            atbdDocument={atbd.document}
+          />
+        </ShadowScrollbar>
       </PanelBody>
     </OutlineSelf>
   );

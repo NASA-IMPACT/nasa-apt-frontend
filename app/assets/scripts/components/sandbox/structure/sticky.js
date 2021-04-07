@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import throttle from 'lodash.throttle';
 import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
@@ -45,6 +46,20 @@ const FakeEditorToolbar = styled.div`
 
 const FakeEditorBody = styled.div`
   height: 20rem;
+`;
+
+const DocumentOutline = styled.div`
+  background: #bbb;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  width: 200px;
+
+  ol {
+    list-style: decimal;
+    margin-left: 1.5rem;
+  }
 `;
 
 function SandboxStickyStructure() {
@@ -102,6 +117,20 @@ function SandboxStickyStructure() {
           </InpageActions>
         </StickyInpageHeader>
         <InpageBodyScroll>
+          <DocOutline>
+            <ol>
+              {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'].map((n) => (
+                <li key={n}>
+                  {n}
+                  <ol>
+                    {['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r'].map((j) => (
+                      <li key={j}>{j}</li>
+                    ))}
+                  </ol>
+                </li>
+              ))}
+            </ol>
+          </DocOutline>
           <Constrainer>
             <FakeEditor data-sticky='boundary'>
               <StickyElement
@@ -126,3 +155,51 @@ function SandboxStickyStructure() {
 }
 
 export default SandboxStickyStructure;
+
+function DocOutline(props) {
+  const headerElRef = useRef(null);
+  const footerElRef = useRef(null);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const positioner = throttle(() => {
+      if (!headerElRef.current) {
+        headerElRef.current = document.querySelector(
+          '[data-element="inpage-header"]'
+        );
+      }
+
+      if (!footerElRef.current) {
+        footerElRef.current = document.querySelector('[data-element="footer"]');
+      }
+
+      const { top, height } = headerElRef.current.getBoundingClientRect();
+      const headerEnd = top + height;
+      elementRef.current.style.top = `${headerEnd}px`;
+
+      if (footerElRef.current) {
+        const { top } = footerElRef.current.getBoundingClientRect();
+        elementRef.current.style.bottom = `${Math.max(
+          0,
+          window.innerHeight - top
+        )}px`;
+      }
+    }, 16);
+
+    let rafId;
+    const rafRun = () => {
+      positioner();
+      rafId = requestAnimationFrame(rafRun);
+    };
+
+    rafRun();
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, []);
+
+  return <DocumentOutline ref={elementRef} {...props} />;
+}

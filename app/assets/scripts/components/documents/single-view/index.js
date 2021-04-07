@@ -117,7 +117,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <StickyInpageHeader>
+          <StickyInpageHeader data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
