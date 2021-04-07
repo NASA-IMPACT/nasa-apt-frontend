@@ -151,7 +151,9 @@ StepIdentifyingInformation.propTypes = {
   id: T.oneOfType([T.string, T.number]),
   version: T.string,
   atbd: T.shape({
+    id: T.number,
     title: T.string,
-    alias: T.string
+    alias: T.string,
+    document: T.object
   })
 };

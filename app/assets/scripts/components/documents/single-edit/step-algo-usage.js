@@ -11,7 +11,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 
-export default function StepAlgoDescription(props) {
+export default function StepAlgoUsage(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
@@ -34,51 +34,39 @@ export default function StepAlgoDescription(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <FormikSectionFieldset
-                label='Scientific Theory'
-                sectionName='sections_completed.scientific_theory'
+                label='Constraints'
+                sectionName='sections_completed.constraints'
               >
                 <FormikInputEditor
-                  id='scientific_theory'
-                  name='document.scientific_theory'
-                  label='Describe the scientific theory'
-                />
-
-                <FormikInputEditor
-                  id='scientific_theory_assumptions'
-                  name='document.scientific_theory_assumptions'
-                  label='Scientific theory assumptions'
+                  id='algorithm_usage_constraints'
+                  name='document.algorithm_usage_constraints'
+                  label='Describe the algorithm constraints'
                 />
               </FormikSectionFieldset>
 
+              <FormBlockHeading>Performance Assessment</FormBlockHeading>
+
               <FormikSectionFieldset
-                label='Mathematical Theory'
-                sectionName='sections_completed.mathematical_theory'
+                label='Validation'
+                sectionName='sections_completed.validation'
               >
                 <FormikInputEditor
-                  id='mathematical_theory'
-                  name='document.mathematical_theory'
-                  label='Describe the mathematical theory'
+                  id='performance_assessment_validation_methods'
+                  name='document.performance_assessment_validation_methods'
+                  label='Validation Methods'
                 />
 
                 <FormikInputEditor
-                  id='mathematical_theory_assumptions'
-                  name='document.mathematical_theory_assumptions'
-                  label='Mathematical theory assumptions'
+                  id='performance_assessment_validation_uncertainties'
+                  name='document.performance_assessment_validation_uncertainties'
+                  label='Uncertainties'
                 />
-              </FormikSectionFieldset>
 
-              <FormikSectionFieldset
-                label='Input Variables'
-                sectionName='sections_completed.input_variables'
-              >
-                Coming Soon.
-              </FormikSectionFieldset>
-
-              <FormikSectionFieldset
-                label='Output Variables'
-                sectionName='sections_completed.output_variables'
-              >
-                Coming Soon.
+                <FormikInputEditor
+                  id='performance_assessment_validation_errors'
+                  name='document.performance_assessment_validation_errors'
+                  label='Errors'
+                />
               </FormikSectionFieldset>
             </Form>
           </FormBlock>
@@ -88,7 +76,7 @@ export default function StepAlgoDescription(props) {
   );
 }
 
-StepAlgoDescription.propTypes = {
+StepAlgoUsage.propTypes = {
   renderInpageHeader: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),

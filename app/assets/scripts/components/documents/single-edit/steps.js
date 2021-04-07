@@ -6,6 +6,7 @@ import { editorEmptyValue } from '../../slate/editor';
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
 import StepAlgoDescription from './step-algo-description';
+import StepAlgoUsage from './step-algo-usage';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -124,9 +125,20 @@ export const STEPS = [
   {
     id: 'algorithm_usage',
     label: 'Algorithm usage',
-    StepComponent: () => <p>Algorithm usage coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoUsage,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          algorithm_usage_constraints: '<editor>',
+          performance_assessment_validation_methods: '<editor>',
+          performance_assessment_validation_uncertainties: '<editor>',
+          performance_assessment_validation_errors: '<editor>'
+        },
+        sections_completed: {
+          constraints: 'incomplete',
+          validation: 'incomplete'
+        }
+      });
     }
   },
   {

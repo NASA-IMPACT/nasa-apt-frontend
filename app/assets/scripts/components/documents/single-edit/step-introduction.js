@@ -68,7 +68,7 @@ StepIntroduction.propTypes = {
   id: T.oneOfType([T.string, T.number]),
   version: T.string,
   atbd: T.shape({
-    title: T.string,
-    alias: T.string
+    id: T.number,
+    document: T.object
   })
 };
