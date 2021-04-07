@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { Heading } from '@devseed-ui/typography';
 
 import App from '../../common/app';
 import {
@@ -13,6 +14,7 @@ import {
 import UhOh from '../../uhoh';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
+import DetailsList from '../../../styles/typography/details-list';
 import DocumentNavHeader from '../document-nav-header';
 import AtbdActionsMenu from '../atbd-actions-menu';
 
@@ -41,6 +43,20 @@ const Paper = styled.div`
 
 const PaperContent = styled.div`
   grid-column: content-start / content-end;
+`;
+
+const DocumentHeader = styled.section`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 2rem;
+`;
+
+const DocumentTitle = styled(Heading).attrs({ as: 'h2' })`
+  margin: 0;
+`;
+
+const DocumentMetaDetails = styled(DetailsList)`
+  background: transparent;
 `;
 
 function DocumentView() {
@@ -129,6 +145,13 @@ function DocumentView() {
               <ContentBlock>
                 <PaperContent>
                   <Prose>
+                    <DocumentHeader>
+                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                      <DocumentMetaDetails>
+                        <dt>Version</dt>
+                        <dd>{atbd.data.version}</dd>
+                      </DocumentMetaDetails>
+                    </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
                   </Prose>
                 </PaperContent>
