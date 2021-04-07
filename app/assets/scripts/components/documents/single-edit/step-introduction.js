@@ -39,7 +39,7 @@ export default function StepIntroduction(props) {
               >
                 <FormikInputEditor
                   id='introduction'
-                  name='introduction'
+                  name='document.introduction'
                   label='Introduce the algorithm'
                 />
               </FormikSectionFieldset>
@@ -50,7 +50,7 @@ export default function StepIntroduction(props) {
               >
                 <FormikInputEditor
                   id='historical_perspective'
-                  name='historical_perspective'
+                  name='document.historical_perspective'
                   label='Describe the historical perspective'
                 />
               </FormikSectionFieldset>

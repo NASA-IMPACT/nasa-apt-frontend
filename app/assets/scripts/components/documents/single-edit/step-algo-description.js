@@ -39,13 +39,13 @@ export default function StepAlgoDescription(props) {
               >
                 <FormikInputEditor
                   id='scientific_theory'
-                  name='scientific_theory'
+                  name='document.scientific_theory'
                   label='Describe the scientific theory'
                 />
 
                 <FormikInputEditor
                   id='scientific_theory_assumptions'
-                  name='scientific_theory_assumptions'
+                  name='document.scientific_theory_assumptions'
                   label='Scientific theory assumptions'
                 />
               </FormikSectionFieldset>
@@ -56,13 +56,13 @@ export default function StepAlgoDescription(props) {
               >
                 <FormikInputEditor
                   id='mathematical_theory'
-                  name='mathematical_theory'
+                  name='document.mathematical_theory'
                   label='Describe the mathematical theory'
                 />
 
                 <FormikInputEditor
                   id='mathematical_theory_assumptions'
-                  name='mathematical_theory_assumptions'
+                  name='document.mathematical_theory_assumptions'
                   label='Mathematical theory assumptions'
                 />
               </FormikSectionFieldset>

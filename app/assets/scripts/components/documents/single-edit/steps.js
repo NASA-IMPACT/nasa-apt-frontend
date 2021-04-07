@@ -15,14 +15,10 @@ import StepAlgoDescription from './step-algo-description';
  * @param {object} defaults defaults object
  */
 const getFromObj = (obj, defaults) => {
-  const { sections_completed = {}, ...remainingKeys } = defaults;
-
-  return {
-    // The id of the atbd will never be changed but is useful to have present.
-    id: obj.id,
-    ...Object.keys(remainingKeys).reduce((acc, key) => {
-      const defValue = defaults[key];
-      const source = get(obj, key);
+  const recursiveGet = (_obj, _defaults) =>
+    Object.keys(_defaults).reduce((acc, key) => {
+      const defValue = _defaults[key];
+      const source = get(_obj, key);
       const isObject = !Array.isArray(defValue) && defValue instanceof Object;
 
       // The fallback value can be changed with some tags. This is needed
@@ -30,19 +26,14 @@ const getFromObj = (obj, defaults) => {
       const value = defValue === '<editor>' ? editorEmptyValue : defValue;
       return {
         ...acc,
-        [key]: isObject ? getFromObj(source || {}, defValue) : source || value
+        [key]: isObject ? recursiveGet(source || {}, defValue) : source || value
       };
-    }, {}),
-    // The sections_completed must be handled slightly differently. Every time
-    // we update sections_completed we must update the whole field, otherwise
-    // the contents are replaced. To ensure that the correct values are present
-    // we start with the defaults for the current step and update them with
-    // whatever is already present in the ATBD. Not every step will use all the
-    // sections, but they'll always be submitted.
-    sections_completed: {
-      ...sections_completed,
-      ...(obj.sections_completed || {})
-    }
+    }, {});
+
+  return {
+    // The id of the atbd will never be changed but is useful to have present.
+    id: obj.id,
+    ...recursiveGet(obj, defaults)
   };
 };
 
@@ -96,8 +87,10 @@ export const STEPS = [
     StepComponent: StepIntroduction,
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
-        introduction: '<editor>',
-        historical_perspective: '<editor>',
+        document: {
+          introduction: '<editor>',
+          historical_perspective: '<editor>'
+        },
         sections_completed: {
           introduction: 'incomplete',
           historical_perspective: 'incomplete'
@@ -111,12 +104,14 @@ export const STEPS = [
     StepComponent: StepAlgoDescription,
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
-        scientific_theory: '<editor>',
-        scientific_theory_assumptions: '<editor>',
-        mathematical_theory: '<editor>',
-        mathematical_theory_assumptions: '<editor>',
-        algorithm_input_variables: '',
-        algorithm_output_variables: '',
+        document: {
+          scientific_theory: '<editor>',
+          scientific_theory_assumptions: '<editor>',
+          mathematical_theory: '<editor>',
+          mathematical_theory_assumptions: '<editor>',
+          algorithm_input_variables: '',
+          algorithm_output_variables: ''
+        },
         sections_completed: {
           scientific_theory: 'incomplete',
           mathematical_theory: 'incomplete',
