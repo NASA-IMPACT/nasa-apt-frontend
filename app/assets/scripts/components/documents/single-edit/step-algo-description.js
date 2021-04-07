@@ -11,7 +11,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 
-export default function StepIntroduction(props) {
+export default function StepAlgoDescription(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
@@ -34,25 +34,51 @@ export default function StepIntroduction(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <FormikSectionFieldset
-                label='Introduction'
-                sectionName='sections_completed.introduction'
+                label='Scientific Theory'
+                sectionName='sections_completed.scientific_theory'
               >
                 <FormikInputEditor
-                  id='introduction'
-                  name='introduction'
-                  label='Introduce the algorithm'
+                  id='scientific_theory'
+                  name='scientific_theory'
+                  label='Describe the scientific theory'
+                />
+
+                <FormikInputEditor
+                  id='scientific_theory_assumptions'
+                  name='scientific_theory_assumptions'
+                  label='Scientific theory assumptions'
                 />
               </FormikSectionFieldset>
 
               <FormikSectionFieldset
-                label='Historical Perspective'
-                sectionName='sections_completed.historical_perspective'
+                label='Mathematical Theory'
+                sectionName='sections_completed.mathematical_theory'
               >
                 <FormikInputEditor
-                  id='historical_perspective'
-                  name='historical_perspective'
-                  label='Describe the historical perspective'
+                  id='mathematical_theory'
+                  name='mathematical_theory'
+                  label='Describe the mathematical theory'
                 />
+
+                <FormikInputEditor
+                  id='mathematical_theory_assumptions'
+                  name='mathematical_theory_assumptions'
+                  label='Mathematical theory assumptions'
+                />
+              </FormikSectionFieldset>
+
+              <FormikSectionFieldset
+                label='Input Variables'
+                sectionName='sections_completed.input_variables'
+              >
+                Coming Soon.
+              </FormikSectionFieldset>
+
+              <FormikSectionFieldset
+                label='Output Variables'
+                sectionName='sections_completed.output_variables'
+              >
+                Coming Soon.
               </FormikSectionFieldset>
             </Form>
           </FormBlock>
@@ -62,7 +88,7 @@ export default function StepIntroduction(props) {
   );
 }
 
-StepIntroduction.propTypes = {
+StepAlgoDescription.propTypes = {
   renderInpageHeader: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),

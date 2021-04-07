@@ -5,6 +5,7 @@ import { editorEmptyValue } from '../../slate/editor';
 
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
+import StepAlgoDescription from './step-algo-description';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -107,9 +108,22 @@ export const STEPS = [
   {
     id: 'algorithm_description',
     label: 'Algorithm description',
-    StepComponent: () => <p>Algorithm description coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoDescription,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        scientific_theory: '<editor>',
+        scientific_theory_assumptions: '<editor>',
+        mathematical_theory: '<editor>',
+        mathematical_theory_assumptions: '<editor>',
+        algorithm_input_variables: '',
+        algorithm_output_variables: '',
+        sections_completed: {
+          scientific_theory: 'incomplete',
+          mathematical_theory: 'incomplete',
+          input_variables: 'incomplete',
+          output_variables: 'incomplete'
+        }
+      });
     }
   },
   {
