@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
-import FullEditor, { ReadEditor } from '../../slate/editor';
+import FullEditor from '../../slate/editor';
 import { Link } from '../../../styles/clean/link';
 import {
   Inpage,
@@ -15,6 +15,7 @@ import {
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
 import { hugeDoc } from '../../slate/plugins/debug-editor/dummy';
+import SafeReadEditor from '../../slate/safe-read-editor';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -39,6 +40,12 @@ function SandboxEditor() {
         children: [{ text: 'A line of text in a paragraph.' }]
       }
     ]
+  });
+
+  const [value2, setValue2] = useState({
+    // Root level has no type and is the first child of the Editor.
+    // This is needed for the block breaks to work.
+    children: 'invalid'
   });
 
   return (
@@ -66,7 +73,14 @@ function SandboxEditor() {
               }}
             />
 
-            <ReadEditor value={value} />
+            <SafeReadEditor value={value} />
+
+            <FullEditor
+              value={value2}
+              onChange={(v) => {
+                setValue2(v);
+              }}
+            />
           </Constrainer>
         </InpageBodyScroll>
       </Inpage>
