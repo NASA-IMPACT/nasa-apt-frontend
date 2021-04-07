@@ -7,6 +7,7 @@ import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
 import StepAlgoDescription from './step-algo-description';
 import StepAlgoUsage from './step-algo-usage';
+import StepJournalDetails from './step-journal-details';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -152,9 +153,18 @@ export const STEPS = [
   {
     id: 'journal_details',
     label: 'Journal details',
-    StepComponent: () => <p>Journal details coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepJournalDetails,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          journal_discussion: '<editor>',
+          journal_acknowledgements: '<editor>'
+        },
+        sections_completed: {
+          discussion: 'incomplete',
+          acknowledgements: 'incomplete'
+        }
+      });
     }
   }
 ];
