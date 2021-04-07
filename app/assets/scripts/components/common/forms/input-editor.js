@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
-import { Field } from 'formik';
+import { FastField } from 'formik';
 import { FormHelperMessage } from '@devseed-ui/form';
 
 import FormGroupStructure from './form-group-structure';
@@ -17,7 +17,7 @@ import FullEditor from '../../slate/editor';
  */
 export function FormikInputEditor({ helper, id, ...props }) {
   return (
-    <Field {...props}>
+    <FastField {...props}>
       {({ field, meta, form }) => {
         return (
           <FormGroupStructure
@@ -42,7 +42,7 @@ export function FormikInputEditor({ helper, id, ...props }) {
           </FormGroupStructure>
         );
       }}
-    </Field>
+    </FastField>
   );
 }
 
