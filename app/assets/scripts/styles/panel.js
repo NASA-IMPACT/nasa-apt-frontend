@@ -11,7 +11,6 @@ export const Panel = styled.section`
   flex-flow: column nowrap;
   width: 18rem;
   box-shadow: ${themeVal('boxShadow.elevationD')};
-  border: 1px solid ${themeVal('color.baseAlphaC')};
 
   ${media.mediumUp`
     width: 20rem;

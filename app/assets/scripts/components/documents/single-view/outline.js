@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import * as Scroll from 'react-scroll';
-import { glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
+import { glsp, rgba, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
 import {
@@ -24,19 +24,45 @@ const OutlineMenuSelf = styled.ol`
 
 const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   ${truncated()}
+  position: relative;
   display: block;
   font-size: 1rem;
   line-height: 1.5rem;
   padding: ${glsp(0.5, themeVal('layout.gap.medium'))};
   margin: 0;
-
-  &.active {
-    background-color: red;
-  }
+  background-color: ${rgba(themeVal('color.link'), 0)};
+  transition: all 0.24s ease-in-out 0s;
 
   &,
   &:visited {
     color: inherit;
+  }
+
+  &:hover {
+    opacity: 1;
+    background-color: ${rgba(themeVal('color.link'), 0.08)};
+  }
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0.25rem;
+    height: 0;
+    background: ${themeVal('color.link')};
+    content: '';
+    pointer-events: none;
+    transform: translate(0, -50%);
+    transition: all 0.32s ease-in-out 0s;
+  }
+
+  &.active {
+    background-color: ${rgba(themeVal('color.link'), 0.08)};
+    color: ${themeVal('color.link')};
+
+    &::before {
+      height: 100%;
+    }
   }
 
   ${OutlineMenuSelf} ${OutlineMenuSelf} & {
