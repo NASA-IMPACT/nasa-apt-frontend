@@ -31,8 +31,8 @@ export default class SafeReadEditor extends React.Component {
 const SafeReadEditorComponent = (props) => {
   const { value, whenEmpty, ...rest } = props;
 
-  const strValue = value
-    ? value.map((n) => Node.string(n).trim()).join('')
+  const strValue = value?.children
+    ? value.children.map((n) => Node.string(n).trim()).join('')
     : '';
 
   if (whenEmpty && !strValue) {
@@ -42,6 +42,6 @@ const SafeReadEditorComponent = (props) => {
 };
 
 SafeReadEditorComponent.propTypes = {
-  value: T.array,
+  value: T.object,
   whenEmpty: T.node
 };

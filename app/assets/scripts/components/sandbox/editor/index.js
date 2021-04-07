@@ -29,19 +29,17 @@ const InpageBodyScroll = styled(InpageBody)`
 function SandboxEditor() {
   // Keep track of state for the value of the editor.
   // Move up.
-  const [value, setValue] = useState([
-    {
-      // Root level has no type and is the first child of the Editor.
-      // This is needed for the block breaks to work.
-      children: [
-        ...hugeDoc,
-        {
-          type: 'p',
-          children: [{ text: 'A line of text in a paragraph.' }]
-        }
-      ]
-    }
-  ]);
+  const [value, setValue] = useState({
+    // Root level has no type and is the first child of the Editor.
+    // This is needed for the block breaks to work.
+    children: [
+      ...hugeDoc,
+      {
+        type: 'p',
+        children: [{ text: 'A line of text in a paragraph.' }]
+      }
+    ]
+  });
 
   return (
     <App pageTitle='Sandbox/Editor'>
