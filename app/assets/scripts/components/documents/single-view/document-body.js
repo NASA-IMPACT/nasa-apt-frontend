@@ -41,11 +41,42 @@ const AtbdSection = styled(AtbdSectionBase)`
 // When the section that's being rendered is a list of items we only need
 // to print the title and then the data from the children.
 // This method is a utility to just render the children.
-const childrenPassThrough = ({ element, children }) => (
-  <AtbdSection key={element.id} id={element.id} title={element.label}>
-    {children || 'Not Available'}
-  </AtbdSection>
+const childrenPassThrough = ({ element, children }) => {
+  return (
+    <AtbdSection key={element.id} id={element.id} title={element.label}>
+      {React.Children.count(children) ? children : <EmptySection />}
+    </AtbdSection>
+  );
+};
+
+const DataAccessItem = ({ id, label, url, description }) => (
+  <div key={id} itemScope itemType='https://schema.org/Dataset'>
+    <h2 id={id} itemProp='name' data-scroll='target'>
+      {label}
+    </h2>
+    <h4>Url</h4>
+    <p
+      itemProp='distribution'
+      itemScope
+      itemType='https://schema.org/DataDownload'
+    >
+      <a
+        href={url}
+        target='_blank'
+        rel='noopener noreferrer'
+        title='Open url in new tab'
+        itemProp='contentUrl'
+      >
+        {url}
+      </a>
+    </p>
+    <h4>Description</h4>
+
+    <SafeReadEditor value={description} whenEmpty={<EmptySection />} />
+  </div>
 );
+
+const EmptySection = () => <p>No content available</p>;
 
 /**
  * Renders each element of the given array (by calling their `render` function)
@@ -56,7 +87,11 @@ const childrenPassThrough = ({ element, children }) => (
 const renderElements = (elements, props) =>
   elements
     ? elements.map((el) => {
-        const children = renderElements(el.children, props);
+        // If children is a function means it needs props to dynamically render
+        // them, like the case of array fields.
+        const resultingChildren =
+          typeof el.children === 'function' ? el.children(props) : el.children;
+        const children = renderElements(resultingChildren, props);
         return el.render({ element: el, children, ...props });
       })
     : null;
@@ -83,7 +118,7 @@ export const atbdContentSections = [
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           value={document.introduction}
-          whenEmpty='No content available'
+          whenEmpty={<EmptySection />}
         />
       </AtbdSection>
     )
@@ -95,7 +130,7 @@ export const atbdContentSections = [
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           value={document.historical_perspective}
-          whenEmpty='No content available'
+          whenEmpty={<EmptySection />}
         />
       </AtbdSection>
     )
@@ -115,7 +150,7 @@ export const atbdContentSections = [
             </h2>
             <SafeReadEditor
               value={document.scientific_theory}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
             {children}
           </React.Fragment>
@@ -131,7 +166,7 @@ export const atbdContentSections = [
                 </h3>
                 <SafeReadEditor
                   value={document.scientific_theory_assumptions}
-                  whenEmpty='No content available'
+                  whenEmpty={<EmptySection />}
                 />
               </React.Fragment>
             )
@@ -148,7 +183,7 @@ export const atbdContentSections = [
             </h2>
             <SafeReadEditor
               value={document.mathematical_theory}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
             {children}
           </React.Fragment>
@@ -164,7 +199,7 @@ export const atbdContentSections = [
                 </h3>
                 <SafeReadEditor
                   value={document.mathematical_theory_assumptions}
-                  whenEmpty='No content available'
+                  whenEmpty={<EmptySection />}
                 />
               </React.Fragment>
             )
@@ -197,43 +232,49 @@ export const atbdContentSections = [
       }
     ]
   },
-  // {
-  //   label: 'Algorithm Implementations',
-  //   id: 'algo-implementations',
-  //   render: childrenPassThroughRenderer,
-  //   children: (algorithm_implementations || []).map((o, idx) => ({
-  //     label: `Entry #${idx + 1}`,
-  //     id: `algo-implementations-${idx + 1}`,
-  //     render: (el) => (
-  //       <div
-  //         key={el.id}
-  //         itemProp='hasPart'
-  //         itemScope
-  //         itemType='https://schema.org/CreativeWork'
-  //       >
-  //         <h2 id={el.id} itemProp='name'>
-  //           {el.label}
-  //         </h2>
-  //         <h4>Url</h4>
-  //         <p>
-  //           <a
-  //             href={o.access_url}
-  //             target='_blank'
-  //             rel='noopener noreferrer'
-  //             title='Open url in new tab'
-  //             itemProp='url'
-  //           >
-  //             {o.access_url}
-  //           </a>
-  //         </p>
-  //         <h4>Description</h4>
-  //         <Prose itemProp='description'>
-  //           {this.renderReadOnlyEditor(o.execution_description)}
-  //         </Prose>
-  //       </div>
-  //     )
-  //   }))
-  // },
+  {
+    label: 'Algorithm Implementations',
+    id: 'algo-implementations',
+    render: childrenPassThrough,
+    children: ({ document }) => {
+      const items = document.algorithm_implementations || [];
+
+      return items.map((o, idx) => ({
+        label: `Entry #${idx + 1}`,
+        id: `algo-implementations-${idx + 1}`,
+        render: ({ element, document }) => (
+          <div
+            key={element.id}
+            itemProp='hasPart'
+            itemScope
+            itemType='https://schema.org/CreativeWork'
+          >
+            <h2 id={element.id} itemProp='name' data-scroll='target'>
+              {element.label}
+            </h2>
+            <h4>Url</h4>
+            <p>
+              <a
+                href={o.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                title='Open url in new tab'
+                itemProp='url'
+              >
+                {o.url}
+              </a>
+            </p>
+            <h4>Description</h4>
+            <SafeReadEditor
+              itemProp='description'
+              value={document.algorithm_implementations[idx].description}
+              whenEmpty={<EmptySection />}
+            />
+          </div>
+        )
+      }));
+    }
+  },
   {
     label: 'Algorithm Usage Constraints',
     id: 'algo-usage-constraints',
@@ -241,7 +282,7 @@ export const atbdContentSections = [
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
-          whenEmpty='No content available'
+          whenEmpty={<EmptySection />}
         />
       </AtbdSection>
     )
@@ -261,7 +302,7 @@ export const atbdContentSections = [
             </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_methods}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
           </React.Fragment>
         )
@@ -276,7 +317,7 @@ export const atbdContentSections = [
             </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_uncertainties}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
           </React.Fragment>
         )
@@ -291,83 +332,80 @@ export const atbdContentSections = [
             </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_errors}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
           </React.Fragment>
         )
       }
     ]
   },
-  // {
-  //   label: 'Data Access',
-  //   id: 'data-access',
-  //   render: childrenPassThroughRenderer,
-  //   children: [
-  //     {
-  //       label: 'Data Access Input Data',
-  //       id: 'data-access-input',
-  //       render: childrenPassThroughRenderer,
-  //       children: (data_access_input_data || []).map((o, idx) => ({
-  //         label: `Entry #${idx + 1}`,
-  //         id: `data-access-input-${idx + 1}`,
-  //         render: (el) => (
-  //           <div key={el.id} itemScope itemType='https://schema.org/Dataset'>
-  //             <h2 id={el.id} itemProp='name'>
-  //               {el.label}
-  //             </h2>
-  //             {this.renderUrlDescriptionField({
-  //               id: o.data_access_input_data_id,
-  //               url: o.access_url,
-  //               description: o.description
-  //             })}
-  //           </div>
-  //         )
-  //       }))
-  //     },
-  //     {
-  //       label: 'Data Access Output Data',
-  //       id: 'data-access-output',
-  //       render: childrenPassThroughRenderer,
-  //       children: (data_access_output_data || []).map((o, idx) => ({
-  //         label: `Entry #${idx + 1}`,
-  //         id: `data-access-output-${idx + 1}`,
-  //         render: (el) => (
-  //           <div key={el.id} itemScope itemType='https://schema.org/Dataset'>
-  //             <h2 id={el.id} itemProp='name'>
-  //               {el.label}
-  //             </h2>
-  //             {this.renderUrlDescriptionField({
-  //               id: o.data_access_output_data_id,
-  //               url: o.access_url,
-  //               description: o.description
-  //             })}
-  //           </div>
-  //         )
-  //       }))
-  //     },
-  //     {
-  //       label: 'Data Access Related URLs',
-  //       id: 'data-access-related-urls',
-  //       render: childrenPassThroughRenderer,
-  //       children: (data_access_related_urls || []).map((o, idx) => ({
-  //         label: `Entry #${idx + 1}`,
-  //         id: `data-access-related-urls-${idx + 1}`,
-  //         render: (el) => (
-  //           <div key={el.id} itemScope itemType='https://schema.org/Dataset'>
-  //             <h2 id={el.id} itemProp='name'>
-  //               {el.label}
-  //             </h2>
-  //             {this.renderUrlDescriptionField({
-  //               id: o.data_access_related_url_id,
-  //               url: o.url,
-  //               description: o.description
-  //             })}
-  //           </div>
-  //         )
-  //       }))
-  //     }
-  //   ]
-  // },
+  {
+    label: 'Data Access',
+    id: 'data-access',
+    render: childrenPassThrough,
+    children: [
+      {
+        label: 'Data Access Input Data',
+        id: 'data-access-input',
+        render: childrenPassThrough,
+        children: ({ document }) => {
+          const items = document.data_access_input_data || [];
+          return items.map((o, idx) => ({
+            label: `Entry #${idx + 1}`,
+            id: `data-access-input-${idx + 1}`,
+            render: ({ element, document }) => (
+              <DataAccessItem
+                id={element.id}
+                label={element.label}
+                url={document.data_access_input_data[idx].url}
+                description={document.data_access_input_data[idx].description}
+              />
+            )
+          }));
+        }
+      },
+      {
+        label: 'Data Access Output Data',
+        id: 'data-access-output',
+        render: childrenPassThrough,
+        children: ({ document }) => {
+          const items = document.data_access_output_data || [];
+          return items.map((o, idx) => ({
+            label: `Entry #${idx + 1}`,
+            id: `data-access-output-${idx + 1}`,
+            render: ({ element, document }) => (
+              <DataAccessItem
+                id={element.id}
+                label={element.label}
+                url={document.data_access_output_data[idx].url}
+                description={document.data_access_output_data[idx].description}
+              />
+            )
+          }));
+        }
+      },
+      {
+        label: 'Data Access Related URLs',
+        id: 'data-access-related-urls',
+        render: childrenPassThrough,
+        children: ({ document }) => {
+          const items = document.data_access_related_urls || [];
+          return items.map((o, idx) => ({
+            label: `Entry #${idx + 1}`,
+            id: `data-access-related-urls-${idx + 1}`,
+            render: ({ element, document }) => (
+              <DataAccessItem
+                id={element.id}
+                label={element.label}
+                url={document.data_access_related_urls[idx].url}
+                description={document.data_access_related_urls[idx].description}
+              />
+            )
+          }));
+        }
+      }
+    ]
+  },
   {
     label: 'Contacts',
     id: 'contacts',
@@ -508,7 +546,7 @@ export const atbdContentSections = [
             </h3>
             <SafeReadEditor
               value={document.journal_discussion}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
           </React.Fragment>
         )
@@ -523,7 +561,7 @@ export const atbdContentSections = [
             </h3>
             <SafeReadEditor
               value={document.journal_acknowledgements}
-              whenEmpty='No content available'
+              whenEmpty={<EmptySection />}
             />
           </React.Fragment>
         )
