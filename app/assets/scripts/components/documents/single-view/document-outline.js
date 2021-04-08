@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import * as Scroll from 'react-scroll';
 import throttle from 'lodash.throttle';
 import { glsp, rgba, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
@@ -15,6 +14,7 @@ import {
   PanelBody
 } from '../../../styles/panel';
 import { atbdContentSections } from './document-body';
+import { useScrollLink } from './scroll-manager';
 
 const OutlineSelf = styled(Panel).attrs({ as: 'nav' })`
   position: sticky;
@@ -87,35 +87,15 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   }
 `;
 
-// The scroll element needed for the smooth scrolling and active navigation
-// links.
-const ScrollLink = Scroll.ScrollLink(OutlineMenuLink);
-
-const OutlineMenuScrollLink = (props) => {
-  const { to, ...rest } = props;
-
-  return (
-    <ScrollLink
-      to={to}
-      href={`#${to}`}
-      spy={true}
-      hashSpy={true}
-      duration={500}
-      smooth={true}
-      offset={-96}
-      activeClass='active'
-      {...rest}
-    />
-  );
-};
-
-OutlineMenuScrollLink.propTypes = {
+OutlineMenuLink.propTypes = {
   to: T.string
 };
 
 // Component to recursively render the outline menu.
 const OutlineMenu = (props) => {
   const { items, atbdDocument = {} } = props;
+
+  const { activeId, getScrollToId } = useScrollLink();
 
   return items?.length ? (
     <OutlineMenuSelf>
@@ -128,12 +108,14 @@ const OutlineMenu = (props) => {
 
         return (
           <li key={item.id}>
-            <OutlineMenuScrollLink
-              to={item.id}
+            <OutlineMenuLink
+              className={activeId === item.id ? 'active' : ''}
+              href={`#${item.id}`}
               title={`Go to ${item.label} section`}
+              onClick={getScrollToId(item.id)}
             >
               {item.label}
-            </OutlineMenuScrollLink>
+            </OutlineMenuLink>
             <OutlineMenu items={items} atbdDocument={atbdDocument} />
           </li>
         );
@@ -150,11 +132,50 @@ OutlineMenu.propTypes = {
 // Outline panel component
 export default function DocumentOutline(props) {
   const { atbd } = props;
+  const { activeId } = useScrollLink();
 
   const headerElRef = useRef(null);
   const footerElRef = useRef(null);
   const elementRef = useRef(null);
 
+  // If the active item has changed, ensure it is in view.
+  useEffect(() => {
+    if (!activeId) return;
+
+    // Get reference to the element, using the href.
+    const activeLinkElement = elementRef.current.querySelector(
+      `[href="#${activeId}"]`
+    );
+
+    // For an item to be in view it has to be within the visible area of the
+    // scroll container which in this case is the offsetParent.
+    // The scroll area is the first parent element with a position attribute and
+    // that's why using offsetParent works.
+    // It is VERY IMPORTANT that this doesn't change
+    const scrollArea = activeLinkElement.offsetParent;
+    const scrollAreaVisibleExtent = [
+      scrollArea.scrollTop,
+      scrollArea.offsetHeight - scrollArea.scrollTop
+    ];
+
+    const linkTop = activeLinkElement.offsetTop;
+    const linkBottom =
+      activeLinkElement.offsetTop + activeLinkElement.offsetHeight;
+    if (
+      linkTop < scrollAreaVisibleExtent[0] ||
+      linkBottom > scrollAreaVisibleExtent[1]
+    ) {
+      // Link is hidden. Scroll.
+      scrollArea.scroll({
+        // Aim for the link to be in the middle.
+        top: linkTop - scrollArea.offsetHeight / 2,
+        behavior: 'smooth'
+      });
+    }
+  }, [activeId]);
+
+  // Make the outline sticky by computing the height taking the header and
+  // footer into account.
   useEffect(() => {
     const positioner = throttle(() => {
       if (!headerElRef.current) {

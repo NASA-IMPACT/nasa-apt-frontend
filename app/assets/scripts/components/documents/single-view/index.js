@@ -17,14 +17,14 @@ import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentNavHeader from '../document-nav-header';
 import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentOutline from './document-outline';
+import DocumentBody from './document-body';
+import { ScrollAnchorProvider } from './scroll-manager';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
-
-import DocumentOutline from './document-outline';
-import DocumentBody from './document-body';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -135,23 +135,25 @@ function DocumentView() {
               />
             </InpageActions>
           </InpageHeaderSticky>
-          <DocumentCanvas>
-            <DocumentOutline atbd={atbd.data} />
-            <ContentBlock>
-              <DocumentContent>
-                <Prose>
-                  <DocumentHeader>
-                    <DocumentTitle>{atbd.data.title}</DocumentTitle>
-                    <DocumentMetaDetails>
-                      <dt>Version</dt>
-                      <dd>{atbd.data.version}</dd>
-                    </DocumentMetaDetails>
-                  </DocumentHeader>
-                  <DocumentBody atbd={atbd.data} />
-                </Prose>
-              </DocumentContent>
-            </ContentBlock>
-          </DocumentCanvas>
+          <ScrollAnchorProvider>
+            <DocumentCanvas>
+              <DocumentOutline atbd={atbd.data} />
+              <ContentBlock>
+                <DocumentContent>
+                  <Prose>
+                    <DocumentHeader>
+                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                      <DocumentMetaDetails>
+                        <dt>Version</dt>
+                        <dd>{atbd.data.version}</dd>
+                      </DocumentMetaDetails>
+                    </DocumentHeader>
+                    <DocumentBody atbd={atbd.data} />
+                  </Prose>
+                </DocumentContent>
+              </ContentBlock>
+            </DocumentCanvas>
+          </ScrollAnchorProvider>
         </Inpage>
       )}
     </App>

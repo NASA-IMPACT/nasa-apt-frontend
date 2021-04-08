@@ -2,37 +2,23 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import * as Scroll from 'react-scroll';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import SafeReadEditor from '../../slate/safe-read-editor';
 
 import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
-
-// The scroll element needed for the smooth scrolling and active navigation
-// links.
-const ScrollAnchor = Scroll.ScrollElement((props) => {
-  const { parentBindings, element: E = 'div', children, ...rest } = props;
-  return (
-    <E
-      {...rest}
-      ref={(el) => {
-        parentBindings.domNode = el;
-      }}
-    >
-      {children}
-    </E>
-  );
-});
+import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 
 // Wrapper for each of the main sections.
-const AtbdSectionBase = ({ id, title, children, ...props }) => (
-  <ScrollAnchor name={id} element='section' {...props}>
+const AtbdSectionBase = ({ id, title, children }) => (
+  <section>
     <header>
-      <h1 id={id}>{title}</h1>
+      <h1 id={id} data-scroll='target'>
+        {title}
+      </h1>
     </header>
     <div>{children}</div>
-  </ScrollAnchor>
+  </section>
 );
 
 const AtbdSection = styled(AtbdSectionBase)`
@@ -91,7 +77,8 @@ export const atbdContentSections = [
   {
     label: 'Introduction',
     id: 'introduction',
-    editorSubsections: (document) => subsectionsFromSlateDocument(document.introduction),
+    editorSubsections: (document) =>
+      subsectionsFromSlateDocument(document.introduction),
     render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
@@ -122,27 +109,31 @@ export const atbdContentSections = [
         label: 'Scientific Theory',
         id: 'sci-theory',
         render: ({ element, document, children }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             <SafeReadEditor
               value={document.scientific_theory}
               whenEmpty='No content available'
             />
             {children}
-          </ScrollAnchor>
+          </React.Fragment>
         ),
         children: [
           {
             label: 'Assumptions',
             id: 'sci-theory-assumptions',
             render: ({ element, document }) => (
-              <ScrollAnchor id={element.id} key={element.id}>
-                <h3 id={element.id}>{element.label}</h3>
+              <React.Fragment key={element.id}>
+                <h3 id={element.id} data-scroll='target'>
+                  {element.label}
+                </h3>
                 <SafeReadEditor
                   value={document.scientific_theory_assumptions}
                   whenEmpty='No content available'
                 />
-              </ScrollAnchor>
+              </React.Fragment>
             )
           }
         ]
@@ -151,27 +142,31 @@ export const atbdContentSections = [
         label: 'Mathematical Theory',
         id: 'math-theory',
         render: ({ element, document, children }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             <SafeReadEditor
               value={document.mathematical_theory}
               whenEmpty='No content available'
             />
             {children}
-          </ScrollAnchor>
+          </React.Fragment>
         ),
         children: [
           {
             label: 'Assumptions',
             id: 'math-theory-assumptions',
             render: ({ element, document }) => (
-              <ScrollAnchor id={element.id} key={element.id}>
-                <h3 id={element.id}>{element.label}</h3>
+              <React.Fragment key={element.id}>
+                <h3 id={element.id} data-scroll='target'>
+                  {element.label}
+                </h3>
                 <SafeReadEditor
                   value={document.mathematical_theory_assumptions}
                   whenEmpty='No content available'
                 />
-              </ScrollAnchor>
+              </React.Fragment>
             )
           }
         ]
@@ -180,20 +175,24 @@ export const atbdContentSections = [
         label: 'Algorithm Input Variables',
         id: 'algo-input-var',
         render: ({ element }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             List of variables will be coming soon.
-          </ScrollAnchor>
+          </React.Fragment>
         )
       },
       {
         label: 'Algorithm Output Variables',
         id: 'algo-output-var',
         render: ({ element }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             List of variables will be coming soon.
-          </ScrollAnchor>
+          </React.Fragment>
         )
       }
     ]
@@ -256,39 +255,45 @@ export const atbdContentSections = [
         label: 'Performance Assessment Validation Methods',
         id: 'perf-assesment-validation-method',
         render: ({ element, document }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_methods}
               whenEmpty='No content available'
             />
-          </ScrollAnchor>
+          </React.Fragment>
         )
       },
       {
         label: 'Performance Assessment Validation Uncertainties',
         id: 'perf-assesment-validation-uncert',
         render: ({ element, document }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_uncertainties}
               whenEmpty='No content available'
             />
-          </ScrollAnchor>
+          </React.Fragment>
         )
       },
       {
         label: 'Performance Assessment Validation Errors',
         id: 'perf-assesment-validation-err',
         render: ({ element, document }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h2 id={element.id}>{element.label}</h2>
+          <React.Fragment key={element.id}>
+            <h2 id={element.id} data-scroll='target'>
+              {element.label}
+            </h2>
             <SafeReadEditor
               value={document.performance_assessment_validation_errors}
               whenEmpty='No content available'
             />
-          </ScrollAnchor>
+          </React.Fragment>
         )
       }
     ]
@@ -497,26 +502,30 @@ export const atbdContentSections = [
         label: 'Acknowledgements',
         id: 'acknowledgements',
         render: ({ element, document }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h3 id={element.id}>{element.label}</h3>
+          <React.Fragment key={element.id}>
+            <h3 id={element.id} data-scroll='target'>
+              {element.label}
+            </h3>
             <SafeReadEditor
               value={document.journal_discussion}
               whenEmpty='No content available'
             />
-          </ScrollAnchor>
+          </React.Fragment>
         )
       },
       {
         label: 'Discussion',
         id: 'discussion',
         render: ({ element, document }) => (
-          <ScrollAnchor id={element.id} key={element.id}>
-            <h3 id={element.id}>{element.label}</h3>
+          <React.Fragment key={element.id}>
+            <h3 id={element.id} data-scroll='target'>
+              {element.label}
+            </h3>
             <SafeReadEditor
               value={document.journal_acknowledgements}
               whenEmpty='No content available'
             />
-          </ScrollAnchor>
+          </React.Fragment>
         )
       }
     ]
@@ -526,6 +535,10 @@ export const atbdContentSections = [
 export default function DocumentBody(props) {
   const { atbd } = props;
   const document = atbd.document;
+
+  useScrollToHashOnMount();
+  useScrollListener();
+
   return renderElements(atbdContentSections, { document });
 }
 
