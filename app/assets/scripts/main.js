@@ -79,7 +79,9 @@ function Root() {
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
-            <Route path='/sandbox' component={Sandbox} />
+            {process.env.NODE_ENV !== 'production' && (
+              <Route path='/sandbox' component={Sandbox} />
+            )}
             <Route path='*' component={UhOh} />
           </Switch>
         </Composer>

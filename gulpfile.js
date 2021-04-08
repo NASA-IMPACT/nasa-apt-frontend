@@ -31,6 +31,7 @@ const { appTitle, appDescription } = require('./app/assets/scripts/config');
 // ---------------------------------------------------------------------------//
 
 const isDev = () => process.env.NODE_ENV === 'development';
+const isProd = () => process.env.NODE_ENV === 'production';
 const readPackage = () => JSON.parse(fs.readFileSync('package.json'));
 
 // Set the version in an env variable so it gets replaced in the config.
@@ -103,12 +104,17 @@ module.exports.default = gulp.series(
 function javascript() {
   var brs = browserify({
     entries: ['./app/assets/scripts/main.js'],
-    debug: true,
+    debug: isDev(),
     cache: {},
     packageCache: {},
     bundleExternal: false,
-    fullPaths: true
+    fullPaths: isDev()
   }).on('log', log);
+
+  // Ignore the sandbox on production, but keep it on staging.
+  if (isProd()) {
+    brs = brs.ignore(['./app/assets/scripts/components/sandbox/index.js']);
+  }
 
   if (isDev()) {
     brs.plugin(watchify).plugin(errorify).on('update', bundler);
