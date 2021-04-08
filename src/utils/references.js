@@ -55,6 +55,7 @@ export function bibtexToRef(input) {
       publisher,
       report_number,
       series,
+      journal,
       title,
       url,
       volume,
@@ -80,6 +81,7 @@ export function bibtexToRef(input) {
   if (typeof pages !== 'undefined') ref.pages = pages;
   if (typeof publisher !== 'undefined') ref.publisher = publisher;
   if (typeof report_number !== 'undefined') ref.report_number = report_number;
+  if (typeof journal !== 'undefined') ref.series = journal;
   if (typeof series !== 'undefined') ref.series = series;
   if (typeof title !== 'undefined') ref.title = title;
   if (typeof url !== 'undefined') ref.online_resource = url;
