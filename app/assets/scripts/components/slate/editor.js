@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
@@ -56,10 +56,25 @@ const withPlugins = [
   withLinkEditor
 ];
 
+export const editorEmptyValue = {
+  // Root level has no type and is the first and only child of the Editor.
+  // This is needed for the block breaks to work.
+  children: [
+    {
+      type: 'p',
+      children: [{ text: '' }]
+    }
+  ]
+};
+
 export default function FullEditor(props) {
-  const { onChange, value } = props;
+  const { id, onChange: inputOnChange, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
-  window.editor = editor;
+
+  // The editor needs to work with an array, but we store the value as an object
+  // which is the first and only child.
+  const value = [inputVal];
+  const onChange = useCallback((v) => inputOnChange(v[0]), [inputOnChange]);
 
   // Render the Slate context.
   return (
@@ -81,12 +96,14 @@ export default function FullEditor(props) {
 
 FullEditor.propTypes = {
   onChange: T.func,
-  value: T.array
+  value: T.object
 };
 
 export function ReadEditor(props) {
-  const { value } = props;
+  const { id, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
+
+  const value = [inputVal];
 
   // Render the Slate context.
   return (
@@ -97,5 +114,6 @@ export function ReadEditor(props) {
 }
 
 ReadEditor.propTypes = {
-  value: T.array
+  id: T.string,
+  value: T.object
 };
