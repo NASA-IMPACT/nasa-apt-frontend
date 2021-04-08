@@ -22,6 +22,8 @@ export const Panel = styled.section`
 `;
 
 export const PanelHeader = styled.header`
+  position: relative;
+  z-index: 9999;
   padding: ${glsp(0.5, themeVal('layout.gap.xsmall'))};
   box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
 

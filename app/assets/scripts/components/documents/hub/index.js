@@ -6,7 +6,7 @@ import { GlobalLoading } from '@devseed-ui/global-loading';
 import App from '../../common/app';
 import {
   Inpage,
-  StickyInpageHeader,
+  InpageHeaderSticky,
   InpageHeadline,
   InpageTitle,
   InpageActions,
@@ -72,7 +72,7 @@ function Documents() {
     <App pageTitle='Documents'>
       {atbds.status === 'loading' && <GlobalLoading />}
       <Inpage>
-        <StickyInpageHeader>
+        <InpageHeaderSticky>
           <InpageHeadline>
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
@@ -85,7 +85,7 @@ function Documents() {
               Create
             </ButtonSecondary>
           </InpageActions>
-        </StickyInpageHeader>
+        </InpageHeaderSticky>
         <InpageBody>
           <ContentBlock>
             {atbds.status === 'succeeded' && !atbds.data?.length && (

@@ -7,7 +7,7 @@ import { Heading } from '@devseed-ui/typography';
 import App from '../../common/app';
 import {
   Inpage,
-  StickyInpageHeader,
+  InpageHeaderSticky,
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
@@ -26,12 +26,8 @@ import toasts from '../../common/toasts';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 
-const InpageBodyScroll = styled(InpageBody)`
+const DocumentCanvas = styled(InpageBody)`
   padding: 0;
-  overflow: auto;
-`;
-
-const DocumentCanvas = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   height: 100%;
@@ -117,7 +113,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <StickyInpageHeader data-element='inpage-header'>
+          <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
@@ -138,26 +134,24 @@ function DocumentView() {
                 onSelect={onDocumentMenuAction}
               />
             </InpageActions>
-          </StickyInpageHeader>
-          <InpageBodyScroll>
-            <DocumentCanvas>
-              <DocumentOutline atbd={atbd.data} />
-              <ContentBlock>
-                <DocumentContent>
-                  <Prose>
-                    <DocumentHeader>
-                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
-                      <DocumentMetaDetails>
-                        <dt>Version</dt>
-                        <dd>{atbd.data.version}</dd>
-                      </DocumentMetaDetails>
-                    </DocumentHeader>
-                    <DocumentBody atbd={atbd.data} />
-                  </Prose>
-                </DocumentContent>
-              </ContentBlock>
-            </DocumentCanvas>
-          </InpageBodyScroll>
+          </InpageHeaderSticky>
+          <DocumentCanvas>
+            <DocumentOutline atbd={atbd.data} />
+            <ContentBlock>
+              <DocumentContent>
+                <Prose>
+                  <DocumentHeader>
+                    <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                    <DocumentMetaDetails>
+                      <dt>Version</dt>
+                      <dd>{atbd.data.version}</dd>
+                    </DocumentMetaDetails>
+                  </DocumentHeader>
+                  <DocumentBody atbd={atbd.data} />
+                </Prose>
+              </DocumentContent>
+            </ContentBlock>
+          </DocumentCanvas>
         </Inpage>
       )}
     </App>

@@ -17,9 +17,9 @@ import {
 import { atbdContentSections } from './document-body';
 
 const OutlineSelf = styled(Panel).attrs({ as: 'nav' })`
-  position: fixed;
-  top: 0;
-  bottom: 0;
+  position: sticky;
+  top: 0px;
+  height: 100px;
 
   ${PanelBody} > * {
     /* Ensure the shadow scrollbar takes up the full height */
@@ -157,31 +157,34 @@ export default function DocumentOutline(props) {
 
   useEffect(() => {
     const positioner = throttle(() => {
-      // Get header reference if not defined. Our sticky outline will always sit
-      // below the sticky header.
       if (!headerElRef.current) {
         headerElRef.current = document.querySelector(
           '[data-element="inpage-header"]'
         );
       }
 
-      // Get the footer reference if not defined. Our sticky outline will shrink
-      // when the footer approaches.
       if (!footerElRef.current) {
         footerElRef.current = document.querySelector('[data-element="footer"]');
       }
 
       const { top, height } = headerElRef.current.getBoundingClientRect();
+      // The header end represents to distance of the header plus anything else
+      // between it and the top of the viewport,
       const headerEnd = top + height;
-      elementRef.current.style.top = `${headerEnd}px`;
 
+      let visibleFooterHeight = 0;
       if (footerElRef.current) {
         const { top } = footerElRef.current.getBoundingClientRect();
-        elementRef.current.style.bottom = `${Math.max(
-          0,
-          window.innerHeight - top
-        )}px`;
+        visibleFooterHeight = Math.max(0, window.innerHeight - top);
       }
+
+      const finalElementHeight = Math.max(
+        0,
+        window.innerHeight - visibleFooterHeight - headerEnd
+      );
+
+      elementRef.current.style.height = `${finalElementHeight}px`;
+      elementRef.current.style.top = `${height}px`;
     }, 16);
 
     // Using requestAnimationFrame with a lodash throttle is the best way to

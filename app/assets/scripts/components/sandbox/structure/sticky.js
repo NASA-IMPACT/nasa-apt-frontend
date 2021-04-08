@@ -17,13 +17,18 @@ import {
   InpageActions,
   InpageBody,
   InpageSubtitle,
-  StickyInpageHeader
+  InpageHeaderSticky
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
 import StickyElement from '../../common/sticky-element';
 
-const InpageBodyScroll = styled(InpageBody)`
-  padding: 0;
+const InpageBodyCanvas = styled(InpageBody)`
+  display: grid;
+  grid-template-columns: min-content 1fr;
+
+  > * {
+    grid-row: 1;
+  }
 
   ${Constrainer} {
     padding-top: 3rem;
@@ -50,11 +55,10 @@ const FakeEditorBody = styled.div`
 
 const DocumentOutline = styled.div`
   background: #bbb;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  overflow-y: scroll;
-  width: 200px;
+  position: sticky;
+  top: 84px;
+  height: 500px;
+  overflow: scroll;
 
   ol {
     list-style: decimal;
@@ -66,7 +70,7 @@ function SandboxStickyStructure() {
   return (
     <App pageTitle='Sandbox/Structure'>
       <Inpage>
-        <StickyInpageHeader data-element='inpage-header'>
+        <InpageHeaderSticky data-element='inpage-header'>
           <InpageHeadline>
             <InpageTitle>
               GPM Integrated Multi-Satellite Retrievals for GPM (IMERG)
@@ -115,8 +119,8 @@ function SandboxStickyStructure() {
               Button 2B
             </Button>
           </InpageActions>
-        </StickyInpageHeader>
-        <InpageBodyScroll>
+        </InpageHeaderSticky>
+        <InpageBodyCanvas>
           <DocOutline>
             <ol>
               {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'].map((n) => (
@@ -148,7 +152,7 @@ function SandboxStickyStructure() {
               big content block
             </p>
           </Constrainer>
-        </InpageBodyScroll>
+        </InpageBodyCanvas>
       </Inpage>
     </App>
   );
@@ -174,16 +178,22 @@ function DocOutline(props) {
       }
 
       const { top, height } = headerElRef.current.getBoundingClientRect();
+      // The header end represents to distance of the header plus anything else
+      // between it and the top of the viewport,
       const headerEnd = top + height;
-      elementRef.current.style.top = `${headerEnd}px`;
 
+      let visibleFooterHeight = 0;
       if (footerElRef.current) {
         const { top } = footerElRef.current.getBoundingClientRect();
-        elementRef.current.style.bottom = `${Math.max(
-          0,
-          window.innerHeight - top
-        )}px`;
+        visibleFooterHeight = Math.max(0, window.innerHeight - top);
       }
+
+      const finalElementHeight = Math.max(
+        0,
+        window.innerHeight - visibleFooterHeight - headerEnd
+      );
+
+      elementRef.current.style.height = `${finalElementHeight}px`;
     }, 16);
 
     let rafId;
