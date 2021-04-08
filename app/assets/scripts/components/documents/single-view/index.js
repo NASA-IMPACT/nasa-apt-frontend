@@ -23,7 +23,7 @@ import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
 
-import Outline from './outline';
+import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 
 const InpageBodyScroll = styled(InpageBody)`
@@ -31,7 +31,7 @@ const InpageBodyScroll = styled(InpageBody)`
   overflow: auto;
 `;
 
-const Paper = styled.div`
+const DocumentCanvas = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   height: 100%;
@@ -41,11 +41,11 @@ const Paper = styled.div`
   }
 `;
 
-const PaperContent = styled.div`
+const DocumentContent = styled.div`
   grid-column: content-start / content-end;
 `;
 
-const DocumentHeader = styled.section`
+const DocumentHeader = styled.header`
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 2rem;
@@ -140,10 +140,10 @@ function DocumentView() {
             </InpageActions>
           </StickyInpageHeader>
           <InpageBodyScroll>
-            <Paper>
-              <Outline atbd={atbd.data} />
+            <DocumentCanvas>
+              <DocumentOutline atbd={atbd.data} />
               <ContentBlock>
-                <PaperContent>
+                <DocumentContent>
                   <Prose>
                     <DocumentHeader>
                       <DocumentTitle>{atbd.data.title}</DocumentTitle>
@@ -154,9 +154,9 @@ function DocumentView() {
                     </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
                   </Prose>
-                </PaperContent>
+                </DocumentContent>
               </ContentBlock>
-            </Paper>
+            </DocumentCanvas>
           </InpageBodyScroll>
         </Inpage>
       )}

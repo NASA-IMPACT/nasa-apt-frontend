@@ -148,7 +148,7 @@ OutlineMenu.propTypes = {
 };
 
 // Outline panel component
-export default function Outline(props) {
+export default function DocumentOutline(props) {
   const { atbd } = props;
 
   const headerElRef = useRef(null);
@@ -220,6 +220,6 @@ export default function Outline(props) {
   );
 }
 
-Outline.propTypes = {
+DocumentOutline.propTypes = {
   atbd: T.object
 };
