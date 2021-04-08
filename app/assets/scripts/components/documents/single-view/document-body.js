@@ -618,7 +618,9 @@ export default function DocumentBody(props) {
   const { atbd } = props;
   const document = atbd.document;
 
+  // Scroll to an existing hash when the component mounts.
   useScrollToHashOnMount();
+  // Setup the listener to change active links.
   useScrollListener();
 
   return renderElements(atbdContentSections, { document });
