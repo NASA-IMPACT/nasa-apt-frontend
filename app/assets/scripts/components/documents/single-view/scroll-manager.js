@@ -31,9 +31,9 @@ const setIdOnHash = (id) => {
   } = window;
 
   if (id) {
-    history.pushState(null, null, `#${id}`);
+    history.replaceState(null, null, `#${id}`);
   } else {
-    history.pushState(null, null, pathname + search);
+    history.replaceState(null, null, pathname + search);
   }
 };
 
