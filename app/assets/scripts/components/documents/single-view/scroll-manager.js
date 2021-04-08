@@ -51,6 +51,16 @@ export function ScrollAnchorProvider({ children }) {
 
   useEffect(() => {
     setTargetItems(gatherTargetItems());
+
+    const resizeListener = debounce(() => {
+      setTargetItems(gatherTargetItems());
+    }, 100);
+
+    window.addEventListener('resize', resizeListener);
+
+    return () => {
+      window.removeEventListener('resize', resizeListener);
+    };
   }, []);
 
   const scrollToId = useCallback(
