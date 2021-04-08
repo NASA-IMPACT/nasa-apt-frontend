@@ -126,6 +126,8 @@ export const atbdContentSections = [
   {
     label: 'Historical Perspective',
     id: 'historic-prespective',
+    editorSubsections: (document) =>
+      subsectionsFromSlateDocument(document.historical_perspective),
     render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
@@ -143,6 +145,8 @@ export const atbdContentSections = [
       {
         label: 'Scientific Theory',
         id: 'sci-theory',
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(document.scientific_theory),
         render: ({ element, document, children }) => (
           <React.Fragment key={element.id}>
             <h2 id={element.id} data-scroll='target'>
@@ -159,6 +163,10 @@ export const atbdContentSections = [
           {
             label: 'Assumptions',
             id: 'sci-theory-assumptions',
+            editorSubsections: (document) =>
+              subsectionsFromSlateDocument(
+                document.scientific_theory_assumptions
+              ),
             render: ({ element, document }) => (
               <React.Fragment key={element.id}>
                 <h3 id={element.id} data-scroll='target'>
@@ -176,6 +184,8 @@ export const atbdContentSections = [
       {
         label: 'Mathematical Theory',
         id: 'math-theory',
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(document.mathematical_theory),
         render: ({ element, document, children }) => (
           <React.Fragment key={element.id}>
             <h2 id={element.id} data-scroll='target'>
@@ -192,6 +202,10 @@ export const atbdContentSections = [
           {
             label: 'Assumptions',
             id: 'math-theory-assumptions',
+            editorSubsections: (document) =>
+              subsectionsFromSlateDocument(
+                document.mathematical_theory_assumptions
+              ),
             render: ({ element, document }) => (
               <React.Fragment key={element.id}>
                 <h3 id={element.id} data-scroll='target'>
@@ -242,6 +256,10 @@ export const atbdContentSections = [
       return items.map((o, idx) => ({
         label: `Entry #${idx + 1}`,
         id: `algo-implementations-${idx + 1}`,
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(
+            document.algorithm_implementations[idx].description
+          ),
         render: ({ element, document }) => (
           <div
             key={element.id}
@@ -278,6 +296,8 @@ export const atbdContentSections = [
   {
     label: 'Algorithm Usage Constraints',
     id: 'algo-usage-constraints',
+    editorSubsections: (document) =>
+      subsectionsFromSlateDocument(document.algorithm_usage_constraints),
     render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
@@ -295,6 +315,10 @@ export const atbdContentSections = [
       {
         label: 'Performance Assessment Validation Methods',
         id: 'perf-assesment-validation-method',
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(
+            document.performance_assessment_validation_methods
+          ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
             <h2 id={element.id} data-scroll='target'>
@@ -310,6 +334,10 @@ export const atbdContentSections = [
       {
         label: 'Performance Assessment Validation Uncertainties',
         id: 'perf-assesment-validation-uncert',
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(
+            document.performance_assessment_validation_uncertainties
+          ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
             <h2 id={element.id} data-scroll='target'>
@@ -325,6 +353,10 @@ export const atbdContentSections = [
       {
         label: 'Performance Assessment Validation Errors',
         id: 'perf-assesment-validation-err',
+        editorSubsections: (document) =>
+          subsectionsFromSlateDocument(
+            document.performance_assessment_validation_errors
+          ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
             <h2 id={element.id} data-scroll='target'>
@@ -353,6 +385,10 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-input-${idx + 1}`,
+            editorSubsections: (document) =>
+              subsectionsFromSlateDocument(
+                document.data_access_input_data[idx].description
+              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 id={element.id}
@@ -373,6 +409,10 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-output-${idx + 1}`,
+            editorSubsections: (document) =>
+              subsectionsFromSlateDocument(
+                document.data_access_output_data[idx].description
+              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 id={element.id}
@@ -393,6 +433,10 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-related-urls-${idx + 1}`,
+            editorSubsections: (document) =>
+              subsectionsFromSlateDocument(
+                document.data_access_related_urls[idx].description
+              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 id={element.id}
