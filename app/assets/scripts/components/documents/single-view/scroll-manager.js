@@ -11,6 +11,7 @@ import React, {
 } from 'react';
 import T from 'prop-types';
 import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 
 const TARGET_SELECTOR = '[data-scroll="target"]';
 const BASE_OFFSET_TOP = 100;
@@ -135,7 +136,7 @@ export function useScrollListener() {
   );
 
   useEffect(() => {
-    const scrollListener = debounce(() => {
+    const scrollListener = throttle(() => {
       const scroll = window.scrollY;
 
       // Find the first item that's on view.
