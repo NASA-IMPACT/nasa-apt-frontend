@@ -9,7 +9,6 @@ on:
 
 env:
   NODE: 14
-  NODE_ENV: production
   DEPLOY_BUCKET: algorithm-publication-tool-staging
   DEPLOY_BUCKET_REGION: us-west-2
 
