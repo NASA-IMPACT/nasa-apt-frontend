@@ -51,11 +51,11 @@ jobs:
       - name: Build
         run: |
           export PUBLIC_URL='/apt'
-          REACT_APP_FIGURES_BUCKET=nasa-apt-v5-prod-figures
-          REACT_APP_S3_URI=http://s3.amazonaws.com
-          REACT_APP_API_URL=https://apt.ds.io
-          REACT_APP_AUTH_URL=https://apt.ds.io
-          REACT_APP_FASTAPI_URL=https://apt.ds.io/fastapi
+          export REACT_APP_FIGURES_BUCKET=nasa-apt-v5-prod-figures
+          export REACT_APP_S3_URI=http://s3.amazonaws.com
+          export REACT_APP_API_URL=https://apt.ds.io
+          export REACT_APP_AUTH_URL=https://apt.ds.io
+          export REACT_APP_FASTAPI_URL=https://apt.ds.io/fastapi
           yarn build
 
   deploy:
