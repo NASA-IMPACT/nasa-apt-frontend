@@ -50,7 +50,7 @@ jobs:
       - name: Build
         run: |
           export SKIP_PREFLIGHT_CHECK=true
-          export PUBLIC_URL='/apt'
+          export PUBLIC_URL='https://impact.earthdata.nasa.gov/apt'
           export REACT_APP_FIGURES_BUCKET=nasa-apt-v5-prod-figures
           export REACT_APP_S3_URI=http://s3.amazonaws.com
           export REACT_APP_API_URL=https://apt.ds.io
