@@ -10,6 +10,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
+import { formString } from '../../../utils/strings';
 
 export default function StepIntroduction(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -41,6 +42,7 @@ export default function StepIntroduction(props) {
                   id='introduction'
                   name='document.introduction'
                   label='Introduce the algorithm'
+                  description={formString('introduction.introduction')}
                 />
               </FormikSectionFieldset>
 
@@ -52,6 +54,9 @@ export default function StepIntroduction(props) {
                   id='historical_perspective'
                   name='document.historical_perspective'
                   label='Describe the historical perspective'
+                  description={formString(
+                    'introduction.historical_perspective'
+                  )}
                 />
               </FormikSectionFieldset>
             </Form>

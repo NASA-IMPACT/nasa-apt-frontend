@@ -1,0 +1,15 @@
+title: The descriptive formal title of the ATBD.
+alias: An alias to use in the url for the ATBD.
+
+citation:
+  creators: The individual or group that authored the ATBD.
+  editors: The individual or group responsible for publishing the ATBD.
+  title: The descriptive formal title of the ATBD.
+  series_name: The name of the series for which the ATBD is part of.
+  release_date: Release date of the ATBD.
+  release_place: The name (city if possible) of the place from which the ATBD was released.
+  publisher: The name of the individual or group that made the ATBD available for release.
+  version: The version number of the ATBD.
+  issue: The issue number of the ATBD.
+  additional_details: Additional free-text citation details.
+  online_resource: The URL of the ATBD landing page.

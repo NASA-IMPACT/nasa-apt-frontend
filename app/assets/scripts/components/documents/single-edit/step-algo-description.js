@@ -10,6 +10,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
+import { formString } from '../../../utils/strings';
 
 export default function StepAlgoDescription(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -41,12 +42,18 @@ export default function StepAlgoDescription(props) {
                   id='scientific_theory'
                   name='document.scientific_theory'
                   label='Describe the scientific theory'
+                  description={formString(
+                    'algorithm_description.scientific_theory'
+                  )}
                 />
 
                 <FormikInputEditor
                   id='scientific_theory_assumptions'
                   name='document.scientific_theory_assumptions'
                   label='Scientific theory assumptions'
+                  description={formString(
+                    'algorithm_description.scientific_theory_assumptions'
+                  )}
                 />
               </FormikSectionFieldset>
 
@@ -58,12 +65,18 @@ export default function StepAlgoDescription(props) {
                   id='mathematical_theory'
                   name='document.mathematical_theory'
                   label='Describe the mathematical theory'
+                  description={formString(
+                    'algorithm_description.mathematical_theory'
+                  )}
                 />
 
                 <FormikInputEditor
                   id='mathematical_theory_assumptions'
                   name='document.mathematical_theory_assumptions'
                   label='Mathematical theory assumptions'
+                  description={formString(
+                    'algorithm_description.mathematical_theory_assumptions'
+                  )}
                 />
               </FormikSectionFieldset>
 

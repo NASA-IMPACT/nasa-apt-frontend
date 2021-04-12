@@ -11,6 +11,8 @@ const log = require('fancy-log');
 const errorify = require('errorify');
 const historyApiFallback = require('connect-history-api-fallback');
 const through2 = require('through2');
+const jsonConcat = require('gulp-json-concat');
+const yaml = require('gulp-yaml');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -77,16 +79,20 @@ function serve() {
   // watch for changes
   gulp.watch(['app/*.html', 'app/assets/graphics/**/*'], bs.reload);
 
+  gulp.watch(['content/strings/*'], ymlStrings);
+
   gulp.watch('package.json', vendorScripts);
 }
 
 module.exports.clean = clean;
 module.exports.serve = gulp.series(
+  ymlStrings,
   gulp.parallel(vendorScripts, javascript),
   serve
 );
 module.exports.default = gulp.series(
   clean,
+  ymlStrings,
   gulp.parallel(vendorScripts, javascript),
   gulp.parallel(html, imagesImagemin),
   copyFiles,
@@ -184,6 +190,16 @@ function vendorScripts() {
 // //////////////////////////////////////////////////////////////////////////////
 // --------------------------- Helper tasks -----------------------------------//
 // ----------------------------------------------------------------------------//
+
+function ymlStrings() {
+  return gulp
+    .src('content/strings/*.yml')
+    .pipe(yaml({ safe: true }))
+    .pipe(
+      jsonConcat('strings.json', (data) => Buffer.from(JSON.stringify(data)))
+    )
+    .pipe(gulp.dest('app/assets/scripts/'));
+}
 
 function copyFiles() {
   return gulp

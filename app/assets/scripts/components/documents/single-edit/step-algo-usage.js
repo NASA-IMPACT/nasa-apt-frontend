@@ -10,6 +10,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
+import { formString } from '../../../utils/strings';
 
 export default function StepAlgoUsage(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -41,6 +42,7 @@ export default function StepAlgoUsage(props) {
                   id='algorithm_usage_constraints'
                   name='document.algorithm_usage_constraints'
                   label='Describe the algorithm constraints'
+                  description={formString('algorithm_usage.constraints')}
                 />
               </FormikSectionFieldset>
 
@@ -54,18 +56,23 @@ export default function StepAlgoUsage(props) {
                   id='performance_assessment_validation_methods'
                   name='document.performance_assessment_validation_methods'
                   label='Validation Methods'
+                  description={formString('algorithm_usage.validation_methods')}
                 />
 
                 <FormikInputEditor
                   id='performance_assessment_validation_uncertainties'
                   name='document.performance_assessment_validation_uncertainties'
                   label='Uncertainties'
+                  description={formString(
+                    'algorithm_usage.validation_uncertainties'
+                  )}
                 />
 
                 <FormikInputEditor
                   id='performance_assessment_validation_errors'
                   name='document.performance_assessment_validation_errors'
                   label='Errors'
+                  description={formString('algorithm_usage.validation_errors')}
                 />
               </FormikSectionFieldset>
             </Form>

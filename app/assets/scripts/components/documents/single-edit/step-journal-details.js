@@ -10,6 +10,7 @@ import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
+import { formString } from '../../../utils/strings';
 
 export default function StepJournalDetails(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -45,6 +46,7 @@ export default function StepJournalDetails(props) {
                   id='journal_discussion'
                   name='document.journal_discussion'
                   label='List discussion points'
+                  description={formString('journal_details.discussion')}
                 />
               </FormikSectionFieldset>
 
@@ -56,6 +58,7 @@ export default function StepJournalDetails(props) {
                   id='journal_acknowledgements'
                   name='document.journal_acknowledgements'
                   label='List of acknowledgements'
+                  description={formString('journal_details.acknowledgements')}
                 />
               </FormikSectionFieldset>
             </Form>

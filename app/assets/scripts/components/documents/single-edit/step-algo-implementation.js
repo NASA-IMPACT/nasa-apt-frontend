@@ -8,13 +8,14 @@ import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import { FormikInputText } from '../../common/forms/input-text';
+import { FieldMultiItem } from '../../common/forms/field-multi-item';
+import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
-import { FormikInputText } from '../../common/forms/input-text';
 import { editorEmptyValue } from '../../slate/editor';
-import { FieldMultiItem } from '../../common/forms/field-multi-item';
-import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
+import { formString } from '../../../utils/strings';
 
 // The initial value is the same for
 // Algorithm Implementations
@@ -53,10 +54,7 @@ export default function StepAlgoImplementation(props) {
                 sectionName='sections_completed.algorithm_implementations'
                 fieldLabel='Algorithm Implementations'
                 fieldName='document.algorithm_implementations'
-                // fieldDescription='Description for the array fields popover'
                 fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
-                urlFieldInfo='The direct access mechanisms to the algorithm implementation source code.'
-                descriptionFieldInfo='Relevant information needed to execute the algorithm implementation. May include, but not be limited to, execution instructions, memory requirements, programming languages and dependencies.'
               />
 
               <UrlDescriptionSection
@@ -64,10 +62,7 @@ export default function StepAlgoImplementation(props) {
                 sectionName='sections_completed.data_access_input_data'
                 fieldLabel='Data Access Inputs'
                 fieldName='document.data_access_input_data'
-                // fieldDescription='Description for the array fields popover'
                 fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
-                urlFieldInfo='Algorithm input data access URL.'
-                descriptionFieldInfo='Description of the data access method. Provides context on how to access the data.'
               />
 
               <UrlDescriptionSection
@@ -75,10 +70,7 @@ export default function StepAlgoImplementation(props) {
                 sectionName='sections_completed.data_access_output_data'
                 fieldLabel='Data Access Outputs'
                 fieldName='document.data_access_output_data'
-                // fieldDescription='Description for the array fields popover'
                 fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
-                urlFieldInfo='Algorithm output data access URL.'
-                descriptionFieldInfo='Description of the data access method. Provides context on how to access the data.'
               />
 
               <UrlDescriptionSection
@@ -86,10 +78,7 @@ export default function StepAlgoImplementation(props) {
                 sectionName='sections_completed.data_access_related_urls'
                 fieldLabel='Data Access Related Urls'
                 fieldName='document.data_access_related_urls'
-                // fieldDescription='Description for the array fields popover'
                 fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
-                urlFieldInfo='Alternative data access mechanisms including links to machine services, ordering services and DAAC websites.'
-                descriptionFieldInfo='Description of the alternative data access method provided.'
               />
             </Form>
           </FormBlock>
@@ -118,11 +107,18 @@ const UrlDescriptionSection = (props) => {
     sectionName,
     fieldLabel,
     fieldName,
-    fieldDescription,
-    fieldEmptyMessage,
-    urlFieldInfo,
-    descriptionFieldInfo
+    fieldEmptyMessage
   } = props;
+
+  const path = fieldName.replace(/^document\./, '');
+
+  const fieldDescription = formString(
+    `algorithm_implementation.${path}.fieldset`
+  );
+  const urlFieldInfo = formString(`algorithm_implementation.${path}.url`);
+  const descriptionFieldInfo = formString(
+    `algorithm_implementation.${path}.description`
+  );
 
   return (
     <FormikSectionFieldset label={sectionLabel} sectionName={sectionName}>
@@ -170,8 +166,5 @@ UrlDescriptionSection.propTypes = {
   sectionName: T.string,
   fieldLabel: T.string,
   fieldName: T.string,
-  fieldDescription: T.string,
-  fieldEmptyMessage: T.node,
-  urlFieldInfo: T.string,
-  descriptionFieldInfo: T.string
+  fieldEmptyMessage: T.node
 };
