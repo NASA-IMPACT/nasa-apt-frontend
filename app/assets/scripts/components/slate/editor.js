@@ -1,12 +1,6 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { createEditor, Node } from 'slate';
+import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
 
 import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';

@@ -8,6 +8,7 @@ import StepIntroduction from './step-introduction';
 import StepAlgoDescription from './step-algo-description';
 import StepAlgoUsage from './step-algo-usage';
 import StepJournalDetails from './step-journal-details';
+import StepAlgoImplementation from './step-algo-implementation';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -145,9 +146,28 @@ export const STEPS = [
   {
     id: 'algorithm_implementation',
     label: 'Algorithm implementation',
-    StepComponent: () => <p>Algorithm implementation coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoImplementation,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          algorithm_implementations: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   url: '',
+            //   description: '<editor>'
+            // }
+          ],
+          data_access_input_data: [],
+          data_access_output_data: [],
+          data_access_related_urls: []
+        },
+        sections_completed: {
+          algorithm_implementations: 'incomplete',
+          data_access_input_data: 'incomplete',
+          data_access_output_data: 'incomplete',
+          data_access_related_urls: 'incomplete'
+        }
+      });
     }
   },
   {
