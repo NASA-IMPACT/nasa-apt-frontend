@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { PropTypes as T } from 'prop-types';
 import {
   FormGroup,
@@ -11,35 +12,61 @@ import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
 
 import Tip from '../tooltip';
 
+const FormGroupFooter = styled.div`
+  /* styled-component */
+`;
+
 /**
  * From group structure.
  *
  * @prop {string} id Id used in the <FormLabel htmlFor={id}>
  * @prop {string} label Label for the group
+ * @prop {string} description Description for the info popover.
+ * @prop {string} toolbarItems Additional toolbar items to show on the toolbar.
+ * They will be rendered inside a <Toolbar>
  * @prop {node} helper Helper message shown below children.
  * @prop {node} children Elements to render inside <FormGroupBody>
+ * @prop {node} footerContent Elements to render inside <FormGroupFooter> after
+ * <FormGroupBody>
  */
 export default function FormGroupStructure(props) {
-  const { id, label, description, helper, children } = props;
+  const {
+    id,
+    label,
+    toolbarItems,
+    description,
+    helper,
+    children,
+    footerContent
+  } = props;
+
+  const hasToolbar = description || toolbarItems;
+
+  const descComp = description && (
+    <Tip title={description} key='description'>
+      <ToolbarIconButton useIcon='circle-information' size='small'>
+        More information
+      </ToolbarIconButton>
+    </Tip>
+  );
+
+  // Because of a @devseed-ui/toolbar bug, there can't be null/undefined
+  // children on the toolbar.
+  const toolbar = (
+    <Toolbar size='small'>{[toolbarItems, descComp].filter(Boolean)}</Toolbar>
+  );
 
   return (
     <FormGroup>
       <FormGroupHeader>
         <FormLabel htmlFor={id}>{label}</FormLabel>
-        {description && (
-          <Toolbar size='small'>
-            <Tip title={description}>
-              <ToolbarIconButton useIcon='circle-information' size='small'>
-                More information
-              </ToolbarIconButton>
-            </Tip>
-          </Toolbar>
-        )}
+        {hasToolbar && toolbar}
       </FormGroupHeader>
       <FormGroupBody>
         {children}
         {helper && <FormHelper>{helper}</FormHelper>}
       </FormGroupBody>
+      {footerContent && <FormGroupFooter>{footerContent}</FormGroupFooter>}
     </FormGroup>
   );
 }
@@ -48,6 +75,8 @@ FormGroupStructure.propTypes = {
   id: T.string,
   label: T.string,
   description: T.string,
+  toolbarItems: T.object,
   helper: T.node,
+  footerContent: T.node,
   children: T.node
 };
