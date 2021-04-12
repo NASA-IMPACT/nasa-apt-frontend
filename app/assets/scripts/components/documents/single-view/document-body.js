@@ -13,9 +13,9 @@ import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 const AtbdSectionBase = ({ id, title, children }) => (
   <section>
     <header>
-      <h1 id={id} data-scroll='target'>
+      <h2 id={id} data-scroll='target'>
         {title}
-      </h1>
+      </h2>
     </header>
     <div>{children}</div>
   </section>
@@ -51,9 +51,9 @@ const childrenPassThrough = ({ element, children }) => {
 
 const DataAccessItem = ({ id, label, url, description }) => (
   <div key={id} itemScope itemType='https://schema.org/Dataset'>
-    <h2 id={id} itemProp='name' data-scroll='target'>
+    <h3 id={id} itemProp='name' data-scroll='target'>
       {label}
-    </h2>
+    </h3>
     <h4>Url</h4>
     <p
       itemProp='distribution'
@@ -71,7 +71,6 @@ const DataAccessItem = ({ id, label, url, description }) => (
       </a>
     </p>
     <h4>Description</h4>
-
     <SafeReadEditor value={description} whenEmpty={<EmptySection />} />
   </div>
 );
@@ -149,9 +148,9 @@ export const atbdContentSections = [
           subsectionsFromSlateDocument(document.scientific_theory),
         render: ({ element, document, children }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <SafeReadEditor
               value={document.scientific_theory}
               whenEmpty={<EmptySection />}
@@ -169,9 +168,9 @@ export const atbdContentSections = [
               ),
             render: ({ element, document }) => (
               <React.Fragment key={element.id}>
-                <h3 id={element.id} data-scroll='target'>
+                <h4 id={element.id} data-scroll='target'>
                   {element.label}
-                </h3>
+                </h4>
                 <SafeReadEditor
                   value={document.scientific_theory_assumptions}
                   whenEmpty={<EmptySection />}
@@ -188,9 +187,9 @@ export const atbdContentSections = [
           subsectionsFromSlateDocument(document.mathematical_theory),
         render: ({ element, document, children }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <SafeReadEditor
               value={document.mathematical_theory}
               whenEmpty={<EmptySection />}
@@ -208,9 +207,9 @@ export const atbdContentSections = [
               ),
             render: ({ element, document }) => (
               <React.Fragment key={element.id}>
-                <h3 id={element.id} data-scroll='target'>
+                <h4 id={element.id} data-scroll='target'>
                   {element.label}
-                </h3>
+                </h4>
                 <SafeReadEditor
                   value={document.mathematical_theory_assumptions}
                   whenEmpty={<EmptySection />}
@@ -225,9 +224,9 @@ export const atbdContentSections = [
         id: 'algo-input-var',
         render: ({ element }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             List of variables will be coming soon.
           </React.Fragment>
         )
@@ -237,9 +236,9 @@ export const atbdContentSections = [
         id: 'algo-output-var',
         render: ({ element }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             List of variables will be coming soon.
           </React.Fragment>
         )
@@ -267,9 +266,9 @@ export const atbdContentSections = [
             itemScope
             itemType='https://schema.org/CreativeWork'
           >
-            <h2 id={element.id} itemProp='name' data-scroll='target'>
+            <h3 id={element.id} itemProp='name' data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <h4>Url</h4>
             <p>
               <a
@@ -321,9 +320,9 @@ export const atbdContentSections = [
           ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <SafeReadEditor
               value={document.performance_assessment_validation_methods}
               whenEmpty={<EmptySection />}
@@ -340,9 +339,9 @@ export const atbdContentSections = [
           ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <SafeReadEditor
               value={document.performance_assessment_validation_uncertainties}
               whenEmpty={<EmptySection />}
@@ -359,9 +358,9 @@ export const atbdContentSections = [
           ),
         render: ({ element, document }) => (
           <React.Fragment key={element.id}>
-            <h2 id={element.id} data-scroll='target'>
+            <h3 id={element.id} data-scroll='target'>
               {element.label}
-            </h2>
+            </h3>
             <SafeReadEditor
               value={document.performance_assessment_validation_errors}
               whenEmpty={<EmptySection />}
@@ -379,7 +378,14 @@ export const atbdContentSections = [
       {
         label: 'Data Access Input Data',
         id: 'data-access-input',
-        render: childrenPassThrough,
+        render: ({ element, children }) => (
+          <React.Fragment key={element.id}>
+            <h3 id={element.id} data-scroll='target'>
+              {element.label}
+            </h3>
+            {children}
+          </React.Fragment>
+        ),
         children: ({ document }) => {
           const items = document.data_access_input_data || [];
           return items.map((o, idx) => ({
@@ -403,7 +409,14 @@ export const atbdContentSections = [
       {
         label: 'Data Access Output Data',
         id: 'data-access-output',
-        render: childrenPassThrough,
+        render: ({ element, children }) => (
+          <React.Fragment key={element.id}>
+            <h3 id={element.id} data-scroll='target'>
+              {element.label}
+            </h3>
+            {children}
+          </React.Fragment>
+        ),
         children: ({ document }) => {
           const items = document.data_access_output_data || [];
           return items.map((o, idx) => ({
@@ -427,7 +440,14 @@ export const atbdContentSections = [
       {
         label: 'Data Access Related URLs',
         id: 'data-access-related-urls',
-        render: childrenPassThrough,
+        render: ({ element, children }) => (
+          <React.Fragment key={element.id}>
+            <h3 id={element.id} data-scroll='target'>
+              {element.label}
+            </h3>
+            {children}
+          </React.Fragment>
+        ),
         children: ({ document }) => {
           const items = document.data_access_related_urls || [];
           return items.map((o, idx) => ({

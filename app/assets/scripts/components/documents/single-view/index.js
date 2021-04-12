@@ -47,7 +47,7 @@ const DocumentHeader = styled.header`
   grid-gap: 2rem;
 `;
 
-const DocumentTitle = styled(Heading).attrs({ as: 'h2' })`
+const DocumentTitle = styled(Heading)`
   margin: 0;
 `;
 
