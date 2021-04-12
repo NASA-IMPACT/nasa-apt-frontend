@@ -6,7 +6,7 @@ import FullEditor from '../../slate/editor';
 import { Link } from '../../../styles/clean/link';
 import {
   Inpage,
-  InpageHeader,
+  StickyInpageHeader,
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
@@ -51,7 +51,7 @@ function SandboxEditor() {
   return (
     <App pageTitle='Sandbox/Editor'>
       <Inpage>
-        <InpageHeader>
+        <StickyInpageHeader data-element='inpage-header'>
           <InpageHeadline>
             <InpageTitle>Editor</InpageTitle>
           </InpageHeadline>
@@ -63,7 +63,7 @@ function SandboxEditor() {
               </Link>
             </InpageSubtitle>
           </InpageMeta>
-        </InpageHeader>
+        </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>
             <FullEditor

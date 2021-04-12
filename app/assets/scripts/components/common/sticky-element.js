@@ -53,12 +53,12 @@ function StickyElement(props) {
       dontUpdateHolderHeightWhenSticky={dontUpdateHolderHeightWhenSticky}
     >
       {({ wrapperStyles, wrapperRef, holderStyles, holderRef }) => {
-        let newWrapperStyles = wrapperStyles;
+        let newWrapperStyles = { ...wrapperStyles, background: '#fff' };
 
         if (wrapperStyles?.top) {
           const newTop = offsetFromTop + parseInt(wrapperStyles.top || 0);
           newWrapperStyles = {
-            ...wrapperStyles,
+            ...newWrapperStyles,
             top: newTop
           };
         }

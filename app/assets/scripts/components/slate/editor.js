@@ -30,6 +30,7 @@ import { BoldPlugin } from './plugins/bold';
 import { ItalicPlugin } from './plugins/italic';
 import { UnderlinePlugin } from './plugins/underline';
 import { SubSupScriptPlugin } from './plugins/subsupscript';
+import StickyElement from '../common/sticky-element';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -121,9 +122,16 @@ export default function FullEditor(props) {
 
   // Render the Slate context.
   return (
-    <EditorWrapper>
+    <EditorWrapper data-sticky='boundary'>
       <Slate editor={editor} value={value} onChange={onChange}>
-        <EditorToolbar plugins={plugins} />
+        <StickyElement
+          bottomOffset={84}
+          topOffset={-84}
+          boundaryElement='[data-sticky="boundary"]'
+          hideOnBoundaryHit={false}
+        >
+          <EditorToolbar plugins={plugins} />
+        </StickyElement>
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
 

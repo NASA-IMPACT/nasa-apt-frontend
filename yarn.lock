@@ -8093,10 +8093,10 @@ react-side-effect@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"
   integrity sha512-2FoTQzRNTncBVtnzxFOk2mCpcfxQpenBMbk5kSVBg5UcPqV9fRbgY2zhb7GTWWOlpFmAxhClBDlIq8Rsubz1yQ==
 
-react-sticky-el@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/react-sticky-el/-/react-sticky-el-2.0.6.tgz#332debd92d93aa038d8baedbe044362bd4bad821"
-  integrity sha512-VFrhfdyc76IqHZw9TDMi/Nh46Yld+Shoykm8cXJgBVFXtVMFIhixJQN5QTeXAcB90v4K0b+RuCDR5DzP3mwL8A==
+react-sticky-el@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/react-sticky-el/-/react-sticky-el-2.0.7.tgz#3212d0531aa81fa392daa8d480371ad4439b66e1"
+  integrity sha512-pf38BaD+H4oOSkyRdV5PRulljbXy1pfX9rXA+Wdur07qARG2ebtl41dDrqEUc1EzriB5/iXWyfRP9GVFDmKVOg==
   dependencies:
     eslint-plugin-react "^7.19.0"
     flow-bin "^0.120.1"
