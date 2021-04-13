@@ -19,7 +19,7 @@ import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
 import { EquationPlugin } from './plugins/equation';
-import { SubSectionPlugin } from './plugins/subsection';
+import { SubSectionPlugin, withSubsectionId } from './plugins/subsection';
 import {
   LinkPlugin,
   withLink,
@@ -54,7 +54,8 @@ const withPlugins = [
   withInlineVoid({ plugins }),
   withList,
   withLink,
-  withLinkEditor
+  withLinkEditor,
+  withSubsectionId
 ];
 
 export const editorEmptyValue = {
