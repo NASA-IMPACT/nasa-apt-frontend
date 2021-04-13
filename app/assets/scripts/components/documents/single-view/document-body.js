@@ -9,33 +9,40 @@ import SafeReadEditor from '../../slate/safe-read-editor';
 import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 
+import { proseInnerSpacing } from '../../../styles/typography/prose';
+
 // Wrapper for each of the main sections.
-const AtbdSectionBase = ({ id, title, children }) => (
-  <section>
-    <header>
-      <h2 id={id} data-scroll='target'>
-        {title}
-      </h2>
-    </header>
-    <div>{children}</div>
+const AtbdSectionBase = ({ id, title, children, ...props }) => (
+  <section {...props}>
+    <h2 id={id} data-scroll='target'>
+      {title}
+    </h2>
+    {children}
   </section>
 );
 
 const AtbdSection = styled(AtbdSectionBase)`
-  h1 {
-    font-size: 2rem !important;
-  }
-  h2 {
-    font-size: 1.5rem !important;
-  }
-  h3 {
-    font-size: 1rem !important;
-  }
+  ${proseInnerSpacing()}
+  position: relative;
+
   &:not(:last-child) {
-    padding-bottom: ${glsp(3)};
-    margin-bottom: ${glsp(3)};
-    border-bottom: 1px solid ${themeVal('color.baseAlphaD')};
+    padding-bottom: ${glsp(1.5)};
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 8rem;
+      background: ${themeVal('color.baseAlphaC')};
+      content: '';
+      pointer-events: none;
+    }
   }
+`;
+
+const AtbdSubSection = styled.div`
+  ${proseInnerSpacing()}
 `;
 
 // When the section that's being rendered is a list of items we only need
@@ -50,7 +57,7 @@ const childrenPassThrough = ({ element, children }) => {
 };
 
 const DataAccessItem = ({ id, label, url, description }) => (
-  <div key={id} itemScope itemType='https://schema.org/Dataset'>
+  <AtbdSubSection key={id} itemScope itemType='https://schema.org/Dataset'>
     <h3 id={id} itemProp='name' data-scroll='target'>
       {label}
     </h3>
@@ -72,10 +79,10 @@ const DataAccessItem = ({ id, label, url, description }) => (
     </p>
     <h4>Description</h4>
     <SafeReadEditor value={description} whenEmpty={<EmptySection />} />
-  </div>
+  </AtbdSubSection>
 );
 
-const EmptySection = () => <p>No content available</p>;
+const EmptySection = () => <p>No content available.</p>;
 
 /**
  * Renders each element of the given array (by calling their `render` function)
@@ -227,7 +234,7 @@ export const atbdContentSections = [
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            List of variables will be coming soon.
+            <p>List of variables will be coming soon.</p>
           </React.Fragment>
         )
       },
@@ -239,7 +246,7 @@ export const atbdContentSections = [
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            List of variables will be coming soon.
+            <p>List of variables will be coming soon.</p>
           </React.Fragment>
         )
       }
@@ -260,7 +267,7 @@ export const atbdContentSections = [
             document.algorithm_implementations[idx].description
           ),
         render: ({ element, document }) => (
-          <div
+          <AtbdSubSection
             key={element.id}
             itemProp='hasPart'
             itemScope
@@ -287,7 +294,7 @@ export const atbdContentSections = [
               value={document.algorithm_implementations[idx].description}
               whenEmpty={<EmptySection />}
             />
-          </div>
+          </AtbdSubSection>
         )
       }));
     }
@@ -475,7 +482,7 @@ export const atbdContentSections = [
     id: 'contacts',
     render: ({ element }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Content for {element.label} will arrive soon.
+        <p>Content for {element.label} will arrive soon.</p>
       </AtbdSection>
     )
     // render: (el) => {
@@ -564,7 +571,7 @@ export const atbdContentSections = [
     id: 'references',
     render: ({ element }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        Content for {element.label} will arrive soon.
+        <p>Content for {element.label} will arrive soon.</p>
       </AtbdSection>
     )
     // this.referenceIndex.length ? (
@@ -593,9 +600,12 @@ export const atbdContentSections = [
     id: 'journal-details',
     render: ({ element, children }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <em>
-          If provided, the journal details are included only in the Journal PDF.
-        </em>
+        <p>
+          <em>
+            If provided, the journal details are included only in the Journal
+            PDF.
+          </em>
+        </p>
         {children}
       </AtbdSection>
     ),

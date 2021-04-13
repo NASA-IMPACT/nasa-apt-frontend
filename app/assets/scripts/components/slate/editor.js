@@ -10,8 +10,8 @@ import composeDebugEditor from './plugins/debug-editor/compose-debug-editor';
 // See slate/plugins/README
 import {
   EditableWithPlugins,
-  EditablePlugins,
   EditorWrapper,
+  ReadableWithPlugins,
   withInlineVoid,
   withHistory,
   pipe
@@ -109,7 +109,12 @@ export function ReadEditor(props) {
   // Render the Slate context.
   return (
     <Slate editor={editor} value={value}>
-      <EditablePlugins plugins={plugins} value={value} readOnly style={{}} />
+      <ReadableWithPlugins
+        plugins={plugins}
+        value={value}
+        readOnly
+        style={{}}
+      />
     </Slate>
   );
 }

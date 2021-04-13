@@ -6,6 +6,8 @@ import {
   withInlineVoid as withInlineVoid$
 } from '@udecode/slate-plugins';
 
+import { proseInnerSpacing } from '../../../../styles/typography/prose';
+
 export * from './with-history';
 
 // Editable field of the Editor styled.
@@ -15,6 +17,12 @@ export const EditableWithPlugins = styled(EditablePlugins$)`
 
   > div > *:not(:last-child) {
     margin-bottom: ${glsp()};
+  }
+`;
+
+export const ReadableWithPlugins = styled(EditablePlugins$)`
+  > div {
+    ${proseInnerSpacing()}
   }
 `;
 

@@ -39,6 +39,7 @@ const DocumentCanvas = styled(InpageBody)`
 
 const DocumentContent = styled.div`
   grid-column: content-start / content-end;
+  max-width: 52rem;
 `;
 
 const DocumentHeader = styled.header`
@@ -146,6 +147,25 @@ function DocumentView() {
                       <DocumentMetaDetails>
                         <dt>Version</dt>
                         <dd>{atbd.data.version}</dd>
+                        <dt>Release date</dt>
+                        <dd>
+                          <time dateTime='2020-12-04'>Dec 4, 2020</time>
+                        </dd>
+                        <dt>Keywords</dt>
+                        <dd>constellation, GPM, multi-satellite, IMERG</dd>
+                        <dt>Authors</dt>
+                        <dd>
+                          George J. Huffman, David T. Bolvin, Dan Braithwaite,
+                          Kuolin Hsu, Robert Joyce, Pingping Xie
+                        </dd>
+                        <dt>Editors</dt>
+                        <dd>Kuolin Hsu, Robert Joyce, Pingping Xie</dd>
+                        <dt>URL</dt>
+                        <dd>
+                          <a href='#' title='View'>
+                            doi.org/10.5067/GEDI
+                          </a>
+                        </dd>
                       </DocumentMetaDetails>
                     </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
