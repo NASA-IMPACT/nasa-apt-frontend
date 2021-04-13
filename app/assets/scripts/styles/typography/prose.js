@@ -38,33 +38,33 @@ const Prose = styled.div`
   }
 
   h1 {
-    font-size: 2.5rem;
-    line-height: 3rem;
-  }
-
-  h2 {
     font-size: 2.25rem;
     line-height: 2.75rem;
   }
 
-  h3 {
+  h2 {
     font-size: 2rem;
     line-height: 2.5rem;
   }
 
-  h4 {
+  h3 {
     font-size: 1.75rem;
     line-height: 2.25rem;
   }
 
-  h5 {
+  h4 {
     font-size: 1.5rem;
     line-height: 2rem;
   }
 
-  h6 {
+  h5 {
     font-size: 1.25rem;
     line-height: 1.75rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   ol,
