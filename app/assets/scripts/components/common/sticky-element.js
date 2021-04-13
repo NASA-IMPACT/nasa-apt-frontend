@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react';
+import styled from 'styled-components';
 import { RenderPropSticky } from 'react-sticky-el';
+
+const Wrapper = styled.div`
+  position: relative;
+  z-index: 100;
+`;
 
 // This component is basically the same as exported by react-sticky-el with a
 // change to support an offset value from the top. This is need to make some
@@ -52,7 +58,7 @@ function StickyElement(props) {
       isIOSFixEnabled={isIOSFixEnabled}
       dontUpdateHolderHeightWhenSticky={dontUpdateHolderHeightWhenSticky}
     >
-      {({ wrapperStyles, wrapperRef, holderStyles, holderRef }) => {
+      {({ isFixed, wrapperStyles, wrapperRef, holderStyles, holderRef }) => {
         let newWrapperStyles = { ...wrapperStyles, background: '#fff' };
 
         if (wrapperStyles?.top) {
@@ -64,11 +70,16 @@ function StickyElement(props) {
         }
 
         return (
-          <div {...rest} ref={holderRef} style={holderStyles}>
-            <div {...rest} style={newWrapperStyles} ref={wrapperRef}>
+          <Wrapper {...rest} ref={holderRef} style={holderStyles}>
+            <div
+              {...rest}
+              style={newWrapperStyles}
+              ref={wrapperRef}
+              className={isFixed && 'is-sticky'}
+            >
               {children}
             </div>
-          </div>
+          </Wrapper>
         );
       }}
     </RenderPropSticky>

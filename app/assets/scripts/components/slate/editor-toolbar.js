@@ -11,11 +11,7 @@ import {
 } from '@udecode/slate-plugins';
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
-import {
-  Toolbar,
-  ToolbarLabel,
-  ToolbarIconButton
-} from '@devseed-ui/toolbar';
+import { Toolbar, ToolbarLabel, ToolbarIconButton } from '@devseed-ui/toolbar';
 
 import Tip from '../common/tooltip';
 import PortalContainer from './plugins/common/portal-container';
@@ -24,9 +20,25 @@ import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
 
-const EditorMasterToolbar = styled(Toolbar)`
-  background-color: ${themeVal('color.baseAlphaD')};
+const EditorActions = styled.div`
+  display: grid;
+  grid-gap: ${glsp()};
+  grid-template-columns: 1fr min-content;
+  background-color: ${themeVal('color.baseAlphaB')};
+  border-radius: ${themeVal('shape.rounded')} ${themeVal('shape.rounded')} 0 0;
+  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaB')},
+    ${themeVal('boxShadow.elevationC')};
   padding: ${glsp(0.25, 1)};
+  transition: all 0.24s ease 0s;
+  clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
+
+  .is-sticky & {
+    border-radius: 0;
+  }
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
 export const FloatingToolbar = styled.div`
@@ -56,48 +68,61 @@ export function EditorToolbar(props) {
   const editor = useSlate();
 
   return (
-    <EditorMasterToolbar>
-      <ToolbarLabel>Insert</ToolbarLabel>
-      {plugins.reduce((acc, p) => {
-        if (!p.toolbar) return acc;
+    <EditorActions>
+      <Toolbar>
+        <ToolbarLabel>Insert</ToolbarLabel>
+        {plugins.reduce((acc, p) => {
+          if (!p.toolbar) return acc;
 
-        return acc.concat(
-          castArray(p.toolbar).map((btn) => (
-            <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
-              <ToolbarIconButton
-                useIcon={btn.icon}
-                onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-              >
-                {btn.label}
-              </ToolbarIconButton>
-            </Tip>
-          ))
-        );
-      }, [])}
-      <ToolbarLabel>Actions</ToolbarLabel>
-      <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
-        <ToolbarIconButton
-          useIcon='arrow-semi-spin-ccw'
-          disabled={!editor.canUndo()}
-          onClick={() => {
-            editor.undo();
-          }}
-        >
-          Undo
-        </ToolbarIconButton>
-      </Tip>
-      <Tip title={`Redo (${modKey(REDO_HOTKEY)})`}>
-        <ToolbarIconButton
-          useIcon='arrow-semi-spin-cw'
-          disabled={!editor.canRedo()}
-          onClick={() => {
-            editor.redo();
-          }}
-        >
-          Redo
-        </ToolbarIconButton>
-      </Tip>
-    </EditorMasterToolbar>
+          return acc.concat(
+            castArray(p.toolbar).map((btn) => (
+              <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+                <ToolbarIconButton
+                  useIcon={btn.icon}
+                  onMouseDown={getPreventDefaultHandler(
+                    p.onUse,
+                    editor,
+                    btn.id
+                  )}
+                >
+                  {btn.label}
+                </ToolbarIconButton>
+              </Tip>
+            ))
+          );
+        }, [])}
+        <ToolbarLabel>Actions</ToolbarLabel>
+        <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
+          <ToolbarIconButton
+            useIcon='arrow-semi-spin-ccw'
+            disabled={!editor.canUndo()}
+            onClick={() => {
+              editor.undo();
+            }}
+          >
+            Undo
+          </ToolbarIconButton>
+        </Tip>
+        <Tip title={`Redo (${modKey(REDO_HOTKEY)})`}>
+          <ToolbarIconButton
+            useIcon='arrow-semi-spin-cw'
+            disabled={!editor.canRedo()}
+            onClick={() => {
+              editor.redo();
+            }}
+          >
+            Redo
+          </ToolbarIconButton>
+        </Tip>
+      </Toolbar>
+      <Toolbar>
+        <Tip title='Show keyboard shortcuts'>
+          <ToolbarIconButton useIcon='square'>
+            Keyboard shortcuts
+          </ToolbarIconButton>
+        </Tip>
+      </Toolbar>
+    </EditorActions>
   );
 }
 

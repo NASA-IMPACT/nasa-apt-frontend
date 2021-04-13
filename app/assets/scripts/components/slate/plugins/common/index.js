@@ -27,8 +27,9 @@ export const ReadableWithPlugins = styled(EditablePlugins$)`
 `;
 
 export const EditorWrapper = styled.div`
-  border: ${themeVal('layout.border')} solid ${themeVal('color.baseAlphaD')};
+  border: ${themeVal('layout.border')} solid ${themeVal('color.baseAlphaC')};
   border-radius: ${themeVal('shape.rounded')};
+  overflow: hidden;
 `;
 
 // Pipe function for composition.
