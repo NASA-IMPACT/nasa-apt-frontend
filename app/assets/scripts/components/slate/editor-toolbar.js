@@ -199,6 +199,7 @@ export function EditorFloatingToolbar(props) {
               castArray(p.floatToolbar).map((btn) => (
                 <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
                   <ToolbarIconButton
+                    className={`fl_toolbar-${btn.id}`}
                     useIcon={btn.icon}
                     active={isMarkActive(editor, btn.id)}
                     onMouseDown={getPreventDefaultHandler(

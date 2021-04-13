@@ -51,12 +51,22 @@ export function EditorLinkToolbar() {
   const fieldRef = useRef(null);
   const [draftValue, setDraftValue] = useState('');
 
-  const outsideClickListener = useCallback(() => {
-    if (active) {
-      // Cancel
-      onAction(editor, 'cancel');
-    }
-  }, [active, editor]);
+  const outsideClickListener = useCallback(
+    (event) => {
+      // If the click outside originates in the link button of the floating
+      // toolbar, ignore it. Since the toolbar takes a bit to show up (in part
+      // because of the css transition on the visibility property) the outside
+      // click fires and it is for all intents and purposes clicking outside
+      // (the triggering link). In this case we ignore it.
+      if (event.target.classList.contains('fl_toolbar-a')) return;
+
+      if (active) {
+        // Cancel
+        onAction(editor, 'cancel');
+      }
+    },
+    [active, editor]
+  );
 
   const onFieldKeyDown = (e) => {
     if (e.key === 'Enter') {
