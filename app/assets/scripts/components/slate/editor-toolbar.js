@@ -12,11 +12,10 @@ import {
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import {
-  Toolbar as Toolbar$,
+  Toolbar,
   ToolbarLabel,
   ToolbarIconButton
 } from '@devseed-ui/toolbar';
-import { Button } from '@devseed-ui/button';
 
 import Tip from '../common/tooltip';
 import PortalContainer from './plugins/common/portal-container';
@@ -25,24 +24,30 @@ import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
 
-const Toolbar = styled(Toolbar$)`
+const EditorMasterToolbar = styled(Toolbar)`
   background-color: ${themeVal('color.baseAlphaD')};
   padding: ${glsp(0.25, 1)};
 `;
 
 export const FloatingToolbar = styled.div`
   position: absolute;
-  z-index: 9999;
   top: 100%;
-  white-space: nowrap;
+  z-index: 9999;
+  display: grid;
+  grid-gap: ${glsp(0.25)};
+  margin-top: ${glsp(-0.5)};
+  padding: ${glsp(0.5)};
+  background-color: ${themeVal('color.surface')};
+  box-shadow: ${themeVal('boxShadow.elevationD')};
+  border-radius: ${themeVal('shape.rounded')};
   opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
   visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
   transition: visibility 120ms linear, opacity 120ms ease-out,
     left 75ms ease-out;
-  background-color: ${themeVal('color.surface')};
-  border-radius: ${themeVal('shape.rounded')};
-  border: 1px solid ${themeVal('color.baseAlphaD')};
-  margin-top: ${glsp(-0.5)};
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
 // Display the toolbar buttons for the plugins that define a toolbar.
@@ -51,7 +56,7 @@ export function EditorToolbar(props) {
   const editor = useSlate();
 
   return (
-    <Toolbar>
+    <EditorMasterToolbar>
       <ToolbarLabel>Insert</ToolbarLabel>
       {plugins.reduce((acc, p) => {
         if (!p.toolbar) return acc;
@@ -92,7 +97,7 @@ export function EditorToolbar(props) {
           Redo
         </ToolbarIconButton>
       </Tip>
-    </Toolbar>
+    </EditorMasterToolbar>
   );
 }
 
@@ -154,28 +159,29 @@ export function EditorFloatingToolbar(props) {
   return (
     <PortalContainer>
       <FloatingToolbar ref={ref} isHidden={hidden}>
-        {plugins.reduce((acc, p) => {
-          if (!p.floatToolbar) return acc;
+        <Toolbar>
+          {plugins.reduce((acc, p) => {
+            if (!p.floatToolbar) return acc;
 
-          return acc.concat(
-            castArray(p.floatToolbar).map((btn) => (
-              <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
-                <Button
-                  useIcon={btn.icon}
-                  hideText
-                  active={isMarkActive(editor, btn.id)}
-                  onMouseDown={getPreventDefaultHandler(
-                    p.onUse,
-                    editor,
-                    btn.id
-                  )}
-                >
-                  {btn.label}
-                </Button>
-              </Tip>
-            ))
-          );
-        }, [])}
+            return acc.concat(
+              castArray(p.floatToolbar).map((btn) => (
+                <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+                  <ToolbarIconButton
+                    useIcon={btn.icon}
+                    active={isMarkActive(editor, btn.id)}
+                    onMouseDown={getPreventDefaultHandler(
+                      p.onUse,
+                      editor,
+                      btn.id
+                    )}
+                  >
+                    {btn.label}
+                  </ToolbarIconButton>
+                </Tip>
+              ))
+            );
+          }, [])}
+        </Toolbar>
       </FloatingToolbar>
     </PortalContainer>
   );

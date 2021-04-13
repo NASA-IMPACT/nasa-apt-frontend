@@ -2,7 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSlate } from 'slate-react';
 import styled from 'styled-components';
 import { isUrl } from '@udecode/slate-plugins';
-import { Button } from '@devseed-ui/button';
+import { visuallyHidden } from '@devseed-ui/theme-provider';
+import {
+  Toolbar,
+  ToolbarIconButton,
+  VerticalDivider
+} from '@devseed-ui/toolbar';
+
 import {
   FormGroup,
   FormGroupHeader,
@@ -16,6 +22,10 @@ import PortalContainer from '../common/portal-container';
 import useRectFollow from '../common/use-rect-follow';
 import useOutsideClick from '../common/use-outside-click';
 import { onLinkEditorAction as onAction } from '.';
+
+const ToolbarLinkHeader = styled(FormGroupHeader)`
+  ${visuallyHidden};
+`;
 
 // Keeping transition: all breaks the focus. This happens because with
 // transition: all, the position also gets queued for animation, and the browser
@@ -84,45 +94,49 @@ export function EditorLinkToolbar() {
     <PortalContainer>
       <FloatingToolbar ref={ref} isHidden={!active}>
         <FormGroup>
-          <FormGroupHeader>
+          <ToolbarLinkHeader>
             <FormLabel htmlFor='link-editor-url'>Input</FormLabel>
-          </FormGroupHeader>
+          </ToolbarLinkHeader>
           <FormGroupBody>
             <FormInput
               ref={fieldRef}
               type='text'
               id='link-editor-url'
               onKeyDown={onFieldKeyDown}
+              placeholder='Enter link URL'
               value={draftValue}
               onChange={(e) => setDraftValue(e.target.value)}
             />
           </FormGroupBody>
         </FormGroup>
-        <Button
-          useIcon='tick--small'
-          hideText
-          onClick={() => onAction(editor, 'confirm', { value: draftValue })}
-        >
-          Confirm
-        </Button>
-        <Button
-          useIcon='trash-bin'
-          hideText
-          onClick={() => onAction(editor, 'remove')}
-        >
-          Remove
-        </Button>
-        <Button
-          forwardedAs='a'
-          href={isValidUrl ? draftValue : '#'}
-          useIcon='expand-top-right'
-          hideText
-          disabled={!isValidUrl}
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Visit link
-        </Button>
+        <Toolbar>
+          <ToolbarIconButton
+            useIcon='tick--small'
+            onClick={() => onAction(editor, 'confirm', { value: draftValue })}
+            title='Save link'
+          >
+            Confirm
+          </ToolbarIconButton>
+          <ToolbarIconButton
+            forwardedAs='a'
+            href={isValidUrl ? draftValue : '#'}
+            useIcon='expand-top-right'
+            disabled={!isValidUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            title='Visit link'
+          >
+            Visit
+          </ToolbarIconButton>
+          <VerticalDivider />
+          <ToolbarIconButton
+            useIcon='trash-bin'
+            onClick={() => onAction(editor, 'remove')}
+            title='Remove link'
+          >
+            Remove
+          </ToolbarIconButton>
+        </Toolbar>
       </FloatingToolbar>
     </PortalContainer>
   );
