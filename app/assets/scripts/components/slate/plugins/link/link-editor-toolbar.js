@@ -2,7 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSlate } from 'slate-react';
 import styled from 'styled-components';
 import { isUrl } from '@udecode/slate-plugins';
+import { visuallyHidden } from '@devseed-ui/theme-provider';
+import {
+  Toolbar,
+  ToolbarIconButton,
+  VerticalDivider
+} from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
+
 import {
   FormGroup,
   FormGroupHeader,
@@ -16,6 +23,10 @@ import PortalContainer from '../common/portal-container';
 import useRectFollow from '../common/use-rect-follow';
 import useOutsideClick from '../common/use-outside-click';
 import { onLinkEditorAction as onAction } from '.';
+
+const ToolbarLinkHeader = styled(FormGroupHeader)`
+  ${visuallyHidden}
+`;
 
 // Keeping transition: all breaks the focus. This happens because with
 // transition: all, the position also gets queued for animation, and the browser
@@ -40,12 +51,22 @@ export function EditorLinkToolbar() {
   const fieldRef = useRef(null);
   const [draftValue, setDraftValue] = useState('');
 
-  const outsideClickListener = useCallback(() => {
-    if (active) {
-      // Cancel
-      onAction(editor, 'cancel');
-    }
-  }, [active, editor]);
+  const outsideClickListener = useCallback(
+    (event) => {
+      // If the click outside originates in the link button of the floating
+      // toolbar, ignore it. Since the toolbar takes a bit to show up (in part
+      // because of the css transition on the visibility property) the outside
+      // click fires and it is for all intents and purposes clicking outside
+      // (the triggering link). In this case we ignore it.
+      if (event.target.classList.contains('fl_toolbar-a')) return;
+
+      if (active) {
+        // Cancel
+        onAction(editor, 'cancel');
+      }
+    },
+    [active, editor]
+  );
 
   const onFieldKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -66,11 +87,19 @@ export function EditorLinkToolbar() {
   useOutsideClick({ ref, listener: outsideClickListener });
 
   useEffect(() => {
+    let id;
     // Focus when the link editor activates but only if its value is empty. In
     // this case it will not autofocus when clicking on an existing link.
     if (active && fieldRef.current && !value) {
-      fieldRef.current.focus();
+      // Because the toolbar takes a bit to appear we need a timeout otherwise
+      // when we try to focus the field is not in view
+      id = setTimeout(() => {
+        fieldRef.current.focus();
+      }, 150);
     }
+    return () => {
+      id && clearTimeout(id);
+    };
   }, [fieldRef, active, value]);
 
   // Reset the field value when input changes.
@@ -84,45 +113,50 @@ export function EditorLinkToolbar() {
     <PortalContainer>
       <FloatingToolbar ref={ref} isHidden={!active}>
         <FormGroup>
-          <FormGroupHeader>
+          <ToolbarLinkHeader>
             <FormLabel htmlFor='link-editor-url'>Input</FormLabel>
-          </FormGroupHeader>
+          </ToolbarLinkHeader>
           <FormGroupBody>
             <FormInput
               ref={fieldRef}
               type='text'
               id='link-editor-url'
               onKeyDown={onFieldKeyDown}
+              placeholder='Enter link URL'
               value={draftValue}
               onChange={(e) => setDraftValue(e.target.value)}
             />
           </FormGroupBody>
         </FormGroup>
-        <Button
-          useIcon='tick--small'
-          hideText
-          onClick={() => onAction(editor, 'confirm', { value: draftValue })}
-        >
-          Confirm
-        </Button>
-        <Button
-          useIcon='trash-bin'
-          hideText
-          onClick={() => onAction(editor, 'remove')}
-        >
-          Remove
-        </Button>
-        <Button
-          forwardedAs='a'
-          href={isValidUrl ? draftValue : '#'}
-          useIcon='expand-top-right'
-          hideText
-          disabled={!isValidUrl}
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Visit link
-        </Button>
+        <Toolbar>
+          <ToolbarIconButton
+            useIcon='tick--small'
+            onClick={() => onAction(editor, 'confirm', { value: draftValue })}
+            title='Save link'
+          >
+            Confirm
+          </ToolbarIconButton>
+          <Button
+            forwardedAs='a'
+            href={isValidUrl ? draftValue : '#'}
+            useIcon='expand-top-right'
+            disabled={!isValidUrl}
+            target='_blank'
+            hideText
+            rel='noopener noreferrer'
+            title='Visit link'
+          >
+            Visit
+          </Button>
+          <VerticalDivider />
+          <ToolbarIconButton
+            useIcon='trash-bin'
+            onClick={() => onAction(editor, 'remove')}
+            title='Remove link'
+          >
+            Remove
+          </ToolbarIconButton>
+        </Toolbar>
       </FloatingToolbar>
     </PortalContainer>
   );

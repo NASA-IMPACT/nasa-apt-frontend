@@ -1,7 +1,10 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import { useReadOnly } from 'slate-react';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
+
+import { useReadingContext } from '../common/read-context';
 
 const SectionHeading = styled.h2`
   position: relative;
@@ -21,12 +24,34 @@ const SectionHeading = styled.h2`
 `;
 
 export default function SubSection(props) {
-  const { attributes, children } = props;
+  const { attributes, htmlAttributes, element, children } = props;
 
-  return <SectionHeading {...attributes}>{children}</SectionHeading>;
+  const readOnly = useReadOnly();
+  const { subsectionLevel, sectionId } = useReadingContext();
+
+  let readAttributes = {};
+  let Element = SectionHeading;
+
+  if (readOnly) {
+    if (subsectionLevel) {
+      Element = subsectionLevel;
+    }
+    if (sectionId) {
+      readAttributes.id = `${sectionId}--${element.id}`;
+      readAttributes['data-scroll'] = 'target';
+    }
+  }
+
+  return (
+    <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+      {children}
+    </Element>
+  );
 }
 
 SubSection.propTypes = {
   attributes: T.object,
+  htmlAttributes: T.object,
+  element: T.object,
   children: T.node
 };

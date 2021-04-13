@@ -12,6 +12,7 @@ export default () => css`
     line-height: 1.25rem;
     max-width: 16rem;
     padding: ${glsp(1 / 2, 1)};
+    word-break: break-word;
   }
 
   ${['top', 'bottom', 'left', 'right'].map(

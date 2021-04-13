@@ -70,7 +70,11 @@ export default function DocumentNavHeader(props) {
   return (
     <>
       <InpageHeadline>
-        <TruncatedInpageTitle>{title}</TruncatedInpageTitle>
+        <TruncatedInpageTitle>
+          <Link to={atbdView(atbdId, version)} title='View document'>
+            {title}
+          </Link>
+        </TruncatedInpageTitle>
         <InpageHeadNav role='navigation'>
           <BreadcrumbMenu>
             <li>
@@ -97,7 +101,11 @@ export default function DocumentNavHeader(props) {
       </InpageHeadline>
       <InpageMeta>
         <dt>Under</dt>
-        <InpageSubtitle as='dd'>Documents</InpageSubtitle>
+        <InpageSubtitle as='dd'>
+          <Link to='/documents' title='View all Documents'>
+            Documents
+          </Link>
+        </InpageSubtitle>
         <dt>Status</dt>
         <dd>
           <StatusPill status={status} completeness={completeness} />

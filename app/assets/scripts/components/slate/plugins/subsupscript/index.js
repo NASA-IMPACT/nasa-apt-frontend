@@ -40,14 +40,14 @@ export const SubSupScriptPlugin = {
   floatToolbar: [
     {
       id: MARK_SUBSCRIPT,
-      icon: 'expand-down-right',
+      icon: 'subscript',
       hotkey: 'mod+,',
       label: 'Subscript',
       tip: (key) => `Subscript (${modKey(key)})`
     },
     {
       id: MARK_SUPERSCRIPT,
-      icon: 'expand-top-right',
+      icon: 'superscript',
       hotkey: 'mod+.',
       label: 'Superscript',
       tip: (key) => `Superscript (${modKey(key)})`

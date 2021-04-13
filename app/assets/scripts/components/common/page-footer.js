@@ -64,7 +64,7 @@ function PageFooter() {
   const updateDate = new Date(+process.env.APP_BUILD_TIME || nowDate.getTime());
 
   return (
-    <PageFooterSelf role='contentinfo'>
+    <PageFooterSelf role='contentinfo' data-element='footer'>
       <Colophon>
         <CreditsLink
           href='https://earthdata.nasa.gov/'

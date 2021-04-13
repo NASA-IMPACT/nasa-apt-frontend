@@ -12,34 +12,60 @@ import {
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import {
-  Toolbar as Toolbar$,
+  Toolbar,
   ToolbarLabel,
-  ToolbarIconButton
+  ToolbarIconButton,
+  VerticalDivider
 } from '@devseed-ui/toolbar';
-import { Button } from '@devseed-ui/button';
 
+import Tip from '../common/tooltip';
 import PortalContainer from './plugins/common/portal-container';
 import { modKey, REDO_HOTKEY, UNDO_HOTKEY } from './plugins/common/utils';
 import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
 
-const Toolbar = styled(Toolbar$)`
-  background-color: ${themeVal('color.baseAlphaD')};
+const EditorActions = styled.div`
+  display: grid;
+  grid-gap: ${glsp()};
+  grid-template-columns: 1fr min-content;
+  background-color: ${themeVal('color.baseAlphaA')};
+  border-radius: ${themeVal('shape.rounded')} ${themeVal('shape.rounded')} 0 0;
+  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
   padding: ${glsp(0.25, 1)};
+  transition: all 0.24s ease 0s;
+  clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
+
+  .is-sticky & {
+    border-radius: 0;
+    box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaB')},
+      ${themeVal('boxShadow.elevationD')};
+  }
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
 export const FloatingToolbar = styled.div`
   position: absolute;
+  top: 100%;
   z-index: 9999;
-  white-space: nowrap;
-  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
-  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
-  transition: top 75ms ease-out, left 75ms ease-out;
-  background-color: ${themeVal('color.surface')};
-  border-radius: ${themeVal('shape.rounded')};
-  border: 1px solid ${themeVal('color.baseAlphaD')};
+  display: grid;
+  grid-gap: ${glsp(0.25)};
   margin-top: ${glsp(-0.5)};
+  padding: ${glsp(0.5)};
+  background-color: ${themeVal('color.surface')};
+  box-shadow: ${themeVal('boxShadow.elevationD')};
+  border-radius: ${themeVal('shape.rounded')};
+  opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
+  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
+  transition: visibility 120ms linear, opacity 120ms ease-out,
+    left 75ms ease-out;
+
+  > * {
+    grid-row: 1;
+  }
 `;
 
 // Display the toolbar buttons for the plugins that define a toolbar.
@@ -48,46 +74,62 @@ export function EditorToolbar(props) {
   const editor = useSlate();
 
   return (
-    <Toolbar>
-      <ToolbarLabel>Insert</ToolbarLabel>
-      {plugins.reduce((acc, p) => {
-        if (!p.toolbar) return acc;
+    <EditorActions>
+      <Toolbar>
+        <ToolbarLabel>Insert</ToolbarLabel>
+        {plugins.reduce((acc, p) => {
+          if (!p.toolbar) return acc;
 
-        return acc.concat(
-          castArray(p.toolbar).map((btn) => (
-            <ToolbarIconButton
-              key={btn.id}
-              useIcon={btn.icon}
-              data-tip={btn.tip(btn.hotkey)}
-              onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-            >
-              {btn.label}
-            </ToolbarIconButton>
-          ))
-        );
-      }, [])}
-      <ToolbarLabel>Actions</ToolbarLabel>
-      <ToolbarIconButton
-        useIcon='arrow-semi-spin-ccw'
-        data-tip={`Undo (${modKey(UNDO_HOTKEY)})`}
-        disabled={!editor.canUndo()}
-        onClick={() => {
-          editor.undo();
-        }}
-      >
-        Undo
-      </ToolbarIconButton>
-      <ToolbarIconButton
-        useIcon='arrow-semi-spin-cw'
-        data-tip={`Redo (${modKey(REDO_HOTKEY)})`}
-        disabled={!editor.canRedo()}
-        onClick={() => {
-          editor.redo();
-        }}
-      >
-        Redo
-      </ToolbarIconButton>
-    </Toolbar>
+          return acc.concat(
+            castArray(p.toolbar).map((btn) => (
+              <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+                <ToolbarIconButton
+                  useIcon={btn.icon}
+                  onMouseDown={getPreventDefaultHandler(
+                    p.onUse,
+                    editor,
+                    btn.id
+                  )}
+                >
+                  {btn.label}
+                </ToolbarIconButton>
+              </Tip>
+            ))
+          );
+        }, [])}
+        <VerticalDivider />
+        <ToolbarLabel>Actions</ToolbarLabel>
+        <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
+          <ToolbarIconButton
+            useIcon='arrow-semi-spin-ccw'
+            disabled={!editor.canUndo()}
+            onClick={() => {
+              editor.undo();
+            }}
+          >
+            Undo
+          </ToolbarIconButton>
+        </Tip>
+        <Tip title={`Redo (${modKey(REDO_HOTKEY)})`}>
+          <ToolbarIconButton
+            useIcon='arrow-semi-spin-cw'
+            disabled={!editor.canRedo()}
+            onClick={() => {
+              editor.redo();
+            }}
+          >
+            Redo
+          </ToolbarIconButton>
+        </Tip>
+      </Toolbar>
+      <Toolbar>
+        <Tip title='Show keyboard shortcuts'>
+          <ToolbarIconButton useIcon='keyboard'>
+            Keyboard shortcuts
+          </ToolbarIconButton>
+        </Tip>
+      </Toolbar>
+    </EditorActions>
   );
 }
 
@@ -149,24 +191,30 @@ export function EditorFloatingToolbar(props) {
   return (
     <PortalContainer>
       <FloatingToolbar ref={ref} isHidden={hidden}>
-        {plugins.reduce((acc, p) => {
-          if (!p.floatToolbar) return acc;
+        <Toolbar>
+          {plugins.reduce((acc, p) => {
+            if (!p.floatToolbar) return acc;
 
-          return acc.concat(
-            castArray(p.floatToolbar).map((btn) => (
-              <Button
-                key={btn.id}
-                useIcon={btn.icon}
-                hideText
-                data-tip={btn.tip(btn.hotkey)}
-                active={isMarkActive(editor, btn.id)}
-                onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-              >
-                {btn.label}
-              </Button>
-            ))
-          );
-        }, [])}
+            return acc.concat(
+              castArray(p.floatToolbar).map((btn) => (
+                <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+                  <ToolbarIconButton
+                    className={`fl_toolbar-${btn.id}`}
+                    useIcon={btn.icon}
+                    active={isMarkActive(editor, btn.id)}
+                    onMouseDown={getPreventDefaultHandler(
+                      p.onUse,
+                      editor,
+                      btn.id
+                    )}
+                  >
+                    {btn.label}
+                  </ToolbarIconButton>
+                </Tip>
+              ))
+            );
+          }, [])}
+        </Toolbar>
       </FloatingToolbar>
     </PortalContainer>
   );

@@ -28,7 +28,7 @@ export const UnderlinePlugin = {
   },
   floatToolbar: {
     id: MARK_UNDERLINE,
-    icon: 'equal--small',
+    icon: 'underline',
     hotkey: 'mod+U',
     label: 'Underline',
     tip: (key) => `Underline (${modKey(key)})`

@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../../common/app';
-import { StickyInpageHeader, InpageActions } from '../../../styles/inpage';
+import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
@@ -77,7 +77,7 @@ function DocumentEdit() {
           version={version}
           atbd={atbd.data}
           renderInpageHeader={() => (
-            <StickyInpageHeader>
+            <InpageHeaderSticky>
               <DocumentNavHeader
                 atbdId={id}
                 title={atbd.data.title}
@@ -91,7 +91,7 @@ function DocumentEdit() {
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
               </InpageActions>
-            </StickyInpageHeader>
+            </InpageHeaderSticky>
           )}
         />
       )}

@@ -3,7 +3,7 @@ import React from 'react';
 import App from '../common/app';
 import {
   Inpage,
-  StickyInpageHeader,
+  InpageHeaderSticky,
   InpageHeadline,
   InpageTitle,
   InpageBody
@@ -15,11 +15,11 @@ function About() {
   return (
     <App pageTitle='About'>
       <Inpage>
-        <StickyInpageHeader>
+        <InpageHeaderSticky>
           <InpageHeadline>
             <InpageTitle>About</InpageTitle>
           </InpageHeadline>
-        </StickyInpageHeader>
+        </InpageHeaderSticky>
         <InpageBody>
           <ContentBlock>
             <Prose>

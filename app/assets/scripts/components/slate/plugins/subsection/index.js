@@ -1,7 +1,7 @@
 import isHotkey from 'is-hotkey';
-import { Transforms } from 'slate';
+import { Editor, Transforms, Node } from 'slate';
 import castArray from 'lodash.castarray';
-import { getRenderElement } from '@udecode/slate-plugins';
+import { getNodes, getRenderElement } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
 import SubSection from './sub-section';
@@ -56,10 +56,50 @@ export const SubSectionPlugin = {
   },
   toolbar: {
     id: SUB_SECTION,
-    icon: 'pilcrow',
+    icon: 'heading',
     hotkey: 'mod+L',
-    label: 'Sub Section',
-    tip: (key) => `Sub Section (${modKey(key)})`
+    label: 'Heading',
+    tip: (key) => `Heading (${modKey(key)})`
   },
   onUse: onSubsectionUse
+};
+
+/**
+ * Enhances the slate editor to add subsections ids.
+ * It ensures the ids are unique for all the document.
+ *
+ * @param {Editor} editor The slate editor.
+ */
+export const withSubsectionId = (editor) => {
+  const { onChange } = editor;
+
+  editor.onChange = () => {
+    // Get all the subsections to normalize.
+    Editor.withoutNormalizing(editor, () => {
+      const nodes = [
+        ...getNodes(editor, { match: { type: SUB_SECTION }, at: [] })
+      ];
+
+      let idTracker = {};
+
+      nodes.forEach(([node, path]) => {
+        // Create the node id from the content.
+        const nodeContent = Node.string(node);
+        const nodeId = nodeContent.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+        // Track the id so there are not two equal ones.
+        idTracker[nodeId] =
+          typeof idTracker[nodeId] === 'undefined' ? 0 : idTracker[nodeId] + 1;
+
+        // Add id count if not unique.
+        const newId =
+          nodeId + (idTracker[nodeId] ? `-${idTracker[nodeId]}` : '');
+
+        Transforms.setNodes(editor, { id: newId }, { at: path });
+      });
+    });
+    return onChange();
+  };
+
+  return editor;
 };

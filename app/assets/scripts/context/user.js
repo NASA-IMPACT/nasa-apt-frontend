@@ -37,7 +37,12 @@ export const UserProvider = (props) => {
   useEffect(() => {
     let timer;
     if (tokenData.expireAt) {
-      const millis = tokenData.expireAt - Date.now();
+      // There's a limit to setTimeout's delay. 2 days is more than enough.
+      // https://stackoverflow.com/questions/3468607/why-does-settimeout-break-for-large-millisecond-delay-values
+      const millis = Math.min(
+        tokenData.expireAt - Date.now(),
+        86400 * 2 * 1000
+      );
 
       // Timer to expire the token
       timer = setTimeout(() => {
