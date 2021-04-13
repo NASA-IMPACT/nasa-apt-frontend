@@ -129,6 +129,11 @@ export const InpageTitle = styled.h1`
       );
       /* stylelint-enable function-calc-no-invalid */
     `}
+
+  a {
+    display: block;
+    color: inherit;
+  }
 `;
 
 export const InpageSubtitle = styled.p`
