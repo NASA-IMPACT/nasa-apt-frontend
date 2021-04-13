@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { tint } from 'polished';
 
 import {
@@ -10,14 +10,19 @@ import {
 
 const _tint = stylizeFunction(tint);
 
+export const proseInnerSpacing = () => css`
+  > * {
+    margin-bottom: ${glsp(1.5)};
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
 const Prose = styled.div`
   font-size: 1rem;
   line-height: 1.5;
-
-  ${media.mediumUp`
-    font-size: 1.25rem;
-    line-height: 1.6;
-  `}
 
   h1,
   h2,
@@ -33,63 +38,33 @@ const Prose = styled.div`
   }
 
   h1 {
-    font-size: 2.5rem;
-    line-height: 3rem;
-
-    ${media.mediumUp`
-      font-size: 2.75rem;
-      line-height: 3.25rem;
-    `}
+    font-size: 2.25rem;
+    line-height: 2.75rem;
   }
 
   h2 {
-    font-size: 2.25rem;
-    line-height: 2.75rem;
-
-    ${media.mediumUp`
-      font-size: 2.5rem;
-      line-height: 3rem;
-    `}
+    font-size: 2rem;
+    line-height: 2.5rem;
   }
 
   h3 {
-    font-size: 2rem;
-    line-height: 2.5rem;
-
-    ${media.mediumUp`
-      font-size: 2.25rem;
-      line-height: 2.75rem;
-    `}
+    font-size: 1.75rem;
+    line-height: 2.25rem;
   }
 
   h4 {
-    font-size: 1.75rem;
-    line-height: 2.25rem;
-
-    ${media.mediumUp`
-      font-size: 2rem;
-      line-height: 2.5rem;
-    `}
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 
   h5 {
-    font-size: 1.5rem;
-    line-height: 2rem;
-
-    ${media.mediumUp`
-      font-size: 1.75rem;
-      line-height: 2.25rem;
-    `}
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 
   h6 {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-
-    ${media.mediumUp`
-      font-size: 1.5rem;
-      line-height: 2rem;
-    `}
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   ol,
@@ -165,17 +140,7 @@ const Prose = styled.div`
     display: block;
   }
 
-  > * {
-    margin-bottom: ${glsp(1.5)};
-
-    ${media.mediumUp`
-      margin-bottom: ${glsp(2)};
-    `}
-  }
-
-  > *:last-child {
-    margin-bottom: 0;
-  }
+  ${proseInnerSpacing()}
 `;
 
 export default Prose;

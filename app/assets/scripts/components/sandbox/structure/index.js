@@ -25,21 +25,16 @@ import {
 import Constrainer from '../../../styles/constrainer';
 import Prose from '../../../styles/typography/prose';
 
-const InpageBodyScroll = styled(InpageBody)`
-  padding: 0;
-  overflow: auto;
-
-  ${Constrainer} {
-    padding-top: 3rem;
-    padding-bottom: 30rem;
-  }
+const InpageHeaderSticky = styled(InpageHeader)`
+  position: sticky;
+  top: 0;
 `;
 
 function SandboxStructure() {
   return (
     <App pageTitle='Sandbox/Structure'>
       <Inpage>
-        <InpageHeader>
+        <InpageHeaderSticky>
           <InpageHeadline>
             <InpageTitle>
               GPM Integrated Multi-Satellite Retrievals for GPM (IMERG)
@@ -88,14 +83,77 @@ function SandboxStructure() {
               Button 2B
             </Button>
           </InpageActions>
-        </InpageHeader>
-        <InpageBodyScroll>
+        </InpageHeaderSticky>
+        <InpageBody>
           <Constrainer>
             <Prose>
-              <p>Hello world!</p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                a tellus eu arcu ultrices dictum in eu ante. Vestibulum rutrum
+                nulla quis felis faucibus finibus. Aenean sit amet faucibus mi.
+                Integer at semper ante. In tempus erat sed tincidunt luctus. In
+                tempus volutpat eros. In egestas sapien sit amet felis
+                facilisis, ac maximus nulla porttitor. Sed commodo placerat
+                ligula nec tristique. Maecenas interdum augue urna, vitae
+                pellentesque arcu porta id. Integer vestibulum faucibus porta.
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                posuere cubilia curae; Fusce mattis purus at ligula porttitor
+                euismod in sit amet felis. Praesent eget imperdiet felis.
+                Praesent urna nunc, elementum a enim eget, lacinia ullamcorper
+                neque. Integer fermentum ac velit a condimentum. Nam nec urna
+                faucibus, dictum felis nec, dignissim justo.{' '}
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                a tellus eu arcu ultrices dictum in eu ante. Vestibulum rutrum
+                nulla quis felis faucibus finibus. Aenean sit amet faucibus mi.
+                Integer at semper ante. In tempus erat sed tincidunt luctus. In
+                tempus volutpat eros. In egestas sapien sit amet felis
+                facilisis, ac maximus nulla porttitor. Sed commodo placerat
+                ligula nec tristique. Maecenas interdum augue urna, vitae
+                pellentesque arcu porta id. Integer vestibulum faucibus porta.
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                posuere cubilia curae; Fusce mattis purus at ligula porttitor
+                euismod in sit amet felis. Praesent eget imperdiet felis.
+                Praesent urna nunc, elementum a enim eget, lacinia ullamcorper
+                neque. Integer fermentum ac velit a condimentum. Nam nec urna
+                faucibus, dictum felis nec, dignissim justo.{' '}
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                a tellus eu arcu ultrices dictum in eu ante. Vestibulum rutrum
+                nulla quis felis faucibus finibus. Aenean sit amet faucibus mi.
+                Integer at semper ante. In tempus erat sed tincidunt luctus. In
+                tempus volutpat eros. In egestas sapien sit amet felis
+                facilisis, ac maximus nulla porttitor. Sed commodo placerat
+                ligula nec tristique. Maecenas interdum augue urna, vitae
+                pellentesque arcu porta id. Integer vestibulum faucibus porta.
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                posuere cubilia curae; Fusce mattis purus at ligula porttitor
+                euismod in sit amet felis. Praesent eget imperdiet felis.
+                Praesent urna nunc, elementum a enim eget, lacinia ullamcorper
+                neque. Integer fermentum ac velit a condimentum. Nam nec urna
+                faucibus, dictum felis nec, dignissim justo.{' '}
+              </p>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+                a tellus eu arcu ultrices dictum in eu ante. Vestibulum rutrum
+                nulla quis felis faucibus finibus. Aenean sit amet faucibus mi.
+                Integer at semper ante. In tempus erat sed tincidunt luctus. In
+                tempus volutpat eros. In egestas sapien sit amet felis
+                facilisis, ac maximus nulla porttitor. Sed commodo placerat
+                ligula nec tristique. Maecenas interdum augue urna, vitae
+                pellentesque arcu porta id. Integer vestibulum faucibus porta.
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                posuere cubilia curae; Fusce mattis purus at ligula porttitor
+                euismod in sit amet felis. Praesent eget imperdiet felis.
+                Praesent urna nunc, elementum a enim eget, lacinia ullamcorper
+                neque. Integer fermentum ac velit a condimentum. Nam nec urna
+                faucibus, dictum felis nec, dignissim justo.{' '}
+              </p>
             </Prose>
           </Constrainer>
-        </InpageBodyScroll>
+        </InpageBody>
       </Inpage>
     </App>
   );

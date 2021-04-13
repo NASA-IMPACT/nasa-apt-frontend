@@ -2,34 +2,33 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { Heading } from '@devseed-ui/typography';
 
 import App from '../../common/app';
 import {
   Inpage,
-  StickyInpageHeader,
+  InpageHeaderSticky,
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
+import DetailsList from '../../../styles/typography/details-list';
 import DocumentNavHeader from '../document-nav-header';
 import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentOutline from './document-outline';
+import DocumentBody from './document-body';
+import { ScrollAnchorProvider } from './scroll-manager';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
 
-import Outline from './outline';
-import DocumentBody from './document-body';
-
-const InpageBodyScroll = styled(InpageBody)`
+const DocumentCanvas = styled(InpageBody)`
   padding: 0;
-  overflow: auto;
-`;
-
-const Paper = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
   height: 100%;
@@ -39,8 +38,36 @@ const Paper = styled.div`
   }
 `;
 
-const PaperContent = styled.div`
+const DocumentContent = styled.div`
   grid-column: content-start / content-end;
+  max-width: 52rem;
+`;
+
+const DocumentHeader = styled.header`
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 2rem;
+  padding-bottom: ${glsp(1.5)};
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: ${themeVal('color.baseAlphaC')};
+    content: '';
+    pointer-events: none;
+  }
+`;
+
+const DocumentTitle = styled(Heading)`
+  margin: 0;
+`;
+
+const DocumentMetaDetails = styled(DetailsList)`
+  background: transparent;
 `;
 
 function DocumentView() {
@@ -101,7 +128,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <StickyInpageHeader>
+          <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
@@ -122,19 +149,45 @@ function DocumentView() {
                 onSelect={onDocumentMenuAction}
               />
             </InpageActions>
-          </StickyInpageHeader>
-          <InpageBodyScroll>
-            <Paper>
-              <Outline atbd={atbd.data} />
+          </InpageHeaderSticky>
+          <ScrollAnchorProvider>
+            <DocumentCanvas>
+              <DocumentOutline atbd={atbd.data} />
               <ContentBlock>
-                <PaperContent>
+                <DocumentContent>
                   <Prose>
+                    <DocumentHeader>
+                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                      <DocumentMetaDetails>
+                        <dt>Version</dt>
+                        <dd>{atbd.data.version}</dd>
+                        <dt>Release date</dt>
+                        <dd>
+                          <time dateTime='2020-12-04'>Dec 4, 2020</time>
+                        </dd>
+                        <dt>Keywords</dt>
+                        <dd>constellation, GPM, multi-satellite, IMERG</dd>
+                        <dt>Authors</dt>
+                        <dd>
+                          George J. Huffman, David T. Bolvin, Dan Braithwaite,
+                          Kuolin Hsu, Robert Joyce, Pingping Xie
+                        </dd>
+                        <dt>Editors</dt>
+                        <dd>Kuolin Hsu, Robert Joyce, Pingping Xie</dd>
+                        <dt>URL</dt>
+                        <dd>
+                          <a href='#' title='View'>
+                            doi.org/10.5067/GEDI
+                          </a>
+                        </dd>
+                      </DocumentMetaDetails>
+                    </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
                   </Prose>
-                </PaperContent>
+                </DocumentContent>
               </ContentBlock>
-            </Paper>
-          </InpageBodyScroll>
+            </DocumentCanvas>
+          </ScrollAnchorProvider>
         </Inpage>
       )}
     </App>

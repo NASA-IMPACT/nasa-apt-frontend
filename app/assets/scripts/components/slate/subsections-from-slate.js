@@ -1,4 +1,5 @@
 import { Node } from 'slate';
+import castArray from 'lodash.castarray';
 
 import { SUB_SECTION } from './plugins/subsection';
 
@@ -10,22 +11,22 @@ import { SUB_SECTION } from './plugins/subsection';
  * @param {Object} document The field value in Slate editor format.
  */
 export function subsectionsFromSlateDocument(document) {
-  if (!Array.isArray(document)) return [];
-
   // Recursively get the subsections from a slate document.
   const extractSection = (items = []) => {
     return items.reduce((acc, i) => {
-      if (i.type === SUB_SECTION) {
+      if (!i) {
+        return acc;
+      } else if (i.type === SUB_SECTION) {
         return acc.concat(i);
       } else if (i.children) {
-        return acc.concat(extractSection(i.children));
+        return acc.concat(extractSection(castArray(i.children)));
       } else {
         return acc;
       }
     }, []);
   };
 
-  const sections = extractSection(document);
+  const sections = extractSection(castArray(document));
 
   return sections.map((section) => ({
     id: 'find-an-id',

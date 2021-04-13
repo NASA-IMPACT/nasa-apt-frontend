@@ -10,8 +10,7 @@ export const Panel = styled.section`
   display: flex;
   flex-flow: column nowrap;
   width: 18rem;
-  box-shadow: ${themeVal('boxShadow.elevationD')};
-  border: 1px solid ${themeVal('color.baseAlphaC')};
+  box-shadow: 0 0 0 1px ${themeVal('color.baseAlphaC')};
 
   ${media.mediumUp`
     width: 20rem;
@@ -23,6 +22,8 @@ export const Panel = styled.section`
 `;
 
 export const PanelHeader = styled.header`
+  position: relative;
+  z-index: 9999;
   padding: ${glsp(0.5, themeVal('layout.gap.xsmall'))};
   box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
 
