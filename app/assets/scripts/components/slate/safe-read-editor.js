@@ -3,6 +3,7 @@ import T from 'prop-types';
 import { Node } from 'slate';
 
 import { ReadEditor } from './editor';
+import { ReadProvider } from './plugins/common/read-context';
 
 export default class SafeReadEditor extends React.Component {
   static getDerivedStateFromError(error) {
@@ -29,7 +30,7 @@ export default class SafeReadEditor extends React.Component {
 }
 
 const SafeReadEditorComponent = (props) => {
-  const { value, whenEmpty, ...rest } = props;
+  const { value, whenEmpty, context, contextDeps, ...rest } = props;
 
   const strValue = value?.children
     ? value.children.map((n) => Node.string(n).trim()).join('')
@@ -38,10 +39,16 @@ const SafeReadEditorComponent = (props) => {
   if (whenEmpty && !strValue) {
     return whenEmpty;
   }
-  return <ReadEditor value={value} {...rest} />;
+  return (
+    <ReadProvider context={context} contextDeps={contextDeps}>
+      <ReadEditor value={value} {...rest} />
+    </ReadProvider>
+  );
 };
 
 SafeReadEditorComponent.propTypes = {
   value: T.object,
+  context: T.object,
+  contextDeps: T.array,
   whenEmpty: T.node
 };

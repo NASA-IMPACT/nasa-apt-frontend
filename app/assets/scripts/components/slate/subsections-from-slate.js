@@ -10,7 +10,7 @@ import { SUB_SECTION } from './plugins/subsection';
  *
  * @param {Object} document The field value in Slate editor format.
  */
-export function subsectionsFromSlateDocument(document) {
+export function subsectionsFromSlateDocument(document, baseId = '') {
   // Recursively get the subsections from a slate document.
   const extractSection = (items = []) => {
     return items.reduce((acc, i) => {
@@ -29,7 +29,7 @@ export function subsectionsFromSlateDocument(document) {
   const sections = extractSection(castArray(document));
 
   return sections.map((section) => ({
-    id: 'find-an-id',
+    id: (baseId ? `${baseId}--` : '') + section.id,
     label: Node.string(section)
   }));
 }

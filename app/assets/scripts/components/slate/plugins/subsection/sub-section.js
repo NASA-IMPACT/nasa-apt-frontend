@@ -30,19 +30,22 @@ export default function SubSection(props) {
   const { subsectionLevel, sectionId } = useReadingContext();
 
   let readAttributes = {};
+  let Element = SectionHeading;
+
   if (readOnly) {
     if (subsectionLevel) {
-      readAttributes.as = subsectionLevel;
+      Element = subsectionLevel;
     }
     if (sectionId) {
       readAttributes.id = `${sectionId}--${element.id}`;
+      readAttributes['data-scroll'] = 'target';
     }
   }
 
   return (
-    <SectionHeading {...attributes} {...htmlAttributes} {...readAttributes}>
+    <Element {...attributes} {...htmlAttributes} {...readAttributes}>
       {children}
-    </SectionHeading>
+    </Element>
   );
 }
 

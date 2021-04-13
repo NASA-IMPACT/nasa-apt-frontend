@@ -102,7 +102,8 @@ const OutlineMenu = (props) => {
     <OutlineMenuSelf>
       {items.map((item) => {
         // User defined subsections.
-        const editorSubsections = item.editorSubsections?.(atbdDocument) || [];
+        const editorSubsections =
+          item.editorSubsections?.(atbdDocument, item) || [];
         // Regular children.
         // If children is a function means it needs props to dynamically render
         // them, like the case of array fields.
