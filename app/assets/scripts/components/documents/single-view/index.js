@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
 import App from '../../common/app';
@@ -43,9 +44,22 @@ const DocumentContent = styled.div`
 `;
 
 const DocumentHeader = styled.header`
+  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 2rem;
+  padding-bottom: ${glsp(1.5)};
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background: ${themeVal('color.baseAlphaC')};
+    content: '';
+    pointer-events: none;
+  }
 `;
 
 const DocumentTitle = styled(Heading)`
