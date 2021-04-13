@@ -24,16 +24,17 @@ const EditorActions = styled.div`
   display: grid;
   grid-gap: ${glsp()};
   grid-template-columns: 1fr min-content;
-  background-color: ${themeVal('color.baseAlphaB')};
+  background-color: ${themeVal('color.baseAlphaA')};
   border-radius: ${themeVal('shape.rounded')} ${themeVal('shape.rounded')} 0 0;
-  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaB')},
-    ${themeVal('boxShadow.elevationC')};
+  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
   padding: ${glsp(0.25, 1)};
   transition: all 0.24s ease 0s;
   clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
 
   .is-sticky & {
     border-radius: 0;
+    box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaB')},
+      ${themeVal('boxShadow.elevationD')};
   }
 
   > * {
