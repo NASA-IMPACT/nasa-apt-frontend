@@ -58,8 +58,8 @@ export const SubSectionPlugin = {
     id: SUB_SECTION,
     icon: 'heading',
     hotkey: 'mod+L',
-    label: 'Sub Section',
-    tip: (key) => `Sub Section (${modKey(key)})`
+    label: 'Heading',
+    tip: (key) => `Heading (${modKey(key)})`
   },
   onUse: onSubsectionUse
 };
