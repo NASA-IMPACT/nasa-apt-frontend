@@ -1,7 +1,7 @@
 {
   "name": "apt-frontend",
   "description": "Interface for the Algorithm Publication Tool",
-  "version": "2.0.0",
+  "version": "2.0.0-alpha2",
   "author": {
     "name": "Development Seed",
     "url": "https://developmentseed.org"
