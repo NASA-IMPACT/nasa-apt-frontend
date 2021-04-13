@@ -8,6 +8,7 @@ import {
   ToolbarIconButton,
   VerticalDivider
 } from '@devseed-ui/toolbar';
+import { Button } from '@devseed-ui/button';
 
 import {
   FormGroup,
@@ -24,7 +25,7 @@ import useOutsideClick from '../common/use-outside-click';
 import { onLinkEditorAction as onAction } from '.';
 
 const ToolbarLinkHeader = styled(FormGroupHeader)`
-  ${visuallyHidden};
+  ${visuallyHidden}
 `;
 
 // Keeping transition: all breaks the focus. This happens because with
@@ -117,17 +118,18 @@ export function EditorLinkToolbar() {
           >
             Confirm
           </ToolbarIconButton>
-          <ToolbarIconButton
+          <Button
             forwardedAs='a'
             href={isValidUrl ? draftValue : '#'}
             useIcon='expand-top-right'
             disabled={!isValidUrl}
             target='_blank'
+            hideText
             rel='noopener noreferrer'
             title='Visit link'
           >
             Visit
-          </ToolbarIconButton>
+          </Button>
           <VerticalDivider />
           <ToolbarIconButton
             useIcon='trash-bin'
