@@ -64,10 +64,22 @@ const BASE_OFFSET_TOP = 100;
  * @returns Array<Object>
  */
 function gatherTargetItems() {
+  // Because the offset is relative to the offsetParent (any element ith
+  // position defined) we have to traverse the dom until we reach the top.
+  const getTotalOffset = (node) => {
+    let n = node;
+    let total = 0;
+    while (n) {
+      total += n.offsetTop;
+      n = n.offsetParent;
+    }
+    return total;
+  };
+
   const targets = document.querySelectorAll(TARGET_SELECTOR);
   return Array.from(targets).map((el) => ({
     id: el.id,
-    top: el.offsetTop
+    top: getTotalOffset(el)
   }));
 }
 
@@ -116,6 +128,7 @@ const ScrollContext = createContext(null);
 export function ScrollAnchorProvider({ children }) {
   const [targetItems, setTargetItems] = useState([]);
   const [activeItem, setActiveItem] = useState(null);
+  const [scrollInitiator, setScrollInitiator] = useState(null);
   const [globalTopOffset, setGlobalTopOffset] = useState(BASE_OFFSET_TOP);
 
   useEffect(() => {
@@ -154,7 +167,9 @@ export function ScrollAnchorProvider({ children }) {
     targetItems,
     globalTopOffset,
     activeItem,
-    setActiveItem
+    setActiveItem,
+    scrollInitiator,
+    setScrollInitiator
   };
 
   return (
@@ -180,15 +195,18 @@ ScrollAnchorProvider.propTypes = {
  * @returns Object
  */
 export function useScrollLink() {
-  const { scrollToId, activeItem } = useContext(ScrollContext);
+  const { scrollToId, setScrollInitiator, activeItem } = useContext(
+    ScrollContext
+  );
 
   const getScrollToId = useCallback(
     (id) => (event) => {
       event?.preventDefault?.();
       scrollToId(id);
+      setScrollInitiator('link');
       setIdOnHash(id);
     },
-    [scrollToId]
+    [scrollToId, setScrollInitiator]
   );
 
   return {
@@ -218,11 +236,31 @@ export function useScrollToHashOnMount() {
  * scrolls.
  */
 export function useScrollListener() {
-  const { targetItems, setActiveItem, globalTopOffset } = useContext(
-    ScrollContext
-  );
+  const {
+    targetItems,
+    setActiveItem,
+    scrollInitiator,
+    setScrollInitiator,
+    globalTopOffset
+  } = useContext(ScrollContext);
 
   useEffect(() => {
+    // If we're scrolling to a position because a link was clicked we don't want
+    // the hash to be constantly updating. So the event listener gets replaced
+    // for one that listens for the end of the scroll. Once scrolling stops we
+    // reset the initiator and in turn that triggers the useEffect which sets
+    // the scrolling listener again.
+    if (scrollInitiator === 'link') {
+      const scrollListener = debounce(() => {
+        setScrollInitiator(null);
+      }, 100);
+
+      window.addEventListener('scroll', scrollListener);
+      return () => {
+        window.removeEventListener('scroll', scrollListener);
+      };
+    }
+
     const scrollListener = throttle(() => {
       const scroll = window.scrollY;
 
@@ -239,5 +277,11 @@ export function useScrollListener() {
     return () => {
       window.removeEventListener('scroll', scrollListener);
     };
-  }, [targetItems, setActiveItem, globalTopOffset]);
+  }, [
+    targetItems,
+    setActiveItem,
+    scrollInitiator,
+    setScrollInitiator,
+    globalTopOffset
+  ]);
 }
