@@ -436,6 +436,7 @@ export const atbdContentSections = [
               ),
             render: ({ element, document }) => (
               <DataAccessItem
+                key={element.id}
                 id={element.id}
                 label={element.label}
                 url={document.data_access_input_data[idx].url}
@@ -470,6 +471,7 @@ export const atbdContentSections = [
               ),
             render: ({ element, document }) => (
               <DataAccessItem
+                key={element.id}
                 id={element.id}
                 label={element.label}
                 url={document.data_access_output_data[idx].url}
@@ -504,6 +506,7 @@ export const atbdContentSections = [
               ),
             render: ({ element, document }) => (
               <DataAccessItem
+                key={element.id}
                 id={element.id}
                 label={element.label}
                 url={document.data_access_related_urls[idx].url}
