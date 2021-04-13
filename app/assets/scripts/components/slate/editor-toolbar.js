@@ -11,7 +11,12 @@ import {
 } from '@udecode/slate-plugins';
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
-import { Toolbar, ToolbarLabel, ToolbarIconButton } from '@devseed-ui/toolbar';
+import {
+  Toolbar,
+  ToolbarLabel,
+  ToolbarIconButton,
+  VerticalDivider
+} from '@devseed-ui/toolbar';
 
 import Tip from '../common/tooltip';
 import PortalContainer from './plugins/common/portal-container';
@@ -92,6 +97,7 @@ export function EditorToolbar(props) {
             ))
           );
         }, [])}
+        <VerticalDivider />
         <ToolbarLabel>Actions</ToolbarLabel>
         <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
           <ToolbarIconButton
