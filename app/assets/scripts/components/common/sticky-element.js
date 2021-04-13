@@ -75,7 +75,7 @@ function StickyElement(props) {
               {...rest}
               style={newWrapperStyles}
               ref={wrapperRef}
-              className={isFixed && 'is-sticky'}
+              className={isFixed ? 'is-sticky' : ''}
             >
               {children}
             </div>

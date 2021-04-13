@@ -117,7 +117,7 @@ export function EditorToolbar(props) {
       </Toolbar>
       <Toolbar>
         <Tip title='Show keyboard shortcuts'>
-          <ToolbarIconButton useIcon='square'>
+          <ToolbarIconButton useIcon='keyboard'>
             Keyboard shortcuts
           </ToolbarIconButton>
         </Tip>

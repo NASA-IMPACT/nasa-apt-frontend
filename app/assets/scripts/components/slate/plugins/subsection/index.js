@@ -56,7 +56,7 @@ export const SubSectionPlugin = {
   },
   toolbar: {
     id: SUB_SECTION,
-    icon: 'pilcrow',
+    icon: 'heading',
     hotkey: 'mod+L',
     label: 'Sub Section',
     tip: (key) => `Sub Section (${modKey(key)})`
