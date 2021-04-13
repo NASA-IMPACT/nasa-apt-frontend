@@ -1,9 +1,9 @@
 import React from 'react';
 import T from 'prop-types';
+import { useReadOnly } from 'slate-react';
 
 import { isModKey, modKey } from '../common/utils';
 import Tip from '../../../common/tooltip';
-import { useReadOnly } from 'slate-react';
 
 export const LinkElement = ({
   attributes,
