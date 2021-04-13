@@ -87,11 +87,19 @@ export function EditorLinkToolbar() {
   useOutsideClick({ ref, listener: outsideClickListener });
 
   useEffect(() => {
+    let id;
     // Focus when the link editor activates but only if its value is empty. In
     // this case it will not autofocus when clicking on an existing link.
     if (active && fieldRef.current && !value) {
-      fieldRef.current.focus();
+      // Because the toolbar takes a bit to appear we need a timeout otherwise
+      // when we try to focus the field is not in view
+      id = setTimeout(() => {
+        fieldRef.current.focus();
+      }, 150);
     }
+    return () => {
+      id && clearTimeout(id);
+    };
   }, [fieldRef, active, value]);
 
   // Reset the field value when input changes.
