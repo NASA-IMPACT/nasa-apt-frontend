@@ -25,7 +25,7 @@ export const BoldPlugin = {
   },
   floatToolbar: {
     id: MARK_BOLD,
-    icon: 'area',
+    icon: 'bold',
     hotkey: 'mod+B',
     label: 'Bold',
     tip: (key) => `Bold (${modKey(key)})`

@@ -1,18 +1,9 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
-import {
-  FormGroup,
-  FormGroupHeader,
-  FormGroupBody,
-  FormLabel,
-  FormInput,
-  FormHelper,
-  FormHelperMessage
-} from '@devseed-ui/form';
-import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
-
-import Tip from '../tooltip';
 import { Field } from 'formik';
+import { FormInput, FormHelperMessage } from '@devseed-ui/form';
+
+import FormGroupStructure from './form-group-structure';
 
 /**
  * From group input structure.
@@ -46,30 +37,20 @@ export function InputText(props) {
   } = props;
 
   return (
-    <FormGroup>
-      <FormGroupHeader>
-        <FormLabel htmlFor={id}>{label}</FormLabel>
-        {description && (
-          <Toolbar size='small'>
-            <Tip title={description}>
-              <ToolbarIconButton useIcon='circle-information' size='small'>
-                More information
-              </ToolbarIconButton>
-            </Tip>
-          </Toolbar>
-        )}
-      </FormGroupHeader>
-      <FormGroupBody>
-        <FormInput
-          type='text'
-          variation={inputVariation}
-          id={id}
-          size={inputSize}
-          {...inputProps}
-        />
-        {helper && <FormHelper>{helper}</FormHelper>}
-      </FormGroupBody>
-    </FormGroup>
+    <FormGroupStructure
+      id={id}
+      label={label}
+      description={description}
+      helper={helper}
+    >
+      <FormInput
+        type='text'
+        variation={inputVariation}
+        id={id}
+        size={inputSize}
+        {...inputProps}
+      />
+    </FormGroupStructure>
   );
 }
 

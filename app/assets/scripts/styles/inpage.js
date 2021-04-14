@@ -1,5 +1,6 @@
-import styled from 'styled-components';
-
+import React from 'react';
+import styled, { css } from 'styled-components';
+import useDimensions from 'react-cool-dimensions';
 import {
   glsp,
   media,
@@ -10,6 +11,8 @@ import {
 import { reveal } from '@devseed-ui/animation';
 import { headingAlt } from '@devseed-ui/typography';
 
+import StickyElement from '../components/common/sticky-element';
+
 export const Inpage = styled.article`
   display: grid;
   height: 100%;
@@ -17,6 +20,8 @@ export const Inpage = styled.article`
 `;
 
 export const InpageHeader = styled.header`
+  position: relative;
+  z-index: 20;
   display: grid;
   grid-template-columns: max-content 1fr;
   grid-gap: ${glsp(0, themeVal('layout.gap.xsmall'))};
@@ -25,12 +30,20 @@ export const InpageHeader = styled.header`
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
   padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
-  box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)};
+  box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)},
+    ${themeVal('boxShadow.elevationD')};
+  clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
 
   ${media.mediumUp`
     grid-gap: ${glsp(0, themeVal('layout.gap.medium'))};
     padding: ${glsp(1, themeVal('layout.gap.medium'))};
   `}
+`;
+
+export const InpageHeaderSticky = styled(InpageHeader)`
+  position: sticky;
+  top: 0;
+  z-index: 9999;
 `;
 
 export const InpageHeadline = styled.div`
@@ -89,7 +102,7 @@ export const InpageMeta = styled.dl`
   }
 
   dt {
-    ${visuallyHidden};
+    ${visuallyHidden}
   }
 
   a {
@@ -105,12 +118,23 @@ export const InpageTitle = styled.h1`
   overflow: hidden;
   white-space: nowrap;
 
-  /* Apply mask conditionally: container max-width (24rem) - mask size (3rem) */
-  mask-image: linear-gradient(
-    to right,
-    black calc(100% - ${glsp(3)}),
-    transparent 100%
-  );
+  ${({ shouldMask }) =>
+    shouldMask &&
+    css`
+      /* Apply mask conditionally: container max-width (24rem) - mask size (3rem) */
+      /* stylelint-disable function-calc-no-invalid */
+      mask-image: linear-gradient(
+        to right,
+        black calc(100% - ${glsp(3)}),
+        transparent 100%
+      );
+      /* stylelint-enable function-calc-no-invalid */
+    `}
+
+  a {
+    display: block;
+    color: inherit;
+  }
 `;
 
 export const InpageSubtitle = styled.p`
@@ -139,3 +163,24 @@ export const InpageActions = styled.div`
 export const InpageBody = styled.div`
   background: transparent;
 `;
+
+// Wrapper component for Inpage header and sticky element.
+// All props are forwarded to InpageHeader
+const StickyElementZIndex = styled(StickyElement)`
+  z-index: 1000;
+`;
+export function StickyInpageHeader(props) {
+  return (
+    <StickyElementZIndex>
+      <InpageHeader {...props} />
+    </StickyElementZIndex>
+  );
+}
+
+// Wrapper component for Inpage Title applying the truncate mask after a certain
+// width. All props are forwarded to InpageTitle.
+export function TruncatedInpageTitle(props) {
+  const { ref, width } = useDimensions();
+
+  return <InpageTitle {...props} ref={ref} shouldMask={width > 352} />;
+}

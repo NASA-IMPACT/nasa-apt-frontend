@@ -10,6 +10,7 @@ import { InputText } from './input-text';
 import { axiosAPI } from '../../../utils/axios';
 import useSafeState from '../../../utils/use-safe-state';
 import { useAuthToken } from '../../../context/user';
+import { formString } from '../../../utils/strings';
 
 window.axiosAPI = axiosAPI;
 
@@ -198,7 +199,6 @@ export default function FieldAtbdAlias() {
     title,
     initialValues.title,
     initialValues.alias,
-    touched.title,
     touched.alias,
     checkAliasExist,
     setFieldValue,
@@ -210,9 +210,9 @@ export default function FieldAtbdAlias() {
       id='alias'
       name='alias'
       label='Alias'
+      description={formString('identifying_information.alias')}
       value={alias}
       onBlur={(e) => {
-        checkAliasExist(toAliasFormat(e.target.value));
         // On blur check immediately.
         checkAliasExist.flush();
         handleBlur(e);

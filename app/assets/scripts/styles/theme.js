@@ -9,7 +9,7 @@ export function themeOverridesAPT(uiTheme) {
         base: baseColor,
         baseDark: baseColor,
         primary: '#2276ac',
-        secondary: '#1b6390',
+        secondary: '#17557c',
         link: '#2276ac'
       },
       type: {

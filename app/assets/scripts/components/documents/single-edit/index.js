@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
-import { InpageHeader, InpageActions } from '../../../styles/inpage';
+import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
+import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
 import StepsMenu from './steps-menu';
+import Tip from '../../common/tooltip';
 
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import Tip from '../../common/tooltip';
 import { calculateAtbdCompleteness } from '../completeness';
 
 function DocumentEdit() {
@@ -77,7 +77,7 @@ function DocumentEdit() {
           version={version}
           atbd={atbd.data}
           renderInpageHeader={() => (
-            <InpageHeader>
+            <InpageHeaderSticky>
               <DocumentNavHeader
                 atbdId={id}
                 title={atbd.data.title}
@@ -91,7 +91,7 @@ function DocumentEdit() {
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
               </InpageActions>
-            </InpageHeader>
+            </InpageHeaderSticky>
           )}
         />
       )}
@@ -109,14 +109,14 @@ const SaveButton = () => {
 
   return (
     <Tip position='top-end' title='There are unsaved changes' open={dirty}>
-      <Button
-        variation='primary-raised-light'
+      <ButtonSecondary
         title='Save current changes'
         disabled={isSubmitting || !dirty || status?.working}
         onClick={submitForm}
+        useIcon='tick--small'
       >
         Save
-      </Button>
+      </ButtonSecondary>
     </Tip>
   );
 };

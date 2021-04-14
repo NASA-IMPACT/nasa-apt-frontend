@@ -3,7 +3,7 @@ import T from 'prop-types';
 
 import {
   InpageHeadline,
-  InpageTitle,
+  TruncatedInpageTitle,
   InpageMeta,
   InpageHeadNav,
   BreadcrumbMenu,
@@ -70,7 +70,11 @@ export default function DocumentNavHeader(props) {
   return (
     <>
       <InpageHeadline>
-        <InpageTitle>{title}</InpageTitle>
+        <TruncatedInpageTitle>
+          <Link to={atbdView(atbdId, version)} title='View document'>
+            {title}
+          </Link>
+        </TruncatedInpageTitle>
         <InpageHeadNav role='navigation'>
           <BreadcrumbMenu>
             <li>
@@ -97,7 +101,11 @@ export default function DocumentNavHeader(props) {
       </InpageHeadline>
       <InpageMeta>
         <dt>Under</dt>
-        <InpageSubtitle as='dd'>Documents</InpageSubtitle>
+        <InpageSubtitle as='dd'>
+          <Link to='/documents' title='View all Documents'>
+            Documents
+          </Link>
+        </InpageSubtitle>
         <dt>Status</dt>
         <dd>
           <StatusPill status={status} completeness={completeness} />

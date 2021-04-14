@@ -1,12 +1,10 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
-import styled from 'styled-components';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
-import { Heading } from '@devseed-ui/typography';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
-import { ContentBlock } from '../../../styles/content-block';
+import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
 import {
   FormikSectionFieldset,
@@ -18,18 +16,7 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { createProcessToast } from '../../common/toasts';
 import { useHistory } from 'react-router';
 import { atbdEdit } from '../../../utils/url-creator';
-
-const FormBlock = styled(ContentBlock)`
-  grid-gap: 2rem;
-
-  > * {
-    grid-column: content-start / content-end;
-  }
-`;
-
-const FormBlockHeading = styled(Heading)`
-  margin: 0;
-`;
+import { formString } from '../../../utils/strings';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -87,7 +74,12 @@ export default function StepIdentifyingInformation(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <SectionFieldset label='General'>
-                <FormikInputText id='title' name='title' label='Title' />
+                <FormikInputText
+                  id='title'
+                  name='title'
+                  label='Title'
+                  description={formString('identifying_information.title')}
+                />
                 <FieldAtbdAlias />
               </SectionFieldset>
 
@@ -99,56 +91,89 @@ export default function StepIdentifyingInformation(props) {
                   id='citation-creators'
                   name='citation.creators'
                   label='Creators'
+                  description={formString(
+                    'identifying_information.citation.creators'
+                  )}
                 />
                 <FormikInputText
                   id='citation-editors'
                   name='citation.editors'
                   label='Editors'
+                  description={formString(
+                    'identifying_information.citation.editors'
+                  )}
                 />
                 <FormikInputText
                   id='citation-title'
                   name='citation.title'
                   label='Title'
+                  description={formString(
+                    'identifying_information.citation.title'
+                  )}
                 />
                 <FormikInputText
                   id='citation-series_name'
                   name='citation.series_name'
                   label='Series name'
+                  description={formString(
+                    'identifying_information.citation.series_name'
+                  )}
                 />
                 <FormikInputText
                   id='citation-release_date'
                   name='citation.release_date'
                   label='Release date'
+                  description={formString(
+                    'identifying_information.citation.release_date'
+                  )}
                 />
                 <FormikInputText
                   id='citation-release_place'
                   name='citation.release_place'
                   label='Release place'
+                  description={formString(
+                    'identifying_information.citation.release_place'
+                  )}
                 />
                 <FormikInputText
                   id='citation-publisher'
                   name='citation.publisher'
                   label='Publisher'
+                  description={formString(
+                    'identifying_information.citation.publisher'
+                  )}
                 />
                 <FormikInputText
                   id='citation-version'
                   name='citation.version'
                   label='Version'
+                  description={formString(
+                    'identifying_information.citation.version'
+                  )}
                 />
                 <FormikInputText
                   id='citation-issue'
                   name='citation.issue'
                   label='Issue'
+                  description={formString(
+                    'identifying_information.citation.issue'
+                  )}
                 />
                 <FormikInputText
                   id='citation-additional_details'
                   name='citation.additional_details'
                   label='Additional details'
+                  description={formString(
+                    'identifying_information.citation.additional_details'
+                  )}
                 />
                 <FormikInputText
                   id='citation-online_resource'
                   name='citation.online_resource'
                   label='Online resource'
+                  description={formString(
+                    'identifying_information.citation.online_resource'
+                  )}
                 />
               </FormikSectionFieldset>
             </Form>
@@ -165,7 +190,9 @@ StepIdentifyingInformation.propTypes = {
   id: T.oneOfType([T.string, T.number]),
   version: T.string,
   atbd: T.shape({
+    id: T.number,
     title: T.string,
-    alias: T.string
+    alias: T.string,
+    document: T.object
   })
 };

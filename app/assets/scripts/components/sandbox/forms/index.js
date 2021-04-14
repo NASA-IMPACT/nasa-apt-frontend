@@ -16,8 +16,10 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
-import InputText from '../../common/forms/input-text';
-import SectionFieldset from '../../common/forms/section-fieldset';
+import { InputText } from '../../common/forms/input-text';
+import { SectionFieldset } from '../../common/forms/section-fieldset';
+import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
+import { FieldMultiItem } from '../../common/forms/field-multi-item';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -67,6 +69,32 @@ function SandboxForms() {
                   // value=''
                   // onChange={}
                 />
+              </SectionFieldset>
+
+              <SectionFieldset
+                label='Multi item fields'
+                status='incomplete' // Should be from state
+                // onStatusChange={}
+              >
+                <FieldMultiItem
+                  label='Field Array'
+                  description='Description for the array fields popover'
+                >
+                  <DeletableFieldset
+                    label='Array Fieldset'
+                    disableDelete
+                    deleteDescription='At least one field is needed'
+                  >
+                    <InputText label='Field title' description='Something' />
+                  </DeletableFieldset>
+                </FieldMultiItem>
+
+                <FieldMultiItem
+                  label='Field Array Empty'
+                  emptyMessage='There is nothing here. You can start by adding something.'
+                >
+                  {/* Nothing here */}
+                </FieldMultiItem>
               </SectionFieldset>
             </Form>
           </Constrainer>

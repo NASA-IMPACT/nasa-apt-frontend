@@ -6,7 +6,7 @@ import { GlobalLoading } from '@devseed-ui/global-loading';
 import App from '../../common/app';
 import {
   Inpage,
-  InpageHeader,
+  InpageHeaderSticky,
   InpageHeadline,
   InpageTitle,
   InpageActions,
@@ -14,6 +14,7 @@ import {
 } from '../../../styles/inpage';
 import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
+import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
 
 import { useAtbds } from '../../../context/atbds-list';
@@ -71,31 +72,32 @@ function Documents() {
     <App pageTitle='Documents'>
       {atbds.status === 'loading' && <GlobalLoading />}
       <Inpage>
-        <InpageHeader>
+        <InpageHeaderSticky>
           <InpageHeadline>
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <Button
-              variation='achromic-plain'
-              title='Create new ATBD'
+            <ButtonSecondary
+              title='Create new document'
+              useIcon='plus--small'
               onClick={onCreateClick}
             >
-              Create new
-            </Button>
+              Create
+            </ButtonSecondary>
           </InpageActions>
-        </InpageHeader>
+        </InpageHeaderSticky>
         <InpageBody>
           <ContentBlock>
             {atbds.status === 'succeeded' && !atbds.data?.length && (
               <div>
                 There are no documents. You can start by creating one.
                 <Button
-                  to='/'
                   variation='primary-raised-dark'
-                  title='Create new'
+                  title='Create new document'
+                  useIcon='plus--small'
+                  onClick={onCreateClick}
                 >
-                  Create new
+                  Create
                 </Button>
               </div>
             )}

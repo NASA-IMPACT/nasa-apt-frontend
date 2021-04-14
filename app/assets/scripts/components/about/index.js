@@ -1,15 +1,13 @@
 import React from 'react';
 
 import App from '../common/app';
-
 import {
   Inpage,
-  InpageHeader,
+  InpageHeaderSticky,
   InpageHeadline,
   InpageTitle,
   InpageBody
 } from '../../styles/inpage';
-
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 
@@ -17,11 +15,11 @@ function About() {
   return (
     <App pageTitle='About'>
       <Inpage>
-        <InpageHeader>
+        <InpageHeaderSticky>
           <InpageHeadline>
             <InpageTitle>About</InpageTitle>
           </InpageHeadline>
-        </InpageHeader>
+        </InpageHeaderSticky>
         <InpageBody>
           <ContentBlock>
             <Prose>

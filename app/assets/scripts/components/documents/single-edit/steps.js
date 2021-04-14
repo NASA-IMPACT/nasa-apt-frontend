@@ -1,7 +1,14 @@
 import React from 'react'; /* eslint-disable react/display-name */
 import get from 'lodash.get';
 
+import { editorEmptyValue } from '../../slate/editor';
+
 import StepIdentifyingInformation from './step-identifying-information';
+import StepIntroduction from './step-introduction';
+import StepAlgoDescription from './step-algo-description';
+import StepAlgoUsage from './step-algo-usage';
+import StepJournalDetails from './step-journal-details';
+import StepAlgoImplementation from './step-algo-implementation';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -11,30 +18,25 @@ import StepIdentifyingInformation from './step-identifying-information';
  * @param {object} defaults defaults object
  */
 const getFromObj = (obj, defaults) => {
-  const { sections_completed = {}, ...remainingKeys } = defaults;
+  const recursiveGet = (_obj, _defaults) =>
+    Object.keys(_defaults).reduce((acc, key) => {
+      const defValue = _defaults[key];
+      const source = get(_obj, key);
+      const isObject = !Array.isArray(defValue) && defValue instanceof Object;
+
+      // The fallback value can be changed with some tags. This is needed
+      // because values set as object are recursively computed.
+      const value = defValue === '<editor>' ? editorEmptyValue : defValue;
+      return {
+        ...acc,
+        [key]: isObject ? recursiveGet(source || {}, defValue) : source || value
+      };
+    }, {});
 
   return {
     // The id of the atbd will never be changed but is useful to have present.
     id: obj.id,
-    ...Object.keys(remainingKeys).reduce((acc, key) => {
-      const value = defaults[key];
-      const source = get(obj, key);
-      const isObject = !Array.isArray(value) && value instanceof Object;
-      return {
-        ...acc,
-        [key]: isObject ? getFromObj(source || {}, value) : source || value
-      };
-    }, {}),
-    // The sections_completed must be handled slightly differently. Every time
-    // we update sections_completed we must update the whole field, otherwise
-    // the contents are replaced. To ensure that the correct values are present
-    // we start with the defaults for the current step and update them with
-    // whatever is already present in the ATBD. Not every step will use all the
-    // sections, but they'll always be submitted.
-    sections_completed: {
-      ...sections_completed,
-      ...(obj.sections_completed || {})
-    }
+    ...recursiveGet(obj, defaults)
   };
 };
 
@@ -85,41 +87,104 @@ export const STEPS = [
   {
     id: 'introduction',
     label: 'Introduction',
-    StepComponent: () => <p>Introduction coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepIntroduction,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          introduction: '<editor>',
+          historical_perspective: '<editor>'
+        },
+        sections_completed: {
+          introduction: 'incomplete',
+          historical_perspective: 'incomplete'
+        }
+      });
     }
   },
   {
     id: 'algorithm_description',
     label: 'Algorithm description',
-    StepComponent: () => <p>Algorithm description coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoDescription,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          scientific_theory: '<editor>',
+          scientific_theory_assumptions: '<editor>',
+          mathematical_theory: '<editor>',
+          mathematical_theory_assumptions: '<editor>',
+          algorithm_input_variables: '',
+          algorithm_output_variables: ''
+        },
+        sections_completed: {
+          scientific_theory: 'incomplete',
+          mathematical_theory: 'incomplete',
+          input_variables: 'incomplete',
+          output_variables: 'incomplete'
+        }
+      });
     }
   },
   {
     id: 'algorithm_usage',
     label: 'Algorithm usage',
-    StepComponent: () => <p>Algorithm usage coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoUsage,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          algorithm_usage_constraints: '<editor>',
+          performance_assessment_validation_methods: '<editor>',
+          performance_assessment_validation_uncertainties: '<editor>',
+          performance_assessment_validation_errors: '<editor>'
+        },
+        sections_completed: {
+          constraints: 'incomplete',
+          validation: 'incomplete'
+        }
+      });
     }
   },
   {
     id: 'algorithm_implementation',
     label: 'Algorithm implementation',
-    StepComponent: () => <p>Algorithm implementation coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepAlgoImplementation,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          algorithm_implementations: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   url: '',
+            //   description: '<editor>'
+            // }
+          ],
+          data_access_input_data: [],
+          data_access_output_data: [],
+          data_access_related_urls: []
+        },
+        sections_completed: {
+          algorithm_implementations: 'incomplete',
+          data_access_input_data: 'incomplete',
+          data_access_output_data: 'incomplete',
+          data_access_related_urls: 'incomplete'
+        }
+      });
     }
   },
   {
     id: 'journal_details',
     label: 'Journal details',
-    StepComponent: () => <p>Journal details coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepJournalDetails,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          journal_discussion: '<editor>',
+          journal_acknowledgements: '<editor>'
+        },
+        sections_completed: {
+          discussion: 'incomplete',
+          acknowledgements: 'incomplete'
+        }
+      });
     }
   }
 ];

@@ -11,6 +11,8 @@ const log = require('fancy-log');
 const errorify = require('errorify');
 const historyApiFallback = require('connect-history-api-fallback');
 const through2 = require('through2');
+const jsonConcat = require('gulp-json-concat');
+const yaml = require('gulp-yaml');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -31,6 +33,7 @@ const { appTitle, appDescription } = require('./app/assets/scripts/config');
 // ---------------------------------------------------------------------------//
 
 const isDev = () => process.env.NODE_ENV === 'development';
+const isProd = () => process.env.NODE_ENV === 'production';
 const readPackage = () => JSON.parse(fs.readFileSync('package.json'));
 
 // Set the version in an env variable so it gets replaced in the config.
@@ -76,16 +79,20 @@ function serve() {
   // watch for changes
   gulp.watch(['app/*.html', 'app/assets/graphics/**/*'], bs.reload);
 
+  gulp.watch(['content/strings/*'], ymlStrings);
+
   gulp.watch('package.json', vendorScripts);
 }
 
 module.exports.clean = clean;
 module.exports.serve = gulp.series(
+  ymlStrings,
   gulp.parallel(vendorScripts, javascript),
   serve
 );
 module.exports.default = gulp.series(
   clean,
+  ymlStrings,
   gulp.parallel(vendorScripts, javascript),
   gulp.parallel(html, imagesImagemin),
   copyFiles,
@@ -103,12 +110,17 @@ module.exports.default = gulp.series(
 function javascript() {
   var brs = browserify({
     entries: ['./app/assets/scripts/main.js'],
-    debug: true,
+    debug: isDev(),
     cache: {},
     packageCache: {},
     bundleExternal: false,
-    fullPaths: true
+    fullPaths: isDev()
   }).on('log', log);
+
+  // Ignore the sandbox on production, but keep it on staging.
+  if (isProd()) {
+    brs = brs.ignore(['./app/assets/scripts/components/sandbox/index.js']);
+  }
 
   if (isDev()) {
     brs.plugin(watchify).plugin(errorify).on('update', bundler);
@@ -178,6 +190,16 @@ function vendorScripts() {
 // //////////////////////////////////////////////////////////////////////////////
 // --------------------------- Helper tasks -----------------------------------//
 // ----------------------------------------------------------------------------//
+
+function ymlStrings() {
+  return gulp
+    .src('content/strings/*.yml')
+    .pipe(yaml({ safe: true }))
+    .pipe(
+      jsonConcat('strings.json', (data) => Buffer.from(JSON.stringify(data)))
+    )
+    .pipe(gulp.dest('app/assets/scripts/'));
+}
 
 function copyFiles() {
   return gulp

@@ -28,7 +28,7 @@ export const ItalicPlugin = {
   },
   floatToolbar: {
     id: MARK_ITALIC,
-    icon: 'exclamation--small',
+    icon: 'italic',
     hotkey: 'mod+I',
     label: 'Italic',
     tip: (key) => `Italic (${modKey(key)})`

@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
 import FullEditor from '../../slate/editor';
-
 import { Link } from '../../../styles/clean/link';
-
 import {
   Inpage,
-  InpageHeader,
+  StickyInpageHeader,
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
   InpageMeta,
   InpageBody
 } from '../../../styles/inpage';
-
 import Constrainer from '../../../styles/constrainer';
+import { hugeDoc } from '../../slate/plugins/debug-editor/dummy';
+import SafeReadEditor from '../../slate/safe-read-editor';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -29,10 +28,30 @@ const InpageBodyScroll = styled(InpageBody)`
 `;
 
 function SandboxEditor() {
+  // Keep track of state for the value of the editor.
+  // Move up.
+  const [value, setValue] = useState({
+    // Root level has no type and is the first child of the Editor.
+    // This is needed for the block breaks to work.
+    children: [
+      ...hugeDoc,
+      {
+        type: 'p',
+        children: [{ text: 'A line of text in a paragraph.' }]
+      }
+    ]
+  });
+
+  const [value2, setValue2] = useState({
+    // Root level has no type and is the first child of the Editor.
+    // This is needed for the block breaks to work.
+    children: 'invalid'
+  });
+
   return (
     <App pageTitle='Sandbox/Editor'>
       <Inpage>
-        <InpageHeader>
+        <StickyInpageHeader data-element='inpage-header'>
           <InpageHeadline>
             <InpageTitle>Editor</InpageTitle>
           </InpageHeadline>
@@ -44,10 +63,24 @@ function SandboxEditor() {
               </Link>
             </InpageSubtitle>
           </InpageMeta>
-        </InpageHeader>
+        </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>
-            <FullEditor />
+            <FullEditor
+              value={value}
+              onChange={(v) => {
+                setValue(v);
+              }}
+            />
+
+            <SafeReadEditor value={value} />
+
+            <FullEditor
+              value={value2}
+              onChange={(v) => {
+                setValue2(v);
+              }}
+            />
           </Constrainer>
         </InpageBodyScroll>
       </Inpage>

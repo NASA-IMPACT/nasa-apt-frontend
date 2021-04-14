@@ -1,0 +1,19 @@
+algorithm_implementations:
+  fieldset: TBD.
+  url: The direct access mechanims to the algorithm implementation source code.
+  description: Relevant information needed to execute the algorithm implementation. May include, but not be limited to, execution instructions, memory requirements, programming languages and dependencies.
+
+data_access_input_data:
+  fieldset: TBD.
+  url: Algorithm input data access URL.
+  description: Description of the data access method. Provides context on how to access the data.
+
+data_access_output_data:
+  fieldset: TBD.
+  url: Algorithm output data access URL.
+  description: Description of the data access method. Provides context on how to access the data.
+
+data_access_related_urls:
+  fieldset: TBD.
+  url: Alternative data access mecanisims including links to machine services, ordering services and DAAC websites.
+  description: Description of the alternative data access method provided.
