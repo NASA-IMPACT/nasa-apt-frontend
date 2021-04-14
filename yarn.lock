@@ -909,6 +909,14 @@
     "@devseed-ui/collecticons" "3.0.0-rc.0"
     "@devseed-ui/theme-provider" "^3.0.0"
 
+"@devseed-ui/button@3.0.2-rc.1":
+  version "3.0.2-rc.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@devseed-ui%2fbutton/-/button-3.0.2-rc.1.tgz#72e07a199373edff61d95644c825d932fa4778d9"
+  integrity sha512-MgZ6ruEhwGPr/LZVNb7L8dqX5mfsh1Xb/PPOAPV5FJ9u0Unp+alt3TGOuUxn05UO6YCqaKfK0a/KVsS2Ebotug==
+  dependencies:
+    "@devseed-ui/collecticons" "3.0.0-rc.0"
+    "@devseed-ui/theme-provider" "^3.0.0"
+
 "@devseed-ui/collecticons@3.0.0-rc.0":
   version "3.0.0-rc.0"
   resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@devseed-ui%2fcollecticons/-/collecticons-3.0.0-rc.0.tgz#efc5f5c73b74606562c65d3dac56280ebd76f0ea"

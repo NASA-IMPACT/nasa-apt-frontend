@@ -106,7 +106,7 @@
     "@casl/ability": "^5.2.2",
     "@casl/react": "^2.2.2",
     "@devseed-ui/animation": "^3.0.0",
-    "@devseed-ui/button": "3.0.2-rc.0",
+    "@devseed-ui/button": "3.0.2-rc.1",
     "@devseed-ui/collecticons": "3.0.0-rc.0",
     "@devseed-ui/dropdown": "2.0.2-rc.0",
     "@devseed-ui/form": "1.0.3-rc.0",
