@@ -99,7 +99,7 @@ const PageTitleLink = styled(Link)`
   }
 
   span {
-    ${visuallyHidden};
+    ${visuallyHidden}
   }
 
   strong {

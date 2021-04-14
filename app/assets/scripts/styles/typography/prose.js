@@ -126,9 +126,8 @@ const Prose = styled.div`
     `}
   }
 
-  figure img {
+  > img {
     display: block;
-    margin: 0 auto;
   }
 
   img {
@@ -136,8 +135,9 @@ const Prose = styled.div`
     height: auto;
   }
 
-  > img {
+  figure img {
     display: block;
+    margin: 0 auto;
   }
 
   ${proseInnerSpacing()}

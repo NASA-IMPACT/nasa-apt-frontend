@@ -32,7 +32,9 @@ export const PanelHeader = styled.header`
   `}
 `;
 
-export const PanelHeadline = styled.div``;
+export const PanelHeadline = styled.div`
+  /* Styled component */
+`;
 
 export const PanelTitle = styled(Heading)`
   font-size: 1.25rem;
@@ -60,7 +62,9 @@ export const PanelSectionHeader = styled.header`
   `}
 `;
 
-export const PanelSectionHeadline = styled.div``;
+export const PanelSectionHeadline = styled.div`
+  /* Styled component */
+`;
 
 export const PanelSectionTitle = styled(Heading)`
   font-size: 1rem;
