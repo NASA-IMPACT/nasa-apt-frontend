@@ -19,10 +19,12 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 
 import { atbdView } from '../../../utils/url-creator';
 import { calculateAtbdCompleteness } from '../completeness';
+import { useUser } from '../../../context/user';
 
 function AtbdHubEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
+  const { isLogged } = useUser();
 
   const { percent } = calculateAtbdCompleteness(lastVersion);
 
@@ -54,7 +56,7 @@ function AtbdHubEntry(props) {
             </HubEntryBreadcrumbMenu>
           </HubEntryHeadNav>
         </HubEntryHeadline>
-        {lastVersion.status === 'Draft' && (
+        {isLogged && (
           <HubEntryMeta>
             <dt>Status</dt>
             <dd>
