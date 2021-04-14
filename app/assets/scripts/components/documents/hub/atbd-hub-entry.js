@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
+import { format } from 'date-fns';
 
 import {
   HubEntry,
@@ -32,6 +33,15 @@ function AtbdHubEntry(props) {
     onDocumentAction,
     atbd
   ]);
+
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at.
+  const updateDate = new Date(
+    Math.max(
+      new Date(atbd.last_updated_at).getTime(),
+      new Date(lastVersion.last_updated_at).getTime()
+    )
+  );
 
   return (
     <HubEntry>
@@ -69,7 +79,9 @@ function AtbdHubEntry(props) {
           <dd>George J. Huffman et al.</dd>
           <dt>On</dt>
           <dd>
-            <time dateTime='2021-02-07'>Feb 7, 2021</time>
+            <time dateTime={format(updateDate, 'yyyy-MM-dd')}>
+              {format(updateDate, 'MMM do, yyyy')}
+            </time>
           </dd>
         </HubEntryDetails>
         <HubEntryActions>
