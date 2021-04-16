@@ -116,7 +116,7 @@
     "@devseed-ui/theme-provider": "^3.0.0",
     "@devseed-ui/toolbar": "2.1.0-rc.0",
     "@devseed-ui/typography": "^1.0.0",
-    "@udecode/slate-plugins": "^0.73.0",
+    "@udecode/slate-plugins": "0.75.2",
     "axios": "^0.21.1",
     "clipboard": "^2.0.6",
     "date-fns": "^2.19.0",
