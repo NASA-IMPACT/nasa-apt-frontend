@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import T from 'prop-types';
-import { useFocused, useSelected } from 'slate-react';
+import { useFocused, useReadOnly, useSelected } from 'slate-react';
 import styled, { css } from 'styled-components';
 import { glsp, themeVal, rgba } from '@devseed-ui/theme-provider';
 
@@ -36,6 +36,11 @@ const Ref = styled.span`
         `)}
 `;
 
+const RefReadOnly = styled.sup`
+  padding: ${glsp(0, 0.25)};
+  font-size: 0.75rem;
+`;
+
 const Spacer = styled.span`
   visibility: hidden;
   font-size: 0;
@@ -45,7 +50,8 @@ export default function Reference(props) {
   const { attributes, htmlAttributes, children, element } = props;
   const focused = useFocused();
   const selected = useSelected();
-  const { references } = useRichContext();
+  const readOnly = useReadOnly();
+  const { references, referencesUseIndex } = useRichContext();
 
   const [isHoverTipVisible, setHoverTipVisible] = useState(focused && selected);
 
@@ -56,6 +62,20 @@ export default function Reference(props) {
   const referenceTitle = reference
     ? formatReference(reference) || 'Empty reference'
     : 'Reference not found';
+
+  // The read only version of the references is much simpler that the editor.
+  // There's no need to allow selection and the text instead of `ref` shows the
+  // index at which the reference appears in the document.
+  if (readOnly) {
+    return (
+      <RefReadOnly>
+        <Tip tag='span' title={referenceTitle}>
+          {referencesUseIndex?.[element.refId]?.docIndex || 0}
+          {children}
+        </Tip>
+      </RefReadOnly>
+    );
+  }
 
   return (
     <Ref
