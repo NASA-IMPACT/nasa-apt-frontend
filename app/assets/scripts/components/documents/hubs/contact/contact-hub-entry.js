@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 
 import {
@@ -6,20 +6,19 @@ import {
   HubEntryHeader,
   HubEntryHeadline,
   HubEntryTitle,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryActions
+  HubEntryDetails
+  // HubEntryActions
 } from '../../../../styles/hub';
 import { Link } from '../../../../styles/clean/link';
-// import AtbdActionsMenu from '../atbd-actions-menu'; update to Actions Menu?
+// import ContactActionsMenu from '../contact-actions-menu'; TODO create this?
 
 import { contactView } from '../../../../utils/url-creator';
 
-export default function ContactEntry({ contact, onContactAction }) {
-  const onAction = useCallback((...args) => onContactAction(contact, ...args), [
-    onContactAction,
-    contact
-  ]);
+export default function ContactEntry({ contact }) {
+  // const onAction = useCallback((...args) => onContactAction(contact, ...args), [
+  //   onContactAction,
+  //   contact
+  // ]);
   return (
     <HubEntry>
       <HubEntryHeader>
@@ -29,7 +28,6 @@ export default function ContactEntry({ contact, onContactAction }) {
               {contact.name}
             </Link>
           </HubEntryTitle>
-          <HubEntryHeadNav role='navigation'></HubEntryHeadNav>
         </HubEntryHeadline>
         <HubEntryDetails>
           <dt>Mechanisms</dt>
@@ -39,15 +37,15 @@ export default function ContactEntry({ contact, onContactAction }) {
             <time dateTime={contact.createdAt}>{contact.createdAt}</time>
           </dd>
         </HubEntryDetails>
-        <HubEntryActions>
-          <ContactActionsMenu contact={contact} onSelect={onAction} />
-        </HubEntryActions>
+        {/* <HubEntryActions> TODO: add this once created
+          <ActionsMenu contact={contact} onSelect={onAction} />
+        </HubEntryActions> */}
       </HubEntryHeader>
     </HubEntry>
   );
 }
 
 ContactEntry.propTypes = {
-  contact: T.object,
-  onContactAction: T.func
+  contact: T.object
+  // onContactAction: T.func
 };

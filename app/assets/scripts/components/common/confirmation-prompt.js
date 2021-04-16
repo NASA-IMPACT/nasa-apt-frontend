@@ -244,3 +244,26 @@ export const confirmDeleteAtbdVersion = async (name, version) => {
     renderControls: deleteControls
   });
 };
+
+/**
+ * Convenience method to show a delete confirmation prompt for a contact.
+ * Will display a "Cancel/Delete" buttons and:
+ * title: 'Delete this contact?'
+ * content: <p>The contact <strong>{name}</strong> will be deleted.</p>
+ *
+ * @param {string} name Name of the contact to delete
+ * @param {any} data Any extra data that the confirmation prompt should keep
+ *              track of. Useful to know what confirmation we're working with.
+ */
+export const confirmDeleteContact = async (name) => {
+  return showConfirmationPrompt({
+    title: 'Delete this contact?',
+    content: (
+      <p>
+        The contact <strong>{name}</strong> and all the references to this
+        contact in other documents will be removed.
+      </p>
+    ),
+    renderControls: deleteControls
+  });
+};

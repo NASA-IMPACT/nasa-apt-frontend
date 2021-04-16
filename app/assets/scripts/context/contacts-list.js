@@ -15,7 +15,7 @@ export const ContactsProvider = ({ children }) => {
   const {
     getState: getContacts,
     fetchContacts,
-    deleteFullContact
+    deleteContact
   } = useContexeedApi({
     name: 'contactList',
     requests: {
@@ -24,7 +24,7 @@ export const ContactsProvider = ({ children }) => {
       }))
     },
     mutations: {
-      deleteFullContact: withRequestToken(token, ({ id }) => ({
+      deleteContact: withRequestToken(token, ({ id }) => ({
         mutation: async ({ axios, requestOptions, state, actions }) => {
           try {
             // Dispatch request action. It is already dispatchable.
@@ -52,8 +52,7 @@ export const ContactsProvider = ({ children }) => {
     getState: getSingleContact,
     fetchSingleContact,
     createContact,
-    updateContact,
-    deleteContact
+    updateContact
   } = useContexeedApi({
     name: 'contactSingle',
     useKey: true,
@@ -103,27 +102,6 @@ export const ContactsProvider = ({ children }) => {
           }
         }
       })),
-      deleteContact: withRequestToken(token, ({ id }) => ({
-        stateKey: `${id}`,
-        mutation: async ({ axios, requestOptions, actions }) => {
-          try {
-            // Dispatch request action. It is already dispatchable.
-            actions.request();
-
-            await axios({
-              ...requestOptions,
-              url: `/contacts/${id}`,
-              method: 'delete'
-            });
-
-            // If this worked, invalidate the state for this id-version
-            return actions.invalidate();
-          } catch (error) {
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(null, error);
-          }
-        }
-      })),
       updateContact: withRequestToken(token, ({ id, data }) => ({
         stateKey: `${id}`,
         mutation: async ({ axios, requestOptions, state, actions }) => {
@@ -157,6 +135,7 @@ export const ContactsProvider = ({ children }) => {
     getSingleContact,
     fetchSingleContact,
     createContact,
+    deleteContact,
     updateContact
   };
 
@@ -175,7 +154,6 @@ ContactsProvider.propTypes = {
 // Used to access different parts of the contact list context
 const useCheckContext = (fnName) => {
   const context = useContext(ContactsContext);
-  console.log('context', context);
   if (!context) {
     throw new Error(
       `The \`${fnName}\` hook must be used inside the <ContactsContext> component's context.`
@@ -201,8 +179,7 @@ export const useSingleContact = ({ id }) => {
     updateContact: useCallback((data) => updateContact({ id, data }), [
       id,
       updateContact
-    ]),
-    deleteContact: useCallback(() => deleteContact({ id }), [id, deleteContact])
+    ])
   };
 };
 
@@ -211,12 +188,12 @@ export const useContacts = () => {
     getContacts,
     fetchContacts,
     createContact,
-    deleteFullContact
+    deleteContact
   } = useCheckContext('useContacts');
   return {
     contacts: getContacts(),
     fetchContacts,
     createContact,
-    deleteFullContact
+    deleteContact
   };
 };

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -20,16 +20,16 @@ import ContactHubEntry from './contact-hub-entry';
 import { useContacts } from '../../../../context/contacts-list';
 // import { conactEdit } from '../../../../utils/url-creator'; TODO create this
 import toasts, { createProcessToast } from '../../../common/toasts';
-// import { confirmDeleteContact } from '../../../common/confirmation-prompt'; TODO update this to include contact
+import { confirmDeleteContact } from '../../../common/confirmation-prompt';
 
 export function Contacts() {
   const {
     fetchContacts,
     createContact,
-    deleteFullContact,
+    deleteContact,
     contacts
   } = useContacts();
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect(() => {
     fetchContacts();
@@ -52,16 +52,16 @@ export function Contacts() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('contact successfully created');
-      history.push(conactEdit(result.data));
+      // history.push(conactEdit(result.data));
     }
   };
 
-  const onDocumentAction = useCallback(
+  const onContactAction = useCallback(
     async (contact, menuId) => {
       if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteAtbd(contact.title);
+        const { result: confirmed } = await confirmDeleteContact(contact.title);
         if (confirmed) {
-          const result = await deleteFullContact({ id: contact.id });
+          const result = await deleteContact({ id: contact.id });
           if (result.error) {
             toasts.error(`An error occurred: ${result.error.message}`);
           } else {
@@ -70,7 +70,7 @@ export function Contacts() {
         }
       }
     },
-    [deleteFullContact]
+    [deleteContact]
   );
 
   return (
@@ -112,7 +112,7 @@ export function Contacts() {
                   <HubListItem key={contact.id}>
                     <ContactHubEntry
                       contact={contact}
-                      onDocumentAction={onDocumentAction}
+                      onContactAction={onContactAction}
                     />
                   </HubListItem>
                 ))}
