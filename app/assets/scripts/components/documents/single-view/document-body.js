@@ -56,6 +56,28 @@ const AtbdSectionPassThrough = ({ element, children }) => {
   );
 };
 
+const MultilineString = ({ value, whenEmpty, ...rest }) => {
+  if (!value || typeof value !== 'string') {
+    return whenEmpty;
+  }
+
+  const pieces = value.split('\n');
+  return pieces.length > 1 ? (
+    <p {...rest}>
+      {pieces.slice(0, -1).map((v, i) => (
+        /* eslint-disable-next-line react/no-array-index-key */
+        <React.Fragment key={i}>
+          {v}
+          <br />
+        </React.Fragment>
+      ))}
+      {pieces[pieces.length - 1]}
+    </p>
+  ) : (
+    <p>{value}</p>
+  );
+};
+
 const FragmentWithOptionalEditor = ({
   element,
   children,
@@ -103,7 +125,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
       </a>
     </p>
     <h4>Description</h4>
-    <SafeReadEditor value={description} whenEmpty={<EmptySection />} />
+    <MultilineString value={description} whenEmpty={<EmptySection />} />
   </AtbdSubSection>
 );
 
@@ -317,7 +339,7 @@ export const atbdContentSections = [
               </a>
             </p>
             <h4>Description</h4>
-            <SafeReadEditor
+            <MultilineString
               itemProp='description'
               value={document.algorithm_implementations[idx].description}
               whenEmpty={<EmptySection />}

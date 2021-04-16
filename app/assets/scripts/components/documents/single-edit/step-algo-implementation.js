@@ -6,7 +6,7 @@ import { Form } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
-import { FormikInputEditor } from '../../common/forms/input-editor';
+import { FormikInputTextarea } from '../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { FormikInputText } from '../../common/forms/input-text';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
@@ -146,7 +146,7 @@ const UrlDescriptionSection = (props) => {
                   label='Url'
                   description={urlFieldInfo}
                 />
-                <FormikInputEditor
+                <FormikInputTextarea
                   id={`${name}.${index}.description`}
                   name={`${name}.${index}.description`}
                   label='Description'
