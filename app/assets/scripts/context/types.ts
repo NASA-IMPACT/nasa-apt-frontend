@@ -24,3 +24,15 @@ interface ATBDVersion {
 interface ATBDDocument {
   [key: string]: any;
 }
+
+interface Contact {
+  id: Number;
+  first_name: String;
+  middle_name: String;
+  last_name: String;
+  uuid: String;
+  url: String;
+  mechanisms: ("Direct line" | "Email" | "Facebook" | "Fax" | "Mobile" | "Primary" | "TDD/TTY phone" | "Telephone" | "Twitter" | "U.S." | "Other")[];
+  roles: ("Data center contact" | "Technical contact" | "Science contact" | "Investigator"| "Metadata author" | "User services"| "Science software development")[];
+  title: String;
+}
