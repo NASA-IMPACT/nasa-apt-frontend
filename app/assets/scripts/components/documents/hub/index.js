@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
-import App from '../../../common/app';
+import App from '../../common/app';
 import {
   Inpage,
   InpageHeaderSticky,
@@ -11,16 +11,16 @@ import {
   InpageTitle,
   InpageActions,
   InpageBody
-} from '../../../../styles/inpage';
-import { HubList, HubListItem } from '../../../../styles/hub';
-import { ContentBlock } from '../../../../styles/content-block';
-import ButtonSecondary from '../../../../styles/button-secondary';
+} from '../../../styles/inpage';
+import { HubList, HubListItem } from '../../../styles/hub';
+import { ContentBlock } from '../../../styles/content-block';
+import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
 
-import { useAtbds } from '../../../../context/atbds-list';
-import { atbdEdit } from '../../../../utils/url-creator';
-import toasts, { createProcessToast } from '../../../common/toasts';
-import { confirmDeleteAtbd } from '../../../common/confirmation-prompt';
+import { useAtbds } from '../../../context/atbds-list';
+import { atbdEdit } from '../../../utils/url-creator';
+import toasts, { createProcessToast } from '../../common/toasts';
+import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
 
 function Documents() {
   const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
