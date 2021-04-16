@@ -115,7 +115,7 @@ const validateSlateValue = (value) => {
   return false;
 };
 
-export default function FullEditor(props) {
+export function RichTextEditor(props) {
   const { id, onChange: inputOnChange, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
@@ -153,7 +153,7 @@ export default function FullEditor(props) {
   );
 }
 
-FullEditor.propTypes = {
+RichTextEditor.propTypes = {
   id: T.string,
   onChange: T.func,
   value: T.object

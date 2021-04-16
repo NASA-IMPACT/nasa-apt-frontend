@@ -142,6 +142,29 @@ Any other flow (like showing on caret placement) works the same way, with the de
 
 One may argue that the link click could store the properties directly and trigger the needed change for React to pick it up, but then the `onChange` handler would run and conflicting conditions would hide the Link Editor. By concentrating the operations in a single place it becomes easier to reason about and track errors.
 
+## Rich Context
+
+The RichContext (`common/rich-context.js`) is used to pass additional context information to slate's plugin components. Some components have to render in a different way when they're in read mode. Not only that but depending on where they're used, they may need contextual information.
+
+For example: The subsection needs to know the heading level that should be used to render it, and the section it appears in to use as id prefix.
+
+Another example are the references. The reference node stores the id to the reference it refers to, but we need the full reference data to be able to display the popover.
+```js
+{
+  type: 'ref',
+  refId: 1,
+  children: [{ text: '' }]
+}
+```
+
+The context should wrap the editor and values should be passed using the `context` prop. This values gets memoized but dependencies can be provided using `contextDeps`
+```js
+<RichContextProvider context={{ value: theValue }} contextDeps={[theValue]}>
+  <RichTextEditor />
+</RichContextProvider>
+```
+
+
 # Loose notes
 
 **Toolbar button and focus**  
