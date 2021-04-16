@@ -10,7 +10,7 @@ import SubSection from './sub-section';
 export const SUB_SECTION = 'sub-section';
 
 /**
- * Insert an equation.
+ * Insert a subsection heading.
  *
  * @param {Editor} editor Slate editor instance.
  */

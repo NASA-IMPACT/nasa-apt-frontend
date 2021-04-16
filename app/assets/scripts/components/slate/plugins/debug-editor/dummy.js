@@ -3,8 +3,16 @@ export const hugeDoc = [
     type: 'p',
     children: [
       {
+        text: 'The algorithm specified in this document'
+      },
+      {
+        type: 'ref',
+        refId: 1,
+        children: [{ text: '' }]
+      },
+      {
         text:
-          'The algorithm specified in this document is designed to derive footprint level canopy cover and vertical '
+          ' is designed to derive footprint level canopy cover and vertical '
       },
       {
         type: 'a',
