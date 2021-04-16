@@ -15,7 +15,7 @@ export const ContactsProvider = ({ children }) => {
   const {
     getState: getContacts,
     fetchContacts,
-    deleteContact
+    deleteFullContact
   } = useContexeedApi({
     name: 'contactList',
     requests: {
@@ -24,7 +24,7 @@ export const ContactsProvider = ({ children }) => {
       }))
     },
     mutations: {
-      deleteContact: withRequestToken(token, ({ id }) => ({
+      deleteFullContact: withRequestToken(token, ({ id }) => ({
         mutation: async ({ axios, requestOptions, state, actions }) => {
           try {
             // Dispatch request action. It is already dispatchable.
@@ -124,10 +124,6 @@ export const ContactsProvider = ({ children }) => {
           }
         }
       })),
-      // Updating an ATBD is simple most of the times. The vast majority of the
-      // fields belong to an ATBD version and we'd use the versions endpoint.
-      // However when updating global fields like the tile or alias, we need to
-      // hit a separate endpoint just for those.
       updateContact: withRequestToken(token, ({ id, data }) => ({
         stateKey: `${id}`,
         mutation: async ({ axios, requestOptions, state, actions }) => {
@@ -179,7 +175,7 @@ ContactsProvider.propTypes = {
 // Used to access different parts of the contact list context
 const useCheckContext = (fnName) => {
   const context = useContext(ContactsContext);
-
+  console.log('context', context);
   if (!context) {
     throw new Error(
       `The \`${fnName}\` hook must be used inside the <ContactsContext> component's context.`
@@ -215,12 +211,12 @@ export const useContacts = () => {
     getContacts,
     fetchContacts,
     createContact,
-    deleteContact
+    deleteFullContact
   } = useCheckContext('useContacts');
   return {
     contacts: getContacts(),
     fetchContacts,
     createContact,
-    deleteContact
+    deleteFullContact
   };
 };

@@ -183,6 +183,17 @@ function PageHeader() {
             <Button
               forwardedAs={NavLink}
               exact
+              to='/contacts'
+              variation='achromic-plain'
+              title='View the contact list'
+            >
+              Contacts
+            </Button>
+          </li>
+          <li>
+            <Button
+              forwardedAs={NavLink}
+              exact
               to='/about'
               variation='achromic-plain'
               title='Learn more about the app'
