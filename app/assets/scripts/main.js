@@ -17,10 +17,10 @@ import ConfirmationPrompt from './components/common/confirmation-prompt';
 
 // Views
 import Home from './components/home';
-import Documents from './components/documents/hubs/atbd';
+import Documents from './components/documents/hub/atbd';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
-import Contacts from './components/documents/hubs/contact';
+import Contacts from './components/documents/hub/contact';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';

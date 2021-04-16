@@ -8,11 +8,11 @@ import {
   HubEntryTitle,
   HubEntryDetails
   // HubEntryActions
-} from '../../../../styles/hub';
-import { Link } from '../../../../styles/clean/link';
+} from '../../../styles/hub';
+import { Link } from '../../../styles/clean/link';
 // import ContactActionsMenu from '../contact-actions-menu'; TODO create this?
 
-import { contactView } from '../../../../utils/url-creator';
+import { contactView } from '../../../utils/url-creator';
 
 export default function ContactEntry({ contact }) {
   // const onAction = useCallback((...args) => onContactAction(contact, ...args), [

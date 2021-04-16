@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
-import App from '../../../common/app';
+import App from '../../common/app';
 import {
   Inpage,
   InpageHeaderSticky,
@@ -11,16 +11,16 @@ import {
   InpageTitle,
   InpageActions,
   InpageBody
-} from '../../../../styles/inpage';
-import { HubList, HubListItem } from '../../../../styles/hub';
-import { ContentBlock } from '../../../../styles/content-block';
-import ButtonSecondary from '../../../../styles/button-secondary';
+} from '../../../styles/inpage';
+import { HubList, HubListItem } from '../../../styles/hub';
+import { ContentBlock } from '../../../styles/content-block';
+import ButtonSecondary from '../../../styles/button-secondary';
 import ContactHubEntry from './contact-hub-entry';
 
-import { useContacts } from '../../../../context/contacts-list';
+import { useContacts } from '../../../context/contacts-list';
 // import { conactEdit } from '../../../../utils/url-creator'; TODO create this
-import toasts, { createProcessToast } from '../../../common/toasts';
-import { confirmDeleteContact } from '../../../common/confirmation-prompt';
+import toasts, { createProcessToast } from '../../common/toasts';
+import { confirmDeleteContact } from '../../common/confirmation-prompt';
 
 export function Contacts() {
   const {
@@ -35,7 +35,7 @@ export function Contacts() {
     fetchContacts();
   }, []);
 
-  // We only want to handle errors when the atbd request fails. Mutation errors,
+  // We only want to handle errors when the contact request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
   // handlers.
   if (contacts.status === 'failed' && contacts.error) {
