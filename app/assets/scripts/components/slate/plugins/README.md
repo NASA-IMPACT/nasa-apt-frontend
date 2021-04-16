@@ -43,6 +43,8 @@ interface ToolbarItem {
   label: string;
   // Toolbar tooltip. key is the shortcut string formatter according to OS.
   tip: (key: string) => string;
+  // Whether or not the button should be disabled.
+  isDisabled: (editor: Editor) => Boolean;
 }
 
 // The OnUse function is called whenever the plugin action is triggered either

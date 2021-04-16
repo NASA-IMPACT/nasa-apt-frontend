@@ -85,6 +85,7 @@ export function EditorToolbar(props) {
               <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
                 <ToolbarIconButton
                   useIcon={btn.icon}
+                  disabled={btn.isDisabled?.(editor)}
                   onMouseDown={getPreventDefaultHandler(
                     p.onUse,
                     editor,
