@@ -17,7 +17,7 @@ import ConfirmationPrompt from './components/common/confirmation-prompt';
 
 // Views
 import Home from './components/home';
-import Documents from './components/documents/hub';
+import Documents from './components/documents/hubs/atbd';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
 import About from './components/about';

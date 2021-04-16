@@ -11,14 +11,14 @@ import {
   HubEntryHeadNav,
   HubEntryBreadcrumbMenu,
   HubEntryActions
-} from '../../../styles/hub';
-import StatusPill from '../../common/status-pill';
-import { Link } from '../../../styles/clean/link';
-import VersionsMenu from '../versions-menu';
-import AtbdActionsMenu from '../atbd-actions-menu';
+} from '../../../../styles/hub';
+import StatusPill from '../../../common/status-pill';
+import { Link } from '../../../../styles/clean/link';
+import VersionsMenu from '../../versions-menu';
+import AtbdActionsMenu from '../../atbd-actions-menu';
 
-import { atbdView } from '../../../utils/url-creator';
-import { calculateAtbdCompleteness } from '../completeness';
+import { atbdView } from '../../../../utils/url-creator';
+import { calculateAtbdCompleteness } from '../../completeness';
 
 function AtbdHubEntry(props) {
   const { atbd, onDocumentAction } = props;
