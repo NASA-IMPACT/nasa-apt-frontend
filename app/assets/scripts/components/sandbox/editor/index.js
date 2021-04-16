@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
-import { RichTextEditor } from '../../slate/editor';
+import { RichTextEditor } from '../../slate/editor';
 import { Link } from '../../../styles/clean/link';
 import {
   Inpage,
@@ -14,7 +14,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
-import { hugeDoc } from '../../slate/plugins/debug-editor/dummy';
+import { hugeDoc, references } from '../../slate/plugins/debug-editor/dummy';
 import SafeReadEditor from '../../slate/safe-read-editor';
 import { RichContextProvider } from '../../slate/plugins/common/rich-context';
 
@@ -67,7 +67,7 @@ function SandboxEditor() {
         </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>
-            <RichContextProvider>
+            <RichContextProvider context={{ references }}>
               <RichTextEditor
                 value={value}
                 onChange={(v) => {
