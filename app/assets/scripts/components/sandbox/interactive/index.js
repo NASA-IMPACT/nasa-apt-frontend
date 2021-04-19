@@ -14,6 +14,7 @@ import Prose from '../../../styles/typography/prose';
 
 import toasts from '../../common/toasts';
 import { showConfirmationPrompt } from '../../common/confirmation-prompt';
+import { TabContent, TabItem, TabsManager, TabsNav } from '../../common/tabs';
 
 function SandboxInteractive() {
   return (
@@ -54,6 +55,21 @@ function SandboxInteractive() {
               >
                 Confirmation prompt
               </Button>
+
+              <h2>Tabs</h2>
+              <TabsManager>
+                <TabsNav>
+                  <TabItem label='Tab 1' tabId='t1'>
+                    Tab 1
+                  </TabItem>
+                  <TabItem label='Tab 2' tabId='t2'>
+                    Tab 2
+                  </TabItem>
+                </TabsNav>
+
+                <TabContent tabId='t1'>Tab 1 content</TabContent>
+                <TabContent tabId='t2'>Tab 2 content</TabContent>
+              </TabsManager>
             </Prose>
           </ContentBlock>
         </InpageBody>
