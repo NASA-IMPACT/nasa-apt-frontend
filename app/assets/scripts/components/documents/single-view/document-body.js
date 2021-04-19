@@ -329,7 +329,7 @@ export const atbdContentSections = [
           </React.Fragment>
         ),
         children: ({ document }) => {
-          const items = document.input_variables || [];
+          const items = document.algorithm_input_variables || [];
           return items.map((o, idx) => ({
             label: `Variable #${idx + 1}`,
             id: `algo-input-vars-${idx + 1}`,
