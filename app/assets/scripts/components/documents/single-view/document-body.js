@@ -4,10 +4,9 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
-import SafeReadEditor from '../../slate/safe-read-editor';
+import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
 import DetailsList from '../../../styles/typography/details-list';
 
-import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
 import {
   createDocumentReferenceIndex,
   formatReference
@@ -153,6 +152,31 @@ const DataAccessItem = ({ id, label, url, description }) => (
   </AtbdSubSection>
 );
 
+const VariableItem = ({ element, variable }) => (
+  <React.Fragment>
+    <h4 id={element.id} data-scroll='target'>
+      {element.label}
+    </h4>
+    <DetailsList>
+      <dt>Name</dt>
+      <dd>
+        <SafeReadEditor value={variable.name} whenEmpty={<EmptySection />} />
+      </dd>
+      <dt>Long name</dt>
+      <dd>
+        <SafeReadEditor
+          value={variable.long_name}
+          whenEmpty={<EmptySection />}
+        />
+      </dd>
+      <dt>Unit</dt>
+      <dd>
+        <SafeReadEditor value={variable.unit} whenEmpty={<EmptySection />} />
+      </dd>
+    </DetailsList>
+  </React.Fragment>
+);
+
 const EmptySection = () => <p>No content available.</p>;
 
 /**
@@ -177,7 +201,7 @@ const renderElements = (elements, props) =>
 // Each node has the following properties:
 // label: Human readable title to print
 // id: Unique id in the whole page to be used as anchor
-// tocFromEditor: For the fields edited through slate, we need to extract the
+// editorSubsections: For the fields edited through slate, we need to extract the
 //    subsections which are user generated. These will be added to the children
 //    when rendering.
 // render: Function to render this element. It is called with the current
@@ -246,7 +270,11 @@ export const atbdContentSections = [
             subsectionLevel='h4'
             withEditor
           >
-            {props.children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: [
@@ -287,7 +315,11 @@ export const atbdContentSections = [
             subsectionLevel='h4'
             withEditor
           >
-            {props.children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: [
@@ -316,26 +348,46 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'algo-input-var',
-        render: ({ element }) => (
+        render: ({ element, children }) => (
           <React.Fragment key={element.id}>
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            <p>List of variables will be coming soon.</p>
+            {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
-        )
+        ),
+        children: ({ document }) => {
+          const items = document.algorithm_input_variables || [];
+          return items.map((o, idx) => ({
+            label: `Variable #${idx + 1}`,
+            id: `algo-input-vars-${idx + 1}`,
+            render: ({ element }) => (
+              <VariableItem key={element.id} element={element} variable={o} />
+            )
+          }));
+        }
       },
       {
         label: 'Algorithm Output Variables',
         id: 'algo-output-var',
-        render: ({ element }) => (
+        render: ({ element, children }) => (
           <React.Fragment key={element.id}>
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            <p>List of variables will be coming soon.</p>
+            {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
-        )
+        ),
+        children: ({ document }) => {
+          const items = document.algorithm_output_variables || [];
+          return items.map((o, idx) => ({
+            label: `Variable #${idx + 1}`,
+            id: `algo-output-vars-${idx + 1}`,
+            render: ({ element }) => (
+              <VariableItem key={element.id} element={element} variable={o} />
+            )
+          }));
+        }
       }
     ]
   },
@@ -493,7 +545,11 @@ export const atbdContentSections = [
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {props.children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {
@@ -524,7 +580,11 @@ export const atbdContentSections = [
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {props.children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {
@@ -555,7 +615,11 @@ export const atbdContentSections = [
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {props.children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {

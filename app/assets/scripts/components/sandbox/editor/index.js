@@ -15,18 +15,19 @@ import {
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
 import { hugeDoc, references } from '../../slate/plugins/debug-editor/dummy';
-import SafeReadEditor from '../../slate/safe-read-editor';
 import { RichContextProvider } from '../../slate/plugins/common/rich-context';
+import { InlineRichTextEditor } from '../../slate/inline-editor';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
 
-  ${Constrainer} {
-    padding-top: 3rem;
-    padding-bottom: 30rem;
+  h2 {
+    margin: 2rem 0 1rem 0;
   }
 `;
+
+const inlineFormattingOptions = ['bold', 'italic', 'underline', 'subsupscript'];
 
 function SandboxEditor() {
   // Keep track of state for the value of the editor.
@@ -49,6 +50,11 @@ function SandboxEditor() {
     children: 'invalid'
   });
 
+  const [valueInline, setValueInline] = useState({
+    type: 'p',
+    children: [{ text: '' }]
+  });
+
   return (
     <App pageTitle='Sandbox/Editor'>
       <Inpage>
@@ -67,6 +73,16 @@ function SandboxEditor() {
         </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>
+            <h2>Inline editor</h2>
+            <InlineRichTextEditor
+              formattingOptions={inlineFormattingOptions}
+              value={valueInline}
+              onChange={(v) => {
+                setValueInline(v);
+              }}
+            />
+
+            <h2>Rich text editor</h2>
             <RichContextProvider context={{ references }}>
               <RichTextEditor
                 value={value}
@@ -76,9 +92,8 @@ function SandboxEditor() {
               />
             </RichContextProvider>
 
-            <SafeReadEditor value={value} />
-
-            <FullEditor
+            <h2>Rich text editor - error value</h2>
+            <RichTextEditor
               value={value2}
               onChange={(v) => {
                 setValue2(v);
