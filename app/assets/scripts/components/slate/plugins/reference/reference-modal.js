@@ -24,7 +24,8 @@ export function ReferencesModal() {
       title='References'
       content={
         <div>
-          <Button onClick={onInsertClick}>Confirm</Button>
+          <p>Reference modal under development.</p>
+          <Button onClick={onInsertClick}>Confirm dummy reference</Button>
           <Button onClick={() => editor.referenceModal.reset()}>Cancel</Button>
         </div>
       }
