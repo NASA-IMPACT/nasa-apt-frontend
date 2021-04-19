@@ -14,7 +14,6 @@ import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
-import { editorEmptyValue } from '../../slate/editor';
 import { formString } from '../../../utils/strings';
 
 // The initial value is the same for
@@ -24,7 +23,7 @@ import { formString } from '../../../utils/strings';
 // Data Access Related Urls
 const emptyFieldValue = {
   url: '',
-  description: editorEmptyValue
+  description: ''
 };
 
 export default function StepAlgoImplementation(props) {
