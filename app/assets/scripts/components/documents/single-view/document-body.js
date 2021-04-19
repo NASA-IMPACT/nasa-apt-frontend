@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import SafeReadEditor from '../../slate/safe-read-editor';
+import DetailsList from '../../../styles/typography/details-list';
 
 import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
-
 import { proseInnerSpacing } from '../../../styles/typography/prose';
 
 // Wrapper for each of the main sections.
@@ -108,24 +108,30 @@ const DataAccessItem = ({ id, label, url, description }) => (
     <h3 id={id} itemProp='name' data-scroll='target'>
       {label}
     </h3>
-    <h4>Url</h4>
-    <p
-      itemProp='distribution'
-      itemScope
-      itemType='https://schema.org/DataDownload'
-    >
-      <a
-        href={url}
-        target='_blank'
-        rel='noopener noreferrer'
-        title='Open url in new tab'
-        itemProp='contentUrl'
-      >
-        {url}
-      </a>
-    </p>
-    <h4>Description</h4>
-    <MultilineString value={description} whenEmpty={<EmptySection />} />
+    <DetailsList>
+      <dt>Url</dt>
+      <dd>
+        <p
+          itemProp='distribution'
+          itemScope
+          itemType='https://schema.org/DataDownload'
+        >
+          <a
+            href={url}
+            target='_blank'
+            rel='noopener noreferrer'
+            title='Open url in new tab'
+            itemProp='contentUrl'
+          >
+            {url}
+          </a>
+        </p>
+      </dd>
+      <dt>Description</dt>
+      <dd>
+        <MultilineString value={description} whenEmpty={<EmptySection />} />
+      </dd>
+    </DetailsList>
   </AtbdSubSection>
 );
 
@@ -311,11 +317,6 @@ export const atbdContentSections = [
       return items.map((o, idx) => ({
         label: `Entry #${idx + 1}`,
         id: `algo-implementations-${idx + 1}`,
-        editorSubsections: (document, { id }) =>
-          subsectionsFromSlateDocument(
-            document.algorithm_implementations[idx].description,
-            id
-          ),
         render: ({ element, document }) => (
           <AtbdSubSection
             key={element.id}
@@ -326,24 +327,30 @@ export const atbdContentSections = [
             <h3 id={element.id} itemProp='name' data-scroll='target'>
               {element.label}
             </h3>
-            <h4>Url</h4>
-            <p>
-              <a
-                href={o.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                title='Open url in new tab'
-                itemProp='url'
-              >
-                {o.url}
-              </a>
-            </p>
-            <h4>Description</h4>
-            <MultilineString
-              itemProp='description'
-              value={document.algorithm_implementations[idx].description}
-              whenEmpty={<EmptySection />}
-            />
+            <DetailsList>
+              <dt>Url</dt>
+              <dd>
+                <p>
+                  <a
+                    href={o.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    title='Open url in new tab'
+                    itemProp='url'
+                  >
+                    {o.url}
+                  </a>
+                </p>
+              </dd>
+              <dt>Description</dt>
+              <dd>
+                <MultilineString
+                  itemProp='description'
+                  value={document.algorithm_implementations[idx].description}
+                  whenEmpty={<EmptySection />}
+                />
+              </dd>
+            </DetailsList>
           </AtbdSubSection>
         )
       }));
@@ -451,11 +458,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-input-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_input_data[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
@@ -486,11 +488,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-output-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_output_data[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
@@ -521,11 +518,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-related-urls-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_related_urls[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
