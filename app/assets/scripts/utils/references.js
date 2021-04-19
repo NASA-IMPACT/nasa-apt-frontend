@@ -1,3 +1,5 @@
+import Cite from 'citation-js';
+
 import { nodeFromSlateDocument } from '../components/slate';
 import { REFERENCE } from '../components/slate/plugins/reference';
 
@@ -20,6 +22,14 @@ import { REFERENCE } from '../components/slate/plugins/reference';
 //   online_resource: String;
 // }
 
+/**
+ * Format a reference is AGU style.
+ * Author, A.A., Author, B.B., & Author, C.C. (year). Title of article. Title of periodical, xx(x), pp-pp. https://doi.org/xx.xxxx/xxxxxxx
+ * {authors}. ({year}). {title}. {series}, {volume}({issue}), {pages}, {doi}
+ *
+ * @param {Reference} reference The reference object
+ * @return String
+ */
 export const formatReference = (reference) => {
   const { authors, year, title, series, volume, issue, pages, doi } = reference;
 
@@ -147,3 +157,101 @@ export const createDocumentReferenceIndex = (document) => {
 
   return refUsageIndex;
 };
+
+/**
+ * Reads the given file parsing the Bibtex.
+ * Rejects the promise if the file is not valid.
+ *
+ * @param {File} inputFile File to read, from <input type="file">
+ * @returns Promise<Object>
+ */
+export function parseBibtexFile(inputFile) {
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onerror = () => {
+      reader.abort();
+      reject(new Error('Error reading file.'));
+    };
+
+    reader.onload = () => {
+      try {
+        // Read from Bibtex format.
+        const input = new Cite(reader.result, { style: 'bibtex' });
+
+        // Output as Bibtext JSON (default is CSL)
+        const items = input.get({
+          format: 'real',
+          type: 'json',
+          style: 'bibtex'
+        });
+
+        // Return properties
+        resolve(items);
+      } catch (error) {
+        reject(new Error('Error parsing Bibtex file.'));
+      }
+    };
+    reader.readAsText(inputFile);
+  });
+}
+
+/**
+ * Converts a Bibtext JSON reference to an APT reference.
+ *
+ * @param {Array} bibtexItems Bibtext JSON from parseBibtexFile()
+ *
+ * @see parseBibtexFile()
+ * @returns Array<Reference>
+ */
+export function bibtexItemsToRefs(bibtexItems) {
+  const parsedItems = bibtexItems.map((item) => {
+    const { properties, type } = item;
+
+    const propsToMap = [
+      // from -> to
+      ['address', 'publication_place'],
+      ['author', 'authors'],
+      ['doi', 'doi'],
+      ['edition', 'edition'],
+      ['isbn', 'isbn'],
+      ['note', 'other_reference_details'],
+      // Journal and series get mapped to the same APT property. If both exist
+      // "series" prevails.
+      ['journal', 'series'],
+      ['series', 'series'],
+
+      ['report_number', 'report_number'],
+      ['pages', 'pages'],
+      ['publisher', 'publisher'],
+      ['title', 'title'],
+      ['url', 'online_resource'],
+      ['volume', 'volume'],
+      ['year', 'year']
+    ];
+
+    const ref = {};
+
+    // Map props that are straightforward.
+    propsToMap.forEach(([from, to]) => {
+      if (typeof properties[from] !== 'undefined') {
+        ref[to] = properties[from];
+      }
+    });
+
+    // Conditional prop mapping.
+    if (typeof properties.number !== 'undefined') {
+      if (type === 'techreport') {
+        ref.report_number = properties.number;
+      } else {
+        ref.issue = properties.number;
+      }
+    }
+    return ref;
+  });
+
+  return {
+    valid: parsedItems,
+    total: bibtexItems.length
+  };
+}
