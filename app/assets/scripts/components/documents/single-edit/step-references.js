@@ -1,20 +1,43 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
-import { Formik, Form as FormikForm } from 'formik';
+import styled from 'styled-components';
+import get from 'lodash.get';
+import { Formik, Form as FormikForm, FieldArray } from 'formik';
 import { toast } from 'react-toastify';
-import { Form } from '@devseed-ui/form';
+import {
+  Form,
+  FormFieldset,
+  FormFieldsetHeader,
+  FormFieldsetBody,
+  FormLegend,
+  FormCheckable
+} from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
+import {
+  Toolbar,
+  ToolbarButton,
+  ToolbarIconButton,
+  VerticalDivider,
+  ToolbarLabel
+} from '@devseed-ui/toolbar';
+import { glsp } from '@devseed-ui/theme-provider';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import { MultiItemEmpty } from '../../common/forms/field-multi-item';
+import DropdownMenu from '../../common/dropdown-menu';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { bibtexItemsToRefs, parseBibtexFile } from '../../../utils/references';
 import { showConfirmationPrompt } from '../../common/confirmation-prompt';
+
+const ReferenceFormCheckable = styled(FormCheckable)`
+  margin-right: ${glsp(0.5)};
+`;
 
 const confirmImportReferences = async (referenceCount) => {
   const txt =
@@ -75,6 +98,13 @@ const readBibtexFile = async (file) => {
   }
 };
 
+const getReferenceEmptyValue = () => {
+  return {
+    // Random 16 hex id.
+    id: Math.random().toString(16).slice(2, 10)
+  };
+};
+
 export default function StepReferences(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
@@ -90,6 +120,45 @@ export default function StepReferences(props) {
     const refs = await readBibtexFile(file);
   };
 
+  const dropdownMenuTriggerProps = useMemo(
+    () => ({
+      size: 'small',
+      useIcon: ['chevron-down--small', 'after']
+    }),
+    []
+  );
+
+  const referencesMenu = useMemo(
+    () => [
+      {
+        id: 'actions',
+        items: [
+          {
+            id: 'add',
+            label: 'Add new',
+            title: 'Add new reference'
+          },
+          {
+            id: 'import',
+            label: 'Import from BibTeX file...',
+            title: 'Import from file'
+          }
+        ]
+      },
+      {
+        id: 'actions2',
+        items: [
+          {
+            id: 'delete',
+            label: 'Delete selected...',
+            title: 'Delete selected references'
+          }
+        ]
+      }
+    ],
+    []
+  );
+
   return (
     <Formik
       initialValues={initialValues}
@@ -104,8 +173,103 @@ export default function StepReferences(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <input type='file' onChange={fileChange} />
-              Hello
+              <FormFieldset>
+                <FormFieldsetHeader>
+                  <FormLegend>References</FormLegend>
+                  <Toolbar size='small'>
+                    <ToolbarLabel>Select</ToolbarLabel>
+                    <ToolbarButton>All</ToolbarButton>
+                    <ToolbarButton>None</ToolbarButton>
+                    <ToolbarButton>Unused</ToolbarButton>
+
+                    <VerticalDivider />
+
+                    <DropdownMenu
+                      menu={referencesMenu}
+                      triggerProps={dropdownMenuTriggerProps}
+                      triggerLabel='Actions'
+                      dropTitle='Options'
+                      onSelect={() => {}}
+                    />
+                  </Toolbar>
+                </FormFieldsetHeader>
+                <FormFieldsetBody>
+                  <FieldArray
+                    name='document.publication_references'
+                    render={({ remove, push, form, name }) => {
+                      const values = get(form.values, name);
+
+                      if (!values?.length) {
+                        return (
+                          <MultiItemEmpty>
+                            <p>
+                              There are no references. You can start by adding
+                              one.
+                            </p>
+                            <Button
+                              useIcon='plus--small'
+                              onClick={() => push(getReferenceEmptyValue())}
+                            >
+                              Add new
+                            </Button>
+                            <Button useIcon='upload-2' onClick={() => {}}>
+                              Import from BibTeX file
+                            </Button>
+                          </MultiItemEmpty>
+                        );
+                      }
+
+                      return (
+                        <React.Fragment>
+                          {values.map((field, index) => (
+                            <FormFieldset key={field.id}>
+                              <FormFieldsetHeader>
+                                <ReferenceFormCheckable
+                                  textPlacement='left'
+                                  type='checkbox'
+                                  hideText
+                                >
+                                  Select reference
+                                </ReferenceFormCheckable>
+                                <FormLegend>Reference 1</FormLegend>
+                                <Toolbar size='small'>
+                                  <ToolbarIconButton
+                                    useIcon='pencil'
+                                    onClick={() => {}}
+                                  >
+                                    Edit reference
+                                  </ToolbarIconButton>
+                                  <VerticalDivider />
+                                  <ToolbarIconButton
+                                    useIcon='trash-bin'
+                                    onClick={() => remove(index)}
+                                  >
+                                    Delete
+                                  </ToolbarIconButton>
+                                </Toolbar>
+                              </FormFieldsetHeader>
+                              <FormFieldsetBody>
+                                reference fields
+                              </FormFieldsetBody>
+                            </FormFieldset>
+                          ))}
+                          <div>
+                            <Button
+                              useIcon='plus--small'
+                              onClick={() => push(getReferenceEmptyValue())}
+                            >
+                              Add new
+                            </Button>
+                            <Button useIcon='upload-2' onClick={() => {}}>
+                              Import from BibTeX file
+                            </Button>
+                          </div>
+                        </React.Fragment>
+                      );
+                    }}
+                  />
+                </FormFieldsetBody>
+              </FormFieldset>
             </Form>
           </FormBlock>
         </InpageBody>
