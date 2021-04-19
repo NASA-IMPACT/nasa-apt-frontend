@@ -4,7 +4,7 @@ import { FastField } from 'formik';
 import { FormHelperMessage } from '@devseed-ui/form';
 
 import FormGroupStructure from './form-group-structure';
-import { RichTextEditor } from '../../slate/editor';
+import { RichTextEditor } from '../../slate';
 
 /**
  * InputText component for usage with Formik

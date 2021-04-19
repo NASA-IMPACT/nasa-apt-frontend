@@ -1,4 +1,4 @@
-import { nodeFromSlateDocument } from '../components/slate/nodes-from-slate';
+import { nodeFromSlateDocument } from '../components/slate';
 import { REFERENCE } from '../components/slate/plugins/reference';
 
 // interface Reference {

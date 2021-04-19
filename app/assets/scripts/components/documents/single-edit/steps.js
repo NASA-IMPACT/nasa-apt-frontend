@@ -1,7 +1,7 @@
 import React from 'react'; /* eslint-disable react/display-name */
 import get from 'lodash.get';
 
-import { editorEmptyValue } from '../../slate/editor';
+import { editorEmptyValue } from '../../slate';
 
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';

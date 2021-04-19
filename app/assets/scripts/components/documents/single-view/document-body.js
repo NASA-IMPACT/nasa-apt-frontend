@@ -4,9 +4,8 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
-import SafeReadEditor from '../../slate/safe-read-editor';
+import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
 
-import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
 import {
   createDocumentReferenceIndex,
   formatReference
