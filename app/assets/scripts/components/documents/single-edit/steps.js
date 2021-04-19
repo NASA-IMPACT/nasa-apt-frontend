@@ -112,8 +112,22 @@ export const STEPS = [
           scientific_theory_assumptions: '<editor>',
           mathematical_theory: '<editor>',
           mathematical_theory_assumptions: '<editor>',
-          algorithm_input_variables: '',
-          algorithm_output_variables: ''
+          algorithm_input_variables: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   name: '<editor>'
+            //   long_name: '<editor>'
+            //   unit: '<editor>'
+            // }
+          ],
+          algorithm_output_variables: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   name: '<editor>'
+            //   long_name: '<editor>'
+            //   unit: '<editor>'
+            // }
+          ]
         },
         sections_completed: {
           scientific_theory: 'incomplete',
@@ -157,9 +171,27 @@ export const STEPS = [
             //   description: '<editor>'
             // }
           ],
-          data_access_input_data: [],
-          data_access_output_data: [],
-          data_access_related_urls: []
+          data_access_input_data: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   url: '',
+            //   description: '<editor>'
+            // }
+          ],
+          data_access_output_data: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   url: '',
+            //   description: '<editor>'
+            // }
+          ],
+          data_access_related_urls: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   url: '',
+            //   description: '<editor>'
+            // }
+          ]
         },
         sections_completed: {
           algorithm_implementations: 'incomplete',
