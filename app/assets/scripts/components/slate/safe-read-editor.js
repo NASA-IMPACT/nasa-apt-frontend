@@ -3,7 +3,7 @@ import T from 'prop-types';
 import { Node } from 'slate';
 
 import { ReadEditor } from './editor';
-import { ReadProvider } from './plugins/common/read-context';
+import { RichContextProvider } from './plugins/common/rich-context';
 
 export default class SafeReadEditor extends React.Component {
   static getDerivedStateFromError(error) {
@@ -40,9 +40,9 @@ const SafeReadEditorComponent = (props) => {
     return whenEmpty;
   }
   return (
-    <ReadProvider context={context} contextDeps={contextDeps}>
+    <RichContextProvider context={context} contextDeps={contextDeps}>
       <ReadEditor value={value} {...rest} />
-    </ReadProvider>
+    </RichContextProvider>
   );
 };
 

@@ -4,7 +4,7 @@ import { FastField } from 'formik';
 import { FormHelperMessage } from '@devseed-ui/form';
 
 import FormGroupStructure from './form-group-structure';
-import FullEditor from '../../slate/editor';
+import { RichTextEditor } from '../../slate/editor';
 
 /**
  * InputText component for usage with Formik
@@ -31,7 +31,7 @@ export function FormikInputEditor({ helper, id, ...props }) {
               )
             }
           >
-            <FullEditor
+            <RichTextEditor
               id={id}
               value={field.value}
               onChange={(value) => {

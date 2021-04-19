@@ -4,6 +4,7 @@ import { createEditor } from 'slate';
 import { Slate, withReact } from 'slate-react';
 
 import { EditorToolbar, EditorFloatingToolbar } from './editor-toolbar';
+import StickyElement from '../common/sticky-element';
 import composeDebugEditor from './plugins/debug-editor/compose-debug-editor';
 
 // Slate custom plugins.
@@ -31,7 +32,8 @@ import { BoldPlugin } from './plugins/bold';
 import { ItalicPlugin } from './plugins/italic';
 import { UnderlinePlugin } from './plugins/underline';
 import { SubSupScriptPlugin } from './plugins/subsupscript';
-import StickyElement from '../common/sticky-element';
+import { ReferencePlugin, ReferencesModal } from './plugins/reference';
+import { withReferenceModal } from './plugins/reference/with-reference-modal';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -40,6 +42,7 @@ const plugins = [
   ListPlugin,
   EquationPlugin,
   SubSectionPlugin,
+  ReferencePlugin,
   LinkPlugin,
   BoldPlugin,
   ItalicPlugin,
@@ -56,6 +59,7 @@ const withPlugins = [
   withList,
   withLink,
   withLinkEditor,
+  withReferenceModal,
   withSubsectionId
 ];
 
@@ -111,7 +115,7 @@ const validateSlateValue = (value) => {
   return false;
 };
 
-export default function FullEditor(props) {
+export function RichTextEditor(props) {
   const { id, onChange: inputOnChange, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
@@ -136,6 +140,7 @@ export default function FullEditor(props) {
         </StickyElement>
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
+        <ReferencesModal />
 
         <EditableDebug
           id={id}
@@ -148,7 +153,7 @@ export default function FullEditor(props) {
   );
 }
 
-FullEditor.propTypes = {
+RichTextEditor.propTypes = {
   id: T.string,
   onChange: T.func,
   value: T.object
