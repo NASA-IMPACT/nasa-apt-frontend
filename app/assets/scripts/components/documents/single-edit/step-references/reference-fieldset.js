@@ -98,7 +98,9 @@ export default function ReferencesFieldset(props) {
         >
           Select reference
         </ReferenceFormCheckable>
-        <ReferenceFormLegend onClick={onSelectFiltered}>{label}</ReferenceFormLegend>
+        <ReferenceFormLegend onClick={onSelectFiltered}>
+          {label}
+        </ReferenceFormLegend>
         {referenceUsage && <Pill>In use: {referenceUsage.count}x</Pill>}
         <Toolbar size='small'>
           <ToolbarIconButton
