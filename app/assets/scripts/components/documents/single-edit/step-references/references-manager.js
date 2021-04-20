@@ -22,6 +22,7 @@ import ReferencesManagerMenu from './references-manager-menu';
 
 import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
+import { formatReference } from '../../../../utils/references';
 
 const generateRefId = () => Math.random().toString(16).slice(2, 10);
 
@@ -145,6 +146,8 @@ export default function ReferencesManager(props) {
                 <React.Fragment>
                   {values.map((field, index) => (
                     <ReferencesFieldset
+                      index={index}
+                      label={`Ref #${index + 1}: ${formatReference(field)}`}
                       id={`${name}-${index}`}
                       name={`${name}.${index}`}
                       key={field.id}

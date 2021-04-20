@@ -13,10 +13,16 @@ import {
   ToolbarIconButton,
   VerticalDivider
 } from '@devseed-ui/toolbar';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
 
 import Pill from '../../../common/pill';
 import ReferenceFormFields from './reference-form-fields';
+
+const ReferenceFormLegend = styled(FormLegend)`
+  ${truncated()}
+  display: block;
+  max-width: 15rem;
+`;
 
 const ReferenceFormCheckable = styled(FormCheckable)`
   margin-right: ${glsp(0.5)};
@@ -51,6 +57,7 @@ const ReferencesFormFieldsetHeader = styled(FormFieldsetHeader)`
 
 export default function ReferencesFieldset(props) {
   const {
+    label,
     name,
     id,
     referenceUsage,
@@ -91,7 +98,7 @@ export default function ReferencesFieldset(props) {
         >
           Select reference
         </ReferenceFormCheckable>
-        <FormLegend onClick={onSelectFiltered}>Reference 1</FormLegend>
+        <ReferenceFormLegend onClick={onSelectFiltered}>{label}</ReferenceFormLegend>
         {referenceUsage && <Pill>In use: {referenceUsage.count}x</Pill>}
         <Toolbar size='small'>
           <ToolbarIconButton
@@ -117,6 +124,7 @@ export default function ReferencesFieldset(props) {
 }
 
 ReferencesFieldset.propTypes = {
+  label: T.string,
   name: T.string,
   id: T.string,
   referenceUsage: T.object,
