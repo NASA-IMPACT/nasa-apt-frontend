@@ -6,11 +6,11 @@ import {
   HubEntryHeader,
   HubEntryHeadline,
   HubEntryTitle,
-  HubEntryDetails
-  // HubEntryActions
+  HubEntryDetails,
+  HubEntryActions
 } from '../../../styles/hub';
 import { Link } from '../../../styles/clean/link';
-// import ContactActionsMenu from '../contact-actions-menu'; TODO create this?
+import ContactActionsMenu from '../contact-actions-menu';
 
 export default function ContactEntry({ contact, onContactAction }) {
   const onAction = useCallback((...args) => onContactAction(contact, ...args), [
@@ -35,15 +35,15 @@ export default function ContactEntry({ contact, onContactAction }) {
             <time dateTime={contact.createdAt}>{contact.createdAt}</time>
           </dd>
         </HubEntryDetails>
-        {/* <HubEntryActions> TODO: add this once created
-          <ActionsMenu contact={contact} onSelect={onAction} />
-        </HubEntryActions> */}
+        <HubEntryActions>
+          <ContactActionsMenu contact={contact} onSelect={onAction} />
+        </HubEntryActions>
       </HubEntryHeader>
     </HubEntry>
   );
 }
 
 ContactEntry.propTypes = {
-  contact: T.object
-  // onContactAction: T.func
+  contact: T.object,
+  onContactAction: T.func
 };
