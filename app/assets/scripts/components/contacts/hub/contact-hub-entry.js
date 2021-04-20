@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import T from 'prop-types';
 
 import {
@@ -12,26 +12,24 @@ import {
 import { Link } from '../../../styles/clean/link';
 // import ContactActionsMenu from '../contact-actions-menu'; TODO create this?
 
-import { contactView } from '../../../utils/url-creator';
-
-export default function ContactEntry({ contact }) {
-  // const onAction = useCallback((...args) => onContactAction(contact, ...args), [
-  //   onContactAction,
-  //   contact
-  // ]);
+export default function ContactEntry({ contact, onContactAction }) {
+  const onAction = useCallback((...args) => onContactAction(contact, ...args), [
+    onContactAction,
+    contact
+  ]);
   return (
     <HubEntry>
       <HubEntryHeader>
         <HubEntryHeadline>
           <HubEntryTitle>
-            <Link to={contactView(contact)} title='View document'>
-              {contact.name}
+            <Link to={`contact/${contact.id}`} title='View document'>
+              {contact.first_name} {contact.middle_name} {contact.last_name}
             </Link>
           </HubEntryTitle>
         </HubEntryHeadline>
         <HubEntryDetails>
           <dt>Mechanisms</dt>
-          <dd>{contact.mechanismsCount} contact mechanisms</dd>
+          <dd>{contact.mechanisms.length} contact mechanisms</dd>
           <dt>On</dt>
           <dd>
             <time dateTime={contact.createdAt}>{contact.createdAt}</time>
