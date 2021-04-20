@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from 'react';
-import T from 'prop-types';
+import React, { useState } from 'react';
 import get from 'lodash.get';
-import { FieldArray } from 'formik';
+import { FieldArray, useField } from 'formik';
 import {
   FormFieldset,
   FormFieldsetHeader,
@@ -16,23 +15,21 @@ import {
 } from '@devseed-ui/toolbar';
 
 import { MultiItemEmpty } from '../../../common/forms/field-multi-item';
-import DropdownMenu from '../../../common/dropdown-menu';
 import ReferencesFieldset from './reference-fieldset';
 import ReferencesCreationActions from './reference-creation-actions';
+import ReferencesManagerMenu from './references-manager-menu';
 
 import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
 
-const getReferenceEmptyValue = () => {
-  return {
-    // Random 16 hex id.
-    id: Math.random().toString(16).slice(2, 10)
-  };
-};
+const generateRefId = () => Math.random().toString(16).slice(2, 10);
 
-const dropdownMenuTriggerProps = {
-  size: 'small',
-  useIcon: ['chevron-down--small', 'after']
+const getReferenceEmptyValue = (base = {}) => {
+  return {
+    ...base,
+    // Random 16 hex id.
+    id: generateRefId()
+  };
 };
 
 // The selection of the refs is managed by SelectionList. This utility only
@@ -51,49 +48,31 @@ const editingReferencesList = new SelectionList();
 export default function ReferencesManager() {
   const [refsSelected, setRefsSelected] = useState([]);
   const [refsEditing, setRefsEditing] = useState([]);
+  const [field, , helpers] = useField('document.publication_references');
 
-  const referencesMenu = useMemo(
-    () => [
-      {
-        id: 'actions',
-        items: [
-          {
-            id: 'add',
-            label: 'Add new',
-            title: 'Add new reference'
-          },
-          {
-            id: 'import',
-            label: 'Import from BibTeX file...',
-            title: 'Import from file'
-          }
-        ]
-      },
-      {
-        id: 'actions2',
-        items: [
-          {
-            id: 'delete',
-            label: 'Delete selected...',
-            title: 'Delete selected references'
-          }
-        ]
-      }
-    ],
-    []
-  );
-
-  const fileChange = async (e) => {
-    const file = e.target.files[0];
-    // Reset file input.
-    e.target.value = '';
+  const onFileSelect = async (file) => {
     const refs = await readBibtexFile(file);
+    const preparedRefs = refs.valid.map((r) => getReferenceEmptyValue(r));
+    helpers.setValue(field.value.concat(preparedRefs));
   };
 
-  const onMenuAction = ({ push }, menuId) => {
+  const onMenuAction = ({ push }, menuId, data) => {
     switch (menuId) {
       case 'add':
         push(getReferenceEmptyValue());
+        break;
+      case 'import':
+        onFileSelect(data.file);
+        break;
+      case 'delete':
+        {
+          // Create a list of ids to facilitate searching.
+          const selectedIds = refsSelected.map((r) => r.id);
+          helpers.setValue(
+            field.value.filter((f) => !selectedIds.includes(f.id))
+          );
+          setRefsSelected([]);
+        }
         break;
     }
   };
@@ -115,18 +94,20 @@ export default function ReferencesManager() {
               <FormLegend>References</FormLegend>
               <Toolbar size='small'>
                 <ToolbarLabel>Select</ToolbarLabel>
-                <ToolbarButton>All</ToolbarButton>
-                <ToolbarButton>None</ToolbarButton>
+                <ToolbarButton onClick={() => setRefsSelected(values)}>
+                  All
+                </ToolbarButton>
+                <ToolbarButton onClick={() => setRefsSelected([])}>
+                  None
+                </ToolbarButton>
                 <ToolbarButton>Unused</ToolbarButton>
 
                 <VerticalDivider />
 
-                <DropdownMenu
-                  menu={referencesMenu}
-                  triggerProps={dropdownMenuTriggerProps}
-                  triggerLabel='Actions'
-                  dropTitle='Options'
-                  onSelect={(...args) => onMenuAction(arrayHelpers, ...args)}
+                <ReferencesManagerMenu
+                  arrayHelpers={arrayHelpers}
+                  onSelect={onMenuAction}
+                  refSelectedCount={refsSelected.length}
                 />
               </Toolbar>
             </FormFieldsetHeader>
@@ -160,7 +141,7 @@ export default function ReferencesManager() {
                   <div>
                     <ReferencesCreationActions
                       onAddClick={() => push(getReferenceEmptyValue())}
-                      onUploadClick={() => {}}
+                      onFileSelect={onFileSelect}
                     />
                   </div>
                 </React.Fragment>
@@ -169,7 +150,7 @@ export default function ReferencesManager() {
                   <p>There are no references. You can start by adding one.</p>
                   <ReferencesCreationActions
                     onAddClick={() => push(getReferenceEmptyValue())}
-                    onUploadClick={() => {}}
+                    onFileSelect={onFileSelect}
                   />
                 </MultiItemEmpty>
               )}

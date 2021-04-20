@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
   FormFieldset,
   FormFieldsetHeader,
@@ -13,10 +13,18 @@ import {
   ToolbarIconButton,
   VerticalDivider
 } from '@devseed-ui/toolbar';
-import { glsp } from '@devseed-ui/theme-provider';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 const ReferenceFormCheckable = styled(FormCheckable)`
   margin-right: ${glsp(0.5)};
+`;
+
+const ReferencesFormFieldset = styled(FormFieldset)`
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      border-color: ${themeVal('color.baseAlphaE')};
+    `}
 `;
 
 // Re-organize the header to ensure the Legend only takes up the needed space,
@@ -57,7 +65,7 @@ export default function ReferencesFieldset(props) {
   );
 
   return (
-    <FormFieldset>
+    <ReferencesFormFieldset isSelected={isSelected}>
       <ReferencesFormFieldsetHeader>
         <ReferenceFormCheckable
           name={name}
@@ -90,7 +98,7 @@ export default function ReferencesFieldset(props) {
         </Toolbar>
       </ReferencesFormFieldsetHeader>
       {isEditing && <FormFieldsetBody>reference fields</FormFieldsetBody>}
-    </FormFieldset>
+    </ReferencesFormFieldset>
   );
 }
 
