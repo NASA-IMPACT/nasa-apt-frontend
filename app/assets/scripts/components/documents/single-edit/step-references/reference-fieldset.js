@@ -16,6 +16,7 @@ import {
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import Pill from '../../../common/pill';
+import ReferenceFormFields from './reference-form-fields';
 
 const ReferenceFormCheckable = styled(FormCheckable)`
   margin-right: ${glsp(0.5)};
@@ -106,7 +107,11 @@ export default function ReferencesFieldset(props) {
           </ToolbarIconButton>
         </Toolbar>
       </ReferencesFormFieldsetHeader>
-      {isEditing && <FormFieldsetBody>reference fields</FormFieldsetBody>}
+      {isEditing && (
+        <FormFieldsetBody>
+          <ReferenceFormFields id={id} name={name} />
+        </FormFieldsetBody>
+      )}
     </ReferencesFormFieldset>
   );
 }

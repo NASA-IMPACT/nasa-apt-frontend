@@ -27,6 +27,21 @@ const generateRefId = () => Math.random().toString(16).slice(2, 10);
 
 const getReferenceEmptyValue = (base = {}) => {
   return {
+    title: '',
+    authors: '',
+    series: '',
+    edition: '',
+    volume: '',
+    issue: '',
+    report_number: '',
+    publication_place: '',
+    year: '',
+    publisher: '',
+    pages: '',
+    isbn: '',
+    doi: '',
+    online_resource: '',
+    other_reference_details: '',
     ...base,
     // Random 16 hex id.
     id: generateRefId()
@@ -62,7 +77,11 @@ export default function ReferencesManager(props) {
   const onMenuAction = ({ push }, menuId, data) => {
     switch (menuId) {
       case 'add':
-        push(getReferenceEmptyValue());
+        {
+          const newRef = getReferenceEmptyValue();
+          push(newRef);
+          setRefsEditing([newRef]);
+        }
         break;
       case 'import':
         onFileSelect(data.file);
@@ -151,7 +170,11 @@ export default function ReferencesManager(props) {
                   ))}
                   <div>
                     <ReferencesCreationActions
-                      onAddClick={() => push(getReferenceEmptyValue())}
+                      onAddClick={() => {
+                        const newRef = getReferenceEmptyValue();
+                        push(newRef);
+                        setRefsEditing([newRef]);
+                      }}
                       onFileSelect={onFileSelect}
                     />
                   </div>
@@ -160,7 +183,11 @@ export default function ReferencesManager(props) {
                 <MultiItemEmpty>
                   <p>There are no references. You can start by adding one.</p>
                   <ReferencesCreationActions
-                    onAddClick={() => push(getReferenceEmptyValue())}
+                    onAddClick={() => {
+                      const newRef = getReferenceEmptyValue();
+                      push(newRef);
+                      setRefsEditing([newRef]);
+                    }}
                     onFileSelect={onFileSelect}
                   />
                 </MultiItemEmpty>
