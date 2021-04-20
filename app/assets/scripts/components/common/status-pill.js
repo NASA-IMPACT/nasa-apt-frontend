@@ -3,20 +3,10 @@ import T from 'prop-types';
 import styled from 'styled-components';
 
 import { rgba, themeVal } from '@devseed-ui/theme-provider';
+import Pill from './pill';
 
-const StatusSelf = styled.strong`
-  position: relative;
-  display: block;
-  height: 1.25rem;
+const StatusSelf = styled(Pill)`
   width: 6rem;
-  font-size: 0.75rem;
-  font-weight: ${themeVal('type.base.bold')};
-  text-transform: uppercase;
-  color: ${themeVal('color.baseLight')};
-  text-align: center;
-  background-color: ${rgba(themeVal('color.base'), 0.48)};
-  border-radius: ${themeVal('shape.ellipsoid')};
-  overflow: hidden;
 
   &::before {
     position: absolute;
@@ -29,11 +19,6 @@ const StatusSelf = styled.strong`
     pointer-events: none;
     background-color: ${rgba(themeVal('color.base'), 0.32)};
   }
-
-  > * {
-    position: relative;
-    z-index: 2;
-  }
 `;
 
 const isDraft = (status) => status.toLowerCase() === 'draft';
@@ -43,7 +28,7 @@ function StatusPill(props) {
 
   return (
     <StatusSelf value={isDraft(status) ? completeness : 100}>
-      <span>{isDraft(status) ? `Draft: ${completeness}%` : 'Published'}</span>
+      {isDraft(status) ? `Draft: ${completeness}%` : 'Published'}
     </StatusSelf>
   );
 }
