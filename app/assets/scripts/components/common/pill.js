@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 
-import { rgba, themeVal } from '@devseed-ui/theme-provider';
+import { rgba, themeVal, glsp } from '@devseed-ui/theme-provider';
 
 const StyledStrong = styled.strong`
   /* styled-component */
@@ -34,6 +34,7 @@ const Pill = styled(PillSelf)`
   text-align: center;
   background-color: ${rgba(themeVal('color.base'), 0.48)};
   border-radius: ${themeVal('shape.ellipsoid')};
+  padding: ${glsp(0, 0.5)};
   overflow: hidden;
 
   > * {

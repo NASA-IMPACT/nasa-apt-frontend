@@ -123,7 +123,8 @@ export const createDocumentReferenceIndex = (document) => {
   //   refId: {
   //     docIndex: 1,
   //     refId: 1,
-  //     fields: ['fieldName']
+  //     fields: ['fieldName'],
+  //     count: X
   //   }
   // }
   const refUsageIndex = {};
@@ -145,11 +146,13 @@ export const createDocumentReferenceIndex = (document) => {
       const refItem = refUsageIndex[node.refId];
       if (refItem) {
         refItem.fields = addUnique(refItem.fields, fieldName);
+        refItem.count++;
       } else {
         refUsageIndex[node.refId] = {
           docIndex: ++docIndex,
           refId: node.refId,
-          fields: [fieldName]
+          fields: [fieldName],
+          count: 1
         };
       }
     }

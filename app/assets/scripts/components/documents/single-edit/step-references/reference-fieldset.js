@@ -15,6 +15,8 @@ import {
 } from '@devseed-ui/toolbar';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
+import Pill from '../../../common/pill';
+
 const ReferenceFormCheckable = styled(FormCheckable)`
   margin-right: ${glsp(0.5)};
 `;
@@ -31,9 +33,14 @@ const ReferencesFormFieldset = styled(FormFieldset)`
 // otherwise the click event would span the whole header.
 const ReferencesFormFieldsetHeader = styled(FormFieldsetHeader)`
   justify-content: flex-start;
+  align-items: center;
 
   ${FormLegend} {
     width: max-content;
+  }
+
+  ${Pill} {
+    margin-left: ${glsp()};
   }
 
   ${Toolbar} {
@@ -45,6 +52,7 @@ export default function ReferencesFieldset(props) {
   const {
     name,
     id,
+    referenceUsage,
     isEditing,
     onEditClick,
     onDeleteClick,
@@ -83,6 +91,7 @@ export default function ReferencesFieldset(props) {
           Select reference
         </ReferenceFormCheckable>
         <FormLegend onClick={onSelectFiltered}>Reference 1</FormLegend>
+        {referenceUsage && <Pill>In use: {referenceUsage.count}x</Pill>}
         <Toolbar size='small'>
           <ToolbarIconButton
             useIcon='pencil'
@@ -105,6 +114,7 @@ export default function ReferencesFieldset(props) {
 ReferencesFieldset.propTypes = {
   name: T.string,
   id: T.string,
+  referenceUsage: T.object,
   isEditing: T.bool,
   onEditClick: T.func,
   onDeleteClick: T.func,

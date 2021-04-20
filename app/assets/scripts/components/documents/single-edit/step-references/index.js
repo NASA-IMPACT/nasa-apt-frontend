@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
@@ -9,6 +9,7 @@ import ReferencesManager from './references-manager';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
+import { createDocumentReferenceIndex } from '../../../../utils/references';
 
 export default function StepReferences(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -17,6 +18,11 @@ export default function StepReferences(props) {
   const initialValues = step.getInitialValues(atbd);
 
   const onSubmit = useSubmitForVersionData(updateAtbd);
+
+  const referenceIndex = useMemo(
+    () => createDocumentReferenceIndex(atbd.document),
+    [atbd]
+  );
 
   return (
     <Formik
@@ -32,7 +38,7 @@ export default function StepReferences(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <ReferencesManager />
+              <ReferencesManager referenceIndex={referenceIndex} />
             </Form>
           </FormBlock>
         </InpageBody>

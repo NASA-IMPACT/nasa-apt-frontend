@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import T from 'prop-types';
 import get from 'lodash.get';
 import { FieldArray, useField } from 'formik';
 import {
@@ -45,7 +46,9 @@ const getReferenceEmptyValue = (base = {}) => {
 const selectedReferencesList = new SelectionList();
 const editingReferencesList = new SelectionList();
 
-export default function ReferencesManager() {
+export default function ReferencesManager(props) {
+  const { referenceIndex } = props;
+
   const [refsSelected, setRefsSelected] = useState([]);
   const [refsEditing, setRefsEditing] = useState([]);
   const [field, , helpers] = useField('document.publication_references');
@@ -88,6 +91,8 @@ export default function ReferencesManager() {
         selectedReferencesList.setList(values).setSelected(refsSelected);
         editingReferencesList.setList(values).setSelected(refsEditing);
 
+        const unusedRef = values.filter((r) => !referenceIndex[r.id]);
+
         return (
           <FormFieldset>
             <FormFieldsetHeader>
@@ -100,7 +105,12 @@ export default function ReferencesManager() {
                 <ToolbarButton onClick={() => setRefsSelected([])}>
                   None
                 </ToolbarButton>
-                <ToolbarButton>Unused</ToolbarButton>
+                <ToolbarButton
+                  disabled={!unusedRef.length}
+                  onClick={() => setRefsSelected(unusedRef)}
+                >
+                  Unused
+                </ToolbarButton>
 
                 <VerticalDivider />
 
@@ -119,6 +129,7 @@ export default function ReferencesManager() {
                       id={`${name}-${index}`}
                       name={`${name}.${index}`}
                       key={field.id}
+                      referenceUsage={referenceIndex[field.id]}
                       isEditing={editingReferencesList.isSelected(field)}
                       onEditClick={(e) => {
                         const newSelection = editingReferencesList.toggle(
@@ -162,4 +173,6 @@ export default function ReferencesManager() {
   );
 }
 
-ReferencesManager.propTypes = {};
+ReferencesManager.propTypes = {
+  referenceIndex: T.object
+};
