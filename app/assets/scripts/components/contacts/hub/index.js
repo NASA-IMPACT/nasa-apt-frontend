@@ -79,7 +79,7 @@ export function Contacts() {
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Documents</InpageTitle>
+            <InpageTitle>Contacts</InpageTitle>
           </InpageHeadline>
           <InpageActions>
             <ButtonSecondary
