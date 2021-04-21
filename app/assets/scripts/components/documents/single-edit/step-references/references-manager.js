@@ -119,10 +119,16 @@ export default function ReferencesManager(props) {
               <FormLegend>References</FormLegend>
               <Toolbar size='small'>
                 <ToolbarLabel>Select</ToolbarLabel>
-                <ToolbarButton onClick={() => setRefsSelected(values)}>
+                <ToolbarButton
+                  disabled={!values.length}
+                  onClick={() => setRefsSelected(values)}
+                >
                   All
                 </ToolbarButton>
-                <ToolbarButton onClick={() => setRefsSelected([])}>
+                <ToolbarButton
+                  disabled={!values.length}
+                  onClick={() => setRefsSelected([])}
+                >
                   None
                 </ToolbarButton>
                 <ToolbarButton
