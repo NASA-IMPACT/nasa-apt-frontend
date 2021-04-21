@@ -896,6 +896,86 @@
   resolved "https://registry.yarnpkg.com/@casl/react/-/react-2.2.2.tgz#efd7b992b71a2566386af9b1e79c9fd303f75883"
   integrity sha512-Ab/bUptAJclaGzscQNfddpbR6Cv/dCQbdSFXq60gOMi70Oyb6h2p55ZNE0P+0SW4XsEcmOSXr82nk7TbbXglgg==
 
+"@citation-js/cli@0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fcli/-/cli-0.5.0.tgz#4d6d3cc96c154ef7c089c831afa29a41328f647e"
+  integrity sha512-gTUuJDMuGeGZxG6cqaiYjjGgRI0JehvyvYfJEd+Yf9fqI6tqCKIdGk5vo8F97veNiZP7nZ4IuBfdjaQFwa436w==
+  dependencies:
+    "@citation-js/core" "^0.5.0"
+    "@citation-js/plugin-bibjson" "^0.5.0"
+    "@citation-js/plugin-bibtex" "^0.5.0"
+    "@citation-js/plugin-csl" "^0.5.0"
+    "@citation-js/plugin-doi" "^0.5.0"
+    "@citation-js/plugin-ris" "^0.5.0"
+    "@citation-js/plugin-wikidata" "^0.5.0"
+    commander "^5.1.0"
+
+"@citation-js/core@0.5.0", "@citation-js/core@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fcore/-/core-0.5.0.tgz#0d90f7cec15b1e9ce4db259634c2951384792329"
+  integrity sha512-3CjODmBJK6edZALxN+A8imLFXZKfu2uFa+ueu85jqUI6E8uVtggPM5Tn58+WVoHaUBYGWW5Lc4UM/wYzJPDVcQ==
+  dependencies:
+    "@citation-js/date" "^0.4.4"
+    "@citation-js/name" "^0.4.2"
+    isomorphic-fetch "^3.0.0"
+    sync-fetch "^0.2.0"
+
+"@citation-js/date@0.4.4", "@citation-js/date@^0.4.4":
+  version "0.4.4"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fdate/-/date-0.4.4.tgz#2e90b3c04b8b4861b331274916c3cc3e57860628"
+  integrity sha512-wD195pZPwCCN8idhxz4HYZbf5mMnPZMRhOipcU8v1orZWqZp6YDRjOplNKo6yX7tf6fB4ZO8QLuNaNjuic5AWQ==
+
+"@citation-js/name@0.4.2", "@citation-js/name@^0.4.2":
+  version "0.4.2"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fname/-/name-0.4.2.tgz#8dc834b7e6c06998fc8d3b63632658754c94a875"
+  integrity sha512-brSPsjs2fOVzSnARLKu0qncn6suWjHVQtrqSUrnqyaRH95r/Ad4wPF5EsoWr+Dx8HzkCGb/ogmoAzfCsqlTwTQ==
+
+"@citation-js/plugin-bibjson@0.5.0", "@citation-js/plugin-bibjson@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-bibjson/-/plugin-bibjson-0.5.0.tgz#19713ce14c83266a3c0b7462525dac218d873482"
+  integrity sha512-1IiR2YiRMj2haEm2cDrEdOAxaYMb42oIpqq0ppTEO3rcwfkiv7MJOleTncPvg2mIB4JQFFlhxTkcSrqY/QeHcg==
+  dependencies:
+    "@citation-js/date" "^0.4.4"
+    "@citation-js/name" "^0.4.2"
+
+"@citation-js/plugin-bibtex@0.5.0", "@citation-js/plugin-bibtex@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-bibtex/-/plugin-bibtex-0.5.0.tgz#b8920cad3e54a760dcb64bf96b70a4d302c0e33f"
+  integrity sha512-3R9LkmWUQ69fnNsQ+IGY5307zFYAKf5vr14NT1+TdnarGvGRlHkF3B3wk9TK2/d8pGgg7pi4oiuF9VmGBSIaMw==
+  dependencies:
+    "@citation-js/date" "^0.4.4"
+    "@citation-js/name" "^0.4.2"
+    moo "^0.5.1"
+
+"@citation-js/plugin-csl@0.5.0", "@citation-js/plugin-csl@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-csl/-/plugin-csl-0.5.0.tgz#d4913ea80ea82b814fb5774344e181fbfe767bf8"
+  integrity sha512-dCPwdELFoPbgedxWK+Rj+zvkkQ8PQoPEOwzW9f4JgfIuj/jXlpsUX/SgJGJrzHGkQYYkmTkBx6LcEDNoGS62sw==
+  dependencies:
+    citeproc "^2.4.6"
+
+"@citation-js/plugin-doi@0.5.0", "@citation-js/plugin-doi@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-doi/-/plugin-doi-0.5.0.tgz#53935d1e2a2d4dc488d329845c4442218afa9c82"
+  integrity sha512-oJ5KW6+BxVkkf5mWAoAiqmxi1III+Ot9q0ac1gwzN6+eM3j4WC9JU8iEGLfiHY8GbfwqsxVPyhNfA1+JbJ8m6g==
+
+"@citation-js/plugin-ris@0.5.0", "@citation-js/plugin-ris@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-ris/-/plugin-ris-0.5.0.tgz#4de7fe249d28f1152d8701ad68d2acbe0f2ebc0b"
+  integrity sha512-GENH2d16oO1yuk6FJEhQ5H8U28MdJ85wGHzBmbCFgkoyPwwYREg8yF8gVHo7oQZkbzrshpSvZ9QDtAVMABSB2w==
+  dependencies:
+    "@citation-js/date" "^0.4.4"
+    "@citation-js/name" "^0.4.2"
+
+"@citation-js/plugin-wikidata@0.5.0", "@citation-js/plugin-wikidata@^0.5.0":
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@citation-js%2fplugin-wikidata/-/plugin-wikidata-0.5.0.tgz#11b0eddbe25ccbd3ba254f00a272570854baca0f"
+  integrity sha512-7jIs1bpOVWckcPNTWhyjYxiJ+cFkotwSr9bqTSa5e18MLQkS0Z6YmiF0pCjQyJ0wrLaMDS0ZLDgklAHIyMqoHw==
+  dependencies:
+    "@citation-js/date" "^0.4.4"
+    "@citation-js/name" "^0.4.2"
+    wikidata-sdk "7"
+
 "@devseed-ui/animation@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/animation/-/animation-3.0.0.tgz#b4e846072c61dc8b4e46d0f4ca65534c64ba9446"
@@ -2326,7 +2406,7 @@ buffer-xor@^1.0.3:
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
   integrity sha1-JuYe0UIvtw3ULm42cp7VHYVf6Nk=
 
-buffer@^5.2.1:
+buffer@^5.2.1, buffer@^5.7.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
@@ -2569,6 +2649,28 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
+citation-js@^0.5.0:
+  version "0.5.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/citation-js/-/citation-js-0.5.0.tgz#b98bd7c7d42eb246dcf0bdab5156a5960948b6dc"
+  integrity sha512-jwNAfp8KkUjgS1NChXfjEibPlxdrzwdYliuIAOBsnznZUdWqnGuAFC5gaM4bdhzU1EML9SfF6K9F/ZDy/WtGpA==
+  dependencies:
+    "@citation-js/cli" "0.5.0"
+    "@citation-js/core" "0.5.0"
+    "@citation-js/date" "0.4.4"
+    "@citation-js/name" "0.4.2"
+    "@citation-js/plugin-bibjson" "0.5.0"
+    "@citation-js/plugin-bibtex" "0.5.0"
+    "@citation-js/plugin-csl" "0.5.0"
+    "@citation-js/plugin-doi" "0.5.0"
+    "@citation-js/plugin-ris" "0.5.0"
+    "@citation-js/plugin-wikidata" "0.5.0"
+    citeproc "^2.4.59"
+
+citeproc@^2.4.59, citeproc@^2.4.6:
+  version "2.4.59"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/citeproc/-/citeproc-2.4.59.tgz#36e1fab8cba4c7f2f88d3f009094b06d4bf08879"
+  integrity sha512-BoOk7hu2ORheW2TT//Xj6AFnyP9CuVuQ6THBYTRXO3wEYTMviPbcyXFiZ/tPg5bijvvvVa4gPJRVnipQ0y2aKw==
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -2786,6 +2888,11 @@ commander@^2.2.0, commander@^2.20.0, commander@^2.8.1:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
+
+commander@^5.1.0:
+  version "5.1.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
 component-bind@1.0.0:
   version "1.0.0"
@@ -6181,6 +6288,14 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
+isomorphic-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
+  integrity sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==
+  dependencies:
+    node-fetch "^2.6.1"
+    whatwg-fetch "^3.4.1"
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -7075,6 +7190,11 @@ moniker@0.1.2:
   resolved "https://registry.yarnpkg.com/moniker/-/moniker-0.1.2.tgz#872dfba575dcea8fa04a5135b13d5f24beccc97e"
   integrity sha1-hy37pXXc6o+gSlE1sT1fJL7MyX4=
 
+moo@^0.5.1:
+  version "0.5.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/moo/-/moo-0.5.1.tgz#7aae7f384b9b09f620b6abf6f74ebbcd1b65dbc4"
+  integrity sha512-I1mnb5xn4fO80BH9BLcF0yLypy2UKl+Cb01Fu0hJRkJjlCRtxZMWkTdAtDd5ZqCOxtCkhmRwyI57vWT+1iZ67w==
+
 mozjpeg@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/mozjpeg/-/mozjpeg-6.0.1.tgz#56969dddb5741ef2bcb1af066cae21e61a91a27b"
@@ -7186,6 +7306,11 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+node-fetch@^2.6.1:
+  version "2.6.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-releases@^1.1.70:
   version "1.1.70"
@@ -10010,6 +10135,14 @@ symbol-observable@^1.2.0:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
 
+sync-fetch@^0.2.0:
+  version "0.2.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/sync-fetch/-/sync-fetch-0.2.1.tgz#55cc01d7485bd92cb1fc22fd6270cdf811e787ee"
+  integrity sha512-GxcJRiIgg32kjEe90/BTtLeCBOdSR5ShfxbQNrB3duVKbuf7lnjmC4aT3y/Bu1t84j5Uio80IoDQZ4uOHrtTHQ==
+  dependencies:
+    buffer "^5.7.0"
+    node-fetch "^2.6.1"
+
 syntax-error@^1.1.1:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/syntax-error/-/syntax-error-1.4.0.tgz#2d9d4ff5c064acb711594a3e3b95054ad51d907c"
@@ -10837,6 +10970,11 @@ watchify@^4.0.0:
     through2 "^4.0.2"
     xtend "^4.0.2"
 
+whatwg-fetch@^3.4.1:
+  version "3.6.2"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
+  integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
+
 which-module@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/which-module/-/which-module-1.0.0.tgz#bba63ca861948994ff307736089e3b96026c2a4f"
@@ -10873,6 +11011,18 @@ which@^2.0.1:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
+
+wikibase-sdk@^7.11.1:
+  version "7.11.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/wikibase-sdk/-/wikibase-sdk-7.11.1.tgz#4384b3c89485e3038df459d4d0beff4524ea13c5"
+  integrity sha512-affAamti2V69czAQoxHk0X4MuQaFU04jGCjXhvvsMeMnC2mhUmzSBibkCRPthB6vlS5dY6B8KDCWwygmVoiTHg==
+
+wikidata-sdk@7:
+  version "7.11.1"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/wikidata-sdk/-/wikidata-sdk-7.11.1.tgz#400e2ef9d3bfd79377093a841f4db6cd3593e001"
+  integrity sha512-oXmLcCo0Qd3xY4G5ZY4YFS34WUJBBWjKdYK/Sg8ns6PXmgp2fl7E9rYyxWFXxPsmyxbi9zTyXXipN/fTuHpGxQ==
+  dependencies:
+    wikibase-sdk "^7.11.1"
 
 word-wrap@^1.2.3:
   version "1.2.3"

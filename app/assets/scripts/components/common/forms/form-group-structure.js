@@ -33,6 +33,7 @@ export default function FormGroupStructure(props) {
   const {
     id,
     label,
+    className,
     toolbarItems,
     description,
     helper,
@@ -57,7 +58,7 @@ export default function FormGroupStructure(props) {
   );
 
   return (
-    <FormGroup>
+    <FormGroup className={className}>
       <FormGroupHeader>
         <FormLabel htmlFor={id}>{label}</FormLabel>
         {hasToolbar && toolbar}
@@ -74,6 +75,7 @@ export default function FormGroupStructure(props) {
 FormGroupStructure.propTypes = {
   id: T.string,
   label: T.string,
+  className: T.string,
   description: T.string,
   toolbarItems: T.object,
   helper: T.node,
