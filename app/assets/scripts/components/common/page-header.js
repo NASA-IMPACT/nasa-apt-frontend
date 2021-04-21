@@ -11,6 +11,7 @@ import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import config from '../../config';
+import { Can } from '../../a11n';
 import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
@@ -181,15 +182,17 @@ function PageHeader() {
           </li>
           {user.isLogged && (
             <li>
-              <Button
-                forwardedAs={NavLink}
-                exact
-                to='/contacts'
-                variation='achromic-plain'
-                title='View the contact list'
-              >
-                Contacts
-              </Button>
+              <Can do='view' on='contacts'>
+                <Button
+                  forwardedAs={NavLink}
+                  exact
+                  to='/contacts'
+                  variation='achromic-plain'
+                  title='View the contact list'
+                >
+                  Contacts
+                </Button>
+              </Can>
             </li>
           )}
           <li>
