@@ -166,7 +166,13 @@ export default function ReferencesManager(props) {
                         );
                         setRefsEditing(newSelection);
                       }}
-                      onDeleteClick={() => remove(index)}
+                      onDeleteClick={() => {
+                        const newSelection = selectedReferencesList.deselect(
+                          field
+                        );
+                        setRefsSelected(newSelection);
+                        remove(index);
+                      }}
                       isSelected={selectedReferencesList.isSelected(field)}
                       onSelectClick={(e) => {
                         const newSelection = selectedReferencesList.toggle(
