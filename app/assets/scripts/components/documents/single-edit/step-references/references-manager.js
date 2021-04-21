@@ -28,6 +28,8 @@ const generateRefId = () => Math.random().toString(16).slice(2, 10);
 
 const getReferenceEmptyValue = (base = {}) => {
   return {
+    // Random 16 hex id.
+    id: generateRefId(),
     title: '',
     authors: '',
     series: '',
@@ -43,9 +45,7 @@ const getReferenceEmptyValue = (base = {}) => {
     doi: '',
     online_resource: '',
     other_reference_details: '',
-    ...base,
-    // Random 16 hex id.
-    id: generateRefId()
+    ...base
   };
 };
 
