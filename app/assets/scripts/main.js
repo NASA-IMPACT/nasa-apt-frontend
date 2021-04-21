@@ -79,7 +79,12 @@ function Root() {
               path='/documents/:id/:version/edit/:step?'
               component={DocumentsEdit}
             />
-            <Route exact path='/contacts' component={Contacts} />
+            <AccessRoute
+              permission={['read', 'contact']}
+              exact
+              path='/contacts'
+              component={Contacts}
+            />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
