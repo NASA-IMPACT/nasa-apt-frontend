@@ -7,13 +7,6 @@ import { Link } from '../../styles/clean/link';
 export default function ContactActionsMenu({ contact, onSelect }) {
   const dropProps = useMemo(() => {
     // Define menu items.
-    const itemViewInfo = {
-      id: 'view-info',
-      label: 'View info...',
-      title: 'View contact info',
-      as: Link,
-      to: `contact/${contact.id}`
-    };
     const itemEdit = {
       id: 'edit',
       label: 'Edit',
@@ -39,7 +32,7 @@ export default function ContactActionsMenu({ contact, onSelect }) {
       ...triggerProps,
       menu: {
         id: 'actions',
-        items: [itemViewInfo, itemEdit, itemDelete]
+        items: [itemEdit, itemDelete]
       }
     };
   }, [contact]);
