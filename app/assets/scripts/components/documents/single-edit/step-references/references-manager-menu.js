@@ -85,7 +85,7 @@ export default function ReferencesManagerMenu(props) {
       menu={referencesMenu}
       triggerProps={dropdownMenuTriggerProps}
       triggerLabel='Actions'
-      dropTitle='Options'
+      dropTitle='Actions'
       onSelect={onMenuSelect}
     />
   );
