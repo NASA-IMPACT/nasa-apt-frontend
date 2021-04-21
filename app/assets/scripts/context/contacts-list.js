@@ -58,25 +58,7 @@ export const ContactsProvider = ({ children }) => {
     useKey: true,
     requests: {
       fetchSingleContact: withRequestToken(token, ({ id }) => ({
-        stateKey: `${id}`,
-        mutation: async ({ axios, requestOptions, actions }) => {
-          try {
-            // Dispatch request action. It is already dispatchable.
-            actions.request();
-
-            const response = await axios({
-              ...requestOptions,
-              url: `/contacts/${id}`,
-              method: 'fetch'
-            });
-
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(response.data);
-          } catch (error) {
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(null, error);
-          }
-        }
+        url: `/contacts/${id}`
       }))
     },
     mutations: {
