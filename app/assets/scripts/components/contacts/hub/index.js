@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
+// import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -28,7 +28,7 @@ export function Contacts() {
     deleteContact,
     contacts
   } = useContacts();
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect(() => {
     fetchContacts();

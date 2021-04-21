@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
-// import { Heading } from '@devseed-ui/typography';
+import { Heading } from '@devseed-ui/typography';
 
 import App from '../common/app';
 import {
@@ -55,6 +55,10 @@ const ContactHeader = styled.header`
     content: '';
     pointer-events: none;
   }
+`;
+
+const ContactTitle = styled(Heading)`
+  margin: 0;
 `;
 
 export default function ContactView() {
@@ -123,22 +127,20 @@ export default function ContactView() {
               />
             </InpageActions>
           </InpageHeaderSticky>
-          <ScrollAnchorProvider>
-            <ContactCanvas>
-              <ContentBlock>
-                <ContactContent>
-                  <Prose>
-                    <ContactHeader>
-                      <ContactTitle>
-                        {contact.data.first_name} {contact.data.last_name}
-                      </ContactTitle>
-                    </ContactHeader>
-                    <ContactBody contact={contact.data} />
-                  </Prose>
-                </ContactContent>
-              </ContentBlock>
-            </ContactCanvas>
-          </ScrollAnchorProvider>
+          <ContactCanvas>
+            <ContentBlock>
+              <ContactContent>
+                <Prose>
+                  <ContactHeader>
+                    <ContactTitle>
+                      {contact.data.first_name} {contact.data.last_name}
+                    </ContactTitle>
+                  </ContactHeader>
+                  {/* <ContactBody contact={contact.data} /> */}
+                </Prose>
+              </ContactContent>
+            </ContentBlock>
+          </ContactCanvas>
         </Inpage>
       )}
     </App>
