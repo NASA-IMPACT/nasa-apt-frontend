@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 
+import { contactEdit } from '../../utils/url-creator';
 import DropdownMenu from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
@@ -12,7 +13,7 @@ export default function ContactActionsMenu({ contact, onSelect }) {
       label: 'Edit',
       title: 'Edit contact',
       as: Link,
-      to: `contact/${contact.id}/edit`
+      to: contactEdit(contact.id)
     };
 
     const triggerProps = {

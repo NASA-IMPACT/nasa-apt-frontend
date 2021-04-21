@@ -11,6 +11,7 @@ import {
 } from '../../../styles/hub';
 import { Link } from '../../../styles/clean/link';
 import ContactActionsMenu from '../contact-actions-menu';
+import { contactView } from '../../../utils/url-creator';
 
 export default function ContactEntry({ contact, onContactAction }) {
   const onAction = useCallback((...args) => onContactAction(contact, ...args), [
@@ -22,7 +23,7 @@ export default function ContactEntry({ contact, onContactAction }) {
       <HubEntryHeader>
         <HubEntryHeadline>
           <HubEntryTitle>
-            <Link to={`contact/${contact.id}`} title='View document'>
+            <Link to={contactView(contact.id)} title='View document'>
               {contact.first_name} {contact.middle_name} {contact.last_name}
             </Link>
           </HubEntryTitle>

@@ -45,3 +45,21 @@ export const atbdEdit = (atbd, version = 'last', step = null) => {
 
   return `${atbdView(atbd, version)}/edit${stepVal}`;
 };
+
+/**
+ * Creates the url to view a given a contact.
+ *
+ * @param {string|number} contactId The contact id
+ */
+export const contactView = (contactId) => {
+  return `contact/${contactId}`;
+};
+
+/**
+ * Creates the url to view a given a contact in edit mode.
+ *
+ * @param {string|number} contactId The contact id
+ */
+export const contactEdit = (contactId) => {
+  return `${contactView(contactId)}/edit`;
+};
