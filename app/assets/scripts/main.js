@@ -80,7 +80,7 @@ function Root() {
               component={DocumentsEdit}
             />
             <AccessRoute
-              permission={['read', 'contact']}
+              permission={['view', 'contacts']}
               exact
               path='/contacts'
               component={Contacts}
