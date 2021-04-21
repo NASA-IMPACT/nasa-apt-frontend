@@ -9,6 +9,7 @@ import StepAlgoDescription from './step-algo-description';
 import StepAlgoUsage from './step-algo-usage';
 import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
+import StepReferences from './step-references';
 
 /**
  * Returns the default object filled with values from source if they exist. If
@@ -79,9 +80,33 @@ export const STEPS = [
   {
     id: 'references',
     label: 'References',
-    StepComponent: () => <p>References coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepReferences,
+    getInitialValues: (atbd) => {
+      return getFromObj(atbd, {
+        document: {
+          publication_references: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   id: '',
+            //   authors: '',
+            //   title: '',
+            //   series: '',
+            //   edition: '',
+            //   volume: '',
+            //   issue: '',
+            //   publication_place: '',
+            //   publisher: '',
+            //   pages: '',
+            //   isbn: '',
+            //   year: '',
+            //   doi: '',
+            //   other_reference_details: '',
+            //   report_number: '',
+            //   online_resource: ''
+            // }
+          ]
+        }
+      });
     }
   },
   {

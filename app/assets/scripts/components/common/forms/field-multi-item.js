@@ -6,14 +6,14 @@ import { Button } from '@devseed-ui/button';
 
 import FormGroupStructure from './form-group-structure';
 
-const MultiItemEmpty = styled.div`
+export const MultiItemEmpty = styled.div`
   background-color: ${themeVal('color.baseAlphaB')};
   border-radius: ${themeVal('shape.rounded')};
   border: ${themeVal('layout.border')} solid ${themeVal('color.baseAlphaC')};
   padding: ${glsp()};
   text-align: center;
 
-  & > *:not(:last-child) {
+  & > p {
     margin-bottom: ${glsp(0.5)};
   }
 `;

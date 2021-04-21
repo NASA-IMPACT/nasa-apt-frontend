@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
+import styled, { css } from 'styled-components';
 import castArray from 'lodash.castarray';
 import { Button } from '@devseed-ui/button';
 import Dropdown, {
@@ -7,6 +8,17 @@ import Dropdown, {
   DropMenu,
   DropMenuItem
 } from '@devseed-ui/dropdown';
+import { disabled } from '@devseed-ui/theme-provider';
+
+import Try from './try-render';
+
+const DropMenuItemEnhanced = styled(DropMenuItem)`
+  ${({ disabled: d }) =>
+    d &&
+    css`
+      ${disabled()};
+    `}
+`;
 
 const getMenuClickHandler = (fn, menuItem) => {
   return (event) => {
@@ -51,7 +63,7 @@ interface Menu {
  * @prop {function} onSelect Handler for when an element is selected. The event
  * will be prevented unless there's an href property set.
  */
-export default function DropdownMenu(props) {
+const DropdownMenu = React.forwardRef((props, ref) => {
   const {
     menu: menuInput,
     activeItem,
@@ -73,6 +85,7 @@ export default function DropdownMenu(props) {
 
   return (
     <Dropdown
+      ref={ref}
       alignment='center'
       direction='down'
       triggerElement={(props) => (
@@ -95,24 +108,43 @@ export default function DropdownMenu(props) {
           iconified={menu.iconified}
         >
           {menu.items.map((menuItem) => {
-            const { id, icon, title, label, keepOpen, ...rest } = menuItem;
+            const {
+              id,
+              icon,
+              title,
+              label,
+              keepOpen,
+              render,
+              ...rest
+            } = menuItem;
 
             const closeProp = keepOpen
               ? {}
               : { 'data-dropdown': 'click.close' };
 
+            const itemProps = {
+              active: id === activeMenuItem?.id,
+              ...closeProp
+            };
+
             return (
               <li key={id}>
-                <DropMenuItem
-                  useIcon={icon}
-                  title={title}
-                  active={id === activeMenuItem?.id}
-                  {...closeProp}
-                  {...rest}
-                  onClick={getMenuClickHandler(onSelect, menuItem)}
+                <Try
+                  fn={render}
+                  {...itemProps}
+                  menuItem={menuItem}
+                  onSelect={onSelect}
                 >
-                  {label}
-                </DropMenuItem>
+                  <DropMenuItemEnhanced
+                    useIcon={icon}
+                    title={title}
+                    {...itemProps}
+                    {...rest}
+                    onClick={getMenuClickHandler(onSelect, menuItem)}
+                  >
+                    {label}
+                  </DropMenuItemEnhanced>
+                </Try>
               </li>
             );
           })}
@@ -120,7 +152,7 @@ export default function DropdownMenu(props) {
       ))}
     </Dropdown>
   );
-}
+});
 
 DropdownMenu.propTypes = {
   menu: T.oneOfType([T.array, T.object]),
@@ -131,3 +163,5 @@ DropdownMenu.propTypes = {
   triggerLabel: T.string,
   onSelect: T.func
 };
+
+export default DropdownMenu;

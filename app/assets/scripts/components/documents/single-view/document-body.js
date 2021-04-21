@@ -820,23 +820,6 @@ export default function DocumentBody(props) {
   // Setup the listener to change active links.
   useScrollListener();
 
-  document.publication_references = [
-    {
-      id: 1,
-      authors: 'Dickens, Charles and Steinbeck, John',
-      title: 'Example Reference',
-      series: 'A',
-      edition: '3rd',
-      volume: '42ml',
-      issue: 'ticket',
-      publication_place: 'Boston',
-      publisher: 'PenguinBooks',
-      pages: '189-198',
-      isbn: 123456789,
-      year: 1995
-    }
-  ];
-
   const referencesUseIndex = useMemo(
     () => createDocumentReferenceIndex(document),
     [document]
