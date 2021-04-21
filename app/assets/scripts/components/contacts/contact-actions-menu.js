@@ -14,11 +14,6 @@ export default function ContactActionsMenu({ contact, onSelect }) {
       as: Link,
       to: `contact/${contact.id}/edit`
     };
-    const itemDelete = {
-      id: 'delete',
-      label: 'Delete',
-      title: 'Delete contact'
-    };
 
     const triggerProps = {
       triggerProps: {
@@ -32,7 +27,7 @@ export default function ContactActionsMenu({ contact, onSelect }) {
       ...triggerProps,
       menu: {
         id: 'actions',
-        items: [itemEdit, itemDelete]
+        items: [itemEdit]
       }
     };
   }, [contact]);
