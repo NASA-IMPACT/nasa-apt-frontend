@@ -41,6 +41,11 @@ const ReferencesFormFieldset = styled(FormFieldset)`
 const ReferencesFormFieldsetHeader = styled(FormFieldsetHeader)`
   justify-content: flex-start;
   align-items: center;
+  ${({ isEditing }) =>
+    !isEditing &&
+    css`
+      border-color: transparent;
+    `}
 
   ${FormLegend} {
     width: max-content;
@@ -82,7 +87,7 @@ export default function ReferencesFieldset(props) {
 
   return (
     <ReferencesFormFieldset isSelected={isSelected}>
-      <ReferencesFormFieldsetHeader>
+      <ReferencesFormFieldsetHeader isEditing={isEditing}>
         <ReferenceFormCheckable
           name={name}
           id={id}
