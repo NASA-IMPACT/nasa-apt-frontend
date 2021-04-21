@@ -21,11 +21,12 @@ export function DeletableFieldset(props) {
     label,
     onDeleteClick,
     disableDelete,
-    deleteDescription
+    deleteDescription,
+    ...rest
   } = props;
 
   return (
-    <FormFieldset>
+    <FormFieldset {...rest}>
       <FormFieldsetHeader>
         <FormLegend>{label}</FormLegend>
         <Toolbar size='small'>

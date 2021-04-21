@@ -47,12 +47,12 @@ export const toggleMark = (editor, type, clear = []) => {
   const isActive = isMarkActive(editor, type);
 
   if (isActive) {
-    setMarkState(editor, type, false);
+    setMarkState(editor, type, null);
     return;
   }
   const clears = castArray(clear);
   clears.forEach((clearType) => {
-    setMarkState(editor, clearType, false);
+    setMarkState(editor, clearType, null);
   });
 
   setMarkState(editor, type, true);

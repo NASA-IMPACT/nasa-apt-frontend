@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useReadOnly } from 'slate-react';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
-import { useReadingContext } from '../common/read-context';
+import { useRichContext } from '../common/rich-context';
 
 const SectionHeading = styled.h2`
   position: relative;
@@ -27,7 +27,7 @@ export default function SubSection(props) {
   const { attributes, htmlAttributes, element, children } = props;
 
   const readOnly = useReadOnly();
-  const { subsectionLevel, sectionId } = useReadingContext();
+  const { subsectionLevel, sectionId } = useRichContext();
 
   let readAttributes = {};
   let Element = SectionHeading;
