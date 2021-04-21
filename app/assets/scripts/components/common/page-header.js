@@ -179,17 +179,19 @@ function PageHeader() {
               Documents
             </Button>
           </li>
-          <li>
-            <Button
-              forwardedAs={NavLink}
-              exact
-              to='/contacts'
-              variation='achromic-plain'
-              title='View the contact list'
-            >
-              Contacts
-            </Button>
-          </li>
+          {user.isLogged && (
+            <li>
+              <Button
+                forwardedAs={NavLink}
+                exact
+                to='/contacts'
+                variation='achromic-plain'
+                title='View the contact list'
+              >
+                Contacts
+              </Button>
+            </li>
+          )}
           <li>
             <Button
               forwardedAs={NavLink}

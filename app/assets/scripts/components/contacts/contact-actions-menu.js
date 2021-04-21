@@ -4,11 +4,7 @@ import T from 'prop-types';
 import DropdownMenu from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
-import { useUser } from '../../context/user';
-
 export default function ContactActionsMenu({ contact, onSelect }) {
-  const { isLogged } = useUser();
-
   const dropProps = useMemo(() => {
     // Define menu items.
     const itemViewInfo = {
@@ -39,16 +35,14 @@ export default function ContactActionsMenu({ contact, onSelect }) {
       triggerLabel: 'Contact options'
     };
 
-    if (!isLogged) {
-      return {
-        ...triggerProps,
-        menu: {
-          id: 'actions',
-          items: [itemViewInfo, itemEdit, itemDelete]
-        }
-      };
-    }
-  }, [contact, isLogged]);
+    return {
+      ...triggerProps,
+      menu: {
+        id: 'actions',
+        items: [itemViewInfo, itemEdit, itemDelete]
+      }
+    };
+  }, [contact]);
 
   return (
     <DropdownMenu {...dropProps} dropTitle='Options' onSelect={onSelect} />
