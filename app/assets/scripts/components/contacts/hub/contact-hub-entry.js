@@ -22,7 +22,7 @@ export default function ContactEntry({ contact, onContactAction }) {
       <HubEntryHeader>
         <HubEntryHeadline>
           <HubEntryTitle>
-            <Link to={`contact/${contact.id}`} title='View document'>
+            <Link to={`contact/${contact.id}`} title='View contact'>
               {contact.first_name} {contact.middle_name} {contact.last_name}
             </Link>
           </HubEntryTitle>

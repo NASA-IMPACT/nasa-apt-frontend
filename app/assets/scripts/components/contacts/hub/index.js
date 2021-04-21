@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -18,7 +18,6 @@ import ButtonSecondary from '../../../styles/button-secondary';
 import ContactHubEntry from './contact-hub-entry';
 
 import { useContacts } from '../../../context/contacts-list';
-// import { conactEdit } from '../../../../utils/url-creator'; TODO create this
 import toasts, { createProcessToast } from '../../common/toasts';
 import { confirmDeleteContact } from '../../common/confirmation-prompt';
 
@@ -29,7 +28,7 @@ export function Contacts() {
     deleteContact,
     contacts
   } = useContacts();
-  // const history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     fetchContacts();
@@ -52,7 +51,7 @@ export function Contacts() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('contact successfully created');
-      // history.push(conactEdit(result.data));
+      // history.push(result.data.id);
     }
   };
 

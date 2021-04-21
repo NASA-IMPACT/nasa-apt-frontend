@@ -21,6 +21,7 @@ import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
 import Contacts from './components/contacts/hub';
+import ContactsView from './components/contacts/single-view';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
@@ -80,6 +81,7 @@ function Root() {
               component={DocumentsEdit}
             />
             <Route exact path='/contacts' component={Contacts} />
+            <Route exact path='/contact/:id' component={ContactsView} />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
