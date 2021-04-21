@@ -24,14 +24,15 @@ PillSelf.propTypes = {
 
 const Pill = styled(PillSelf)`
   position: relative;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 1.25rem;
   min-width: 2rem;
   font-size: 0.75rem;
   font-weight: ${themeVal('type.base.bold')};
   text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
-  text-align: center;
   background-color: ${rgba(themeVal('color.base'), 0.48)};
   border-radius: ${themeVal('shape.ellipsoid')};
   padding: ${glsp(0, 0.5)};

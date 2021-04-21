@@ -52,7 +52,7 @@ const ReferencesFormFieldsetHeader = styled(FormFieldsetHeader)`
   }
 
   ${Pill} {
-    margin-left: ${glsp()};
+    margin-left: ${glsp(0.25)};
   }
 
   ${Toolbar} {
