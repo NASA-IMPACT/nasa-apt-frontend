@@ -22,32 +22,10 @@ import ReferencesManagerMenu from './references-manager-menu';
 
 import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
-import { formatReference } from '../../../../utils/references';
-
-const generateRefId = () => Math.random().toString(16).slice(2, 10);
-
-const getReferenceEmptyValue = (base = {}) => {
-  return {
-    // Random 16 hex id.
-    id: generateRefId(),
-    title: '',
-    authors: '',
-    series: '',
-    edition: '',
-    volume: '',
-    issue: '',
-    report_number: '',
-    publication_place: '',
-    year: '',
-    publisher: '',
-    pages: '',
-    isbn: '',
-    doi: '',
-    online_resource: '',
-    other_reference_details: '',
-    ...base
-  };
-};
+import {
+  formatReference,
+  getReferenceEmptyValue
+} from '../../../../utils/references';
 
 // The selection of the refs is managed by SelectionList. This utility only
 // handles the selection part (multi selects, toggle, etc), we still store the
