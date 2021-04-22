@@ -117,7 +117,10 @@ export const STEPS = [
       return getFromObj(atbd, {
         document: {
           introduction: '<editor>',
-          historical_perspective: '<editor>'
+          historical_perspective: '<editor>',
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           introduction: 'incomplete',
@@ -152,7 +155,10 @@ export const STEPS = [
             //   long_name: '<editor>'
             //   unit: '<editor>'
             // }
-          ]
+          ],
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           scientific_theory: 'incomplete',
@@ -173,7 +179,10 @@ export const STEPS = [
           algorithm_usage_constraints: '<editor>',
           performance_assessment_validation_methods: '<editor>',
           performance_assessment_validation_uncertainties: '<editor>',
-          performance_assessment_validation_errors: '<editor>'
+          performance_assessment_validation_errors: '<editor>',
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           constraints: 'incomplete',
@@ -216,7 +225,10 @@ export const STEPS = [
             //   url: '',
             //   description: '<editor>'
             // }
-          ]
+          ],
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           algorithm_implementations: 'incomplete',
@@ -235,7 +247,10 @@ export const STEPS = [
       return getFromObj(atbd, {
         document: {
           journal_discussion: '<editor>',
-          journal_acknowledgements: '<editor>'
+          journal_acknowledgements: '<editor>',
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           discussion: 'incomplete',

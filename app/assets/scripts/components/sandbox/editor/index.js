@@ -56,6 +56,7 @@ function SandboxEditor() {
   });
 
   const onReferenceUpsert = useCallback((val) => {
+    // eslint-disable-next-line no-console
     console.log('Upserted reference', val);
   }, []);
 
