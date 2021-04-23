@@ -118,7 +118,7 @@ export const AtbdsProvider = (props) => {
               url: '/atbds',
               method: 'post',
               data: {
-                // New ATBDS are created as Untitled. The user can change the title
+                // New ATBDs are created as Untitled. The user can change the title
                 // at a later stage.
                 title: 'Untitled Document'
               }
@@ -210,11 +210,27 @@ export const AtbdsProvider = (props) => {
             let updatedData = state.data;
 
             if (contentResponse) {
+              // Despite being an array it only has 1 version, the one we queried.
+              // See note on fetchSingleAtbd
+              const updatedVersion = contentResponse.data.versions[0];
+
               updatedData = {
                 ...updatedData,
-                // Despite being an array it only has 1 version, the one we queried.
-                // See not on fetchSingleAtbd
-                ...contentResponse.data.versions[0]
+                // When the content gets updated we also have to update the
+                // corresponding version in the versions array. This is needed
+                // to ensure consistency with the returned structure from
+                // fetchSingleAtbd.
+                versions: updatedData.versions.map((v) => {
+                  if (v.version === version) {
+                    // Exclude document from the versions array.
+                    /* eslint-disable-next-line no-unused-vars */
+                    const { document, ...rest } = updatedVersion;
+                    return rest;
+                  } else {
+                    return v;
+                  }
+                }),
+                ...updatedVersion
               };
             }
 
@@ -229,15 +245,24 @@ export const AtbdsProvider = (props) => {
             // Dispatch receive action. It is already dispatchable.
             const updateResult = actions.receive(updatedData);
 
-            if (metaResponse) {
-              // The state key may have to change if the atbd alias changed.
-              const atbdId = metaResponse.data.alias || metaResponse.data.id;
-              const newKey = `${atbdId}/${version}`;
+            // The state key may have to change if the atbd alias changed.
+            const newAtbdId = metaResponse
+              ? metaResponse.data.alias || metaResponse.data.id
+              : id;
+            // Or if the version changed
+            const newAtbdVersion = contentResponse
+              ? // Despite being an array it only has 1 version, the one we queried.
+                contentResponse.data.versions[0].version
+              : version;
 
+            const currentKey = `${id}/${version}`;
+            const newKey = `${newAtbdId}/${newAtbdVersion}`;
+
+            if (newKey !== currentKey) {
               // Direct access to the dispatch function.
               actions.dispatch({
                 type: 'atbdSingle/move-key',
-                from: `${id}/${version}`,
+                from: currentKey,
                 to: newKey
               });
 

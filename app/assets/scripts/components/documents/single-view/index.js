@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -21,11 +21,16 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
+import {
+  confirmDraftMajorVersion,
+  MinorVersionModal
+} from '../document-publishing-modals';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
 import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
 import toasts from '../../common/toasts';
+import { useSubmitForMinorVersion } from '../single-edit/use-submit';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -73,10 +78,16 @@ const DocumentMetaDetails = styled(DetailsList)`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
-  const { atbd, fetchSingleAtbd, deleteAtbdVersion } = useSingleAtbd({
+  const {
+    atbd,
+    updateAtbd,
+    fetchSingleAtbd,
+    deleteAtbdVersion
+  } = useSingleAtbd({
     id,
     version
   });
+  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useState(false);
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -100,8 +111,18 @@ function DocumentView() {
           }
         }
       }
+
+      if (menuId === 'update-minor') {
+        setUpdatingMinorVersion(true);
+      }
     },
     [atbd.data?.title, atbd.data?.version, deleteAtbdVersion, history]
+  );
+
+  const onMinorVersionSubmit = useSubmitForMinorVersion(
+    updateAtbd,
+    setUpdatingMinorVersion,
+    history
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -128,6 +149,12 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
+          <MinorVersionModal
+            revealed={isUpdatingMinorVersion}
+            atbd={atbd.data}
+            onSubmit={onMinorVersionSubmit}
+            onClose={() => setUpdatingMinorVersion(false)}
+          />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
