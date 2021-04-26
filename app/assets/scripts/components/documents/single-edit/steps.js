@@ -11,6 +11,7 @@ import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
 import StepReferences from './step-references';
 
+const editorSymbol = Symbol.for('<editor>');
 /**
  * Returns the default object filled with values from source if they exist. If
  * not the defaults are use.
@@ -27,7 +28,7 @@ const getFromObj = (obj, defaults) => {
 
       // The fallback value can be changed with some tags. This is needed
       // because values set as object are recursively computed.
-      const value = defValue === '<editor>' ? editorEmptyValue : defValue;
+      const value = defValue === editorSymbol ? editorEmptyValue : defValue;
       return {
         ...acc,
         [key]: isObject ? recursiveGet(source || {}, defValue) : source || value
@@ -116,8 +117,8 @@ export const STEPS = [
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
         document: {
-          introduction: '<editor>',
-          historical_perspective: '<editor>'
+          introduction: editorSymbol,
+          historical_perspective: editorSymbol
         },
         sections_completed: {
           introduction: 'incomplete',
@@ -133,24 +134,24 @@ export const STEPS = [
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
         document: {
-          scientific_theory: '<editor>',
-          scientific_theory_assumptions: '<editor>',
-          mathematical_theory: '<editor>',
-          mathematical_theory_assumptions: '<editor>',
+          scientific_theory: editorSymbol,
+          scientific_theory_assumptions: editorSymbol,
+          mathematical_theory: editorSymbol,
+          mathematical_theory_assumptions: editorSymbol,
           algorithm_input_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
-            //   name: '<editor>'
-            //   long_name: '<editor>'
-            //   unit: '<editor>'
+            //   name: editorSymbol
+            //   long_name: editorSymbol
+            //   unit: editorSymbol
             // }
           ],
           algorithm_output_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
-            //   name: '<editor>'
-            //   long_name: '<editor>'
-            //   unit: '<editor>'
+            //   name: editorSymbol
+            //   long_name: editorSymbol
+            //   unit: editorSymbol
             // }
           ]
         },
@@ -170,10 +171,10 @@ export const STEPS = [
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
         document: {
-          algorithm_usage_constraints: '<editor>',
-          performance_assessment_validation_methods: '<editor>',
-          performance_assessment_validation_uncertainties: '<editor>',
-          performance_assessment_validation_errors: '<editor>'
+          algorithm_usage_constraints: editorSymbol,
+          performance_assessment_validation_methods: editorSymbol,
+          performance_assessment_validation_uncertainties: editorSymbol,
+          performance_assessment_validation_errors: editorSymbol
         },
         sections_completed: {
           constraints: 'incomplete',
@@ -193,28 +194,28 @@ export const STEPS = [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: '<editor>'
+            //   description: editorSymbol
             // }
           ],
           data_access_input_data: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: '<editor>'
+            //   description: editorSymbol
             // }
           ],
           data_access_output_data: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: '<editor>'
+            //   description: editorSymbol
             // }
           ],
           data_access_related_urls: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: '<editor>'
+            //   description: editorSymbol
             // }
           ]
         },
@@ -234,8 +235,8 @@ export const STEPS = [
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
         document: {
-          journal_discussion: '<editor>',
-          journal_acknowledgements: '<editor>'
+          journal_discussion: editorSymbol,
+          journal_acknowledgements: editorSymbol
         },
         sections_completed: {
           discussion: 'incomplete',
