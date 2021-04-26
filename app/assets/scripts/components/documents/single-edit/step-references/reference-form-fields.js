@@ -79,7 +79,7 @@ export default function ReferenceFormFields(props) {
   const { id: bId, name: bName } = props;
 
   const baseId = bId ? `${bId}-` : '';
-  const baseName = bName ? `${bName}-` : '';
+  const baseName = bName ? `${bName}.` : '';
 
   return (
     <ReferenceFieldsStructure>
