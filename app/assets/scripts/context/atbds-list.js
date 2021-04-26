@@ -243,17 +243,23 @@ export const AtbdsProvider = (props) => {
           }
         }
       })),
-      publishAtbdVersion: withRequestToken(token, ({ id, version }) => ({
+      publishAtbdVersion: withRequestToken(token, ({ id, version, data }) => ({
         stateKey: `${id}/${version}`,
         mutation: async ({ axios, requestOptions, state, actions }) => {
           try {
             // Dispatch request action. It is already dispatchable.
             actions.request();
 
+            /* eslint-disable-next-line no-unused-vars */
+            const { id: _, ...rest } = data;
+
             const response = await axios({
               ...requestOptions,
               url: `/atbds/${id}/publish`,
-              method: 'post'
+              method: 'post',
+              data: {
+                ...rest
+              }
             });
 
             const updatedVersion = response.data.versions[0];
@@ -479,11 +485,10 @@ export const useSingleAtbd = ({ id, version }) => {
       version,
       deleteAtbdVersion
     ]),
-    publishAtbdVersion: useCallback(() => publishAtbdVersion({ id, version }), [
-      id,
-      version,
-      publishAtbdVersion
-    ]),
+    publishAtbdVersion: useCallback(
+      (data) => publishAtbdVersion({ id, version, data }),
+      [id, version, publishAtbdVersion]
+    ),
     createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
       id,
       createAtbdVersion
