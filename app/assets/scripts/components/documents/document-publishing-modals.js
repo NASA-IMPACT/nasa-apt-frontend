@@ -28,7 +28,11 @@ export function MinorVersionModal(props) {
   }, [atbd]);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      enableReinitialize
+      onSubmit={onSubmit}
+    >
       <Modal
         id='modal'
         size='medium'
@@ -89,7 +93,7 @@ export function PublishingModal(props) {
       return { id: atbd.id };
     }
 
-    const base = `# v${atbd.major + 1}.0\n- \n\n`;
+    const base = `# v${atbd.major}.0\n- \n\n`;
 
     return {
       id: atbd.id,
@@ -98,7 +102,11 @@ export function PublishingModal(props) {
   }, [atbd, isFirstVersion]);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      enableReinitialize
+      onSubmit={onSubmit}
+    >
       <Modal
         id='modal'
         size='medium'

@@ -112,7 +112,7 @@ AtbdActionsMenu.propTypes = {
 
 const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
   const lastVersion = atbd.versions.last;
-  const isLastDraft = lastVersion.status.toLowerCase() === 'Draft';
+  const isLastDraft = lastVersion.status.toLowerCase() === 'draft';
 
   const item = (
     <DropMenuItemEnhanced
