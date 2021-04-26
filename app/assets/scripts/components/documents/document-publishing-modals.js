@@ -16,14 +16,16 @@ import { FormikInputTextarea } from '../common/forms/input-textarea';
 export function MinorVersionModal(props) {
   const { atbd, revealed, onClose, onSubmit } = props;
 
-  const initialValues = useMemo(
-    () => ({
+  const initialValues = useMemo(() => {
+    const newMinor = atbd.minor + 1;
+    const base = `# v${atbd.major}.${newMinor}\n- \n\n`;
+
+    return {
       id: atbd.id,
-      changelog: atbd.changelog || '',
-      minor: atbd.minor + 1
-    }),
-    [atbd]
-  );
+      changelog: base + (atbd.changelog || ''),
+      minor: newMinor
+    };
+  }, [atbd]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
@@ -45,14 +47,11 @@ export function MinorVersionModal(props) {
               This action will update the document to version v{atbd.major}.
               {atbd.minor + 1}.
             </p>
-            <p>
-              Use the changelog to register what changed in relation to the
-              previous minor version.
-            </p>
             <FormikInputTextarea
               id='changelog'
               name='changelog'
               label='Changelog'
+              description='Use the changelog to register what changed in relation to the previous minor version.'
             />
           </Form>
         }
@@ -90,9 +89,11 @@ export function PublishingModal(props) {
       return { id: atbd.id };
     }
 
+    const base = `# v${atbd.major + 1}.0\n- \n\n`;
+
     return {
       id: atbd.id,
-      changelog: atbd.changelog || ''
+      changelog: base + (atbd.changelog || '')
     };
   }, [atbd, isFirstVersion]);
 
@@ -120,14 +121,11 @@ export function PublishingModal(props) {
             </p>
             {!isFirstVersion && (
               <React.Fragment>
-                <p>
-                  Use the changelog to register what changed in relation to the
-                  previous major version.
-                </p>
                 <FormikInputTextarea
                   id='changelog'
                   name='changelog'
                   label='Changelog'
+                  description='Use the changelog to register what changed in relation to the previous major version.'
                 />
               </React.Fragment>
             )}
