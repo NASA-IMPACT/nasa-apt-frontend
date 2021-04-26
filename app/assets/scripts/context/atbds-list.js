@@ -8,6 +8,59 @@ import { useContexeedApi } from '../utils/contexeed';
 // Context
 export const AtbdsContext = createContext(null);
 
+const getUpdatedTimes = (atbdData, versionData) => {
+  if (!atbdData) {
+    return {
+      last_updated_at: versionData.last_updated_at,
+      last_updated_by: versionData.last_updated_by
+    };
+  }
+  if (!versionData) {
+    return {
+      last_updated_at: atbdData.last_updated_at,
+      last_updated_by: atbdData.last_updated_by
+    };
+  }
+
+  const lastUpdate =
+    atbdData.last_updated_at > versionData.last_updated_at
+      ? atbdData.last_updated_at
+      : versionData.last_updated_at;
+  const lastUpdatedBy =
+    atbdData.last_updated_at > versionData.last_updated_at
+      ? atbdData.last_updated_by
+      : versionData.last_updated_by;
+
+  return {
+    last_updated_at: lastUpdate,
+    last_updated_by: lastUpdatedBy
+  };
+};
+
+/**
+ * Computes the new versions array replacing the version with the updated data.
+ *
+ * @param {array} versions The current versions array
+ * @param {string} currentVersion The version identifier (v2.3)
+ * @param {object} newVersionData The new data for this version
+ * @returns array
+ */
+const getUpdatedVersions = (versions, currentVersion, newVersionData) => {
+  // When the content gets updated we also have to update the corresponding
+  // version in the versions array. This is needed to ensure consistency with
+  // the returned structure from fetchSingleAtbd.
+  return versions.map((v) => {
+    if (v.version === currentVersion) {
+      // Exclude document from the versions array.
+      /* eslint-disable-next-line no-unused-vars */
+      const { document, ...rest } = newVersionData;
+      return rest;
+    } else {
+      return v;
+    }
+  });
+};
+
 // Context provider
 export const AtbdsProvider = (props) => {
   const { children } = props;
@@ -90,6 +143,10 @@ export const AtbdsProvider = (props) => {
               url: `/atbds/${id}/versions/${version}`
             })
           ]);
+          const metaData = metaInfo.data;
+          // Despite being an array it only has 1 version, the one we queried.
+          const versionData = versionInfo.data.versions[0];
+
           // The responses of both endpoints are pretty similar. The first
           // includes the meta information (no document) of all the versions,
           // and the second includes the full document of the requested version.
@@ -97,9 +154,11 @@ export const AtbdsProvider = (props) => {
           // We keep the response from the metaInfo, and append all the fields
           // of the queried version.
           return {
-            ...metaInfo.data,
-            // Despite being an array it only has 1 version, the one we queried.
-            ...versionInfo.data.versions[0]
+            ...metaData,
+            ...versionData,
+            // The last updated at value will be the most recent between the
+            // base data and the version data.
+            ...getUpdatedTimes(metaData, versionData)
           };
         }
       }))
@@ -133,8 +192,6 @@ export const AtbdsProvider = (props) => {
         }
       })),
       deleteAtbdVersion: withRequestToken(token, ({ id, version }) => ({
-        // The statekey of an ATBD is id-version, but in this case we are
-        // deleting the whole atbd so there's no version
         stateKey: `${id}/${version}`,
         mutation: async ({ axios, requestOptions, actions }) => {
           try {
@@ -220,16 +277,11 @@ export const AtbdsProvider = (props) => {
                 // corresponding version in the versions array. This is needed
                 // to ensure consistency with the returned structure from
                 // fetchSingleAtbd.
-                versions: updatedData.versions.map((v) => {
-                  if (v.version === version) {
-                    // Exclude document from the versions array.
-                    /* eslint-disable-next-line no-unused-vars */
-                    const { document, ...rest } = updatedVersion;
-                    return rest;
-                  } else {
-                    return v;
-                  }
-                }),
+                versions: getUpdatedVersions(
+                  updatedData.versions,
+                  version,
+                  updatedVersion
+                ),
                 ...updatedVersion
               };
             }
@@ -241,6 +293,16 @@ export const AtbdsProvider = (props) => {
                 alias: metaResponse.data.alias
               };
             }
+
+            updatedData = {
+              ...updatedData,
+              // The last updated at value will be the most recent between the
+              // base data and the version data.
+              ...getUpdatedTimes(
+                metaResponse?.data,
+                contentResponse?.data.versions[0]
+              )
+            };
 
             // Dispatch receive action. It is already dispatchable.
             const updateResult = actions.receive(updatedData);
