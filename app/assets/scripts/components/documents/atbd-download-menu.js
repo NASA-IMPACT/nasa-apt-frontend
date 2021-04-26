@@ -5,9 +5,11 @@ import DropdownMenu from '../common/dropdown-menu';
 import ButtonSecondary from '../../styles/button-secondary';
 
 import { apiUrl } from '../../config';
+import { useAuthToken } from '../../context/user';
 
 export default function AtbdDownloadMenu(props) {
   const { atbd } = props;
+  const { token } = useAuthToken();
 
   const dropProps = useMemo(() => {
     const triggerProps = {
@@ -24,18 +26,20 @@ export default function AtbdDownloadMenu(props) {
     let pdfLinks = [];
     for (let v = atbd.minor; v >= 0; v--) {
       const version = `v${atbd.major}.${v}`;
+      const pdfUrl = `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`;
+
       pdfLinks.push(
         {
           id: `${version}-document`,
           label: `${version} Document PDF`,
           title: `Download document for version ${version}`,
-          href: `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`
+          href: `${pdfUrl}${token ? `?token=${token}` : ''}`
         },
         {
           id: `${version}-journal`,
           label: `${version} Journal PDF`,
           title: `Download journal for version ${version}`,
-          href: `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf?journal=true`
+          href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`
         }
       );
     }
