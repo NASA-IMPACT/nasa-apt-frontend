@@ -17,6 +17,7 @@ import { createProcessToast } from '../../common/toasts';
 import { useHistory } from 'react-router';
 import { atbdEdit } from '../../../utils/url-creator';
 import { formString } from '../../../utils/strings';
+import { formStringSymbol, citationFields } from '../citation';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -87,94 +88,21 @@ export default function StepIdentifyingInformation(props) {
                 label='Citation'
                 sectionName='sections_completed.citation'
               >
-                <FormikInputText
-                  id='citation-creators'
-                  name='citation.creators'
-                  label='Creators'
-                  description={formString(
-                    'identifying_information.citation.creators'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-editors'
-                  name='citation.editors'
-                  label='Editors'
-                  description={formString(
-                    'identifying_information.citation.editors'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-title'
-                  name='citation.title'
-                  label='Title'
-                  description={formString(
-                    'identifying_information.citation.title'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-series_name'
-                  name='citation.series_name'
-                  label='Series name'
-                  description={formString(
-                    'identifying_information.citation.series_name'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-release_date'
-                  name='citation.release_date'
-                  label='Release date'
-                  description={formString(
-                    'identifying_information.citation.release_date'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-release_place'
-                  name='citation.release_place'
-                  label='Release place'
-                  description={formString(
-                    'identifying_information.citation.release_place'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-publisher'
-                  name='citation.publisher'
-                  label='Publisher'
-                  description={formString(
-                    'identifying_information.citation.publisher'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-version'
-                  name='citation.version'
-                  label='Version'
-                  description={formString(
-                    'identifying_information.citation.version'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-issue'
-                  name='citation.issue'
-                  label='Issue'
-                  description={formString(
-                    'identifying_information.citation.issue'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-additional_details'
-                  name='citation.additional_details'
-                  label='Additional details'
-                  description={formString(
-                    'identifying_information.citation.additional_details'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-online_resource'
-                  name='citation.online_resource'
-                  label='Online resource'
-                  description={formString(
-                    'identifying_information.citation.online_resource'
-                  )}
-                />
+                {citationFields.map((field) => (
+                  <FormikInputText
+                    key={field.name}
+                    id={`citation-${field.name}`}
+                    name={`citation.${field.name}`}
+                    label={field.label}
+                    description={
+                      field.description === formStringSymbol
+                        ? formString(
+                            `identifying_information.citation.${field.name}`
+                          )
+                        : field.description
+                    }
+                  />
+                ))}
               </FormikSectionFieldset>
             </Form>
           </FormBlock>

@@ -21,6 +21,7 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
+import DocumentInfoModal from '../document-info-modal';
 import {
   MinorVersionModal,
   PublishingModal
@@ -29,6 +30,7 @@ import {
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
 import {
+  useSubmitForDocumentInfo,
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
 } from '../single-edit/use-submit';
@@ -94,6 +96,7 @@ function DocumentView() {
   });
   const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useState(false);
   const [isPublishingDocument, setPublishingDocument] = useState(false);
+  const [isViewingDocumentInfo, setViewingDocumentInfo] = useState(false);
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -122,6 +125,9 @@ function DocumentView() {
         case 'publish':
           setPublishingDocument(true);
           break;
+        case 'view-info':
+          setViewingDocumentInfo(true);
+          break;
       }
     },
     [atbd.data, deleteAtbdVersion, createAtbdVersion, history]
@@ -138,6 +144,8 @@ function DocumentView() {
     publishAtbdVersion,
     setPublishingDocument
   );
+
+  const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -163,6 +171,12 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
+          <DocumentInfoModal
+            revealed={isViewingDocumentInfo}
+            atbd={atbd.data}
+            onSubmit={onDocumentInfoSubmit}
+            onClose={() => setViewingDocumentInfo(false)}
+          />
           <MinorVersionModal
             revealed={isUpdatingMinorVersion}
             atbd={atbd.data}

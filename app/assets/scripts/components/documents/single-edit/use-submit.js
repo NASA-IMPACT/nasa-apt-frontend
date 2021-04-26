@@ -66,3 +66,20 @@ export function useSubmitForPublishingVersion(
     [atbdVersion, publishAtbdVersion, setPublishingDocument]
   );
 }
+
+export function useSubmitForDocumentInfo(updateAtbd) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast('Updating changelog');
+      const result = await updateAtbd(values);
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(`An error occurred: ${result.error.message}`);
+      } else {
+        resetForm({ values });
+        processToast.success('Changelog updated');
+      }
+    },
+    [updateAtbd]
+  );
+}
