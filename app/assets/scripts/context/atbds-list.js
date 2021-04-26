@@ -103,7 +103,9 @@ export const AtbdsProvider = (props) => {
     fetchSingleAtbd,
     createAtbd,
     updateAtbd,
-    deleteAtbdVersion
+    deleteAtbdVersion,
+    createAtbdVersion,
+    publishAtbdVersion
   } = useContexeedApi({
     name: 'atbdSingle',
     useKey: true,
@@ -191,6 +193,35 @@ export const AtbdsProvider = (props) => {
           }
         }
       })),
+      createAtbdVersion: withRequestToken(token, ({ id }) => ({
+        // Holder for the creation of a new ATBD  version since we don't have a
+        // version number yet.
+        stateKey: `${id}/new`,
+        mutation: async ({ axios, requestOptions, actions }) => {
+          try {
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            const response = await axios({
+              ...requestOptions,
+              url: `/atbds/${id}/versions`,
+              method: 'post'
+            });
+
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive({
+              ...response.data,
+              // Although this state slice is jut a placeholder for the new
+              // version, it is good to ensure that the structure is always the
+              // same. See rationale on fetchSingleAtbd
+              ...response.data.versions[0]
+            });
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
+          }
+        }
+      })),
       deleteAtbdVersion: withRequestToken(token, ({ id, version }) => ({
         stateKey: `${id}/${version}`,
         mutation: async ({ axios, requestOptions, actions }) => {
@@ -206,6 +237,46 @@ export const AtbdsProvider = (props) => {
 
             // If this worked, invalidate the state for this id-version
             return actions.invalidate();
+          } catch (error) {
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(null, error);
+          }
+        }
+      })),
+      publishAtbdVersion: withRequestToken(token, ({ id, version }) => ({
+        stateKey: `${id}/${version}`,
+        mutation: async ({ axios, requestOptions, state, actions }) => {
+          try {
+            // Dispatch request action. It is already dispatchable.
+            actions.request();
+
+            const response = await axios({
+              ...requestOptions,
+              url: `/atbds/${id}/publish`,
+              method: 'post'
+            });
+
+            const updatedVersion = response.data.versions[0];
+
+            const updatedData = {
+              ...state.data,
+              // When the content gets updated we also have to update the
+              // corresponding version in the versions array. This is needed
+              // to ensure consistency with the returned structure from
+              // fetchSingleAtbd.
+              versions: getUpdatedVersions(
+                state.data.versions,
+                version,
+                updatedVersion
+              ),
+              ...updatedVersion
+              // There's no need to worry about updated times in this case
+              // because the latest one will be the one on the version, since
+              // publishing is an action on the version.
+            };
+
+            // Dispatch receive action. It is already dispatchable.
+            return actions.receive(updatedData);
           } catch (error) {
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(null, error);
@@ -351,7 +422,9 @@ export const AtbdsProvider = (props) => {
     createAtbd,
     updateAtbd,
     deleteFullAtbd,
-    deleteAtbdVersion
+    deleteAtbdVersion,
+    createAtbdVersion,
+    publishAtbdVersion
   };
 
   return (
@@ -384,7 +457,9 @@ export const useSingleAtbd = ({ id, version }) => {
     getSingleAtbd,
     fetchSingleAtbd,
     updateAtbd,
-    deleteAtbdVersion
+    deleteAtbdVersion,
+    createAtbdVersion,
+    publishAtbdVersion
   } = useCheckContext('useSingleAtbd');
 
   return {
@@ -403,6 +478,15 @@ export const useSingleAtbd = ({ id, version }) => {
       id,
       version,
       deleteAtbdVersion
+    ]),
+    publishAtbdVersion: useCallback(() => publishAtbdVersion({ id, version }), [
+      id,
+      version,
+      publishAtbdVersion
+    ]),
+    createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
+      id,
+      createAtbdVersion
     ])
   };
 };

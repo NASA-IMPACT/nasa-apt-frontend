@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { atbdView } from '../../../utils/url-creator';
 
+import { atbdView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 
 export function useSubmitForVersionData(updateAtbd) {
@@ -42,5 +42,27 @@ export function useSubmitForMinorVersion(
       }
     },
     [updateAtbd, setUpdatingMinorVersion, history]
+  );
+}
+
+export function useSubmitForPublishingVersion(
+  atbdVersion,
+  publishAtbdVersion,
+  setPublishingDocument
+) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast('Publishing version.');
+      const result = await publishAtbdVersion(values);
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(`An error occurred: ${result.error.message}`);
+      } else {
+        resetForm({ values });
+        setPublishingDocument(false);
+        processToast.success(`Version ${atbdVersion} was published.`);
+      }
+    },
+    [atbdVersion, publishAtbdVersion, setPublishingDocument]
   );
 }

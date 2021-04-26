@@ -22,15 +22,18 @@ import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
 import {
-  confirmDraftMajorVersion,
-  MinorVersionModal
+  MinorVersionModal,
+  PublishingModal
 } from '../document-publishing-modals';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
-import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
-import toasts from '../../common/toasts';
-import { useSubmitForMinorVersion } from '../single-edit/use-submit';
+import {
+  useSubmitForMinorVersion,
+  useSubmitForPublishingVersion
+} from '../single-edit/use-submit';
+import { atbdDeleteConfirmAndToast } from '../atbd-delete-process';
+import { atbdDraftMajorConfirmAndToast } from '../atbd-draft-major-process';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -82,12 +85,15 @@ function DocumentView() {
     atbd,
     updateAtbd,
     fetchSingleAtbd,
-    deleteAtbdVersion
+    deleteAtbdVersion,
+    createAtbdVersion,
+    publishAtbdVersion
   } = useSingleAtbd({
     id,
     version
   });
   const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useState(false);
+  const [isPublishingDocument, setPublishingDocument] = useState(false);
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -95,34 +101,42 @@ function DocumentView() {
 
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteAtbdVersion(
-          atbd.data?.title,
-          atbd.data?.version
-        );
-
-        if (confirmed) {
-          const result = await deleteAtbdVersion();
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('ATBD successfully deleted');
-            history.push('/documents');
-          }
-        }
-      }
-
-      if (menuId === 'update-minor') {
-        setUpdatingMinorVersion(true);
+      switch (menuId) {
+        case 'delete':
+          await atbdDeleteConfirmAndToast({
+            atbd: atbd.data,
+            deleteAtbdVersion,
+            history
+          });
+          break;
+        case 'update-minor':
+          setUpdatingMinorVersion(true);
+          break;
+        case 'draft-major':
+          await atbdDraftMajorConfirmAndToast({
+            atbd: atbd.data,
+            createAtbdVersion,
+            history
+          });
+          break;
+        case 'publish':
+          setPublishingDocument(true);
+          break;
       }
     },
-    [atbd.data?.title, atbd.data?.version, deleteAtbdVersion, history]
+    [atbd.data, deleteAtbdVersion, createAtbdVersion, history]
   );
 
   const onMinorVersionSubmit = useSubmitForMinorVersion(
     updateAtbd,
     setUpdatingMinorVersion,
     history
+  );
+
+  const onPublishVersionSubmit = useSubmitForPublishingVersion(
+    atbd.data?.version,
+    publishAtbdVersion,
+    setPublishingDocument
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -154,6 +168,12 @@ function DocumentView() {
             atbd={atbd.data}
             onSubmit={onMinorVersionSubmit}
             onClose={() => setUpdatingMinorVersion(false)}
+          />
+          <PublishingModal
+            revealed={isPublishingDocument}
+            atbd={atbd.data}
+            onSubmit={onPublishVersionSubmit}
+            onClose={() => setPublishingDocument(false)}
           />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
