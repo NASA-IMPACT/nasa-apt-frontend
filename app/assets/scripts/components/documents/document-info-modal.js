@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { format } from 'date-fns';
@@ -17,7 +17,8 @@ import { CopyField } from '../common/copy-field';
 import { FormikInputTextarea } from '../common/forms/input-textarea';
 
 import { atbdEdit } from '../../utils/url-creator';
-import { citationFields } from './citation';
+import { citationFields, createBibtexCitation } from './citation';
+import { downloadTextFile } from '../../utils/download-text-file';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -41,6 +42,15 @@ const DocInfoList = styled(DetailsList)`
 
   margin-bottom: ${glsp(-1)};
 
+  dt {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  dd {
+    margin-bottom: ${glsp()};
+  }
+
   dt:nth-of-type(1),
   dt:nth-of-type(2),
   dt:nth-of-type(3) {
@@ -63,15 +73,6 @@ const DocInfoList = styled(DetailsList)`
   dd:nth-of-type(5),
   dd:nth-of-type(6) {
     grid-row: 5;
-  }
-
-  dt {
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-
-  dd {
-    margin-bottom: ${glsp()};
   }
 `;
 
@@ -212,10 +213,6 @@ function TabCitation(props) {
         .join(', ')
     : '';
 
-  const missingFields = citation
-    ? citationFields.filter((f) => !citation[f.name])
-    : '';
-
   const citationEditLink = (
     <Link
       to={atbdEdit(atbd, atbd.version)}
@@ -224,6 +221,14 @@ function TabCitation(props) {
       identifying information
     </Link>
   );
+
+  const onDownloadClick = useCallback(() => {
+    const { id, alias, version, citation } = atbd;
+    const aliasId = alias || id;
+
+    const bibtexCitation = createBibtexCitation(aliasId, version, citation);
+    downloadTextFile(`atbd--${aliasId}--${version}.bibtex`, bibtexCitation);
+  }, [atbd]);
 
   return (
     <TabContent tabId='citation'>
@@ -255,6 +260,7 @@ function TabCitation(props) {
                   useIcon='download-2'
                   variation='primary-raised-dark'
                   title='Download BibTeX file'
+                  onClick={onDownloadClick}
                 >
                   Download BibTeX
                 </Button>
