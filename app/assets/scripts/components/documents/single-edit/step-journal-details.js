@@ -7,6 +7,7 @@ import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
@@ -38,29 +39,31 @@ export default function StepJournalDetails(props) {
               export.
             </p>
             <Form as={FormikForm}>
-              <FormikSectionFieldset
-                label='Discussion'
-                sectionName='sections_completed.discussion'
-              >
-                <FormikInputEditor
-                  id='journal_discussion'
-                  name='document.journal_discussion'
-                  label='List discussion points'
-                  description={formString('journal_details.discussion')}
-                />
-              </FormikSectionFieldset>
+              <RichTextContex2Formik>
+                <FormikSectionFieldset
+                  label='Discussion'
+                  sectionName='sections_completed.discussion'
+                >
+                  <FormikInputEditor
+                    id='journal_discussion'
+                    name='document.journal_discussion'
+                    label='List discussion points'
+                    description={formString('journal_details.discussion')}
+                  />
+                </FormikSectionFieldset>
 
-              <FormikSectionFieldset
-                label='Acknowledgements'
-                sectionName='sections_completed.acknowledgements'
-              >
-                <FormikInputEditor
-                  id='journal_acknowledgements'
-                  name='document.journal_acknowledgements'
-                  label='List of acknowledgements'
-                  description={formString('journal_details.acknowledgements')}
-                />
-              </FormikSectionFieldset>
+                <FormikSectionFieldset
+                  label='Acknowledgements'
+                  sectionName='sections_completed.acknowledgements'
+                >
+                  <FormikInputEditor
+                    id='journal_acknowledgements'
+                    name='document.journal_acknowledgements'
+                    label='List of acknowledgements'
+                    description={formString('journal_details.acknowledgements')}
+                  />
+                </FormikSectionFieldset>
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>

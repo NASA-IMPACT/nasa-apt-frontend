@@ -22,6 +22,37 @@ import { REFERENCE } from '../components/slate/plugins/reference';
 //   online_resource: String;
 // }
 
+const generateRefId = () => Math.random().toString(16).slice(2, 10);
+
+/**
+ * Returns all the fields of an empty reference. If a base is provided the
+ * values from it will be applied on top of the empty ones.
+ *
+ * @param {Reference} base Existing reference if any
+ */
+export const getReferenceEmptyValue = (base = {}) => {
+  return {
+    // Random 16 hex id.
+    id: generateRefId(),
+    title: '',
+    authors: '',
+    series: '',
+    edition: '',
+    volume: '',
+    issue: '',
+    report_number: '',
+    publication_place: '',
+    year: '',
+    publisher: '',
+    pages: '',
+    isbn: '',
+    doi: '',
+    online_resource: '',
+    other_reference_details: '',
+    ...base
+  };
+};
+
 /**
  * Format a reference is AGU style.
  * Author, A.A., Author, B.B., & Author, C.C. (year). Title of article. Title of periodical, xx(x), pp-pp. https://doi.org/xx.xxxx/xxxxxxx
