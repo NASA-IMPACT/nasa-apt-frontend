@@ -22,6 +22,7 @@ import { useUser } from '../../../context/user';
 import toasts, { createProcessToast } from '../../common/toasts';
 import { confirmDeleteContact } from '../../common/confirmation-prompt';
 import SignIn from '../../../a11n/signin';
+import { contactEdit } from '../../../utils/url-creator';
 
 export function Contacts() {
   const {
@@ -55,7 +56,7 @@ export function Contacts() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('contact successfully created');
-      history.push(result.data.id);
+      history.push(contactEdit(result.data.id));
     }
   };
 
