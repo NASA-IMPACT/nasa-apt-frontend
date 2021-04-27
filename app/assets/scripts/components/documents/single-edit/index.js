@@ -1,27 +1,67 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router';
+import React, { useCallback, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
+import AtbdActionsMenu from '../atbd-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
+import {
+  DocumentModals,
+  useDocumentModals
+} from '../document-publishing-actions';
+import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
-  const { atbd, fetchSingleAtbd } = useSingleAtbd({ id, version });
+  const history = useHistory();
+  const {
+    atbd,
+    fetchSingleAtbd,
+    createAtbdVersion,
+    updateAtbd,
+    publishAtbdVersion,
+    deleteAtbdVersion
+  } = useSingleAtbd({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
-  }, [id, version]);
+  }, [id, version, fetchSingleAtbd]);
+
+  const { menuHandler, documentModalProps } = useDocumentModals({
+    atbd: atbd.data,
+    createAtbdVersion,
+    updateAtbd,
+    publishAtbdVersion
+  });
+
+  const onDocumentMenuAction = useCallback(
+    async (menuId) => {
+      // Handle actions that would trigger document modals.
+      await menuHandler(menuId);
+
+      switch (menuId) {
+        case 'delete':
+          await atbdDeleteVersionConfirmAndToast({
+            atbd: atbd.data,
+            deleteAtbdVersion,
+            history
+          });
+          break;
+      }
+    },
+    [atbd.data, deleteAtbdVersion, history, menuHandler]
+  );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -71,6 +111,9 @@ function DocumentEdit() {
     <App pageTitle='Document Edit'>
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
+        <DocumentModals {...documentModalProps} />
+      )}
+      {atbd.status === 'succeeded' && (
         <StepComponent
           step={stepDefinition}
           id={id}
@@ -90,6 +133,16 @@ function DocumentEdit() {
               <InpageActions>
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
+                <VerticalDivider variation='light' />
+                <AtbdActionsMenu
+                  // In the case of a single ATBD the selected version data is
+                  // merged with the ATBD meta and that's why both variables are
+                  // the same.
+                  atbd={atbd.data}
+                  atbdVersion={atbd.data}
+                  variation='achromic-plain'
+                  onSelect={onDocumentMenuAction}
+                />
               </InpageActions>
             </InpageHeaderSticky>
           )}

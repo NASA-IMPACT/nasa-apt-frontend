@@ -37,6 +37,16 @@ const getUpdatedTimes = (atbdData, versionData) => {
   };
 };
 
+export const computeAtbdVersion = (metaData, versionData) => {
+  return {
+    ...metaData,
+    ...versionData,
+    // The last updated at value will be the most recent between the
+    // base data and the version data.
+    ...getUpdatedTimes(metaData, versionData)
+  };
+};
+
 /**
  * Computes the new versions array replacing the version with the updated data.
  *
@@ -98,9 +108,39 @@ export const AtbdsProvider = (props) => {
     }
   });
 
+  /**
+   * Thunk function to invalidate other versions of the same atbd.
+   *
+   * @description
+   * Each Atbd contains an array with a list of all existent versions for that
+   * Atbd. This is used to populate the version dropdown among other things.
+   * Despite each of the entries on this versions array not containing the full
+   * document, they still contain some information that can be updated.
+   * For example, if we are on version v2.0 of an Atbd the version's array for
+   * this Atbd will contains v2.0 and v1.x. If we add a new major version
+   * (v3.0), the system will fetch the data for v3.0 from the api and the
+   * version's array for v3.0 will now contain, v3.0, v2.0, v1.x. However the
+   * version's array for v2.0 will be missing the newly added v3.0 because we
+   * didn't fetch the updated data and the frontend caches data.
+   * This could be solved by updating all the versions in the state, but by
+   * invalidating them we ensure that if the user were to open them again,
+   * they'd be refetched ensuring that the data will all be correct.
+   * At the expense of a network request we reduce the probability of data
+   * inconsistencies.
+   *
+   * @param {string|number} id Atbd id or alias used for the cache key
+   * @param {string} version Atbd version
+   */
+  const invalidateOtherAtbdVersions = (id, version) => (dispatch, state) => {
+    Object.keys(state)
+      .filter((k) => k.startsWith(`${id}/`) && k !== `${id}/${version}`)
+      .forEach(invalidate);
+  };
+
   const {
     getState: getSingleAtbd,
     fetchSingleAtbd,
+    invalidate,
     createAtbd,
     updateAtbd,
     deleteAtbdVersion,
@@ -155,13 +195,7 @@ export const AtbdsProvider = (props) => {
           // The structure of an ATBD can be see in ./types.ts
           // We keep the response from the metaInfo, and append all the fields
           // of the queried version.
-          return {
-            ...metaData,
-            ...versionData,
-            // The last updated at value will be the most recent between the
-            // base data and the version data.
-            ...getUpdatedTimes(metaData, versionData)
-          };
+          return computeAtbdVersion(metaData, versionData);
         }
       }))
     },
@@ -194,7 +228,7 @@ export const AtbdsProvider = (props) => {
         }
       })),
       createAtbdVersion: withRequestToken(token, ({ id }) => ({
-        // Holder for the creation of a new ATBD  version since we don't have a
+        // Holder for the creation of a new ATBD version since we don't have a
         // version number yet.
         stateKey: `${id}/new`,
         mutation: async ({ axios, requestOptions, actions }) => {
@@ -208,14 +242,16 @@ export const AtbdsProvider = (props) => {
               method: 'post'
             });
 
+            // See explanation before contexeed declaration.
+            actions.dispatch(invalidateOtherAtbdVersions(id, 'new'));
+
             // Dispatch receive action. It is already dispatchable.
-            return actions.receive({
-              ...response.data,
+            return actions.receive(
               // Although this state slice is jut a placeholder for the new
               // version, it is good to ensure that the structure is always the
               // same. See rationale on fetchSingleAtbd
-              ...response.data.versions[0]
-            });
+              computeAtbdVersion(response.data, response.data.versions[0])
+            );
           } catch (error) {
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(null, error);
@@ -265,7 +301,7 @@ export const AtbdsProvider = (props) => {
             const updatedVersion = response.data.versions[0];
 
             const updatedData = {
-              ...state.data,
+              ...computeAtbdVersion(state.data, updatedVersion),
               // When the content gets updated we also have to update the
               // corresponding version in the versions array. This is needed
               // to ensure consistency with the returned structure from
@@ -274,12 +310,11 @@ export const AtbdsProvider = (props) => {
                 state.data.versions,
                 version,
                 updatedVersion
-              ),
-              ...updatedVersion
-              // There's no need to worry about updated times in this case
-              // because the latest one will be the one on the version, since
-              // publishing is an action on the version.
+              )
             };
+
+            // See explanation before contexeed declaration.
+            actions.dispatch(invalidateOtherAtbdVersions(id, version));
 
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(updatedData);
@@ -349,7 +384,7 @@ export const AtbdsProvider = (props) => {
               const updatedVersion = contentResponse.data.versions[0];
 
               updatedData = {
-                ...updatedData,
+                ...computeAtbdVersion(updatedData, updatedVersion),
                 // When the content gets updated we also have to update the
                 // corresponding version in the versions array. This is needed
                 // to ensure consistency with the returned structure from
@@ -358,8 +393,7 @@ export const AtbdsProvider = (props) => {
                   updatedData.versions,
                   version,
                   updatedVersion
-                ),
-                ...updatedVersion
+                )
               };
             }
 
@@ -404,6 +438,11 @@ export const AtbdsProvider = (props) => {
                 from: currentKey,
                 to: newKey
               });
+
+              // See explanation before contexeed declaration.
+              actions.dispatch(
+                invalidateOtherAtbdVersions(newAtbdId, newAtbdVersion)
+              );
 
               // Ensure everything is correct, even the new key.
               return { ...updateResult, key: newKey };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
@@ -55,6 +55,11 @@ function SandboxEditor() {
     children: [{ text: '' }]
   });
 
+  const onReferenceUpsert = useCallback((val) => {
+    // eslint-disable-next-line no-console
+    console.log('Upserted reference', val);
+  }, []);
+
   return (
     <App pageTitle='Sandbox/Editor'>
       <Inpage>
@@ -83,7 +88,7 @@ function SandboxEditor() {
             />
 
             <h2>Rich text editor</h2>
-            <RichContextProvider context={{ references }}>
+            <RichContextProvider context={{ references, onReferenceUpsert }}>
               <RichTextEditor
                 value={value}
                 onChange={(v) => {

@@ -1,6 +1,6 @@
 export const references = [
   {
-    id: 1,
+    id: '1',
     authors: 'Dickens, Charles and Steinbeck, John',
     title: 'Example Reference',
     series: 'A',
@@ -51,7 +51,7 @@ export const hugeDoc = [
       },
       {
         type: 'ref',
-        refId: 1,
+        refId: '1',
         children: [{ text: '' }]
       },
       {

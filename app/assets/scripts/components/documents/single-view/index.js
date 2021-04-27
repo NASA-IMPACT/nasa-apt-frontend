@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -21,21 +22,15 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
-import DocumentInfoModal from '../document-info-modal';
-import {
-  MinorVersionModal,
-  PublishingModal
-} from '../document-publishing-modals';
+import Datetime from '../../common/date';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
+import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
 import {
-  useSubmitForDocumentInfo,
-  useSubmitForMinorVersion,
-  useSubmitForPublishingVersion
-} from '../single-edit/use-submit';
-import { atbdDeleteConfirmAndToast } from '../atbd-delete-process';
-import { atbdDraftMajorConfirmAndToast } from '../atbd-draft-major-process';
+  useDocumentModals,
+  DocumentModals
+} from '../document-publishing-actions';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -94,58 +89,35 @@ function DocumentView() {
     id,
     version
   });
-  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useState(false);
-  const [isPublishingDocument, setPublishingDocument] = useState(false);
-  const [isViewingDocumentInfo, setViewingDocumentInfo] = useState(false);
 
   useEffect(() => {
     fetchSingleAtbd();
-  }, [id, version]);
+  }, [id, version, fetchSingleAtbd]);
+
+  const { menuHandler, documentModalProps } = useDocumentModals({
+    atbd: atbd.data,
+    createAtbdVersion,
+    updateAtbd,
+    publishAtbdVersion
+  });
 
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
+      // Handle actions that would trigger document modals.
+      await menuHandler(menuId);
+
       switch (menuId) {
         case 'delete':
-          await atbdDeleteConfirmAndToast({
+          await atbdDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
           });
           break;
-        case 'update-minor':
-          setUpdatingMinorVersion(true);
-          break;
-        case 'draft-major':
-          await atbdDraftMajorConfirmAndToast({
-            atbd: atbd.data,
-            createAtbdVersion,
-            history
-          });
-          break;
-        case 'publish':
-          setPublishingDocument(true);
-          break;
-        case 'view-info':
-          setViewingDocumentInfo(true);
-          break;
       }
     },
-    [atbd.data, deleteAtbdVersion, createAtbdVersion, history]
+    [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
-
-  const onMinorVersionSubmit = useSubmitForMinorVersion(
-    updateAtbd,
-    setUpdatingMinorVersion,
-    history
-  );
-
-  const onPublishVersionSubmit = useSubmitForPublishingVersion(
-    atbd.data?.version,
-    publishAtbdVersion,
-    setPublishingDocument
-  );
-
-  const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -171,24 +143,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <DocumentInfoModal
-            revealed={isViewingDocumentInfo}
-            atbd={atbd.data}
-            onSubmit={onDocumentInfoSubmit}
-            onClose={() => setViewingDocumentInfo(false)}
-          />
-          <MinorVersionModal
-            revealed={isUpdatingMinorVersion}
-            atbd={atbd.data}
-            onSubmit={onMinorVersionSubmit}
-            onClose={() => setUpdatingMinorVersion(false)}
-          />
-          <PublishingModal
-            revealed={isPublishingDocument}
-            atbd={atbd.data}
-            onSubmit={onPublishVersionSubmit}
-            onClose={() => setPublishingDocument(false)}
-          />
+          <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
@@ -222,23 +177,21 @@ function DocumentView() {
                       <DocumentMetaDetails>
                         <dt>Version</dt>
                         <dd>{atbd.data.version}</dd>
-                        <dt>Release date</dt>
-                        <dd>
-                          <time dateTime='2020-12-04'>Dec 4, 2020</time>
-                        </dd>
+                        <ReleaseDate date={atbd.data.citation?.release_date} />
                         <dt>Keywords</dt>
-                        <dd>constellation, GPM, multi-satellite, IMERG</dd>
-                        <dt>Authors</dt>
+                        <dd>coming soon</dd>
+                        <dt>Creators</dt>
                         <dd>
-                          George J. Huffman, David T. Bolvin, Dan Braithwaite,
-                          Kuolin Hsu, Robert Joyce, Pingping Xie
+                          {atbd.data.citation?.creators || 'None provided'}
                         </dd>
                         <dt>Editors</dt>
-                        <dd>Kuolin Hsu, Robert Joyce, Pingping Xie</dd>
+                        <dd>
+                          {atbd.data.citation?.editors || 'None provided'}
+                        </dd>
                         <dt>URL</dt>
                         <dd>
                           <a href='#' title='View'>
-                            doi.org/10.5067/GEDI
+                            coming soon
                           </a>
                         </dd>
                       </DocumentMetaDetails>
@@ -256,3 +209,38 @@ function DocumentView() {
 }
 
 export default DocumentView;
+
+const ReleaseDate = ({ date }) => {
+  if (!date) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>None provided</dd>
+      </React.Fragment>
+    );
+  }
+
+  const dateObj = new Date(date);
+  // Not parsable. Print as provided.
+  if (isNaN(dateObj.getTime())) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>{date}</dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>Release date</dt>
+      <dd>
+        <Datetime date={dateObj} />
+      </dd>
+    </React.Fragment>
+  );
+};
+
+ReleaseDate.propTypes = {
+  date: T.string
+};

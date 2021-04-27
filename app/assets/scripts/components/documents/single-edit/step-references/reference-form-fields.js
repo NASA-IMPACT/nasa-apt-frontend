@@ -76,21 +76,24 @@ const fields = [
 ];
 
 export default function ReferenceFormFields(props) {
-  const { id: baseId, name: baseName } = props;
+  const { id: bId, name: bName } = props;
+
+  const baseId = bId ? `${bId}-` : '';
+  const baseName = bName ? `${bName}.` : '';
 
   return (
     <ReferenceFieldsStructure>
       <ReferenceTitle
-        id={`${baseId}-title`}
-        name={`${baseName}.title`}
+        id={`${baseId}title`}
+        name={`${baseName}title`}
         label='Title'
         description={formString('reference.title')}
       />
       {fields.map(({ id, label }) => (
         <FormikInputText
           key={id}
-          id={`${baseId}-${id}`}
-          name={`${baseName}.${id}`}
+          id={`${baseId}${id}`}
+          name={`${baseName}${id}`}
           label={label}
           description={formString(`reference.${id}`)}
         />

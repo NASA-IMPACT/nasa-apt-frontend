@@ -164,6 +164,20 @@ The context should wrap the editor and values should be passed using the `contex
 </RichContextProvider>
 ```
 
+The rich context is currently being used by:
+
+**Subsection**  
+Only used when in read only mode:
+  - `subsectionLevel`: heading level to be used when rendering the section header. Needed because of the nesting of document sections.
+  - `sectionId`: The prefix for the section heading id. Used to avoid clashed with ids on other editors.
+
+**References**  
+In read mode:
+  - `references`: List of references from where to pick the data for the tooltip
+In write mode:
+  - `references`: List of references from where to pick the data for the tooltip and for the modal
+  - `onReferenceUpsert`: called when the user confirms the insertion of a reference. The value will contain any updates to the reference.
+
 
 # Loose notes
 

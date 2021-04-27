@@ -20,6 +20,7 @@ import Home from './components/home';
 import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
+import Contacts from './components/contacts/hub';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
@@ -28,6 +29,7 @@ import Authorize from './a11n/authorize';
 
 // Contexts
 import { AtbdsProvider } from './context/atbds-list';
+import { ContactsProvider } from './context/contacts-list';
 import { UserProvider } from './context/user';
 import { AbilityProvider } from './a11n/index';
 
@@ -35,7 +37,8 @@ const composingComponents = [
   ErrorBoundary,
   AbilityProvider,
   UserProvider,
-  AtbdsProvider
+  AtbdsProvider,
+  ContactsProvider
 ];
 
 // Root component.
@@ -75,6 +78,12 @@ function Root() {
               exact
               path='/documents/:id/:version/edit/:step?'
               component={DocumentsEdit}
+            />
+            <AccessRoute
+              permission={['view', 'contacts']}
+              exact
+              path='/contacts'
+              component={Contacts}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />

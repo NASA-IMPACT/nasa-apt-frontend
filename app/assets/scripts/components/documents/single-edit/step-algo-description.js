@@ -14,6 +14,7 @@ import {
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
 import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
@@ -40,7 +41,7 @@ export default function StepAlgoDescription(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useSubmitForVersionData(updateAtbd);
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik
@@ -56,67 +57,69 @@ export default function StepAlgoDescription(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <FormikSectionFieldset
-                label='Scientific Theory'
-                sectionName='sections_completed.scientific_theory'
-              >
-                <FormikInputEditor
-                  id='scientific_theory'
-                  name='document.scientific_theory'
-                  label='Describe the scientific theory'
-                  description={formString(
-                    'algorithm_description.scientific_theory'
-                  )}
+              <RichTextContex2Formik>
+                <FormikSectionFieldset
+                  label='Scientific Theory'
+                  sectionName='sections_completed.scientific_theory'
+                >
+                  <FormikInputEditor
+                    id='scientific_theory'
+                    name='document.scientific_theory'
+                    label='Describe the scientific theory'
+                    description={formString(
+                      'algorithm_description.scientific_theory'
+                    )}
+                  />
+
+                  <FormikInputEditor
+                    id='scientific_theory_assumptions'
+                    name='document.scientific_theory_assumptions'
+                    label='Scientific theory assumptions'
+                    description={formString(
+                      'algorithm_description.scientific_theory_assumptions'
+                    )}
+                  />
+                </FormikSectionFieldset>
+
+                <FormikSectionFieldset
+                  label='Mathematical Theory'
+                  sectionName='sections_completed.mathematical_theory'
+                >
+                  <FormikInputEditor
+                    id='mathematical_theory'
+                    name='document.mathematical_theory'
+                    label='Describe the mathematical theory'
+                    description={formString(
+                      'algorithm_description.mathematical_theory'
+                    )}
+                  />
+
+                  <FormikInputEditor
+                    id='mathematical_theory_assumptions'
+                    name='document.mathematical_theory_assumptions'
+                    label='Mathematical theory assumptions'
+                    description={formString(
+                      'algorithm_description.mathematical_theory_assumptions'
+                    )}
+                  />
+                </FormikSectionFieldset>
+
+                <VariablesSection
+                  sectionLabel='Input Variables'
+                  sectionName='sections_completed.input_variables'
+                  fieldLabel='Variables'
+                  fieldName='document.algorithm_input_variables'
+                  fieldEmptyMessage='There are no Input Variables. You can start by adding one.'
                 />
 
-                <FormikInputEditor
-                  id='scientific_theory_assumptions'
-                  name='document.scientific_theory_assumptions'
-                  label='Scientific theory assumptions'
-                  description={formString(
-                    'algorithm_description.scientific_theory_assumptions'
-                  )}
+                <VariablesSection
+                  sectionLabel='Output Variables'
+                  sectionName='sections_completed.output_variables'
+                  fieldLabel='Variables'
+                  fieldName='document.algorithm_output_variables'
+                  fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
                 />
-              </FormikSectionFieldset>
-
-              <FormikSectionFieldset
-                label='Mathematical Theory'
-                sectionName='sections_completed.mathematical_theory'
-              >
-                <FormikInputEditor
-                  id='mathematical_theory'
-                  name='document.mathematical_theory'
-                  label='Describe the mathematical theory'
-                  description={formString(
-                    'algorithm_description.mathematical_theory'
-                  )}
-                />
-
-                <FormikInputEditor
-                  id='mathematical_theory_assumptions'
-                  name='document.mathematical_theory_assumptions'
-                  label='Mathematical theory assumptions'
-                  description={formString(
-                    'algorithm_description.mathematical_theory_assumptions'
-                  )}
-                />
-              </FormikSectionFieldset>
-
-              <VariablesSection
-                sectionLabel='Input Variables'
-                sectionName='sections_completed.input_variables'
-                fieldLabel='Variables'
-                fieldName='document.algorithm_input_variables'
-                fieldEmptyMessage='There are no Input Variables. You can start by adding one.'
-              />
-
-              <VariablesSection
-                sectionLabel='Output Variables'
-                sectionName='sections_completed.output_variables'
-                fieldLabel='Variables'
-                fieldName='document.algorithm_output_variables'
-                fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
-              />
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>

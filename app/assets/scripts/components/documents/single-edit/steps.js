@@ -85,6 +85,21 @@ export const STEPS = [
     getInitialValues: (atbd) => {
       return getFromObj(atbd, {
         document: {
+          // In the references page we need all the fields with an editor in
+          // case the user removes a reference, because we remove the reference
+          // node from all the fields.
+          introduction: editorSymbol,
+          historical_perspective: editorSymbol,
+          scientific_theory: editorSymbol,
+          scientific_theory_assumptions: editorSymbol,
+          mathematical_theory: editorSymbol,
+          mathematical_theory_assumptions: editorSymbol,
+          algorithm_usage_constraints: editorSymbol,
+          performance_assessment_validation_methods: editorSymbol,
+          performance_assessment_validation_uncertainties: editorSymbol,
+          performance_assessment_validation_errors: editorSymbol,
+          journal_discussion: editorSymbol,
+          journal_acknowledgements: editorSymbol,
           publication_references: [
             // Default is empty and set when adding an array field in the form.
             // {
@@ -118,7 +133,10 @@ export const STEPS = [
       return getFromObj(atbd, {
         document: {
           introduction: editorSymbol,
-          historical_perspective: editorSymbol
+          historical_perspective: editorSymbol,
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           introduction: 'incomplete',
@@ -153,7 +171,10 @@ export const STEPS = [
             //   long_name: editorSymbol
             //   unit: editorSymbol
             // }
-          ]
+          ],
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           scientific_theory: 'incomplete',
@@ -174,7 +195,10 @@ export const STEPS = [
           algorithm_usage_constraints: editorSymbol,
           performance_assessment_validation_methods: editorSymbol,
           performance_assessment_validation_uncertainties: editorSymbol,
-          performance_assessment_validation_errors: editorSymbol
+          performance_assessment_validation_errors: editorSymbol,
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           constraints: 'incomplete',
@@ -217,7 +241,10 @@ export const STEPS = [
             //   url: '',
             //   description: editorSymbol
             // }
-          ]
+          ],
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           algorithm_implementations: 'incomplete',
@@ -236,7 +263,10 @@ export const STEPS = [
       return getFromObj(atbd, {
         document: {
           journal_discussion: editorSymbol,
-          journal_acknowledgements: editorSymbol
+          journal_acknowledgements: editorSymbol,
+          // Publication references are needed in steps with <editor> fields in
+          // case the users wants to insert one.
+          publication_references: []
         },
         sections_completed: {
           discussion: 'incomplete',

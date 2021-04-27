@@ -8,11 +8,19 @@ import Dropdown, {
   DropMenu,
   DropMenuItem
 } from '@devseed-ui/dropdown';
-import { disabled } from '@devseed-ui/theme-provider';
+import { disabled, themeVal, rgba } from '@devseed-ui/theme-provider';
 
 import Try from './try-render';
 
 export const DropMenuItemEnhanced = styled(DropMenuItem)`
+  ${({ focused }) =>
+    focused &&
+    css`
+      color: ${themeVal('color.link')};
+      background-color: ${rgba(themeVal('color.link'), 0.12)};
+      opacity: 1;
+    `}
+
   ${({ disabled: d }) =>
     d &&
     css`

@@ -20,6 +20,7 @@ import { InputText } from '../../common/forms/input-text';
 import { SectionFieldset } from '../../common/forms/section-fieldset';
 import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
+import SelectCombo from '../../common/forms/select-combo';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -30,6 +31,54 @@ const InpageBodyScroll = styled(InpageBody)`
     padding-bottom: 30rem;
   }
 `;
+
+const selectOptions = [
+  {
+    value: 'v5hu54hw',
+    label: 'Isaac Cantera'
+  },
+  {
+    value: 'wllxcw4t',
+    label: 'Franciska Fabbri'
+  },
+  {
+    value: 'qv0cfr80',
+    label: 'Karen Sample'
+  },
+  {
+    value: 'ale13yvg',
+    label: 'Daryn Bice'
+  },
+  {
+    value: 'kvdjaang',
+    label:
+      'Purus sit amet nulla quisque arcu libero rutrum ac lobortis vel dapibus at diam nam'
+  },
+  {
+    value: '7gduphf1',
+    label:
+      'Ornare imperdiet sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam erat volutpat'
+  },
+  {
+    value: '4zwg4wkc',
+    label:
+      'Blandit lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit'
+  },
+  {
+    value: 'zkph7puf',
+    label:
+      'Parturient montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa sed magna at nunc dapibus'
+  },
+  {
+    value: 'vq79mcjv',
+    label: 'Sapien cursus vestibulum proin eu mi nulla ac enim in tempor'
+  },
+  {
+    value: '5oyl8dup',
+    label:
+      'Erat eros viverra eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero nam'
+  }
+];
 
 function SandboxForms() {
   return (
@@ -51,6 +100,8 @@ function SandboxForms() {
         <InpageBodyScroll>
           <Constrainer>
             <Form>
+              <SelectCombo options={selectOptions} />
+
               <SectionFieldset
                 label='Section name'
                 status='incomplete' // Should be from state
