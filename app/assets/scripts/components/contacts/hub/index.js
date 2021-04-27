@@ -55,7 +55,7 @@ export function Contacts() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('contact successfully created');
-      // history.push(result.data.id);
+      history.push(result.data.id);
     }
   };
 
