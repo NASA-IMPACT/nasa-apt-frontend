@@ -58,6 +58,7 @@ export const ContactsProvider = ({ children }) => {
     useKey: true,
     requests: {
       fetchSingleContact: withRequestToken(token, ({ id }) => ({
+        stateKey: `${id}`,
         url: `/contacts/${id}`
       }))
     },
