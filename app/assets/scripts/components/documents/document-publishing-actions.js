@@ -130,7 +130,7 @@ export const useDocumentModals = ({
   // We then capture this, show the appropriate modal and clear the history
   // state to prevent the modal from popping up on refresh.
   useEffect(() => {
-    const { menuAction, ...rest } = history.location.state;
+    const { menuAction, ...rest } = history.location.state || {};
     if (menuAction) {
       menuHandler(menuAction);
       // Using undefined keeps the same path.
