@@ -37,8 +37,9 @@ const TabsList = styled.ul`
   }
 `;
 
-const TabsActions = styled.div`
-  /* Styled component */
+const TabInnerContent = styled.div`
+  display: grid;
+  grid-gap: ${glsp()};
 `;
 
 const TabLink = styled.a`
@@ -124,7 +125,11 @@ export function TabContent(props) {
   const { children, tabId, ...rest } = props;
   const { activeTab } = useTabs();
 
-  return activeTab === tabId && <TabsActions {...rest}>{children}</TabsActions>;
+  return (
+    activeTab === tabId && (
+      <TabInnerContent {...rest}>{children}</TabInnerContent>
+    )
+  );
 }
 
 TabContent.propTypes = {
