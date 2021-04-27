@@ -37,6 +37,16 @@ const getUpdatedTimes = (atbdData, versionData) => {
   };
 };
 
+export const computeAtbdVersion = (metaData, versionData) => {
+  return {
+    ...metaData,
+    ...versionData,
+    // The last updated at value will be the most recent between the
+    // base data and the version data.
+    ...getUpdatedTimes(metaData, versionData)
+  };
+};
+
 /**
  * Computes the new versions array replacing the version with the updated data.
  *
@@ -185,13 +195,7 @@ export const AtbdsProvider = (props) => {
           // The structure of an ATBD can be see in ./types.ts
           // We keep the response from the metaInfo, and append all the fields
           // of the queried version.
-          return {
-            ...metaData,
-            ...versionData,
-            // The last updated at value will be the most recent between the
-            // base data and the version data.
-            ...getUpdatedTimes(metaData, versionData)
-          };
+          return computeAtbdVersion(metaData, versionData);
         }
       }))
     },
@@ -242,13 +246,12 @@ export const AtbdsProvider = (props) => {
             actions.dispatch(invalidateOtherAtbdVersions(id, 'new'));
 
             // Dispatch receive action. It is already dispatchable.
-            return actions.receive({
-              ...response.data,
+            return actions.receive(
               // Although this state slice is jut a placeholder for the new
               // version, it is good to ensure that the structure is always the
               // same. See rationale on fetchSingleAtbd
-              ...response.data.versions[0]
-            });
+              computeAtbdVersion(response.data, response.data.versions[0])
+            );
           } catch (error) {
             // Dispatch receive action. It is already dispatchable.
             return actions.receive(null, error);
@@ -298,7 +301,7 @@ export const AtbdsProvider = (props) => {
             const updatedVersion = response.data.versions[0];
 
             const updatedData = {
-              ...state.data,
+              ...computeAtbdVersion(state.data, updatedVersion),
               // When the content gets updated we also have to update the
               // corresponding version in the versions array. This is needed
               // to ensure consistency with the returned structure from
@@ -307,11 +310,7 @@ export const AtbdsProvider = (props) => {
                 state.data.versions,
                 version,
                 updatedVersion
-              ),
-              ...updatedVersion
-              // There's no need to worry about updated times in this case
-              // because the latest one will be the one on the version, since
-              // publishing is an action on the version.
+              )
             };
 
             // See explanation before contexeed declaration.
@@ -385,7 +384,7 @@ export const AtbdsProvider = (props) => {
               const updatedVersion = contentResponse.data.versions[0];
 
               updatedData = {
-                ...updatedData,
+                ...computeAtbdVersion(updatedData, updatedVersion),
                 // When the content gets updated we also have to update the
                 // corresponding version in the versions array. This is needed
                 // to ensure consistency with the returned structure from
@@ -394,8 +393,7 @@ export const AtbdsProvider = (props) => {
                   updatedData.versions,
                   version,
                   updatedVersion
-                ),
-                ...updatedVersion
+                )
               };
             }
 

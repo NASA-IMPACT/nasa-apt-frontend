@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -21,21 +21,14 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
-import DocumentInfoModal from '../document-info-modal';
-import {
-  MinorVersionModal,
-  PublishingModal
-} from '../document-publishing-modals';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
+import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
 import {
-  useSubmitForDocumentInfo,
-  useSubmitForMinorVersion,
-  useSubmitForPublishingVersion
-} from '../single-edit/use-submit';
-import { atbdDeleteConfirmAndToast } from '../atbd-delete-process';
-import { atbdDraftMajorConfirmAndToast } from '../atbd-draft-major-process';
+  useDocumentModals,
+  DocumentModals
+} from '../document-publishing-actions';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -94,58 +87,34 @@ function DocumentView() {
     id,
     version
   });
-  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useState(false);
-  const [isPublishingDocument, setPublishingDocument] = useState(false);
-  const [isViewingDocumentInfo, setViewingDocumentInfo] = useState(false);
 
   useEffect(() => {
     fetchSingleAtbd();
-  }, [id, version]);
+  }, [id, version, fetchSingleAtbd]);
+
+  const { menuHandler, documentModalProps } = useDocumentModals({
+    atbd: atbd.data,
+    history,
+    createAtbdVersion,
+    updateAtbd,
+    publishAtbdVersion
+  });
 
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
+      await menuHandler(menuId);
       switch (menuId) {
         case 'delete':
-          await atbdDeleteConfirmAndToast({
+          await atbdDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
           });
           break;
-        case 'update-minor':
-          setUpdatingMinorVersion(true);
-          break;
-        case 'draft-major':
-          await atbdDraftMajorConfirmAndToast({
-            atbd: atbd.data,
-            createAtbdVersion,
-            history
-          });
-          break;
-        case 'publish':
-          setPublishingDocument(true);
-          break;
-        case 'view-info':
-          setViewingDocumentInfo(true);
-          break;
       }
     },
-    [atbd.data, deleteAtbdVersion, createAtbdVersion, history]
+    [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
-
-  const onMinorVersionSubmit = useSubmitForMinorVersion(
-    updateAtbd,
-    setUpdatingMinorVersion,
-    history
-  );
-
-  const onPublishVersionSubmit = useSubmitForPublishingVersion(
-    atbd.data?.version,
-    publishAtbdVersion,
-    setPublishingDocument
-  );
-
-  const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -171,24 +140,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
-          <DocumentInfoModal
-            revealed={isViewingDocumentInfo}
-            atbd={atbd.data}
-            onSubmit={onDocumentInfoSubmit}
-            onClose={() => setViewingDocumentInfo(false)}
-          />
-          <MinorVersionModal
-            revealed={isUpdatingMinorVersion}
-            atbd={atbd.data}
-            onSubmit={onMinorVersionSubmit}
-            onClose={() => setUpdatingMinorVersion(false)}
-          />
-          <PublishingModal
-            revealed={isPublishingDocument}
-            atbd={atbd.data}
-            onSubmit={onPublishVersionSubmit}
-            onClose={() => setPublishingDocument(false)}
-          />
+          <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
