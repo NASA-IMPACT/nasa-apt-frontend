@@ -45,7 +45,7 @@ const TabInnerContent = styled.div`
 const TabLink = styled.a`
   position: relative;
   display: block;
-  padding: ${glsp(0, 0, 0.5, 0)};
+  padding: ${glsp(0, 0, 1, 0)};
   font-size: 0.875rem;
   line-height: 1rem;
   font-weight: ${themeVal('type.base.bold')};
@@ -55,6 +55,15 @@ const TabLink = styled.a`
   &:visited {
     color: inherit;
   }
+
+  ${({ active }) =>
+    active &&
+    css`
+      &,
+      &:visited {
+        color: ${themeVal('color.link')};
+      }
+    `}
 
   &::after {
     position: absolute;
