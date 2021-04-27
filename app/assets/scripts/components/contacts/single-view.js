@@ -6,21 +6,16 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
 import App from '../common/app';
-import {
-  Inpage,
-  InpageHeaderSticky,
-  InpageActions,
-  InpageBody
-} from '../../styles/inpage';
-import UhOh from '../uhoh';
+import { confirmDeleteContact } from '../common/confirmation-prompt';
+import toasts from '../common/toasts';
+import { Inpage, InpageBody } from '../../styles/inpage';
+import DetailsList from '../../styles/typography/details-list';
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
-import ContactNavHeader from './contact-nav-header';
+import UhOh from '../uhoh';
 import ContactActionsMenu from './contact-actions-menu';
 
 import { useSingleContact } from '../../context/contacts-list';
-import { confirmDeleteContact } from '../common/confirmation-prompt';
-import toasts from '../common/toasts';
 
 const ContactCanvas = styled(InpageBody)`
   padding: 0;
@@ -41,9 +36,13 @@ const ContactContent = styled.div`
 const ContactHeader = styled.header`
   position: relative;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-auto-columns: 3fr 1fr;
   grid-gap: 2rem;
   padding-bottom: ${glsp(1.5)};
+
+  > * {
+    grid-row: 1;
+  }
 
   &::after {
     position: absolute;
@@ -60,6 +59,8 @@ const ContactHeader = styled.header`
 const ContactTitle = styled(Heading)`
   margin: 0;
 `;
+
+const EmptySection = () => <p>No content available.</p>;
 
 export default function ContactView() {
   const { id } = useParams();
@@ -107,36 +108,54 @@ export default function ContactView() {
       throw contact.error;
     }
   }
-
+  const { status, data } = contact;
   return (
     <App pageTitle='Contact view'>
-      {contact.status === 'loading' && <GlobalLoading />}
-      {contact.status === 'succeeded' && (
+      {status === 'loading' && <GlobalLoading />}
+      {status === 'succeeded' && (
         <Inpage>
-          <InpageHeaderSticky data-element='inpage-header'>
-            <ContactNavHeader
-              contactId={id}
-              title={contact.data.title}
-              mode='view'
-            />
-            <InpageActions>
-              <ContactActionsMenu
-                contact={contact.data}
-                variation='achromic-plain'
-                onSelect={onContactMenuAction}
-              />
-            </InpageActions>
-          </InpageHeaderSticky>
           <ContactCanvas>
             <ContentBlock>
               <ContactContent>
                 <Prose>
                   <ContactHeader>
                     <ContactTitle>
-                      {contact.data.first_name} {contact.data.last_name}
+                      {data.first_name} {data.last_name}
                     </ContactTitle>
+                    <ContactActionsMenu
+                      contact={data}
+                      variation='achromic-plain'
+                      onSelect={onContactMenuAction}
+                    />
                   </ContactHeader>
-                  {/* <ContactBody contact={contact.data} /> */}
+                  <DetailsList>
+                    <dt>First Name</dt>
+                    <dd>
+                      {data.first_name ? data.first_name : <EmptySection />}
+                    </dd>
+
+                    <dt>Middle Name</dt>
+                    <dd>
+                      {data.middle_name ? data.middle_name : <EmptySection />}
+                    </dd>
+                    <dt>Last Name</dt>
+                    <dd>
+                      {data.last_name ? data.last_name : <EmptySection />}
+                    </dd>
+                    <dt>Mechanisms</dt>
+                    <dd>
+                      {data.mechanisms ? (
+                        data.mechanisms.map((mechanism) => (
+                          <p key={mechanism.mechanism_type}>
+                            {mechanism.mechanism_type}:{' '}
+                            {mechanism.mechanism_value}
+                          </p>
+                        ))
+                      ) : (
+                        <EmptySection />
+                      )}
+                    </dd>
+                  </DetailsList>
                 </Prose>
               </ContactContent>
             </ContentBlock>
