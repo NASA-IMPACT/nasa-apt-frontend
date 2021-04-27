@@ -80,6 +80,7 @@ export default function StepIdentifyingInformation(props) {
                           )
                         : field.description
                     }
+                    helper={field.helper}
                   />
                 ))}
               </FormikSectionFieldset>

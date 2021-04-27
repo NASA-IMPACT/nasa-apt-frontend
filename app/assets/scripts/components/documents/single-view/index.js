@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -21,6 +22,7 @@ import AtbdActionsMenu from '../atbd-actions-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
+import Datetime from '../../common/date';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
@@ -175,23 +177,21 @@ function DocumentView() {
                       <DocumentMetaDetails>
                         <dt>Version</dt>
                         <dd>{atbd.data.version}</dd>
-                        <dt>Release date</dt>
-                        <dd>
-                          <time dateTime='2020-12-04'>Dec 4, 2020</time>
-                        </dd>
+                        <ReleaseDate date={atbd.data.citation?.release_date} />
                         <dt>Keywords</dt>
-                        <dd>constellation, GPM, multi-satellite, IMERG</dd>
-                        <dt>Authors</dt>
+                        <dd>coming soon</dd>
+                        <dt>Creators</dt>
                         <dd>
-                          George J. Huffman, David T. Bolvin, Dan Braithwaite,
-                          Kuolin Hsu, Robert Joyce, Pingping Xie
+                          {atbd.data.citation?.creators || 'None provided'}
                         </dd>
                         <dt>Editors</dt>
-                        <dd>Kuolin Hsu, Robert Joyce, Pingping Xie</dd>
+                        <dd>
+                          {atbd.data.citation?.editors || 'None provided'}
+                        </dd>
                         <dt>URL</dt>
                         <dd>
                           <a href='#' title='View'>
-                            doi.org/10.5067/GEDI
+                            coming soon
                           </a>
                         </dd>
                       </DocumentMetaDetails>
@@ -209,3 +209,38 @@ function DocumentView() {
 }
 
 export default DocumentView;
+
+const ReleaseDate = ({ date }) => {
+  if (!date) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>None provided</dd>
+      </React.Fragment>
+    );
+  }
+
+  const dateObj = new Date(date);
+  // Not parsable. Print as provided.
+  if (isNaN(dateObj.getTime())) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>{date}</dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>Release date</dt>
+      <dd>
+        <Datetime date={dateObj} />
+      </dd>
+    </React.Fragment>
+  );
+};
+
+ReleaseDate.propTypes = {
+  date: T.string
+};

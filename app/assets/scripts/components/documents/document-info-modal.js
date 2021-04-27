@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { format } from 'date-fns';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { Form, FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
@@ -15,6 +14,7 @@ import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 import { CopyField } from '../common/copy-field';
 import { FormikInputTextarea } from '../common/forms/input-textarea';
+import Datetime from '../common/date';
 
 import { atbdEdit } from '../../utils/url-creator';
 import { citationFields } from './citation';
@@ -95,29 +95,13 @@ function TabGeneral(props) {
         <dt>Version</dt>
         <dd>{atbd.version}</dd>
         <dt>Created on</dt>
-        <dd>
-          {createdAt ? (
-            <time dateTime={format(createdAt, 'yyyy-MM-dd')}>
-              {format(createdAt, 'MMM do, yyyy')}
-            </time>
-          ) : (
-            'n/a'
-          )}
-        </dd>
+        <dd>{createdAt ? <Datetime date={createdAt} /> : 'n/a'}</dd>
         <dt>Created by</dt>
         <dd>Admin</dd>
         <dt>Status</dt>
         <dd>{atbd.status}</dd>
         <dt>Last update</dt>
-        <dd>
-          {updatedAt ? (
-            <time dateTime={format(updatedAt, 'yyyy-MM-dd')}>
-              {format(updatedAt, 'MMM do, yyyy')}
-            </time>
-          ) : (
-            'n/a'
-          )}
-        </dd>
+        <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
       </DetailsList>
 
       <Formik initialValues={initialValues} onSubmit={onSubmit}>

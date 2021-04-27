@@ -1,4 +1,6 @@
 // Citation related helpers.
+import React from 'react';
+import { FormHelperMessage } from '@devseed-ui/form';
 
 // Symbol to define that the description should come from the strings file.
 export const formStringSymbol = Symbol.for('form string');
@@ -7,12 +9,22 @@ export const citationFields = [
   {
     name: 'creators',
     label: 'Creators',
-    description: formStringSymbol
+    description: formStringSymbol,
+    helper: (
+      <FormHelperMessage>
+        Separate values with <em>and</em>.
+      </FormHelperMessage>
+    )
   },
   {
     name: 'editors',
     label: 'Editors',
-    description: formStringSymbol
+    description: formStringSymbol,
+    helper: (
+      <FormHelperMessage>
+        Separate values with <em>and</em>.
+      </FormHelperMessage>
+    )
   },
   {
     name: 'title',
@@ -27,7 +39,8 @@ export const citationFields = [
   {
     name: 'release_date',
     label: 'Release date',
-    description: formStringSymbol
+    description: formStringSymbol,
+    helper: <FormHelperMessage>Use YYYY-MM-DD format.</FormHelperMessage>
   },
   {
     name: 'release_place',
