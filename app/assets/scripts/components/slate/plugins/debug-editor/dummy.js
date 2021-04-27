@@ -1,10 +1,62 @@
+export const references = [
+  {
+    id: '1',
+    authors: 'Dickens, Charles and Steinbeck, John',
+    title: 'Example Reference',
+    series: 'A',
+    edition: '3rd',
+    volume: '42ml',
+    issue: 'ticket',
+    publication_place: 'Boston',
+    publisher: 'PenguinBooks',
+    pages: '189-198',
+    isbn: 123456789,
+    year: 1995
+  },
+  {
+    id: 'empty',
+    authors: '',
+    title: '',
+    series: '',
+    edition: '',
+    volume: '',
+    issue: '',
+    publication_place: '',
+    publisher: '',
+    pages: '',
+    isbn: '',
+    year: ''
+  },
+  {
+    id: 'hex',
+    title:
+      'Evaluation of national and global LAI products derived from optical remote sensing instruments over Canada',
+    authors: 'Abuelgasim, A.A. and Fernandes, R.A. and Leblanc, S.G.',
+    series: 'IEEE Transactions on Geoscience and Remote Sensing',
+    issn: '0196-2892',
+    doi: '10.1109/TGRS.2006.874794',
+    issue: '7',
+    volume: '44',
+    pages: '1872--1884',
+    year: '2006'
+  }
+];
+
 export const hugeDoc = [
   {
     type: 'p',
     children: [
       {
+        text: 'The algorithm specified in this document'
+      },
+      {
+        type: 'ref',
+        refId: '1',
+        children: [{ text: '' }]
+      },
+      {
         text:
-          'The algorithm specified in this document is designed to derive footprint level canopy cover and vertical '
+          ' is designed to derive footprint level canopy cover and vertical '
       },
       {
         type: 'a',

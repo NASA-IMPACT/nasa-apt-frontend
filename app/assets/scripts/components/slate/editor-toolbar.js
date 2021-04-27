@@ -49,7 +49,7 @@ const EditorActions = styled.div`
 
 export const FloatingToolbar = styled.div`
   position: absolute;
-  top: 100%;
+  top: 90%;
   z-index: 9999;
   display: grid;
   grid-gap: ${glsp(0.25)};
@@ -85,6 +85,7 @@ export function EditorToolbar(props) {
               <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
                 <ToolbarIconButton
                   useIcon={btn.icon}
+                  disabled={btn.isDisabled?.(editor)}
                   onMouseDown={getPreventDefaultHandler(
                     p.onUse,
                     editor,

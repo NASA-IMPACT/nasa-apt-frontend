@@ -7,6 +7,7 @@ import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
@@ -34,31 +35,33 @@ export default function StepIntroduction(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <FormikSectionFieldset
-                label='Introduction'
-                sectionName='sections_completed.introduction'
-              >
-                <FormikInputEditor
-                  id='introduction'
-                  name='document.introduction'
-                  label='Introduce the algorithm'
-                  description={formString('introduction.introduction')}
-                />
-              </FormikSectionFieldset>
+              <RichTextContex2Formik>
+                <FormikSectionFieldset
+                  label='Introduction'
+                  sectionName='sections_completed.introduction'
+                >
+                  <FormikInputEditor
+                    id='introduction'
+                    name='document.introduction'
+                    label='Introduce the algorithm'
+                    description={formString('introduction.introduction')}
+                  />
+                </FormikSectionFieldset>
 
-              <FormikSectionFieldset
-                label='Historical Perspective'
-                sectionName='sections_completed.historical_perspective'
-              >
-                <FormikInputEditor
-                  id='historical_perspective'
-                  name='document.historical_perspective'
-                  label='Describe the historical perspective'
-                  description={formString(
-                    'introduction.historical_perspective'
-                  )}
-                />
-              </FormikSectionFieldset>
+                <FormikSectionFieldset
+                  label='Historical Perspective'
+                  sectionName='sections_completed.historical_perspective'
+                >
+                  <FormikInputEditor
+                    id='historical_perspective'
+                    name='document.historical_perspective'
+                    label='Describe the historical perspective'
+                    description={formString(
+                      'introduction.historical_perspective'
+                    )}
+                  />
+                </FormikSectionFieldset>
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>

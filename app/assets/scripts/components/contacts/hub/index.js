@@ -18,8 +18,10 @@ import ButtonSecondary from '../../../styles/button-secondary';
 import ContactHubEntry from './contact-hub-entry';
 
 import { useContacts } from '../../../context/contacts-list';
+import { useUser } from '../../../context/user';
 import toasts, { createProcessToast } from '../../common/toasts';
 import { confirmDeleteContact } from '../../common/confirmation-prompt';
+import SignIn from '../../../a11n/signin';
 
 export function Contacts() {
   const {
@@ -28,6 +30,8 @@ export function Contacts() {
     deleteContact,
     contacts
   } = useContacts();
+
+  const { isLogged } = useUser();
   // const history = useHistory();
 
   useEffect(() => {
@@ -71,14 +75,16 @@ export function Contacts() {
     },
     [deleteContact]
   );
-
+  if (!isLogged) {
+    return <SignIn />;
+  }
   return (
     <App pageTitle='Contacts'>
       {contacts.status === 'loading' && <GlobalLoading />}
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Documents</InpageTitle>
+            <InpageTitle>Contacts</InpageTitle>
           </InpageHeadline>
           <InpageActions>
             <ButtonSecondary
