@@ -24,6 +24,45 @@ const TabsNavModal = styled(TabsNav)`
   padding: ${glsp(0, 2)};
 `;
 
+const DocInfoList = styled(DetailsList)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: ${glsp(0, 1)};
+
+  dt:nth-of-type(1),
+  dt:nth-of-type(2),
+  dt:nth-of-type(3) {
+    grid-row: 1;
+  }
+
+  dt:nth-of-type(4),
+  dt:nth-of-type(5),
+  dt:nth-of-type(6) {
+    grid-row: 3;
+  }
+
+  dd:nth-of-type(1),
+  dd:nth-of-type(2),
+  dd:nth-of-type(3) {
+    grid-row: 2;
+  }
+
+  dd:nth-of-type(4),
+  dd:nth-of-type(5),
+  dd:nth-of-type(6) {
+    grid-row: 5;
+  }
+
+  dt {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  dd {
+    margin-bottom: ${glsp()};
+  }
+`;
+
 const CitationTextWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -44,7 +83,7 @@ export default function DocumentInfoModal(props) {
     <Modal
       id='modal'
       size='medium'
-      revealed={revealed}
+      revealed={true}
       onCloseClick={onClose}
       title='Document info'
       content={
@@ -91,7 +130,7 @@ function TabGeneral(props) {
 
   return (
     <TabContent tabId='general'>
-      <DetailsList>
+      <DocInfoList>
         <dt>Version</dt>
         <dd>{atbd.version}</dd>
         <dt>Created on</dt>
@@ -118,7 +157,7 @@ function TabGeneral(props) {
             'n/a'
           )}
         </dd>
-      </DetailsList>
+      </DocInfoList>
 
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         <Form as={FormikForm}>
