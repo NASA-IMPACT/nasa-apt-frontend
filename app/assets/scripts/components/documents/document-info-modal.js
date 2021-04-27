@@ -24,10 +24,22 @@ const TabsNavModal = styled(TabsNav)`
   padding: ${glsp(0, 2)};
 `;
 
+const TabActions = styled.div`
+  display: grid;
+  grid-auto-columns: min-content;
+  grid-gap: ${glsp()};
+
+  > * {
+    grid-row: 1;
+  }
+`;
+
 const DocInfoList = styled(DetailsList)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: ${glsp(0, 1)};
+
+  margin-bottom: ${glsp(-1)};
 
   dt:nth-of-type(1),
   dt:nth-of-type(2),
@@ -63,27 +75,13 @@ const DocInfoList = styled(DetailsList)`
   }
 `;
 
-const CitationTextWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  flex-flow: row nowrap;
-
-  > *:not(:last-child) {
-    margin-right: 1rem;
-  }
-
-  ${FormTextarea} {
-    flex: 1;
-  }
-`;
-
 export default function DocumentInfoModal(props) {
   const { atbd, revealed, onClose, onSubmit } = props;
   return (
     <Modal
       id='modal'
       size='medium'
-      revealed={true}
+      revealed={revealed}
       onCloseClick={onClose}
       title='Document info'
       content={
@@ -167,9 +165,9 @@ function TabGeneral(props) {
             label='Changelog'
             description='Use the changelog to register what changed in relation to the previous version.'
           />
-          <div>
+          <TabActions>
             <SaveButton />
-          </div>
+          </TabActions>
         </Form>
       </Formik>
     </TabContent>
@@ -242,36 +240,28 @@ function TabCitation(props) {
       {citationText && (
         <CopyField value={citationText}>
           {({ value, ref }) => (
-            <CitationTextWrapper>
+            <React.Fragment>
               <FormTextarea readOnly value={value} />
-              <Button
-                hideText
-                useIcon='clipboard'
-                size='large'
-                variation='primary-raised-light'
-                title='Copy to clipboard'
-                ref={ref}
-              >
-                Copy to clipboard
-              </Button>
-            </CitationTextWrapper>
+              <TabActions>
+                <Button
+                  useIcon='clipboard'
+                  variation='primary-raised-light'
+                  title='Copy to clipboard'
+                  ref={ref}
+                >
+                  Copy to clipboard
+                </Button>
+                <Button
+                  useIcon='download'
+                  variation='primary-raised-dark'
+                  title='Download BibTeX file'
+                >
+                  Download BibTeX
+                </Button>
+              </TabActions>
+            </React.Fragment>
           )}
         </CopyField>
-      )}
-
-      {!!missingFields.length && (
-        <Prose>
-          <p>The following fields did not have data and were not included:</p>
-          <ul>
-            {missingFields.map((f) => (
-              <li key={f.name}>{f.label}</li>
-            ))}
-          </ul>
-          <p>
-            The citation information can be edited through the{' '}
-            {citationEditLink} form.
-          </p>
-        </Prose>
       )}
     </TabContent>
   );
