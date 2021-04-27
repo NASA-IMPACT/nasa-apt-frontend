@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import App from '../../common/app';
 import {
@@ -141,6 +142,7 @@ function DocumentView() {
             />
             <InpageActions>
               <AtbdDownloadMenu atbd={atbd.data} />
+              <VerticalDivider variation='light' />
               <AtbdActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
