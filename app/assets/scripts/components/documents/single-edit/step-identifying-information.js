@@ -13,44 +13,18 @@ import {
 import FieldAtbdAlias from '../../common/forms/field-atbd-alias';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { createProcessToast } from '../../common/toasts';
-import { useHistory } from 'react-router';
-import { atbdEdit } from '../../../utils/url-creator';
 import { formString } from '../../../utils/strings';
 import { formStringSymbol, citationFields } from '../citation';
+import { useSubmitForMetaAndVersionData } from './use-submit';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
-  const history = useHistory();
 
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Saving changes');
-      const result = await updateAtbd({
-        ...values,
-        // If the alias is submitted as empty string (""), the api fails with a
-        // 404 error.
-        alias: values.alias || null
-      });
-      setSubmitting(false);
-
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        processToast.success('Changes saved');
-        // Update the path in case the alias changed.
-        if (values.alias) {
-          history.replace(atbdEdit(values.alias, version, step.id));
-        }
-      }
-    },
-    [updateAtbd, history, version, step.id]
-  );
+  const onSubmit = useSubmitForMetaAndVersionData(updateAtbd, atbd, step);
 
   const validate = useCallback((values) => {
     let errors = {};
@@ -75,6 +49,11 @@ export default function StepIdentifyingInformation(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <SectionFieldset label='General'>
+                <p>
+                  <em>
+                    Updates to the general information will affect all versions.
+                  </em>
+                </p>
                 <FormikInputText
                   id='title'
                   name='title'

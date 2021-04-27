@@ -94,7 +94,6 @@ function DocumentView() {
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
-    history,
     createAtbdVersion,
     updateAtbd,
     publishAtbdVersion
@@ -102,7 +101,9 @@ function DocumentView() {
 
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
+      // Handle actions that would trigger document modals.
       await menuHandler(menuId);
+
       switch (menuId) {
         case 'delete':
           await atbdDeleteVersionConfirmAndToast({

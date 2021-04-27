@@ -64,6 +64,10 @@ function Documents() {
         case 'draft-major':
         case 'publish':
         case 'view-info':
+          // To trigger the modals to open from other pages, we use the history
+          // state as the user is sent from one page to another. See explanation
+          // on
+          // app/assets/scripts/components/documents/document-publishing-actions.js
           history.push(atbdView(atbd), { menuAction: menuId });
           break;
       }

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
+import { useHistory, useLocation } from 'react-router';
 
 import DocumentInfoModal from './document-info-modal';
 import {
@@ -68,11 +69,13 @@ DocumentModals.propTypes = {
 
 export const useDocumentModals = ({
   atbd,
-  history,
   createAtbdVersion,
   updateAtbd,
   publishAtbdVersion
 }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useSafeState(false);
   const [isPublishingDocument, setPublishingDocument] = useSafeState(false);
   const [isViewingDocumentInfo, setViewingDocumentInfo] = useSafeState(false);
@@ -130,13 +133,13 @@ export const useDocumentModals = ({
   // We then capture this, show the appropriate modal and clear the history
   // state to prevent the modal from popping up on refresh.
   useEffect(() => {
-    const { menuAction, ...rest } = history.location.state || {};
+    const { menuAction, ...rest } = location.state || {};
     if (menuAction) {
       menuHandler(menuAction);
       // Using undefined keeps the same path.
       history.replace(undefined, rest);
     }
-  }, [menuHandler, history]);
+  }, [menuHandler, history, location]);
 
   return {
     menuHandler,
