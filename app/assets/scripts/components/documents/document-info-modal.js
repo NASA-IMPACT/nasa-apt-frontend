@@ -252,7 +252,7 @@ function TabCitation(props) {
                   Copy to clipboard
                 </Button>
                 <Button
-                  useIcon='download'
+                  useIcon='download-2'
                   variation='primary-raised-dark'
                   title='Download BibTeX file'
                 >
