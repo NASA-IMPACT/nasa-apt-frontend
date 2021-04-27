@@ -21,6 +21,31 @@ export const DropMenuItemEnhanced = styled(DropMenuItem)`
       opacity: 1;
     `}
 
+  ${({ active }) =>
+    active &&
+    css`
+      &,
+      &:visited {
+        background-color: ${rgba(themeVal('color.link'), 0.08)};
+        color: ${themeVal('color.link')};
+      }
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.25rem;
+        height: 100%;
+        background: ${themeVal('color.link')};
+        content: '';
+        pointer-events: none;
+      }
+
+      &::after {
+        display: none;
+      }
+    `}
+
   ${({ disabled: d }) =>
     d &&
     css`
