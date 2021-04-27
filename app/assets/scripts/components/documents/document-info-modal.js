@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
@@ -17,24 +17,62 @@ import { FormikInputTextarea } from '../common/forms/input-textarea';
 import Datetime from '../common/date';
 
 import { atbdEdit } from '../../utils/url-creator';
-import { citationFields } from './citation';
+import { citationFields, createBibtexCitation } from './citation';
+import { downloadTextFile } from '../../utils/download-text-file';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
   padding: ${glsp(0, 2)};
 `;
 
-const CitationTextWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  flex-flow: row nowrap;
+const TabActions = styled.div`
+  display: grid;
+  grid-auto-columns: min-content;
+  grid-gap: ${glsp()};
 
-  > *:not(:last-child) {
-    margin-right: 1rem;
+  > * {
+    grid-row: 1;
+  }
+`;
+
+const DocInfoList = styled(DetailsList)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: ${glsp(0, 1)};
+
+  margin-bottom: ${glsp(-1)};
+
+  dt {
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 
-  ${FormTextarea} {
-    flex: 1;
+  dd {
+    margin-bottom: ${glsp()};
+  }
+
+  dt:nth-of-type(1),
+  dt:nth-of-type(2),
+  dt:nth-of-type(3) {
+    grid-row: 1;
+  }
+
+  dt:nth-of-type(4),
+  dt:nth-of-type(5),
+  dt:nth-of-type(6) {
+    grid-row: 3;
+  }
+
+  dd:nth-of-type(1),
+  dd:nth-of-type(2),
+  dd:nth-of-type(3) {
+    grid-row: 2;
+  }
+
+  dd:nth-of-type(4),
+  dd:nth-of-type(5),
+  dd:nth-of-type(6) {
+    grid-row: 5;
   }
 `;
 
@@ -91,7 +129,7 @@ function TabGeneral(props) {
 
   return (
     <TabContent tabId='general'>
-      <DetailsList>
+      <DocInfoList>
         <dt>Version</dt>
         <dd>{atbd.version}</dd>
         <dt>Created on</dt>
@@ -102,7 +140,7 @@ function TabGeneral(props) {
         <dd>{atbd.status}</dd>
         <dt>Last update</dt>
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
-      </DetailsList>
+      </DocInfoList>
 
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         <Form as={FormikForm}>
@@ -112,9 +150,9 @@ function TabGeneral(props) {
             label='Changelog'
             description='Use the changelog to register what changed in relation to the previous version.'
           />
-          <div>
+          <TabActions>
             <SaveButton />
-          </div>
+          </TabActions>
         </Form>
       </Formik>
     </TabContent>
@@ -159,10 +197,6 @@ function TabCitation(props) {
         .join(', ')
     : '';
 
-  const missingFields = citation
-    ? citationFields.filter((f) => !citation[f.name])
-    : '';
-
   const citationEditLink = (
     <Link
       to={atbdEdit(atbd, atbd.version)}
@@ -171,6 +205,14 @@ function TabCitation(props) {
       identifying information
     </Link>
   );
+
+  const onDownloadClick = useCallback(() => {
+    const { id, alias, version, citation } = atbd;
+    const aliasId = alias || id;
+
+    const bibtexCitation = createBibtexCitation(aliasId, version, citation);
+    downloadTextFile(`atbd--${aliasId}--${version}.bibtex`, bibtexCitation);
+  }, [atbd]);
 
   return (
     <TabContent tabId='citation'>
@@ -187,36 +229,29 @@ function TabCitation(props) {
       {citationText && (
         <CopyField value={citationText}>
           {({ value, ref }) => (
-            <CitationTextWrapper>
+            <React.Fragment>
               <FormTextarea readOnly value={value} />
-              <Button
-                hideText
-                useIcon='clipboard'
-                size='large'
-                variation='primary-raised-light'
-                title='Copy to clipboard'
-                ref={ref}
-              >
-                Copy to clipboard
-              </Button>
-            </CitationTextWrapper>
+              <TabActions>
+                <Button
+                  useIcon='clipboard'
+                  variation='primary-raised-light'
+                  title='Copy to clipboard'
+                  ref={ref}
+                >
+                  Copy to clipboard
+                </Button>
+                <Button
+                  useIcon='download-2'
+                  variation='primary-raised-dark'
+                  title='Download BibTeX file'
+                  onClick={onDownloadClick}
+                >
+                  Download BibTeX
+                </Button>
+              </TabActions>
+            </React.Fragment>
           )}
         </CopyField>
-      )}
-
-      {!!missingFields.length && (
-        <Prose>
-          <p>The following fields did not have data and were not included:</p>
-          <ul>
-            {missingFields.map((f) => (
-              <li key={f.name}>{f.label}</li>
-            ))}
-          </ul>
-          <p>
-            The citation information can be edited through the{' '}
-            {citationEditLink} form.
-          </p>
-        </Prose>
       )}
     </TabContent>
   );
