@@ -84,6 +84,7 @@ function AtbdHubEntry(props) {
         </HubEntryDetails>
         <HubEntryActions>
           <AtbdActionsMenu
+            origin='hub'
             atbd={atbd}
             atbdVersion={lastVersion}
             onSelect={onAction}
