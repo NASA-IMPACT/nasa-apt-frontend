@@ -1,7 +1,7 @@
 {
   "name": "apt-frontend",
   "description": "Interface for the Algorithm Publication Tool",
-  "version": "2.0.0-alpha2",
+  "version": "2.0.0-alpha3",
   "author": {
     "name": "Development Seed",
     "url": "https://developmentseed.org"
@@ -56,6 +56,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/plugin-proposal-object-rest-spread": "^7.12.13",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
     "@babel/plugin-transform-spread": "^7.12.13",
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
@@ -101,7 +102,6 @@
     "watchify": "^4.0.0"
   },
   "dependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
     "@babel/polyfill": "^7.12.1",
     "@casl/ability": "^5.2.2",
     "@casl/react": "^2.2.2",
@@ -116,9 +116,10 @@
     "@devseed-ui/theme-provider": "^3.0.0",
     "@devseed-ui/toolbar": "2.1.0-rc.0",
     "@devseed-ui/typography": "^1.0.0",
-    "@udecode/slate-plugins": "^0.73.0",
+    "@udecode/slate-plugins": "0.75.2",
     "axios": "^0.21.1",
-    "clipboard": "^2.0.6",
+    "citation-js": "^0.5.0",
+    "clipboard": "^2.0.8",
     "date-fns": "^2.19.0",
     "formik": "^2.2.6",
     "history": "^4.10.0",
@@ -140,6 +141,7 @@
     "react-katex": "^2.0.2",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
+    "react-select": "^4.3.0",
     "react-sticky-el": "^2.0.7",
     "react-tippy": "^1.4.0",
     "react-toastify": "^7.0.3",

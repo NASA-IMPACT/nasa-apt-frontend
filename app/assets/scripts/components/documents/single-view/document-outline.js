@@ -37,7 +37,7 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   position: relative;
   display: block;
   font-size: 1rem;
-  line-height: 1.5rem;
+  line-height: 1.25rem;
   padding: ${glsp(0.5, themeVal('layout.gap.medium'))};
   margin: 0;
   background-color: ${rgba(themeVal('color.link'), 0)};
@@ -76,15 +76,18 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   }
 
   ${OutlineMenuSelf} ${OutlineMenuSelf} & {
-    padding-left: ${glsp(2.5)};
+    padding-left: ${glsp(3)};
+    font-size: 0.875rem;
   }
 
   ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} & {
-    padding-left: ${glsp(3)};
+    padding-left: ${glsp(4)};
+    font-size: 0.875rem;
   }
 
   ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} ${OutlineMenuSelf} & {
-    padding-left: ${glsp(3.5)};
+    padding-left: ${glsp(5)};
+    font-size: 0.875rem;
   }
 `;
 
@@ -195,6 +198,8 @@ export default function DocumentOutline(props) {
       if (!footerElRef.current) {
         footerElRef.current = document.querySelector('[data-element="footer"]');
       }
+
+      if (!headerElRef.current || !elementRef.current) return;
 
       const { top, height } = headerElRef.current.getBoundingClientRect();
       // The header end represents to distance of the header plus anything else

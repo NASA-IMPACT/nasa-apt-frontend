@@ -1,14 +1,17 @@
 /* eslint-disable react/display-name, react/prop-types */
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
-import SafeReadEditor from '../../slate/safe-read-editor';
+import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
+import DetailsList from '../../../styles/typography/details-list';
 
-import { subsectionsFromSlateDocument } from '../../slate/subsections-from-slate';
+import {
+  createDocumentReferenceIndex,
+  formatReference
+} from '../../../utils/references';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
-
 import { proseInnerSpacing } from '../../../styles/typography/prose';
 
 // Wrapper for each of the main sections.
@@ -45,6 +48,13 @@ const AtbdSubSection = styled.div`
   ${proseInnerSpacing()}
 `;
 
+const ReferencesList = styled.ol`
+  && {
+    list-style: none;
+    margin: 0;
+  }
+`;
+
 // When the section that's being rendered is a list of items we only need
 // to print the title and then the data from the children.
 // This method is a utility to just render the children.
@@ -56,13 +66,37 @@ const AtbdSectionPassThrough = ({ element, children }) => {
   );
 };
 
+const MultilineString = ({ value, whenEmpty, ...rest }) => {
+  if (!value || typeof value !== 'string') {
+    return whenEmpty;
+  }
+
+  const pieces = value.split('\n');
+  return pieces.length > 1 ? (
+    <p {...rest}>
+      {pieces.slice(0, -1).map((v, i) => (
+        /* eslint-disable-next-line react/no-array-index-key */
+        <React.Fragment key={i}>
+          {v}
+          <br />
+        </React.Fragment>
+      ))}
+      {pieces[pieces.length - 1]}
+    </p>
+  ) : (
+    <p>{value}</p>
+  );
+};
+
 const FragmentWithOptionalEditor = ({
   element,
+  document,
   children,
   value,
   withEditor,
   HLevel,
-  subsectionLevel
+  subsectionLevel,
+  referencesUseIndex
 }) => {
   return (
     <React.Fragment>
@@ -71,7 +105,12 @@ const FragmentWithOptionalEditor = ({
       </HLevel>
       {withEditor && (
         <SafeReadEditor
-          context={{ subsectionLevel, sectionId: element.id }}
+          context={{
+            subsectionLevel,
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex
+          }}
           value={value}
           whenEmpty={<EmptySection />}
         />
@@ -86,25 +125,56 @@ const DataAccessItem = ({ id, label, url, description }) => (
     <h3 id={id} itemProp='name' data-scroll='target'>
       {label}
     </h3>
-    <h4>Url</h4>
-    <p
-      itemProp='distribution'
-      itemScope
-      itemType='https://schema.org/DataDownload'
-    >
-      <a
-        href={url}
-        target='_blank'
-        rel='noopener noreferrer'
-        title='Open url in new tab'
-        itemProp='contentUrl'
-      >
-        {url}
-      </a>
-    </p>
-    <h4>Description</h4>
-    <SafeReadEditor value={description} whenEmpty={<EmptySection />} />
+    <DetailsList>
+      <dt>Url</dt>
+      <dd>
+        <p
+          itemProp='distribution'
+          itemScope
+          itemType='https://schema.org/DataDownload'
+        >
+          <a
+            href={url}
+            target='_blank'
+            rel='noopener noreferrer'
+            title='Open url in new tab'
+            itemProp='contentUrl'
+          >
+            {url}
+          </a>
+        </p>
+      </dd>
+      <dt>Description</dt>
+      <dd>
+        <MultilineString value={description} whenEmpty={<EmptySection />} />
+      </dd>
+    </DetailsList>
   </AtbdSubSection>
+);
+
+const VariableItem = ({ element, variable }) => (
+  <React.Fragment>
+    <h4 id={element.id} data-scroll='target'>
+      {element.label}
+    </h4>
+    <DetailsList>
+      <dt>Name</dt>
+      <dd>
+        <SafeReadEditor value={variable.name} whenEmpty={<EmptySection />} />
+      </dd>
+      <dt>Long name</dt>
+      <dd>
+        <SafeReadEditor
+          value={variable.long_name}
+          whenEmpty={<EmptySection />}
+        />
+      </dd>
+      <dt>Unit</dt>
+      <dd>
+        <SafeReadEditor value={variable.unit} whenEmpty={<EmptySection />} />
+      </dd>
+    </DetailsList>
+  </React.Fragment>
 );
 
 const EmptySection = () => <p>No content available.</p>;
@@ -131,7 +201,7 @@ const renderElements = (elements, props) =>
 // Each node has the following properties:
 // label: Human readable title to print
 // id: Unique id in the whole page to be used as anchor
-// tocFromEditor: For the fields edited through slate, we need to extract the
+// editorSubsections: For the fields edited through slate, we need to extract the
 //    subsections which are user generated. These will be added to the children
 //    when rendering.
 // render: Function to render this element. It is called with the current
@@ -145,10 +215,15 @@ export const atbdContentSections = [
     id: 'introduction',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.introduction, id),
-    render: ({ element, document }) => (
+    render: ({ element, document, referencesUseIndex }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
-          context={{ subsectionLevel: 'h3', sectionId: element.id }}
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex
+          }}
           value={document.introduction}
           whenEmpty={<EmptySection />}
         />
@@ -160,10 +235,15 @@ export const atbdContentSections = [
     id: 'historic-perspective',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.historical_perspective, id),
-    render: ({ element, document }) => (
+    render: ({ element, document, referencesUseIndex }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
-          context={{ subsectionLevel: 'h3', sectionId: element.id }}
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex
+          }}
           value={document.historical_perspective}
           whenEmpty={<EmptySection />}
         />
@@ -180,16 +260,21 @@ export const atbdContentSections = [
         id: 'sci-theory',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.scientific_theory, id),
-        render: ({ element, document, children }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.scientific_theory}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.scientific_theory}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
           >
-            {children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: [
@@ -201,11 +286,12 @@ export const atbdContentSections = [
                 document.scientific_theory_assumptions,
                 id
               ),
-            render: ({ element, document }) => (
+            render: (props) => (
               <FragmentWithOptionalEditor
-                key={element.id}
-                element={element}
-                value={document.scientific_theory_assumptions}
+                {...props}
+                key={props.element.id}
+                element={props.element}
+                value={props.document.scientific_theory_assumptions}
                 HLevel='h4'
                 subsectionLevel='h5'
                 withEditor
@@ -219,16 +305,21 @@ export const atbdContentSections = [
         id: 'math-theory',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.mathematical_theory, id),
-        render: ({ element, document, children }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.mathematical_theory}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.mathematical_theory}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
           >
-            {children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: [
@@ -240,11 +331,12 @@ export const atbdContentSections = [
                 document.mathematical_theory_assumptions,
                 id
               ),
-            render: ({ element, document }) => (
+            render: (props) => (
               <FragmentWithOptionalEditor
-                key={element.id}
-                element={element}
-                value={document.mathematical_theory_assumptions}
+                {...props}
+                key={props.element.id}
+                element={props.element}
+                value={props.document.mathematical_theory_assumptions}
                 HLevel='h4'
                 subsectionLevel='h5'
                 withEditor
@@ -256,26 +348,46 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'algo-input-var',
-        render: ({ element }) => (
+        render: ({ element, children }) => (
           <React.Fragment key={element.id}>
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            <p>List of variables will be coming soon.</p>
+            {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
-        )
+        ),
+        children: ({ document }) => {
+          const items = document.algorithm_input_variables || [];
+          return items.map((o, idx) => ({
+            label: `Variable #${idx + 1}`,
+            id: `algo-input-vars-${idx + 1}`,
+            render: ({ element }) => (
+              <VariableItem key={element.id} element={element} variable={o} />
+            )
+          }));
+        }
       },
       {
         label: 'Algorithm Output Variables',
         id: 'algo-output-var',
-        render: ({ element }) => (
+        render: ({ element, children }) => (
           <React.Fragment key={element.id}>
             <h3 id={element.id} data-scroll='target'>
               {element.label}
             </h3>
-            <p>List of variables will be coming soon.</p>
+            {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
-        )
+        ),
+        children: ({ document }) => {
+          const items = document.algorithm_output_variables || [];
+          return items.map((o, idx) => ({
+            label: `Variable #${idx + 1}`,
+            id: `algo-output-vars-${idx + 1}`,
+            render: ({ element }) => (
+              <VariableItem key={element.id} element={element} variable={o} />
+            )
+          }));
+        }
       }
     ]
   },
@@ -289,11 +401,6 @@ export const atbdContentSections = [
       return items.map((o, idx) => ({
         label: `Entry #${idx + 1}`,
         id: `algo-implementations-${idx + 1}`,
-        editorSubsections: (document, { id }) =>
-          subsectionsFromSlateDocument(
-            document.algorithm_implementations[idx].description,
-            id
-          ),
         render: ({ element, document }) => (
           <AtbdSubSection
             key={element.id}
@@ -304,24 +411,30 @@ export const atbdContentSections = [
             <h3 id={element.id} itemProp='name' data-scroll='target'>
               {element.label}
             </h3>
-            <h4>Url</h4>
-            <p>
-              <a
-                href={o.url}
-                target='_blank'
-                rel='noopener noreferrer'
-                title='Open url in new tab'
-                itemProp='url'
-              >
-                {o.url}
-              </a>
-            </p>
-            <h4>Description</h4>
-            <SafeReadEditor
-              itemProp='description'
-              value={document.algorithm_implementations[idx].description}
-              whenEmpty={<EmptySection />}
-            />
+            <DetailsList>
+              <dt>Url</dt>
+              <dd>
+                <p>
+                  <a
+                    href={o.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    title='Open url in new tab'
+                    itemProp='url'
+                  >
+                    {o.url}
+                  </a>
+                </p>
+              </dd>
+              <dt>Description</dt>
+              <dd>
+                <MultilineString
+                  itemProp='description'
+                  value={document.algorithm_implementations[idx].description}
+                  whenEmpty={<EmptySection />}
+                />
+              </dd>
+            </DetailsList>
           </AtbdSubSection>
         )
       }));
@@ -332,11 +445,16 @@ export const atbdContentSections = [
     id: 'algo-usage-constraints',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.algorithm_usage_constraints, id),
-    render: ({ element, document }) => (
+    render: ({ element, document, referencesUseIndex }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
-          context={{ subsectionLevel: 'h3', sectionId: element.id }}
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex
+          }}
           whenEmpty={<EmptySection />}
         />
       </AtbdSection>
@@ -355,11 +473,12 @@ export const atbdContentSections = [
             document.performance_assessment_validation_methods,
             id
           ),
-        render: ({ element, document }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.performance_assessment_validation_methods}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.performance_assessment_validation_methods}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
@@ -374,11 +493,14 @@ export const atbdContentSections = [
             document.performance_assessment_validation_uncertainties,
             id
           ),
-        render: ({ element, document }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.performance_assessment_validation_uncertainties}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={
+              props.document.performance_assessment_validation_uncertainties
+            }
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
@@ -393,11 +515,12 @@ export const atbdContentSections = [
             document.performance_assessment_validation_errors,
             id
           ),
-        render: ({ element, document }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.performance_assessment_validation_errors}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.performance_assessment_validation_errors}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
@@ -414,14 +537,19 @@ export const atbdContentSections = [
       {
         label: 'Data Access Input Data',
         id: 'data-access-input',
-        render: ({ element, children }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
+            {...props}
+            key={props.element.id}
+            element={props.element}
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {
@@ -429,11 +557,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-input-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_input_data[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
@@ -449,14 +572,19 @@ export const atbdContentSections = [
       {
         label: 'Data Access Output Data',
         id: 'data-access-output',
-        render: ({ element, children }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
+            {...props}
+            key={props.element.id}
+            element={props.element}
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {
@@ -464,11 +592,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-output-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_output_data[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
@@ -484,14 +607,19 @@ export const atbdContentSections = [
       {
         label: 'Data Access Related URLs',
         id: 'data-access-related-urls',
-        render: ({ element, children }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
+            {...props}
+            key={props.element.id}
+            element={props.element}
             HLevel='h3'
             subsectionLevel='h4'
           >
-            {children}
+            {React.Children.count(props.children) ? (
+              props.children
+            ) : (
+              <EmptySection />
+            )}
           </FragmentWithOptionalEditor>
         ),
         children: ({ document }) => {
@@ -499,11 +627,6 @@ export const atbdContentSections = [
           return items.map((o, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data-access-related-urls-${idx + 1}`,
-            editorSubsections: (document, { id }) =>
-              subsectionsFromSlateDocument(
-                document.data_access_related_urls[idx].description,
-                id
-              ),
             render: ({ element, document }) => (
               <DataAccessItem
                 key={element.id}
@@ -610,31 +733,30 @@ export const atbdContentSections = [
   {
     label: 'References',
     id: 'references',
-    render: ({ element }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <p>Content for {element.label} will arrive soon.</p>
-      </AtbdSection>
-    )
-    // this.referenceIndex.length ? (
-    //   <AtbdSection key={el.id} id={el.id} title={el.label}>
-    //     <ol>
-    //       {this.referenceIndex.map((o, idx) => {
-    //         const ref = (publication_references || []).find(
-    //           (r) => r.publication_reference_id === o.id
-    //         );
-    //         return ref ? (
-    //           <li key={o.id} id={`reference-${o.id}`}>
-    //             [{idx + 1}] <em>{ref.authors}</em> {ref.title}
-    //           </li>
-    //         ) : (
-    //           <li key={o.id} id={`reference-${o.id}`}>
-    //             [{idx + 1}] Reference not found
-    //           </li>
-    //         );
-    //       })}
-    //     </ol>
-    //   </AtbdSection>
-    // ) : null
+    render: ({ element, document, referencesUseIndex }) => {
+      const referencesInUse = Object.values(referencesUseIndex);
+      return (
+        <AtbdSection key={element.id} id={element.id} title={element.label}>
+          {referencesInUse.length ? (
+            <ReferencesList>
+              {referencesInUse.map(({ docIndex, refId }) => {
+                const ref = (document.publication_references || []).find(
+                  (r) => r.id === refId
+                );
+                return (
+                  <li key={refId}>
+                    [{docIndex}]{' '}
+                    {ref ? formatReference(ref) : 'Reference not found'}
+                  </li>
+                );
+              })}
+            </ReferencesList>
+          ) : (
+            <p>No references were used in this document.</p>
+          )}
+        </AtbdSection>
+      );
+    }
   },
   {
     label: 'Journal Details',
@@ -656,11 +778,12 @@ export const atbdContentSections = [
         id: 'acknowledgements',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.journal_discussion, id),
-        render: ({ element, document }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.journal_discussion}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.journal_discussion}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
@@ -672,11 +795,12 @@ export const atbdContentSections = [
         id: 'discussion',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.journal_acknowledgements, id),
-        render: ({ element, document }) => (
+        render: (props) => (
           <FragmentWithOptionalEditor
-            key={element.id}
-            element={element}
-            value={document.journal_acknowledgements}
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.journal_acknowledgements}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
@@ -696,7 +820,12 @@ export default function DocumentBody(props) {
   // Setup the listener to change active links.
   useScrollListener();
 
-  return renderElements(atbdContentSections, { document });
+  const referencesUseIndex = useMemo(
+    () => createDocumentReferenceIndex(document),
+    [document]
+  );
+
+  return renderElements(atbdContentSections, { document, referencesUseIndex });
 }
 
 DocumentBody.propTypes = {

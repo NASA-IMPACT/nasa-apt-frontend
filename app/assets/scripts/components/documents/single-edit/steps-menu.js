@@ -3,11 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { Button } from '@devseed-ui/button';
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
-import Dropdown, {
-  DropTitle,
-  DropMenu,
-  DropMenuItem
-} from '@devseed-ui/dropdown';
+import Dropdown, { DropTitle, DropMenu } from '@devseed-ui/dropdown';
 import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 
 import { Link } from '../../../styles/clean/link';
@@ -15,6 +11,7 @@ import { Link } from '../../../styles/clean/link';
 import { getATBDEditStep, STEPS } from './steps';
 import { atbdEdit } from '../../../utils/url-creator';
 import { calculateAtbdStepCompleteness } from '../completeness';
+import { DropMenuItemEnhanced } from '../../common/dropdown-menu';
 
 // TODO: Remove once the ui library is updated.
 const ToolbarLabel = styled(ToolbarLabel$)`
@@ -28,12 +25,16 @@ const StepsDropdown = styled(Dropdown)`
   max-width: 18rem;
 `;
 
-const StepMenuItem = styled(DropMenuItem)`
+const StepMenuItem = styled(DropMenuItemEnhanced)`
   flex-flow: column;
   align-items: flex-start;
+  justify-content: center;
+  min-height: 3.25rem;
 
   small {
+    display: block;
     font-size: 0.75rem;
+    line-height: 1rem;
     font-weight: ${themeVal('type.base.regular')};
   }
 `;
@@ -51,7 +52,7 @@ export default function StepsMenu(props) {
         Step {activeStepItem.stepNum} of {STEPS.length}
       </ToolbarLabel>
       <StepsDropdown
-        alignment='center'
+        alignment='right'
         direction='down'
         triggerElement={(props) => (
           <Button
@@ -84,11 +85,11 @@ export default function StepsMenu(props) {
                   to={atbdEdit(atbdId, atbd.version, id)}
                 >
                   <span>{label}</span>
-                  {!!total && (
-                    <small>
-                      {percent}% complete ({complete} of {total} sections)
-                    </small>
-                  )}
+                  <small>
+                    {total
+                      ? `${percent}% complete (${complete} of ${total} sections)`
+                      : '—'}
+                  </small>
                 </StepMenuItem>
               </li>
             );

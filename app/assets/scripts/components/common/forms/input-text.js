@@ -6,7 +6,7 @@ import { FormInput, FormHelperMessage } from '@devseed-ui/form';
 import FormGroupStructure from './form-group-structure';
 
 /**
- * From group input structure.
+ * Text input with form group structure.
  *
  * @prop {string} id Input field id
  * @prop {string} name Input field name
@@ -23,6 +23,7 @@ export function InputText(props) {
   const {
     id,
     label,
+    className,
     inputSize,
     inputVariation,
     description,
@@ -40,6 +41,7 @@ export function InputText(props) {
     <FormGroupStructure
       id={id}
       label={label}
+      className={className}
       description={description}
       helper={helper}
     >
@@ -58,6 +60,7 @@ InputText.propTypes = {
   id: T.string,
   name: T.string,
   label: T.string,
+  className: T.string,
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,
   inputVariation: T.string,

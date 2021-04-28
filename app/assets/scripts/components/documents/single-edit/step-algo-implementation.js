@@ -6,15 +6,15 @@ import { Form } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
-import { FormikInputEditor } from '../../common/forms/input-editor';
+import { FormikInputTextarea } from '../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { FormikInputText } from '../../common/forms/input-text';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
 import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
-import { editorEmptyValue } from '../../slate/editor';
 import { formString } from '../../../utils/strings';
 
 // The initial value is the same for
@@ -24,7 +24,7 @@ import { formString } from '../../../utils/strings';
 // Data Access Related Urls
 const emptyFieldValue = {
   url: '',
-  description: editorEmptyValue
+  description: ''
 };
 
 export default function StepAlgoImplementation(props) {
@@ -33,7 +33,7 @@ export default function StepAlgoImplementation(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useSubmitForVersionData(updateAtbd);
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik
@@ -49,37 +49,39 @@ export default function StepAlgoImplementation(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <UrlDescriptionSection
-                sectionLabel='Algorithm Implementation'
-                sectionName='sections_completed.algorithm_implementations'
-                fieldLabel='Algorithm Implementations'
-                fieldName='document.algorithm_implementations'
-                fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
-              />
+              <RichTextContex2Formik>
+                <UrlDescriptionSection
+                  sectionLabel='Algorithm Implementation'
+                  sectionName='sections_completed.algorithm_implementations'
+                  fieldLabel='Algorithm Implementations'
+                  fieldName='document.algorithm_implementations'
+                  fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
+                />
 
-              <UrlDescriptionSection
-                sectionLabel='Data Access Input'
-                sectionName='sections_completed.data_access_input_data'
-                fieldLabel='Data Access Inputs'
-                fieldName='document.data_access_input_data'
-                fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
-              />
+                <UrlDescriptionSection
+                  sectionLabel='Data Access Input'
+                  sectionName='sections_completed.data_access_input_data'
+                  fieldLabel='Data Access Inputs'
+                  fieldName='document.data_access_input_data'
+                  fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
+                />
 
-              <UrlDescriptionSection
-                sectionLabel='Data Access Output'
-                sectionName='sections_completed.data_access_output_data'
-                fieldLabel='Data Access Outputs'
-                fieldName='document.data_access_output_data'
-                fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
-              />
+                <UrlDescriptionSection
+                  sectionLabel='Data Access Output'
+                  sectionName='sections_completed.data_access_output_data'
+                  fieldLabel='Data Access Outputs'
+                  fieldName='document.data_access_output_data'
+                  fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
+                />
 
-              <UrlDescriptionSection
-                sectionLabel='Data Access Related Urls'
-                sectionName='sections_completed.data_access_related_urls'
-                fieldLabel='Data Access Related Urls'
-                fieldName='document.data_access_related_urls'
-                fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
-              />
+                <UrlDescriptionSection
+                  sectionLabel='Data Access Related Urls'
+                  sectionName='sections_completed.data_access_related_urls'
+                  fieldLabel='Data Access Related Urls'
+                  fieldName='document.data_access_related_urls'
+                  fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
+                />
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>
@@ -146,7 +148,7 @@ const UrlDescriptionSection = (props) => {
                   label='Url'
                   description={urlFieldInfo}
                 />
-                <FormikInputEditor
+                <FormikInputTextarea
                   id={`${name}.${index}.description`}
                   name={`${name}.${index}.description`}
                   label='Description'

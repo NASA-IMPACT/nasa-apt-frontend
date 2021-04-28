@@ -16,11 +16,14 @@ import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
+import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdEdit } from '../../../utils/url-creator';
-import toasts, { createProcessToast } from '../../common/toasts';
-import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
+import { atbdEdit, atbdView } from '../../../utils/url-creator';
+import { createProcessToast } from '../../common/toasts';
+import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
+import { Can } from '../../../a11n';
+import { Link } from '../../../styles/clean/link';
 
 function Documents() {
   const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
@@ -53,19 +56,26 @@ function Documents() {
 
   const onDocumentAction = useCallback(
     async (atbd, menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteAtbd(atbd.title);
-        if (confirmed) {
-          const result = await deleteFullAtbd({ id: atbd.id });
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('ATBD successfully deleted');
-          }
-        }
+      switch (menuId) {
+        case 'delete':
+          await atbdDeleteFullConfirmAndToast({
+            atbd,
+            deleteFullAtbd
+          });
+          break;
+        case 'update-minor':
+        case 'draft-major':
+        case 'publish':
+        case 'view-info':
+          // To trigger the modals to open from other pages, we use the history
+          // state as the user is sent from one page to another. See explanation
+          // on
+          // app/assets/scripts/components/documents/document-publishing-actions.js
+          history.push(atbdView(atbd), { menuAction: menuId });
+          break;
       }
     },
-    [deleteFullAtbd]
+    [deleteFullAtbd, history]
   );
 
   return (
@@ -77,31 +87,52 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <ButtonSecondary
-              title='Create new document'
-              useIcon='plus--small'
-              onClick={onCreateClick}
-            >
-              Create
-            </ButtonSecondary>
+            <Can do='create' on='documents'>
+              <ButtonSecondary
+                title='Create new document'
+                useIcon='plus--small'
+                onClick={onCreateClick}
+              >
+                Create
+              </ButtonSecondary>
+            </Can>
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
-          <ContentBlock>
-            {atbds.status === 'succeeded' && !atbds.data?.length && (
-              <div>
-                There are no documents. You can start by creating one.
-                <Button
-                  variation='primary-raised-dark'
-                  title='Create new document'
-                  useIcon='plus--small'
-                  onClick={onCreateClick}
-                >
-                  Create
-                </Button>
-              </div>
-            )}
-            {atbds.status === 'succeeded' && atbds.data?.length && (
+          {atbds.status === 'succeeded' && !atbds.data?.length && (
+            <ContentBlock style={{ height: '100%' }}>
+              <EmptyHub>
+                <Can do='create' on='document'>
+                  <p>
+                    APT is a repository for scientific documents, but none
+                    exist. Start by creating one.
+                  </p>
+                  <Button
+                    variation='primary-raised-dark'
+                    title='Create new document'
+                    useIcon='plus--small'
+                    onClick={onCreateClick}
+                  >
+                    Create document
+                  </Button>
+                </Can>
+                <Can not do='create' on='document'>
+                  <p>
+                    APT is a repository for scientific documents, but none
+                    exist.
+                  </p>
+                  <p>
+                    <Link to='/signin' title='Sign in now'>
+                      Sign in
+                    </Link>{' '}
+                    in to create one.
+                  </p>
+                </Can>
+              </EmptyHub>
+            </ContentBlock>
+          )}
+          {atbds.status === 'succeeded' && atbds.data?.length && (
+            <ContentBlock>
               <HubList>
                 {atbds.data.map((atbd) => (
                   <HubListItem key={atbd.id}>
@@ -112,8 +143,8 @@ function Documents() {
                   </HubListItem>
                 ))}
               </HubList>
-            )}
-          </ContentBlock>
+            </ContentBlock>
+          )}
         </InpageBody>
       </Inpage>
     </App>

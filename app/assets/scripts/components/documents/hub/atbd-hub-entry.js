@@ -16,13 +16,17 @@ import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
 import AtbdActionsMenu from '../atbd-actions-menu';
+import Datetime from '../../common/date';
+import Tip from '../../common/tooltip';
 
 import { atbdView } from '../../../utils/url-creator';
 import { calculateAtbdCompleteness } from '../completeness';
+import { useUser } from '../../../context/user';
 
 function AtbdHubEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
+  const { isLogged } = useUser();
 
   const { percent } = calculateAtbdCompleteness(lastVersion);
 
@@ -30,6 +34,15 @@ function AtbdHubEntry(props) {
     onDocumentAction,
     atbd
   ]);
+
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at.
+  const updateDate = new Date(
+    Math.max(
+      new Date(atbd.last_updated_at).getTime(),
+      new Date(lastVersion.last_updated_at).getTime()
+    )
+  );
 
   return (
     <HubEntry>
@@ -54,7 +67,7 @@ function AtbdHubEntry(props) {
             </HubEntryBreadcrumbMenu>
           </HubEntryHeadNav>
         </HubEntryHeadline>
-        {lastVersion.status === 'Draft' && (
+        {isLogged && (
           <HubEntryMeta>
             <dt>Status</dt>
             <dd>
@@ -63,15 +76,15 @@ function AtbdHubEntry(props) {
           </HubEntryMeta>
         )}
         <HubEntryDetails>
-          <dt>By</dt>
-          <dd>George J. Huffman et al.</dd>
+          <Creators creators={lastVersion.citation?.creators} />
           <dt>On</dt>
           <dd>
-            <time dateTime='2021-02-07'>Feb 7, 2021</time>
+            <Datetime date={updateDate} />
           </dd>
         </HubEntryDetails>
         <HubEntryActions>
           <AtbdActionsMenu
+            origin='hub'
             atbd={atbd}
             atbdVersion={lastVersion}
             onSelect={onAction}
@@ -88,3 +101,31 @@ AtbdHubEntry.propTypes = {
 };
 
 export default AtbdHubEntry;
+
+const Creators = ({ creators }) => {
+  if (!creators) return null;
+
+  const creatorsList = creators?.split(' and ');
+
+  if (creatorsList.length > 1) {
+    return (
+      <React.Fragment>
+        <dt>By</dt>
+        <dd>
+          <Tip title={creators}>{creatorsList[0]} et al.</Tip>
+        </dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>By</dt>
+      <dd>{creators}</dd>
+    </React.Fragment>
+  );
+};
+
+Creators.propTypes = {
+  creators: T.string
+};

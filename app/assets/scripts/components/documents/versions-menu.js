@@ -40,7 +40,13 @@ export default function VersionsMenu(props) {
   return versions.length === 1 ? (
     <strong>{versions[0].version}</strong>
   ) : (
-    <DropdownMenu {...dropProps} withChevron dropTitle='Version' />
+    <DropdownMenu
+      {...dropProps}
+      alignment='left'
+      direction='down'
+      withChevron
+      dropTitle='Version'
+    />
   );
 }
 

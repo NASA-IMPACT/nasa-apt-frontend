@@ -1,5 +1,8 @@
 import { ReactEditor } from 'slate-react';
-import { ELEMENT_LINK, findNode, isCollapsed } from '@udecode/slate-plugins';
+import { findNode, isCollapsed } from '@udecode/slate-plugins';
+
+import { LINK } from '.';
+import { createOp } from '../common/create-change-operation';
 
 const linkEditorInitialState = {
   // Store whether the Link Editor is visible.
@@ -17,17 +20,6 @@ const linkEditorInitialState = {
   // otherwise.
   value: ''
 };
-
-/**
- * Creates an operation to be applied in the next onChange cycle.
- *
- * @param {string} type Type of operation.
- * @param  {...any} args Arguments for the operation.
- */
-const createOp = (type = null, ...args) => ({
-  type,
-  args
-});
 
 /**
  * Enhances the slate editor with link editing capabilities
@@ -113,7 +105,7 @@ export const withLinkEditor = (editor) => {
     // on every cursor change.
 
     // Is the caret on a link?
-    const linkUnderCaret = findNode(editor, { match: { type: ELEMENT_LINK } });
+    const linkUnderCaret = findNode(editor, { match: { type: LINK } });
     // Selection can't be expanded.
     const caretOnLink = !!linkUnderCaret && isCollapsed(editor.selection);
 

@@ -7,6 +7,7 @@ import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
@@ -18,7 +19,7 @@ export default function StepAlgoUsage(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useSubmitForVersionData(updateAtbd);
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik
@@ -34,47 +35,53 @@ export default function StepAlgoUsage(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <FormikSectionFieldset
-                label='Constraints'
-                sectionName='sections_completed.constraints'
-              >
-                <FormikInputEditor
-                  id='algorithm_usage_constraints'
-                  name='document.algorithm_usage_constraints'
-                  label='Describe the algorithm constraints'
-                  description={formString('algorithm_usage.constraints')}
-                />
-              </FormikSectionFieldset>
+              <RichTextContex2Formik>
+                <FormikSectionFieldset
+                  label='Constraints'
+                  sectionName='sections_completed.constraints'
+                >
+                  <FormikInputEditor
+                    id='algorithm_usage_constraints'
+                    name='document.algorithm_usage_constraints'
+                    label='Describe the algorithm constraints'
+                    description={formString('algorithm_usage.constraints')}
+                  />
+                </FormikSectionFieldset>
 
-              <FormBlockHeading>Performance Assessment</FormBlockHeading>
+                <FormBlockHeading>Performance Assessment</FormBlockHeading>
 
-              <FormikSectionFieldset
-                label='Validation'
-                sectionName='sections_completed.validation'
-              >
-                <FormikInputEditor
-                  id='performance_assessment_validation_methods'
-                  name='document.performance_assessment_validation_methods'
-                  label='Validation Methods'
-                  description={formString('algorithm_usage.validation_methods')}
-                />
+                <FormikSectionFieldset
+                  label='Validation'
+                  sectionName='sections_completed.validation'
+                >
+                  <FormikInputEditor
+                    id='performance_assessment_validation_methods'
+                    name='document.performance_assessment_validation_methods'
+                    label='Validation Methods'
+                    description={formString(
+                      'algorithm_usage.validation_methods'
+                    )}
+                  />
 
-                <FormikInputEditor
-                  id='performance_assessment_validation_uncertainties'
-                  name='document.performance_assessment_validation_uncertainties'
-                  label='Uncertainties'
-                  description={formString(
-                    'algorithm_usage.validation_uncertainties'
-                  )}
-                />
+                  <FormikInputEditor
+                    id='performance_assessment_validation_uncertainties'
+                    name='document.performance_assessment_validation_uncertainties'
+                    label='Uncertainties'
+                    description={formString(
+                      'algorithm_usage.validation_uncertainties'
+                    )}
+                  />
 
-                <FormikInputEditor
-                  id='performance_assessment_validation_errors'
-                  name='document.performance_assessment_validation_errors'
-                  label='Errors'
-                  description={formString('algorithm_usage.validation_errors')}
-                />
-              </FormikSectionFieldset>
+                  <FormikInputEditor
+                    id='performance_assessment_validation_errors'
+                    name='document.performance_assessment_validation_errors'
+                    label='Errors'
+                    description={formString(
+                      'algorithm_usage.validation_errors'
+                    )}
+                  />
+                </FormikSectionFieldset>
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>

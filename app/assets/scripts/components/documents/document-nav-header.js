@@ -88,6 +88,8 @@ export default function DocumentNavHeader(props) {
             {isLogged && documentModesMenu.items.length > 1 && (
               <li>
                 <DropdownMenu
+                  alignment='left'
+                  direction='down'
                   menu={documentModesMenu}
                   activeItem={mode}
                   triggerProps={dropdownMenuTriggerProps}
