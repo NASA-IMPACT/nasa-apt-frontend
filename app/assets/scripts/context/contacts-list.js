@@ -16,100 +16,106 @@ export const ContactsProvider = ({ children }) => {
     getState: getContacts,
     fetchContacts,
     deleteContact
-  } = useContexeedApi({
-    name: 'contactList',
-    requests: {
-      fetchContacts: withRequestToken(token, () => ({
-        url: '/contacts'
-      }))
-    },
-    mutations: {
-      deleteContact: withRequestToken(token, ({ id }) => ({
-        mutation: async ({ axios, requestOptions, state, actions }) => {
-          try {
-            // Dispatch request action. It is already dispatchable.
-            actions.request();
+  } = useContexeedApi(
+    {
+      name: 'contactList',
+      requests: {
+        fetchContacts: withRequestToken(token, () => ({
+          url: '/contacts'
+        }))
+      },
+      mutations: {
+        deleteContact: withRequestToken(token, ({ id }) => ({
+          mutation: async ({ axios, requestOptions, state, actions }) => {
+            try {
+              // Dispatch request action. It is already dispatchable.
+              actions.request();
 
-            await axios({
-              ...requestOptions,
-              url: `/contacts/${id}`,
-              method: 'delete'
-            });
+              await axios({
+                ...requestOptions,
+                url: `/contacts/${id}`,
+                method: 'delete'
+              });
 
-            // If this worked, remove the item from the contact list.
-            const newData = state.data.filter((contact) => contact.id !== id);
-            return actions.receive(newData);
-          } catch (error) {
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(null, error);
+              // If this worked, remove the item from the contact list.
+              const newData = state.data.filter((contact) => contact.id !== id);
+              return actions.receive(newData);
+            } catch (error) {
+              // Dispatch receive action. It is already dispatchable.
+              return actions.receive(null, error);
+            }
           }
-        }
-      }))
-    }
-  });
+        }))
+      }
+    },
+    [token]
+  );
 
   const {
     getState: getSingleContact,
     fetchSingleContact,
     createContact,
     updateContact
-  } = useContexeedApi({
-    name: 'contactSingle',
-    useKey: true,
-    requests: {
-      fetchSingleContact: withRequestToken(token, ({ id }) => ({
-        url: `/contacts/${id}`
-      }))
+  } = useContexeedApi(
+    {
+      name: 'contactSingle',
+      useKey: true,
+      requests: {
+        fetchSingleContact: withRequestToken(token, ({ id }) => ({
+          url: `/contacts/${id}`
+        }))
+      },
+      mutations: {
+        createContact: withRequestToken(token, () => ({
+          // Holder for the creation of a new contact since we don't have id yet.
+          stateKey: 'new',
+          mutation: async ({ axios, requestOptions, actions }) => {
+            try {
+              // Dispatch request action. It is already dispatchable.
+              actions.request();
+
+              const response = await axios({
+                ...requestOptions,
+                url: '/contacts',
+                method: 'post'
+              });
+
+              // Dispatch receive action. It is already dispatchable.
+              return actions.receive(response.data);
+            } catch (error) {
+              // Dispatch receive action. It is already dispatchable.
+              return actions.receive(null, error);
+            }
+          }
+        })),
+        updateContact: withRequestToken(token, ({ id, data }) => ({
+          stateKey: `${id}`,
+          mutation: async ({ axios, requestOptions, state, actions }) => {
+            try {
+              const { id, ...rest } = data;
+              // Dispatch request action. It is already dispatchable.
+              actions.request();
+
+              await axios({
+                ...requestOptions,
+                url: `/contacts/${id}`,
+                method: 'post',
+                data: rest
+              });
+
+              // Dispatch receive action. It is already dispatchable.
+              const updateResult = actions.receive(state.data);
+              return { ...updateResult };
+            } catch (error) {
+              // Dispatch receive action. It is already dispatchable.
+              return actions.receive(null, error);
+            }
+          }
+        }))
+      }
     },
-    mutations: {
-      createContact: withRequestToken(token, () => ({
-        // Holder for the creation of a new contact since we don't have id yet.
-        stateKey: 'new',
-        mutation: async ({ axios, requestOptions, actions }) => {
-          try {
-            // Dispatch request action. It is already dispatchable.
-            actions.request();
-
-            const response = await axios({
-              ...requestOptions,
-              url: '/contacts',
-              method: 'post'
-            });
-
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(response.data);
-          } catch (error) {
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(null, error);
-          }
-        }
-      })),
-      updateContact: withRequestToken(token, ({ id, data }) => ({
-        stateKey: `${id}`,
-        mutation: async ({ axios, requestOptions, state, actions }) => {
-          try {
-            const { id, ...rest } = data;
-            // Dispatch request action. It is already dispatchable.
-            actions.request();
-
-            await axios({
-              ...requestOptions,
-              url: `/contacts/${id}`,
-              method: 'post',
-              data: rest
-            });
-
-            // Dispatch receive action. It is already dispatchable.
-            const updateResult = actions.receive(state.data);
-            return { ...updateResult };
-          } catch (error) {
-            // Dispatch receive action. It is already dispatchable.
-            return actions.receive(null, error);
-          }
-        }
-      }))
-    }
-  });
+    [token]
+  );
 
   const contextValue = {
     getContacts,
