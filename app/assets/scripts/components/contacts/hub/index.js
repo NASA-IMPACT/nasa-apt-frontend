@@ -22,6 +22,7 @@ import { useUser } from '../../../context/user';
 import toasts, { createProcessToast } from '../../common/toasts';
 import { confirmDeleteContact } from '../../common/confirmation-prompt';
 import SignIn from '../../../a11n/signin';
+import { EmptyHub } from '../../common/empty-states';
 
 export function Contacts() {
   const {
@@ -99,17 +100,20 @@ export function Contacts() {
         <InpageBody>
           <ContentBlock>
             {contacts.status === 'succeeded' && !contacts.data?.length && (
-              <div>
-                There are no contacts. You can start by creating one.
+              <EmptyHub>
+                <p>
+                  It looks like the contact list is empty. Start by creating a
+                  contact.
+                </p>
                 <Button
                   variation='primary-raised-dark'
                   title='Create new contact'
                   useIcon='plus--small'
                   onClick={onCreateClick}
                 >
-                  Create
+                  Create contact
                 </Button>
-              </div>
+              </EmptyHub>
             )}
             {contacts.status === 'succeeded' && contacts.data?.length && (
               <HubList>

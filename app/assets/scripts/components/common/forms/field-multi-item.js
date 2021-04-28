@@ -1,22 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 import T from 'prop-types';
-import { themeVal, glsp } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 
 import FormGroupStructure from './form-group-structure';
+import { EmptyBox } from '../empty-states';
 
-export const MultiItemEmpty = styled.div`
-  background-color: ${themeVal('color.baseAlphaB')};
-  border-radius: ${themeVal('shape.rounded')};
-  border: ${themeVal('layout.border')} solid ${themeVal('color.baseAlphaC')};
-  padding: ${glsp()};
-  text-align: center;
-
-  & > p {
-    margin-bottom: ${glsp(0.5)};
-  }
-`;
+export const MultiItemEmpty = EmptyBox;
 
 /**
  * Fieldset for multi item fields with a trash icon

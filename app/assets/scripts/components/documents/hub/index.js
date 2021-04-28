@@ -16,12 +16,14 @@ import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
+import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdEdit, atbdView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
 import { Can } from '../../../a11n';
+import { Link } from '../../../styles/clean/link';
 
 function Documents() {
   const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
@@ -99,17 +101,34 @@ function Documents() {
         <InpageBody>
           <ContentBlock>
             {atbds.status === 'succeeded' && !atbds.data?.length && (
-              <div>
-                There are no documents. You can start by creating one.
-                <Button
-                  variation='primary-raised-dark'
-                  title='Create new document'
-                  useIcon='plus--small'
-                  onClick={onCreateClick}
-                >
-                  Create
-                </Button>
-              </div>
+              <EmptyHub>
+                <Can do='create' on='document'>
+                  <p>
+                    APT is a repository for scientific documents, but none
+                    exist. Start by creating one.
+                  </p>
+                  <Button
+                    variation='primary-raised-dark'
+                    title='Create new document'
+                    useIcon='plus--small'
+                    onClick={onCreateClick}
+                  >
+                    Create document
+                  </Button>
+                </Can>
+                <Can not do='create' on='document'>
+                  <p>
+                    APT is a repository for scientific documents, but none
+                    exist.
+                  </p>
+                  <p>
+                    <Link to='/signin' title='Sign in now'>
+                      Sign in
+                    </Link>{' '}
+                    in to create one.
+                  </p>
+                </Can>
+              </EmptyHub>
             )}
             {atbds.status === 'succeeded' && atbds.data?.length && (
               <HubList>

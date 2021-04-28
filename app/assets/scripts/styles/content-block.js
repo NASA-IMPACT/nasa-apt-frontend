@@ -47,6 +47,7 @@ export const ContentBlock = styled(UniversalGridder).attrs({
     largeUp: ['full-start', 'full-end']
   }
 })`
+  height: 100%;
   padding: ${glsp(themeVal('layout.gap.xsmall'), 0)};
   grid-row-gap: ${glsp(themeVal('layout.gap.xsmall'))};
 
