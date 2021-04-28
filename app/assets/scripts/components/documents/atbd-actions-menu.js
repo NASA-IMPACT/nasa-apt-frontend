@@ -99,7 +99,13 @@ export default function AtbdActionsMenu(props) {
   }, [variation, atbd, atbdVersion, isLogged]);
 
   return (
-    <DropdownMenu {...dropProps} dropTitle='Options' onSelect={onSelect} />
+    <DropdownMenu
+      {...dropProps}
+      alignment='right'
+      direction='down'
+      dropTitle='Options'
+      onSelect={onSelect}
+    />
   );
 }
 

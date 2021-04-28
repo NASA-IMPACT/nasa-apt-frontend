@@ -104,7 +104,9 @@ const DropdownMenu = React.forwardRef((props, ref) => {
     withChevron,
     triggerProps = {},
     triggerLabel,
-    onSelect
+    onSelect,
+    alignment,
+    direction
   } = props;
 
   const menu = useMemo(() => castArray(menuInput), [menuInput]);
@@ -119,8 +121,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   return (
     <Dropdown
       ref={ref}
-      alignment='center'
-      direction='down'
+      alignment={alignment}
+      direction={direction}
       triggerElement={(props) => (
         <Button
           variation='base-plain'
@@ -194,7 +196,14 @@ DropdownMenu.propTypes = {
   dropTitle: T.string,
   triggerProps: T.object,
   triggerLabel: T.string,
+  alignment: T.string,
+  direction: T.string,
   onSelect: T.func
+};
+
+DropdownMenu.defaultProps = {
+  alignment: 'center',
+  direction: 'down'
 };
 
 export default DropdownMenu;

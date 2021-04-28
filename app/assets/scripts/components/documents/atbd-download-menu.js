@@ -53,7 +53,14 @@ export default function AtbdDownloadMenu(props) {
     };
   }, [atbd]);
 
-  return <DropdownMenu {...dropProps} dropTitle='Download' />;
+  return (
+    <DropdownMenu
+      {...dropProps}
+      alignment='right'
+      direction='down'
+      dropTitle='Download'
+    />
+  );
 }
 
 AtbdDownloadMenu.propTypes = {

@@ -52,7 +52,7 @@ export default function StepsMenu(props) {
         Step {activeStepItem.stepNum} of {STEPS.length}
       </ToolbarLabel>
       <StepsDropdown
-        alignment='center'
+        alignment='right'
         direction='down'
         triggerElement={(props) => (
           <Button

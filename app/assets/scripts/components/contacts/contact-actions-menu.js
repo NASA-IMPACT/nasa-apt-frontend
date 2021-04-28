@@ -34,7 +34,13 @@ export default function ContactActionsMenu({ contact, onSelect }) {
   }, [contact]);
 
   return (
-    <DropdownMenu {...dropProps} dropTitle='Options' onSelect={onSelect} />
+    <DropdownMenu
+      {...dropProps}
+      alignment='right'
+      direction='down'
+      dropTitle='Options'
+      onSelect={onSelect}
+    />
   );
 }
 
