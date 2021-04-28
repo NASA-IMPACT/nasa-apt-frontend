@@ -13,7 +13,10 @@ import Tip from '../common/tooltip';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 import { CopyField } from '../common/copy-field';
-import { FormikInputTextarea, InputTextarea } from '../common/forms/input-textarea';
+import {
+  FormikInputTextarea,
+  InputTextarea
+} from '../common/forms/input-textarea';
 import Datetime from '../common/date';
 import { Can } from '../../a11n';
 

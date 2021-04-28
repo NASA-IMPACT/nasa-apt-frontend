@@ -30,7 +30,7 @@ export const remindMinorVersionUpdate = async (currentVersion) => {
           If you are done with your changes, consider updating the
           document&apos;s minor version.
         </p>
-        <p>You&apos;ll always be able to updated the minor version later.</p>
+        <p>You&apos;ll always be able to update the minor version later.</p>
       </ContentWrapper>
     ),
     /* eslint-disable-next-line react/display-name, react/prop-types */
