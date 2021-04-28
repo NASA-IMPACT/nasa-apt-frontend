@@ -21,6 +21,7 @@ import { useAtbds } from '../../../context/atbds-list';
 import { atbdEdit, atbdView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
+import { Can } from '../../../a11n';
 
 function Documents() {
   const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
@@ -84,13 +85,15 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <ButtonSecondary
-              title='Create new document'
-              useIcon='plus--small'
-              onClick={onCreateClick}
-            >
-              Create
-            </ButtonSecondary>
+            <Can do='create' on='documents'>
+              <ButtonSecondary
+                title='Create new document'
+                useIcon='plus--small'
+                onClick={onCreateClick}
+              >
+                Create
+              </ButtonSecondary>
+            </Can>
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
