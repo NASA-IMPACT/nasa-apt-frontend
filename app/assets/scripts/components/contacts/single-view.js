@@ -141,31 +141,40 @@ export default function ContactView() {
                   </ContactHeader>
                   <DetailsList>
                     <dt>First Name</dt>
-                    <dd>
-                      {data.first_name ? data.first_name : <EmptySection />}
-                    </dd>
-
-                    <dt>Middle Name</dt>
-                    <dd>
-                      {data.middle_name ? data.middle_name : <EmptySection />}
-                    </dd>
+                    <dd>{data?.first_name || <EmptySection />}</dd>
+                    {data.name && (
+                      <>
+                        <dt>Middle Name</dt>
+                        <dd>{data.name}</dd>
+                      </>
+                    )}
                     <dt>Last Name</dt>
-                    <dd>
-                      {data.last_name ? data.last_name : <EmptySection />}
-                    </dd>
-                    <dt>Mechanisms</dt>
-                    <dd>
-                      {data.mechanisms ? (
-                        data.mechanisms.map((mechanism) => (
-                          <p key={mechanism.mechanism_type}>
-                            {mechanism.mechanism_type}:{' '}
-                            {mechanism.mechanism_value}
-                          </p>
-                        ))
-                      ) : (
-                        <EmptySection />
-                      )}
-                    </dd>
+                    <dd>{data?.last_name || <EmptySection />}</dd>
+                    {data.uuid && (
+                      <>
+                        <dt>UUID</dt>
+                        <dd>{data.uuid}</dd>
+                      </>
+                    )}
+                    {data.url && (
+                      <>
+                        <dt>URL</dt>
+                        <dd>{data.url}</dd>
+                      </>
+                    )}
+                    {data?.mechanisms.length && (
+                      <>
+                        <dt>Mechanisms</dt>
+                        <dd>
+                          {data.mechanisms.map((mechanism) => (
+                            <p key={mechanism.mechanism_type}>
+                              {mechanism.mechanism_type}:{' '}
+                              {mechanism.mechanism_value}
+                            </p>
+                          ))}
+                        </dd>
+                      </>
+                    )}
                   </DetailsList>
                 </Prose>
               </ContactContent>
