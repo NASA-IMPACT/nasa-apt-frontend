@@ -172,7 +172,6 @@ function PageHeader() {
           <li>
             <Button
               forwardedAs={NavLink}
-              exact
               to='/documents'
               variation='achromic-plain'
               title='View the documents'
@@ -185,7 +184,6 @@ function PageHeader() {
               <Can do='view' on='contacts'>
                 <Button
                   forwardedAs={NavLink}
-                  exact
                   to='/contacts'
                   variation='achromic-plain'
                   title='View the contact list'

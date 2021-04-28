@@ -37,14 +37,15 @@ const TabsList = styled.ul`
   }
 `;
 
-const TabsActions = styled.div`
-  /* Styled component */
+const TabInnerContent = styled.div`
+  display: grid;
+  grid-gap: ${glsp()};
 `;
 
 const TabLink = styled.a`
   position: relative;
   display: block;
-  padding: ${glsp(0, 0, 0.5, 0)};
+  padding: ${glsp(0, 0, 1, 0)};
   font-size: 0.875rem;
   line-height: 1rem;
   font-weight: ${themeVal('type.base.bold')};
@@ -54,6 +55,15 @@ const TabLink = styled.a`
   &:visited {
     color: inherit;
   }
+
+  ${({ active }) =>
+    active &&
+    css`
+      &,
+      &:visited {
+        color: ${themeVal('color.link')};
+      }
+    `}
 
   &::after {
     position: absolute;
@@ -124,7 +134,11 @@ export function TabContent(props) {
   const { children, tabId, ...rest } = props;
   const { activeTab } = useTabs();
 
-  return activeTab === tabId && <TabsActions {...rest}>{children}</TabsActions>;
+  return (
+    activeTab === tabId && (
+      <TabInnerContent {...rest}>{children}</TabInnerContent>
+    )
+  );
 }
 
 TabContent.propTypes = {

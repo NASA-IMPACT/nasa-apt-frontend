@@ -17,7 +17,7 @@ export default function StepReferences(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useSubmitForVersionData(updateAtbd);
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   const referenceIndex = useMemo(
     () => createDocumentReferenceIndex(atbd.document),

@@ -1,6 +1,10 @@
 import Cite from 'citation-js';
+import castArray from 'lodash.castarray';
 
-import { nodeFromSlateDocument } from '../components/slate';
+import {
+  nodeFromSlateDocument,
+  removeNodeFromSlateDocument
+} from '../components/slate';
 import { REFERENCE } from '../components/slate/plugins/reference';
 
 // interface Reference {
@@ -115,6 +119,22 @@ export const formatReference = (reference) => {
     .join(' ');
 };
 
+// Fields that can have references.
+const fieldsWithReferences = [
+  'introduction',
+  'historical_perspective',
+  'scientific_theory',
+  'scientific_theory_assumptions',
+  'mathematical_theory',
+  'mathematical_theory_assumptions',
+  'algorithm_usage_constraints',
+  'performance_assessment_validation_methods',
+  'performance_assessment_validation_uncertainties',
+  'performance_assessment_validation_errors',
+  'journal_discussion',
+  'journal_acknowledgements'
+];
+
 /**
  * Traverse the atbd document and search for references. From those references
  * create a usage index where the use count is stored. The first reference to
@@ -133,22 +153,6 @@ export const formatReference = (reference) => {
  * }
  */
 export const createDocumentReferenceIndex = (document) => {
-  // Fields that can have references.
-  const fields = [
-    'introduction',
-    'historical_perspective',
-    'scientific_theory',
-    'scientific_theory_assumptions',
-    'mathematical_theory',
-    'mathematical_theory_assumptions',
-    'algorithm_usage_constraints',
-    'performance_assessment_validation_methods',
-    'performance_assessment_validation_uncertainties',
-    'performance_assessment_validation_errors',
-    'journal_discussion',
-    'journal_acknowledgements'
-  ];
-
   // Index structure:
   // {
   //   refId: {
@@ -169,7 +173,7 @@ export const createDocumentReferenceIndex = (document) => {
   };
 
   // For loops, not pretty, but fast.
-  for (const fieldName of fields) {
+  for (const fieldName of fieldsWithReferences) {
     const fieldData = document?.[fieldName] || {};
     const referenceNodes = nodeFromSlateDocument(fieldData, REFERENCE);
 
@@ -190,6 +194,32 @@ export const createDocumentReferenceIndex = (document) => {
   }
 
   return refUsageIndex;
+};
+
+export const removeReferencesFromDocument = (atbdDocument, refIds) => {
+  const refIdArray = castArray(refIds);
+
+  if (!refIdArray.length) {
+    return atbdDocument;
+  }
+
+  const cleanAtbd = {
+    ...atbdDocument
+  };
+
+  // For loops, not pretty, but fast.
+  for (const fieldName of fieldsWithReferences) {
+    if (atbdDocument?.[fieldName]) {
+      cleanAtbd[fieldName] = removeNodeFromSlateDocument(
+        cleanAtbd[fieldName],
+        (node) => {
+          return node.type === REFERENCE && refIdArray.includes(node.refId);
+        }
+      );
+    }
+  }
+
+  return cleanAtbd;
 };
 
 /**

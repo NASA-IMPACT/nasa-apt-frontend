@@ -26,3 +26,30 @@ export function nodeFromSlateDocument(document, type) {
 
   return getNodes(castArray(document), type);
 }
+
+/**
+ * Traverse the Editor AST and remove all nodes for which the filter function
+ * returns true. When working outside the Slate context we need can't use the
+ * Editor's methods to search for nodes.
+ *
+ * @param {Object} document The field value in Slate editor format.
+ * @param {function} filterFn Filtering function.
+ */
+export function removeNodeFromSlateDocument(document, filterFn) {
+  // Recursively get the subsections from a slate document.
+  const filterNodes = (items = [], filterFn) => {
+    return items.reduce((acc, i) => {
+      const newItem = { ...i };
+
+      if (i?.children) {
+        newItem.children = filterNodes(castArray(i.children), filterFn);
+      }
+
+      return filterFn(newItem) ? acc : acc.concat(newItem);
+    }, []);
+  };
+
+  const result = filterNodes(castArray(document), filterFn);
+  // Return the same as input.
+  return Array.isArray(document) ? result : result[0];
+}

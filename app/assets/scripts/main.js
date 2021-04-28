@@ -122,3 +122,12 @@ Composer.propTypes = {
   components: T.array,
   children: T.node
 };
+
+Object.defineProperty(Array.prototype, 'last', {
+  enumerable: false,
+  configurable: true,
+  get: function () {
+    return this[this.length - 1];
+  },
+  set: undefined
+});

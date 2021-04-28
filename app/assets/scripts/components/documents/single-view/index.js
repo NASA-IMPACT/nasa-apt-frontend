@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
+import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -23,11 +24,15 @@ import AtbdDownloadMenu from '../atbd-download-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
+import Datetime from '../../common/date';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
-import { confirmDeleteAtbdVersion } from '../../common/confirmation-prompt';
-import toasts from '../../common/toasts';
+import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
+import {
+  useDocumentModals,
+  DocumentModals
+} from '../document-publishing-actions';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -75,35 +80,45 @@ const DocumentMetaDetails = styled(DetailsList)`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
-  const { atbd, fetchSingleAtbd, deleteAtbdVersion } = useSingleAtbd({
+  const {
+    atbd,
+    updateAtbd,
+    fetchSingleAtbd,
+    deleteAtbdVersion,
+    createAtbdVersion,
+    publishAtbdVersion
+  } = useSingleAtbd({
     id,
     version
   });
 
   useEffect(() => {
     fetchSingleAtbd();
-  }, [id, version]);
+  }, [id, version, fetchSingleAtbd]);
+
+  const { menuHandler, documentModalProps } = useDocumentModals({
+    atbd: atbd.data,
+    createAtbdVersion,
+    updateAtbd,
+    publishAtbdVersion
+  });
 
   const onDocumentMenuAction = useCallback(
     async (menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteAtbdVersion(
-          atbd.data?.title,
-          atbd.data?.version
-        );
+      // Handle actions that would trigger document modals.
+      await menuHandler(menuId);
 
-        if (confirmed) {
-          const result = await deleteAtbdVersion();
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('ATBD successfully deleted');
-            history.push('/documents');
-          }
-        }
+      switch (menuId) {
+        case 'delete':
+          await atbdDeleteVersionConfirmAndToast({
+            atbd: atbd.data,
+            deleteAtbdVersion,
+            history
+          });
+          break;
       }
     },
-    [atbd.data?.title, atbd.data?.version, deleteAtbdVersion, history]
+    [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -130,6 +145,7 @@ function DocumentView() {
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
+          <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentNavHeader
               atbdId={id}
@@ -165,23 +181,21 @@ function DocumentView() {
                       <DocumentMetaDetails>
                         <dt>Version</dt>
                         <dd>{atbd.data.version}</dd>
-                        <dt>Release date</dt>
-                        <dd>
-                          <time dateTime='2020-12-04'>Dec 4, 2020</time>
-                        </dd>
+                        <ReleaseDate date={atbd.data.citation?.release_date} />
                         <dt>Keywords</dt>
-                        <dd>constellation, GPM, multi-satellite, IMERG</dd>
-                        <dt>Authors</dt>
+                        <dd>coming soon</dd>
+                        <dt>Creators</dt>
                         <dd>
-                          George J. Huffman, David T. Bolvin, Dan Braithwaite,
-                          Kuolin Hsu, Robert Joyce, Pingping Xie
+                          {atbd.data.citation?.creators || 'None provided'}
                         </dd>
                         <dt>Editors</dt>
-                        <dd>Kuolin Hsu, Robert Joyce, Pingping Xie</dd>
+                        <dd>
+                          {atbd.data.citation?.editors || 'None provided'}
+                        </dd>
                         <dt>URL</dt>
                         <dd>
                           <a href='#' title='View'>
-                            doi.org/10.5067/GEDI
+                            coming soon
                           </a>
                         </dd>
                       </DocumentMetaDetails>
@@ -199,3 +213,38 @@ function DocumentView() {
 }
 
 export default DocumentView;
+
+const ReleaseDate = ({ date }) => {
+  if (!date) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>None provided</dd>
+      </React.Fragment>
+    );
+  }
+
+  const dateObj = new Date(date);
+  // Not parsable. Print as provided.
+  if (isNaN(dateObj.getTime())) {
+    return (
+      <React.Fragment>
+        <dt>Release date</dt>
+        <dd>{date}</dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>Release date</dt>
+      <dd>
+        <Datetime date={dateObj} />
+      </dd>
+    </React.Fragment>
+  );
+};
+
+ReleaseDate.propTypes = {
+  date: T.string
+};

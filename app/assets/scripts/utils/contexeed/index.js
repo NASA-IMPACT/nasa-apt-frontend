@@ -106,6 +106,7 @@ export function useContexeedApi(config, deps = []) {
       }
       return dispatch(actions.invalidate(key));
     },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     [dispatch, ...deps]
   );
 
@@ -212,7 +213,7 @@ const makeMutationAction = (config, fnName, actions) => {
       const dispatchableActions = {
         request: (...args) => dispatch(callAction(request, args)),
         receive: (...args) => dispatch(callAction(receive, args)),
-        invalidate: () => dispatch(callAction(invalidate, args)),
+        invalidate: (...args) => dispatch(callAction(invalidate, args)),
         dispatch
       };
 

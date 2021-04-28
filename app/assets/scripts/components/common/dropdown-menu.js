@@ -28,7 +28,7 @@ export const DropMenuItemEnhanced = styled(DropMenuItem)`
     `}
 `;
 
-const getMenuClickHandler = (fn, menuItem) => {
+export const getMenuClickHandler = (fn, menuItem) => {
   return (event) => {
     // Prevent the default action unless is a link.
     if (!menuItem.href && !menuItem.to) {

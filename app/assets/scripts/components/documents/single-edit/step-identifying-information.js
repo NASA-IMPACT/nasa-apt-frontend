@@ -13,43 +13,18 @@ import {
 import FieldAtbdAlias from '../../common/forms/field-atbd-alias';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { createProcessToast } from '../../common/toasts';
-import { useHistory } from 'react-router';
-import { atbdEdit } from '../../../utils/url-creator';
 import { formString } from '../../../utils/strings';
+import { formStringSymbol, citationFields } from '../citation';
+import { useSubmitForMetaAndVersionData } from './use-submit';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
-  const history = useHistory();
 
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Saving changes');
-      const result = await updateAtbd({
-        ...values,
-        // If the alias is submitted as empty string (""), the api fails with a
-        // 404 error.
-        alias: values.alias || null
-      });
-      setSubmitting(false);
-
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        processToast.success('Changes saved');
-        // Update the path in case the alias changed.
-        if (values.alias) {
-          history.replace(atbdEdit(values.alias, version, step.id));
-        }
-      }
-    },
-    [updateAtbd, history, version, step.id]
-  );
+  const onSubmit = useSubmitForMetaAndVersionData(updateAtbd, atbd, step);
 
   const validate = useCallback((values) => {
     let errors = {};
@@ -74,6 +49,11 @@ export default function StepIdentifyingInformation(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <SectionFieldset label='General'>
+                <p>
+                  <em>
+                    Updates to the general information will affect all versions.
+                  </em>
+                </p>
                 <FormikInputText
                   id='title'
                   name='title'
@@ -87,94 +67,22 @@ export default function StepIdentifyingInformation(props) {
                 label='Citation'
                 sectionName='sections_completed.citation'
               >
-                <FormikInputText
-                  id='citation-creators'
-                  name='citation.creators'
-                  label='Creators'
-                  description={formString(
-                    'identifying_information.citation.creators'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-editors'
-                  name='citation.editors'
-                  label='Editors'
-                  description={formString(
-                    'identifying_information.citation.editors'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-title'
-                  name='citation.title'
-                  label='Title'
-                  description={formString(
-                    'identifying_information.citation.title'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-series_name'
-                  name='citation.series_name'
-                  label='Series name'
-                  description={formString(
-                    'identifying_information.citation.series_name'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-release_date'
-                  name='citation.release_date'
-                  label='Release date'
-                  description={formString(
-                    'identifying_information.citation.release_date'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-release_place'
-                  name='citation.release_place'
-                  label='Release place'
-                  description={formString(
-                    'identifying_information.citation.release_place'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-publisher'
-                  name='citation.publisher'
-                  label='Publisher'
-                  description={formString(
-                    'identifying_information.citation.publisher'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-version'
-                  name='citation.version'
-                  label='Version'
-                  description={formString(
-                    'identifying_information.citation.version'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-issue'
-                  name='citation.issue'
-                  label='Issue'
-                  description={formString(
-                    'identifying_information.citation.issue'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-additional_details'
-                  name='citation.additional_details'
-                  label='Additional details'
-                  description={formString(
-                    'identifying_information.citation.additional_details'
-                  )}
-                />
-                <FormikInputText
-                  id='citation-online_resource'
-                  name='citation.online_resource'
-                  label='Online resource'
-                  description={formString(
-                    'identifying_information.citation.online_resource'
-                  )}
-                />
+                {citationFields.map((field) => (
+                  <FormikInputText
+                    key={field.name}
+                    id={`citation-${field.name}`}
+                    name={`citation.${field.name}`}
+                    label={field.label}
+                    description={
+                      field.description === formStringSymbol
+                        ? formString(
+                            `identifying_information.citation.${field.name}`
+                          )
+                        : field.description
+                    }
+                    helper={field.helper}
+                  />
+                ))}
               </FormikSectionFieldset>
             </Form>
           </FormBlock>

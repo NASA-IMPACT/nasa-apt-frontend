@@ -1,11 +1,15 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, {
+  DropMenuItemEnhanced,
+  getMenuClickHandler
+} from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
 import { atbdEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
+import Tip from '../common/tooltip';
 
 export default function AtbdActionsMenu(props) {
   const { atbd, atbdVersion, variation, onSelect } = props;
@@ -25,8 +29,8 @@ export default function AtbdActionsMenu(props) {
     };
     const itemDraftMajor = {
       id: 'draft-major',
-      label: 'Draft a new major version',
-      title: 'Draft a new major version of document'
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
     };
     const itemEdit = {
       id: 'edit',
@@ -104,4 +108,37 @@ AtbdActionsMenu.propTypes = {
   atbd: T.object,
   atbdVersion: T.object,
   variation: T.string
+};
+
+const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
+  const lastVersion = atbd.versions.last;
+  const isLastDraft = lastVersion.status.toLowerCase() === 'draft';
+
+  const item = (
+    <DropMenuItemEnhanced
+      disabled={isLastDraft}
+      title='Draft a new major version of document'
+      onClick={getMenuClickHandler(onSelect, menuItem)}
+      {...props}
+    >
+      Draft a new major version
+    </DropMenuItemEnhanced>
+  );
+
+  // There can only be 1 major draft version.
+  return isLastDraft ? (
+    <Tip
+      title={`A Major draft version (${lastVersion.version}) already exists.`}
+    >
+      {item}
+    </Tip>
+  ) : (
+    item
+  );
+};
+
+DraftMajorMenuItem.propTypes = {
+  onSelect: T.func,
+  menuItem: T.object,
+  atbd: T.object
 };

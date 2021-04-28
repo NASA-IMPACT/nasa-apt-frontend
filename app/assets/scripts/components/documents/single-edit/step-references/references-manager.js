@@ -24,7 +24,8 @@ import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
 import {
   formatReference,
-  getReferenceEmptyValue
+  getReferenceEmptyValue,
+  removeReferencesFromDocument
 } from '../../../../utils/references';
 
 // The selection of the refs is managed by SelectionList. This utility only
@@ -53,7 +54,7 @@ export default function ReferencesManager(props) {
     helpers.setValue(field.value.concat(preparedRefs));
   };
 
-  const onMenuAction = ({ push }, menuId, data) => {
+  const onMenuAction = ({ push, form }, menuId, data) => {
     switch (menuId) {
       case 'add':
         {
@@ -69,9 +70,19 @@ export default function ReferencesManager(props) {
         {
           // Create a list of ids to facilitate searching.
           const selectedIds = refsSelected.map((r) => r.id);
+
+          // Remove the deleted references from all the editor
+          // fields.
+          const newDocument = removeReferencesFromDocument(
+            form.values.document,
+            selectedIds
+          );
+          form.setFieldValue('document', newDocument);
+
           helpers.setValue(
             field.value.filter((f) => !selectedIds.includes(f.id))
           );
+
           setRefsSelected([]);
         }
         break;
@@ -148,6 +159,15 @@ export default function ReferencesManager(props) {
                         const newSelection = selectedReferencesList.deselect(
                           field
                         );
+
+                        // Remove the deleted references from all the editor
+                        // fields.
+                        const newDocument = removeReferencesFromDocument(
+                          form.values.document,
+                          field.id
+                        );
+                        form.setFieldValue('document', newDocument);
+
                         setRefsSelected(newSelection);
                         remove(index);
                       }}

@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { Modal, ModalFooter } from '@devseed-ui/modal';
+import { Modal, ModalFooter, ModalHeadline } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
+import { headingAlt } from '@devseed-ui/typography';
 
 const ConfirmationModalFooter = styled(ModalFooter)`
-  justify-content: flex-end;
+  justify-content: center;
+`;
+
+export const ModalSubtitle = styled.p`
+  ${headingAlt()}
 `;
 
 const noop = () => {};
@@ -16,6 +21,7 @@ let theConfirmationModal = null;
 // Base state to reset on new showings.
 const baseState = {
   title: 'Are you sure?',
+  subtitle: null,
   content: <p>This action will be carried out.</p>,
   // eslint-disable-next-line
   renderControls: ({ cancel, confirm }) => (
@@ -114,14 +120,19 @@ class ConfirmationPrompt extends Component {
   }
 
   render() {
-    const { revealed, title, content, renderControls } = this.state;
+    const { revealed, title, subtitle, content, renderControls } = this.state;
 
     return (
       <Modal
         id='confirmation-prompt-modal'
         size='small'
         revealed={revealed}
-        title={title}
+        renderHeadline={() => (
+          <ModalHeadline>
+            <h1>{title}</h1>
+            {subtitle && <ModalSubtitle>{subtitle}</ModalSubtitle>}
+          </ModalHeadline>
+        )}
         content={content}
         renderToolbar={() => null}
         renderFooter={() => (
@@ -166,11 +177,12 @@ export function showConfirmationPrompt(opts = {}) {
   if (theConfirmationModal === null) {
     throw new Error('<ConfirmationPrompt /> component not mounted');
   }
-  const { data, title, content, renderControls } = opts;
+  const { data, title, subtitle, content, renderControls } = opts;
   return new Promise((resolve) => {
     theConfirmationModal.setState({
       revealed: true,
       title: title || baseState.title,
+      subtitle: subtitle || baseState.subtitle,
       content: content || baseState.content,
       renderControls: renderControls || baseState.renderControls,
       onResult: (result) => resolve({ result, data: data || baseState.data })
@@ -181,7 +193,7 @@ export function showConfirmationPrompt(opts = {}) {
 const deleteControls = ({ confirm, cancel }) => (
   <React.Fragment>
     <Button
-      variation='base-plain'
+      variation='base-raised-light'
       title='Cancel deletion'
       useIcon='xmark--small'
       onClick={cancel}

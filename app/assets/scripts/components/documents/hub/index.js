@@ -18,9 +18,10 @@ import ButtonSecondary from '../../../styles/button-secondary';
 import AtbdHubEntry from './atbd-hub-entry';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdEdit } from '../../../utils/url-creator';
-import toasts, { createProcessToast } from '../../common/toasts';
-import { confirmDeleteAtbd } from '../../common/confirmation-prompt';
+import { atbdEdit, atbdView } from '../../../utils/url-creator';
+import { createProcessToast } from '../../common/toasts';
+import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
+import { Can } from '../../../a11n';
 
 function Documents() {
   const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
@@ -53,19 +54,26 @@ function Documents() {
 
   const onDocumentAction = useCallback(
     async (atbd, menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteAtbd(atbd.title);
-        if (confirmed) {
-          const result = await deleteFullAtbd({ id: atbd.id });
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('ATBD successfully deleted');
-          }
-        }
+      switch (menuId) {
+        case 'delete':
+          await atbdDeleteFullConfirmAndToast({
+            atbd,
+            deleteFullAtbd
+          });
+          break;
+        case 'update-minor':
+        case 'draft-major':
+        case 'publish':
+        case 'view-info':
+          // To trigger the modals to open from other pages, we use the history
+          // state as the user is sent from one page to another. See explanation
+          // on
+          // app/assets/scripts/components/documents/document-publishing-actions.js
+          history.push(atbdView(atbd), { menuAction: menuId });
+          break;
       }
     },
-    [deleteFullAtbd]
+    [deleteFullAtbd, history]
   );
 
   return (
@@ -77,13 +85,15 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
-            <ButtonSecondary
-              title='Create new document'
-              useIcon='plus--small'
-              onClick={onCreateClick}
-            >
-              Create
-            </ButtonSecondary>
+            <Can do='create' on='documents'>
+              <ButtonSecondary
+                title='Create new document'
+                useIcon='plus--small'
+                onClick={onCreateClick}
+              >
+                Create
+              </ButtonSecondary>
+            </Can>
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
