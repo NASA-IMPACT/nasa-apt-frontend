@@ -1,14 +1,18 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, {
+  DropMenuItemEnhanced,
+  getMenuClickHandler
+} from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
 import { atbdEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
+import Tip from '../common/tooltip';
 
 export default function AtbdActionsMenu(props) {
-  const { atbd, atbdVersion, variation, onSelect } = props;
+  const { atbd, atbdVersion, variation, onSelect, origin } = props;
   const { isLogged } = useUser();
 
   const dropProps = useMemo(() => {
@@ -25,8 +29,8 @@ export default function AtbdActionsMenu(props) {
     };
     const itemDraftMajor = {
       id: 'draft-major',
-      label: 'Draft a new major version',
-      title: 'Draft a new major version of document'
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
     };
     const itemEdit = {
       id: 'edit',
@@ -47,8 +51,15 @@ export default function AtbdActionsMenu(props) {
       items: [
         {
           id: 'delete',
-          label: 'Delete',
-          title: 'Delete document'
+          /* eslint-disable-next-line react/display-name */
+          render: (props) => (
+            <DeleteMenuItem
+              {...props}
+              atbd={atbd}
+              atbdVersion={atbdVersion}
+              origin={origin}
+            />
+          )
         }
       ]
     };
@@ -95,13 +106,113 @@ export default function AtbdActionsMenu(props) {
   }, [variation, atbd, atbdVersion, isLogged]);
 
   return (
-    <DropdownMenu {...dropProps} dropTitle='Options' onSelect={onSelect} />
+    <DropdownMenu
+      {...dropProps}
+      alignment='right'
+      direction='down'
+      dropTitle='Options'
+      onSelect={onSelect}
+    />
   );
 }
 
 AtbdActionsMenu.propTypes = {
+  origin: T.string,
   onSelect: T.func,
   atbd: T.object,
   atbdVersion: T.object,
   variation: T.string
+};
+
+const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
+  const lastVersion = atbd.versions.last;
+  const isLastDraft = lastVersion.status.toLowerCase() === 'draft';
+
+  const item = (
+    <DropMenuItemEnhanced
+      disabled={isLastDraft}
+      title='Draft a new major version of document'
+      onClick={getMenuClickHandler(onSelect, menuItem)}
+      {...props}
+    >
+      Draft a new major version
+    </DropMenuItemEnhanced>
+  );
+
+  // There can only be 1 major draft version.
+  return isLastDraft ? (
+    <Tip
+      title={`A Major draft version (${lastVersion.version}) already exists.`}
+    >
+      {item}
+    </Tip>
+  ) : (
+    item
+  );
+};
+
+DraftMajorMenuItem.propTypes = {
+  onSelect: T.func,
+  menuItem: T.object,
+  atbd: T.object
+};
+
+const DeleteMenuItem = ({
+  onSelect,
+  menuItem,
+  atbd,
+  atbdVersion,
+  origin,
+  ...props
+}) => {
+  const isPublished = atbdVersion.status.toLowerCase() === 'published';
+
+  // The delete action on the hub, deletes the whole document, however this is
+  // not possible if there are published versions. Warn the user of this case.
+  // This is only relevant if the last version if not published, otherwise the
+  // other message is good.
+  if (origin === 'hub') {
+    const hasPublished = atbd.versions.some(
+      (v) => v.status.toLowerCase() === 'published'
+    );
+    if (hasPublished && !isPublished) {
+      return (
+        <Tip title='It is not possible to delete a document that has published versions. You can delete draft versions from the document page'>
+          <DropMenuItemEnhanced
+            disabled
+            title='Delete document'
+            onClick={getMenuClickHandler(onSelect, menuItem)}
+            {...props}
+          >
+            Delete
+          </DropMenuItemEnhanced>
+        </Tip>
+      );
+    }
+  }
+
+  const item = (
+    <DropMenuItemEnhanced
+      disabled={isPublished}
+      title='Delete document'
+      onClick={getMenuClickHandler(onSelect, menuItem)}
+      {...props}
+    >
+      Delete
+    </DropMenuItemEnhanced>
+  );
+
+  return isPublished ? (
+    <Tip title='It is not possible to delete a published document'>{item}</Tip>
+  ) : (
+    item
+  );
+};
+
+DeleteMenuItem.propTypes = {
+  origin: T.string,
+  onSelect: T.func,
+  menuItem: T.object,
+  atbd: T.object,
+  atbdVersion: T.object
 };

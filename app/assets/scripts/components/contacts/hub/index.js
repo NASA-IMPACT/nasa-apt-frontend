@@ -23,6 +23,7 @@ import toasts, { createProcessToast } from '../../common/toasts';
 import { confirmDeleteContact } from '../../common/confirmation-prompt';
 import SignIn from '../../../a11n/signin';
 import { contactEdit } from '../../../utils/url-creator';
+import { EmptyHub } from '../../common/empty-states';
 
 export function Contacts() {
   const {
@@ -98,21 +99,26 @@ export function Contacts() {
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
-          <ContentBlock>
-            {contacts.status === 'succeeded' && !contacts.data?.length && (
-              <div>
-                There are no contacts. You can start by creating one.
+          {contacts.status === 'succeeded' && !contacts.data?.length && (
+            <ContentBlock style={{ height: '100%' }}>
+              <EmptyHub>
+                <p>
+                  It looks like the contact list is empty. Start by creating a
+                  contact.
+                </p>
                 <Button
                   variation='primary-raised-dark'
                   title='Create new contact'
                   useIcon='plus--small'
                   onClick={onCreateClick}
                 >
-                  Create
+                  Create contact
                 </Button>
-              </div>
-            )}
-            {contacts.status === 'succeeded' && contacts.data?.length && (
+              </EmptyHub>
+            </ContentBlock>
+          )}
+          {contacts.status === 'succeeded' && contacts.data?.length && (
+            <ContentBlock>
               <HubList>
                 {contacts.data.map((contact) => (
                   <HubListItem key={contact.id}>
@@ -123,8 +129,8 @@ export function Contacts() {
                   </HubListItem>
                 ))}
               </HubList>
-            )}
-          </ContentBlock>
+            </ContentBlock>
+          )}
         </InpageBody>
       </Inpage>
     </App>

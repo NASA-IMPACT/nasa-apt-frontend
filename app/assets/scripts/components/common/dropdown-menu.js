@@ -21,6 +21,31 @@ export const DropMenuItemEnhanced = styled(DropMenuItem)`
       opacity: 1;
     `}
 
+  ${({ active }) =>
+    active &&
+    css`
+      &,
+      &:visited {
+        background-color: ${rgba(themeVal('color.link'), 0.08)};
+        color: ${themeVal('color.link')};
+      }
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.25rem;
+        height: 100%;
+        background: ${themeVal('color.link')};
+        content: '';
+        pointer-events: none;
+      }
+
+      &::after {
+        display: none;
+      }
+    `}
+
   ${({ disabled: d }) =>
     d &&
     css`
@@ -28,7 +53,7 @@ export const DropMenuItemEnhanced = styled(DropMenuItem)`
     `}
 `;
 
-const getMenuClickHandler = (fn, menuItem) => {
+export const getMenuClickHandler = (fn, menuItem) => {
   return (event) => {
     // Prevent the default action unless is a link.
     if (!menuItem.href && !menuItem.to) {
@@ -79,7 +104,9 @@ const DropdownMenu = React.forwardRef((props, ref) => {
     withChevron,
     triggerProps = {},
     triggerLabel,
-    onSelect
+    onSelect,
+    alignment,
+    direction
   } = props;
 
   const menu = useMemo(() => castArray(menuInput), [menuInput]);
@@ -94,8 +121,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   return (
     <Dropdown
       ref={ref}
-      alignment='center'
-      direction='down'
+      alignment={alignment}
+      direction={direction}
       triggerElement={(props) => (
         <Button
           variation='base-plain'
@@ -169,7 +196,14 @@ DropdownMenu.propTypes = {
   dropTitle: T.string,
   triggerProps: T.object,
   triggerLabel: T.string,
+  alignment: T.string,
+  direction: T.string,
   onSelect: T.func
+};
+
+DropdownMenu.defaultProps = {
+  alignment: 'center',
+  direction: 'down'
 };
 
 export default DropdownMenu;

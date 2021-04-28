@@ -199,6 +199,8 @@ export default function DocumentOutline(props) {
         footerElRef.current = document.querySelector('[data-element="footer"]');
       }
 
+      if (!headerElRef.current || !elementRef.current) return;
+
       const { top, height } = headerElRef.current.getBoundingClientRect();
       // The header end represents to distance of the header plus anything else
       // between it and the top of the viewport,

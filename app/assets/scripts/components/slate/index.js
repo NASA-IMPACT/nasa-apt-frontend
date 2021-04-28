@@ -3,7 +3,10 @@ import { InlineRichTextEditor } from './inline-editor';
 import { editorEmptyValue } from './editor-values';
 import SafeReadEditor from './safe-read-editor';
 import { subsectionsFromSlateDocument } from './subsections-from-slate';
-import { nodeFromSlateDocument } from './nodes-from-slate';
+import {
+  nodeFromSlateDocument,
+  removeNodeFromSlateDocument
+} from './nodes-from-slate';
 import { RichContextProvider } from './plugins/common/rich-context';
 
 export {
@@ -17,5 +20,6 @@ export {
   editorEmptyValue,
   // Helpers.
   subsectionsFromSlateDocument,
-  nodeFromSlateDocument
+  nodeFromSlateDocument,
+  removeNodeFromSlateDocument
 };

@@ -19,7 +19,7 @@ export default function StepJournalDetails(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = useSubmitForVersionData(updateAtbd);
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik

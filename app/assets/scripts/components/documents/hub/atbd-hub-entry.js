@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
-import { format } from 'date-fns';
 
 import {
   HubEntry,
@@ -17,6 +16,8 @@ import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
 import AtbdActionsMenu from '../atbd-actions-menu';
+import Datetime from '../../common/date';
+import Tip from '../../common/tooltip';
 
 import { atbdView } from '../../../utils/url-creator';
 import { calculateAtbdCompleteness } from '../completeness';
@@ -75,17 +76,15 @@ function AtbdHubEntry(props) {
           </HubEntryMeta>
         )}
         <HubEntryDetails>
-          <dt>By</dt>
-          <dd>George J. Huffman et al.</dd>
+          <Creators creators={lastVersion.citation?.creators} />
           <dt>On</dt>
           <dd>
-            <time dateTime={format(updateDate, 'yyyy-MM-dd')}>
-              {format(updateDate, 'MMM do, yyyy')}
-            </time>
+            <Datetime date={updateDate} />
           </dd>
         </HubEntryDetails>
         <HubEntryActions>
           <AtbdActionsMenu
+            origin='hub'
             atbd={atbd}
             atbdVersion={lastVersion}
             onSelect={onAction}
@@ -102,3 +101,31 @@ AtbdHubEntry.propTypes = {
 };
 
 export default AtbdHubEntry;
+
+const Creators = ({ creators }) => {
+  if (!creators) return null;
+
+  const creatorsList = creators?.split(' and ');
+
+  if (creatorsList.length > 1) {
+    return (
+      <React.Fragment>
+        <dt>By</dt>
+        <dd>
+          <Tip title={creators}>{creatorsList[0]} et al.</Tip>
+        </dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>By</dt>
+      <dd>{creators}</dd>
+    </React.Fragment>
+  );
+};
+
+Creators.propTypes = {
+  creators: T.string
+};
