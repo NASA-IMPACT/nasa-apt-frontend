@@ -8,12 +8,18 @@ import { Heading } from '@devseed-ui/typography';
 import App from '../common/app';
 import { confirmDeleteContact } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
-import { Inpage, InpageBody } from '../../styles/inpage';
+import {
+  Inpage,
+  InpageBody,
+  InpageHeaderSticky,
+  InpageActions
+} from '../../styles/inpage';
 import DetailsList from '../../styles/typography/details-list';
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import UhOh from '../uhoh';
 import ContactActionsMenu from './contact-actions-menu';
+import ContactNavHeader from './contact-nav-header';
 
 import { useSingleContact } from '../../context/contacts-list';
 
@@ -36,13 +42,9 @@ const ContactContent = styled.div`
 const ContactHeader = styled.header`
   position: relative;
   display: grid;
-  grid-auto-columns: 3fr 1fr;
+  grid-template-columns: 1fr;
   grid-gap: 2rem;
   padding-bottom: ${glsp(1.5)};
-
-  > * {
-    grid-row: 1;
-  }
 
   &::after {
     position: absolute;
@@ -77,7 +79,7 @@ export default function ContactView() {
     async (menuId) => {
       if (menuId === 'delete') {
         const { result: confirmed } = await confirmDeleteContact(
-          contact.data?.id
+          `${contact.data?.first_name} ${contact.data?.last_name}`
         );
 
         if (confirmed) {
@@ -114,6 +116,20 @@ export default function ContactView() {
       {status === 'loading' && <GlobalLoading />}
       {status === 'succeeded' && (
         <Inpage>
+          <InpageHeaderSticky data-element='inpage-header'>
+            <ContactNavHeader
+              contactId={data.id}
+              name={`${data.first_name} ${data.last_name}`}
+              mode='view'
+            />
+            <InpageActions>
+              <ContactActionsMenu
+                contact={contact.data}
+                variation='achromic-plain'
+                onSelect={onContactMenuAction}
+              />
+            </InpageActions>
+          </InpageHeaderSticky>
           <ContactCanvas>
             <ContentBlock>
               <ContactContent>
@@ -122,11 +138,6 @@ export default function ContactView() {
                     <ContactTitle>
                       {data.first_name} {data.last_name}
                     </ContactTitle>
-                    <ContactActionsMenu
-                      contact={data}
-                      variation='achromic-plain'
-                      onSelect={onContactMenuAction}
-                    />
                   </ContactHeader>
                   <DetailsList>
                     <dt>First Name</dt>

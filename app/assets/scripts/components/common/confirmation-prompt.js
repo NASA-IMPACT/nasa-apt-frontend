@@ -260,8 +260,8 @@ export const confirmDeleteContact = async (name) => {
     title: 'Delete this contact?',
     content: (
       <p>
-        The contact <strong>{name}</strong> and all the references to this
-        contact in other documents will be removed.
+        <strong>{name}</strong> and all the references to this contact in other
+        documents will be removed.
       </p>
     ),
     renderControls: deleteControls
