@@ -13,8 +13,9 @@ import Tip from '../common/tooltip';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 import { CopyField } from '../common/copy-field';
-import { FormikInputTextarea } from '../common/forms/input-textarea';
+import { FormikInputTextarea, InputTextarea } from '../common/forms/input-textarea';
 import Datetime from '../common/date';
+import { Can } from '../../a11n';
 
 import { atbdEdit } from '../../utils/url-creator';
 import { citationFields, createBibtexCitation } from './citation';
@@ -142,19 +143,31 @@ function TabGeneral(props) {
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
       </DocInfoList>
 
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        <Form as={FormikForm}>
-          <FormikInputTextarea
-            id='changelog'
-            name='changelog'
-            label='Changelog'
-            description='Use the changelog to register what changed in relation to the previous version.'
-          />
-          <TabActions>
-            <SaveButton />
-          </TabActions>
-        </Form>
-      </Formik>
+      <Can do='edit' on='document'>
+        <Formik initialValues={initialValues} onSubmit={onSubmit}>
+          <Form as={FormikForm}>
+            <FormikInputTextarea
+              id='changelog'
+              name='changelog'
+              label='Changelog'
+              description='Use the changelog to register what changed in relation to the previous version.'
+            />
+            <TabActions>
+              <SaveButton />
+            </TabActions>
+          </Form>
+        </Formik>
+      </Can>
+
+      <Can not do='edit' on='document'>
+        <InputTextarea
+          id='changelog'
+          name='changelog'
+          label='Changelog'
+          value={initialValues.changelog}
+          readOnly
+        />
+      </Can>
     </TabContent>
   );
 }
@@ -219,10 +232,12 @@ function TabCitation(props) {
       {!hasCitation && (
         <Prose>
           <p>There is no citation data available.</p>
-          <p>
-            The citation information can be edited through the{' '}
-            {citationEditLink} form.
-          </p>
+          <Can do='edit' on='document'>
+            <p>
+              The citation information can be edited through the{' '}
+              {citationEditLink} form.
+            </p>
+          </Can>
         </Prose>
       )}
 
