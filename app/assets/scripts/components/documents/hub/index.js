@@ -99,8 +99,8 @@ function Documents() {
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
-          <ContentBlock>
-            {atbds.status === 'succeeded' && !atbds.data?.length && (
+          {atbds.status === 'succeeded' && !atbds.data?.length && (
+            <ContentBlock style={{ height: '100%' }}>
               <EmptyHub>
                 <Can do='create' on='document'>
                   <p>
@@ -129,8 +129,10 @@ function Documents() {
                   </p>
                 </Can>
               </EmptyHub>
-            )}
-            {atbds.status === 'succeeded' && atbds.data?.length && (
+            </ContentBlock>
+          )}
+          {atbds.status === 'succeeded' && atbds.data?.length && (
+            <ContentBlock>
               <HubList>
                 {atbds.data.map((atbd) => (
                   <HubListItem key={atbd.id}>
@@ -141,8 +143,8 @@ function Documents() {
                   </HubListItem>
                 ))}
               </HubList>
-            )}
-          </ContentBlock>
+            </ContentBlock>
+          )}
         </InpageBody>
       </Inpage>
     </App>

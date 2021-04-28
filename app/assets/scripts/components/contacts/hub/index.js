@@ -98,8 +98,8 @@ export function Contacts() {
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
-          <ContentBlock>
-            {contacts.status === 'succeeded' && !contacts.data?.length && (
+          {contacts.status === 'succeeded' && !contacts.data?.length && (
+            <ContentBlock style={{ height: '100%' }}>
               <EmptyHub>
                 <p>
                   It looks like the contact list is empty. Start by creating a
@@ -114,8 +114,10 @@ export function Contacts() {
                   Create contact
                 </Button>
               </EmptyHub>
-            )}
-            {contacts.status === 'succeeded' && contacts.data?.length && (
+            </ContentBlock>
+          )}
+          {contacts.status === 'succeeded' && contacts.data?.length && (
+            <ContentBlock>
               <HubList>
                 {contacts.data.map((contact) => (
                   <HubListItem key={contact.id}>
@@ -126,8 +128,8 @@ export function Contacts() {
                   </HubListItem>
                 ))}
               </HubList>
-            )}
-          </ContentBlock>
+            </ContentBlock>
+          )}
         </InpageBody>
       </Inpage>
     </App>
