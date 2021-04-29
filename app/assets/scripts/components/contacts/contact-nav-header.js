@@ -23,7 +23,7 @@ export default function ContactNavHeader({ name, id, mode }) {
 
   const canEditContact = ability.can('edit', 'contact');
 
-  const documentModesMenu = useMemo(() => {
+  const contactModesMenu = useMemo(() => {
     const viewContact = {
       id: 'view',
       label: 'Viewing',
@@ -60,16 +60,18 @@ export default function ContactNavHeader({ name, id, mode }) {
     <>
       <InpageHeadline>
         <TruncatedInpageTitle>
-          <Link to={contactView(id)} title='View document'>
+          <Link to={contactView(id)} title='View contact'>
             {name}
           </Link>
         </TruncatedInpageTitle>
         <InpageHeadNav role='navigation'>
           <BreadcrumbMenu>
-            {isLogged && documentModesMenu.items.length > 1 && (
+            {isLogged && contactModesMenu.items.length > 1 && (
               <li>
                 <DropdownMenu
-                  menu={documentModesMenu}
+                  alignment='left'
+                  direction='down'
+                  menu={contactModesMenu}
                   activeItem={mode}
                   triggerProps={dropdownMenuTriggerProps}
                   withChevron

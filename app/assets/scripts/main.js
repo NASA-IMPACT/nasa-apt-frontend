@@ -22,6 +22,7 @@ import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
 import Contacts from './components/contacts/hub';
 import ContactsView from './components/contacts/single-view';
+import ContactsEdit from './components/contacts/single-edit';
 import About from './components/about';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
@@ -89,8 +90,14 @@ function Root() {
             <AccessRoute
               permission={['view', 'contacts']}
               exact
-              path='/contact/:id'
+              path='/contacts/:id'
               component={ContactsView}
+            />
+            <AccessRoute
+              permission={['edit', 'contacts']}
+              exact
+              path='/contacts/:id/edit'
+              component={ContactsEdit}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />

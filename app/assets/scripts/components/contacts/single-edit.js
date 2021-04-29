@@ -1,19 +1,25 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
+import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import App from '../common/app';
 import { confirmDeleteContact } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
+import Tip from '../common/tooltip';
+
 import {
   Inpage,
   InpageBody,
   InpageHeaderSticky,
   InpageActions
 } from '../../styles/inpage';
+import ButtonSecondary from '../../styles/button-secondary';
+
 import DetailsList from '../../styles/typography/details-list';
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
@@ -64,10 +70,15 @@ const ContactTitle = styled(Heading)`
 
 const EmptySection = () => <p>No content available.</p>;
 
-export default function ContactView() {
+export default function ContactEdit() {
   const { id } = useParams();
   const history = useHistory();
-  const { contact, fetchSingleContact, deleteContact } = useSingleContact({
+  const {
+    contact,
+    fetchSingleContact,
+    updateContact,
+    deleteContact
+  } = useSingleContact({
     id
   });
 
@@ -111,6 +122,7 @@ export default function ContactView() {
     }
   }
   const { status, data } = contact;
+  console.log();
   return (
     <App pageTitle='Contact view'>
       {status === 'loading' && <GlobalLoading />}
@@ -120,9 +132,11 @@ export default function ContactView() {
             <ContactNavHeader
               id={data.id}
               name={`${data.first_name} ${data.last_name}`}
-              mode='view'
+              mode='edit'
             />
             <InpageActions>
+              {/* <SaveButton /> */}
+              <VerticalDivider variation='light' />
               <ContactActionsMenu
                 contact={contact.data}
                 variation='achromic-plain'
@@ -185,3 +199,22 @@ export default function ContactView() {
     </App>
   );
 }
+
+const SaveButton = () => {
+  const { dirty, isSubmitting, submitForm, status } = useFormikContext();
+  // status?.working is used to disable form submission when something is going
+  // on.
+
+  return (
+    <Tip position='top-end' title='There are unsaved changes' open={dirty}>
+      <ButtonSecondary
+        title='Save current changes'
+        disabled={isSubmitting || !dirty || status?.working}
+        onClick={submitForm}
+        useIcon='tick--small'
+      >
+        Save
+      </ButtonSecondary>
+    </Tip>
+  );
+};
