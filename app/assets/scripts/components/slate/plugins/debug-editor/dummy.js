@@ -70,6 +70,119 @@ export const hugeDoc = [
     ]
   },
   {
+    type: 'table-block',
+    children: [
+      {
+        type: 'table',
+        children: [
+          {
+            type: 'tr',
+            children: [
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Name',
+                        bold: true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Result',
+                        bold: true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'tr',
+            children: [
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Lincoln'
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Inconclusive'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            type: 'tr',
+            children: [
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Bridge-water'
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: 'td',
+                children: [
+                  {
+                    type: 'p',
+                    children: [
+                      {
+                        text: 'Pass'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        type: 'caption',
+        children: [
+          {
+            text: 'Test results by different entities'
+          }
+        ]
+      }
+    ]
+  },
+  {
     type: 'p',
     children: [
       {

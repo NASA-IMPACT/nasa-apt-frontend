@@ -5,6 +5,7 @@ import {
 
 import { EQUATION } from '../equation';
 import { SUB_SECTION } from '../subsection';
+import { CAPTION } from '../common/caption';
 
 // A Soft Break allows the user to add a new like to a block without exiting it.
 // This is used to for example changing line in a paragraph without creating a
@@ -38,7 +39,7 @@ export const ExitBreakPlugin = ExitBreakPlugin$({
       hotkey: 'enter',
       query: {
         // On an equation block, an enter automatically exits.
-        allow: [EQUATION, SUB_SECTION]
+        allow: [EQUATION, SUB_SECTION, CAPTION]
       }
     }
   ]

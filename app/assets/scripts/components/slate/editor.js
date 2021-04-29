@@ -33,8 +33,13 @@ import { BoldPlugin } from './plugins/bold';
 import { ItalicPlugin } from './plugins/italic';
 import { UnderlinePlugin } from './plugins/underline';
 import { SubSupScriptPlugin } from './plugins/subsupscript';
-import { ReferencePlugin, ReferencesModal } from './plugins/reference';
-import { withReferenceModal } from './plugins/reference/with-reference-modal';
+import {
+  ReferencePlugin,
+  ReferencesModal,
+  withReferenceModal
+} from './plugins/reference';
+import { TableBlockPlugin, withTableBlock } from './plugins/table';
+import { withCaption } from './plugins/caption';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -44,6 +49,7 @@ const plugins = [
   EquationPlugin,
   SubSectionPlugin,
   ReferencePlugin,
+  TableBlockPlugin,
   LinkPlugin,
   BoldPlugin,
   ItalicPlugin,
@@ -61,7 +67,9 @@ const withPlugins = [
   withLink,
   withLinkEditor,
   withReferenceModal,
-  withSubsectionId
+  withSubsectionId,
+  withCaption,
+  withTableBlock
 ];
 
 export function RichTextEditor(props) {

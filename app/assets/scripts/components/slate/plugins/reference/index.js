@@ -9,6 +9,7 @@ import { isValidReferenceLocation } from './is-valid';
 import Reference from './reference';
 
 export * from './reference-modal';
+export * from './with-reference-modal';
 
 // Plugin type.
 export const REFERENCE = 'ref';
