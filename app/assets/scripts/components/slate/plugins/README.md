@@ -28,8 +28,18 @@ interface SlatePlugin {
 The slate plugins defined by apt extends this interface and adds 2 properties:
 ```js
 interface APTSlatePlugin extends SlatePlugin {
+  // Main toolbar shown on the editor toolbar. Should contain permanent actions
+  // to insert blocks.
   toolbar: ToolbarItem[];
-  onUse: OnUse;
+  // Items that appear on the floating toolbar when text is selected. Should
+  // display actions related to selections.
+  floatToolbar: ToolbarItem[];
+  // The context toolbar is shown alongside the main toolbar but only when the 
+  // isInContext returns true. This is useful for actions that are contextual to
+  // the focused element.
+  contextToolbar: ToolbarContextItem[];
+  // Callback for when a button is pressed.
+  onUse: (editor: Editor, btnId: string) => void;
 }
 
 interface ToolbarItem {
@@ -45,6 +55,11 @@ interface ToolbarItem {
   tip: (key: string) => string;
   // Whether or not the button should be disabled.
   isDisabled: (editor: Editor) => Boolean;
+}
+
+interface ToolbarContextItem extends ToolbarItem {
+  // Whether or not the button should be displayed.
+  isInContext: (editor: Editor) => Boolean;
 }
 
 // The OnUse function is called whenever the plugin action is triggered either
@@ -183,3 +198,34 @@ In write mode:
 
 **Toolbar button and focus**  
 Any button that interacts with the editor, link the toolbar and floating toolbar ones need to use `onMouseDown` with the `getPreventDefaultHandler` function to prevent the editor from loosing focus. If `click` is used, the editor would have to be refocused with `ReactEditor.focus(editor);` However this is critical for the floating toolbar, that gets hidden when the editor looses focus.
+
+**Captions**  
+The caption is a complete node block. This gives us more flexibility in what a caption can be made of.
+```js
+{
+  type: 'caption',
+  children: [{ text: 'some caption' }]
+}
+```
+Right now supports formatting (bold, italic, ...) and other inline items, like links and references. It is not possible to have block elements (like lists) inside captions.
+Captions will not appear randomly in the document. They will always be paired with other elements like tables and images.
+In these cases a parent wrapper block will house the element we want and a caption. Always in this order, and always 2 children.
+
+For example a table will be:
+```js
+{
+  type: 'table-block',
+  children: [
+    {
+      type: 'table',
+      children: [
+        // all table children
+      ]
+    },
+    {
+      type: 'caption',
+      children: [{ text: 'some caption' }]
+    }
+  ]
+}
+```
