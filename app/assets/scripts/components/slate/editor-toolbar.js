@@ -73,6 +73,29 @@ export function EditorToolbar(props) {
   const { plugins } = props;
   const editor = useSlate();
 
+  const contextualActions = plugins.reduce((acc, p) => {
+    if (!p.contextToolbar) return acc;
+
+    return acc.concat(
+      castArray(p.contextToolbar)
+        .filter(
+          ({ isInContext }) =>
+            typeof isInContext === 'function' && isInContext(editor)
+        )
+        .map((btn) => (
+          <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+            <ToolbarIconButton
+              useIcon={btn.icon}
+              disabled={btn.isDisabled?.(editor)}
+              onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
+            >
+              {btn.label}
+            </ToolbarIconButton>
+          </Tip>
+        ))
+    );
+  }, []);
+
   return (
     <EditorActions>
       <Toolbar>
@@ -98,8 +121,17 @@ export function EditorToolbar(props) {
             ))
           );
         }, [])}
-        <VerticalDivider />
-        <ToolbarLabel>Actions</ToolbarLabel>
+
+        {!!contextualActions.length && (
+          <React.Fragment>
+            <VerticalDivider />
+            <ToolbarLabel>Options</ToolbarLabel>
+            {contextualActions}
+          </React.Fragment>
+        )}
+      </Toolbar>
+
+      <Toolbar>
         <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
           <ToolbarIconButton
             useIcon='arrow-semi-spin-ccw'
@@ -122,8 +154,7 @@ export function EditorToolbar(props) {
             Redo
           </ToolbarIconButton>
         </Tip>
-      </Toolbar>
-      <Toolbar>
+        <VerticalDivider />
         <Tip title='Show keyboard shortcuts'>
           <ToolbarIconButton useIcon='keyboard'>
             Keyboard shortcuts
