@@ -88,6 +88,7 @@ export function EditorToolbar(props) {
               useIcon={btn.icon}
               disabled={btn.isDisabled?.(editor)}
               onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
+              {...getHoverEventHandlers(editor, 'contextual', btn)}
             >
               {btn.label}
             </ToolbarIconButton>
@@ -114,6 +115,7 @@ export function EditorToolbar(props) {
                     editor,
                     btn.id
                   )}
+                  {...getHoverEventHandlers(editor, 'main', btn)}
                 >
                   {btn.label}
                 </ToolbarIconButton>
@@ -167,6 +169,43 @@ export function EditorToolbar(props) {
 
 EditorToolbar.propTypes = {
   plugins: T.array
+};
+
+/**
+ * Create event handlers for enter and leave events.
+ *
+ * @description
+ * When the user interacts with the toolbar items we store what's happened in a
+ * `toolbarEvent` property on the editor and then trigger a change event. This
+ * allows any plugin to take advantage of an event on a toolbar item. This is
+ * used for example with the table, where we show what happens when the user
+ * hovers the contextual action buttons.
+ *
+ * @param {Editor} editor Slate editor instance
+ * @param {string} origin Toolbar where the event originated
+ * @param {object} toolbarItem The item interacted with
+ *
+ * @returns {object} props to spread on the element.
+ */
+const getHoverEventHandlers = (editor, origin, toolbarItem) => {
+  const onMouseEnter = () => {
+    editor.toolbarEvent = {
+      eventType: 'enter',
+      origin,
+      item: toolbarItem
+    };
+    editor.onChange();
+  };
+
+  const onMouseLeave = () => {
+    editor.toolbarEvent = null;
+    editor.onChange();
+  };
+
+  return {
+    onMouseEnter,
+    onMouseLeave
+  };
 };
 
 // Blocks where selection related actions like inserting links and/or marks are
@@ -239,6 +278,7 @@ export function EditorFloatingToolbar(props) {
                       editor,
                       btn.id
                     )}
+                    {...getHoverEventHandlers(editor, 'floating', btn)}
                   >
                     {btn.label}
                   </ToolbarIconButton>
