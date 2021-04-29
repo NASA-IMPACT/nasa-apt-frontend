@@ -1,7 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import { Node } from 'slate';
-import { useSelected } from 'slate-react';
+import { useReadOnly, useSelected } from 'slate-react';
 import styled, { css } from 'styled-components';
 
 const CaptionElement = styled.figcaption`
@@ -28,8 +28,11 @@ const Placeholder = styled.span`
 export function Caption(props) {
   const { attributes, htmlAttributes, element, children } = props;
   const isSelected = useSelected();
+  const readOnly = useReadOnly();
 
   const emptyCaption = !Node.string(element);
+
+  if (readOnly && emptyCaption) return null;
 
   // The current version of Slate has no way to render a placeholder on an
   // element. The best way is to create an element which is absolutely

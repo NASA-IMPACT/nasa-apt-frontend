@@ -1,7 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-import { useSelected, useSlate } from 'slate-react';
+import { useReadOnly, useSelected, useSlate } from 'slate-react';
 import { ELEMENT_TD, findNode } from '@udecode/slate-plugins';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
@@ -72,16 +72,28 @@ const TableBlockElement = styled.figure`
   overflow-x: auto;
 
   table {
-    margin: ${glsp(0, 0, 1, 0)};
+    margin-top: 0;
   }
 
   tbody td {
     border-color: ${themeVal('color.baseAlphaE')};
   }
 
-  ${({ isSelected }) => isSelected && '&,'}
-  &:hover {
-    box-shadow: 0 0 0 1px ${themeVal('color.baseAlphaD')};
+  ${({ isReadOnly }) =>
+    !isReadOnly &&
+    css`
+      ${({ isSelected }) => isSelected && '&,'}
+      &:hover {
+        box-shadow: 0 0 0 1px ${themeVal('color.baseAlphaD')};
+      }
+    `}
+
+  & > * {
+    margin-bottom: ${glsp()};
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
   }
 
   ${renderHighlightStyles}
@@ -89,8 +101,9 @@ const TableBlockElement = styled.figure`
 
 export default function TableBlock(props) {
   const { attributes, htmlAttributes, children } = props;
-  const isSelected = useSelected();
   const editor = useSlate();
+  const isSelected = useSelected();
+  const readOnly = useReadOnly();
 
   const interactionProps = getTableBlockInteractionProps({
     isSelected,
@@ -102,6 +115,7 @@ export default function TableBlock(props) {
       {...attributes}
       {...htmlAttributes}
       isSelected={isSelected}
+      isReadOnly={readOnly}
       {...interactionProps}
     >
       {children}
