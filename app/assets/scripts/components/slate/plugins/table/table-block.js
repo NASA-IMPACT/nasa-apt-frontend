@@ -87,7 +87,7 @@ const TableBlockElement = styled.figure`
   }
 
   tbody td {
-    border-color: ${themeVal('color.baseAlphaE')};
+    border-color: ${themeVal('color.baseAlphaD')};
   }
 
   ${({ isReadOnly }) =>
