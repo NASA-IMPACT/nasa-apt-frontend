@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components';
 
 const CaptionElement = styled.figcaption`
   font-size: 0.875rem;
+  line-height: 1rem;
   text-align: center;
   position: relative;
 
@@ -22,7 +23,7 @@ const Placeholder = styled.span`
   user-select: none;
   left: 0;
   width: 100%;
-  opacity: 0.64;
+  opacity: 0.48;
 `;
 
 export function Caption(props) {
