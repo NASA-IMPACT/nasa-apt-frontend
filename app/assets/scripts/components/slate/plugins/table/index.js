@@ -4,7 +4,8 @@ import {
   addRow,
   deleteRow,
   addColumn,
-  deleteColumn
+  deleteColumn,
+  withTable as withTable$
 } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
@@ -18,7 +19,6 @@ import {
 } from './helpers';
 
 export * from './helpers';
-export * from './with-table-block';
 
 /**
  * Callback on plugin use through shortcut or button
@@ -117,3 +117,6 @@ export const TableBlockPlugin = {
   ],
   onUse: onTableUse
 };
+
+// Re-export. See README.md for rationale.
+export const withTable = withTable$();

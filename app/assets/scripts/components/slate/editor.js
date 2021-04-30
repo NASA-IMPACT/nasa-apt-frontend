@@ -38,8 +38,13 @@ import {
   ReferencesModal,
   withReferenceModal
 } from './plugins/reference';
-import { TableBlockPlugin, withTableBlock } from './plugins/table';
-import { withCaption } from './plugins/caption';
+import {
+  TABLE,
+  TableBlockPlugin,
+  TABLE_BLOCK,
+  withTable
+} from './plugins/table';
+import { withCaption, withCaptionLayout } from './plugins/caption';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -86,7 +91,13 @@ const withPlugins = [
   withReferenceModal,
   withSubsectionId,
   withCaption,
-  withTableBlock
+  withCaptionLayout([
+    {
+      parent: TABLE_BLOCK,
+      element: TABLE
+    }
+  ]),
+  withTable
 ];
 
 export function RichTextEditor(props) {
