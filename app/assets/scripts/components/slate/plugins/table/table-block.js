@@ -58,18 +58,29 @@ const renderHighlightStyles = (props) => {
       `;
     case 'delete-table':
       return css`
-        & {
-          box-shadow: 0 0 0 2px ${themeVal('color.danger')};
+        &::before {
+          box-shadow: inset 0 0 0 1px ${themeVal('color.danger')};
         }
       `;
   }
 };
 
 const TableBlockElement = styled.figure`
-  padding: ${glsp(0.5)};
-  transition: box-shadow 0.32s;
-  box-shadow: 0 0 0 1px transparent;
-  overflow-x: auto;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: -${glsp(0.5)};
+    right: -${glsp(0.5)};
+    bottom: -${glsp(0.5)};
+    left: -${glsp(0.5)};
+    content: '';
+    pointer-events: none;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px transparent;
+    border-radius: ${themeVal('shape.rounded')};
+    transition: all 0.24s ease-in-out 0s;
+  }
 
   table {
     margin-top: 0;
@@ -82,9 +93,23 @@ const TableBlockElement = styled.figure`
   ${({ isReadOnly }) =>
     !isReadOnly &&
     css`
-      ${({ isSelected }) => isSelected && '&,'}
+        &:hover {
+          ::before {
+            box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaC')};
+          }
+        }
+      }
+    `}
+
+  ${({ isSelected, isReadOnly }) =>
+    !isReadOnly &&
+    isSelected &&
+    css`
+      &,
       &:hover {
-        box-shadow: 0 0 0 1px ${themeVal('color.baseAlphaD')};
+        ::before {
+          box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaE')};
+        }
       }
     `}
 
@@ -97,6 +122,10 @@ const TableBlockElement = styled.figure`
   }
 
   ${renderHighlightStyles}
+`;
+
+const TableBlockElementInner = styled.div`
+  overflow-x: auto;
 `;
 
 export default function TableBlock(props) {
@@ -118,7 +147,7 @@ export default function TableBlock(props) {
       isReadOnly={readOnly}
       {...interactionProps}
     >
-      {children}
+      <TableBlockElementInner>{children}</TableBlockElementInner>
     </TableBlockElement>
   );
 }
