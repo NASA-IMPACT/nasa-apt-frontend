@@ -36,7 +36,7 @@ export function Caption(props) {
     <CaptionElement {...attributes} {...htmlAttributes} isEmpty={emptyCaption}>
       {!isSelected && emptyCaption && (
         <Placeholder contentEditable={false}>
-          Write a caption... (optional)
+          Write a caption (optional)
         </Placeholder>
       )}
       {children}
