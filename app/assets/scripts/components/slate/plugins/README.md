@@ -55,6 +55,9 @@ interface ToolbarItem {
   tip: (key: string) => string;
   // Whether or not the button should be disabled.
   isDisabled: (editor: Editor) => Boolean;
+  // Override to custom render the toolbar item.
+  // buttonProps should be spread onto the item.
+  render: (props: { editor: Editor, plugin: APTSlatePlugin, item: ToolbarItem, buttonProps: Object }) => React.Component;
 }
 
 interface ToolbarContextItem extends ToolbarItem {

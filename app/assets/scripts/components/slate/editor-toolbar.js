@@ -68,6 +68,46 @@ export const FloatingToolbar = styled.div`
   }
 `;
 
+const ToolbarRenderableItem = (props) => {
+  const { editor, btn, toolbarType, plugin, ...rest } = props;
+
+  const mouseEvents = {
+    onMouseDown: getPreventDefaultHandler(plugin.onUse, editor, btn.id),
+    ...getHoverEventHandlers(editor, toolbarType, btn)
+  };
+
+  if (typeof btn.render === 'function') {
+    return btn.render({
+      editor,
+      plugin,
+      item: btn,
+      buttonProps: {
+        ...mouseEvents
+      }
+    });
+  }
+
+  return (
+    <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
+      <ToolbarIconButton
+        useIcon={btn.icon}
+        disabled={btn.isDisabled?.(editor)}
+        {...mouseEvents}
+        {...rest}
+      >
+        {btn.label}
+      </ToolbarIconButton>
+    </Tip>
+  );
+};
+
+ToolbarRenderableItem.propTypes = {
+  editor: T.object,
+  btn: T.object,
+  toolbarType: T.string,
+  plugin: T.object
+};
+
 // Display the toolbar buttons for the plugins that define a toolbar.
 export function EditorToolbar(props) {
   const { plugins } = props;
@@ -83,16 +123,13 @@ export function EditorToolbar(props) {
             typeof isInContext === 'function' && isInContext(editor)
         )
         .map((btn) => (
-          <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
-            <ToolbarIconButton
-              useIcon={btn.icon}
-              disabled={btn.isDisabled?.(editor)}
-              onMouseDown={getPreventDefaultHandler(p.onUse, editor, btn.id)}
-              {...getHoverEventHandlers(editor, 'contextual', btn)}
-            >
-              {btn.label}
-            </ToolbarIconButton>
-          </Tip>
+          <ToolbarRenderableItem
+            key={btn.id}
+            editor={editor}
+            btn={btn}
+            toolbarType='contextual'
+            plugin={p}
+          />
         ))
     );
   }, []);
@@ -106,20 +143,13 @@ export function EditorToolbar(props) {
 
           return acc.concat(
             castArray(p.toolbar).map((btn) => (
-              <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
-                <ToolbarIconButton
-                  useIcon={btn.icon}
-                  disabled={btn.isDisabled?.(editor)}
-                  onMouseDown={getPreventDefaultHandler(
-                    p.onUse,
-                    editor,
-                    btn.id
-                  )}
-                  {...getHoverEventHandlers(editor, 'main', btn)}
-                >
-                  {btn.label}
-                </ToolbarIconButton>
-              </Tip>
+              <ToolbarRenderableItem
+                key={btn.id}
+                editor={editor}
+                btn={btn}
+                toolbarType='main'
+                plugin={p}
+              />
             ))
           );
         }, [])}
@@ -268,21 +298,15 @@ export function EditorFloatingToolbar(props) {
 
             return acc.concat(
               castArray(p.floatToolbar).map((btn) => (
-                <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
-                  <ToolbarIconButton
-                    className={`fl_toolbar-${btn.id}`}
-                    useIcon={btn.icon}
-                    active={isMarkActive(editor, btn.id)}
-                    onMouseDown={getPreventDefaultHandler(
-                      p.onUse,
-                      editor,
-                      btn.id
-                    )}
-                    {...getHoverEventHandlers(editor, 'floating', btn)}
-                  >
-                    {btn.label}
-                  </ToolbarIconButton>
-                </Tip>
+                <ToolbarRenderableItem
+                  key={btn.id}
+                  editor={editor}
+                  btn={btn}
+                  toolbarType='floating'
+                  plugin={p}
+                  className={`fl_toolbar-${btn.id}`}
+                  active={isMarkActive(editor, btn.id)}
+                />
               ))
             );
           }, [])}
