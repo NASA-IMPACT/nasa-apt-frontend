@@ -6,15 +6,9 @@ import styled, { css } from 'styled-components';
 
 const CaptionElement = styled.figcaption`
   font-size: 0.875rem;
-  line-height: 1rem;
+  line-height: 1.25rem;
   text-align: center;
   position: relative;
-
-  ${({ emptyCaption }) =>
-    emptyCaption &&
-    css`
-      color: red;
-    `}
 `;
 
 const Placeholder = styled.span`
