@@ -19,20 +19,21 @@ const renderHighlightStyles = (props) => {
     case 'add-row':
       return css`
         tbody > tr:nth-child(${rowIdx + 1}) > td {
-          border-bottom: 2px solid ${themeVal('color.primary')};
+          border-bottom: 1px solid ${themeVal('color.primary')};
         }
       `;
     case 'add-column':
       return css`
         tbody > tr > td:nth-child(${columnIdx + 1}) {
-          border-right: 2px solid ${themeVal('color.primary')};
+          border-right: 1px solid ${themeVal('color.primary')};
         }
       `;
     case 'delete-row':
       return css`
         tbody > tr:nth-child(${rowIdx + 1}) > {
           td {
-            border: 2px solid ${themeVal('color.danger')};
+            border: 1px solid ${themeVal('color.danger')};
+            box-shadow: 0 -1px 0 0 ${themeVal('color.danger')};
           }
 
           td:not(:first-child) {
@@ -47,7 +48,8 @@ const renderHighlightStyles = (props) => {
     case 'delete-column':
       return css`
         tbody > tr > td:nth-child(${columnIdx + 1}) {
-          border: 2px solid ${themeVal('color.danger')};
+          border: 1px solid ${themeVal('color.danger')};
+          box-shadow: -1px 0 0 0 ${themeVal('color.danger')};
         }
         tbody > tr:not(:first-child) > td:nth-child(${columnIdx + 1}) {
           border-top: 1px solid ${themeVal('color.baseAlphaE')};
@@ -87,6 +89,7 @@ const TableBlockElement = styled.figure`
   }
 
   tbody td {
+    transition: all 0.24s ease-in-out 0s;
     border-color: ${themeVal('color.baseAlphaD')};
   }
 
