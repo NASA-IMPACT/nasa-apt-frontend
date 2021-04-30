@@ -13,7 +13,7 @@ export * from './with-history';
 // Editable field of the Editor styled.
 export const EditableWithPlugins = styled(EditablePlugins$)`
   background-color: ${themeVal('color.surface')};
-  padding: ${glsp(2, 1)};
+  padding: ${glsp(2)};
 
   > div > *:not(:last-child) {
     margin-bottom: ${glsp()};
