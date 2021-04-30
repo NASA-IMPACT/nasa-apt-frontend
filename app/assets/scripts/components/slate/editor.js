@@ -45,6 +45,7 @@ import {
   withTable
 } from './plugins/table';
 import { withCaption, withCaptionLayout } from './plugins/caption';
+import { IMAGE, ImageBlockPlugin, IMAGE_BLOCK } from './plugins/image';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -72,6 +73,7 @@ const plugins = [
   SubSectionPlugin,
   ReferencePlugin,
   TableBlockPlugin,
+  ImageBlockPlugin,
   LinkPlugin,
   BoldPlugin,
   ItalicPlugin,
@@ -95,6 +97,10 @@ const withPlugins = [
     {
       parent: TABLE_BLOCK,
       element: TABLE
+    },
+    {
+      parent: IMAGE_BLOCK,
+      element: IMAGE
     }
   ]),
   withTable

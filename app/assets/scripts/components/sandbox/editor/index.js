@@ -88,7 +88,7 @@ function SandboxEditor() {
             />
 
             <h2>Rich text editor</h2>
-            <RichContextProvider context={{ references, onReferenceUpsert }}>
+            <RichContextProvider context={{ references, onReferenceUpsert, atbd: { id: 1 } }}>
               <RichTextEditor
                 value={value}
                 onChange={(v) => {
