@@ -44,6 +44,23 @@ import { withCaption } from './plugins/caption';
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
 const plugins = [
+  // The current slate-plugins version in use (0.75.2) uses in turn a slate
+  // version (0.59) that has a bug when it comes to spellcheck.
+  // Spellcheck is only supported in browsers with beforeinput dom event, and
+  // slate is considering all versions of firefox to not have this feature
+  // (which was fixed in a more recent version). Because of this it sets the
+  // spellCheck property as undefined, which means it is reset to the browser's
+  // default (in more recent slate versions this is set to false). This is turn
+  // shows the spellcheck as enabled but it doesn't work, causing severe errors
+  // en some cases.
+  // This element is rendered for the first editor child (the ine without a
+  // type) and includes a forced disable for the spellcheck.
+  {
+    /* eslint-disable react/display-name, react/prop-types */
+    renderElement: ({ element, children }) =>
+      !element.type && <div spellCheck={false}>{children}</div>
+    /* eslint-enable */
+  },
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,

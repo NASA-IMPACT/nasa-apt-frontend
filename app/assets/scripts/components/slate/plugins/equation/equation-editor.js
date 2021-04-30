@@ -23,7 +23,7 @@ export default function EquationEditor(props) {
     <div {...attributes}>{equation}</div>
   ) : (
     <div {...attributes}>
-      <EquationInput>{children}</EquationInput>
+      <EquationInput spellCheck={false}>{children}</EquationInput>
       <div contentEditable={false}>{equation}</div>
     </div>
   );
