@@ -72,7 +72,13 @@ const ToolbarRenderableItem = (props) => {
   const { editor, btn, toolbarType, plugin, ...rest } = props;
 
   const mouseEvents = {
-    onMouseDown: getPreventDefaultHandler(plugin.onUse, editor, btn.id),
+    onMouseDown: (e) => {
+      // When the user clicks the item we want to reset the toolbarEvent because
+      // if the clicked item disappears (like que trash can) the "leave" event
+      // is never triggered.
+      editor.toolbarEvent = null;
+      return getPreventDefaultHandler(plugin.onUse, editor, btn.id)(e);
+    },
     ...getHoverEventHandlers(editor, toolbarType, btn)
   };
 
