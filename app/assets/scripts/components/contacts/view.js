@@ -1,31 +1,20 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory, useParams } from 'react-router';
-import { useFormikContext } from 'formik';
+import { useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
-import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import App from '../common/app';
 import { confirmDeleteContact } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
-import Tip from '../common/tooltip';
-
-import {
-  Inpage,
-  InpageBody,
-  InpageHeaderSticky,
-  InpageActions
-} from '../../styles/inpage';
-import ButtonSecondary from '../../styles/button-secondary';
-
+import { Inpage, InpageBody } from '../../styles/inpage';
 import DetailsList from '../../styles/typography/details-list';
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import UhOh from '../uhoh';
 import ContactActionsMenu from './contact-actions-menu';
-import ContactNavHeader from './contact-nav-header';
+import ContactNav from './contact-nav';
 
 import { useSingleContact } from '../../context/contacts-list';
 
@@ -70,42 +59,15 @@ const ContactTitle = styled(Heading)`
 
 const EmptySection = () => <p>No content available.</p>;
 
-export default function ContactEdit() {
+export default function ContactView() {
   const { id } = useParams();
-  const history = useHistory();
-  const {
-    contact,
-    fetchSingleContact,
-    updateContact,
-    deleteContact
-  } = useSingleContact({
+  const { contact, fetchSingleContact, deleteContact } = useSingleContact({
     id
   });
 
   useEffect(() => {
     fetchSingleContact();
   }, [id]);
-
-  const onContactMenuAction = useCallback(
-    async (menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteContact(
-          `${contact.data?.first_name} ${contact.data?.last_name}`
-        );
-
-        if (confirmed) {
-          const result = await deleteContact();
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('Contact successfully deleted');
-            history.push('/contacts');
-          }
-        }
-      }
-    },
-    [contact.data?.id, deleteContact, history]
-  );
 
   // We only want to handle errors when the contact request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -122,28 +84,17 @@ export default function ContactEdit() {
     }
   }
   const { status, data } = contact;
-  console.log();
   return (
     <App pageTitle='Contact view'>
       {status === 'loading' && <GlobalLoading />}
       {status === 'succeeded' && (
         <Inpage>
-          <InpageHeaderSticky data-element='inpage-header'>
-            <ContactNavHeader
-              id={data.id}
-              name={`${data.first_name} ${data.last_name}`}
-              mode='edit'
-            />
-            <InpageActions>
-              {/* <SaveButton /> */}
-              <VerticalDivider variation='light' />
-              <ContactActionsMenu
-                contact={contact.data}
-                variation='achromic-plain'
-                onSelect={onContactMenuAction}
-              />
-            </InpageActions>
-          </InpageHeaderSticky>
+          <ContactNav
+            contactId={data.id}
+            name={`${data.first_name} ${data.last_name}`}
+            deleteContact={deleteContact}
+            mode='view'
+          />
           <ContactCanvas>
             <ContentBlock>
               <ContactContent>
@@ -199,22 +150,3 @@ export default function ContactEdit() {
     </App>
   );
 }
-
-const SaveButton = () => {
-  const { dirty, isSubmitting, submitForm, status } = useFormikContext();
-  // status?.working is used to disable form submission when something is going
-  // on.
-
-  return (
-    <Tip position='top-end' title='There are unsaved changes' open={dirty}>
-      <ButtonSecondary
-        title='Save current changes'
-        disabled={isSubmitting || !dirty || status?.working}
-        onClick={submitForm}
-        useIcon='tick--small'
-      >
-        Save
-      </ButtonSecondary>
-    </Tip>
-  );
-};

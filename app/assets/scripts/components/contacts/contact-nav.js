@@ -1,23 +1,31 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
+import { useHistory } from 'react-router';
 
 import {
   InpageHeadline,
   TruncatedInpageTitle,
   InpageMeta,
   InpageHeadNav,
+  InpageHeaderSticky,
+  InpageActions,
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
 import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import DropdownMenu from '../common/dropdown-menu';
+import { confirmDeleteContact } from '../common/confirmation-prompt';
+import toasts from '../common/toasts';
+import ContactActionsMenu from './contact-actions-menu';
 
 import { contactEdit, contactView } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
-export default function ContactNavHeader({ name, id, mode }) {
+export default function ContactNav({ name, contactId, deleteContact, mode }) {
+  const history = useHistory();
+
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -29,7 +37,7 @@ export default function ContactNavHeader({ name, id, mode }) {
       label: 'Viewing',
       title: `Switch to viewing mode`,
       as: Link,
-      to: contactView(id)
+      to: contactView(contactId)
     };
     return {
       id: 'mode',
@@ -42,12 +50,12 @@ export default function ContactNavHeader({ name, id, mode }) {
               label: 'Editing',
               title: `Switch to editing mode`,
               as: Link,
-              to: contactEdit(id)
+              to: contactEdit(contactId)
             }
           ]
         : [viewContact]
     };
-  }, [id, canEditContact]);
+  }, [contactId, canEditContact]);
 
   const dropdownMenuTriggerProps = useMemo(
     () => ({
@@ -56,11 +64,32 @@ export default function ContactNavHeader({ name, id, mode }) {
     []
   );
 
+  const onContactMenuAction = useCallback(
+    async (menuId) => {
+      if (menuId === 'delete') {
+        const { result: confirmed } = await confirmDeleteContact(
+          `${contact.data?.first_name} ${contact.data?.last_name}`
+        );
+
+        if (confirmed) {
+          const result = await deleteContact();
+          if (result.error) {
+            toasts.error(`An error occurred: ${result.error.message}`);
+          } else {
+            toasts.success('Contact successfully deleted');
+            history.push('/contacts');
+          }
+        }
+      }
+    },
+    [contactId, deleteContact, history]
+  );
+
   return (
-    <>
+    <InpageHeaderSticky data-element='inpage-header'>
       <InpageHeadline>
         <TruncatedInpageTitle>
-          <Link to={contactView(id)} title='View contact'>
+          <Link to={contactView(contactId)} title='View contact'>
             {name}
           </Link>
         </TruncatedInpageTitle>
@@ -90,12 +119,20 @@ export default function ContactNavHeader({ name, id, mode }) {
           </Link>
         </InpageSubtitle>
       </InpageMeta>
-    </>
+      <InpageActions>
+        <ContactActionsMenu
+          contactId={contactId}
+          variation='achromic-plain'
+          onSelect={onContactMenuAction}
+        />
+      </InpageActions>
+    </InpageHeaderSticky>
   );
 }
 
-ContactNavHeader.propTypes = {
+ContactNav.propTypes = {
   name: T.string,
-  id: T.oneOfType([T.string, T.number]),
+  contactId: T.oneOfType([T.string, T.number]),
+  deleteContact: T.func,
   mode: T.string
 };

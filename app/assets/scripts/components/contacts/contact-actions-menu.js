@@ -5,7 +5,7 @@ import { contactEdit } from '../../utils/url-creator';
 import DropdownMenu from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
 
-export default function ContactActionsMenu({ contact, onSelect, variation }) {
+export default function ContactActionsMenu({ contactId, onSelect, variation }) {
   const dropProps = useMemo(() => {
     // Define menu items.
     const itemEdit = {
@@ -13,7 +13,7 @@ export default function ContactActionsMenu({ contact, onSelect, variation }) {
       label: 'Edit',
       title: 'Edit contact',
       as: Link,
-      to: contactEdit(contact.id)
+      to: contactEdit(contactId)
     };
 
     // The delete option is in a separate menu.
@@ -47,7 +47,7 @@ export default function ContactActionsMenu({ contact, onSelect, variation }) {
         deleteMenu
       ]
     };
-  }, [contact, variation]);
+  }, [contactId, variation]);
 
   return (
     <DropdownMenu
@@ -63,5 +63,5 @@ export default function ContactActionsMenu({ contact, onSelect, variation }) {
 ContactActionsMenu.propTypes = {
   onSelect: T.func,
   variation: T.string,
-  contact: T.object
+  contactId: T.oneOfType([T.string, T.number])
 };
