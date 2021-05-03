@@ -18,13 +18,13 @@ export const SUB_SECTION = 'sub-section';
  * @param {Editor} editor The slate editor instance
  * @returns boolean
  */
-export const isInSubsection = (editor) => isInNodeType(editor, SUB_SECTION);
+const isInSubsection = (editor) => isInNodeType(editor, SUB_SECTION);
 
 /**
  * Remove the SUB_SECTION at selection
  * @param {Editor} editor The slate editor instance
  */
-export const deleteSubSection = (editor) => {
+const deleteSubSection = (editor) => {
   if (isInSubsection(editor)) {
     const entry = getAbove(editor, { match: { type: SUB_SECTION } });
     if (entry) {
@@ -75,6 +75,7 @@ export const onSubsectionUse = (editor, btnId) => {
 
 // Plugin definition for slate-plugins framework.
 export const SubSectionPlugin = {
+  name: 'Heading',
   renderElement: getRenderElement({
     type: SUB_SECTION,
     component: SubSection
@@ -82,6 +83,12 @@ export const SubSectionPlugin = {
   onKeyDown: (e, editor) => {
     castArray(SubSectionPlugin.toolbar).forEach((btn) => {
       if (isHotkey(btn.hotkey, e)) {
+        e.preventDefault();
+        SubSectionPlugin.onUse(editor, btn.id);
+      }
+    });
+    castArray(SubSectionPlugin.contextToolbar).forEach((btn) => {
+      if (btn.isInContext?.(editor) && isHotkey(btn.hotkey, e)) {
         e.preventDefault();
         SubSectionPlugin.onUse(editor, btn.id);
       }

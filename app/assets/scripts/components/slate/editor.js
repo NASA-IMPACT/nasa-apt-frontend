@@ -18,6 +18,11 @@ import {
   withHistory,
   pipe
 } from './plugins/common';
+import {
+  ShortcutsModalPlugin,
+  withShortcutsModal,
+  ShortcutsModal
+} from './plugins/shortcuts-modal';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
@@ -67,6 +72,7 @@ const plugins = [
       !element.type && <div spellCheck={false}>{children}</div>
     /* eslint-enable */
   },
+  ShortcutsModalPlugin,
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,
@@ -86,6 +92,7 @@ const plugins = [
 const withPlugins = [
   withReact,
   withHistory,
+  withShortcutsModal,
   withInlineVoid({ plugins }),
   withList,
   withLink,
@@ -132,6 +139,7 @@ export function RichTextEditor(props) {
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
         <ReferencesModal />
+        <ShortcutsModal plugins={plugins} />
 
         <EditableDebug
           id={id}

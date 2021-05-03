@@ -52,6 +52,7 @@ export const onTableUse = (editor, btnId) => {
 
 // Plugin definition for slate-plugins framework.
 export const TableBlockPlugin = {
+  name: 'Table',
   renderElement: renderElementTableBlock(),
   onKeyDown: (e, editor) => {
     castArray(TableBlockPlugin.toolbar).forEach((btn) => {

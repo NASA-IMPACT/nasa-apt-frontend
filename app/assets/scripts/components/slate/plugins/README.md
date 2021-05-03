@@ -28,6 +28,8 @@ interface SlatePlugin {
 The slate plugins defined by apt extends this interface and adds 2 properties:
 ```js
 interface APTSlatePlugin extends SlatePlugin {
+  // Human readable name of the plugin.
+  name: string;
   // Main toolbar shown on the editor toolbar. Should contain permanent actions
   // to insert blocks.
   toolbar: ToolbarItem[];

@@ -24,6 +24,10 @@ import { modKey, REDO_HOTKEY, UNDO_HOTKEY } from './plugins/common/utils';
 import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
 import { EQUATION } from './plugins/equation';
+import {
+  SHORTCUTS_HOTKEY,
+  ShortcutsModalPlugin
+} from './plugins/shortcuts-modal';
 
 const EditorActions = styled.div`
   display: grid;
@@ -193,8 +197,11 @@ export function EditorToolbar(props) {
           </ToolbarIconButton>
         </Tip>
         <VerticalDivider />
-        <Tip title='Show keyboard shortcuts'>
-          <ToolbarIconButton useIcon='keyboard'>
+        <Tip title={`Keyboard shortcuts (${modKey(SHORTCUTS_HOTKEY)})`}>
+          <ToolbarIconButton
+            useIcon='keyboard'
+            onClick={() => ShortcutsModalPlugin.onUse(editor, 'shortcut-modal')}
+          >
             Keyboard shortcuts
           </ToolbarIconButton>
         </Tip>

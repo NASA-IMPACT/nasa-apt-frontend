@@ -30,6 +30,7 @@ export const onImageUse = (editor, btnId) => {
 
 // Plugin definition for slate-plugins framework.
 export const ImageBlockPlugin = {
+  name: 'Image',
   renderElement: renderElementImageBlock(),
   voidTypes: [IMAGE],
   onKeyDown: (e, editor) => {
