@@ -22,7 +22,7 @@ const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
 
-  h2 {
+  ${Constrainer} > h2 {
     margin: 2rem 0 1rem 0;
   }
 `;

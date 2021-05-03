@@ -8,11 +8,14 @@ import DeletableBlock from '../common/deletable-block';
 
 import { useRichContext } from '../common/rich-context';
 
+const DeletableHeadingBlock = styled(DeletableBlock)`
+  margin-top: ${glsp(0.5)};
+`;
+
 const SectionHeading = styled.h2`
   position: relative;
   font-size: 1.5rem;
   line-height: 2.25rem;
-  margin-top: ${glsp(2)};
 `;
 
 export default function SubSection(props) {
@@ -35,15 +38,11 @@ export default function SubSection(props) {
   }
 
   return (
-    <DeletableBlock
-      as={Element}
-      deleteAction='delete-heading'
-      {...attributes}
-      {...htmlAttributes}
-      {...readAttributes}
-    >
-      {children}
-    </DeletableBlock>
+    <DeletableHeadingBlock deleteAction='delete-heading'>
+      <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+        {children}
+      </Element>
+    </DeletableHeadingBlock>
   );
 }
 
