@@ -67,10 +67,10 @@ export function ShortcutsModal(props) {
   const { plugins } = props;
   const editor = useSlate();
 
-  const { visible } = editor.shortcutsModal.getData();
+  const { visible, id } = editor.simpleModal.getData();
 
   const closeModal = useCallback(() => {
-    editor.shortcutsModal.reset();
+    editor.simpleModal.reset();
   }, [editor]);
 
   const { toolbar, floating } = useMemo(() => getPluginShortcuts(plugins), [
@@ -81,7 +81,7 @@ export function ShortcutsModal(props) {
     <Modal
       id='modal'
       size='medium'
-      revealed={visible}
+      revealed={visible && id === 'shortcut-modal'}
       onCloseClick={closeModal}
       title='Keyboard shortcuts'
       content={

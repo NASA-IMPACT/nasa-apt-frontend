@@ -20,9 +20,9 @@ import {
 } from './plugins/common';
 import {
   ShortcutsModalPlugin,
-  withShortcutsModal,
   ShortcutsModal
 } from './plugins/shortcuts-modal';
+import { withSimpleModal } from './plugins/common/with-simple-modal';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
@@ -92,7 +92,7 @@ const plugins = [
 const withPlugins = [
   withReact,
   withHistory,
-  withShortcutsModal,
+  withSimpleModal,
   withInlineVoid({ plugins }),
   withList,
   withLink,
