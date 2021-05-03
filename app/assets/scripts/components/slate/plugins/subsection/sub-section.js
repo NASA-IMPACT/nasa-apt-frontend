@@ -30,6 +30,12 @@ export default function SubSection(props) {
       readAttributes.id = `${sectionId}--${element.id}`;
       readAttributes['data-scroll'] = 'target';
     }
+
+    return (
+      <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+        {children}
+      </Element>
+    );
   }
 
   return (
