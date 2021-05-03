@@ -51,6 +51,7 @@ import {
 } from './plugins/table';
 import { withCaption, withCaptionLayout } from './plugins/caption';
 import { IMAGE, ImageBlockPlugin, IMAGE_BLOCK } from './plugins/image';
+import { LatexModal } from './plugins/equation/latex-cheatsheet-modal';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
@@ -140,6 +141,7 @@ export function RichTextEditor(props) {
         <EditorLinkToolbar />
         <ReferencesModal />
         <ShortcutsModal plugins={plugins} />
+        <LatexModal />
 
         <EditableDebug
           id={id}
