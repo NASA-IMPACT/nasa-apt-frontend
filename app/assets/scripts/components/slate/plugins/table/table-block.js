@@ -1,9 +1,11 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-import { useReadOnly, useSelected, useSlate } from 'slate-react';
+import { useSelected, useSlate } from 'slate-react';
 import { ELEMENT_TD, findNode } from '@udecode/slate-plugins';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { themeVal } from '@devseed-ui/theme-provider';
+
+import DeletableBlock from '../common/deletable-block';
 
 /**
  * Renders the styles for the actions that will modify the table.
@@ -58,32 +60,12 @@ const renderHighlightStyles = (props) => {
           border-bottom: 1px solid ${themeVal('color.baseAlphaE')};
         }
       `;
-    case 'delete-table':
-      return css`
-        &::before {
-          box-shadow: inset 0 0 0 1px ${themeVal('color.danger')};
-        }
-      `;
   }
 };
 
-const TableBlockElement = styled.figure`
-  position: relative;
-
-  &::before {
-    position: absolute;
-    top: -${glsp(0.5)};
-    right: -${glsp(0.5)};
-    bottom: -${glsp(0.5)};
-    left: -${glsp(0.5)};
-    content: '';
-    pointer-events: none;
-    background: transparent;
-    box-shadow: inset 0 0 0 1px transparent;
-    border-radius: ${themeVal('shape.rounded')};
-    transition: all 0.24s ease-in-out 0s;
-  }
-
+const TableBlockElement = styled(DeletableBlock).attrs({
+  forwardedAs: 'figure'
+})`
   table {
     margin-top: 0;
   }
@@ -93,64 +75,25 @@ const TableBlockElement = styled.figure`
     border-color: ${themeVal('color.baseAlphaD')};
   }
 
-  ${({ isReadOnly }) =>
-    !isReadOnly &&
-    css`
-        &:hover {
-          ::before {
-            box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaC')};
-          }
-        }
-      }
-    `}
-
-  ${({ isSelected, isReadOnly }) =>
-    !isReadOnly &&
-    isSelected &&
-    css`
-      &,
-      &:hover {
-        ::before {
-          box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaE')};
-        }
-      }
-    `}
-
-  & > * {
-    margin-bottom: ${glsp()};
-  }
-
-  & > *:last-child {
-    margin-bottom: 0;
-  }
-
   ${renderHighlightStyles}
-`;
-
-const TableBlockElementInner = styled.div`
-  overflow-x: auto;
 `;
 
 export default function TableBlock(props) {
   const { attributes, htmlAttributes, children } = props;
-  const editor = useSlate();
-  const isSelected = useSelected();
-  const readOnly = useReadOnly();
 
-  const interactionProps = getTableBlockInteractionProps({
-    isSelected,
-    editor
-  });
+  // actionName
+  // columnIdx
+  // rowIdx
+  const interactionProps = useTableBlockInteractionProps();
 
   return (
     <TableBlockElement
+      deleteAction='delete-table'
       {...attributes}
       {...htmlAttributes}
-      isSelected={isSelected}
-      isReadOnly={readOnly}
       {...interactionProps}
     >
-      <TableBlockElementInner>{children}</TableBlockElementInner>
+      {children}
     </TableBlockElement>
   );
 }
@@ -169,14 +112,12 @@ TableBlock.propTypes = {
  * @param {boolean} obj.isSelected Whether or not the element is selected
  * @param {Editor} obj.editor Slate editor instance.
  */
-const getTableBlockInteractionProps = ({ isSelected, editor }) => {
+const useTableBlockInteractionProps = () => {
+  const editor = useSlate();
+  const isSelected = useSelected();
+
   if (isSelected && editor.toolbarEvent?.eventType === 'enter') {
     const { item } = editor.toolbarEvent;
-    if (item.id === 'delete-table') {
-      return {
-        actionName: item.id
-      };
-    }
 
     const cell = findNode(editor, { match: { type: ELEMENT_TD } });
     if (cell) {
