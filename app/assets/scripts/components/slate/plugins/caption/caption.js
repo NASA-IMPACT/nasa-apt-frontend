@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import { Node } from 'slate';
 import { useReadOnly, useSelected } from 'slate-react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const CaptionElement = styled.figcaption`
   font-size: 0.875rem;

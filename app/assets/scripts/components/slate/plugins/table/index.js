@@ -17,6 +17,7 @@ import {
   renderElementTableBlock,
   TABLE
 } from './helpers';
+import { isFocusedAnd } from '../common/is-focused-compose';
 
 export * from './helpers';
 
@@ -80,7 +81,7 @@ export const TableBlockPlugin = {
       hotkey: 'mod+Shift+Down',
       label: 'Add row',
       tip: (key) => `Add row (${modKey(key)})`,
-      isInContext: isInTable
+      isInContext: isFocusedAnd(isInTable)
     },
     {
       id: 'delete-row',
@@ -88,7 +89,7 @@ export const TableBlockPlugin = {
       hotkey: 'mod+Shift+Up',
       label: 'Remove row',
       tip: (key) => `Remove row (${modKey(key)})`,
-      isInContext: isInTable
+      isInContext: isFocusedAnd(isInTable)
     },
     {
       id: 'add-column',
@@ -96,7 +97,7 @@ export const TableBlockPlugin = {
       hotkey: 'mod+Shift+Right',
       label: 'Add column',
       tip: (key) => `Add column (${modKey(key)})`,
-      isInContext: isInTable
+      isInContext: isFocusedAnd(isInTable)
     },
     {
       id: 'delete-column',
@@ -104,7 +105,7 @@ export const TableBlockPlugin = {
       hotkey: 'mod+Shift+Left',
       label: 'Remove column',
       tip: (key) => `Remove column (${modKey(key)})`,
-      isInContext: isInTable
+      isInContext: isFocusedAnd(isInTable)
     },
     {
       id: 'delete-table',
@@ -112,7 +113,7 @@ export const TableBlockPlugin = {
       hotkey: 'mod+Shift+D',
       label: 'Remove table',
       tip: (key) => `Remove table (${modKey(key)})`,
-      isInContext: isInTableBlock
+      isInContext: isFocusedAnd(isInTableBlock)
     }
   ],
   onUse: onTableUse

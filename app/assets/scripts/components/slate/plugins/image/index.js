@@ -10,6 +10,7 @@ import {
   renderElementImageBlock,
   IMAGE
 } from './helpers';
+import { isFocusedAnd } from '../common/is-focused-compose';
 
 export * from './helpers';
 
@@ -63,7 +64,7 @@ export const ImageBlockPlugin = {
       hotkey: 'mod+Shift+D',
       label: 'Remove image',
       tip: (key) => `Remove image (${modKey(key)})`,
-      isInContext: isInImageBlock
+      isInContext: isFocusedAnd(isInImageBlock)
     }
   ],
   onUse: onImageUse

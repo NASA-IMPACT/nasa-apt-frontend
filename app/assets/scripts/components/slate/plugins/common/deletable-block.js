@@ -1,7 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-import { useReadOnly, useSelected, useSlate } from 'slate-react';
+import { useFocused, useReadOnly, useSelected, useSlate } from 'slate-react';
 import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 
 const DeletableBlockElement = styled.div`
@@ -76,12 +76,13 @@ const DeletableBlock = React.forwardRef((props, ref) => {
   const { children, deleteAction, ...rest } = props;
   const editor = useSlate();
   const isSelected = useSelected();
+  const isFocused = useFocused();
   const readOnly = useReadOnly();
 
   return (
     <DeletableBlockElement
       ref={ref}
-      isSelected={isSelected}
+      isSelected={isFocused && isSelected}
       isReadOnly={readOnly}
       isDeleting={isDeleting(editor, isSelected, deleteAction)}
       {...rest}
