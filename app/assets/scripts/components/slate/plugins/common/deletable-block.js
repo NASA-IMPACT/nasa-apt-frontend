@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { useReadOnly, useSelected, useSlate } from 'slate-react';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 
 const DeletableBlockElement = styled.div`
   position: relative;
@@ -26,7 +26,7 @@ const DeletableBlockElement = styled.div`
     css`
       &:hover {
         ::before {
-          box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaC')};
+          box-shadow: inset 0 0 0 1px ${rgba(themeVal('color.link'), 0.24)};
         }
       }
     `}
@@ -38,7 +38,7 @@ const DeletableBlockElement = styled.div`
       &,
       &:hover {
         ::before {
-          box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaE')};
+          box-shadow: inset 0 0 0 1px ${rgba(themeVal('color.link'), 0.48)};
         }
       }
     `}
