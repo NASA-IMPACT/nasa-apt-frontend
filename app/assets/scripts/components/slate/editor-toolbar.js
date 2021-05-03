@@ -54,7 +54,7 @@ export const FloatingToolbar = styled.div`
   display: grid;
   grid-gap: ${glsp(0.25)};
   margin-top: ${glsp(-0.5)};
-  padding: ${glsp(0.5)};
+  padding: ${glsp(0.25)};
   background-color: ${themeVal('color.surface')};
   box-shadow: ${themeVal('boxShadow.elevationD')};
   border-radius: ${themeVal('shape.rounded')};
