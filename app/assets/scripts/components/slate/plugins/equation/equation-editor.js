@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Node } from 'slate';
@@ -9,6 +9,10 @@ import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
 
+import DeletableBlock from '../common/deletable-block';
+
+const EQUATION_PDF_THRESHOLD = 600;
+
 const EquationInput = styled.p`
   font-family: monospace;
 `;
@@ -18,7 +22,7 @@ const EquationPreview = styled.aside`
   background: ${themeVal('color.surface')};
   padding: ${glsp(1.5)};
   border-radius: ${themeVal('shape.rounded')};
-  box-shadow: 0 0 0 1px ${themeVal('color.baseAlphaD')};
+  box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaD')};
   margin-top: ${glsp()};
 
   &::before {
@@ -33,7 +37,7 @@ const EquationPreview = styled.aside`
     font-size: 1rem;
     line-height: 1;
     text-align: center;
-    transform: translateY(0.35rem);
+    transform: translateY(0.45rem);
     pointer-events: none;
   }
 `;
@@ -52,6 +56,10 @@ const EquationPreviewTitle = styled.h6`
 const EquationPreviewBody = styled.div`
   text-align: center;
   color: ${themeVal('color.danger')};
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: ${glsp(0.5, 0, 1, 0)};
+  margin-bottom: ${glsp(-1)};
 
   .katex-display {
     margin: 0;
@@ -62,26 +70,42 @@ const EquationPreviewBody = styled.div`
 export default function EquationEditor(props) {
   const { attributes, children, element } = props;
   const readOnly = useReadOnly();
+  const equationBlockRef = useRef();
+  const [isTooLong, setTooLong] = useState(false);
 
   const latexEquation = Node.string(element);
   const equation = (
     <BlockMath math={latexEquation || '\\LaTeX~empty~equation'} />
   );
 
+  useEffect(() => {
+    const node = equationBlockRef.current;
+    if (node) {
+      // Get the katex node which is inline block and has real width.
+      const katexNode = node.querySelector('.katex-display > .katex');
+      setTooLong(katexNode?.offsetWidth > EQUATION_PDF_THRESHOLD);
+    }
+  }, [latexEquation]);
+
   return readOnly ? (
-    <div {...attributes}>{equation}</div>
+    <EquationPreviewBody {...attributes}>{equation}</EquationPreviewBody>
   ) : (
-    <div {...attributes}>
+    <DeletableBlock deleteAction='delete-equation' {...attributes}>
       <EquationInput spellCheck={false}>
         <code>{children}</code>
       </EquationInput>
       <EquationPreview contentEditable={false}>
         <EquationPreviewTitle>
           <span>Equation</span> preview
+          {isTooLong && (
+            <p>Equation may be too long for PDF. Consider splitting it.</p>
+          )}
         </EquationPreviewTitle>
-        <EquationPreviewBody>{equation}</EquationPreviewBody>
+        <EquationPreviewBody ref={equationBlockRef}>
+          {equation}
+        </EquationPreviewBody>
       </EquationPreview>
-    </div>
+    </DeletableBlock>
   );
 }
 
