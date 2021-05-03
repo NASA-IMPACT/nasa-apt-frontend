@@ -50,6 +50,10 @@ ${({ isDeleting }) =>
         box-shadow: inset 0 0 0 1px ${themeVal('color.danger')};
       }
     `}
+`;
+
+const DeletableBlockElementInner = styled.div`
+  overflow-x: auto;
 
   & > * {
     margin-bottom: ${glsp()};
@@ -58,10 +62,6 @@ ${({ isDeleting }) =>
   & > *:last-child {
     margin-bottom: 0;
   }
-`;
-
-const DeletableBlockElementInner = styled.div`
-  overflow-x: auto;
 `;
 
 const isDeleting = (editor, isSelected, deleteAction) => {

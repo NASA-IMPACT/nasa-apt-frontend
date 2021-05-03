@@ -48,6 +48,12 @@ export default function ToolbarImageButton(props) {
   // meaning that editor.toolbarEvent won't be usable for this item.
 
   const onFileSelect = async (file) => {
+    const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+    if (!validImageTypes.includes(file.type)) {
+      toast.error(`Invalid image format. Please use GIF, PNG or JPEG`);
+      return;
+    }
+
     const imageBlockNode = insertImageBlock(editor);
     const imageNode = imageBlockNode?.children[0];
 
@@ -88,7 +94,7 @@ export default function ToolbarImageButton(props) {
 
   return (
     <Tip title={item.tip(item.hotkey)}>
-      <FauxFileDialog name='bibtex-file' onFileSelect={onFileSelect}>
+      <FauxFileDialog name='image-file' onFileSelect={onFileSelect}>
         {(fieProps) => (
           <ToolbarIconButton
             useIcon={item.icon}

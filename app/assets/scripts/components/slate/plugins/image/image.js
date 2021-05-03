@@ -7,17 +7,17 @@ import { useRichContext } from '../common/rich-context';
 import { imageApiUrl } from '../../../../utils/url-creator';
 
 const ImageWrapper = styled.div`
-  & > * {
-    margin-bottom: ${glsp()};
-  }
+  display: flex;
+  justify-content: center;
 
-  & > *:last-child {
-    margin-bottom: 0;
+  img {
+    max-width: 100%;
   }
 `;
 
 const ImageUploading = styled.div`
   background: ${themeVal('color.baseAlphaB')};
+  width: 100%;
   padding: ${glsp(4, 2)};
   text-align: center;
 `;
@@ -28,12 +28,11 @@ export default function Image(props) {
   const { atbd } = useRichContext();
 
   return (
-    <ImageWrapper {...attributes}>
-      <div contentEditable={false}>
-        {(element.uploading || element.uploading === 0) && (
+    <div {...attributes}>
+      <ImageWrapper contentEditable={false}>
+        {element.uploading || element.uploading === 0 ? (
           <ImageUploading>Uploading... {element.uploading}%</ImageUploading>
-        )}
-        {atbd && element.objectKey ? (
+        ) : atbd && element.objectKey ? (
           <img
             alt='Image'
             {...htmlAttributes}
@@ -42,9 +41,9 @@ export default function Image(props) {
         ) : (
           <p>Atbd context or objectKey is missing.</p>
         )}
-      </div>
+      </ImageWrapper>
       {children}
-    </ImageWrapper>
+    </div>
   );
 }
 
