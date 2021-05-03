@@ -2,25 +2,17 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useReadOnly } from 'slate-react';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp } from '@devseed-ui/theme-provider';
+
+import DeletableBlock from '../common/deletable-block';
 
 import { useRichContext } from '../common/rich-context';
 
 const SectionHeading = styled.h2`
   position: relative;
   font-size: 1.5rem;
-  line-height: 2rem;
+  line-height: 2.25rem;
   margin-top: ${glsp(2)};
-
-  &::before {
-    position: absolute;
-    top: ${glsp(-0.5)};
-    left: 0;
-    content: '';
-    width: 5rem;
-    height: 2px;
-    background-color: ${themeVal('color.baseAlphaD')};
-  }
 `;
 
 export default function SubSection(props) {
@@ -43,9 +35,15 @@ export default function SubSection(props) {
   }
 
   return (
-    <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+    <DeletableBlock
+      as={Element}
+      deleteAction='delete-heading'
+      {...attributes}
+      {...htmlAttributes}
+      {...readAttributes}
+    >
       {children}
-    </Element>
+    </DeletableBlock>
   );
 }
 
