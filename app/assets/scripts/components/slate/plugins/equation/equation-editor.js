@@ -42,15 +42,28 @@ const EquationPreview = styled.aside`
   }
 `;
 
+const EquationPreviewHeader = styled.header`
+  display: grid;
+  grid-template-columns: 1fr minmax(min-content, max-content);
+  grid-gap: ${glsp()};
+  margin: ${glsp(-1, -1, 0, -1)};
+`;
+
 const EquationPreviewTitle = styled.h6`
   ${headingAlt()}
   font-size: 0.75rem;
   line-height: 1rem;
-  margin: ${glsp(-1, 0, 0, -1)};
+  margin: 0;
 
   span {
     ${visuallyHidden()}
   }
+`;
+
+const EquationPreviewSubtitle = styled.p`
+  font-size: 0.875rem;
+  line-height: 1rem;
+  color: ${themeVal('color.danger')};
 `;
 
 const EquationPreviewBody = styled.div`
@@ -95,12 +108,16 @@ export default function EquationEditor(props) {
         <code>{children}</code>
       </EquationInput>
       <EquationPreview contentEditable={false}>
-        <EquationPreviewTitle>
-          <span>Equation</span> preview
+        <EquationPreviewHeader>
+          <EquationPreviewTitle>
+            <span>Equation</span> preview
+          </EquationPreviewTitle>
           {isTooLong && (
-            <p>Equation may be too long for PDF. Consider splitting it.</p>
+            <EquationPreviewSubtitle>
+              Equation may be too long for PDF. Consider breaking it.
+            </EquationPreviewSubtitle>
           )}
-        </EquationPreviewTitle>
+        </EquationPreviewHeader>
         <EquationPreviewBody ref={equationBlockRef}>
           {equation}
         </EquationPreviewBody>
