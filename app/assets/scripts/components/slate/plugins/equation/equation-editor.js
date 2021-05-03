@@ -50,8 +50,12 @@ const EquationPreviewTitle = styled.h6`
 `;
 
 const EquationPreviewBody = styled.div`
+  text-align: center;
+  color: ${themeVal('color.danger')};
+
   .katex-display {
     margin: 0;
+    color: ${themeVal('type.base.color')};
   }
 `;
 
