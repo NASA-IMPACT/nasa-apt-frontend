@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 export const Kbd = styled.kbd`
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: ${themeVal('type.base.weight')};
