@@ -76,7 +76,7 @@ export const TableBlockPlugin = {
   contextToolbar: [
     {
       id: 'add-row',
-      icon: 'square',
+      icon: 'table-add-row',
       hotkey: 'mod+Shift+Down',
       label: 'Add row',
       tip: (key) => `Add row (${modKey(key)})`,
@@ -84,7 +84,7 @@ export const TableBlockPlugin = {
     },
     {
       id: 'delete-row',
-      icon: 'square',
+      icon: 'table-subtract-row',
       hotkey: 'mod+Shift+Up',
       label: 'Remove row',
       tip: (key) => `Remove row (${modKey(key)})`,
@@ -92,7 +92,7 @@ export const TableBlockPlugin = {
     },
     {
       id: 'add-column',
-      icon: 'square',
+      icon: 'table-add-column',
       hotkey: 'mod+Shift+Right',
       label: 'Add column',
       tip: (key) => `Add column (${modKey(key)})`,
@@ -100,7 +100,7 @@ export const TableBlockPlugin = {
     },
     {
       id: 'delete-column',
-      icon: 'square',
+      icon: 'table-subtract-column',
       hotkey: 'mod+Shift+Left',
       label: 'Remove column',
       tip: (key) => `Remove column (${modKey(key)})`,
