@@ -15,8 +15,8 @@ export const EditableWithPlugins = styled(EditablePlugins$)`
   background-color: ${themeVal('color.surface')};
   padding: ${glsp(2)};
 
-  > div > *:not(:last-child) {
-    margin-bottom: ${glsp()};
+  > div {
+    ${proseInnerSpacing()}
   }
 `;
 
