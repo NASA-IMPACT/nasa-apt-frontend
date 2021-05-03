@@ -2,15 +2,10 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useReadOnly } from 'slate-react';
-import { glsp } from '@devseed-ui/theme-provider';
 
 import DeletableBlock from '../common/deletable-block';
 
 import { useRichContext } from '../common/rich-context';
-
-const DeletableHeadingBlock = styled(DeletableBlock)`
-  margin-top: ${glsp(0.5)};
-`;
 
 const SectionHeading = styled.h2`
   position: relative;
@@ -38,11 +33,11 @@ export default function SubSection(props) {
   }
 
   return (
-    <DeletableHeadingBlock deleteAction='delete-heading'>
+    <DeletableBlock deleteAction='delete-heading'>
       <Element {...attributes} {...htmlAttributes} {...readAttributes}>
         {children}
       </Element>
-    </DeletableHeadingBlock>
+    </DeletableBlock>
   );
 }
 
