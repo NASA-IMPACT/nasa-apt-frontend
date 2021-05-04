@@ -10,19 +10,24 @@ import { formatReference } from '../../../../utils/references';
 import Tip from '../../../common/tooltip';
 
 const Ref = styled.span`
-  background: ${themeVal('color.baseAlphaB')};
+  color: ${themeVal('color.surface')};
+  background: ${themeVal('color.baseAlphaF')};
   vertical-align: super;
   padding: ${glsp(0, 0.25)};
   border-radius: ${themeVal('shape.rounded')};
+  text-transform: uppercase;
   font-size: 0.75rem;
+  margin: ${glsp(0, 0.125)};
+  user-select: none;
+  cursor: help;
 
   ${({ isInvalid }) =>
     isInvalid
       ? css`
-          background: ${rgba(themeVal('color.danger'), 0.32)};
+          background: ${themeVal('color.danger')};
         `
       : css`
-          background: ${themeVal('color.baseAlphaB')};
+          background: ${themeVal('color.baseAlphaF')};
         `}
 
   ${({ isActive, isInvalid }) =>
