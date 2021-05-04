@@ -1,5 +1,3 @@
-import React from 'react'; /* eslint-disable react/display-name */
-
 import { getValuesFromObj, EDITOR_SYM } from '../../../utils/get-values-object';
 
 import StepIdentifyingInformation from './step-identifying-information';
@@ -9,6 +7,7 @@ import StepAlgoUsage from './step-algo-usage';
 import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
 import StepReferences from './step-references';
+import StepContacts from './step-contacts';
 
 export const STEPS = [
   {
@@ -41,9 +40,19 @@ export const STEPS = [
   {
     id: 'contacts',
     label: 'Contact information',
-    StepComponent: () => <p>Contact information coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepContacts,
+    getInitialValues: (atbd) => {
+      return getValuesFromObj(atbd, {
+        contacts_link: [
+          // {
+          //   contact: {}
+          //   roles: []
+          // }
+        ],
+        sections_completed: {
+          contacts: 'incomplete'
+        }
+      });
     }
   },
   {

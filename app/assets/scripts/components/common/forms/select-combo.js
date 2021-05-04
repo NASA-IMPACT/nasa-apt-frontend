@@ -20,10 +20,12 @@ import { DropMenuItemEnhanced } from '../dropdown-menu';
 // options. The create new option is sticky and will always be present at the
 // top of the dropdown menu.
 
+export const SELECT_COMBO_NEW = { value: 'new', label: 'Create new' };
+
 const groupedOptions = [
   {
     label: 'actions',
-    options: [{ value: 'new', label: 'Create new' }]
+    options: [SELECT_COMBO_NEW]
   }
 ];
 
