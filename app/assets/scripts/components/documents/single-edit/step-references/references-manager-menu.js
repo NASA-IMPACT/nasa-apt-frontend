@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { DropMenuItem } from '@devseed-ui/dropdown';
 
 import DropdownMenu from '../../../common/dropdown-menu';
-import { FileInputElement } from './reference-creation-actions';
+import { FauxFileDialog } from '../../../common/faux-file-dialog';
 import Pill from '../../../common/pill';
 
 const DeleteActionLabel = styled.span`
@@ -99,7 +99,7 @@ ReferencesManagerMenu.propTypes = {
 
 const ImportBibTeXMenuItem = ({ onSelect, menuItem, ...props }) => {
   return (
-    <FileInputElement
+    <FauxFileDialog
       name='bibtex-file'
       onFileSelect={(f) => onSelect(menuItem.id, { ...menuItem, file: f })}
     >
@@ -108,7 +108,7 @@ const ImportBibTeXMenuItem = ({ onSelect, menuItem, ...props }) => {
           Import from BibTeX file...
         </DropMenuItem>
       )}
-    </FileInputElement>
+    </FauxFileDialog>
   );
 };
 

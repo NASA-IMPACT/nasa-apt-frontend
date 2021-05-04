@@ -1,3 +1,5 @@
+import { apiUrl } from '../config';
+
 /**
  * Creates the url to view a given ATBD document.
  *
@@ -62,4 +64,14 @@ export const contactView = (contactId) => {
  */
 export const contactEdit = (contactId) => {
   return `${contactView(contactId)}/edit`;
+};
+
+/**
+ * Creates the url for the images coming from the api
+ *
+ * @param {object} atbd The atbd
+ * @param {string} filename The image object key
+ */
+export const imageApiUrl = (atbd, objectKey) => {
+  return `${apiUrl}/atbds/${atbd.id}/images/${objectKey}`;
 };

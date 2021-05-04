@@ -22,7 +22,7 @@ const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
 
-  h2 {
+  ${Constrainer} > h2 {
     margin: 2rem 0 1rem 0;
   }
 `;
@@ -88,7 +88,9 @@ function SandboxEditor() {
             />
 
             <h2>Rich text editor</h2>
-            <RichContextProvider context={{ references, onReferenceUpsert }}>
+            <RichContextProvider
+              context={{ references, onReferenceUpsert, atbd: { id: 1 } }}
+            >
               <RichTextEditor
                 value={value}
                 onChange={(v) => {
