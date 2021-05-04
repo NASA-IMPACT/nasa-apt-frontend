@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import T from 'prop-types';
 import { useFocused, useReadOnly, useSelected } from 'slate-react';
 import styled, { css } from 'styled-components';
-import { glsp, themeVal, rgba } from '@devseed-ui/theme-provider';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import { useRichContext } from '../common/rich-context';
 import { formatReference } from '../../../../utils/references';
