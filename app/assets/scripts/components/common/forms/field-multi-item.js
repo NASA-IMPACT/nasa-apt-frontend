@@ -57,7 +57,6 @@ FieldMultiItem.propTypes = {
   children: T.node,
   emptyMessage: T.node,
   label: T.string,
-  labelHint: T.oneOfType([T.bool, T.func, T.string]),
   id: T.string,
   description: T.string,
   onAddClick: T.func
