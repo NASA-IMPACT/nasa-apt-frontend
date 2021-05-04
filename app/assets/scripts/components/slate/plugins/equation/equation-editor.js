@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Node } from 'slate';
-import { useReadOnly } from 'slate-react';
+import { Editor, Node, Transforms } from 'slate';
+import { ReactEditor, useEditor, useReadOnly } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
@@ -83,6 +83,7 @@ const EquationPreviewBody = styled.div`
 export default function EquationEditor(props) {
   const { attributes, children, element } = props;
   const readOnly = useReadOnly();
+  const editor = useEditor();
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
 
@@ -100,6 +101,12 @@ export default function EquationEditor(props) {
     }
   }, [latexEquation]);
 
+  // Focus equation input when user clicks the preview.
+  const onEquationPreviewClick = useCallback(() => {
+    const path = ReactEditor.findPath(editor, element);
+    Transforms.select(editor, Editor.end(editor, path));
+  }, [editor, element]);
+
   return readOnly ? (
     <EquationPreviewBody {...attributes}>{equation}</EquationPreviewBody>
   ) : (
@@ -107,7 +114,14 @@ export default function EquationEditor(props) {
       <EquationInput spellCheck={false}>
         <code>{children}</code>
       </EquationInput>
-      <EquationPreview contentEditable={false}>
+      <EquationPreview
+        // Both contentEditable style and are needed for the click to work. See
+        // more at:
+        // https://github.com/ianstormtaylor/slate/issues/3421#issuecomment-591259117
+        contentEditable={false}
+        style={{ userSelect: 'none' }}
+        onClick={onEquationPreviewClick}
+      >
         <EquationPreviewHeader>
           <EquationPreviewTitle>
             <span>Equation</span> preview
