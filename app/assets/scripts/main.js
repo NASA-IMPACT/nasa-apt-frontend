@@ -88,16 +88,16 @@ function Root() {
               component={Contacts}
             />
             <AccessRoute
-              permission={['view', 'contacts']}
-              exact
-              path='/contacts/:id'
-              component={ContactsView}
-            />
-            <AccessRoute
               permission={['edit', 'contacts']}
               exact
               path='/contacts/:id/edit'
               component={ContactsEdit}
+            />
+            <AccessRoute
+              permission={['view', 'contacts']}
+              exact
+              path='/contacts/:id'
+              component={ContactsView}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/signin' component={SignIn} />

@@ -86,7 +86,11 @@ export const ContactsProvider = ({ children }) => {
               const response = await axios({
                 ...requestOptions,
                 url: '/contacts',
-                method: 'post'
+                method: 'post',
+                data: {
+                  first_name: 'New',
+                  last_name: 'Contact'
+                }
               });
 
               // Dispatch receive action. It is already dispatchable.
@@ -99,13 +103,13 @@ export const ContactsProvider = ({ children }) => {
         })),
         updateContact: withRequestToken(token, ({ id, data }) => ({
           stateKey: `${id}`,
-          mutation: async ({ axios, requestOptions, state, actions }) => {
+          mutation: async ({ axios, requestOptions, actions }) => {
             try {
               const { id, ...rest } = data;
               // Dispatch request action. It is already dispatchable.
               actions.request();
 
-              await axios({
+              const response = await axios({
                 ...requestOptions,
                 url: `/contacts/${id}`,
                 method: 'post',
@@ -113,8 +117,7 @@ export const ContactsProvider = ({ children }) => {
               });
 
               // Dispatch receive action. It is already dispatchable.
-              const updateResult = actions.receive(state.data);
-              return { ...updateResult };
+              return actions.receive(response.data);
             } catch (error) {
               // Dispatch receive action. It is already dispatchable.
               return actions.receive(null, error);

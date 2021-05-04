@@ -130,6 +130,7 @@
     "lodash.deburr": "^4.1.0",
     "lodash.defaultsdeep": "^4.6.1",
     "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2",
     "lodash.throttle": "^4.1.1",
     "polished": "^4.1.1",
     "prop-types": "^15.7.2",
