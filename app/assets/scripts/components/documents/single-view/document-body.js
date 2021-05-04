@@ -96,7 +96,8 @@ const FragmentWithOptionalEditor = ({
   withEditor,
   HLevel,
   subsectionLevel,
-  referencesUseIndex
+  referencesUseIndex,
+  atbd
 }) => {
   return (
     <React.Fragment>
@@ -109,7 +110,8 @@ const FragmentWithOptionalEditor = ({
             subsectionLevel,
             sectionId: element.id,
             references: document.publication_references,
-            referencesUseIndex
+            referencesUseIndex,
+            atbd
           }}
           value={value}
           whenEmpty={<EmptySection />}
@@ -215,14 +217,15 @@ export const atbdContentSections = [
     id: 'introduction',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.introduction, id),
-    render: ({ element, document, referencesUseIndex }) => (
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
             sectionId: element.id,
             references: document.publication_references,
-            referencesUseIndex
+            referencesUseIndex,
+            atbd
           }}
           value={document.introduction}
           whenEmpty={<EmptySection />}
@@ -235,14 +238,15 @@ export const atbdContentSections = [
     id: 'historic-perspective',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.historical_perspective, id),
-    render: ({ element, document, referencesUseIndex }) => (
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
             sectionId: element.id,
             references: document.publication_references,
-            referencesUseIndex
+            referencesUseIndex,
+            atbd
           }}
           value={document.historical_perspective}
           whenEmpty={<EmptySection />}
@@ -445,7 +449,7 @@ export const atbdContentSections = [
     id: 'algo-usage-constraints',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.algorithm_usage_constraints, id),
-    render: ({ element, document, referencesUseIndex }) => (
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
@@ -453,7 +457,8 @@ export const atbdContentSections = [
             subsectionLevel: 'h3',
             sectionId: element.id,
             references: document.publication_references,
-            referencesUseIndex
+            referencesUseIndex,
+            atbd
           }}
           whenEmpty={<EmptySection />}
         />
@@ -825,7 +830,11 @@ export default function DocumentBody(props) {
     [document]
   );
 
-  return renderElements(atbdContentSections, { document, referencesUseIndex });
+  return renderElements(atbdContentSections, {
+    document,
+    referencesUseIndex,
+    atbd
+  });
 }
 
 DocumentBody.propTypes = {

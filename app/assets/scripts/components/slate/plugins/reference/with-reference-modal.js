@@ -46,7 +46,7 @@ export const withReferenceModal = (editor) => {
     }
   };
 
-  // Handler for the link Editor operations.
+  // Handler for the references modal operations.
   // If an operation is handled, it should return true. This signals the
   // onChange cycle that we're done and moves to the next one.
   const handleReferenceModalOperation = (editor) => {

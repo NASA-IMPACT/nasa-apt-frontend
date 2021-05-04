@@ -18,6 +18,11 @@ import {
   withHistory,
   pipe
 } from './plugins/common';
+import {
+  ShortcutsModalPlugin,
+  ShortcutsModal
+} from './plugins/shortcuts-modal';
+import { withSimpleModal } from './plugins/common/with-simple-modal';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
@@ -33,17 +38,49 @@ import { BoldPlugin } from './plugins/bold';
 import { ItalicPlugin } from './plugins/italic';
 import { UnderlinePlugin } from './plugins/underline';
 import { SubSupScriptPlugin } from './plugins/subsupscript';
-import { ReferencePlugin, ReferencesModal } from './plugins/reference';
-import { withReferenceModal } from './plugins/reference/with-reference-modal';
+import {
+  ReferencePlugin,
+  ReferencesModal,
+  withReferenceModal
+} from './plugins/reference';
+import {
+  TABLE,
+  TableBlockPlugin,
+  TABLE_BLOCK,
+  withTable
+} from './plugins/table';
+import { withCaption, withCaptionLayout } from './plugins/caption';
+import { IMAGE, ImageBlockPlugin, IMAGE_BLOCK } from './plugins/image';
+import { LatexModal } from './plugins/equation/latex-cheatsheet-modal';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 
 const plugins = [
+  // The current slate-plugins version in use (0.75.2) uses in turn a slate
+  // version (0.59) that has a bug when it comes to spellcheck.
+  // Spellcheck is only supported in browsers with beforeinput dom event, and
+  // slate is considering all versions of firefox to not have this feature
+  // (which was fixed in a more recent version). Because of this it sets the
+  // spellCheck property as undefined, which means it is reset to the browser's
+  // default (in more recent slate versions this is set to false). This is turn
+  // shows the spellcheck as enabled but it doesn't work, causing severe errors
+  // en some cases.
+  // This element is rendered for the first editor child (the ine without a
+  // type) and includes a forced disable for the spellcheck.
+  {
+    /* eslint-disable react/display-name, react/prop-types */
+    renderElement: ({ element, children }) =>
+      !element.type && <div spellCheck={false}>{children}</div>
+    /* eslint-enable */
+  },
+  ShortcutsModalPlugin,
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,
   SubSectionPlugin,
   ReferencePlugin,
+  TableBlockPlugin,
+  ImageBlockPlugin,
   LinkPlugin,
   BoldPlugin,
   ItalicPlugin,
@@ -56,12 +93,25 @@ const plugins = [
 const withPlugins = [
   withReact,
   withHistory,
+  withSimpleModal,
   withInlineVoid({ plugins }),
   withList,
   withLink,
   withLinkEditor,
   withReferenceModal,
-  withSubsectionId
+  withSubsectionId,
+  withCaption,
+  withCaptionLayout([
+    {
+      parent: TABLE_BLOCK,
+      element: TABLE
+    },
+    {
+      parent: IMAGE_BLOCK,
+      element: IMAGE
+    }
+  ]),
+  withTable
 ];
 
 export function RichTextEditor(props) {
@@ -90,6 +140,8 @@ export function RichTextEditor(props) {
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
         <ReferencesModal />
+        <ShortcutsModal plugins={plugins} />
+        <LatexModal />
 
         <EditableDebug
           id={id}

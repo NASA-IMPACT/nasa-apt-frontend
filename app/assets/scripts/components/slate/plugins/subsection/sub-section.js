@@ -2,25 +2,15 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useReadOnly } from 'slate-react';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+
+import DeletableBlock from '../common/deletable-block';
 
 import { useRichContext } from '../common/rich-context';
 
 const SectionHeading = styled.h2`
   position: relative;
   font-size: 1.5rem;
-  line-height: 2rem;
-  margin-top: ${glsp(2)};
-
-  &::before {
-    position: absolute;
-    top: ${glsp(-0.5)};
-    left: 0;
-    content: '';
-    width: 5rem;
-    height: 2px;
-    background-color: ${themeVal('color.baseAlphaD')};
-  }
+  line-height: 2.25rem;
 `;
 
 export default function SubSection(props) {
@@ -40,12 +30,20 @@ export default function SubSection(props) {
       readAttributes.id = `${sectionId}--${element.id}`;
       readAttributes['data-scroll'] = 'target';
     }
+
+    return (
+      <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+        {children}
+      </Element>
+    );
   }
 
   return (
-    <Element {...attributes} {...htmlAttributes} {...readAttributes}>
-      {children}
-    </Element>
+    <DeletableBlock deleteAction='delete-heading'>
+      <Element {...attributes} {...htmlAttributes} {...readAttributes}>
+        {children}
+      </Element>
+    </DeletableBlock>
   );
 }
 
