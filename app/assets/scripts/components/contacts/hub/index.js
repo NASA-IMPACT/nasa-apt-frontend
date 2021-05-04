@@ -40,8 +40,8 @@ export function Contacts() {
     fetchContacts();
   }, []);
 
-  // We only want to handle errors when the contact request fails. Mutation errors,
-  // tracked by the `mutationStatus` property are handled in the submit
+  // We only want to handle errors when the contact request fails. Mutation
+  // errors, tracked by the `mutationStatus` property are handled in the submit
   // handlers.
   if (contacts.status === 'failed' && contacts.error) {
     // This is a serious server error. By throwing it will be caught by the

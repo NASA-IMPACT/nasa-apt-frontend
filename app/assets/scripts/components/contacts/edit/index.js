@@ -1,18 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
-import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
-import get from 'lodash.get';
 import set from 'lodash.set';
-import {
-  Formik,
-  Form as FormikForm,
-  useFormikContext,
-  FieldArray
-} from 'formik';
+import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp } from '@devseed-ui/theme-provider';
 import { VerticalDivider } from '@devseed-ui/toolbar';
-import { Form, FormFieldsetBody } from '@devseed-ui/form';
+import { Form } from '@devseed-ui/form';
 
 import App from '../../common/app';
 import {
@@ -26,97 +18,15 @@ import ContactNavHeader from '../contact-nav-header';
 import ContactActionsMenu from '../contact-actions-menu';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { SectionFieldset } from '../../common/forms/section-fieldset';
-import { FormikInputText } from '../../common/forms/input-text';
-import { FieldMultiItem } from '../../common/forms/field-multi-item';
-import { FormikInputSelect } from '../../common/forms/input-select';
-import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
 import ButtonSecondary from '../../../styles/button-secondary';
 import Tip from '../../common/tooltip';
+import { ContactFormFields, defaultContactValues } from './contact-form-fields';
 
 import { useContacts, useSingleContact } from '../../../context/contacts-list';
 import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 import { getValuesFromObj } from '../../../utils/get-values-object';
-import { formString } from '../../../utils/strings';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
-
-const ContactDetails = styled.div`
-  display: grid;
-  grid-gap: ${glsp()};
-  grid-template-columns: repeat(3, 1fr);
-
-  & > * {
-    height: min-content;
-
-    &:last-child {
-      grid-column: auto / span 2;
-    }
-  }
-`;
-
-const DeletableFieldsetMechanisms = styled(DeletableFieldset)`
-  ${FormFieldsetBody} {
-    grid-template-columns: repeat(2, 1fr);
-
-    & > * {
-      height: min-content;
-    }
-  }
-`;
-
-const contactMechanismTypes = [
-  'Direct line',
-  'Email',
-  'Facebook',
-  'Fax',
-  'Mobile',
-  'Modem',
-  'Primary',
-  'TDD/TTY phone',
-  'Telephone',
-  'Twitter',
-  'U.S.',
-  'Other'
-].map((m) => ({ value: m, label: m }));
-
-const emptyMechanismValue = {
-  mechanism_type: contactMechanismTypes[0].value,
-  mechanism_value: ''
-};
-
-const defaultValues = {
-  first_name: '',
-  middle_name: '',
-  last_name: '',
-  uuid: '',
-  url: '',
-  mechanisms: [emptyMechanismValue]
-};
-
-const detailsFields = [
-  {
-    id: 'first_name',
-    label: 'First name',
-    required: true
-  },
-  {
-    id: 'middle_name',
-    label: 'Middle name'
-  },
-  {
-    id: 'last_name',
-    label: 'Last name',
-    required: true
-  },
-  {
-    id: 'uuid',
-    label: 'Uuid'
-  },
-  {
-    id: 'url',
-    label: 'Url'
-  }
-];
 
 export default function ContactView() {
   const { id } = useParams();
@@ -201,7 +111,7 @@ export default function ContactView() {
 
   const { status, data } = contact;
 
-  const initialValues = getValuesFromObj(data || {}, defaultValues);
+  const initialValues = getValuesFromObj(data || {}, defaultContactValues);
 
   return (
     <App pageTitle='Contact edit'>
@@ -234,71 +144,7 @@ export default function ContactView() {
                 <FormBlockHeading>Contact Information</FormBlockHeading>
                 <Form as={FormikForm}>
                   <SectionFieldset label='Contact'>
-                    <ContactDetails>
-                      {detailsFields.map(({ id, label, required }) => (
-                        <FormikInputText
-                          key={id}
-                          id={id}
-                          name={id}
-                          label={label}
-                          labelHint={required ? '(required)' : null}
-                          description={formString(`contacts.${id}`)}
-                        />
-                      ))}
-                    </ContactDetails>
-                    <FieldArray
-                      name='mechanisms'
-                      render={({ remove, push, form, name }) => {
-                        const fieldValues = get(form.values, name);
-                        const hasSingleValue = fieldValues.length === 1;
-                        return (
-                          <FieldMultiItem
-                            id={name}
-                            label='Contact mechanisms'
-                            description={formString(
-                              `contacts.mechanisms.fieldset`
-                            )}
-                            onAddClick={() => push(emptyMechanismValue)}
-                          >
-                            {fieldValues.map((field, index) => (
-                              <DeletableFieldsetMechanisms
-                                /* eslint-disable-next-line react/no-array-index-key */
-                                key={index}
-                                id={`${name}.${index}`}
-                                disableDelete={hasSingleValue}
-                                deleteDescription={
-                                  hasSingleValue
-                                    ? 'At least one mechanism is required'
-                                    : null
-                                }
-                                label={`Entry #${index + 1}`}
-                                onDeleteClick={() => remove()}
-                              >
-                                <FormikInputSelect
-                                  id={`${name}.${index}.mechanism_type`}
-                                  name={`${name}.${index}.mechanism_type`}
-                                  options={contactMechanismTypes}
-                                  label='Type'
-                                  labelHint='(required)'
-                                  description={formString(
-                                    `contacts.mechanisms.mechanism_type`
-                                  )}
-                                />
-                                <FormikInputText
-                                  id={`${name}.${index}.mechanism_value`}
-                                  name={`${name}.${index}.mechanism_value`}
-                                  label='Value'
-                                  labelHint='(required)'
-                                  description={formString(
-                                    `contacts.mechanisms.mechanism_value`
-                                  )}
-                                />
-                              </DeletableFieldsetMechanisms>
-                            ))}
-                          </FieldMultiItem>
-                        );
-                      }}
-                    />
+                    <ContactFormFields />
                   </SectionFieldset>
                 </Form>
               </FormBlock>
