@@ -37,8 +37,15 @@ export const ContactsProvider = ({ children }) => {
                 method: 'delete'
               });
 
+              // The delete contact action acts on the contact list state, but
+              // if called from within a single contact page, we also want to
+              // invalidate the individual state.
+              invalidateSingle(id);
+
               // If this worked, remove the item from the contact list.
-              const newData = state.data.filter((contact) => contact.id !== id);
+              const newData = state.data?.filter?.(
+                (contact) => contact.id !== id
+              );
               return actions.receive(newData);
             } catch (error) {
               // Dispatch receive action. It is already dispatchable.
@@ -55,7 +62,8 @@ export const ContactsProvider = ({ children }) => {
     getState: getSingleContact,
     fetchSingleContact,
     createContact,
-    updateContact
+    updateContact,
+    invalidate: invalidateSingle
   } = useContexeedApi(
     {
       name: 'contactSingle',
@@ -179,6 +187,7 @@ export const useContacts = () => {
     createContact,
     deleteContact
   } = useCheckContext('useContacts');
+
   return {
     contacts: getContacts(),
     fetchContacts,

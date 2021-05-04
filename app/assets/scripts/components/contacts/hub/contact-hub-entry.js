@@ -11,6 +11,7 @@ import {
 } from '../../../styles/hub';
 import { Link } from '../../../styles/clean/link';
 import ContactActionsMenu from '../contact-actions-menu';
+
 import { contactView } from '../../../utils/url-creator';
 
 export default function ContactEntry({ contact, onContactAction }) {
@@ -18,6 +19,7 @@ export default function ContactEntry({ contact, onContactAction }) {
     onContactAction,
     contact
   ]);
+
   return (
     <HubEntry>
       <HubEntryHeader>
@@ -37,7 +39,7 @@ export default function ContactEntry({ contact, onContactAction }) {
           </dd>
         </HubEntryDetails>
         <HubEntryActions>
-          <ContactActionsMenu contact={contact} onSelect={onAction} />
+          <ContactActionsMenu contactId={contact.id} onSelect={onAction} />
         </HubEntryActions>
       </HubEntryHeader>
     </HubEntry>

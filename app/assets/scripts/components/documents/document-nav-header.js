@@ -68,7 +68,7 @@ export default function DocumentNavHeader(props) {
   );
 
   return (
-    <>
+    <React.Fragment>
       <InpageHeadline>
         <TruncatedInpageTitle>
           <Link to={atbdView(atbdId, version)} title='View document'>
@@ -113,7 +113,7 @@ export default function DocumentNavHeader(props) {
           <StatusPill status={status} completeness={completeness} />
         </dd>
       </InpageMeta>
-    </>
+    </React.Fragment>
   );
 }
 

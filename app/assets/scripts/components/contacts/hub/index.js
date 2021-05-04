@@ -16,14 +16,14 @@ import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
 import ContactHubEntry from './contact-hub-entry';
+import SignIn from '../../../a11n/signin';
+import { EmptyHub } from '../../common/empty-states';
 
 import { useContacts } from '../../../context/contacts-list';
 import { useUser } from '../../../context/user';
-import toasts, { createProcessToast } from '../../common/toasts';
-import { confirmDeleteContact } from '../../common/confirmation-prompt';
-import SignIn from '../../../a11n/signin';
+import { createProcessToast } from '../../common/toasts';
 import { contactEdit } from '../../../utils/url-creator';
-import { EmptyHub } from '../../common/empty-states';
+import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 
 export function Contacts() {
   const {
@@ -64,15 +64,10 @@ export function Contacts() {
   const onContactAction = useCallback(
     async (contact, menuId) => {
       if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteContact(contact.title);
-        if (confirmed) {
-          const result = await deleteContact({ id: contact.id });
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('Contact successfully deleted');
-          }
-        }
+        await contactDeleteConfirmAndToast({
+          contact,
+          deleteContact
+        });
       }
     },
     [deleteContact]

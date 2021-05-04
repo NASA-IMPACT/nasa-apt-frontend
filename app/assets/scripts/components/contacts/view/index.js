@@ -1,22 +1,26 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
-import App from '../common/app';
-import { confirmDeleteContact } from '../common/confirmation-prompt';
-import toasts from '../common/toasts';
-import { Inpage, InpageBody } from '../../styles/inpage';
-import DetailsList from '../../styles/typography/details-list';
-import { ContentBlock } from '../../styles/content-block';
-import Prose from '../../styles/typography/prose';
-import UhOh from '../uhoh';
-import ContactActionsMenu from './contact-actions-menu';
-import ContactNav from './contact-nav';
+import App from '../../common/app';
+import {
+  Inpage,
+  InpageBody,
+  InpageHeaderSticky,
+  InpageActions
+} from '../../../styles/inpage';
+import DetailsList from '../../../styles/typography/details-list';
+import { ContentBlock } from '../../../styles/content-block';
+import Prose from '../../../styles/typography/prose';
+import UhOh from '../../uhoh';
+import ContactActionsMenu from '../contact-actions-menu';
 
-import { useSingleContact } from '../../context/contacts-list';
+import { useContacts, useSingleContact } from '../../../context/contacts-list';
+import { contactDeleteConfirmAndToast } from '../contact-delete-process';
+import ContactNavHeader from '../contact-nav-header';
 
 const ContactCanvas = styled(InpageBody)`
   padding: 0;
@@ -57,17 +61,31 @@ const ContactTitle = styled(Heading)`
   margin: 0;
 `;
 
-const EmptySection = () => <p>No content available.</p>;
-
 export default function ContactView() {
   const { id } = useParams();
-  const { contact, fetchSingleContact, deleteContact } = useSingleContact({
+  const history = useHistory();
+
+  const { deleteContact } = useContacts();
+  const { contact, fetchSingleContact } = useSingleContact({
     id
   });
 
   useEffect(() => {
     fetchSingleContact();
   }, [id]);
+
+  const onContactMenuAction = useCallback(
+    async (menuId) => {
+      if (menuId === 'delete') {
+        await contactDeleteConfirmAndToast({
+          contact: contact.data,
+          deleteContact,
+          history
+        });
+      }
+    },
+    [contact.data, deleteContact, history]
+  );
 
   // We only want to handle errors when the contact request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -89,32 +107,40 @@ export default function ContactView() {
       {status === 'loading' && <GlobalLoading />}
       {status === 'succeeded' && (
         <Inpage>
-          <ContactNav
-            contactId={data.id}
-            name={`${data.first_name} ${data.last_name}`}
-            deleteContact={deleteContact}
-            mode='view'
-          />
+          <InpageHeaderSticky data-element='inpage-header'>
+            <ContactNavHeader
+              contactId={data.id}
+              name={`${data.first_name} ${data.last_name}`}
+              mode='view'
+            />
+            <InpageActions>
+              <ContactActionsMenu
+                contactId={data.id}
+                variation='achromic-plain'
+                onSelect={onContactMenuAction}
+              />
+            </InpageActions>
+          </InpageHeaderSticky>
           <ContactCanvas>
             <ContentBlock>
               <ContactContent>
                 <Prose>
                   <ContactHeader>
                     <ContactTitle>
-                      {data.first_name} {data.last_name}
+                      {data.first_name} {data.middle_name} {data.last_name}
                     </ContactTitle>
                   </ContactHeader>
                   <DetailsList>
                     <dt>First Name</dt>
-                    <dd>{data?.first_name || <EmptySection />}</dd>
-                    {data.name && (
+                    <dd>{data.first_name}</dd>
+                    {data.middle_name && (
                       <>
                         <dt>Middle Name</dt>
-                        <dd>{data.name}</dd>
+                        <dd>{data.middle_name}</dd>
                       </>
                     )}
                     <dt>Last Name</dt>
-                    <dd>{data?.last_name || <EmptySection />}</dd>
+                    <dd>{data.last_name}</dd>
                     {data.uuid && (
                       <>
                         <dt>UUID</dt>
@@ -127,12 +153,15 @@ export default function ContactView() {
                         <dd>{data.url}</dd>
                       </>
                     )}
-                    {data?.mechanisms.length && (
+                    {!!data?.mechanisms.length && (
                       <>
                         <dt>Mechanisms</dt>
                         <dd>
-                          {data.mechanisms.map((mechanism) => (
-                            <p key={mechanism.mechanism_type}>
+                          {data.mechanisms.map((mechanism, i) => (
+                            // Nothing will cause the order to change on this
+                            // page. Array keys are safe.
+                            /* eslint-disable-next-line react/no-array-index-key */
+                            <p key={`${mechanism.mechanism_type}-${i}`}>
                               {mechanism.mechanism_type}:{' '}
                               {mechanism.mechanism_value}
                             </p>

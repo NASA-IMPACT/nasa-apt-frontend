@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 
-import { contactEdit } from '../../utils/url-creator';
 import DropdownMenu from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
+
+import { contactEdit } from '../../utils/url-creator';
 
 export default function ContactActionsMenu({ contactId, onSelect, variation }) {
   const dropProps = useMemo(() => {

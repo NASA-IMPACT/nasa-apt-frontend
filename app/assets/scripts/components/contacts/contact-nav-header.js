@@ -1,31 +1,23 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
-import { useHistory } from 'react-router';
 
 import {
   InpageHeadline,
   TruncatedInpageTitle,
   InpageMeta,
   InpageHeadNav,
-  InpageHeaderSticky,
-  InpageActions,
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
 import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import DropdownMenu from '../common/dropdown-menu';
-import { confirmDeleteContact } from '../common/confirmation-prompt';
-import toasts from '../common/toasts';
-import ContactActionsMenu from './contact-actions-menu';
 
 import { contactEdit, contactView } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
-// Component with the Breadcrumb navigation header for a single ATBD.
-export default function ContactNav({ name, contactId, deleteContact, mode }) {
-  const history = useHistory();
-
+// Component with the Breadcrumb navigation header for a single contact.
+export default function ContactNavHeader({ name, contactId, mode }) {
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -64,29 +56,8 @@ export default function ContactNav({ name, contactId, deleteContact, mode }) {
     []
   );
 
-  const onContactMenuAction = useCallback(
-    async (menuId) => {
-      if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteContact(
-          `${contact.data?.first_name} ${contact.data?.last_name}`
-        );
-
-        if (confirmed) {
-          const result = await deleteContact();
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('Contact successfully deleted');
-            history.push('/contacts');
-          }
-        }
-      }
-    },
-    [contactId, deleteContact, history]
-  );
-
   return (
-    <InpageHeaderSticky data-element='inpage-header'>
+    <React.Fragment>
       <InpageHeadline>
         <TruncatedInpageTitle>
           <Link to={contactView(contactId)} title='View contact'>
@@ -119,20 +90,12 @@ export default function ContactNav({ name, contactId, deleteContact, mode }) {
           </Link>
         </InpageSubtitle>
       </InpageMeta>
-      <InpageActions>
-        <ContactActionsMenu
-          contactId={contactId}
-          variation='achromic-plain'
-          onSelect={onContactMenuAction}
-        />
-      </InpageActions>
-    </InpageHeaderSticky>
+    </React.Fragment>
   );
 }
 
-ContactNav.propTypes = {
+ContactNavHeader.propTypes = {
   name: T.string,
-  contactId: T.oneOfType([T.string, T.number]),
-  deleteContact: T.func,
+  contactId: T.number,
   mode: T.string
 };

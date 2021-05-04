@@ -52,7 +52,7 @@ export const atbdEdit = (atbd, version = 'last', step = null) => {
  * @param {string|number} contactId The contact id
  */
 export const contactView = (contactId) => {
-  return `contacts/${contactId}`;
+  return `/contacts/${contactId}`;
 };
 
 /**
