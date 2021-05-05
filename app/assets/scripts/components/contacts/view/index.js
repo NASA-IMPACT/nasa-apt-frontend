@@ -12,30 +12,20 @@ import {
   InpageHeaderSticky,
   InpageActions
 } from '../../../styles/inpage';
+import UhOh from '../../uhoh';
 import DetailsList from '../../../styles/typography/details-list';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
-import UhOh from '../../uhoh';
 import ContactActionsMenu from '../contact-actions-menu';
+import ContactNavHeader from '../contact-nav-header';
+// import ContactRelatedDocuments from './contact-related-documents';
 
 import { useContacts, useSingleContact } from '../../../context/contacts-list';
 import { contactDeleteConfirmAndToast } from '../contact-delete-process';
-import ContactNavHeader from '../contact-nav-header';
-
-const ContactCanvas = styled(InpageBody)`
-  padding: 0;
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
-
-  > * {
-    grid-row: 1;
-  }
-`;
+import { getContactName } from '../contact-utils';
 
 const ContactContent = styled.div`
   grid-column: content-start / content-end;
-  max-width: 52rem;
 `;
 
 const ContactHeader = styled.header`
@@ -101,7 +91,9 @@ export default function ContactView() {
       throw contact.error;
     }
   }
+
   const { status, data } = contact;
+
   return (
     <App pageTitle='Contact view'>
       {status === 'loading' && <GlobalLoading />}
@@ -110,7 +102,7 @@ export default function ContactView() {
           <InpageHeaderSticky data-element='inpage-header'>
             <ContactNavHeader
               contactId={data.id}
-              name={`${data.first_name} ${data.last_name}`}
+              name={getContactName(data)}
               mode='view'
             />
             <InpageActions>
@@ -121,13 +113,13 @@ export default function ContactView() {
               />
             </InpageActions>
           </InpageHeaderSticky>
-          <ContactCanvas>
+          <InpageBody>
             <ContentBlock>
               <ContactContent>
                 <Prose>
                   <ContactHeader>
                     <ContactTitle>
-                      {data.first_name} {data.middle_name} {data.last_name}
+                      {getContactName(data, { full: true })}
                     </ContactTitle>
                   </ContactHeader>
                   <DetailsList>
@@ -153,27 +145,23 @@ export default function ContactView() {
                         <dd>{data.url}</dd>
                       </>
                     )}
-                    {!!data?.mechanisms.length && (
-                      <>
-                        <dt>Mechanisms</dt>
-                        <dd>
-                          {data.mechanisms.map((mechanism, i) => (
-                            // Nothing will cause the order to change on this
-                            // page. Array keys are safe.
-                            /* eslint-disable-next-line react/no-array-index-key */
-                            <p key={`${mechanism.mechanism_type}-${i}`}>
-                              {mechanism.mechanism_type}:{' '}
-                              {mechanism.mechanism_value}
-                            </p>
-                          ))}
-                        </dd>
-                      </>
-                    )}
+                    {data.mechanisms?.map?.((mechanism, i) => (
+                      // Nothing will cause the order to change on this
+                      // page. Array keys are safe.
+                      <React.Fragment
+                        /* eslint-disable-next-line react/no-array-index-key */
+                        key={`${mechanism.mechanism_type}-${i}`}
+                      >
+                        <dt>{mechanism.mechanism_type}</dt>
+                        <dd>{mechanism.mechanism_value}</dd>
+                      </React.Fragment>
+                    ))}
                   </DetailsList>
                 </Prose>
               </ContactContent>
+              {/* <ContactRelatedDocuments related={data.atbd_versions_link} /> */}
             </ContentBlock>
-          </ContactCanvas>
+          </InpageBody>
         </Inpage>
       )}
     </App>
