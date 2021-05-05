@@ -40,8 +40,8 @@ const ContactsLinkRender = (props) => {
   const fieldValues = get(form.values, name);
 
   const onAdd = () => {
-    // isNew means there's a contact fieldset but no option was selected.
-    push(getEmptyContact({ isNew: true }));
+    // isSelecting means there's a contact fieldset but no option was selected.
+    push(getEmptyContact({ isSelecting: true }));
   };
 
   const onContactSelect = useCallback(

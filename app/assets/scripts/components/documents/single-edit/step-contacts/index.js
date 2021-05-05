@@ -11,7 +11,7 @@ import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import ContactsList from './contacts-list';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
-import { useSubmitForVersionData } from '../use-submit';
+import { useSubmitForAtbdContacts } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
 import { validateContact } from '../../../contacts/edit';
 
@@ -19,13 +19,22 @@ export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
-  const { fetchContacts, createContact, contacts } = useContacts();
+  const {
+    fetchContacts,
+    createContact,
+    updateContactUnbound,
+    contacts
+  } = useContacts();
 
   const initialValues = step.getInitialValues(atbd);
 
-  const onSubmit = (values) => {
-    console.log(values)
-  };
+  const onSubmit = useSubmitForAtbdContacts({
+    updateAtbd,
+    createContact,
+    updateContactUnbound,
+    contactsList: contacts.data
+  });
+
   const validate = useCallback((values) => {
     let errors = {};
 
