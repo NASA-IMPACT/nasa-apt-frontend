@@ -1,6 +1,7 @@
-import React, {  useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import { Formik, Form as FormikForm } from 'formik';
+import set from 'lodash.set';
 import { Form } from '@devseed-ui/form';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -12,6 +13,7 @@ import ContactsList from './contacts-list';
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
+import { validateContact } from '../../../contacts/edit';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -24,6 +26,21 @@ export default function StepContacts(props) {
   const onSubmit = (values) => {
     console.log(values)
   };
+  const validate = useCallback((values) => {
+    let errors = {};
+
+    values.contacts_link.forEach(({ isSelecting, contact }, idx) => {
+      // Contacts that are in the isSelecting phase can be skipped since will be
+      // removed from the submission.
+      if (isSelecting) return;
+      const contactErrors = validateContact(contact);
+      if (Object.keys(contactErrors).length) {
+        set(errors, `contacts_link[${idx}].contact`, contactErrors);
+      }
+    });
+
+    return errors;
+  }, []);
 
   // We need the list of all contacts for the select.
   useEffect(() => {
@@ -42,9 +59,7 @@ export default function StepContacts(props) {
   return (
     <Formik
       initialValues={initialValues}
-      // There's no need to validate this page since the editor already ensures
-      // a valid structure
-      //validate={validate}
+      validate={validate}
       onSubmit={onSubmit}
     >
       <Inpage>

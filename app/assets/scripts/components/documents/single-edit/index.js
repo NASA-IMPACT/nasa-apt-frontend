@@ -156,12 +156,29 @@ export default DocumentEdit;
 
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
-  const { dirty, isSubmitting, submitForm, status } = useFormikContext();
+  const {
+    dirty,
+    isSubmitting,
+    submitForm,
+    status,
+    touched,
+    isValid
+  } = useFormikContext();
   // status?.working is used to disable form submission when something is going
   // on. An example is the alias existence checking.
 
+  // We only want to show an error message when the global validations have run.
+  // Just checking if it is valid results in the message to be too obtrusive. A
+  // simple way to check this is to use the id field. Formik touches all fields
+  // when running global validations, an the id can't be reached in any other
+  // way.
+  const tipMessage =
+    !isValid && touched.id
+      ? 'There are errors in the form'
+      : 'There are unsaved changes';
+
   return (
-    <Tip position='top-end' title='There are unsaved changes' open={dirty}>
+    <Tip position='top-end' title={tipMessage} open={dirty}>
       <ButtonSecondary
         title='Save current changes'
         disabled={isSubmitting || !dirty || status?.working}

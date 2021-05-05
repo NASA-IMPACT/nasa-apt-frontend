@@ -28,6 +28,29 @@ import { getValuesFromObj } from '../../../utils/get-values-object';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
 
+export const validateContact = (values) => {
+  let errors = {};
+
+  if (!values.first_name.trim()) {
+    errors.first_name = 'First name is required';
+  }
+
+  if (!values.last_name.trim()) {
+    errors.last_name = 'Last name is required';
+  }
+
+  values.mechanisms.forEach((m, i) => {
+    if (!m.mechanism_type.trim()) {
+      set(errors, `mechanisms.${i}.mechanism_type`, 'Type is required');
+    }
+    if (!m.mechanism_value.trim()) {
+      set(errors, `mechanisms.${i}.mechanism_value`, 'Value is required');
+    }
+  });
+
+  return errors;
+};
+
 export default function ContactView() {
   const { id } = useParams();
   const history = useHistory();
@@ -71,29 +94,6 @@ export default function ContactView() {
     [updateContact, history]
   );
 
-  const validate = useCallback((values) => {
-    let errors = {};
-
-    if (!values.first_name.trim()) {
-      errors.first_name = 'First name is required';
-    }
-
-    if (!values.last_name.trim()) {
-      errors.last_name = 'Last name is required';
-    }
-
-    values.mechanisms.forEach((m, i) => {
-      if (!m.mechanism_type.trim()) {
-        set(errors, `mechanisms.${i}.mechanism_type`, 'Type is required');
-      }
-      if (!m.mechanism_value.trim()) {
-        set(errors, `mechanisms.${i}.mechanism_value`, 'Value is required');
-      }
-    });
-
-    return errors;
-  }, []);
-
   // We only want to handle errors when the contact request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
   // handlers.
@@ -119,7 +119,7 @@ export default function ContactView() {
       {status === 'succeeded' && (
         <Formik
           initialValues={initialValues}
-          validate={validate}
+          validate={validateContact}
           onSubmit={onSubmit}
         >
           <Inpage>
