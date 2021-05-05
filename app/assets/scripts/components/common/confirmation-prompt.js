@@ -271,10 +271,12 @@ export const confirmDeleteContact = async (name) => {
   return showConfirmationPrompt({
     title: 'Delete this contact?',
     content: (
-      <p>
-        <strong>{name}</strong> and all the references to this contact in other
-        documents will be removed.
-      </p>
+      <React.Fragment>
+        <p>
+          The contact <strong>{name}</strong> will be removed from APT and from
+          all documents where it is being used.
+        </p>
+      </React.Fragment>
     ),
     renderControls: deleteControls
   });
