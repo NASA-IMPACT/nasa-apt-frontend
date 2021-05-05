@@ -9,11 +9,14 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
+  useRef,
   useState
 } from 'react';
 import T from 'prop-types';
 import debounce from 'lodash.debounce';
 import throttle from 'lodash.throttle';
+import useDimensions from 'react-cool-dimensions';
 
 /**
 See adr/0003-scroll.md for decision motivation.
@@ -76,7 +79,7 @@ function gatherTargetItems() {
     return total;
   };
 
-  const targets = document.querySelectorAll(TARGET_SELECTOR);
+  const targets = window.document.querySelectorAll(TARGET_SELECTOR);
   return Array.from(targets).map((el) => ({
     id: el.id,
     top: getTotalOffset(el)
@@ -131,19 +134,26 @@ export function ScrollAnchorProvider({ children }) {
   const [scrollInitiator, setScrollInitiator] = useState(null);
   const [globalTopOffset, setGlobalTopOffset] = useState(BASE_OFFSET_TOP);
 
+  const { ref, height } = useDimensions();
+  const previousHeight = useRef(null);
+
+  const debouncedGather = useMemo(
+    () =>
+      debounce(() => {
+        setTargetItems(gatherTargetItems());
+      }, 100),
+    []
+  );
+
+  // It is not enough to use a window resize event in this case. We have to
+  // listen for the body to actually increase in size. This happens when images
+  // load for example.
   useEffect(() => {
-    setTargetItems(gatherTargetItems());
-
-    const resizeListener = debounce(() => {
-      setTargetItems(gatherTargetItems());
-    }, 100);
-
-    window.addEventListener('resize', resizeListener);
-
-    return () => {
-      window.removeEventListener('resize', resizeListener);
-    };
-  }, []);
+    if (height !== previousHeight.current) {
+      previousHeight.current = height;
+      debouncedGather();
+    }
+  }, [debouncedGather, height]);
 
   const scrollToId = useCallback(
     (targetId) => {
@@ -174,7 +184,7 @@ export function ScrollAnchorProvider({ children }) {
 
   return (
     <ScrollContext.Provider value={contextValue}>
-      {children}
+      <div ref={ref}>{children}</div>
     </ScrollContext.Provider>
   );
 }
