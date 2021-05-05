@@ -42,6 +42,13 @@ export const PanelTitle = styled(Heading)`
   margin: 0;
 `;
 
+export const PanelTitleAlt = styled.h1`
+  ${headingAlt()}
+  font-size: 0.875rem;
+  line-height: 1rem;
+  margin: 0;
+`;
+
 export const PanelBody = styled.div`
   display: flex;
   flex-flow: column nowrap;
