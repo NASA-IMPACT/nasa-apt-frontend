@@ -211,6 +211,10 @@ function PageHeader() {
             <Button
               variation='achromic-plain'
               title='Leave feedback about the app'
+              onClick={(e) => {
+                e.preventDefault();
+                window.feedback?.showForm();
+              }}
             >
               Feedback
             </Button>
