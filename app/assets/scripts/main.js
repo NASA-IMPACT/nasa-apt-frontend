@@ -24,6 +24,7 @@ import Contacts from './components/contacts/hub';
 import ContactsView from './components/contacts/view';
 import ContactsEdit from './components/contacts/edit';
 import About from './components/about';
+import Help from './components/help';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
@@ -33,6 +34,7 @@ import Authorize from './a11n/authorize';
 import { AtbdsProvider } from './context/atbds-list';
 import { ContactsProvider } from './context/contacts-list';
 import { UserProvider } from './context/user';
+import { JsonPagesProvider } from './context/json-pages';
 import { AbilityProvider } from './a11n/index';
 
 const composingComponents = [
@@ -40,7 +42,8 @@ const composingComponents = [
   AbilityProvider,
   UserProvider,
   AtbdsProvider,
-  ContactsProvider
+  ContactsProvider,
+  JsonPagesProvider
 ];
 
 // Root component.
@@ -100,6 +103,7 @@ function Root() {
               component={ContactsView}
             />
             <Route exact path='/about' component={About} />
+            <Route exact path='/help/:pageId?' component={Help} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
             {process.env.NODE_ENV !== 'production' && (
