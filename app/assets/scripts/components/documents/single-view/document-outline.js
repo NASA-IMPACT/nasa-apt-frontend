@@ -97,7 +97,7 @@ OutlineMenuLink.propTypes = {
 
 // Component to recursively render the outline menu.
 const OutlineMenu = (props) => {
-  const { items, atbdDocument = {} } = props;
+  const { items, atbdDocument = {}, atbd = {} } = props;
 
   const { activeId, getScrollToId } = useScrollLink();
 
@@ -112,7 +112,7 @@ const OutlineMenu = (props) => {
         // them, like the case of array fields.
         const resultingChildren =
           typeof item.children === 'function'
-            ? item.children({ document: atbdDocument })
+            ? item.children({ document: atbdDocument, atbd })
             : item.children;
         const children = resultingChildren || [];
         const items = [...editorSubsections, ...children];
@@ -127,7 +127,11 @@ const OutlineMenu = (props) => {
             >
               {item.label}
             </OutlineMenuLink>
-            <OutlineMenu items={items} atbdDocument={atbdDocument} />
+            <OutlineMenu
+              items={items}
+              atbdDocument={atbdDocument}
+              atbd={atbd}
+            />
           </li>
         );
       })}
@@ -137,6 +141,7 @@ const OutlineMenu = (props) => {
 
 OutlineMenu.propTypes = {
   items: T.array,
+  atbd: T.object,
   atbdDocument: T.object
 };
 
@@ -249,6 +254,7 @@ export default function DocumentOutline(props) {
         <ShadowScrollbar>
           <OutlineMenu
             items={atbdContentSections}
+            atbd={atbd}
             atbdDocument={atbd.document}
           />
         </ShadowScrollbar>

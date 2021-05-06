@@ -32,7 +32,7 @@ export default function composeDebugEditor(EditorComponent) {
 
     const debugPlugin = {
       onKeyDown: (e) => {
-        if (isHotkey('mod+shift+I', e)) {
+        if (isHotkey('mod+shift+alt+I', e)) {
           if (isDebugVisible) {
             hide();
           } else {

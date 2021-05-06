@@ -51,7 +51,7 @@ export default function AtbdDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [atbd]);
+  }, [token, atbd]);
 
   return (
     <DropdownMenu

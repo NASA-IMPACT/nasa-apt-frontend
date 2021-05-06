@@ -30,7 +30,7 @@ export function DeletableFieldset(props) {
       <FormFieldsetHeader>
         <FormLegend>{label}</FormLegend>
         <Toolbar size='small'>
-          <Tip title={deleteDescription}>
+          <Tip title={deleteDescription} disabled={!deleteDescription}>
             <ToolbarIconButton
               disabled={disableDelete}
               useIcon='trash-bin'

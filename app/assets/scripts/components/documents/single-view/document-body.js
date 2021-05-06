@@ -13,6 +13,10 @@ import {
 } from '../../../utils/references';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
+import {
+  renderMultipleRoles,
+  getContactName
+} from '../../contacts/contact-utils';
 
 // Wrapper for each of the main sections.
 const AtbdSectionBase = ({ id, title, children, ...props }) => (
@@ -177,6 +181,56 @@ const VariableItem = ({ element, variable }) => (
       </dd>
     </DetailsList>
   </React.Fragment>
+);
+
+const ContactItem = ({ id, label, contact, roles }) => (
+  <AtbdSubSection itemScope itemType='https://schema.org/ContactPoint'>
+    <h3 id={id} data-scroll='target' itemProp='name'>
+      {label}
+    </h3>
+    <DetailsList type='horizontal'>
+      <dt>Roles</dt>
+      {roles.length ? (
+        <dd itemProp='contactType'>{renderMultipleRoles(roles)}</dd>
+      ) : (
+        <dd itemProp='contactType'>No roles in this document</dd>
+      )}
+
+      {contact.mechanisms?.map?.((mechanism, i) => (
+        // Nothing will cause the order to change on this
+        // page. Array keys are safe.
+        <React.Fragment
+          /* eslint-disable-next-line react/no-array-index-key */
+          key={`${mechanism.mechanism_type}-${i}`}
+        >
+          <dt itemProp='contactOption'>{mechanism.mechanism_type}</dt>
+          <dd>{mechanism.mechanism_value}</dd>
+        </React.Fragment>
+      ))}
+      {contact.url && (
+        <React.Fragment>
+          <dt>Url</dt>
+          <dd>
+            <a
+              href={contact.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              title='Open url in new tab'
+              itemProp='url'
+            >
+              {contact.url}
+            </a>
+          </dd>
+        </React.Fragment>
+      )}
+      {contact.uuid && (
+        <React.Fragment>
+          <dt>UUID</dt>
+          <dd itemProp='identifier'>{contact.uuid}</dd>
+        </React.Fragment>
+      )}
+    </DetailsList>
+  </AtbdSubSection>
 );
 
 const EmptySection = () => <p>No content available.</p>;
@@ -649,91 +703,31 @@ export const atbdContentSections = [
   {
     label: 'Contacts',
     id: 'contacts',
-    render: ({ element }) => (
+    render: ({ element, children }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <p>Content for {element.label} will arrive soon.</p>
+        {React.Children.count(children) ? (
+          children
+        ) : (
+          <p>There are no contacts associated with this document</p>
+        )}
       </AtbdSection>
-    )
-    // render: (el) => {
-    //   const contactsSingle = atbd.contacts || [];
-    //   const contactsGroups = atbd.contact_groups || [];
-    //   const contacts = contactsSingle.concat(contactsGroups);
-
-    //   return (
-    //     <AtbdSection key={el.id} id={el.id} title={el.label}>
-    //       {contacts.length ? (
-    //         <AtbdContactList>
-    //           {contacts.map((contact) => (
-    //             <li
-    //               key={contact.contact_id || contact.contact_group_id}
-    //               itemScope
-    //               itemType={
-    //                 contact.contact_group_id
-    //                   ? 'https://schema.org/Organization'
-    //                   : 'https://schema.org/ContactPoint'
-    //               }
-    //             >
-    //               <link
-    //                 itemProp='additionalType'
-    //                 href='http://schema.org/ContactPoint'
-    //               />
-    //               <h2>
-    //                 {contact.contact_group_id ? 'Group: ' : ''}
-    //                 <span itemProp='name'>{contact.displayName}</span>
-    //               </h2>
-    //               <Dl type='horizontal'>
-    //                 {!!contact.roles.length && (
-    //                   <React.Fragment>
-    //                     <dt>Roles</dt>
-    //                     <dd itemProp='contactType'>
-    //                       {contact.roles.join(', ')}
-    //                     </dd>
-    //                   </React.Fragment>
-    //                 )}
-    //                 {contact.url && (
-    //                   <React.Fragment>
-    //                     <dt>Url</dt>
-    //                     <dd>
-    //                       <a
-    //                         href={contact.url}
-    //                         target='_blank'
-    //                         rel='noopener noreferrer'
-    //                         title='Open url in new tab'
-    //                         itemProp='url'
-    //                       >
-    //                         {contact.url}
-    //                       </a>
-    //                     </dd>
-    //                   </React.Fragment>
-    //                 )}
-    //                 {contact.uuid && (
-    //                   <React.Fragment>
-    //                     <dt>UUID</dt>
-    //                     <dd itemProp='identifier'>{contact.uuid}</dd>
-    //                   </React.Fragment>
-    //                 )}
-    //               </Dl>
-
-    //               <h4>Mechanisms</h4>
-    //               <Dl type='horizontal'>
-    //                 {contact.mechanisms.map((m) => (
-    //                   <React.Fragment
-    //                     key={`${m.mechanism_type}-${m.mechanism_value}`}
-    //                   >
-    //                     <dt itemProp='contactOption'>{m.mechanism_type}</dt>
-    //                     <dd>{m.mechanism_value}</dd>
-    //                   </React.Fragment>
-    //                 ))}
-    //               </Dl>
-    //             </li>
-    //           ))}
-    //         </AtbdContactList>
-    //       ) : (
-    //         'Not Available'
-    //       )}
-    //     </AtbdSection>
-    //   );
-    // }
+    ),
+    children: ({ atbd }) => {
+      const contactsLink = atbd?.contacts_link || [];
+      return contactsLink.map(({ contact, roles }, idx) => ({
+        label: getContactName(contact),
+        id: `contacts-${idx + 1}`,
+        render: ({ element }) => (
+          <ContactItem
+            key={element.id}
+            id={element.id}
+            label={element.label}
+            contact={contact}
+            roles={roles}
+          />
+        )
+      }));
+    }
   },
   {
     label: 'References',

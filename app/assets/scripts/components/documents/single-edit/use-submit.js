@@ -138,3 +138,144 @@ export function useSubmitForDocumentInfo(updateAtbd) {
     [updateAtbd]
   );
 }
+
+/**
+ * Compare contacts using the updatedContact's fields as base. Since these
+ * fields are the ones that can be changes, they're all that matter.
+ *
+ * @param {object} origContact Original contact from the contacts list
+ * @param {object} updatedContact updated contact values from the form.
+ */
+const areContactsDifferent = (origContact, updatedContact) => {
+  return Object.keys(updatedContact).some(
+    (key) =>
+      JSON.stringify(updatedContact[key]) !== JSON.stringify(origContact[key])
+  );
+};
+
+export function useSubmitForAtbdContacts({
+  updateAtbd,
+  createContact,
+  updateContactUnbound,
+  contactsList
+}) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm, setValues }) => {
+      const processToast = createProcessToast('Updating document contacts');
+      const tasks = values.contacts_link.map((link) => {
+        // Contacts in the isSelecting phase will be discarded.
+        // Returns false because the task succeeded.
+        if (link.isSelecting)
+          return () => ({
+            error: false
+          });
+
+        if (link.isCreating) {
+          const creationTask = async () => {
+            const { id: tempId, ...data } = link.contact;
+            const result = await createContact({ key: tempId, data });
+            if (result.error) {
+              // Store as it was to recover the form state.
+              return { error: result.error, link };
+            } else {
+              // Store updated link.
+              return {
+                error: false,
+                link: {
+                  roles: link.roles,
+                  contact: result.data
+                }
+              };
+            }
+          };
+          return creationTask;
+        }
+
+        // Contacts should only be updated if anything changed. Search for the
+        // contact in the contacts list and compare them using the fields that
+        // are present in the form.
+        const origContact = contactsList.find((o) => o.id === link.contact.id);
+        if (areContactsDifferent(origContact, link.contact)) {
+          const updateTask = async () => {
+            const data = link.contact;
+            const result = await updateContactUnbound({ id: data.id, data });
+            if (result.error) {
+              // Store as it was to recover the form state.
+              return { error: result.error, link };
+            } else {
+              // If the values were updated, contexeed will store the updated
+              // contact in the list.
+              // Return updated link.
+              return {
+                error: false,
+                link: {
+                  roles: link.roles,
+                  contact: result.data
+                }
+              };
+            }
+          };
+          return updateTask;
+        }
+
+        // Nothing to do to this contact. Store as is.
+        return () => ({
+          error: false,
+          link
+        });
+      });
+
+      // Execute all tasks
+      const taskResults = await Promise.all(tasks.map((t) => t()));
+
+      // If one task fail, stop. The successful tasks won't be repeated on the
+      // next run.
+      const erroredTask = taskResults.find((t) => !!t.error);
+      if (erroredTask) {
+        processToast.error(
+          `An error occurred: ${erroredTask.error.message}. Please try again`
+        );
+      }
+
+      // Get the new value for the field, discarding the ones in the
+      // isSelecting state. They get discarded because for them the link
+      // property is undefined.
+      const newContactsLink = taskResults.map((t) => t.link).filter(Boolean);
+      setValues({
+        ...values,
+        contacts_link: newContactsLink
+      });
+
+      if (!erroredTask) {
+        /* eslint-disable-next-line no-unused-vars */
+        const { contacts_link: _, ...otherValues } = values;
+        const result = await updateAtbd({
+          ...otherValues,
+          // When posting the atbd data the contacts_link has a different
+          // structure.
+          contacts: newContactsLink.map((link) => ({
+            id: link.contact.id,
+            roles: link.roles
+          }))
+        });
+
+        if (result.error) {
+          processToast.error(
+            `An error occurred: ${result.error.message}. Please try again`
+          );
+        } else {
+          resetForm({
+            values: {
+              ...values,
+              contacts_link: result.data.contacts_link
+            }
+          });
+          processToast.success('Changes saved');
+        }
+      }
+
+      setSubmitting(false);
+    },
+    [contactsList, updateAtbd, createContact, updateContactUnbound]
+  );
+}

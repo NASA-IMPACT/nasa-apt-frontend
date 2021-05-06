@@ -1,39 +1,41 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
 import { Field } from 'formik';
-import { FormTextarea, FormHelperMessage } from '@devseed-ui/form';
+import { FormSelect, FormHelperMessage } from '@devseed-ui/form';
 
 import FormGroupStructure from './form-group-structure';
 
 /**
- * Textarea with form group structure.
+ * Text input with form group structure.
  *
- * @prop {string} id Textarea field id
- * @prop {string} name Textarea field name
- * @prop {string} label Label for the textarea
+ * @prop {string} id Input field id
+ * @prop {string} name Input field name
+ * @prop {string} label Label for the input
  * @prop {function|string} labelHint Hint for the label. Setting it to true
  * shows (optional)
- * @prop {mixed} value Textarea value
- * @prop {string} inputSize Styled textarea size option
- * @prop {string} inputVariation Styled textarea variation option
+ * @prop {mixed} value Input value
+ * @prop {string} inputSize Styled input size option
+ * @prop {string} inputVariation Styled input variation option
  * @prop {function} onChange On change event handler
- * @prop {string} placeholder Textarea placeholder value.
+ * @prop {array} options Select options. Must have a value and a label. Value
+ * must be unique
  * @prop {string} description Field description shown in a tooltip
- * @prop {node} helper Helper message shown below textarea.
+ * @prop {node} helper Helper message shown below input.
  */
-export function InputTextarea(props) {
+export function InputSelect(props) {
   const {
     id,
     label,
     labelHint,
+    className,
     inputSize,
     inputVariation,
     description,
     helper,
+    options,
     // All other props are passed directly to the input
     // name,
     // value,
-    // placeholder,
     // onChange,
     // onBlur
     ...inputProps
@@ -44,55 +46,69 @@ export function InputTextarea(props) {
       id={id}
       label={label}
       labelHint={labelHint}
+      className={className}
       description={description}
       helper={helper}
     >
-      <FormTextarea
+      <FormSelect
         variation={inputVariation}
         id={id}
         size={inputSize}
         {...inputProps}
-      />
+      >
+        {options.map(({ value, label, ...rest }) => (
+          <option key={value} value={value} {...rest}>
+            {label}
+          </option>
+        ))}
+      </FormSelect>
     </FormGroupStructure>
   );
 }
 
-InputTextarea.propTypes = {
+InputSelect.propTypes = {
   id: T.string,
   name: T.string,
   label: T.string,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
+  className: T.string,
   value: T.oneOfType([T.string, T.number]),
+  options: T.arrayOf(
+    T.shape({
+      value: T.oneOfType([T.string, T.number]),
+      label: T.oneOfType([T.string, T.number])
+    })
+  ),
   inputSize: T.string,
   inputVariation: T.string,
-  placeholder: T.oneOfType([T.string, T.number]),
   onChange: T.func,
   description: T.string,
   helper: T.node
 };
 
 /**
- * InputTextarea component for usage with Formik
+ * InputSelect component for usage with Formik
  *
- * @prop {string} id Textarea field id
- * @prop {string} name Textarea field name
- * @prop {string} label Label for the textarea
+ * @prop {string} id Input field id
+ * @prop {string} name Input field name
+ * @prop {string} label Label for the input
  * @prop {function|string} labelHint Hint for the label. Setting it to true
  * shows (optional)
  * @prop {mixed} value Input value
- * @prop {string} inputSize Styled textarea size option
- * @prop {string} inputVariation Styled textarea variation option
+ * @prop {string} inputSize Styled input size option
+ * @prop {string} inputVariation Styled input variation option
+ * @prop {array} options Select options. Must have a value and a label. Value
+ * must be unique
  * @prop {function} onChange On change event handler
- * @prop {string} placeholder Textarea placeholder value
  * @prop {string} description Field description shown in a tooltip
- * @prop {node} helper Helper message shown below textarea.
+ * @prop {node} helper Helper message shown below input.
  */
-export function FormikInputTextarea({ helper, ...props }) {
+export function FormikInputSelect({ helper, ...props }) {
   return (
     <Field {...props}>
       {({ field, meta }) => {
         return (
-          <InputTextarea
+          <InputSelect
             {...props}
             {...field}
             invalid={!!meta.touched && !!meta.error}
@@ -110,6 +126,6 @@ export function FormikInputTextarea({ helper, ...props }) {
   );
 }
 
-FormikInputTextarea.propTypes = {
+FormikInputSelect.propTypes = {
   helper: T.node
 };

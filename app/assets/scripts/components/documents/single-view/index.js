@@ -140,8 +140,12 @@ function DocumentView() {
     ? calculateAtbdCompleteness(atbd.data).percent
     : 0;
 
+  const pageTitle = atbd.data?.title
+    ? `Viewing ${atbd.data.title}`
+    : 'Document view';
+
   return (
-    <App pageTitle='Document view'>
+    <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <Inpage>
