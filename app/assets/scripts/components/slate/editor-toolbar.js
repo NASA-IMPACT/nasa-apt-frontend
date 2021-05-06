@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { useSlate } from 'slate-react';
+import { ReactEditor, useSlate } from 'slate-react';
 import {
   getNodes,
   getPreventDefaultHandler,
@@ -101,7 +101,7 @@ const ToolbarRenderableItem = (props) => {
     <Tip key={btn.id} title={btn.tip(btn.hotkey)}>
       <ToolbarIconButton
         useIcon={btn.icon}
-        disabled={btn.isDisabled?.(editor)}
+        disabled={!ReactEditor.isFocused(editor) || btn.isDisabled?.(editor)}
         {...mouseEvents}
         {...rest}
       >
@@ -177,8 +177,8 @@ export function EditorToolbar(props) {
         <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
           <ToolbarIconButton
             useIcon='arrow-semi-spin-ccw'
-            disabled={!editor.canUndo()}
-            onClick={() => {
+            disabled={!ReactEditor.isFocused(editor) || !editor.canUndo()}
+            onMouseDown={() => {
               editor.undo();
             }}
           >
@@ -188,8 +188,8 @@ export function EditorToolbar(props) {
         <Tip title={`Redo (${modKey(REDO_HOTKEY)})`}>
           <ToolbarIconButton
             useIcon='arrow-semi-spin-cw'
-            disabled={!editor.canRedo()}
-            onClick={() => {
+            disabled={!ReactEditor.isFocused(editor) || !editor.canRedo()}
+            onMouseDown={() => {
               editor.redo();
             }}
           >
@@ -200,7 +200,7 @@ export function EditorToolbar(props) {
         <Tip title={`Keyboard shortcuts (${modKey(SHORTCUTS_HOTKEY)})`}>
           <ToolbarIconButton
             useIcon='keyboard'
-            onClick={() => ShortcutsModalPlugin.onUse(editor, 'shortcut-modal')}
+            onMouseDown={() => ShortcutsModalPlugin.onUse(editor, 'shortcut-modal')}
           >
             Keyboard shortcuts
           </ToolbarIconButton>

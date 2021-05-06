@@ -98,7 +98,9 @@ export default function ToolbarImageButton(props) {
         {(fieProps) => (
           <ToolbarIconButton
             useIcon={item.icon}
-            disabled={item.isDisabled?.(editor)}
+            disabled={
+              !ReactEditor.isFocused(editor) || item.isDisabled?.(editor)
+            }
             {...fieProps}
           >
             {item.label}
