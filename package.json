@@ -91,15 +91,18 @@
     "gulp-terser": "^2.0.1",
     "gulp-useref": "^5.0.0",
     "gulp-yaml": "^2.0.4",
+    "markdown-it": "^12.0.6",
     "prettier": "^2.2.1",
     "require-globify": "^1.4.1",
     "stylelint": "^13.10.0",
     "stylelint-config-recommended": "^3.0.0",
     "surge": "^0.21.7",
     "through2": "^4.0.2",
+    "vinyl": "^2.2.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
-    "watchify": "^4.0.0"
+    "watchify": "^4.0.0",
+    "yaml-front-matter": "^4.1.1"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
