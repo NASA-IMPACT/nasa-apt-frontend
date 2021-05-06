@@ -21,6 +21,8 @@ const FormGroupFooter = styled.div`
  *
  * @prop {string} id Id used in the <FormLabel htmlFor={id}>
  * @prop {string} label Label for the group
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {string} description Description for the info popover.
  * @prop {string} toolbarItems Additional toolbar items to show on the toolbar.
  * They will be rendered inside a <Toolbar>
@@ -33,6 +35,7 @@ export default function FormGroupStructure(props) {
   const {
     id,
     label,
+    labelHint,
     className,
     toolbarItems,
     description,
@@ -60,7 +63,9 @@ export default function FormGroupStructure(props) {
   return (
     <FormGroup className={className}>
       <FormGroupHeader>
-        <FormLabel htmlFor={id}>{label}</FormLabel>
+        <FormLabel htmlFor={id} optional={labelHint}>
+          {label}
+        </FormLabel>
         {hasToolbar && toolbar}
       </FormGroupHeader>
       <FormGroupBody>
@@ -75,6 +80,7 @@ export default function FormGroupStructure(props) {
 FormGroupStructure.propTypes = {
   id: T.string,
   label: T.string,
+  labelHint: T.oneOfType([T.bool, T.func, T.string]),
   className: T.string,
   description: T.string,
   toolbarItems: T.object,

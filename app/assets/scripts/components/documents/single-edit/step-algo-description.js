@@ -176,7 +176,7 @@ const VariablesSection = (props) => {
                 key={index}
                 id={`${name}.${index}`}
                 label={`Variable #${index + 1}`}
-                onDeleteClick={() => remove()}
+                onDeleteClick={() => remove(index)}
               >
                 <FormikInlineInputEditor
                   id={`${name}.${index}.name`}

@@ -12,6 +12,8 @@ import { RichTextEditor, InlineRichTextEditor } from '../../slate';
  * @prop {string} id Field id
  * @prop {string} name Field name
  * @prop {string} label Label for the field
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {string} description Field description shown in a tooltip
  * @prop {node} helper Helper message shown below input.
  */
@@ -57,6 +59,8 @@ FormikInputEditor.propTypes = {
  * @prop {string} id Field id
  * @prop {string} name Field name
  * @prop {string} label Label for the field
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {string} description Field description shown in a tooltip
  * @prop {Array<string>} formattingOptions List of formatting options for the inline editor
  * @prop {node} helper Helper message shown below input.

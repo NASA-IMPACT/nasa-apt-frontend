@@ -11,6 +11,8 @@ import FormGroupStructure from './form-group-structure';
  * @prop {string} id Textarea field id
  * @prop {string} name Textarea field name
  * @prop {string} label Label for the textarea
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {mixed} value Textarea value
  * @prop {string} inputSize Styled textarea size option
  * @prop {string} inputVariation Styled textarea variation option
@@ -23,6 +25,7 @@ export function InputTextarea(props) {
   const {
     id,
     label,
+    labelHint,
     inputSize,
     inputVariation,
     description,
@@ -40,6 +43,7 @@ export function InputTextarea(props) {
     <FormGroupStructure
       id={id}
       label={label}
+      labelHint={labelHint}
       description={description}
       helper={helper}
     >
@@ -57,6 +61,7 @@ InputTextarea.propTypes = {
   id: T.string,
   name: T.string,
   label: T.string,
+  labelHint: T.oneOfType([T.bool, T.func, T.string]),
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,
   inputVariation: T.string,
@@ -72,6 +77,8 @@ InputTextarea.propTypes = {
  * @prop {string} id Textarea field id
  * @prop {string} name Textarea field name
  * @prop {string} label Label for the textarea
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {mixed} value Input value
  * @prop {string} inputSize Styled textarea size option
  * @prop {string} inputVariation Styled textarea variation option

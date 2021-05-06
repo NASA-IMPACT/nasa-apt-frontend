@@ -4,6 +4,7 @@ import T from 'prop-types';
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 import { useContexeedApi } from '../utils/contexeed';
+import { emptyContactMechanismValue } from '../components/contacts/edit/contact-form-fields';
 
 // Context
 export const ContactsContext = createContext(null);
@@ -15,10 +16,56 @@ export const ContactsProvider = ({ children }) => {
   const {
     getState: getContacts,
     fetchContacts,
-    deleteContact
+    deleteContact,
+    dispatch: contactListDispatch
   } = useContexeedApi(
     {
       name: 'contactList',
+      interceptor: (state, action) => {
+        // When a new contact is created append it to the list it if is set.
+        switch (action.type) {
+          case 'contactList/append-contact':
+            {
+              const { status, data } = state;
+              if (status === 'succeeded') {
+                const newData = [...data, action.data].sort((a, b) =>
+                  a.first_name > b.first_name ? 1 : -1
+                );
+                return {
+                  action,
+                  state: {
+                    ...state,
+                    data: newData
+                  }
+                };
+              }
+            }
+            break;
+          case 'contactList/update-contact':
+            {
+              const { status, data } = state;
+              if (status === 'succeeded') {
+                const contactIndex = data.findIndex(
+                  (c) => c.id === action.data.id
+                );
+
+                if (contactIndex) {
+                  return {
+                    action,
+                    state: {
+                      ...state,
+                      data: Object.assign([], data, {
+                        [contactIndex]: action.data
+                      })
+                    }
+                  };
+                }
+              }
+            }
+            break;
+        }
+        return { state, action };
+      },
       requests: {
         fetchContacts: withRequestToken(token, () => ({
           url: '/contacts'
@@ -37,8 +84,15 @@ export const ContactsProvider = ({ children }) => {
                 method: 'delete'
               });
 
+              // The delete contact action acts on the contact list state, but
+              // if called from within a single contact page, we also want to
+              // invalidate the individual state.
+              invalidateSingle(id);
+
               // If this worked, remove the item from the contact list.
-              const newData = state.data.filter((contact) => contact.id !== id);
+              const newData = state.data?.filter?.(
+                (contact) => contact.id !== id
+              );
               return actions.receive(newData);
             } catch (error) {
               // Dispatch receive action. It is already dispatchable.
@@ -55,20 +109,24 @@ export const ContactsProvider = ({ children }) => {
     getState: getSingleContact,
     fetchSingleContact,
     createContact,
-    updateContact
+    updateContact,
+    invalidate: invalidateSingle
   } = useContexeedApi(
     {
       name: 'contactSingle',
       useKey: true,
       requests: {
         fetchSingleContact: withRequestToken(token, ({ id }) => ({
+          stateKey: `${id}`,
           url: `/contacts/${id}`
         }))
       },
       mutations: {
-        createContact: withRequestToken(token, () => ({
-          // Holder for the creation of a new contact since we don't have id yet.
-          stateKey: 'new',
+        createContact: withRequestToken(token, ({ key, data } = {}) => ({
+          // Holder for the creation of a new contact since we don't have final
+          // id yet. When creating several contacts at once (like through the
+          // atbd contact page) we need a key to differentiate between them.
+          stateKey: key ? `new-${key}` : 'new',
           mutation: async ({ axios, requestOptions, actions }) => {
             try {
               // Dispatch request action. It is already dispatchable.
@@ -77,9 +135,19 @@ export const ContactsProvider = ({ children }) => {
               const response = await axios({
                 ...requestOptions,
                 url: '/contacts',
-                method: 'post'
+                method: 'post',
+                data: data || {
+                  first_name: 'New',
+                  last_name: 'Contact',
+                  mechanisms: [emptyContactMechanismValue]
+                }
               });
 
+              // Add the newly created contact to the contact list.
+              contactListDispatch({
+                type: 'contactList/append-contact',
+                data: response.data
+              });
               // Dispatch receive action. It is already dispatchable.
               return actions.receive(response.data);
             } catch (error) {
@@ -90,22 +158,27 @@ export const ContactsProvider = ({ children }) => {
         })),
         updateContact: withRequestToken(token, ({ id, data }) => ({
           stateKey: `${id}`,
-          mutation: async ({ axios, requestOptions, state, actions }) => {
+          mutation: async ({ axios, requestOptions, actions }) => {
             try {
               const { id, ...rest } = data;
               // Dispatch request action. It is already dispatchable.
               actions.request();
 
-              await axios({
+              const response = await axios({
                 ...requestOptions,
                 url: `/contacts/${id}`,
                 method: 'post',
                 data: rest
               });
 
+              // Update the contact to the contact list.
+              contactListDispatch({
+                type: 'contactList/update-contact',
+                data: response.data
+              });
+
               // Dispatch receive action. It is already dispatchable.
-              const updateResult = actions.receive(state.data);
-              return { ...updateResult };
+              return actions.receive(response.data);
             } catch (error) {
               // Dispatch receive action. It is already dispatchable.
               return actions.receive(null, error);
@@ -176,12 +249,15 @@ export const useContacts = () => {
     getContacts,
     fetchContacts,
     createContact,
+    updateContact,
     deleteContact
   } = useCheckContext('useContacts');
+
   return {
     contacts: getContacts(),
     fetchContacts,
     createContact,
+    updateContactUnbound: updateContact,
     deleteContact
   };
 };

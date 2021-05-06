@@ -35,7 +35,10 @@ export default function RichTextContex2Formik(props) {
 
   const ctx = {
     onReferenceUpsert,
-    references: refs || []
+    references: refs || [],
+    atbd: {
+      id: values.id
+    }
   };
 
   return (

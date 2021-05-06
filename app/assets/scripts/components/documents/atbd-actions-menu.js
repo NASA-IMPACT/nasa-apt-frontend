@@ -103,7 +103,7 @@ export default function AtbdActionsMenu(props) {
             deleteMenu
           ]
     };
-  }, [variation, atbd, atbdVersion, isLogged]);
+  }, [variation, atbd, atbdVersion, isLogged, origin]);
 
   return (
     <DropdownMenu

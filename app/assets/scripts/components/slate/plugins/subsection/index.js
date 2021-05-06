@@ -1,13 +1,39 @@
 import isHotkey from 'is-hotkey';
 import { Editor, Transforms, Node } from 'slate';
 import castArray from 'lodash.castarray';
-import { getNodes, getRenderElement } from '@udecode/slate-plugins';
+import { getAbove, getNodes, getRenderElement } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
+import { isFocusedAnd } from '../common/is-focused-compose';
+import { isInNodeType } from '../common/is-node-type';
+
 import SubSection from './sub-section';
 
 // Plugin type.
 export const SUB_SECTION = 'sub-section';
+
+/**
+ * Check if the current selection is inside a SUB_SECTION node
+ *
+ * @param {Editor} editor The slate editor instance
+ * @returns boolean
+ */
+const isInSubsection = (editor) => isInNodeType(editor, SUB_SECTION);
+
+/**
+ * Remove the SUB_SECTION at selection
+ * @param {Editor} editor The slate editor instance
+ */
+const deleteSubSection = (editor) => {
+  if (isInSubsection(editor)) {
+    const entry = getAbove(editor, { match: { type: SUB_SECTION } });
+    if (entry) {
+      Transforms.removeNodes(editor, {
+        at: entry[1]
+      });
+    }
+  }
+};
 
 /**
  * Insert a subsection heading.
@@ -36,12 +62,20 @@ export const insertSubSection = (editor) => {
  * @param {Editor} editor Slate editor instance.
  * @param {String} btnId The button that triggered the use.
  */
-export const onSubsectionUse = (editor) => {
-  insertSubSection(editor);
+export const onSubsectionUse = (editor, btnId) => {
+  switch (btnId) {
+    case SUB_SECTION:
+      insertSubSection(editor);
+      break;
+    case 'delete-heading':
+      deleteSubSection(editor);
+      break;
+  }
 };
 
 // Plugin definition for slate-plugins framework.
 export const SubSectionPlugin = {
+  name: 'Heading',
   renderElement: getRenderElement({
     type: SUB_SECTION,
     component: SubSection
@@ -53,6 +87,12 @@ export const SubSectionPlugin = {
         SubSectionPlugin.onUse(editor, btn.id);
       }
     });
+    castArray(SubSectionPlugin.contextToolbar).forEach((btn) => {
+      if (btn.isInContext?.(editor) && isHotkey(btn.hotkey, e)) {
+        e.preventDefault();
+        SubSectionPlugin.onUse(editor, btn.id);
+      }
+    });
   },
   toolbar: {
     id: SUB_SECTION,
@@ -60,6 +100,14 @@ export const SubSectionPlugin = {
     hotkey: 'mod+L',
     label: 'Heading',
     tip: (key) => `Heading (${modKey(key)})`
+  },
+  contextToolbar: {
+    id: 'delete-heading',
+    icon: 'trash-bin',
+    hotkey: 'mod+Shift+D',
+    label: 'Remove heading',
+    tip: (key) => `Remove heading (${modKey(key)})`,
+    isInContext: isFocusedAnd(isInSubsection)
   },
   onUse: onSubsectionUse
 };

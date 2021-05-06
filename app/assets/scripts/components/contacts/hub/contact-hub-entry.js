@@ -11,6 +11,7 @@ import {
 } from '../../../styles/hub';
 import { Link } from '../../../styles/clean/link';
 import ContactActionsMenu from '../contact-actions-menu';
+
 import { contactView } from '../../../utils/url-creator';
 
 export default function ContactEntry({ contact, onContactAction }) {
@@ -18,6 +19,10 @@ export default function ContactEntry({ contact, onContactAction }) {
     onContactAction,
     contact
   ]);
+
+  const mechanismCount = contact.mechanisms.length;
+  const atbdUseCount = contact.atbd_versions_link.length;
+
   return (
     <HubEntry>
       <HubEntryHeader>
@@ -30,14 +35,22 @@ export default function ContactEntry({ contact, onContactAction }) {
         </HubEntryHeadline>
         <HubEntryDetails>
           <dt>Mechanisms</dt>
-          <dd>{contact.mechanisms.length} contact mechanisms</dd>
-          <dt>On</dt>
           <dd>
-            <time dateTime={contact.createdAt}>{contact.createdAt}</time>
+            {mechanismCount} contact{' '}
+            {mechanismCount === 1 ? 'mechanism' : 'mechanisms'}
           </dd>
+          <dt>Number of occurrences</dt>
+          {atbdUseCount ? (
+            <dd>
+              Used on {atbdUseCount}{' '}
+              {atbdUseCount === 1 ? 'document' : 'documents'}
+            </dd>
+          ) : (
+            <dd>Not used on documents</dd>
+          )}
         </HubEntryDetails>
         <HubEntryActions>
-          <ContactActionsMenu contact={contact} onSelect={onAction} />
+          <ContactActionsMenu contactId={contact.id} onSelect={onAction} />
         </HubEntryActions>
       </HubEntryHeader>
     </HubEntry>

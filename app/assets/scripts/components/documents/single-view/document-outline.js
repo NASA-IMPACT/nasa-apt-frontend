@@ -10,7 +10,7 @@ import {
   Panel,
   PanelHeader,
   PanelHeadline,
-  PanelTitle,
+  PanelTitleAlt,
   PanelBody
 } from '../../../styles/panel';
 
@@ -37,7 +37,7 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   position: relative;
   display: block;
   font-size: 1rem;
-  line-height: 1.25rem;
+  line-height: 1.5rem;
   padding: ${glsp(0.5, themeVal('layout.gap.medium'))};
   margin: 0;
   background-color: ${rgba(themeVal('color.link'), 0)};
@@ -97,7 +97,7 @@ OutlineMenuLink.propTypes = {
 
 // Component to recursively render the outline menu.
 const OutlineMenu = (props) => {
-  const { items, atbdDocument = {} } = props;
+  const { items, atbdDocument = {}, atbd = {} } = props;
 
   const { activeId, getScrollToId } = useScrollLink();
 
@@ -112,7 +112,7 @@ const OutlineMenu = (props) => {
         // them, like the case of array fields.
         const resultingChildren =
           typeof item.children === 'function'
-            ? item.children({ document: atbdDocument })
+            ? item.children({ document: atbdDocument, atbd })
             : item.children;
         const children = resultingChildren || [];
         const items = [...editorSubsections, ...children];
@@ -127,7 +127,11 @@ const OutlineMenu = (props) => {
             >
               {item.label}
             </OutlineMenuLink>
-            <OutlineMenu items={items} atbdDocument={atbdDocument} />
+            <OutlineMenu
+              items={items}
+              atbdDocument={atbdDocument}
+              atbd={atbd}
+            />
           </li>
         );
       })}
@@ -137,6 +141,7 @@ const OutlineMenu = (props) => {
 
 OutlineMenu.propTypes = {
   items: T.array,
+  atbd: T.object,
   atbdDocument: T.object
 };
 
@@ -242,13 +247,14 @@ export default function DocumentOutline(props) {
     <OutlineSelf ref={elementRef}>
       <PanelHeader>
         <PanelHeadline>
-          <PanelTitle>Outline</PanelTitle>
+          <PanelTitleAlt>Outline</PanelTitleAlt>
         </PanelHeadline>
       </PanelHeader>
       <PanelBody>
         <ShadowScrollbar>
           <OutlineMenu
             items={atbdContentSections}
+            atbd={atbd}
             atbdDocument={atbd.document}
           />
         </ShadowScrollbar>

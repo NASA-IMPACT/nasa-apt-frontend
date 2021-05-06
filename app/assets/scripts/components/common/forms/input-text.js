@@ -11,6 +11,8 @@ import FormGroupStructure from './form-group-structure';
  * @prop {string} id Input field id
  * @prop {string} name Input field name
  * @prop {string} label Label for the input
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {mixed} value Input value
  * @prop {string} inputSize Styled input size option
  * @prop {string} inputVariation Styled input variation option
@@ -23,6 +25,7 @@ export function InputText(props) {
   const {
     id,
     label,
+    labelHint,
     className,
     inputSize,
     inputVariation,
@@ -41,6 +44,7 @@ export function InputText(props) {
     <FormGroupStructure
       id={id}
       label={label}
+      labelHint={labelHint}
       className={className}
       description={description}
       helper={helper}
@@ -60,6 +64,7 @@ InputText.propTypes = {
   id: T.string,
   name: T.string,
   label: T.string,
+  labelHint: T.oneOfType([T.bool, T.func, T.string]),
   className: T.string,
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,
@@ -76,6 +81,8 @@ InputText.propTypes = {
  * @prop {string} id Input field id
  * @prop {string} name Input field name
  * @prop {string} label Label for the input
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {mixed} value Input value
  * @prop {string} inputSize Styled input size option
  * @prop {string} inputVariation Styled input variation option

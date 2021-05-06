@@ -140,7 +140,7 @@ const UrlDescriptionSection = (props) => {
                 key={index}
                 id={`${name}.${index}`}
                 label={`Entry #${index + 1}`}
-                onDeleteClick={() => remove()}
+                onDeleteClick={() => remove(index)}
               >
                 <FormikInputText
                   id={`${name}.${index}.url`}

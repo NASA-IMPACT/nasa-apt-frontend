@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import T from 'prop-types';
 import { useFocused, useReadOnly, useSelected } from 'slate-react';
 import styled, { css } from 'styled-components';
-import { glsp, themeVal, rgba } from '@devseed-ui/theme-provider';
+import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { headingAlt } from '@devseed-ui/typography';
 
 import { useRichContext } from '../common/rich-context';
 import { formatReference } from '../../../../utils/references';
@@ -10,29 +11,47 @@ import { formatReference } from '../../../../utils/references';
 import Tip from '../../../common/tooltip';
 
 const Ref = styled.span`
-  background: ${themeVal('color.baseAlphaB')};
+  ${headingAlt()}
+  font-size: 0.75rem;
   vertical-align: super;
   padding: ${glsp(0, 0.25)};
+  margin: ${glsp(0, 0.125)};
   border-radius: ${themeVal('shape.rounded')};
-  font-size: 0.75rem;
+  box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaD')};
+  cursor: help;
+  user-select: none;
+  transition: all 0.24s ease-in-out 0s;
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px ${rgba(themeVal('color.link'), 0.24)};
+  }
 
   ${({ isInvalid }) =>
     isInvalid
       ? css`
-          background: ${rgba(themeVal('color.danger'), 0.32)};
+          &,
+          &:hover {
+            box-shadow: inset 0 0 0 1px ${themeVal('color.danger')};
+          }
         `
       : css`
-          background: ${themeVal('color.baseAlphaB')};
+          box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaD')};
         `}
 
   ${({ isActive, isInvalid }) =>
     isActive &&
     (isInvalid
       ? css`
-          box-shadow: inset 0 0 0px 1px ${themeVal('color.danger')};
+          &,
+          &:hover {
+            box-shadow: inset 0 0 0px 1px ${themeVal('color.danger')};
+          }
         `
       : css`
-          box-shadow: inset 0 0 0px 1px ${themeVal('color.primary')};
+          &,
+          &:hover {
+            box-shadow: inset 0 0 0 1px ${rgba(themeVal('color.link'), 0.48)};
+          }
         `)}
 `;
 

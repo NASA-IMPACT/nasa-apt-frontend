@@ -1,7 +1,4 @@
-import React from 'react'; /* eslint-disable react/display-name */
-import get from 'lodash.get';
-
-import { editorEmptyValue } from '../../slate';
+import { getValuesFromObj, EDITOR_SYM } from '../../../utils/get-values-object';
 
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
@@ -10,37 +7,7 @@ import StepAlgoUsage from './step-algo-usage';
 import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
 import StepReferences from './step-references';
-
-const editorSymbol = Symbol.for('<editor>');
-/**
- * Returns the default object filled with values from source if they exist. If
- * not the defaults are use.
- *
- * @param {object} obj source object. Expected to be an ATBD
- * @param {object} defaults defaults object
- */
-const getFromObj = (obj, defaults) => {
-  const recursiveGet = (_obj, _defaults) =>
-    Object.keys(_defaults).reduce((acc, key) => {
-      const defValue = _defaults[key];
-      const source = get(_obj, key);
-      const isObject = !Array.isArray(defValue) && defValue instanceof Object;
-
-      // The fallback value can be changed with some tags. This is needed
-      // because values set as object are recursively computed.
-      const value = defValue === editorSymbol ? editorEmptyValue : defValue;
-      return {
-        ...acc,
-        [key]: isObject ? recursiveGet(source || {}, defValue) : source || value
-      };
-    }, {});
-
-  return {
-    // The id of the atbd will never be changed but is useful to have present.
-    id: obj.id,
-    ...recursiveGet(obj, defaults)
-  };
-};
+import StepContacts from './step-contacts';
 
 export const STEPS = [
   {
@@ -48,7 +15,7 @@ export const STEPS = [
     label: 'Identifying information',
     StepComponent: StepIdentifyingInformation,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         title: '',
         alias: '',
         citation: {
@@ -73,9 +40,19 @@ export const STEPS = [
   {
     id: 'contacts',
     label: 'Contact information',
-    StepComponent: () => <p>Contact information coming soon!</p>,
-    getInitialValues: () => {
-      return {};
+    StepComponent: StepContacts,
+    getInitialValues: (atbd) => {
+      return getValuesFromObj(atbd, {
+        contacts_link: [
+          // {
+          //   contact: {}
+          //   roles: []
+          // }
+        ],
+        sections_completed: {
+          contacts: 'incomplete'
+        }
+      });
     }
   },
   {
@@ -83,23 +60,23 @@ export const STEPS = [
     label: 'References',
     StepComponent: StepReferences,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
           // In the references page we need all the fields with an editor in
           // case the user removes a reference, because we remove the reference
           // node from all the fields.
-          introduction: editorSymbol,
-          historical_perspective: editorSymbol,
-          scientific_theory: editorSymbol,
-          scientific_theory_assumptions: editorSymbol,
-          mathematical_theory: editorSymbol,
-          mathematical_theory_assumptions: editorSymbol,
-          algorithm_usage_constraints: editorSymbol,
-          performance_assessment_validation_methods: editorSymbol,
-          performance_assessment_validation_uncertainties: editorSymbol,
-          performance_assessment_validation_errors: editorSymbol,
-          journal_discussion: editorSymbol,
-          journal_acknowledgements: editorSymbol,
+          introduction: EDITOR_SYM,
+          historical_perspective: EDITOR_SYM,
+          scientific_theory: EDITOR_SYM,
+          scientific_theory_assumptions: EDITOR_SYM,
+          mathematical_theory: EDITOR_SYM,
+          mathematical_theory_assumptions: EDITOR_SYM,
+          algorithm_usage_constraints: EDITOR_SYM,
+          performance_assessment_validation_methods: EDITOR_SYM,
+          performance_assessment_validation_uncertainties: EDITOR_SYM,
+          performance_assessment_validation_errors: EDITOR_SYM,
+          journal_discussion: EDITOR_SYM,
+          journal_acknowledgements: EDITOR_SYM,
           publication_references: [
             // Default is empty and set when adding an array field in the form.
             // {
@@ -130,10 +107,10 @@ export const STEPS = [
     label: 'Introduction',
     StepComponent: StepIntroduction,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
-          introduction: editorSymbol,
-          historical_perspective: editorSymbol,
+          introduction: EDITOR_SYM,
+          historical_perspective: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
@@ -150,26 +127,26 @@ export const STEPS = [
     label: 'Algorithm description',
     StepComponent: StepAlgoDescription,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
-          scientific_theory: editorSymbol,
-          scientific_theory_assumptions: editorSymbol,
-          mathematical_theory: editorSymbol,
-          mathematical_theory_assumptions: editorSymbol,
+          scientific_theory: EDITOR_SYM,
+          scientific_theory_assumptions: EDITOR_SYM,
+          mathematical_theory: EDITOR_SYM,
+          mathematical_theory_assumptions: EDITOR_SYM,
           algorithm_input_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
-            //   name: editorSymbol
-            //   long_name: editorSymbol
-            //   unit: editorSymbol
+            //   name: EDITOR_SYM
+            //   long_name: EDITOR_SYM
+            //   unit: EDITOR_SYM
             // }
           ],
           algorithm_output_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
-            //   name: editorSymbol
-            //   long_name: editorSymbol
-            //   unit: editorSymbol
+            //   name: EDITOR_SYM
+            //   long_name: EDITOR_SYM
+            //   unit: EDITOR_SYM
             // }
           ],
           // Publication references are needed in steps with <editor> fields in
@@ -190,12 +167,12 @@ export const STEPS = [
     label: 'Algorithm usage',
     StepComponent: StepAlgoUsage,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
-          algorithm_usage_constraints: editorSymbol,
-          performance_assessment_validation_methods: editorSymbol,
-          performance_assessment_validation_uncertainties: editorSymbol,
-          performance_assessment_validation_errors: editorSymbol,
+          algorithm_usage_constraints: EDITOR_SYM,
+          performance_assessment_validation_methods: EDITOR_SYM,
+          performance_assessment_validation_uncertainties: EDITOR_SYM,
+          performance_assessment_validation_errors: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
@@ -212,34 +189,34 @@ export const STEPS = [
     label: 'Algorithm implementation',
     StepComponent: StepAlgoImplementation,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
           algorithm_implementations: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: editorSymbol
+            //   description: EDITOR_SYM
             // }
           ],
           data_access_input_data: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: editorSymbol
+            //   description: EDITOR_SYM
             // }
           ],
           data_access_output_data: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: editorSymbol
+            //   description: EDITOR_SYM
             // }
           ],
           data_access_related_urls: [
             // Default is empty and set when adding an array field in the form.
             // {
             //   url: '',
-            //   description: editorSymbol
+            //   description: EDITOR_SYM
             // }
           ],
           // Publication references are needed in steps with <editor> fields in
@@ -260,10 +237,10 @@ export const STEPS = [
     label: 'Journal details',
     StepComponent: StepJournalDetails,
     getInitialValues: (atbd) => {
-      return getFromObj(atbd, {
+      return getValuesFromObj(atbd, {
         document: {
-          journal_discussion: editorSymbol,
-          journal_acknowledgements: editorSymbol,
+          journal_discussion: EDITOR_SYM,
+          journal_acknowledgements: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []

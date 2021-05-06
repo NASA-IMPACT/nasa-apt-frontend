@@ -11,6 +11,8 @@ export const MultiItemEmpty = EmptyBox;
  * Fieldset for multi item fields with a trash icon
  *
  * @prop {string} label Label for the fieldset section
+ * @prop {function|string} labelHint Hint for the label. Setting it to true
+ * shows (optional)
  * @prop {function} onDeleteClick Callback for delete click.
  * @prop {string} description Description for the info popover.
  * @prop {node} emptyMessage Content to display when there are no children.

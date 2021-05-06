@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import { Node } from 'slate';
 
 import { ReadEditor } from './editor';
 import { RichContextProvider } from './plugins/common/rich-context';
+import { IMAGE, IMAGE_BLOCK } from './plugins/image';
+import { removeNodeFromSlateDocument } from './nodes-from-slate';
 
 export default class SafeReadEditor extends React.Component {
   static getDerivedStateFromError(error) {
@@ -36,12 +38,33 @@ const SafeReadEditorComponent = (props) => {
     ? value.children.map((n) => Node.string(n).trim()).join('')
     : '';
 
+  // Remove images that were saved mid-upload resulting in them not being saved
+  // correctly. When this happens the image will be left with a "uploading"
+  // value, and won't have a objectKey.
+  const cleanValue = useMemo(
+    () =>
+      strValue
+        ? removeNodeFromSlateDocument(value, (node) => {
+            // Only act on image blocks.
+            if (node.type !== IMAGE_BLOCK) return false;
+            // That have a image.
+            const imgChild = node.children?.[0];
+
+            return (
+              imgChild?.type === IMAGE &&
+              typeof imgChild?.uploading !== 'undefined'
+            );
+          })
+        : null,
+    [strValue, value]
+  );
+
   if (whenEmpty && !strValue) {
     return whenEmpty;
   }
   return (
     <RichContextProvider context={context} contextDeps={contextDeps}>
-      <ReadEditor value={value} {...rest} />
+      <ReadEditor value={cleanValue} {...rest} />
     </RichContextProvider>
   );
 };

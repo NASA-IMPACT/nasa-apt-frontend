@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-// import { useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -16,13 +16,14 @@ import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
 import ContactHubEntry from './contact-hub-entry';
+import SignIn from '../../../a11n/signin';
+import { EmptyHub } from '../../common/empty-states';
 
 import { useContacts } from '../../../context/contacts-list';
 import { useUser } from '../../../context/user';
-import toasts, { createProcessToast } from '../../common/toasts';
-import { confirmDeleteContact } from '../../common/confirmation-prompt';
-import SignIn from '../../../a11n/signin';
-import { EmptyHub } from '../../common/empty-states';
+import { createProcessToast } from '../../common/toasts';
+import { contactEdit } from '../../../utils/url-creator';
+import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 
 export function Contacts() {
   const {
@@ -33,14 +34,14 @@ export function Contacts() {
   } = useContacts();
 
   const { isLogged } = useUser();
-  // const history = useHistory();
+  const history = useHistory();
 
   useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
-  // We only want to handle errors when the contact request fails. Mutation errors,
-  // tracked by the `mutationStatus` property are handled in the submit
+  // We only want to handle errors when the contact request fails. Mutation
+  // errors, tracked by the `mutationStatus` property are handled in the submit
   // handlers.
   if (contacts.status === 'failed' && contacts.error) {
     // This is a serious server error. By throwing it will be caught by the
@@ -56,22 +57,17 @@ export function Contacts() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('contact successfully created');
-      // history.push(conactEdit(result.data));
+      history.push(contactEdit(result.data.id));
     }
   };
 
   const onContactAction = useCallback(
     async (contact, menuId) => {
       if (menuId === 'delete') {
-        const { result: confirmed } = await confirmDeleteContact(contact.title);
-        if (confirmed) {
-          const result = await deleteContact({ id: contact.id });
-          if (result.error) {
-            toasts.error(`An error occurred: ${result.error.message}`);
-          } else {
-            toasts.success('Contact successfully deleted');
-          }
-        }
+        await contactDeleteConfirmAndToast({
+          contact,
+          deleteContact
+        });
       }
     },
     [deleteContact]

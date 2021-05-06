@@ -31,7 +31,7 @@ function Documents() {
 
   useEffect(() => {
     fetchAtbds();
-  }, []);
+  }, [fetchAtbds]);
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit

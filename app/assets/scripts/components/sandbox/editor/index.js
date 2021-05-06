@@ -14,7 +14,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
-import { hugeDoc, references } from '../../slate/plugins/debug-editor/dummy';
+import { hugeDoc, references } from './dummy';
 import { RichContextProvider } from '../../slate/plugins/common/rich-context';
 import { InlineRichTextEditor } from '../../slate/inline-editor';
 
@@ -22,7 +22,7 @@ const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
   overflow: auto;
 
-  h2 {
+  ${Constrainer} > h2 {
     margin: 2rem 0 1rem 0;
   }
 `;
@@ -88,7 +88,9 @@ function SandboxEditor() {
             />
 
             <h2>Rich text editor</h2>
-            <RichContextProvider context={{ references, onReferenceUpsert }}>
+            <RichContextProvider
+              context={{ references, onReferenceUpsert, atbd: { id: 1 } }}
+            >
               <RichTextEditor
                 value={value}
                 onChange={(v) => {
