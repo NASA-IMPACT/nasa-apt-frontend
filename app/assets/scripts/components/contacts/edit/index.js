@@ -26,7 +26,7 @@ import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 import { getValuesFromObj } from '../../../utils/get-values-object';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
-import { validateContact } from '../contact-utils';
+import { getContactName, validateContact } from '../contact-utils';
 
 export default function ContactView() {
   const { id } = useParams();
@@ -90,8 +90,12 @@ export default function ContactView() {
 
   const initialValues = getValuesFromObj(data || {}, defaultContactValues);
 
+  const pageTitle = data?.id
+    ? `Editing ${getContactName(data)}`
+    : 'Contact edit';
+
   return (
-    <App pageTitle='Contact edit'>
+    <App pageTitle={pageTitle}>
       {status === 'loading' && <GlobalLoading />}
       {status === 'succeeded' && (
         <Formik

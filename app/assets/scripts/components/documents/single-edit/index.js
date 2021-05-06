@@ -107,8 +107,12 @@ function DocumentEdit() {
     ? calculateAtbdCompleteness(atbd.data).percent
     : 0;
 
+  const pageTitle = atbd.data?.title
+    ? `Editing ${atbd.data.title}`
+    : 'Document view';
+
   return (
-    <App pageTitle='Document Edit'>
+    <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <DocumentModals {...documentModalProps} />

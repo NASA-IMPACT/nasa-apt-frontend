@@ -94,8 +94,12 @@ export default function ContactView() {
 
   const { status, data } = contact;
 
+  const pageTitle = data?.id
+    ? `Viewing ${getContactName(data)}`
+    : 'Contact view';
+
   return (
-    <App pageTitle='Contact view'>
+    <App pageTitle={pageTitle}>
       {status === 'loading' && <GlobalLoading />}
       {status === 'succeeded' && (
         <Inpage>

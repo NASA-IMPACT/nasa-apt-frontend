@@ -26,7 +26,11 @@ const PageBody = styled.main`
 
 function App(props) {
   const { pageTitle, hideFooter, children } = props;
-  const title = pageTitle ? `${pageTitle} — ` : '';
+
+  const truncatedTitle =
+    pageTitle?.length > 32 ? `${pageTitle.slice(0, 32)}...` : pageTitle;
+
+  const title = truncatedTitle ? `${truncatedTitle} — ` : '';
 
   return (
     <Page hideFooter={hideFooter}>
