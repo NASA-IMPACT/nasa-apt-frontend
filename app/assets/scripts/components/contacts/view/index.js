@@ -62,7 +62,7 @@ export default function ContactView() {
 
   useEffect(() => {
     fetchSingleContact();
-  }, [id]);
+  }, [fetchSingleContact]);
 
   const onContactMenuAction = useCallback(
     async (menuId) => {

@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import set from 'lodash.set';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { VerticalDivider } from '@devseed-ui/toolbar';
@@ -27,29 +26,7 @@ import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 import { getValuesFromObj } from '../../../utils/get-values-object';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
-
-export const validateContact = (values) => {
-  let errors = {};
-
-  if (!values.first_name.trim()) {
-    errors.first_name = 'First name is required';
-  }
-
-  if (!values.last_name.trim()) {
-    errors.last_name = 'Last name is required';
-  }
-
-  values.mechanisms.forEach((m, i) => {
-    if (!m.mechanism_type.trim()) {
-      set(errors, `mechanisms.${i}.mechanism_type`, 'Type is required');
-    }
-    if (!m.mechanism_value.trim()) {
-      set(errors, `mechanisms.${i}.mechanism_value`, 'Value is required');
-    }
-  });
-
-  return errors;
-};
+import { validateContact } from '../contact-utils';
 
 export default function ContactView() {
   const { id } = useParams();
@@ -62,7 +39,7 @@ export default function ContactView() {
 
   useEffect(() => {
     fetchSingleContact();
-  }, [id]);
+  }, [fetchSingleContact]);
 
   const onContactMenuAction = useCallback(
     async (menuId) => {

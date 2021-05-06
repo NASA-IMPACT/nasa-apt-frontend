@@ -13,7 +13,7 @@ import ContactsList from './contacts-list';
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForAtbdContacts } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
-import { validateContact } from '../../../contacts/edit';
+import { validateContact } from '../../../contacts/contact-utils';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -54,7 +54,7 @@ export default function StepContacts(props) {
   // We need the list of all contacts for the select.
   useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
   // We only want to handle errors when the contact request fails. Mutation
   // errors, tracked by the `mutationStatus` property are handled in the submit

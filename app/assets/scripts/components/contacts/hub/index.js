@@ -38,7 +38,7 @@ export function Contacts() {
 
   useEffect(() => {
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
   // We only want to handle errors when the contact request fails. Mutation
   // errors, tracked by the `mutationStatus` property are handled in the submit
