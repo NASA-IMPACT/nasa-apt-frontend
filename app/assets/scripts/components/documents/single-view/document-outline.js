@@ -10,7 +10,7 @@ import {
   Panel,
   PanelHeader,
   PanelHeadline,
-  PanelTitle,
+  PanelTitleAlt,
   PanelBody
 } from '../../../styles/panel';
 
@@ -37,7 +37,7 @@ const OutlineMenuLink = styled(Heading).attrs({ as: 'a' })`
   position: relative;
   display: block;
   font-size: 1rem;
-  line-height: 1.25rem;
+  line-height: 1.5rem;
   padding: ${glsp(0.5, themeVal('layout.gap.medium'))};
   margin: 0;
   background-color: ${rgba(themeVal('color.link'), 0)};
@@ -242,7 +242,7 @@ export default function DocumentOutline(props) {
     <OutlineSelf ref={elementRef}>
       <PanelHeader>
         <PanelHeadline>
-          <PanelTitle>Outline</PanelTitle>
+          <PanelTitleAlt>Outline</PanelTitleAlt>
         </PanelHeadline>
       </PanelHeader>
       <PanelBody>
