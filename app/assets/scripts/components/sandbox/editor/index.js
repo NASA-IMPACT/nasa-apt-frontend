@@ -14,7 +14,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
-import { hugeDoc, references } from '../../slate/plugins/debug-editor/dummy';
+import { hugeDoc, references } from './dummy';
 import { RichContextProvider } from '../../slate/plugins/common/rich-context';
 import { InlineRichTextEditor } from '../../slate/inline-editor';
 
