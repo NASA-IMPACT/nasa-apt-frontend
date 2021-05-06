@@ -64,7 +64,7 @@ export const insertSubSection = (editor) => {
  */
 export const onSubsectionUse = (editor, btnId) => {
   switch (btnId) {
-    case 'heading':
+    case SUB_SECTION:
       insertSubSection(editor);
       break;
     case 'delete-heading':
