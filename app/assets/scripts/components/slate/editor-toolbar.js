@@ -200,7 +200,9 @@ export function EditorToolbar(props) {
         <Tip title={`Keyboard shortcuts (${modKey(SHORTCUTS_HOTKEY)})`}>
           <ToolbarIconButton
             useIcon='keyboard'
-            onMouseDown={() => ShortcutsModalPlugin.onUse(editor, 'shortcut-modal')}
+            onMouseDown={() => {
+              ShortcutsModalPlugin.onUse(editor, 'shortcut-modal');
+            }}
           >
             Keyboard shortcuts
           </ToolbarIconButton>
