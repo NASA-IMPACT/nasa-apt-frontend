@@ -8399,12 +8399,20 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
+qs-state-hook@^1.0.3:
+  version "1.0.3"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/qs-state-hook/-/qs-state-hook-1.0.3.tgz#610cebcb13d613e106d448b51942a97473102183"
+  integrity sha512-ceBFZOllGSXqrVZv6532a3Av2uzEmcFUAfc5VTd+aKUlKLtoCv0a+XXhErpzX/PuU6zRxUyE2sks2TxpmOUC4g==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    qs "^6.9.6"
+
 qs@6.2.3:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.2.3.tgz#1cfcb25c10a9b2b483053ff39f5dfc9233908cfe"
   integrity sha1-HPyyXBCpsrSDBT/zn138kjOQjP4=
 
-qs@^6.10.1:
+qs@^6.10.1, qs@^6.9.6:
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
   integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
