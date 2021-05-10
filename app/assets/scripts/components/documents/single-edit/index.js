@@ -146,6 +146,7 @@ function DocumentEdit() {
                   atbdVersion={atbd.data}
                   variation='achromic-plain'
                   onSelect={onDocumentMenuAction}
+                  origin='single-edit'
                 />
               </InpageActions>
             </InpageHeaderSticky>

@@ -171,6 +171,7 @@ function DocumentView() {
                 atbdVersion={atbd.data}
                 variation='achromic-plain'
                 onSelect={onDocumentMenuAction}
+                origin='single-view'
               />
             </InpageActions>
           </InpageHeaderSticky>
