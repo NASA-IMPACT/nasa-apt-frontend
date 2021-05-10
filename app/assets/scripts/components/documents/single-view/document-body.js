@@ -30,20 +30,10 @@ const AtbdSectionBase = ({ id, title, children, ...props }) => (
 
 const AtbdSection = styled(AtbdSectionBase)`
   ${proseInnerSpacing()}
-  position: relative;
 
   &:not(:last-child) {
-    padding-bottom: ${glsp(1.5)};
-
     &::after {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 1px;
       width: 8rem;
-      background: ${themeVal('color.baseAlphaC')};
-      content: '';
-      pointer-events: none;
     }
   }
 `;

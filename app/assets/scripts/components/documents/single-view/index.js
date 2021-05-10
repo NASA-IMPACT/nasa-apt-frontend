@@ -47,28 +47,43 @@ const DocumentCanvas = styled(InpageBody)`
   }
 `;
 
+const DocumentProse = styled(Prose)`
+  > * {
+    position: relative;
+    padding-bottom: ${glsp(3)};
+    margin-bottom: ${glsp(3)};
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      width: 100%;
+      background: ${themeVal('color.baseAlphaC')};
+      content: '';
+      pointer-events: none;
+    }
+  }
+
+  > *:last-child {
+    padding-bottom: 0;
+    margin-bottom: 0;
+
+    &::after {
+      display: none;
+    }
+  }
+`;
+
 const DocumentContent = styled.div`
   grid-column: content-start / content-end;
   max-width: 52rem;
 `;
 
 const DocumentHeader = styled.header`
-  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 2rem;
-  padding-bottom: ${glsp(1.5)};
-
-  &::after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 1px;
-    width: 100%;
-    background: ${themeVal('color.baseAlphaC')};
-    content: '';
-    pointer-events: none;
-  }
 `;
 
 const DocumentTitle = styled(Heading)`
@@ -182,7 +197,7 @@ function DocumentView() {
               <DocumentOutline atbd={atbd.data} />
               <ContentBlock>
                 <DocumentContent>
-                  <Prose>
+                  <DocumentProse>
                     <DocumentHeader>
                       <DocumentTitle>{atbd.data.title}</DocumentTitle>
                       <DocumentMetaDetails>
@@ -203,7 +218,7 @@ function DocumentView() {
                       </DocumentMetaDetails>
                     </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
-                  </Prose>
+                  </DocumentProse>
                 </DocumentContent>
               </ContentBlock>
             </DocumentCanvas>
