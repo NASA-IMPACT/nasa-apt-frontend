@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
 import { Formik, Form as FormikForm } from 'formik';
-import { Form } from '@devseed-ui/form';
+import { Form, FormHelperMessage } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
@@ -61,6 +61,21 @@ export default function StepIdentifyingInformation(props) {
                   description={formString('identifying_information.title')}
                 />
                 <FieldAtbdAlias />
+              </SectionFieldset>
+
+              <SectionFieldset label='DOI'>
+                <FormikInputText
+                  id='doi'
+                  name='doi'
+                  label='DOI'
+                  description={formString('identifying_information.doi')}
+                  helper={
+                    <FormHelperMessage>
+                      Use the DOI name (ex: 10.1000/xyz123) instead of the full
+                      url
+                    </FormHelperMessage>
+                  }
+                />
               </SectionFieldset>
 
               <FormikSectionFieldset

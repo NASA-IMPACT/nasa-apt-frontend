@@ -25,6 +25,8 @@ import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
 import Datetime from '../../common/date';
+import Tip from '../../common/tooltip';
+import { CopyField } from '../../common/copy-field';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { calculateAtbdCompleteness } from '../completeness';
@@ -197,12 +199,7 @@ function DocumentView() {
                         <dd>
                           {atbd.data.citation?.editors || 'None provided'}
                         </dd>
-                        <dt>URL</dt>
-                        <dd>
-                          <a href='#' title='View'>
-                            coming soon
-                          </a>
-                        </dd>
+                        <DOIAddress value={atbd.data.doi} />
                       </DocumentMetaDetails>
                     </DocumentHeader>
                     <DocumentBody atbd={atbd.data} />
@@ -252,4 +249,48 @@ const ReleaseDate = ({ date }) => {
 
 ReleaseDate.propTypes = {
   date: T.string
+};
+
+const DOIAddress = ({ value }) => {
+  if (!value) {
+    return (
+      <React.Fragment>
+        <dt>DOI</dt>
+        <dd>None provided</dd>
+      </React.Fragment>
+    );
+  }
+
+  const isUrl = value.match(/https?:\/\//);
+
+  const doiAddress = isUrl ? value : `https://doi.org/${value}`;
+
+  return (
+    <React.Fragment>
+      <dt>DOI</dt>
+      <dd>
+        <CopyField value={doiAddress}>
+          {({ showCopiedMsg, ref }) => (
+            <Tip
+              title={showCopiedMsg ? 'Copied' : 'Click to copy DOI'}
+              hideOnClick={false}
+            >
+              <a
+                href='#'
+                tile='DOI of the present document'
+                ref={ref}
+                onClick={(e) => e.preventDefault()}
+              >
+                {value}
+              </a>
+            </Tip>
+          )}
+        </CopyField>
+      </dd>
+    </React.Fragment>
+  );
+};
+
+DOIAddress.propTypes = {
+  value: T.string
 };
