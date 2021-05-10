@@ -29,7 +29,12 @@ export function CopyField(props) {
 
   const val = showCopiedMsg ? 'Copied!' : value;
 
-  return children({ value: val, ref: triggerElement });
+  return children({
+    value: val,
+    ref: triggerElement,
+    originalValue: value,
+    showCopiedMsg
+  });
 }
 
 CopyField.propTypes = {
