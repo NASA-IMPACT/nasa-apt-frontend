@@ -27,6 +27,7 @@ import {
   getReferenceEmptyValue,
   removeReferencesFromDocument
 } from '../../../../utils/references';
+import { confirmRemoveReferences } from './references-remove-confirm';
 
 // The selection of the refs is managed by SelectionList. This utility only
 // handles the selection part (multi selects, toggle, etc), we still store the
@@ -54,7 +55,7 @@ export default function ReferencesManager(props) {
     helpers.setValue(field.value.concat(preparedRefs));
   };
 
-  const onMenuAction = ({ push, form }, menuId, data) => {
+  const onMenuAction = async ({ push, form }, menuId, data) => {
     switch (menuId) {
       case 'add':
         {
@@ -70,6 +71,12 @@ export default function ReferencesManager(props) {
         {
           // Create a list of ids to facilitate searching.
           const selectedIds = refsSelected.map((r) => r.id);
+
+          const { result } = await confirmRemoveReferences(
+            true,
+            selectedIds.length
+          );
+          if (!result) return;
 
           // Remove the deleted references from all the editor
           // fields.
@@ -155,7 +162,17 @@ export default function ReferencesManager(props) {
                         );
                         setRefsEditing(newSelection);
                       }}
-                      onDeleteClick={() => {
+                      onDeleteClick={async () => {
+                        // If the reference is in use prompt the user for
+                        // confirmation before removing it.
+                        if (referenceIndex[field.id]?.count) {
+                          const { result } = await confirmRemoveReferences(
+                            false,
+                            referenceIndex[field.id].count
+                          );
+                          if (!result) return;
+                        }
+
                         const newSelection = selectedReferencesList.deselect(
                           field
                         );
