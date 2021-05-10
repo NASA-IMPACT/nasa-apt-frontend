@@ -2,7 +2,6 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
 import DetailsList from '../../../styles/typography/details-list';
