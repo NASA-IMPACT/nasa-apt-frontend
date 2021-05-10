@@ -264,18 +264,26 @@ export const confirmDeleteAtbdVersion = async (name, version) => {
  * content: <p>The contact <strong>{name}</strong> will be deleted.</p>
  *
  * @param {string} name Name of the contact to delete
+ * @param {number} contact Number of documents where contact is used
  * @param {any} data Any extra data that the confirmation prompt should keep
  *              track of. Useful to know what confirmation we're working with.
  */
-export const confirmDeleteContact = async (name) => {
+export const confirmDeleteContact = async (name, docsCount) => {
   return showConfirmationPrompt({
     title: 'Delete this contact?',
     content: (
       <React.Fragment>
-        <p>
-          The contact <strong>{name}</strong> will be removed from APT and from
-          all documents where it is being used.
-        </p>
+        {docsCount ? (
+          <p>
+            The contact <strong>{name}</strong> will be removed from APT and
+            from all documents ({docsCount}) where it is being used.
+          </p>
+        ) : (
+          <p>
+            The contact <strong>{name}</strong> will be removed from APT.
+          </p>
+        )}
+        <p>This action is irreversible.</p>
       </React.Fragment>
     ),
     renderControls: deleteControls

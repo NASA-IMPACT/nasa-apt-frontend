@@ -33,7 +33,7 @@ export default function ContactRelatedDocuments(props) {
       <Heading as='h2'>Appears on</Heading>
       <HubList>
         {related.map(({ roles, atbd_version }) => (
-          <HubListItem key='change me'>
+          <HubListItem key={`${atbd_version.atbd.id}-${atbd_version.version}`}>
             <RelatedAtbdEntry atbdVersion={atbd_version} roles={roles} />
           </HubListItem>
         ))}
@@ -48,13 +48,18 @@ ContactRelatedDocuments.propTypes = {
 
 const RelatedAtbdEntry = (props) => {
   const { atbdVersion, roles } = props;
+  const { title } = atbdVersion.atbd;
+
   return (
     <HubEntry>
       <HubEntryHeader>
         <HubEntryHeadline>
           <HubEntryTitle>
-            <Link to={atbdView(1, atbdVersion.version)} title='View document'>
-              Hello
+            <Link
+              to={atbdView(atbdVersion.atbd, atbdVersion.version)}
+              title='View document'
+            >
+              {title}
             </Link>
           </HubEntryTitle>
           <HubEntryHeadNav role='navigation'>
