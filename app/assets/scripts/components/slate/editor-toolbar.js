@@ -1,13 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { ReactEditor, useSlate } from 'slate-react';
 import {
   getNodes,
   getPreventDefaultHandler,
-  isSelectionExpanded,
-  useBalloonMove,
-  useBalloonShow
+  isSelectionExpanded
 } from '@udecode/slate-plugins';
 import castArray from 'lodash.castarray';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -19,7 +17,8 @@ import {
 } from '@devseed-ui/toolbar';
 
 import Tip from '../common/tooltip';
-import PortalContainer from './plugins/common/portal-container';
+import { FloatingControl } from './floating-control';
+
 import { modKey, REDO_HOTKEY, UNDO_HOTKEY } from './plugins/common/utils';
 import { isMarkActive } from './plugins/common/marks';
 import { SUB_SECTION } from './plugins/subsection';
@@ -28,6 +27,7 @@ import {
   SHORTCUTS_HOTKEY,
   ShortcutsModalPlugin
 } from './plugins/shortcuts-modal';
+import { useSelectionRect } from './plugins/common/use-selection-rect';
 
 const EditorActions = styled.div`
   display: grid;
@@ -64,8 +64,7 @@ export const FloatingToolbar = styled.div`
   border-radius: ${themeVal('shape.rounded')};
   opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
   visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
-  transition: visibility 120ms linear, opacity 120ms ease-out,
-    left 75ms ease-out;
+  transition: visibility 120ms linear 10ms, opacity 120ms ease-out 10ms;
 
   > * {
     grid-row: 1;
@@ -281,53 +280,38 @@ export function isSelectionActionAllowed(editor) {
   return true;
 }
 
-const useBalloonShowExcludeBlocks = ({ editor, ref }) => {
-  const [hidden] = useBalloonShow({ editor, ref, hiddenDelay: 0 });
-
-  if (!isSelectionActionAllowed(editor)) {
-    // If the selection actions are not allowed, the toolbar should be hidden.
-    return true;
-  }
-
-  return hidden;
-};
-
 // Display the toolbar buttons for the plugins that define a toolbar.
 export function EditorFloatingToolbar(props) {
   const { plugins } = props;
   const editor = useSlate();
-  const ref = useRef(null);
 
-  const hidden = useBalloonShowExcludeBlocks({
-    editor,
-    ref
-  });
-  useBalloonMove({ editor, ref, direction: 'top' });
+  const pos = useSelectionRect({ editor });
+  // If the selection actions are not allowed, the toolbar should be hidden.
+  const isVisible =
+    isSelectionExpanded(editor) && isSelectionActionAllowed(editor);
 
   return (
-    <PortalContainer>
-      <FloatingToolbar ref={ref} isHidden={hidden}>
-        <Toolbar>
-          {plugins.reduce((acc, p) => {
-            if (!p.floatToolbar) return acc;
+    <FloatingControl visible={isVisible} anchor={pos}>
+      <Toolbar>
+        {plugins.reduce((acc, p) => {
+          if (!p.floatToolbar) return acc;
 
-            return acc.concat(
-              castArray(p.floatToolbar).map((btn) => (
-                <ToolbarRenderableItem
-                  key={btn.id}
-                  editor={editor}
-                  btn={btn}
-                  toolbarType='floating'
-                  plugin={p}
-                  className={`fl_toolbar-${btn.id}`}
-                  active={isMarkActive(editor, btn.id)}
-                />
-              ))
-            );
-          }, [])}
-        </Toolbar>
-      </FloatingToolbar>
-    </PortalContainer>
+          return acc.concat(
+            castArray(p.floatToolbar).map((btn) => (
+              <ToolbarRenderableItem
+                key={btn.id}
+                editor={editor}
+                btn={btn}
+                toolbarType='floating'
+                plugin={p}
+                className={`fl_toolbar-${btn.id}`}
+                active={isMarkActive(editor, btn.id)}
+              />
+            ))
+          );
+        }, [])}
+      </Toolbar>
+    </FloatingControl>
   );
 }
 

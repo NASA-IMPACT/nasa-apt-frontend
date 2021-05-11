@@ -18,7 +18,12 @@ const linkEditorInitialState = {
   // Original url value to display in the Link Editor. This is extracted from
   // the slate element when an existing link is being edited. It will be empty
   // otherwise.
-  value: ''
+  value: '',
+  // Origin on the event that caused the link editor to show. This is needed to
+  // know when to hide the link editor in the editor onChange cycle.
+  // One of: user | caret (caret meaning the user used the arrows to move over
+  // the link)
+  origin: ''
 };
 
 /**
@@ -40,11 +45,7 @@ export const withLinkEditor = (editor) => {
     },
     show: (data) => {
       // Create an operation, storing some data to be used later.
-      editor.linkEditor.operation = createOp('show', {
-        selection: data.selection,
-        selectionRect: data.selectionRect,
-        value: data.value
-      });
+      editor.linkEditor.operation = createOp('show', data);
       // Trigger a change event.
       editor.onChange();
     },
@@ -68,12 +69,13 @@ export const withLinkEditor = (editor) => {
       case 'show': {
         // Use the data from the operation's args to do things. In this case to
         // make the link editor visible.
-        const { selection, selectionRect, value } = args[0];
+        const { selection, selectionRect, value, origin } = args[0];
         linkEditorDataRef.current = {
           visible: true,
           selection,
           selectionRect,
-          value
+          value,
+          origin
         };
         break;
       }
@@ -115,14 +117,20 @@ export const withLinkEditor = (editor) => {
       editor.linkEditor.show({
         selection: editor.selection,
         selectionRect: rect,
-        value: linkUnderCaret[0].url
+        value: linkUnderCaret[0].url,
+        origin: 'caret'
       });
       // The link Editor methods trigger a onChange event, We don't have to do
       // anything else here.
     } else {
-      editor.linkEditor.reset();
-      // The link Editor methods trigger a onChange event, We don't have to do
-      // anything else here.
+      const { visible, origin } = editor.linkEditor.getData();
+      if (visible && origin === 'caret') {
+        // The link Editor methods trigger a onChange event, We don't have to do
+        // anything else here.
+        editor.linkEditor.reset();
+      } else {
+        return onChange();
+      }
     }
   };
 
