@@ -8,6 +8,7 @@ import {
   isSelectionExpanded
 } from '@udecode/slate-plugins';
 import castArray from 'lodash.castarray';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import {
   Toolbar,
@@ -48,6 +49,33 @@ const EditorActions = styled.div`
 
   > * {
     grid-row: 1;
+  }
+`;
+
+const ToolbarGroup = styled.div`
+  display: flex;
+`;
+
+const ContextualToolbar = styled(Toolbar)`
+  position: relative;
+
+  &.contextual-actions-enter {
+    opacity: 0;
+    left: ${glsp(-3)};
+  }
+  &.contextual-actions-enter-active {
+    transition: opacity 200ms, left 200ms;
+    opacity: 1;
+    left: 0;
+  }
+  &.contextual-actions-exit {
+    opacity: 1;
+    left: 0;
+  }
+  &.contextual-actions-exit-active {
+    transition: opacity 200ms, left 200ms;
+    opacity: 0;
+    left: ${glsp(-1)};
   }
 `;
 
@@ -145,32 +173,31 @@ export function EditorToolbar(props) {
 
   return (
     <EditorActions>
-      <Toolbar>
-        <ToolbarLabel>Insert</ToolbarLabel>
-        {plugins.reduce((acc, p) => {
-          if (!p.toolbar) return acc;
+      <ToolbarGroup>
+        <Toolbar>
+          <ToolbarLabel>Insert</ToolbarLabel>
+          {plugins.reduce((acc, p) => {
+            if (!p.toolbar) return acc;
 
-          return acc.concat(
-            castArray(p.toolbar).map((btn) => (
-              <ToolbarRenderableItem
-                key={btn.id}
-                editor={editor}
-                btn={btn}
-                toolbarType='main'
-                plugin={p}
-              />
-            ))
-          );
-        }, [])}
-
-        {!!contextualActions.length && (
-          <React.Fragment>
-            <VerticalDivider />
-            <ToolbarLabel>Options</ToolbarLabel>
-            {contextualActions}
-          </React.Fragment>
-        )}
-      </Toolbar>
+            return acc.concat(
+              castArray(p.toolbar).map((btn) => (
+                <ToolbarRenderableItem
+                  key={btn.id}
+                  editor={editor}
+                  btn={btn}
+                  toolbarType='main'
+                  plugin={p}
+                />
+              ))
+            );
+          }, [])}
+        </Toolbar>
+        <TransitionGroup component={null}>
+          {!!contextualActions.length && (
+            <Contextual>{contextualActions}</Contextual>
+          )}
+        </TransitionGroup>
+      </ToolbarGroup>
 
       <Toolbar>
         <Tip title={`Undo (${modKey(UNDO_HOTKEY)})`}>
@@ -213,6 +240,32 @@ export function EditorToolbar(props) {
 
 EditorToolbar.propTypes = {
   plugins: T.array
+};
+
+// The contextual toolbar must be a separate component because otherwise the
+// animation doesn't work. By being a separate component, the previous children
+// are kept and they can be animated.
+const Contextual = (props) => {
+  const { children, ...rest } = props;
+  return (
+    <CSSTransition
+      mountOnEnter
+      unmountOnExit
+      timeout={300}
+      classNames='contextual-actions'
+      {...rest}
+    >
+      <ContextualToolbar>
+        <VerticalDivider />
+        <ToolbarLabel>Options</ToolbarLabel>
+        {children}
+      </ContextualToolbar>
+    </CSSTransition>
+  );
+};
+
+Contextual.propTypes = {
+  children: T.node
 };
 
 /**
