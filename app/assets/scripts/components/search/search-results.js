@@ -131,11 +131,7 @@ function ResultsList(props) {
           <li key={_id}>
             <SearchResult>
               <ResultLink
-                // TODO: Use version.
-                to={atbdView(
-                  result,
-                  `v${result.version.major}.${result.version.minor}`
-                )}
+                to={atbdView(result, result.version.version)}
                 title='View document'
               >
                 <header>
