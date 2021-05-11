@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { useHistory, useLocation } from 'react-router';
@@ -86,6 +86,7 @@ function Search() {
   // react-router function to ensure the component re-renders when there is a
   // location change.
   useLocation();
+  const searchFieldRef = useRef(null);
 
   const useQsState = useQsStateCreator({
     commit: history.push
@@ -124,6 +125,16 @@ function Search() {
       fetchSearchResults(initialValues);
     }
 
+    const id = setTimeout(() => {
+      if (searchFieldRef.current) {
+        searchFieldRef.current.focus();
+      }
+    }, 150);
+
+    return () => {
+      id && clearTimeout(id);
+    };
+
     // First fetch is done on mount only.
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -159,6 +170,7 @@ function Search() {
               <Form as={FormikForm}>
                 <SearchBox>
                   <FormikInputText
+                    inputRef={searchFieldRef}
                     id='search-term'
                     name='term'
                     label='Search'

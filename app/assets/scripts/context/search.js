@@ -35,13 +35,13 @@ export const SearchProvider = ({ children }) => {
             }
           };
 
-          // elasticQuery.bool.filter.push({
-          //   match: { status: statusFilter }
-          // });
+          elasticQuery.bool.filter.push({
+            match: { 'version.status': statusFilter }
+          });
 
           if (year !== 'all') {
             elasticQuery.bool.filter.push({
-              match: { 'citation.release_date': year }
+              match: { 'version.citation.release_date': year }
             });
           }
 

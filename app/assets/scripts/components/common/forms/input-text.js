@@ -31,6 +31,7 @@ export function InputText(props) {
     inputVariation,
     description,
     helper,
+    inputRef,
     // All other props are passed directly to the input
     // name,
     // value,
@@ -50,6 +51,7 @@ export function InputText(props) {
       helper={helper}
     >
       <FormInput
+        ref={inputRef}
         type='text'
         variation={inputVariation}
         id={id}
@@ -72,7 +74,8 @@ InputText.propTypes = {
   placeholder: T.oneOfType([T.string, T.number]),
   onChange: T.func,
   description: T.string,
-  helper: T.node
+  helper: T.node,
+  inputRef: T.object
 };
 
 /**

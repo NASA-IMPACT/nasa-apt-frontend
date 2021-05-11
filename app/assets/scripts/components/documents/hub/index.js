@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import App from '../../common/app';
 import {
@@ -87,6 +88,16 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
+            <Button
+              as={Link}
+              to='/search'
+              variation='achromic-glass'
+              title='Search documents'
+              useIcon='magnifier-right'
+            >
+              Search
+            </Button>
+            <VerticalDivider variation='light' />
             <Can do='create' on='documents'>
               <ButtonSecondary
                 title='Create new document'
