@@ -56,6 +56,12 @@ const ToolbarGroup = styled.div`
   display: flex;
 `;
 
+const ToolbarLabelAlt = styled(ToolbarLabel)`
+  &:not(:first-child) {
+    margin-left: 0;
+  }
+`;
+
 const ContextualToolbar = styled(Toolbar)`
   position: relative;
 
@@ -257,7 +263,7 @@ const Contextual = (props) => {
     >
       <ContextualToolbar>
         <VerticalDivider />
-        <ToolbarLabel>Options</ToolbarLabel>
+        <ToolbarLabelAlt>Options</ToolbarLabelAlt>
         {children}
       </ContextualToolbar>
     </CSSTransition>
