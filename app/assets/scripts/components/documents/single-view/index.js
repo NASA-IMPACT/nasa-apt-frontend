@@ -6,6 +6,7 @@ import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
 import {
@@ -83,7 +84,7 @@ const DocumentContent = styled.div`
 const DocumentHeader = styled.header`
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 2rem;
+  grid-gap: ${glsp(2)};
 `;
 
 const DocumentTitle = styled(Heading)`
@@ -92,6 +93,15 @@ const DocumentTitle = styled(Heading)`
 
 const DocumentMetaDetails = styled(DetailsList)`
   background: transparent;
+`;
+
+const DOIValue = styled.dd`
+  display: flex;
+  align-items: center;
+
+  ${Button} {
+    margin-left: ${glsp(0.25)};
+  }
 `;
 
 function DocumentView() {
@@ -283,25 +293,29 @@ const DOIAddress = ({ value }) => {
   return (
     <React.Fragment>
       <dt>DOI</dt>
-      <dd>
+      <DOIValue>
+        <a href={doiAddress} title='DOI of the present document'>
+          {value}
+        </a>
         <CopyField value={doiAddress}>
           {({ showCopiedMsg, ref }) => (
             <Tip
               title={showCopiedMsg ? 'Copied' : 'Click to copy DOI'}
               hideOnClick={false}
             >
-              <a
-                href='#'
-                tile='DOI of the present document'
+              <Button
                 ref={ref}
-                onClick={(e) => e.preventDefault()}
+                useIcon='clipboard'
+                variation='base-plain'
+                size='small'
+                hideText
               >
-                {value}
-              </a>
+                Copy DOI
+              </Button>
             </Tip>
           )}
         </CopyField>
-      </dd>
+      </DOIValue>
     </React.Fragment>
   );
 };
