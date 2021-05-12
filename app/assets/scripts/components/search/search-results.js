@@ -5,9 +5,21 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
 
+import {
+  HubList,
+  HubListItem,
+  HubEntry,
+  HubEntryHeader,
+  HubEntryHeadline,
+  HubEntryTitle,
+  HubEntryHeadNav,
+  HubEntryBreadcrumbMenu,
+  HubEntryMeta
+} from '../../styles/hub';
 import { Link } from '../../styles/clean/link';
 import Pill from '../common/pill';
 import TextHighlight from '../common/TextHighlight';
+
 import { atbdView } from '../../utils/url-creator';
 
 const SearchResultsWrapper = styled.div`
@@ -32,17 +44,6 @@ const NoResultsMessage = styled.div`
   }
 `;
 
-const SearchResultsList = styled.ul`
-  display: grid;
-  grid-gap: ${glsp(2)};
-`;
-
-const SearchResult = styled.article`
-  > *:not(:last-child) {
-    margin-bottom: ${glsp()};
-  }
-`;
-
 const ResultLink = styled(Link)`
   display: inline-block;
 
@@ -54,21 +55,6 @@ const ResultLink = styled(Link)`
 
   & > *:not(:last-child) {
     margin-bottom: ${glsp()};
-  }
-`;
-
-const ResultHeadline = styled.div`
-  display: flex;
-  align-items: center;
-
-  ${Pill} {
-    margin-right: ${glsp()};
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.5rem;
   }
 `;
 
@@ -99,7 +85,7 @@ function SearchResults(props) {
     <SearchResultsWrapper>
       <ResultsHeading as='h2'>
         Showing {resultItems.length} result
-        {resultItems.length > 1 ? 's' : ''} for <em>{searchValue}</em>
+        {resultItems.length !== 1 ? 's' : ''} for <em>{searchValue}</em>
       </ResultsHeading>
       <ResultsList resultItems={resultItems} searchValue={searchValue} />
     </SearchResultsWrapper>
@@ -125,32 +111,44 @@ function ResultsList(props) {
   }
 
   return (
-    <SearchResultsList>
+    <HubList>
       {resultItems.map(({ _id, _source: result, highlight }) => {
         return (
-          <li key={_id}>
-            <SearchResult>
+          <HubListItem key={_id}>
+            <HubEntry>
               <ResultLink
                 to={atbdView(result, result.version.version)}
                 title='View document'
               >
-                <header>
-                  <ResultHeadline>
-                    <Pill>{result.version.status}</Pill>
-                    <h1>
+                <HubEntryHeader>
+                  <HubEntryHeadline>
+                    <HubEntryTitle>
                       <TextHighlight value={searchValue}>
                         {result.title}
                       </TextHighlight>
-                    </h1>
-                  </ResultHeadline>
-                </header>
+                    </HubEntryTitle>
+                    <HubEntryHeadNav role='navigation'>
+                      <HubEntryBreadcrumbMenu>
+                        <li>
+                          <strong>{result.version.version}</strong>
+                        </li>
+                      </HubEntryBreadcrumbMenu>
+                    </HubEntryHeadNav>
+                  </HubEntryHeadline>
+                  <HubEntryMeta>
+                    <dt>Status</dt>
+                    <dd>
+                      <Pill>{result.version.status}</Pill>
+                    </dd>
+                  </HubEntryMeta>
+                </HubEntryHeader>
                 <ResultHighlights highlight={highlight} />
               </ResultLink>
-            </SearchResult>
-          </li>
+            </HubEntry>
+          </HubListItem>
         );
       })}
-    </SearchResultsList>
+    </HubList>
   );
 }
 
@@ -187,7 +185,7 @@ const ResultHighlights = (props) => {
         <div>
           <em>
             matches also found in {otherHighlightsCount} other field
-            {otherHighlightsCount.length > 1 ? 's' : ''}
+            {otherHighlightsCount.length !== 1 ? 's' : ''}
           </em>
         </div>
       )}
