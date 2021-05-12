@@ -204,6 +204,17 @@ function PageHeader() {
               About
             </Button>
           </li>
+          <li>
+            <Button
+              forwardedAs={NavLink}
+              exact
+              to='/help'
+              variation='achromic-plain'
+              title='Visit the help section'
+            >
+              Help
+            </Button>
+          </li>
         </GlobalMenu>
         <VerticalDivider variation='light' />
         <GlobalMenu>
@@ -211,6 +222,10 @@ function PageHeader() {
             <Button
               variation='achromic-plain'
               title='Leave feedback about the app'
+              onClick={(e) => {
+                e.preventDefault();
+                window.feedback?.showForm();
+              }}
             >
               Feedback
             </Button>

@@ -14,6 +14,8 @@ const through2 = require('through2');
 const jsonConcat = require('gulp-json-concat');
 const yaml = require('gulp-yaml');
 
+const processHelpPages = require('./gulp-help-pages');
+
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
 // ---------------------------------------------------------------------------//
@@ -52,7 +54,7 @@ function serve() {
   bs.init({
     port: 9000,
     server: {
-      baseDir: ['.tmp', 'app'],
+      baseDir: ['.tmp', 'app', 'dist'],
       routes: {
         '/node_modules': './node_modules'
       },
@@ -76,23 +78,32 @@ function serve() {
     ]
   });
 
+  const reload4Watch = (cb) => {
+    bs.reload();
+    cb();
+  };
+
   // watch for changes
-  gulp.watch(['app/*.html', 'app/assets/graphics/**/*'], bs.reload);
+  gulp.watch(['app/*.html', 'app/assets/graphics/**/*'], reload4Watch);
 
   gulp.watch(['content/strings/*'], ymlStrings);
+  gulp.watch(
+    ['content/help-documentation/*'],
+    gulp.series(helpPages, reload4Watch)
+  );
 
   gulp.watch('package.json', vendorScripts);
 }
 
 module.exports.clean = clean;
 module.exports.serve = gulp.series(
-  ymlStrings,
+  gulp.parallel(ymlStrings, helpPages),
   gulp.parallel(vendorScripts, javascript),
   serve
 );
 module.exports.default = gulp.series(
   clean,
-  ymlStrings,
+  gulp.parallel(ymlStrings, helpPages),
   gulp.parallel(vendorScripts, javascript),
   gulp.parallel(html, imagesImagemin),
   copyFiles,
@@ -199,6 +210,13 @@ function ymlStrings() {
       jsonConcat('strings.json', (data) => Buffer.from(JSON.stringify(data)))
     )
     .pipe(gulp.dest('app/assets/scripts/'));
+}
+
+function helpPages() {
+  return gulp
+    .src('content/help-documentation/*.md')
+    .pipe(processHelpPages('docs'))
+    .pipe(gulp.dest('dist/docs'));
 }
 
 function copyFiles() {

@@ -18,7 +18,7 @@ import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import ContactActionsMenu from '../contact-actions-menu';
 import ContactNavHeader from '../contact-nav-header';
-// import ContactRelatedDocuments from './contact-related-documents';
+import ContactRelatedDocuments from './contact-related-documents';
 
 import { useContacts, useSingleContact } from '../../../context/contacts-list';
 import { contactDeleteConfirmAndToast } from '../contact-delete-process';
@@ -163,7 +163,7 @@ export default function ContactView() {
                   </DetailsList>
                 </Prose>
               </ContactContent>
-              {/* <ContactRelatedDocuments related={data.atbd_versions_link} /> */}
+              <ContactRelatedDocuments related={data.atbd_versions_link} />
             </ContentBlock>
           </InpageBody>
         </Inpage>

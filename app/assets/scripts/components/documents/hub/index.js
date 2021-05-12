@@ -87,6 +87,15 @@ function Documents() {
             <InpageTitle>Documents</InpageTitle>
           </InpageHeadline>
           <InpageActions>
+            <Button
+              as={Link}
+              to='/documents/search'
+              variation='achromic-plain'
+              title='Search documents'
+              useIcon='magnifier-right'
+            >
+              Search
+            </Button>
             <Can do='create' on='documents'>
               <ButtonSecondary
                 title='Create new document'
