@@ -12,7 +12,11 @@ export const SearchContext = createContext(null);
 export const SearchProvider = ({ children }) => {
   const { token } = useAuthToken();
 
-  const { getState: getResults, fetchSearchResults } = useContexeedApi(
+  const {
+    getState: getResults,
+    fetchSearchResults,
+    invalidate
+  } = useContexeedApi(
     {
       name: 'searchResults',
       requests: {
@@ -63,7 +67,8 @@ export const SearchProvider = ({ children }) => {
 
   const contextValue = {
     getResults,
-    fetchSearchResults
+    fetchSearchResults,
+    invalidate
   };
 
   return (
@@ -91,10 +96,13 @@ const useCheckContext = (fnName) => {
 };
 
 export const useSearch = () => {
-  const { getResults, fetchSearchResults } = useCheckContext('useSearch');
+  const { getResults, fetchSearchResults, invalidate } = useCheckContext(
+    'useSearch'
+  );
 
   return {
     results: getResults(),
+    invalidate,
     fetchSearchResults: useCallback((data) => fetchSearchResults({ data }), [
       fetchSearchResults
     ])

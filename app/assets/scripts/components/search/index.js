@@ -114,7 +114,7 @@ function Search() {
     [searchValue, year, status]
   );
 
-  const { results, fetchSearchResults } = useSearch();
+  const { results, fetchSearchResults, invalidate } = useSearch();
 
   useEffect(() => {
     if (searchValue.trim()) {
@@ -128,6 +128,8 @@ function Search() {
     }, 150);
 
     return () => {
+      // Clear results when the user leaves the page.
+      invalidate();
       id && clearTimeout(id);
     };
 
