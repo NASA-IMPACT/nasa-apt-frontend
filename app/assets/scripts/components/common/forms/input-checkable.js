@@ -1,9 +1,7 @@
 import React from 'react';
 import { PropTypes as T } from 'prop-types';
 import { Field } from 'formik';
-
-// Temporary while liv is fixed.
-import { FormCheckable } from './devseedui-checkable';
+import { FormCheckable } from '@devseed-ui/form';
 
 /**
  * InputText component for usage with Formik
