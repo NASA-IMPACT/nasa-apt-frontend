@@ -45,10 +45,15 @@ const getCurrentSelectionRect = () => {
  */
 export const onLinkUse = (editor) => {
   const rect = getCurrentSelectionRect();
+  const { selection } = editor;
+
+  Transforms.collapse(editor);
+
   editor.linkEditor.show({
-    selection: editor.selection,
+    selection,
     selectionRect: rect,
-    value: ''
+    value: '',
+    origin: 'user'
   });
 };
 

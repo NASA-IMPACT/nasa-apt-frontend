@@ -16,6 +16,19 @@ const FormGroupFooter = styled.div`
   /* styled-component */
 `;
 
+// This is needed so that the tooltip doesn't have a div wrapper and the focus
+// works.
+const TooltipTagComponent = React.forwardRef((props, ref) => (
+  <ToolbarIconButton
+    ref={ref}
+    useIcon='circle-information'
+    size='small'
+    {...props}
+  />
+));
+
+TooltipTagComponent.displayName = 'TooltipTagComponent';
+
 /**
  * From group structure.
  *
@@ -47,10 +60,8 @@ export default function FormGroupStructure(props) {
   const hasToolbar = description || toolbarItems;
 
   const descComp = description && (
-    <Tip title={description} key='description'>
-      <ToolbarIconButton useIcon='circle-information' size='small'>
-        More information
-      </ToolbarIconButton>
+    <Tip title={description} key='description' tag={TooltipTagComponent}>
+      More information
     </Tip>
   );
 

@@ -6,10 +6,10 @@ import DropdownMenu, {
   getMenuClickHandler
 } from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
+import Tip from '../common/tooltip';
 
 import { atbdEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
-import Tip from '../common/tooltip';
 
 export default function AtbdActionsMenu(props) {
   const { atbd, atbdVersion, variation, onSelect, origin } = props;
@@ -73,8 +73,6 @@ export default function AtbdActionsMenu(props) {
       triggerLabel: 'ATBD options'
     };
 
-    const isAtbdDraft = atbdVersion.status.toLowerCase() === 'draft';
-
     if (!isLogged) {
       return {
         ...triggerProps,
@@ -85,23 +83,36 @@ export default function AtbdActionsMenu(props) {
       };
     }
 
+    const editItemMenu = origin !== 'single-edit' ? [itemEdit] : [];
+
+    const isAtbdDraft = atbdVersion.status.toLowerCase() === 'draft';
+    if (isAtbdDraft) {
+      return {
+        ...triggerProps,
+        menu: [
+          {
+            id: 'actions',
+            items: [itemViewInfo, itemPublish, ...editItemMenu]
+          },
+          deleteMenu
+        ]
+      };
+    }
+
     return {
       ...triggerProps,
-      menu: isAtbdDraft
-        ? [
-            {
-              id: 'actions',
-              items: [itemViewInfo, itemPublish, itemEdit]
-            },
-            deleteMenu
+      menu: [
+        {
+          id: 'actions',
+          items: [
+            itemViewInfo,
+            itemUpdateMinor,
+            itemDraftMajor,
+            ...editItemMenu
           ]
-        : [
-            {
-              id: 'actions',
-              items: [itemViewInfo, itemUpdateMinor, itemDraftMajor, itemEdit]
-            },
-            deleteMenu
-          ]
+        },
+        deleteMenu
+      ]
     };
   }, [variation, atbd, atbdVersion, isLogged, origin]);
 

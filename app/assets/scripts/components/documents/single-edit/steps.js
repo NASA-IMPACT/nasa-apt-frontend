@@ -31,6 +31,7 @@ export const STEPS = [
           additional_details: '',
           online_resource: ''
         },
+        doi: '',
         sections_completed: {
           citation: 'incomplete'
         }
