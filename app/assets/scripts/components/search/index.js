@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { useHistory, useLocation } from 'react-router';
 import useQsStateCreator from 'qs-state-hook';
-import { Form, FormGroupHeader, FormGroup } from '@devseed-ui/form';
+import { Form } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import App from '../common/app';
@@ -26,33 +25,25 @@ import { Link } from '../../styles/clean/link';
 
 import { useSearch } from '../../context/search';
 
-const SearchBox = styled.div`
-  display: flex;
-  align-items: center;
-
-  ${FormGroup} {
-    flex-grow: 1;
-  }
-
-  ${FormGroupHeader} {
-    ${visuallyHidden()}
-  }
-
-  ${Button} {
-    flex-shrink: 0;
-    margin-left: 1rem;
-  }
+const SearchForm = styled(Form)`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 `;
 
-const SearchFilterGroup = styled.div`
-  display: flex;
+const SearchBox = styled.div`
+  grid-column: 1 / span 2;
+`;
 
-  & > * {
-    min-width: 8rem;
-  }
+const SearchFilter = styled.div`
+  grid-column-end: span 1;
+`;
 
-  & > *:not(:last-child) {
-    margin-right: ${glsp(2)};
+const SearchActions = styled.div`
+  grid-row: 2;
+  grid-column: 1 / span 4;
+
+  ${Button} {
+    min-width: 12rem;
   }
 `;
 
@@ -176,36 +167,38 @@ function Search() {
         </InpageHeaderSticky>
         <InpageBody>
           <FormBlock>
-            <FormBlockHeading>Document search</FormBlockHeading>
+            <FormBlockHeading>Search criteria</FormBlockHeading>
             <Formik initialValues={initialValues} onSubmit={onSearchSubmit}>
-              <Form as={FormikForm}>
+              <SearchForm as={FormikForm}>
                 <SearchBox>
                   <FormikInputText
                     inputRef={searchFieldRef}
                     id='search-term'
                     name='term'
-                    label='Search'
+                    label='Term'
                     placeholder='Search term'
                   />
-                  <SearchButton />
                 </SearchBox>
-                <SearchFilterGroup>
+                <SearchFilter>
                   <FormikInputSelect
                     id='search-year'
                     name='year'
                     options={atbdYearOptions}
                     label='Year'
-                    size='small'
                   />
+                </SearchFilter>
+                <SearchFilter>
                   <FormikInputSelect
                     id='search-status'
                     name='status'
                     options={atbdStatusOptions}
                     label='Status'
-                    size='small'
                   />
-                </SearchFilterGroup>
-              </Form>
+                </SearchFilter>
+                <SearchActions>
+                  <SearchButton />
+                </SearchActions>
+              </SearchForm>
             </Formik>
           </FormBlock>
           <FormBlock>
