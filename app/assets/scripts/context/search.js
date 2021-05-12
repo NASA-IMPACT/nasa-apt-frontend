@@ -62,7 +62,7 @@ export const SearchProvider = ({ children }) => {
         })
       }
     },
-    []
+    [token]
   );
 
   const contextValue = {
