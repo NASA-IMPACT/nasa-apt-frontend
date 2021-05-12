@@ -106,7 +106,7 @@ function Root() {
               component={ContactsView}
             />
             <Route exact path='/about' component={About} />
-            <Route exact path='/search' component={Search} />
+            <Route exact path='/documents/search' component={Search} />
             <Route exact path='/help/:pageId?' component={Help} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />

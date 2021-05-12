@@ -90,14 +90,13 @@ function Documents() {
           <InpageActions>
             <Button
               as={Link}
-              to='/search'
-              variation='achromic-glass'
+              to='/documents/search'
+              variation='achromic-plain'
               title='Search documents'
               useIcon='magnifier-right'
             >
               Search
             </Button>
-            <VerticalDivider variation='light' />
             <Can do='create' on='documents'>
               <ButtonSecondary
                 title='Create new document'

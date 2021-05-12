@@ -14,12 +14,15 @@ import {
   InpageHeaderSticky,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageMeta,
+  InpageSubtitle
 } from '../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../styles/form-block';
 import { FormikInputText } from '../common/forms/input-text';
 import { FormikInputSelect } from '../common/forms/input-select';
 import SearchResults from './search-results';
+import { Link } from '../../styles/clean/link';
 
 import { useSearch } from '../../context/search';
 
@@ -160,8 +163,16 @@ function Search() {
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Document search</InpageTitle>
+            <InpageTitle>Search</InpageTitle>
           </InpageHeadline>
+          <InpageMeta>
+            <dt>Under</dt>
+            <InpageSubtitle as='dd'>
+              <Link to='/documents' title='View all Documents'>
+                Documents
+              </Link>
+            </InpageSubtitle>
+          </InpageMeta>
         </InpageHeaderSticky>
         <InpageBody>
           <FormBlock>
