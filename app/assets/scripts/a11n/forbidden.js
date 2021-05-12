@@ -8,7 +8,7 @@ import {
   InpageTitle,
   InpageBody
 } from '../styles/inpage';
-import Constrainer from '../styles/constrainer';
+import { ContentBlock } from '../styles/content-block';
 import Prose from '../styles/typography/prose';
 import { Link } from '../styles/clean/link';
 
@@ -26,7 +26,7 @@ function Forbidden() {
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             <Prose>
               <p>You don&apos;t have access to this page!</p>
               {user.isLogged ? (
@@ -43,16 +43,15 @@ function Forbidden() {
                   <Link to='/signin' title='Go to the sign in page'>
                     sign in
                   </Link>{' '}
-                  and try again
+                  and try again or{' '}
+                  <Link to='/' title='Visit the homepage'>
+                    visit the homepage
+                  </Link>
+                  .
                 </p>
               )}
-              <p>
-                <Link to='/' title='Visit the homepage'>
-                  Visit the homepage
-                </Link>
-              </p>
             </Prose>
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>

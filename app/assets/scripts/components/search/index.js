@@ -24,6 +24,7 @@ import SearchResults from './search-results';
 import { Link } from '../../styles/clean/link';
 
 import { useSearch } from '../../context/search';
+import { useUser } from '../../context/user';
 
 const SearchForm = styled(Form)`
   display: grid;
@@ -80,6 +81,7 @@ function Search() {
   // react-router function to ensure the component re-renders when there is a
   // location change.
   useLocation();
+  const { isLogged } = useUser();
   const searchFieldRef = useRef(null);
 
   const useQsState = useQsStateCreator({
@@ -187,14 +189,16 @@ function Search() {
                     label='Year'
                   />
                 </SearchFilter>
-                <SearchFilter>
-                  <FormikInputSelect
-                    id='search-status'
-                    name='status'
-                    options={atbdStatusOptions}
-                    label='Status'
-                  />
-                </SearchFilter>
+                {isLogged && (
+                  <SearchFilter>
+                    <FormikInputSelect
+                      id='search-status'
+                      name='status'
+                      options={atbdStatusOptions}
+                      label='Status'
+                    />
+                  </SearchFilter>
+                )}
                 <SearchActions>
                   <SearchButton />
                 </SearchActions>
