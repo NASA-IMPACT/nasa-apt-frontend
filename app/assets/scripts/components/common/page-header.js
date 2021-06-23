@@ -18,6 +18,8 @@ import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
 
+import UserImage from './user-image';
+
 const { appTitle } = config;
 
 const PageHeaderSelf = styled.header`
@@ -132,6 +134,10 @@ const GlobalMenu = styled.ul`
   > * {
     grid-row: 1;
   }
+`;
+
+const UserProfileLink = styled(NavLink)`
+  display: flex;
 `;
 
 function PageHeader() {
@@ -259,6 +265,13 @@ function PageHeader() {
               </Button>
             )}
           </li>
+          {user.isLogged && (
+            <li>
+              <UserProfileLink to='/account' title='View profile'>
+                <UserImage />
+              </UserProfileLink>
+            </li>
+          )}
         </GlobalMenu>
       </PageNav>
     </PageHeaderSelf>

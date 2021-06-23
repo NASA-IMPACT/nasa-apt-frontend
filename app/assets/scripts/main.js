@@ -23,6 +23,8 @@ import DocumentsEdit from './components/documents/single-edit';
 import Contacts from './components/contacts/hub';
 import ContactsView from './components/contacts/view';
 import ContactsEdit from './components/contacts/edit';
+import UserView from './components/users/view';
+import UserEdit from './components/users/edit';
 import About from './components/about';
 import Search from './components/search';
 import Help from './components/help';
@@ -104,6 +106,18 @@ function Root() {
               exact
               path='/contacts/:id'
               component={ContactsView}
+            />
+            <AccessRoute
+              permission={['view', 'profile']}
+              exact
+              path='/account'
+              component={UserView}
+            />
+            <AccessRoute
+              permission={['edit', 'profile']}
+              exact
+              path='/account/edit/:section?'
+              component={UserEdit}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/documents/search' component={Search} />
