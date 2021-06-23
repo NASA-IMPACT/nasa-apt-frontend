@@ -1,28 +1,44 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState
 } from 'react';
 import T from 'prop-types';
-import jwt_decode from 'jwt-decode';
+import Amplify, { Auth } from 'aws-amplify';
 
 import { useContextualAbility, updateAbilityFor } from '../a11n';
+import config from '../config';
 
-const LOCALSTORAGE_TOKEN_KEY = 'tokenData';
+Amplify.configure(config.auth);
 
-const emptyTokenState = { token: null, expireAt: null };
+const emptyUserData = {
+  id: null,
+  name: null,
+  accessToken: null,
+  accessTokenExpire: 0,
+  attributes: null,
+  groups: [],
+  rawCognitoUser: null
+};
 
-const initialTokenState = (() => {
-  const storedToken = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-  if (!storedToken) return emptyTokenState;
-  try {
-    return JSON.parse(storedToken);
-  } catch (error) {
-    return emptyTokenState;
-  }
-})();
+const extractUserDataFromCognito = (user) => {
+  const { sub, preferred_username } = user.attributes;
+  const idTokenData = user.getSignInUserSession().getIdToken().payload;
+  const accessToken = user.getSignInUserSession().getAccessToken();
+
+  return {
+    id: sub,
+    name: preferred_username,
+    accessToken: accessToken.jwtToken,
+    accessTokenExpire: accessToken.payload.exp * 1000,
+    attributes: user.attributes,
+    groups: idTokenData['cognito:groups'] || [],
+    rawCognitoUser: user
+  };
+};
 
 // Context
 export const UserContext = createContext(null);
@@ -30,24 +46,42 @@ export const UserContext = createContext(null);
 // Context provider
 export const UserProvider = (props) => {
   const { children } = props;
-  const [tokenData, setTokenData] = useState(initialTokenState);
+  const [userData, setUserData] = useState(emptyUserData);
   const ability = useContextualAbility();
 
-  // Control token expiration.
+  const loadCognitoUser = useCallback(async () => {
+    try {
+      const user = await Auth.currentAuthenticatedUser();
+      setUserData(extractUserDataFromCognito(user));
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.log('Error getting authenticated user', error);
+      setUserData(emptyUserData);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCognitoUser();
+  }, [loadCognitoUser]);
+
+  // Control token expiration. Amplify refreshes the session automatically, but
+  // we have to request the session using the library's methods. We need the
+  // token to be accessible without having to request it and await every time,
+  // so every so often we need to check credentials to refresh.
   useEffect(() => {
     let timer;
-    if (tokenData.expireAt) {
+    if (userData.accessTokenExpire) {
       // There's a limit to setTimeout's delay. 2 days is more than enough.
       // https://stackoverflow.com/questions/3468607/why-does-settimeout-break-for-large-millisecond-delay-values
       const millis = Math.min(
-        tokenData.expireAt - Date.now(),
+        // Add 1s to ensure the token is really expired
+        userData.accessTokenExpire + 1000 - Date.now(),
         86400 * 2 * 1000
       );
 
       // Timer to expire the token
       timer = setTimeout(() => {
-        setTokenData(emptyTokenState);
-        updateAbilityFor(ability, null);
+        loadCognitoUser();
       }, millis);
     }
 
@@ -57,25 +91,16 @@ export const UserProvider = (props) => {
         clearTimeout(timer);
       }
     };
-  }, [tokenData.expireAt, ability]);
+  }, [userData.accessTokenExpire, loadCognitoUser]);
 
   // Update CASL ability when the user logs in.
   useEffect(() => {
-    updateAbilityFor(ability, tokenData);
-  }, [tokenData, ability]);
-
-  // Store token in localstorage.
-  useEffect(() => {
-    if (tokenData.token) {
-      localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, JSON.stringify(tokenData));
-    } else {
-      localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
-    }
-  }, [tokenData]);
+    updateAbilityFor(ability, userData);
+  }, [userData, ability]);
 
   const contextValue = {
-    tokenData,
-    setTokenData
+    userData,
+    setUserData
   };
 
   return (
@@ -102,30 +127,28 @@ const useCheckContext = (fnName) => {
 };
 
 export const useAuthToken = () => {
-  const { tokenData, setTokenData } = useCheckContext('useAuthToken');
+  const { userData, setUserData } = useCheckContext('useAuthToken');
 
   return useMemo(
     () => ({
-      token: tokenData.token,
-      setToken: (token) => {
-        const decoded = jwt_decode(token);
-        setTokenData({ token, expireAt: decoded.exp * 1000 });
-      },
+      token: userData.accessToken,
       expireToken: () => {
-        setTokenData(emptyTokenState);
+        setUserData(emptyUserData);
       }
     }),
-    [tokenData, setTokenData]
+    [userData, setUserData]
   );
 };
 
 export const useUser = () => {
-  const { tokenData } = useCheckContext('useUser');
+  const { userData, setUserData } = useCheckContext('useUser');
 
   return useMemo(
     () => ({
-      isLogged: !!tokenData.token
+      user: userData,
+      isLogged: !!userData.id,
+      loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
     }),
-    [tokenData]
+    [userData, setUserData]
   );
 };

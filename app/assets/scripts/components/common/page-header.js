@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import { Auth } from 'aws-amplify';
 import {
   glsp,
   media,
@@ -15,7 +17,6 @@ import { Can } from '../../a11n';
 import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
-import { useHistory } from 'react-router';
 
 const { appTitle } = config;
 
@@ -138,7 +139,14 @@ function PageHeader() {
   const user = useUser();
   const history = useHistory();
 
-  const onLogoutClick = useCallback(() => {
+  const onLogoutClick = useCallback(async () => {
+    try {
+      // await Auth.signOut();
+      Auth.signOut({ global: true });
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.log('error signing out: ', error);
+    }
     expireToken();
     history.push('/');
   }, [history, expireToken]);
