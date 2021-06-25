@@ -21,7 +21,7 @@ export default function withRequestToken(token, fn) {
   return (...args) => {
     const tokenHeader = token
       ? {
-          options: {
+          requestOptions: {
             headers: {
               Authorization: `Bearer ${token}`
             }
