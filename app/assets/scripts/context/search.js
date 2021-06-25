@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext } from 'react';
 import T from 'prop-types';
 
-import { useContexeedApi } from '../utils/contexeed';
+import { useContexeedApi } from '../utils/contexeed-v2';
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 
@@ -51,7 +51,7 @@ export const SearchProvider = ({ children }) => {
 
           return {
             url: `/search`,
-            options: {
+            requestOptions: {
               method: 'post',
               data: {
                 query: elasticQuery,

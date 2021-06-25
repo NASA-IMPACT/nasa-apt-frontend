@@ -3,7 +3,7 @@ import T from 'prop-types';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
-import { useContexeedApi } from '../utils/contexeed';
+import { useContexeedApi } from '../utils/contexeed-v2';
 import { emptyContactMechanismValue } from '../components/contacts/edit/contact-form-fields';
 
 // Context
@@ -73,31 +73,20 @@ export const ContactsProvider = ({ children }) => {
       },
       mutations: {
         deleteContact: withRequestToken(token, ({ id }) => ({
-          mutation: async ({ axios, requestOptions, state, actions }) => {
-            try {
-              // Dispatch request action. It is already dispatchable.
-              actions.request();
-
-              await axios({
-                ...requestOptions,
-                url: `/contacts/${id}`,
-                method: 'delete'
-              });
-
-              // The delete contact action acts on the contact list state, but
-              // if called from within a single contact page, we also want to
-              // invalidate the individual state.
-              invalidateSingle(id);
-
-              // If this worked, remove the item from the contact list.
-              const newData = state.data?.filter?.(
-                (contact) => contact.id !== id
-              );
-              return actions.receive(newData);
-            } catch (error) {
-              // Dispatch receive action. It is already dispatchable.
-              return actions.receive(null, error);
-            }
+          url: `/contacts/${id}`,
+          requestOptions: {
+            method: 'delete'
+          },
+          onDone: (finish, { state }) => {
+            // The delete contact action acts on the contact list state, but
+            // if called from within a single contact page, we also want to
+            // invalidate the individual state.
+            invalidateSingle(id);
+            // If this worked, remove the item from the contact list.
+            const newData = state.data?.filter?.(
+              (contact) => contact.id !== id
+            );
+            return finish(null, newData);
           }
         }))
       }
@@ -114,10 +103,10 @@ export const ContactsProvider = ({ children }) => {
   } = useContexeedApi(
     {
       name: 'contactSingle',
-      useKey: true,
+      slicedState: true,
       requests: {
         fetchSingleContact: withRequestToken(token, ({ id }) => ({
-          stateKey: `${id}`,
+          sliceKey: `${id}`,
           url: `/contacts/${id}`
         }))
       },
@@ -126,65 +115,45 @@ export const ContactsProvider = ({ children }) => {
           // Holder for the creation of a new contact since we don't have final
           // id yet. When creating several contacts at once (like through the
           // atbd contact page) we need a key to differentiate between them.
-          stateKey: key ? `new-${key}` : 'new',
-          mutation: async ({ axios, requestOptions, actions }) => {
-            try {
-              // Dispatch request action. It is already dispatchable.
-              actions.request();
-
-              const response = await axios({
-                ...requestOptions,
-                url: '/contacts',
-                method: 'post',
-                data: data || {
-                  first_name: 'New',
-                  last_name: 'Contact',
-                  mechanisms: [emptyContactMechanismValue]
-                }
-              });
-
-              // Add the newly created contact to the contact list.
-              contactListDispatch({
-                type: 'contactList/append-contact',
-                data: response.data
-              });
-              // Dispatch receive action. It is already dispatchable.
-              return actions.receive(response.data);
-            } catch (error) {
-              // Dispatch receive action. It is already dispatchable.
-              return actions.receive(null, error);
+          sliceKey: key ? `new-${key}` : 'new',
+          url: '/contacts',
+          requestOptions: {
+            method: 'post',
+            data: data || {
+              first_name: 'New',
+              last_name: 'Contact',
+              mechanisms: [emptyContactMechanismValue]
             }
+          },
+          onDone: (finish, { data }) => {
+            // Add the newly created contact to the contact list.
+            contactListDispatch({
+              type: 'contactList/append-contact',
+              data: data
+            });
+            return finish();
           }
         })),
-        updateContact: withRequestToken(token, ({ id, data }) => ({
-          stateKey: `${id}`,
-          mutation: async ({ axios, requestOptions, actions }) => {
-            try {
-              const { id, ...rest } = data;
-              // Dispatch request action. It is already dispatchable.
-              actions.request();
+        updateContact: withRequestToken(token, ({ id: stateKeyId, data }) => {
+          const { id, ...rest } = data;
 
-              const response = await axios({
-                ...requestOptions,
-                url: `/contacts/${id}`,
-                method: 'post',
-                data: rest
-              });
-
+          return {
+            sliceKey: `${stateKeyId}`,
+            url: `/contacts/${id}`,
+            requestOptions: {
+              method: 'post',
+              data: rest
+            },
+            onDone: (finish, { data }) => {
               // Update the contact to the contact list.
               contactListDispatch({
                 type: 'contactList/update-contact',
-                data: response.data
+                data: data
               });
-
-              // Dispatch receive action. It is already dispatchable.
-              return actions.receive(response.data);
-            } catch (error) {
-              // Dispatch receive action. It is already dispatchable.
-              return actions.receive(null, error);
+              return finish();
             }
-          }
-        }))
+          };
+        })
       }
     },
     [token]

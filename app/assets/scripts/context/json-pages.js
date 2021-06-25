@@ -3,13 +3,13 @@ import defaultsDeep from 'lodash.defaultsdeep';
 import T from 'prop-types';
 
 import config from '../config';
-import { useContexeedApi } from '../utils/contexeed';
+import { useContexeedApi } from '../utils/contexeed-v2';
 
 function withLocalBaseUrl(fn) {
   return (...args) => {
     return defaultsDeep(
       {
-        options: {
+        requestOptions: {
           baseURL: config.baseUrl || '/'
         }
       },
@@ -26,10 +26,10 @@ export const JsonPagesProvider = ({ children }) => {
   const { getState: getPagesIndex, fetchPagesIndex } = useContexeedApi(
     {
       name: 'jsonPagesIndex',
-      useKey: true,
+      slicedState: true,
       requests: {
         fetchPagesIndex: withLocalBaseUrl(({ id, url }) => ({
-          stateKey: `${id}`,
+          sliceKey: `${id}`,
           url
         }))
       }
@@ -40,10 +40,10 @@ export const JsonPagesProvider = ({ children }) => {
   const { getState: getSingleJsonPage, fetchSingleJsonPage } = useContexeedApi(
     {
       name: 'jsonPages',
-      useKey: true,
+      slicedState: true,
       requests: {
         fetchSingleJsonPage: withLocalBaseUrl(({ id, url }) => ({
-          stateKey: `${id}`,
+          sliceKey: `${id}`,
           url
         }))
       }
