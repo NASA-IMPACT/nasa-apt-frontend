@@ -59,7 +59,7 @@ function SignIn() {
   }, []);
 
   const onSubmit = useCallback(
-    async (values, { setSubmitting, resetForm }) => {
+    async (values, { setSubmitting }) => {
       const processToast = createProcessToast('Singing in. Please wait.');
 
       try {
@@ -69,7 +69,6 @@ function SignIn() {
         processToast.success(
           `Welcome back ${user.attributes.preferred_username}!`
         );
-        resetForm();
         history.push('/');
       } catch (error) {
         if (error.code === 'UserNotConfirmedException') {
@@ -79,9 +78,8 @@ function SignIn() {
         } else {
           processToast.error(error.message);
         }
+        setSubmitting(false);
       }
-
-      setSubmitting(false);
     },
     [history, loginCognitoUser]
   );

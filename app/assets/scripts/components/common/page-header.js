@@ -11,6 +11,11 @@ import {
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import Dropdown, {
+  DropTitle,
+  DropMenu,
+  DropMenuItem
+} from '@devseed-ui/dropdown';
 
 import config from '../../config';
 import { Can } from '../../a11n';
@@ -130,19 +135,27 @@ const PageNav = styled.nav`
 const GlobalMenu = styled.ul`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
+  align-items: center;
 
   > * {
     grid-row: 1;
   }
 `;
 
-const UserProfileLink = styled(NavLink)`
-  display: flex;
+const UserProfileTrigger = styled(Button)`
+  > span {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  figure {
+    margin-right: ${glsp(0.5)};
+  }
 `;
 
 function PageHeader() {
   const { expireToken } = useAuthToken();
-  const user = useUser();
+  const { isLogged, user } = useUser();
   const history = useHistory();
 
   const onLogoutClick = useCallback(async () => {
@@ -193,7 +206,7 @@ function PageHeader() {
               Documents
             </Button>
           </li>
-          {user.isLogged && (
+          {isLogged && (
             <li>
               <Can do='view' on='contacts'>
                 <Button
@@ -245,15 +258,7 @@ function PageHeader() {
             </Button>
           </li>
           <li>
-            {user.isLogged ? (
-              <Button
-                variation='achromic-plain'
-                title='Sign out of the app'
-                onClick={onLogoutClick}
-              >
-                Sign out
-              </Button>
-            ) : (
+            {!isLogged && (
               <Button
                 forwardedAs={NavLink}
                 exact
@@ -265,11 +270,47 @@ function PageHeader() {
               </Button>
             )}
           </li>
-          {user.isLogged && (
+          {isLogged && (
             <li>
-              <UserProfileLink to='/account' title='View profile'>
-                <UserImage />
-              </UserProfileLink>
+              <Dropdown
+                alignment='right'
+                direction='down'
+                triggerElement={(props) => (
+                  <UserProfileTrigger
+                    variation='achromic-plain'
+                    title='Open dropdown'
+                    useIcon={['chevron-down--small', 'after']}
+                    {...props}
+                  >
+                    <UserImage /> {user.name}
+                  </UserProfileTrigger>
+                )}
+              >
+                <DropTitle>Actions</DropTitle>
+                <DropMenu>
+                  <li>
+                    <DropMenuItem
+                      as={Link}
+                      to='/account'
+                      title='View account'
+                      data-dropdown='click.close'
+                    >
+                      Account
+                    </DropMenuItem>
+                  </li>
+                </DropMenu>
+                <DropMenu>
+                  <li>
+                    <DropMenuItem
+                      title='Sign out from account'
+                      onClick={onLogoutClick}
+                      data-dropdown='click.close'
+                    >
+                      Sign out
+                    </DropMenuItem>
+                  </li>
+                </DropMenu>
+              </Dropdown>
             </li>
           )}
         </GlobalMenu>

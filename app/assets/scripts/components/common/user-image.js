@@ -50,7 +50,7 @@ const getPxSize = (size) => {
   if (size === 'profile') {
     return 128;
   } else {
-    return 32;
+    return 24;
   }
 };
 
