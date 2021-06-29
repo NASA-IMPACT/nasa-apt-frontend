@@ -1,10 +1,11 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 import { useContexeedApi } from '../utils/contexeed-v2';
 import { emptyContactMechanismValue } from '../components/contacts/edit/contact-form-fields';
+import { createContextChecker } from '../utils/create-context-checker';
 
 // Context
 export const ContactsContext = createContext(null);
@@ -182,23 +183,17 @@ ContactsProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the contact list context
-const useCheckContext = (fnName) => {
-  const context = useContext(ContactsContext);
-  if (!context) {
-    throw new Error(
-      `The \`${fnName}\` hook must be used inside the <ContactsContext> component's context.`
-    );
-  }
-
-  return context;
-};
+const useSafeContextFn = createContextChecker(
+  ContactsContext,
+  'ContactsContext'
+);
 
 export const useSingleContact = ({ id }) => {
   const {
     getSingleContact,
     fetchSingleContact,
     updateContact
-  } = useCheckContext('useSingleContact');
+  } = useSafeContextFn('useSingleContact');
 
   return {
     contact: getSingleContact(`${id}`),
@@ -220,7 +215,7 @@ export const useContacts = () => {
     createContact,
     updateContact,
     deleteContact
-  } = useCheckContext('useContacts');
+  } = useSafeContextFn('useContacts');
 
   return {
     contacts: getContacts(),

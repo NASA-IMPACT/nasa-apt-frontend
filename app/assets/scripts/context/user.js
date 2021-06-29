@@ -1,7 +1,6 @@
 import React, {
   createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState
@@ -11,6 +10,7 @@ import Amplify, { Auth } from 'aws-amplify';
 
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 import config from '../config';
+import { createContextChecker } from '../utils/create-context-checker';
 
 Amplify.configure(config.auth);
 
@@ -114,24 +114,16 @@ UserProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the ATBD list context
-const useCheckContext = (fnName) => {
-  const context = useContext(UserContext);
-
-  if (!context) {
-    throw new Error(
-      `The \`${fnName}\` hook must be used inside the <UserContext> component's context.`
-    );
-  }
-
-  return context;
-};
+const useSafeContextFn = createContextChecker(UserContext, 'UserContext');
 
 export const useAuthToken = () => {
-  const { userData, setUserData } = useCheckContext('useAuthToken');
+  const { userData, setUserData } = useSafeContextFn('useAuthToken');
 
   return useMemo(
     () => ({
       token: userData.accessToken,
+      // token:
+      //   '',
       expireToken: () => {
         setUserData(emptyUserData);
       }
@@ -141,7 +133,7 @@ export const useAuthToken = () => {
 };
 
 export const useUser = () => {
-  const { userData, setUserData } = useCheckContext('useUser');
+  const { userData, setUserData } = useSafeContextFn('useUser');
 
   return useMemo(
     () => ({

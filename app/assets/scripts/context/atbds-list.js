@@ -1,8 +1,9 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
+import { createContextChecker } from '../utils/create-context-checker';
 import { useContexeedApi } from '../utils/contexeed-v2';
 
 // Context
@@ -458,17 +459,7 @@ AtbdsProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the ATBD list context
-const useCheckContext = (fnName) => {
-  const context = useContext(AtbdsContext);
-
-  if (!context) {
-    throw new Error(
-      `The \`${fnName}\` hook must be used inside the <AtbdsContext> component's context.`
-    );
-  }
-
-  return context;
-};
+const useSafeContextFn = createContextChecker(AtbdsContext, 'AtbdsContext');
 
 export const useSingleAtbd = ({ id, version }) => {
   const {
@@ -478,7 +469,7 @@ export const useSingleAtbd = ({ id, version }) => {
     deleteAtbdVersion,
     createAtbdVersion,
     publishAtbdVersion
-  } = useCheckContext('useSingleAtbd');
+  } = useSafeContextFn('useSingleAtbd');
 
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
@@ -509,7 +500,7 @@ export const useSingleAtbd = ({ id, version }) => {
 };
 
 export const useAtbds = () => {
-  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useCheckContext(
+  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useSafeContextFn(
     'useAtbds'
   );
   return { atbds: getAtbds(), fetchAtbds, createAtbd, deleteFullAtbd };
