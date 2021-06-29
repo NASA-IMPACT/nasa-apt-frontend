@@ -25,6 +25,7 @@ import ContactsView from './components/contacts/view';
 import ContactsEdit from './components/contacts/edit';
 import UserView from './components/users/view';
 import UserEdit from './components/users/edit';
+import UserDashboard from './components/dashboard';
 import About from './components/about';
 import Search from './components/search';
 import Help from './components/help';
@@ -118,6 +119,12 @@ function Root() {
               exact
               path='/account/edit/:section?'
               component={UserEdit}
+            />
+            <AccessRoute
+              permission={['view', 'dashboard']}
+              exact
+              path='/dashboard'
+              component={UserDashboard}
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/documents/search' component={Search} />

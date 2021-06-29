@@ -185,41 +185,55 @@ function PageHeader() {
       </PageHeadline>
       <PageNav role='navigation'>
         <GlobalMenu>
-          <li>
-            <Button
-              forwardedAs={NavLink}
-              exact
-              to='/'
-              variation='achromic-plain'
-              title='Visit the welcome page'
-            >
-              Welcome
-            </Button>
-          </li>
-          <li>
-            <Button
-              forwardedAs={NavLink}
-              to='/documents'
-              variation='achromic-plain'
-              title='View the documents'
-            >
-              Documents
-            </Button>
-          </li>
-          {isLogged && (
+          {isLogged ? (
             <li>
-              <Can do='view' on='contacts'>
+              <Button
+                forwardedAs={NavLink}
+                exact
+                to='/dashboard'
+                variation='achromic-plain'
+                title='Visit the welcome page'
+              >
+                Dashboard
+              </Button>
+            </li>
+          ) : (
+            <React.Fragment>
+              <li>
                 <Button
                   forwardedAs={NavLink}
-                  to='/contacts'
+                  exact
+                  to='/'
                   variation='achromic-plain'
-                  title='View the contact list'
+                  title='Visit the welcome page'
                 >
-                  Contacts
+                  Welcome
                 </Button>
-              </Can>
-            </li>
+              </li>
+              <li>
+                <Button
+                  forwardedAs={NavLink}
+                  to='/documents'
+                  variation='achromic-plain'
+                  title='View the documents'
+                >
+                  Documents
+                </Button>
+              </li>
+            </React.Fragment>
           )}
+          <Can do='view' on='contacts'>
+            <li>
+              <Button
+                forwardedAs={NavLink}
+                to='/contacts'
+                variation='achromic-plain'
+                title='View the contact list'
+              >
+                Contacts
+              </Button>
+            </li>
+          </Can>
           <li>
             <Button
               forwardedAs={NavLink}
@@ -258,7 +272,7 @@ function PageHeader() {
             </Button>
           </li>
           <li>
-            {!isLogged && (
+            {!isLogged ? (
               <Button
                 forwardedAs={NavLink}
                 exact
@@ -268,10 +282,7 @@ function PageHeader() {
               >
                 Sign in
               </Button>
-            )}
-          </li>
-          {isLogged && (
-            <li>
+            ) : (
               <Dropdown
                 alignment='right'
                 direction='down'
@@ -286,16 +297,16 @@ function PageHeader() {
                   </UserProfileTrigger>
                 )}
               >
-                <DropTitle>Actions</DropTitle>
+                <DropTitle>Account</DropTitle>
                 <DropMenu>
                   <li>
                     <DropMenuItem
                       as={Link}
                       to='/account'
-                      title='View account'
+                      title='View user profile'
                       data-dropdown='click.close'
                     >
-                      Account
+                      Profile
                     </DropMenuItem>
                   </li>
                 </DropMenu>
@@ -311,8 +322,8 @@ function PageHeader() {
                   </li>
                 </DropMenu>
               </Dropdown>
-            </li>
-          )}
+            )}
+          </li>
         </GlobalMenu>
       </PageNav>
     </PageHeaderSelf>
