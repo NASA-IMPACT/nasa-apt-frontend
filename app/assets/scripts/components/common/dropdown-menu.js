@@ -92,6 +92,8 @@ interface Menu {
  * @prop {string} dropTitle Title for the dropdown box
  * @prop {object} triggerProps Additional props to add to the trigger button
  * @prop {string} triggerLabel Label for the trigger when no option is selected
+ * @prop {string|function} triggerLabel Label for the trigger when no option is
+ * selected. If a function is used it allows for custom rendering
  * @prop {array|object} menu List of menus according to Menu definition
  * @prop {function} onSelect Handler for when an element is selected. The event
  * will be prevented unless there's an href property set.
@@ -109,14 +111,38 @@ const DropdownMenu = React.forwardRef((props, ref) => {
     direction
   } = props;
 
-  const menu = useMemo(() => castArray(menuInput), [menuInput]);
+  // Normalize menu, adding the menu Id to each item. This is useful for referencing.
+  const dropMenu = useMemo(
+    () =>
+      castArray(menuInput).map((m) => ({
+        ...m,
+        items: m.items.map((item) => ({ ...item, menuId: m.id }))
+      })),
+    [menuInput]
+  );
 
-  const activeMenuItem = useMemo(() => {
-    if (!activeItem) return null;
-    const allItems = menu.reduce((acc, m) => acc.concat(m.items), []);
-    const item = allItems.find((menuItem) => menuItem.id === activeItem);
-    return item;
-  }, [menu, activeItem]);
+  const activeMenuItems = useMemo(() => {
+    const active = castArray(activeItem);
+    const allItems = dropMenu.flatMap((m) => m.items);
+    const items = allItems.filter((menuItem) => active.includes(menuItem.id));
+    return items;
+  }, [dropMenu, activeItem]);
+
+  const getLabel = () => {
+    if (typeof triggerLabel === 'function') {
+      return triggerLabel(activeMenuItems);
+    }
+
+    if (activeMenuItems.length) {
+      return activeMenuItems.map((i) => i.label).join(' & ');
+    }
+
+    return triggerLabel;
+  };
+
+  const isItemActive = (id) => {
+    return activeMenuItems.some((i) => i.id === id);
+  };
 
   return (
     <Dropdown
@@ -131,12 +157,12 @@ const DropdownMenu = React.forwardRef((props, ref) => {
           {...triggerProps}
           {...props}
         >
-          {activeMenuItem?.label || triggerLabel}
+          {getLabel()}
         </Button>
       )}
     >
       <DropTitle>{dropTitle}</DropTitle>
-      {menu.map((menu) => (
+      {dropMenu.map((menu) => (
         <DropMenu
           key={menu.id}
           selectable={menu.selectable}
@@ -150,6 +176,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
               label,
               keepOpen,
               render,
+              /* eslint-disable-next-line no-unused-vars */
+              menuId, // Remove from the arg spreading.
               ...rest
             } = menuItem;
 
@@ -158,7 +186,7 @@ const DropdownMenu = React.forwardRef((props, ref) => {
               : { 'data-dropdown': 'click.close' };
 
             const itemProps = {
-              active: id === activeMenuItem?.id,
+              active: isItemActive(id),
               ...closeProp
             };
 
@@ -192,7 +220,7 @@ const DropdownMenu = React.forwardRef((props, ref) => {
 DropdownMenu.propTypes = {
   menu: T.oneOfType([T.array, T.object]),
   withChevron: T.bool,
-  activeItem: T.string,
+  activeItem: T.oneOfType([T.array, T.string]),
   dropTitle: T.string,
   triggerProps: T.object,
   triggerLabel: T.string,
