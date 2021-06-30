@@ -19,7 +19,9 @@ export const Inpage = styled.article`
   grid-template-rows: min-content 1fr;
 `;
 
-export const InpageHeader = styled.header`
+export const InpageHeader = styled.header.attrs({
+  'data-element': 'inpage-header'
+})`
   position: relative;
   z-index: 20;
   display: grid;
