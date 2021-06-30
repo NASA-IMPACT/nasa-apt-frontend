@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
 
 import { useContexeedApi } from '../utils/contexeed-v2';
