@@ -43,7 +43,7 @@ export default function StepAlgoUsage(props) {
                   <FormikInputEditor
                     id='algorithm_usage_constraints'
                     name='document.algorithm_usage_constraints'
-                    label='Describe the algorithm constraints'
+                    label='Describe the limitations and constraints on output data product use'
                     description={formString('algorithm_usage.constraints')}
                   />
                 </FormikSectionFieldset>
@@ -75,7 +75,7 @@ export default function StepAlgoUsage(props) {
                   <FormikInputEditor
                     id='performance_assessment_validation_errors'
                     name='document.performance_assessment_validation_errors'
-                    label='Errors'
+                    label='Estimated Errors'
                     description={formString(
                       'algorithm_usage.validation_errors'
                     )}

@@ -1,10 +1,10 @@
-title: The descriptive formal title of the ATBD.
-alias: An alias to use in the url for the ATBD.
-doi: The Digital Object Identifier for this document.
+title: The descriptive title of your ATBD.
+alias: A short name for referring to the ATBD (less 8 characters).
+doi: The DOI of the ATBD as assigned by the curator.
 
 citation:
-  creators: The individual or group that authored the ATBD.
-  editors: The individual or group responsible for publishing the ATBD.
+  creators: The list of authors for this ATBD in the order preferred for the citation.
+  editors: The individual responsible for publishing the ATBD.
   title: The descriptive formal title of the ATBD.
   series_name: The name of the series for which the ATBD is part of.
   release_date: Release date of the ATBD.
