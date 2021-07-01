@@ -189,13 +189,21 @@ function PageHeader() {
             <li>
               <Button
                 forwardedAs={NavLink}
+                to='/documents'
+                variation='achromic-plain'
+                title='View the documents'
+              >
+                Documents
+              </Button>
+              {/* <Button
+                forwardedAs={NavLink}
                 exact
                 to='/dashboard'
                 variation='achromic-plain'
                 title='Visit the welcome page'
               >
                 Dashboard
-              </Button>
+              </Button> */}
             </li>
           ) : (
             <React.Fragment>
