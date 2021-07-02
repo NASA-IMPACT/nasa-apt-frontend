@@ -64,7 +64,7 @@ export default function UserView() {
             <UserContent>
               <Prose>
                 <UserHeader>
-                  <UserImage size='profile' />
+                  <UserImage size='profile' user={user} />
                   <UserName>{user.name}</UserName>
                 </UserHeader>
                 <DetailsList>

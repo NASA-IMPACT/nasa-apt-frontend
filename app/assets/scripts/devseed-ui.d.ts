@@ -354,3 +354,15 @@ declare module '@devseed-ui/dropdown' {
   }
   export default class Dropdown extends React.Component<DropdownProps, any> {}
 }
+
+declare module '@devseed-ui/collecticons' {
+  function collecticonsFont(): any;
+
+  class CollecticonsGlobalStyle extends React.Component<any> {}
+
+  /**
+   * Function to get the collecticon for use in a styled component
+   * @param name Name of the collecticon to show
+   */
+  export default function collecticon(name: string): any;
+}

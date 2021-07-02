@@ -55,8 +55,7 @@ const getPxSize = (size) => {
 };
 
 function UserImage(props) {
-  const { size } = props;
-  const { user } = useUser();
+  const { size, user } = props;
 
   const emailMd5 = md5(user?.attributes?.email || '');
   // Replace spaces with encoded + sign (%2B)
@@ -80,7 +79,8 @@ function UserImage(props) {
 }
 
 UserImage.propTypes = {
-  size: T.string
+  size: T.string,
+  user: T.object
 };
 
 export default UserImage;
