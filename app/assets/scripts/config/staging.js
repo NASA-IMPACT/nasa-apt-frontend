@@ -6,9 +6,9 @@ module.exports = {
     // Amazon Cognito Region
     region: 'us-east-1',
     // Amazon Cognito User Pool ID
-    userPoolId: 'us-east-1_myPaDY9o1',
+    userPoolId: 'us-east-1_cqYWVI5KW',
     // Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: '3v15rnvglc8p9nkja4behaoijk',
+    userPoolWebClientId: '4p83612hk9dit8orsc35dfq753',
     // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   },

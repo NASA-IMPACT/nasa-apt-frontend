@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import md5 from 'md5';
 import { themeVal } from '@devseed-ui/theme-provider';
 
-import { useUser } from '../../context/user';
-
 const Figure = styled.figure`
   position: relative;
   display: block;
