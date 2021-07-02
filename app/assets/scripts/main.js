@@ -14,6 +14,7 @@ import ErrorBoundary from './components/uhoh/fatal-error';
 import { ToastsContainer } from './components/common/toasts';
 import AccessRoute from './a11n/access-route';
 import ConfirmationPrompt from './components/common/confirmation-prompt';
+import CommentCenter from './components/comment-center';
 
 // Views
 import Home from './components/home';
@@ -41,10 +42,12 @@ import { UserProvider } from './context/user';
 import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
+import { CommentCenterProvider } from './context/comment-center';
 
 const composingComponents = [
   ErrorBoundary,
   AbilityProvider,
+  CommentCenterProvider,
   UserProvider,
   AtbdsProvider,
   ContactsProvider,
@@ -136,6 +139,7 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
+          {/* <CommentCenter /> */}
         </Composer>
         <ToastsContainer />
       </DevseedUiThemeProvider>
