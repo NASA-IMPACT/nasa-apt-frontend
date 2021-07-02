@@ -11,6 +11,7 @@ import {
   InpageBody
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
+import DashboardAuthor from './dash-author';
 
 import { useUser } from '../../context/user';
 
@@ -33,7 +34,9 @@ function UserDashboard() {
           <ContentBlock>
             <DashboardContent>
               <Heading size='medium'>Welcome {user.name}</Heading>
-              <p>Here&apos;s a summary of what&apos;s going on.</p>
+              <p>Here&apos;s what is happening in your APT account today.</p>
+
+              <DashboardAuthor />
             </DashboardContent>
           </ContentBlock>
         </InpageBody>
