@@ -16,3 +16,11 @@ export const getStateSlice = (state, key) => {
     stateSlice: hasStateKey && key.length ? get(state, key) : state
   };
 };
+
+/**
+ * Checks if the given input is a function.
+ *
+ * @param {function} fn The function to check
+ * @returns Boolean
+ */
+export const isFn = (fn) => typeof fn === 'function';

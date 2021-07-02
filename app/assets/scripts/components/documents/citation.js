@@ -9,7 +9,7 @@ export const formStringSymbol = Symbol.for('form string');
 export const citationFields = [
   {
     name: 'creators',
-    label: 'Creators',
+    label: 'Authors',
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>

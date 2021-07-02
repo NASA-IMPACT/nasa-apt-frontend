@@ -1,15 +1,16 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback } from 'react';
 import defaultsDeep from 'lodash.defaultsdeep';
 import T from 'prop-types';
 
 import config from '../config';
-import { useContexeedApi } from '../utils/contexeed';
+import { useContexeedApi } from '../utils/contexeed-v2';
+import { createContextChecker } from '../utils/create-context-checker';
 
 function withLocalBaseUrl(fn) {
   return (...args) => {
     return defaultsDeep(
       {
-        options: {
+        requestOptions: {
           baseURL: config.baseUrl || '/'
         }
       },
@@ -26,10 +27,10 @@ export const JsonPagesProvider = ({ children }) => {
   const { getState: getPagesIndex, fetchPagesIndex } = useContexeedApi(
     {
       name: 'jsonPagesIndex',
-      useKey: true,
+      slicedState: true,
       requests: {
         fetchPagesIndex: withLocalBaseUrl(({ id, url }) => ({
-          stateKey: `${id}`,
+          sliceKey: `${id}`,
           url
         }))
       }
@@ -40,10 +41,10 @@ export const JsonPagesProvider = ({ children }) => {
   const { getState: getSingleJsonPage, fetchSingleJsonPage } = useContexeedApi(
     {
       name: 'jsonPages',
-      useKey: true,
+      slicedState: true,
       requests: {
         fetchSingleJsonPage: withLocalBaseUrl(({ id, url }) => ({
-          stateKey: `${id}`,
+          sliceKey: `${id}`,
           url
         }))
       }
@@ -71,19 +72,13 @@ JsonPagesProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the contact list context
-const useCheckContext = (fnName) => {
-  const context = useContext(JsonPagesContext);
-  if (!context) {
-    throw new Error(
-      `The \`${fnName}\` hook must be used inside the <JsonPagesContext> component's context.`
-    );
-  }
-
-  return context;
-};
+const useSafeContextFn = createContextChecker(
+  JsonPagesContext,
+  'JsonPagesContext'
+);
 
 export const useSingleJsonPage = (id) => {
-  const { getSingleJsonPage, fetchSingleJsonPage } = useCheckContext(
+  const { getSingleJsonPage, fetchSingleJsonPage } = useSafeContextFn(
     'useSingleJsonPage'
   );
 
@@ -97,7 +92,7 @@ export const useSingleJsonPage = (id) => {
 };
 
 export const useJsonPagesIndex = (id) => {
-  const { getPagesIndex, fetchPagesIndex } = useCheckContext(
+  const { getPagesIndex, fetchPagesIndex } = useSafeContextFn(
     'useJsonPagesIndex'
   );
 

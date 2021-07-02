@@ -32,6 +32,7 @@ export function InputText(props) {
     description,
     helper,
     inputRef,
+    type,
     // All other props are passed directly to the input
     // name,
     // value,
@@ -52,7 +53,7 @@ export function InputText(props) {
     >
       <FormInput
         ref={inputRef}
-        type='text'
+        type={type}
         variation={inputVariation}
         id={id}
         size={inputSize}
@@ -67,6 +68,7 @@ InputText.propTypes = {
   name: T.string,
   label: T.string,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
+  type: T.oneOf(['text', 'password']),
   className: T.string,
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,
@@ -76,6 +78,10 @@ InputText.propTypes = {
   description: T.string,
   helper: T.node,
   inputRef: T.object
+};
+
+InputText.defaultProps = {
+  type: 'text'
 };
 
 /**

@@ -107,7 +107,7 @@ export function ContactFormFields(props) {
             name={`${baseName}${id}`}
             label={label}
             labelHint={required ? '(required)' : null}
-            description={formString(`contacts.${id}`)}
+            description={formString(`contact_information.${id}`)}
           />
         ))}
       </ContactDetails>
@@ -120,7 +120,9 @@ export function ContactFormFields(props) {
             <FieldMultiItem
               id={name}
               label='Contact mechanisms'
-              description={formString(`contacts.mechanisms.fieldset`)}
+              description={formString(
+                `contact_information.mechanisms.fieldset`
+              )}
               onAddClick={() => push(emptyContactMechanismValue)}
             >
               {fieldValues.map((field, index) => (
@@ -142,7 +144,7 @@ export function ContactFormFields(props) {
                     label='Type'
                     labelHint='(required)'
                     description={formString(
-                      `contacts.mechanisms.mechanism_type`
+                      `contact_information.mechanisms.mechanism_type`
                     )}
                   />
                   <FormikInputText
@@ -151,7 +153,7 @@ export function ContactFormFields(props) {
                     label='Value'
                     labelHint='(required)'
                     description={formString(
-                      `contacts.mechanisms.mechanism_value`
+                      `contact_information.mechanisms.mechanism_value`
                     )}
                   />
                 </DeletableFieldsetMechanisms>

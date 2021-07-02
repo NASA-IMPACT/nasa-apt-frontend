@@ -1,13 +1,11 @@
 /**
- * Base reducer for an api request, taking into account the action.id If it
+ * Base reducer for an api request, taking into account the action.key If it
  * exists it will store in the state under that path. Allows for page caching.
  *
  * Uses the following actions:
  * - invalidate/<actionName>
- * - request/<actionName>
- * - receive/<actionName>
- *
- * which are created by makeActions
+ * - begin/<actionName>
+ * - end/<actionName>
  *
  * @param {object} op Options
  * @param {string} op.name The action name to use as suffix
@@ -17,7 +15,7 @@
  * properties.
  *
  * @example
- * const resultsReducer = makeAPIReducer({ name: 'results', initial: {} });
+ * const resultsReducer = makeReducer({ name: 'results', initialState: {}, baseState: {} });
  */
 export function makeReducer({ name: actionName, initialState, baseState }) {
   // Reducer function.
@@ -28,14 +26,14 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
     switch (action.type) {
       case `invalidate/${actionName}`:
         return initialState;
-      case `request/${actionName}`: {
+      case `begin/${actionName}`: {
         return {
           ...baseState,
           ...state,
           [statusKey]: 'loading'
         };
       }
-      case `receive/${actionName}`: {
+      case `end/${actionName}`: {
         // eslint-disable-next-line prefer-const
         let st = {
           ...baseState,

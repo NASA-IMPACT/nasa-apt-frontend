@@ -1,17 +1,17 @@
 algorithm_input_variables:
-  fieldset: TBD.
-  name: The name of the variable that is input into the algorithm as it is named in the data.
-  long_name: The expanded name of the input variable.
-  unit: The unit used to report the input variable.
+  fieldset: ""
+  name: The name of the input data variable used in the algorithm.
+  long_name: The expanded full name of the input data variable.
+  unit: The unit of the input variable.
 
 algorithm_output_variables:
-  fieldset: TBD.
-  name: The name of the variable that is output from the algorithm as it is named in the data.
+  fieldset: ""
+  name: The name of the output variable in the data product created.
   long_name: The expaded name of the output variable.
-  unit: The unit used to report the output variable.
+  unit: The unit of the output variable in the data product created.
 
-scientific_theory: A description of the principles essential to the product retrieval including a descripiton of the physics and assoicated geophysical phenomenom observed.
-scientific_theory_assumptions: A description of any scientific or physical assumptions made in deriving the algorithm.
+scientific_theory: This is a description of the scientific principles used in product retrieval including the physics and associated geophysical phenomena observed.
+scientific_theory_assumptions: What are the assumptions or limitations inherent to the algorithm?
 
 mathematical_theory: A description of the mathematical theory essential to algorithm development.
 mathematical_theory_assumptions: A description of any mathematical assumptions, simplifications and approximations made when deriving the algorithm.

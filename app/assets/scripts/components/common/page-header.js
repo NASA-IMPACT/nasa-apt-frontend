@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
+import { Auth } from 'aws-amplify';
 import {
   glsp,
   media,
@@ -9,13 +11,19 @@ import {
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import Dropdown, {
+  DropTitle,
+  DropMenu,
+  DropMenuItem
+} from '@devseed-ui/dropdown';
 
 import config from '../../config';
 import { Can } from '../../a11n';
 import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
-import { useHistory } from 'react-router';
+
+import UserImage from './user-image';
 
 const { appTitle } = config;
 
@@ -127,18 +135,37 @@ const PageNav = styled.nav`
 const GlobalMenu = styled.ul`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
+  align-items: center;
 
   > * {
     grid-row: 1;
   }
 `;
 
+const UserProfileTrigger = styled(Button)`
+  > span {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  figure {
+    margin-right: ${glsp(0.5)};
+  }
+`;
+
 function PageHeader() {
   const { expireToken } = useAuthToken();
-  const user = useUser();
+  const { isLogged, user } = useUser();
   const history = useHistory();
 
-  const onLogoutClick = useCallback(() => {
+  const onLogoutClick = useCallback(async () => {
+    try {
+      // await Auth.signOut();
+      Auth.signOut({ global: true });
+    } catch (error) {
+      /* eslint-disable-next-line no-console */
+      console.log('error signing out: ', error);
+    }
     expireToken();
     history.push('/');
   }, [history, expireToken]);
@@ -158,41 +185,63 @@ function PageHeader() {
       </PageHeadline>
       <PageNav role='navigation'>
         <GlobalMenu>
-          <li>
-            <Button
-              forwardedAs={NavLink}
-              exact
-              to='/'
-              variation='achromic-plain'
-              title='Visit the welcome page'
-            >
-              Welcome
-            </Button>
-          </li>
-          <li>
-            <Button
-              forwardedAs={NavLink}
-              to='/documents'
-              variation='achromic-plain'
-              title='View the documents'
-            >
-              Documents
-            </Button>
-          </li>
-          {user.isLogged && (
+          {isLogged ? (
             <li>
-              <Can do='view' on='contacts'>
+              <Button
+                forwardedAs={NavLink}
+                to='/documents'
+                variation='achromic-plain'
+                title='View the documents'
+              >
+                Documents
+              </Button>
+              {/* <Button
+                forwardedAs={NavLink}
+                exact
+                to='/dashboard'
+                variation='achromic-plain'
+                title='Visit the welcome page'
+              >
+                Dashboard
+              </Button> */}
+            </li>
+          ) : (
+            <React.Fragment>
+              <li>
                 <Button
                   forwardedAs={NavLink}
-                  to='/contacts'
+                  exact
+                  to='/'
                   variation='achromic-plain'
-                  title='View the contact list'
+                  title='Visit the welcome page'
                 >
-                  Contacts
+                  Welcome
                 </Button>
-              </Can>
-            </li>
+              </li>
+              <li>
+                <Button
+                  forwardedAs={NavLink}
+                  to='/documents'
+                  variation='achromic-plain'
+                  title='View the documents'
+                >
+                  Documents
+                </Button>
+              </li>
+            </React.Fragment>
           )}
+          <Can do='view' on='contacts'>
+            <li>
+              <Button
+                forwardedAs={NavLink}
+                to='/contacts'
+                variation='achromic-plain'
+                title='View the contact list'
+              >
+                Contacts
+              </Button>
+            </li>
+          </Can>
           <li>
             <Button
               forwardedAs={NavLink}
@@ -231,15 +280,7 @@ function PageHeader() {
             </Button>
           </li>
           <li>
-            {user.isLogged ? (
-              <Button
-                variation='achromic-plain'
-                title='Sign out of the app'
-                onClick={onLogoutClick}
-              >
-                Sign out
-              </Button>
-            ) : (
+            {!isLogged ? (
               <Button
                 forwardedAs={NavLink}
                 exact
@@ -249,6 +290,46 @@ function PageHeader() {
               >
                 Sign in
               </Button>
+            ) : (
+              <Dropdown
+                alignment='right'
+                direction='down'
+                triggerElement={(props) => (
+                  <UserProfileTrigger
+                    variation='achromic-plain'
+                    title='Open dropdown'
+                    useIcon={['chevron-down--small', 'after']}
+                    {...props}
+                  >
+                    <UserImage user={user} /> {user.name}
+                  </UserProfileTrigger>
+                )}
+              >
+                <DropTitle>Account</DropTitle>
+                <DropMenu>
+                  <li>
+                    <DropMenuItem
+                      as={Link}
+                      to='/account'
+                      title='View user profile'
+                      data-dropdown='click.close'
+                    >
+                      Profile
+                    </DropMenuItem>
+                  </li>
+                </DropMenu>
+                <DropMenu>
+                  <li>
+                    <DropMenuItem
+                      title='Sign out from account'
+                      onClick={onLogoutClick}
+                      data-dropdown='click.close'
+                    >
+                      Sign out
+                    </DropMenuItem>
+                  </li>
+                </DropMenu>
+              </Dropdown>
             )}
           </li>
         </GlobalMenu>

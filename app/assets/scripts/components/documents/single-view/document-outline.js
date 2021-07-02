@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import throttle from 'lodash.throttle';
 import { glsp, rgba, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
@@ -16,6 +15,7 @@ import {
 
 import { atbdContentSections } from './document-body';
 import { useScrollLink } from './scroll-manager';
+import { useSidePanelPositioner } from '../../../utils/use-sidepanel-positioner';
 
 const OutlineSelf = styled(Panel).attrs({ as: 'nav' })`
   position: sticky;
@@ -150,9 +150,22 @@ export default function DocumentOutline(props) {
   const { atbd } = props;
   const { activeId } = useScrollLink();
 
-  const headerElRef = useRef(null);
-  const footerElRef = useRef(null);
-  const elementRef = useRef(null);
+  // Make the outline sticky by computing the height taking the header and
+  // footer into account.
+  const { ref: elementRef } = useSidePanelPositioner(
+    useMemo(
+      () => ({
+        cacheElements: true,
+        fn: (ref, { height, inpageHeaderHeight }) => {
+          ref.current.style.height = `${height}px`;
+          // Because the parent has a `position` we only need to account for the
+          // inpage header height instead of the height from the top.
+          ref.current.style.top = `${inpageHeaderHeight}px`;
+        }
+      }),
+      []
+    )
+  );
 
   // If the active item has changed, ensure it is in view.
   useEffect(() => {
@@ -188,60 +201,7 @@ export default function DocumentOutline(props) {
         behavior: 'smooth'
       });
     }
-  }, [activeId]);
-
-  // Make the outline sticky by computing the height taking the header and
-  // footer into account.
-  useEffect(() => {
-    const positioner = throttle(() => {
-      if (!headerElRef.current) {
-        headerElRef.current = document.querySelector(
-          '[data-element="inpage-header"]'
-        );
-      }
-
-      if (!footerElRef.current) {
-        footerElRef.current = document.querySelector('[data-element="footer"]');
-      }
-
-      if (!headerElRef.current || !elementRef.current) return;
-
-      const { top, height } = headerElRef.current.getBoundingClientRect();
-      // The header end represents to distance of the header plus anything else
-      // between it and the top of the viewport,
-      const headerEnd = top + height;
-
-      let visibleFooterHeight = 0;
-      if (footerElRef.current) {
-        const { top } = footerElRef.current.getBoundingClientRect();
-        visibleFooterHeight = Math.max(0, window.innerHeight - top);
-      }
-
-      const finalElementHeight = Math.max(
-        0,
-        window.innerHeight - visibleFooterHeight - headerEnd
-      );
-
-      elementRef.current.style.height = `${finalElementHeight}px`;
-      elementRef.current.style.top = `${height}px`;
-    }, 16);
-
-    // Using requestAnimationFrame with a lodash throttle is the best way to
-    // ensure the outline position is appropriately calculated.
-    let rafId;
-    const rafRun = () => {
-      positioner();
-      rafId = requestAnimationFrame(rafRun);
-    };
-
-    rafRun();
-
-    return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, []);
+  }, [elementRef, activeId]);
 
   return (
     <OutlineSelf ref={elementRef}>

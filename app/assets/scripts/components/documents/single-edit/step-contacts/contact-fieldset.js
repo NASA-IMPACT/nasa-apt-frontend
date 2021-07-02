@@ -66,7 +66,7 @@ export default function ContactsFieldset(props) {
             id={`${name}-${index}-roles`}
             name={`${name}.${index}.roles`}
             label='Roles related to this document'
-            description={formString(`contacts.roles`)}
+            description={formString(`contact_information.roles`)}
           >
             <RolesGroup>
               {roleTypes.map((role, roleIdx) => (

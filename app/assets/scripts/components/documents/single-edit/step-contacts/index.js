@@ -83,6 +83,12 @@ export default function StepContacts(props) {
                   label='Contacts'
                   sectionName='sections_completed.contacts'
                 >
+                  <p>
+                    <em>
+                      Please list all contacts and select the appropriate role.
+                      This is not the author list for the ATBD citation.
+                    </em>
+                  </p>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
               </Form>

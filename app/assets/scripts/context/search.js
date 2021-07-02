@@ -1,9 +1,10 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
 
-import { useContexeedApi } from '../utils/contexeed';
+import { useContexeedApi } from '../utils/contexeed-v2';
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
+import { createContextChecker } from '../utils/create-context-checker';
 
 // Context
 export const SearchContext = createContext(null);
@@ -51,7 +52,7 @@ export const SearchProvider = ({ children }) => {
 
           return {
             url: `/search`,
-            options: {
+            requestOptions: {
               method: 'post',
               data: {
                 query: elasticQuery,
@@ -84,19 +85,10 @@ SearchProvider.propTypes = {
 
 // Context consumers.
 // Used to access different parts of the contact list context
-const useCheckContext = (fnName) => {
-  const context = useContext(SearchContext);
-  if (!context) {
-    throw new Error(
-      `The \`${fnName}\` hook must be used inside the <SearchContext> component's context.`
-    );
-  }
-
-  return context;
-};
+const useSafeContextFn = createContextChecker(SearchContext, 'SearchContext');
 
 export const useSearch = () => {
-  const { getResults, fetchSearchResults, invalidate } = useCheckContext(
+  const { getResults, fetchSearchResults, invalidate } = useSafeContextFn(
     'useSearch'
   );
 

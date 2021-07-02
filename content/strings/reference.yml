@@ -1,15 +1,15 @@
-title: TBD.
-authors: TBD.
-series: TBD.
-edition: TBD.
-volume: TBD.
-issue: TBD.
-report_number: TBD.
-publication_place: TBD.
-year: TBD.
-publisher: TBD.
-pages: TBD.
-isbn: TBD.
-doi: TBD.
-online_resource: TBD.
-other_reference_details: TBD.
+title: The title of the reference document.
+authors: The individuals or group that authored the referenced material.
+series: The name of the series of the referenced material.
+edition: The edition number of the referenced material.
+volume: The volume of the referenced material.
+issue: The issue number of the referenced material.
+report_number: The report number of the referenced material.
+publication_place: The publication place of the referened material.
+year: The publication year of the referenced material.
+publisher: The publisher of the referenced material.
+pages: The page numbers of the references material.
+isbn: The ISBN of the reference material.
+doi: DOI of the referenced material.
+online_resource: The URL of the landing page for the reference material.
+other_reference_details: Additional free-text citation details of the referenced material.
