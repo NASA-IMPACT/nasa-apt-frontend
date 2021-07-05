@@ -236,7 +236,11 @@ function html() {
       .src('app/*.html')
       .pipe($.useref({ searchPath: ['.tmp', 'app', '.'] }))
       .pipe(cacheUseref())
-      .pipe($.if('*.js', $.terser()))
+      // AWS amplify is throwing an error because of a graphQL bug which is
+      // solved by disabling mangle.
+      // Amplify issue: https://github.com/aws-amplify/amplify-js/issues/1445
+      // GraphQL issue: https://github.com/graphql/graphql-js/pull/2894
+      .pipe($.if('*.js', $.terser({ mangle: false })))
       .pipe($.if('*.css', $.csso()))
       .pipe($.if(/\.(css|js)$/, $.rev()))
       // Add a prefix to all replacements so next line catches them.
