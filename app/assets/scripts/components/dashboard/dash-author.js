@@ -1,10 +1,16 @@
 import React from 'react';
 import { Heading } from '@devseed-ui/typography';
 import styled from 'styled-components';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
 import AtbdDashboardEntry from './atbd-dashboard-entry';
-import { HubList, HubListItem } from '../../styles/hub';
+import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
+
+const DashboardAuthorInner = styled.div`
+  display: grid;
+  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+`;
 
 const authorTabNav = [
   {
@@ -25,13 +31,13 @@ const authorTabNav = [
   }
 ];
 
-function DashboardAuthor() {
+function DashboardAuthor(props) {
   return (
-    <React.Fragment>
-      <Heading size='medium' as='h2'>
-        Documents
-      </Heading>
+    <DashboardAuthorInner>
       <TabsManager>
+        <Heading size='medium' as='h2'>
+          Documents
+        </Heading>
         <TabsNav>
           {authorTabNav.map((t) => (
             <TabItem key={t.id} label={t.label} tabId={t.id}>
@@ -39,17 +45,19 @@ function DashboardAuthor() {
             </TabItem>
           ))}
         </TabsNav>
-
         <TabContent tabId='leading'>
-          <HubList>
-            <HubListItem key={1}>
+          <DocumentsList>
+            <DocumentsListItem key={1}>
               <AtbdDashboardEntry />
-            </HubListItem>
-          </HubList>
+            </DocumentsListItem>
+            <DocumentsListItem key={2}>
+              <AtbdDashboardEntry />
+            </DocumentsListItem>
+          </DocumentsList>
         </TabContent>
         <TabContent tabId='contrib'>Tab 2 content</TabContent>
       </TabsManager>
-    </React.Fragment>
+    </DashboardAuthorInner>
   );
 }
 

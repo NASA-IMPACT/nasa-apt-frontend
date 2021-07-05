@@ -35,7 +35,8 @@ function UserDashboard() {
             <DashboardContent>
               <Heading size='medium'>Welcome {user.name}</Heading>
               <p>Here&apos;s what is happening in your APT account today.</p>
-
+            </DashboardContent>
+            <DashboardContent>
               <DashboardAuthor />
             </DashboardContent>
           </ContentBlock>

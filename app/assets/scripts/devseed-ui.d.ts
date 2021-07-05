@@ -301,6 +301,18 @@ declare module '@devseed-ui/button' {
      */
     useIcon: string | [iconName: string, position: 'before' | 'after'];
   }
+
+  /**
+   * Renders a wrapper for buttons to create a group
+   */
+  class ButtonGroup extends React.Component<ButtonGroupProps, any> {}
+
+  interface ButtonGroupProps {
+    /**
+    * Orientation of the button group.
+    */
+    orientation: 'horizontal' | 'vertical'
+  }
 }
 
 declare module '@devseed-ui/dropdown' {

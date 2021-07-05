@@ -1,28 +1,11 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
-import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 import { headingAlt } from '@devseed-ui/typography';
 
-import {
-  HubEntry,
-  HubEntryHeader,
-  HubEntryHeadline,
-  HubEntryTitle,
-  HubEntryMeta,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryActions
-} from '../../styles/hub';
-import StatusPill from '../common/status-pill';
-import { Link } from '../../styles/clean/link';
-import AtbdActionsMenu from '../documents/atbd-actions-menu';
 import Tip from '../common/tooltip';
-import VersionsMenu from '../documents/versions-menu';
-import Datetime from '../common/date';
 import Pill from '../common/pill';
 import UserImage from '../common/user-image';
 
@@ -78,7 +61,12 @@ const ContributorEntry = (props) => {
   );
 };
 
-const ContributorsDropContent = () => {
+ContributorEntry.propTypes = {
+  isLead: T.bool,
+  user: T.object
+};
+
+const ContributorsMenuContent = () => {
   return (
     <div>
       <DropTitle>Contributors</DropTitle>
@@ -110,16 +98,15 @@ const ContributorsDropContent = () => {
   );
 };
 
-function ContributorsDrop() {
+export function ContributorsMenu() {
   return (
     <Tip
       position='top'
-      html={<ContributorsDropContent />}
+      html={<ContributorsMenuContent />}
       theme='apt-drop'
       arrow={false}
       animateFill={false}
       animation='shift'
-      // open
       interactive
       useContext
     >
@@ -128,6 +115,4 @@ function ContributorsDrop() {
   );
 }
 
-ContributorsDrop.propTypes = {};
-
-export default ContributorsDrop;
+ContributorsMenu.propTypes = {};

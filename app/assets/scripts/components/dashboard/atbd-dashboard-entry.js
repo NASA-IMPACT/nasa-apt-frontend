@@ -1,30 +1,26 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { glsp } from '@devseed-ui/theme-provider';
+import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
-import { Tooltip } from 'react-tippy';
 
-import {
-  HubEntry,
-  HubEntryHeader,
-  HubEntryHeadline,
-  HubEntryTitle,
-  HubEntryMeta,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryActions
-} from '../../styles/hub';
 import StatusPill from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
-import AtbdActionsMenu from '../documents/atbd-actions-menu';
-import Tip from '../common/tooltip';
 import VersionsMenu from '../documents/versions-menu';
 import Datetime from '../common/date';
-import { DropTitle } from '@devseed-ui/dropdown';
-import ContributorsDrop from './contributors-drop';
+import { ContributorsMenu } from './contributors-menu';
+import {
+  DocumentEntry,
+  DocumentEntryActions,
+  DocumentEntryBreadcrumbMenu,
+  DocumentEntryDetails,
+  DocumentEntryHeader,
+  DocumentEntryHeadline,
+  DocumentEntryHeadNav,
+  DocumentEntryTitle
+} from '../../styles/documents/list';
+import ContextualDocAction from './document-item-ctx-action';
 
 const UpdatedTimeSelf = styled.span`
   font-size: 0.875rem;
@@ -32,6 +28,19 @@ const UpdatedTimeSelf = styled.span`
   ::before {
     ${collecticon('clock')}
     margin-right: ${glsp(0.25)};
+  }
+`;
+
+const CommentCount = styled.span`
+  font-size: 0.875rem;
+
+  ::before {
+    ${collecticon('speech-balloon')}
+    margin-right: ${glsp(0.25)};
+  }
+
+  > span {
+    ${visuallyHidden()}
   }
 `;
 
@@ -45,39 +54,41 @@ const UpdatedTime = ({ date }) => {
 
 function AtbdDashboardEntry(props) {
   return (
-    <HubEntry>
-      <HubEntryHeader>
-        <HubEntryHeadline>
-          <HubEntryTitle>
+    <DocumentEntry>
+      <DocumentEntryHeader>
+        <DocumentEntryHeadline>
+          <DocumentEntryTitle>
             <Link to={'/'} title='View document'>
               Lorem Ipsum
             </Link>
-          </HubEntryTitle>
-          <HubEntryHeadNav role='navigation'>
-            <HubEntryBreadcrumbMenu>
+          </DocumentEntryTitle>
+          <DocumentEntryHeadNav role='navigation'>
+            <DocumentEntryBreadcrumbMenu>
               <li>
-                <VersionsMenu atbdId={123} versions={[{ version: 'v2.1' }]} />
+                <VersionsMenu
+                  atbdId={123}
+                  versions={[{ version: 'v2.1' }, { version: 'v2.2' }]}
+                />
               </li>
-            </HubEntryBreadcrumbMenu>
-          </HubEntryHeadNav>
-        </HubEntryHeadline>
-        <HubEntryMeta>
-          <dt>Status</dt>
-          <dd>
-            <StatusPill status={'draft'} completeness={10} />
-          </dd>
-        </HubEntryMeta>
-        <HubEntryDetails>
-          <dt>On</dt>
-          <dd>
+            </DocumentEntryBreadcrumbMenu>
+          </DocumentEntryHeadNav>
+          <StatusPill status={'draft'} completeness={10} />
+        </DocumentEntryHeadline>
+        <DocumentEntryDetails>
+          <li>
             <UpdatedTime date={new Date()} />
-          </dd>
-          <dt>Contributors</dt>
-          <dd>
-            <ContributorsDrop />
-          </dd>
-        </HubEntryDetails>
-        <HubEntryActions>
+          </li>
+          <li>
+            <ContributorsMenu />
+          </li>
+          <li>
+            <CommentCount>
+              8 <span>comments</span>
+            </CommentCount>
+          </li>
+        </DocumentEntryDetails>
+        <DocumentEntryActions>
+          <ContextualDocAction action='approve-review' />
           <Button variation='base-plain' useIcon='ellipsis-vertical' hideText>
             Opt
           </Button>
@@ -87,9 +98,9 @@ function AtbdDashboardEntry(props) {
             atbdVersion={lastVersion}
             onSelect={onAction}
           /> */}
-        </HubEntryActions>
-      </HubEntryHeader>
-    </HubEntry>
+        </DocumentEntryActions>
+      </DocumentEntryHeader>
+    </DocumentEntry>
   );
 }
 
@@ -99,31 +110,3 @@ AtbdDashboardEntry.propTypes = {
 };
 
 export default AtbdDashboardEntry;
-
-const Creators = ({ creators }) => {
-  if (!creators) return null;
-
-  const creatorsList = creators?.split(' and ');
-
-  if (creatorsList.length > 1) {
-    return (
-      <React.Fragment>
-        <dt>By</dt>
-        <dd>
-          <Tip title={creators}>{creatorsList[0]} et al.</Tip>
-        </dd>
-      </React.Fragment>
-    );
-  }
-
-  return (
-    <React.Fragment>
-      <dt>By</dt>
-      <dd>{creators}</dd>
-    </React.Fragment>
-  );
-};
-
-Creators.propTypes = {
-  creators: T.string
-};
