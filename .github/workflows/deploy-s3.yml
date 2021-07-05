@@ -6,7 +6,7 @@ on:
   push:
     branches:
     - 'develop'
-    - 'master'
+    - 'main'
 
 env:
   NODE: 14
@@ -54,7 +54,7 @@ jobs:
         run: yarn stage
 
       - name: Build production
-        if: github.event.ref == 'refs/heads/master'
+        if: github.event.ref == 'refs/heads/main'
         run: PUBLIC_URL='https://impact.earthdata.nasa.gov/apt' yarn build
 
   deploy:
@@ -84,14 +84,14 @@ jobs:
           SOURCE_DIR: ./dist
 
       - name: Serve site from subpath
-        if: github.event.ref == 'refs/heads/master'
+        if: github.event.ref == 'refs/heads/main'
         run: |
           mkdir deploy/
           mv dist deploy/apt
           cp deploy/apt/index.html deploy/index.html
 
       - name: Deploy to S3 Production
-        if: github.event.ref == 'refs/heads/master'
+        if: github.event.ref == 'refs/heads/main'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
