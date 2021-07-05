@@ -18,7 +18,7 @@ import {
 } from '../../styles/hub';
 import { Link } from '../../styles/clean/link';
 import Pill from '../common/pill';
-import TextHighlight from '../common/TextHighlight';
+import TextHighlight from '../common/text-highlight';
 
 import { atbdView } from '../../utils/url-creator';
 
