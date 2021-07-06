@@ -1,0 +1,11 @@
+first_name: First name of the contact person.
+middle_name: Middle name of the contact person.
+last_name: Last name of the contact person.
+uuid: Universally unique identifier of the contact person, such as the ORCID.
+roles: The role of this contact person (see https://casrai.org/credit/ for definitions).
+url: URL relevant to contacting the contact person.
+
+mechanisms:
+  fieldset: ""
+  mechanism_type: The method for contacting this person.
+  mechanism_value: The contact value associated with the contact method.
