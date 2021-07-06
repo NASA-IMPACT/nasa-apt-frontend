@@ -47,8 +47,10 @@ const getBG = (name) => {
 const getPxSize = (size) => {
   if (size === 'profile') {
     return 128;
-  } else {
+  } else if (size === 'small') {
     return 24;
+  } else {
+    return 32;
   }
 };
 

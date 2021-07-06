@@ -301,7 +301,7 @@ function PageHeader() {
                     useIcon={['chevron-down--small', 'after']}
                     {...props}
                   >
-                    <UserImage user={user} /> {user.name}
+                    <UserImage user={user} size='small' /> {user.name}
                   </UserProfileTrigger>
                 )}
               >

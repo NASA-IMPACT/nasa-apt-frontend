@@ -47,6 +47,7 @@ const ContributorEntrySelf = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   grid-gap: ${glsp(0.5)};
+  align-items: center;
 `;
 
 const ContributorEntry = (props) => {
