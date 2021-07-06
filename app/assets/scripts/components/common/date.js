@@ -1,9 +1,9 @@
 import React from 'react';
 import T from 'prop-types';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 
 export default function Datetime(props) {
-  const { date } = props;
+  const { date, format: dateFormat, useDistanceToNow } = props;
 
   if (isNaN(date?.getTime?.())) {
     return null;
@@ -11,11 +11,15 @@ export default function Datetime(props) {
 
   return (
     <time dateTime={format(date, 'yyyy-MM-dd')}>
-      {format(date, 'MMM do, yyyy')}
+      {useDistanceToNow
+        ? formatDistanceToNow(date, { addSuffix: true })
+        : format(date, dateFormat || 'MMM do, yyyy')}
     </time>
   );
 }
 
 Datetime.propTypes = {
-  date: T.object
+  date: T.object,
+  format: T.string,
+  useDistanceToNow: T.bool
 };
