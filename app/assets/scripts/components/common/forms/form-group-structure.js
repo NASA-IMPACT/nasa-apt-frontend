@@ -90,7 +90,7 @@ export default function FormGroupStructure(props) {
 
 FormGroupStructure.propTypes = {
   id: T.string,
-  label: T.string,
+  label: T.node,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
   className: T.string,
   description: T.string,
