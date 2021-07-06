@@ -10,7 +10,7 @@ on:
 
 env:
   NODE: 14
-  DEPLOY_BUCKET_STAGING: nasa-apt2-staging
+  SURGE_STAGING_DOMAIN: https://nasa-apt.surge.sh
   DEPLOY_BUCKET_PROD: algorithm-publication-tool-staging
   DEPLOY_BUCKET_PROD_REGION: us-west-2
 
@@ -65,6 +65,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+
       - name: Restore dist cache
         uses: actions/cache@v2
         id: cache-dist
@@ -72,16 +79,11 @@ jobs:
           path: dist
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
 
-      - name: Deploy to S3 Staging
+      - name: Deploy Staging to Surge
         if: github.event.ref == 'refs/heads/develop'
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ env.DEPLOY_BUCKET_STAGING }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
-          SOURCE_DIR: ./dist
+        run: |
+          cp ./dist/index.html ./dist/200.html
+          yarn run surge ./dist ${{ env.SURGE_STAGING_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
 
       - name: Serve site from subpath
         if: github.event.ref == 'refs/heads/main'

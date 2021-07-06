@@ -96,6 +96,7 @@
     "require-globify": "^1.4.1",
     "stylelint": "^13.10.0",
     "stylelint-config-recommended": "^3.0.0",
+    "surge": "^0.23.0",
     "through2": "^4.0.2",
     "vinyl": "^2.2.1",
     "vinyl-buffer": "^1.0.1",
