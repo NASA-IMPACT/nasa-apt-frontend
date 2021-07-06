@@ -309,9 +309,9 @@ declare module '@devseed-ui/button' {
 
   interface ButtonGroupProps {
     /**
-    * Orientation of the button group.
-    */
-    orientation: 'horizontal' | 'vertical'
+     * Orientation of the button group.
+     */
+    orientation: 'horizontal' | 'vertical';
   }
 }
 
@@ -377,4 +377,49 @@ declare module '@devseed-ui/collecticons' {
    * @param name Name of the collecticon to show
    */
   export default function collecticon(name: string): any;
+}
+
+declare module '@devseed-ui/shadow-scrollbar' {
+  interface ShadowScrollbarProps {
+    /**
+     * Variation for the top shadow.
+     * @default light
+     */
+    topShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the bottom shadow.
+     * @default light
+     */
+    bottomShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the left shadow.
+     * @default light
+     */
+    leftShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the right shadow.
+     * @default light
+     */
+    rightShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Props for `react-custom-scrollbars`.
+     * See https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+     */
+    scrollbarsProps: any;
+  }
+
+  /**
+   * Component to add custom scrollbars to ensure that they're consistent in all
+   * browsers. It also includes shadows on the sides of the container to
+   * indicate there's more content to scroll through. These shadows gradually
+   * disappear when the user reaches the end of the content.
+   */
+  export default class ShadowScrollbar extends React.Component<
+    ShadowScrollbarProps,
+    any
+  > {}
 }
