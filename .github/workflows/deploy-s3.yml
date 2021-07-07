@@ -10,7 +10,7 @@ on:
 
 env:
   NODE: 14
-  PROD_DOMAIN: https://apt.nasa-impact.net/apt
+  PROD_DOMAIN: https://impact.earthdata.nasa.gov/apt
   DEPLOY_BUCKET_PROD: algorithm-publication-tool-staging
   DEPLOY_BUCKET_PROD_REGION: us-west-2
   SURGE_STAGING_DOMAIN: https://nasa-apt.surge.sh
