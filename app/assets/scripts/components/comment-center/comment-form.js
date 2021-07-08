@@ -27,7 +27,9 @@ const sectionMenuTriggerProps = {
   href: '#comment-field'
 };
 
-const sectionMenuLabel = ([{ label }]) => `Comment under ${label}`;
+const sectionMenuLabel = (selectedItems) => {
+  return `Comment under ${selectedItems[0]?.label}`;
+};
 
 const getTextareaLabel = ({ type, values, setFieldValue }) => {
   switch (type) {
@@ -84,6 +86,7 @@ const CommentForm = (props) => {
 
   return (
     <Formik
+      enableReinitialize
       initialValues={initial}
       validate={console.log}
       onSubmit={console.log}

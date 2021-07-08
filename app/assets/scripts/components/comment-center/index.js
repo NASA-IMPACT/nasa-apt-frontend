@@ -4,6 +4,7 @@ import { CSSTransition } from 'react-transition-group';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
+import collecticon from '@devseed-ui/collecticons';
 
 import {
   Panel,
@@ -91,10 +92,23 @@ const CommentFormWrapper = styled.div`
   }
 `;
 
+const EmptyComment = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: ${glsp(2, 1)};
+
+  ::before {
+    ${collecticon('speech-balloon')}
+    font-size: 3rem;
+    color: ${themeVal('color.baseAlphaE')};
+  }
+`;
+
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 const COMMENTS = [
   {
-    id: 1,
+    id: '1',
     author: { name: 'Monica Anderson' },
     isResolved: false,
     isEdited: false,
@@ -104,7 +118,7 @@ const COMMENTS = [
       'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
     replies: [
       {
-        id: 11,
+        id: '11',
         author: { name: 'Tom Ridley' },
         isEdited: false,
         isEditing: true,
@@ -112,7 +126,7 @@ const COMMENTS = [
         comment: 'This is a very nice reply'
       },
       {
-        id: 12,
+        id: '12',
         author: { name: 'Chiara Cortegazza' },
         isEdited: true,
         isEditing: false,
@@ -122,7 +136,7 @@ const COMMENTS = [
     ]
   },
   {
-    id: 2,
+    id: '2',
     author: { name: 'Tom Ridley' },
     isResolved: false,
     isEdited: true,
@@ -133,7 +147,7 @@ const COMMENTS = [
       'Lorem ipsum may be used as a placeholder before final copy is available.'
   },
   {
-    id: 3,
+    id: '3',
     author: { name: 'Bruce Wayne' },
     isResolved: true,
     isEdited: false,
@@ -166,7 +180,9 @@ function CommentCenter() {
     selectedSection,
     setSelectedSection,
     selectedStatus,
-    setSelectedStatus
+    setSelectedStatus,
+    openThreadId,
+    setOpenThreadId
   } = useCommentCenter();
 
   const togglePanel = useCallback(() => {
@@ -238,7 +254,8 @@ function CommentCenter() {
     []
   );
 
-  const isCommentThread = false;
+  const singleComment = COMMENTS.find((c) => c.id === openThreadId);
+  const isCommentThread = !!singleComment;
 
   return (
     <CommentCenterSelf ref={elementRef}>
@@ -265,7 +282,11 @@ function CommentCenter() {
                 {isCommentThread ? 'Comment Thread' : 'Comments'}
               </PanelTitleAlt>
               {isCommentThread ? (
-                <Button useIcon='arrow-left' title='See all comments'>
+                <Button
+                  useIcon='arrow-left'
+                  title='See all comments'
+                  onClick={() => setOpenThreadId(null)}
+                >
                   View all
                 </Button>
               ) : (
@@ -287,27 +308,38 @@ function CommentCenter() {
                 <React.Fragment>
                   <CommentEntry
                     type={COMMENT_THREAD}
-                    author={COMMENTS[0].author}
-                    isResolved={COMMENTS[0].isResolved}
-                    isEdited={COMMENTS[0].isEdited}
-                    isEditing={COMMENTS[0].isEditing}
-                    date={COMMENTS[0].date}
-                    section={COMMENTS[0].section}
-                    replyCount={COMMENTS[0].replies.length}
-                    comment={COMMENTS[0].comment}
+                    commentId={singleComment.id}
+                    author={singleComment.author}
+                    isResolved={singleComment.isResolved}
+                    isEdited={singleComment.isEdited}
+                    isEditing={singleComment.isEditing}
+                    date={singleComment.date}
+                    section={singleComment.section}
+                    replyCount={singleComment.replies?.length}
+                    comment={singleComment.comment}
                   />
-                  {COMMENTS[0].replies.map((c) => (
-                    <li key={c.id}>
-                      <CommentEntry
-                        type={COMMENT_THREAD_REPLY}
-                        author={c.author}
-                        isEdited={c.isEdited}
-                        isEditing={c.isEditing}
-                        date={c.date}
-                        comment={c.comment}
-                      />
-                    </li>
-                  ))}
+                  {singleComment.replies?.length ? (
+                    <CommentList>
+                      {singleComment.replies.map((c) => (
+                        <li key={c.id}>
+                          <CommentEntry
+                            type={COMMENT_THREAD_REPLY}
+                            commentId={c.id}
+                            author={c.author}
+                            isEdited={c.isEdited}
+                            isEditing={c.isEditing}
+                            date={c.date}
+                            comment={c.comment}
+                          />
+                        </li>
+                      ))}
+                    </CommentList>
+                  ) : (
+                    <EmptyComment>
+                      <p>There are no replies.</p>
+                      <p>Say something!</p>
+                    </EmptyComment>
+                  )}
                 </React.Fragment>
               ) : (
                 <CommentList>
@@ -315,6 +347,7 @@ function CommentCenter() {
                     <li key={c.id}>
                       <CommentEntry
                         type={COMMENT}
+                        commentId={c.id}
                         author={c.author}
                         isResolved={c.isResolved}
                         isEdited={c.isEdited}
@@ -323,6 +356,7 @@ function CommentCenter() {
                         section={c.section}
                         replyCount={c.replies?.length}
                         comment={c.comment}
+                        onViewClick={setOpenThreadId}
                       />
                     </li>
                   ))}

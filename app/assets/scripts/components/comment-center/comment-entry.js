@@ -6,11 +6,15 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 
-import { Link } from '../../styles/clean/link';
 import Datetime from '../common/date';
 import UserIdentity from '../common/user-identity';
 import DropdownMenu from '../common/dropdown-menu';
 import CommentForm from './comment-form';
+
+const getDefaultPrevented = (fn, ...args) => (e) => {
+  e?.preventDefault?.();
+  fn?.(...args);
+};
 
 const AuthoringInfoCmp = (props) => {
   const { date, isEdited, isThread, ...rest } = props;
@@ -21,7 +25,7 @@ const AuthoringInfoCmp = (props) => {
     </React.Fragment>
   );
 
-  return isThread ? <div {...rest}>{d}</div> : <Link {...rest}>{d}</Link>;
+  return isThread ? <div {...rest}>{d}</div> : <a {...rest}>{d}</a>;
 };
 
 AuthoringInfoCmp.propTypes = {
@@ -137,7 +141,7 @@ const CommentReplyButton = styled(Button)`
 const MAX_COMMENT_LENGTH = 140;
 
 const CommentBody = (props) => {
-  const { comment, truncateComment } = props;
+  const { comment, truncateComment, onReadMore } = props;
 
   if (!truncateComment) return <p>{nl2br(comment)}</p>;
 
@@ -148,9 +152,9 @@ const CommentBody = (props) => {
       {comment.length > MAX_COMMENT_LENGTH && (
         <React.Fragment>
           ...{' '}
-          <Link to='' title='Read full comment'>
+          <a href='#' title='Read full comment' onClick={onReadMore}>
             (Read more)
-          </Link>
+          </a>
         </React.Fragment>
       )}
     </p>
@@ -158,6 +162,7 @@ const CommentBody = (props) => {
 };
 
 CommentBody.propTypes = {
+  onReadMore: T.func,
   truncateComment: T.bool,
   comment: T.string
 };
@@ -168,6 +173,8 @@ export const COMMENT_THREAD_REPLY = 'comment-thread-reply';
 
 export default function CommentEntry(props) {
   const {
+    commentId,
+    onViewClick,
     author,
     type,
     isResolved,
@@ -213,6 +220,8 @@ export default function CommentEntry(props) {
             date={date}
             isEdited={isEdited}
             isThread={isReply || isThread}
+            href='#'
+            onClick={getDefaultPrevented(onViewClick, commentId)}
           />
         </CommentEntryHeadline>
         <CommentEntryActions>
@@ -226,6 +235,7 @@ export default function CommentEntry(props) {
                   replyCount ? `Reply comment (${replyCount})` : 'Reply Comment'
                 }
                 data-reply-count={replyCount > 99 ? '99+' : replyCount || null}
+                onClick={getDefaultPrevented(onViewClick, commentId)}
               >
                 Reply
               </CommentReplyButton>
@@ -264,6 +274,7 @@ export default function CommentEntry(props) {
           <CommentBody
             comment={comment}
             truncateComment={!isReply && !isThread}
+            onReadMore={getDefaultPrevented(onViewClick, commentId)}
           />
         )}
       </CommentEntryContent>
@@ -272,6 +283,8 @@ export default function CommentEntry(props) {
 }
 
 CommentEntry.propTypes = {
+  commentId: T.string,
+  onViewClick: T.func,
   author: T.object,
   type: T.oneOf([COMMENT, COMMENT_THREAD, COMMENT_THREAD_REPLY]),
   isResolved: T.bool,

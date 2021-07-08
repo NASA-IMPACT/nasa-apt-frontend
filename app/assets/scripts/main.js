@@ -139,7 +139,7 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
-          {/* <CommentCenter /> */}
+          <CommentCenter />
         </Composer>
         <ToastsContainer />
       </DevseedUiThemeProvider>

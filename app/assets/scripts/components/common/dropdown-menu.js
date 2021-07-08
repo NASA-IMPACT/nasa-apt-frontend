@@ -250,7 +250,7 @@ DropdownMenu.propTypes = {
   activeItem: T.oneOfType([T.array, T.string]),
   dropTitle: T.string,
   triggerProps: T.object,
-  triggerLabel: T.string,
+  triggerLabel: T.oneOfType([T.func, T.string]),
   alignment: T.string,
   direction: T.string,
   onSelect: T.func
