@@ -10079,6 +10079,11 @@ react-native-get-random-values@^1.4.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
+react-nl2br@^1.0.2:
+  version "1.0.2"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/react-nl2br/-/react-nl2br-1.0.2.tgz#ebe2431245caa631242cb10a739ac9bb5b2b6da3"
+  integrity sha512-gjuv4thrXRYvDhd82ceW1fr6sBkF9ngESIuwSevznK9hBEh1KXV0SPeZKScVbHWkaKUq1aMTFeIt04JdIz4p7g==
+
 react-router-dom@^5.2.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-5.2.0.tgz#9e65a4d0c45e13289e66c7b17c7e175d0ea15662"

@@ -60,7 +60,7 @@ export function InputTextarea(props) {
 InputTextarea.propTypes = {
   id: T.string,
   name: T.string,
-  label: T.string,
+  label: T.node,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,

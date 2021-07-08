@@ -9,8 +9,8 @@ export const CommentsCenterContext = createContext(null);
 // Context provider
 export const CommentCenterProvider = ({ children }) => {
   const [isPanelOpen, setPanelOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState('general');
-  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedSection, setSelectedSection] = useState('all-section');
+  const [selectedStatus, setSelectedStatus] = useState('all-status');
 
   const contextValue = {
     isPanelOpen,
