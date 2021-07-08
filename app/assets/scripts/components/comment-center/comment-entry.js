@@ -98,7 +98,9 @@ const CommentEntryHeadline = styled.div`
 `;
 
 const CommentEntryActions = styled.div`
-  /* styled-component*/
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: ${glsp(0.25)};
 `;
 
 const CommentEntryContent = styled.div`
@@ -112,6 +114,23 @@ const CommentEntryContent = styled.div`
     &:focus {
       min-height: 20rem;
     }
+  }
+`;
+
+const CommentReplyButton = styled(Button)`
+  position: relative;
+
+  ::after {
+    content: attr(data-reply-count);
+    font-size: 0.625rem;
+    line-height: 0.875rem !important;
+    position: absolute;
+    right: -0.25rem;
+    top: -0.5rem;
+    padding: ${glsp(0, 0.25)};
+    color: #fff;
+    background: ${themeVal('color.primary')};
+    border-radius: ${themeVal('shape.ellipsoid')};
   }
 `;
 
@@ -154,6 +173,7 @@ export default function CommentEntry(props) {
     isResolved,
     isEdited,
     isEditing,
+    replyCount,
     date,
     section,
     comment
@@ -198,14 +218,17 @@ export default function CommentEntry(props) {
         <CommentEntryActions>
           {!isReply && (
             <React.Fragment>
-              <Button
+              <CommentReplyButton
                 hideText
                 size='small'
                 useIcon='arrow-return'
-                title='Reply comment'
+                title={
+                  replyCount ? `Reply comment (${replyCount})` : 'Reply Comment'
+                }
+                data-reply-count={replyCount > 99 ? '99+' : replyCount || null}
               >
                 Reply
-              </Button>
+              </CommentReplyButton>
               <Button
                 hideText
                 size='small'
@@ -259,5 +282,6 @@ CommentEntry.propTypes = {
     id: T.string,
     label: T.string
   }),
+  replyCount: T.number,
   comment: T.string
 };

@@ -293,6 +293,7 @@ function CommentCenter() {
                     isEditing={COMMENTS[0].isEditing}
                     date={COMMENTS[0].date}
                     section={COMMENTS[0].section}
+                    replyCount={COMMENTS[0].replies.length}
                     comment={COMMENTS[0].comment}
                   />
                   {COMMENTS[0].replies.map((c) => (
@@ -320,6 +321,7 @@ function CommentCenter() {
                         isEditing={c.isEditing}
                         date={c.date}
                         section={c.section}
+                        replyCount={c.replies?.length}
                         comment={c.comment}
                       />
                     </li>
