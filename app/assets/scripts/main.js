@@ -43,6 +43,7 @@ import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
+import AptDevtools from './components/apt-devtools/index.js';
 
 const composingComponents = [
   ErrorBoundary,
@@ -140,6 +141,7 @@ function Root() {
             <Route path='*' component={UhOh} />
           </Switch>
           <CommentCenter />
+          {process.env.NODE_ENV === 'development' && <AptDevtools />}
         </Composer>
         <ToastsContainer />
       </DevseedUiThemeProvider>

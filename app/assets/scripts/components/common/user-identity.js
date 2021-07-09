@@ -25,7 +25,7 @@ UserIdentityCmp.propTypes = {
 
 const UserIdentity = styled(UserIdentityCmp)`
   display: grid;
-  grid-template-columns: min-content 1fr;
+  grid-template-columns: min-content;
   grid-auto-columns: min-content;
   grid-auto-flow: column;
   grid-gap: ${glsp(0.5)};
