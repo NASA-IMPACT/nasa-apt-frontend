@@ -1,5 +1,6 @@
 import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
+import qs from 'qs';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
@@ -80,9 +81,11 @@ export const AtbdsProvider = (props) => {
   const { getState: getAtbds, fetchAtbds, deleteFullAtbd } = useContexeedApi(
     {
       name: 'atbdList',
+      slicedState: true,
       requests: {
-        fetchAtbds: withRequestToken(token, () => ({
-          url: '/atbds'
+        fetchAtbds: withRequestToken(token, (filters = {}) => ({
+          sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
+          url: `/atbds?${qs.stringify(filters, { skipNulls: true })}`
         }))
       },
       mutations: {
@@ -499,9 +502,14 @@ export const useSingleAtbd = ({ id, version }) => {
   };
 };
 
-export const useAtbds = () => {
+export const useAtbds = ({ role, status } = {}) => {
   const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useSafeContextFn(
     'useAtbds'
   );
-  return { atbds: getAtbds(), fetchAtbds, createAtbd, deleteFullAtbd };
+  return {
+    atbds: getAtbds(`${role || 'all'}-${status || 'all'}`),
+    fetchAtbds,
+    createAtbd,
+    deleteFullAtbd
+  };
 };
