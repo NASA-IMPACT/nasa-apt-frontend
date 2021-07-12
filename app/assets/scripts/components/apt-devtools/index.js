@@ -25,7 +25,7 @@ const DevtoolsSelf = styled.aside`
   top: 0;
   left: 0;
   height: 100%;
-  z-index: 1000;
+  z-index: 9000;
   display: grid;
   grid-gap: ${glsp()};
 

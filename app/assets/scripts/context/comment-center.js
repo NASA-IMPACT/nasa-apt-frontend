@@ -16,7 +16,7 @@ export const CommentCenterProvider = ({ children }) => {
   // location change.
   useLocation();
 
-  const [isPanelOpen, setPanelOpen] = useState(true);
+  const [isPanelOpen, setPanelOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('all-section');
   const [selectedStatus, setSelectedStatus] = useState('all-status');
 

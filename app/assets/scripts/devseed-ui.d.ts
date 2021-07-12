@@ -423,3 +423,91 @@ declare module '@devseed-ui/shadow-scrollbar' {
     any
   > {}
 }
+
+declare module '@devseed-ui/global-loading' {
+  /**
+   * Base component for the global loading
+   * @param {object} props Component props
+   */
+  export default class GlobalLoadingProvider extends React.Component<any> {}
+
+  interface GlobalLoadingHideProps {
+    /**
+     * Define how many loadings to show. This will not show multiple loadings
+     * on the page but will increment a counter. This is helpful when there are
+     * many actions that require a loading. The global loading will only be
+     * dismissed once all counters shown are hidden. Each function call will
+     * increment the counter. Default 1.
+     */
+    count: number;
+
+    /**
+     * Sets the count to the given value without incrementing. Default false.
+     */
+    force: boolean;
+  }
+
+  interface GlobalLoadingShowProps extends GlobalLoadingHideProps {
+    /**
+     * Sets an optional message to display. Default to empty.
+     */
+    message: string;
+  }
+
+  /**
+   * Programmatic api to show a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * The loading has a minimum visible time defined by the MIN_TIME constant.
+   * This will prevent flickers in the interface when the action is very fast.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function showGlobalLoading(options: GlobalLoadingShowProps): void;
+
+  /**
+   * Programmatic api to hide a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function hideGlobalLoading(options: GlobalLoadingHideProps): void;
+
+  /**
+   * Programmatic api to show a global loading with a message.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * Each call to showGlobalLoadingMessage will update the global loading message
+   * but not increment the internal counter, show a single call to
+   * hideGlobalLoading will dismiss it
+   *
+   * @param {string} message Message to display
+   */
+  function showGlobalLoadingMessage(message: string): void;
+
+  /**
+   * React component to show/hide a Global loading via mounting and unmounting.
+   * If children are passed, they are used as a message, so it is recommended to
+   * use a string.
+   *
+   * @param {*} props Component props
+   */
+  export class GlobalLoading extends React.Component<any> {}
+}
