@@ -73,15 +73,30 @@ const getUpdatedVersions = (versions, currentVersion, newVersionData) => {
   });
 };
 
+const RESET_STATE_ACTION_TYPE = 'reset-state';
+
 // Context provider
 export const AtbdsProvider = (props) => {
   const { children } = props;
   const { token } = useAuthToken();
 
-  const { getState: getAtbds, fetchAtbds, deleteFullAtbd } = useContexeedApi(
+  const {
+    getState: getAtbds,
+    fetchAtbds,
+    deleteFullAtbd,
+    dispatch: dispatchAtbdList
+  } = useContexeedApi(
     {
       name: 'atbdList',
       slicedState: true,
+      interceptor: (state, action) => {
+        switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
+          }
+        }
+        return { state, action };
+      },
       requests: {
         fetchAtbds: withRequestToken(token, (filters = {}) => ({
           sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
@@ -141,7 +156,8 @@ export const AtbdsProvider = (props) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    publishAtbdVersion,
+    dispatch: dispatchAtbdSingle
   } = useContexeedApi(
     {
       name: 'atbdSingle',
@@ -151,6 +167,9 @@ export const AtbdsProvider = (props) => {
         // when the alias changes the key must updated as well. This code captures
         // the action and does that.
         switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
+          }
           case 'atbdSingle/move-key': {
             const { [action.from]: prevKey, ...rest } = state;
             return {
@@ -437,6 +456,14 @@ export const AtbdsProvider = (props) => {
   );
 
   const contextValue = {
+    invalidateAtbdListCtx: useCallback(
+      () => dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdList]
+    ),
+    invalidateAtbdSingleCtx: useCallback(
+      () => dispatchAtbdSingle({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdSingle]
+    ),
     getAtbds,
     fetchAtbds,
     getSingleAtbd,
@@ -503,10 +530,18 @@ export const useSingleAtbd = ({ id, version }) => {
 };
 
 export const useAtbds = ({ role, status } = {}) => {
-  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useSafeContextFn(
-    'useAtbds'
-  );
+  const {
+    getAtbds,
+    fetchAtbds,
+    createAtbd,
+    deleteFullAtbd,
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx
+  } = useSafeContextFn('useAtbds');
+
   return {
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx,
     atbds: getAtbds(`${role || 'all'}-${status || 'all'}`),
     fetchAtbds,
     createAtbd,

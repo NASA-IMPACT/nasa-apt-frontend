@@ -19,6 +19,7 @@ import UserIdentity from '../common/user-identity';
 
 import { createProcessToast } from '../common/toasts';
 import { useUser } from '../../context/user';
+import { useAtbds } from '../../context/atbds-list';
 
 const DevtoolsSelf = styled.aside`
   position: fixed;
@@ -193,12 +194,15 @@ const DevUsersEntry = styled(DevUsersEntryCmp)`
 
 const DevUsersListCmp = (props) => {
   const { loginCognitoUser } = useUser();
+  const { invalidateAtbdListCtx, invalidateAtbdSingleCtx } = useAtbds();
 
   const loginUser = useCallback(
     async (u) => {
       const processToast = createProcessToast('Singing in. Please wait.');
       try {
         const user = await Auth.signIn(u.username, devUserPwd);
+        invalidateAtbdListCtx();
+        invalidateAtbdSingleCtx();
         loginCognitoUser(user);
         processToast.success(
           `Welcome back ${user.attributes.preferred_username}!`
@@ -207,7 +211,7 @@ const DevUsersListCmp = (props) => {
         processToast.error(error.message);
       }
     },
-    [loginCognitoUser]
+    [loginCognitoUser, invalidateAtbdListCtx, invalidateAtbdSingleCtx]
   );
 
   return (
