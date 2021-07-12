@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
@@ -21,6 +21,8 @@ import {
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
+import { atbdView } from '../../utils/url-creator';
+import { calculateAtbdCompleteness } from '../documents/completeness';
 
 const UpdatedTimeSelf = styled.span`
   font-size: 0.875rem;
@@ -53,30 +55,52 @@ const UpdatedTime = ({ date }) => {
 };
 
 function AtbdDashboardEntry(props) {
+  const { atbd, onDocumentAction } = props;
+  const lastVersion = atbd.versions[atbd.versions.length - 1];
+
+  const { percent } = calculateAtbdCompleteness(lastVersion);
+
+  // const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
+  //   onDocumentAction,
+  //   atbd
+  // ]);
+
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at.
+  const updateDate = new Date(
+    Math.max(
+      new Date(atbd.last_updated_at).getTime(),
+      new Date(lastVersion.last_updated_at).getTime()
+    )
+  );
+
   return (
     <DocumentEntry>
       <DocumentEntryHeader>
         <DocumentEntryHeadline>
           <DocumentEntryTitle>
-            <Link to={'/'} title='View document'>
-              Lorem Ipsum
+            <Link
+              to={atbdView(atbd, lastVersion.version)}
+              title='View document'
+            >
+              {atbd.title}
             </Link>
           </DocumentEntryTitle>
           <DocumentEntryHeadNav role='navigation'>
             <DocumentEntryBreadcrumbMenu>
               <li>
                 <VersionsMenu
-                  atbdId={123}
-                  versions={[{ version: 'v2.1' }, { version: 'v2.2' }]}
+                  atbdId={atbd.alias || atbd.id}
+                  versions={atbd.versions}
                 />
               </li>
             </DocumentEntryBreadcrumbMenu>
           </DocumentEntryHeadNav>
-          <StatusPill status={'draft'} completeness={10} />
+          <StatusPill status={lastVersion.status} completeness={percent} />
         </DocumentEntryHeadline>
         <DocumentEntryDetails>
           <li>
-            <UpdatedTime date={new Date()} />
+            <UpdatedTime date={updateDate} />
           </li>
           <li>
             <ContributorsMenu />

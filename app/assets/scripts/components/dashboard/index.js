@@ -12,6 +12,8 @@ import {
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
 import DashboardAuthor from './dash-author';
+import DashboardCurator from './dash-curator';
+import { Can } from '../../a11n';
 
 import { useUser } from '../../context/user';
 
@@ -37,7 +39,12 @@ function UserDashboard() {
               <p>Here&apos;s what is happening in your APT account today.</p>
             </DashboardContent>
             <DashboardContent>
-              <DashboardAuthor />
+              <Can do='access' on='author-dashboard'>
+                <DashboardAuthor />
+              </Can>
+              <Can do='access' on='curator-dashboard'>
+                <DashboardCurator />
+              </Can>
             </DashboardContent>
           </ContentBlock>
         </InpageBody>

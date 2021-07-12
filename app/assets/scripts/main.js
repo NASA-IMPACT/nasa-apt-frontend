@@ -89,7 +89,7 @@ function Root() {
               component={DocumentsView}
             />
             <AccessRoute
-              permission={['edit', 'atbd']}
+              permission={['edit', 'document']}
               exact
               path='/documents/:id/:version/edit/:step?'
               component={DocumentsEdit}
@@ -125,7 +125,7 @@ function Root() {
               component={UserEdit}
             />
             <AccessRoute
-              permission={['view', 'dashboard']}
+              permission={['access', 'dashboard']}
               exact
               path='/dashboard'
               component={UserDashboard}
