@@ -5,7 +5,7 @@ import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 
-import StatusPill from '../common/status-pill';
+import { AtbdStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
 import Datetime from '../common/date';
@@ -21,8 +21,8 @@ import {
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
+
 import { atbdView } from '../../utils/url-creator';
-import { calculateAtbdCompleteness } from '../documents/completeness';
 
 const UpdatedTimeSelf = styled.span`
   font-size: 0.875rem;
@@ -57,8 +57,6 @@ const UpdatedTime = ({ date }) => {
 function AtbdDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
-
-  const { percent } = calculateAtbdCompleteness(lastVersion);
 
   // const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
   //   onDocumentAction,
@@ -96,7 +94,7 @@ function AtbdDashboardEntry(props) {
               </li>
             </DocumentEntryBreadcrumbMenu>
           </DocumentEntryHeadNav>
-          <StatusPill status={lastVersion.status} completeness={percent} />
+          <AtbdStatusPill atbdVersion={lastVersion} />
         </DocumentEntryHeadline>
         <DocumentEntryDetails>
           <li>

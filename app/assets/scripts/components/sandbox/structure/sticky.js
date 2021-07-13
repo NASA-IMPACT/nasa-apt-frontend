@@ -98,7 +98,7 @@ function SandboxStickyStructure() {
             </InpageSubtitle>
             <dt>Status</dt>
             <dd>
-              <StatusPill status='draft' completeness={56} />
+              <StatusPill status='draft' fillPercent={56} completeness='56%' />
             </dd>
             <dt>Discussion</dt>
             <dd>

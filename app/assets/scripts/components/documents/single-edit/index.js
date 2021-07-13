@@ -15,7 +15,6 @@ import Tip from '../../common/tooltip';
 
 import { getATBDEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { calculateAtbdCompleteness } from '../completeness';
 import {
   DocumentModals,
   useDocumentModals
@@ -103,10 +102,6 @@ function DocumentEdit() {
   // component and include it on every component, it gets passed as a render
   // prop.
 
-  const completeness = atbd.data
-    ? calculateAtbdCompleteness(atbd.data).percent
-    : 0;
-
   const pageTitle = atbd.data?.title
     ? `Editing ${atbd.data.title}`
     : 'Document view';
@@ -128,10 +123,8 @@ function DocumentEdit() {
               <DocumentNavHeader
                 atbdId={id}
                 title={atbd.data.title}
-                status={atbd.data.status}
                 version={version}
                 versions={atbd.data.versions}
-                completeness={completeness}
                 mode='edit'
               />
               <InpageActions>

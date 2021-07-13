@@ -12,7 +12,7 @@ import {
   HubEntryBreadcrumbMenu,
   HubEntryActions
 } from '../../../styles/hub';
-import StatusPill from '../../common/status-pill';
+import { AtbdStatusPill } from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
 import AtbdActionsMenu from '../atbd-actions-menu';
@@ -71,7 +71,7 @@ function AtbdHubEntry(props) {
           <HubEntryMeta>
             <dt>Status</dt>
             <dd>
-              <StatusPill status={lastVersion.status} completeness={percent} />
+              <AtbdStatusPill atbdVersion={lastVersion} />
             </dd>
           </HubEntryMeta>
         )}

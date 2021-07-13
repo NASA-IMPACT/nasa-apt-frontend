@@ -30,7 +30,6 @@ import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { calculateAtbdCompleteness } from '../completeness';
 import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
 import {
   useDocumentModals,
@@ -163,10 +162,6 @@ function DocumentView() {
     }
   }
 
-  const completeness = atbd.data
-    ? calculateAtbdCompleteness(atbd.data).percent
-    : 0;
-
   const pageTitle = atbd.data?.title
     ? `Viewing ${atbd.data.title}`
     : 'Document view';
@@ -181,10 +176,8 @@ function DocumentView() {
             <DocumentNavHeader
               atbdId={id}
               title={atbd.data.title}
-              status={atbd.data.status}
               version={version}
               versions={atbd.data.versions}
-              completeness={completeness}
               mode='view'
             />
             <InpageActions>

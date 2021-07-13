@@ -18,7 +18,7 @@ import { TabContent, TabItem, TabsManager, TabsNav } from '../../common/tabs';
 
 function SandboxInteractive() {
   return (
-    <App pageTitle='Sandbox/Structure'>
+    <App pageTitle='Sandbox/Interactive'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>

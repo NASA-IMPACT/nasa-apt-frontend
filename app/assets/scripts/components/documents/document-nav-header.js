@@ -11,7 +11,7 @@ import {
 } from '../../styles/inpage';
 import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
-import StatusPill from '../common/status-pill';
+import { AtbdStatusPill } from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
@@ -20,15 +20,7 @@ import { atbdEdit, atbdView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentNavHeader(props) {
-  const {
-    title,
-    atbdId,
-    status,
-    version,
-    mode,
-    versions,
-    completeness
-  } = props;
+  const { title, atbdId, version, mode, versions } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -66,6 +58,8 @@ export default function DocumentNavHeader(props) {
     }),
     []
   );
+
+  const atbdVersion = versions.find((v) => v.version === version);
 
   return (
     <React.Fragment>
@@ -110,7 +104,7 @@ export default function DocumentNavHeader(props) {
         </InpageSubtitle>
         <dt>Status</dt>
         <dd>
-          <StatusPill status={status} completeness={completeness} />
+          <AtbdStatusPill atbdVersion={atbdVersion} />
         </dd>
       </InpageMeta>
     </React.Fragment>
@@ -119,10 +113,8 @@ export default function DocumentNavHeader(props) {
 
 DocumentNavHeader.propTypes = {
   title: T.string,
-  status: T.string,
   atbdId: T.oneOfType([T.string, T.number]),
   version: T.string,
   versions: T.array,
-  mode: T.string,
-  completeness: T.number
+  mode: T.string
 };
