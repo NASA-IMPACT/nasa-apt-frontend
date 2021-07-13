@@ -10,7 +10,7 @@ import { AtbdStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
 import Datetime, { DATETIME_FORMAT } from '../common/date';
-import { CollaboratorsMenu } from './collaborators-menu';
+import { CollaboratorsMenu } from '../documents/collaborators-menu';
 import {
   DocumentEntry,
   DocumentEntryActions,
