@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
+import { format } from 'date-fns';
 import styled from 'styled-components';
 import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
@@ -8,7 +9,7 @@ import collecticon from '@devseed-ui/collecticons';
 import { AtbdStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
-import Datetime from '../common/date';
+import Datetime, { DATETIME_FORMAT } from '../common/date';
 import { ContributorsMenu } from './contributors-menu';
 import {
   DocumentEntry,
@@ -22,15 +23,28 @@ import {
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
+import Tip from '../common/tooltip';
 
 import { atbdView } from '../../utils/url-creator';
 
-const UpdatedTime = ({ date }) => {
+const UpdatedTime = ({ atbd, date }) => {
   return (
-    <Button forwardedAs={Link} size='small' useIcon='clock' to='/'>
-      Updated on <Datetime date={date} />
-    </Button>
+    <Tip title={format(date, DATETIME_FORMAT)}>
+      <Button
+        forwardedAs={Link}
+        size='small'
+        useIcon='clock'
+        to={atbdView(atbd)}
+      >
+        Updated on <Datetime date={date} useDistanceToNow />
+      </Button>
+    </Tip>
   );
+};
+
+UpdatedTime.propTypes = {
+  atbd: T.object,
+  date: T.object
 };
 
 function AtbdDashboardEntry(props) {
@@ -81,7 +95,7 @@ function AtbdDashboardEntry(props) {
               <AtbdStatusPill atbdVersion={lastVersion} />
             </li>
             <li>
-              <UpdatedTime date={updateDate} />
+              <UpdatedTime atbd={atbd} date={updateDate} />
             </li>
             <li>
               <ContributorsMenu />

@@ -2,6 +2,9 @@ import React from 'react';
 import T from 'prop-types';
 import { format, formatDistanceToNow } from 'date-fns';
 
+export const DATE_FORMAT = 'MMM do, yyyy';
+export const DATETIME_FORMAT = 'MMM do, yyyy hh:mm';
+
 export default function Datetime(props) {
   const { date, format: dateFormat, useDistanceToNow } = props;
 
@@ -13,7 +16,7 @@ export default function Datetime(props) {
     <time dateTime={format(date, 'yyyy-MM-dd')}>
       {useDistanceToNow
         ? formatDistanceToNow(date, { addSuffix: true })
-        : format(date, dateFormat || 'MMM do, yyyy')}
+        : format(date, dateFormat || DATE_FORMAT)}
     </time>
   );
 }
