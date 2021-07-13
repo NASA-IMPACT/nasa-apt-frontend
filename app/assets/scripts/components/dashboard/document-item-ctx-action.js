@@ -3,8 +3,12 @@ import T from 'prop-types';
 import DropdownMenu from '../common/dropdown-menu';
 import { Button } from '@devseed-ui/button';
 
+const contextualBtnProps = {
+  size: 'small'
+};
+
 const AllowDeny = (props) => {
-  const { onSelect, triggerLabel, triggerProps, dropTitle } = props;
+  const { onSelect, triggerLabel, dropTitle } = props;
 
   const menu = useMemo(
     () => [
@@ -32,7 +36,7 @@ const AllowDeny = (props) => {
       menu={menu}
       withChevron
       triggerLabel={triggerLabel}
-      triggerProps={triggerProps}
+      triggerProps={contextualBtnProps}
       alignment='right'
       direction='down'
       dropTitle={dropTitle}
@@ -43,7 +47,6 @@ const AllowDeny = (props) => {
 
 AllowDeny.propTypes = {
   triggerLabel: T.string,
-  triggerProps: T.object,
   dropTitle: T.string,
   onSelect: T.func
 };
@@ -81,13 +84,21 @@ const ContextualDocAction = (props) => {
       );
     case 'request-review':
       return (
-        <Button title='Request review' onClick={singleBtnCb}>
+        <Button
+          title='Request review'
+          {...contextualBtnProps}
+          onClick={singleBtnCb}
+        >
           Request review
         </Button>
       );
     case 'request-curation':
       return (
-        <Button title='Request curation' onClick={singleBtnCb}>
+        <Button
+          title='Request curation'
+          {...contextualBtnProps}
+          onClick={singleBtnCb}
+        >
           Request curation
         </Button>
       );
