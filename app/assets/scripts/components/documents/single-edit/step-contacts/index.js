@@ -14,6 +14,7 @@ import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForAtbdContacts } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
 import { validateContact } from '../../../contacts/contact-utils';
+import { getDocumentSectionLabel } from '../sections';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -80,7 +81,7 @@ export default function StepContacts(props) {
               <FormBlockHeading>{step.label}</FormBlockHeading>
               <Form as={FormikForm}>
                 <FormikSectionFieldset
-                  label='Contacts'
+                  label={getDocumentSectionLabel('contacts')}
                   sectionName='sections_completed.contacts'
                 >
                   <p>

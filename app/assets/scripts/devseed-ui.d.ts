@@ -178,7 +178,8 @@ declare module '@devseed-ui/theme-provider' {
     | 'mediaRanges.small'
     | 'mediaRanges.medium'
     | 'mediaRanges.large'
-    | 'mediaRanges.xlarge';
+    | 'mediaRanges.xlarge'
+    | string;
   /**
    * Returns a function to be used with styled-components and gets a value from
    * the theme property.

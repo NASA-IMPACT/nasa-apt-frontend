@@ -16,6 +16,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 // The initial value is the same for
 // Algorithm Implementations
@@ -51,7 +52,9 @@ export default function StepAlgoImplementation(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <UrlDescriptionSection
-                  sectionLabel='Algorithm Implementation'
+                  sectionLabel={getDocumentSectionLabel(
+                    'algorithm_implementations'
+                  )}
                   sectionName='sections_completed.algorithm_implementations'
                   fieldLabel='Algorithm Implementations'
                   fieldName='document.algorithm_implementations'
@@ -59,7 +62,9 @@ export default function StepAlgoImplementation(props) {
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Input'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_input_data'
+                  )}
                   sectionName='sections_completed.data_access_input_data'
                   fieldLabel='Data Access Inputs'
                   fieldName='document.data_access_input_data'
@@ -67,7 +72,9 @@ export default function StepAlgoImplementation(props) {
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Output'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_output_data'
+                  )}
                   sectionName='sections_completed.data_access_output_data'
                   fieldLabel='Data Access Outputs'
                   fieldName='document.data_access_output_data'
@@ -75,7 +82,9 @@ export default function StepAlgoImplementation(props) {
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Related Urls'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_related_urls'
+                  )}
                   sectionName='sections_completed.data_access_related_urls'
                   fieldLabel='Data Access Related Urls'
                   fieldName='document.data_access_related_urls'

@@ -7,7 +7,7 @@ import ButtonSecondary from '../../styles/button-secondary';
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
 
-export default function AtbdDownloadMenu(props) {
+export default function DocumentDownloadMenu(props) {
   const { atbd } = props;
   const { token } = useAuthToken();
 
@@ -63,6 +63,6 @@ export default function AtbdDownloadMenu(props) {
   );
 }
 
-AtbdDownloadMenu.propTypes = {
+DocumentDownloadMenu.propTypes = {
   atbd: T.object
 };

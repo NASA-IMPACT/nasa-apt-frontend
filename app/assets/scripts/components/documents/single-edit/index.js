@@ -9,17 +9,17 @@ import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
 import DocumentNavHeader from '../document-nav-header';
-import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 
-import { getATBDEditStep } from './steps';
+import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import {
   DocumentModals,
   useDocumentModals
 } from '../document-publishing-actions';
-import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
+import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -51,7 +51,7 @@ function DocumentEdit() {
 
       switch (menuId) {
         case 'delete':
-          await atbdDeleteVersionConfirmAndToast({
+          await documentDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
@@ -77,7 +77,7 @@ function DocumentEdit() {
     }
   }
 
-  const stepDefinition = getATBDEditStep(step);
+  const stepDefinition = getDocumentEditStep(step);
   const { StepComponent } = stepDefinition;
 
   if (!StepComponent) {
@@ -131,7 +131,7 @@ function DocumentEdit() {
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
                 <VerticalDivider variation='light' />
-                <AtbdActionsMenu
+                <DocumentActionsMenu
                   // In the case of a single ATBD the selected version data is
                   // merged with the ATBD meta and that's why both variables are
                   // the same.

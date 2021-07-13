@@ -20,6 +20,7 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { editorEmptyValue } from '../../slate';
+import { getDocumentSectionLabel } from './sections';
 
 const DeletableFieldsetTriptic = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -59,7 +60,7 @@ export default function StepAlgoDescription(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <FormikSectionFieldset
-                  label='Scientific Theory'
+                  label={getDocumentSectionLabel('scientific_theory')}
                   sectionName='sections_completed.scientific_theory'
                 >
                   <FormikInputEditor
@@ -82,7 +83,7 @@ export default function StepAlgoDescription(props) {
                 </FormikSectionFieldset>
 
                 <FormikSectionFieldset
-                  label='Mathematical Theory'
+                  label={getDocumentSectionLabel('mathematical_theory')}
                   sectionName='sections_completed.mathematical_theory'
                 >
                   <FormikInputEditor
@@ -105,7 +106,7 @@ export default function StepAlgoDescription(props) {
                 </FormikSectionFieldset>
 
                 <VariablesSection
-                  sectionLabel='Input Variables'
+                  sectionLabel={getDocumentSectionLabel('input_variables')}
                   sectionName='sections_completed.input_variables'
                   fieldLabel='Variables'
                   fieldName='document.algorithm_input_variables'
@@ -113,7 +114,7 @@ export default function StepAlgoDescription(props) {
                 />
 
                 <VariablesSection
-                  sectionLabel='Output Variables'
+                  sectionLabel={getDocumentSectionLabel('output_variables')}
                   sectionName='sections_completed.output_variables'
                   fieldLabel='Variables'
                   fieldName='document.algorithm_output_variables'

@@ -6,7 +6,7 @@ import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
-import { calculateAtbdCompleteness } from '../documents/completeness';
+import { calculateDocumentCompleteness } from '../documents/completeness';
 
 const StatusSelf = styled(Pill)`
   min-width: 6rem;
@@ -69,12 +69,12 @@ StatusPill.propTypes = {
 
 export default StatusPill;
 
-export function AtbdStatusPill(props) {
+export function DocumentStatusPill(props) {
   const { atbdVersion } = props;
   const { status } = atbdVersion;
 
   if (status === 'Draft') {
-    const { percent } = calculateAtbdCompleteness(atbdVersion);
+    const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill
         status={statusMapping[status]}
@@ -96,6 +96,6 @@ export function AtbdStatusPill(props) {
   }
 }
 
-AtbdStatusPill.propTypes = {
+DocumentStatusPill.propTypes = {
   atbdVersion: T.object
 };

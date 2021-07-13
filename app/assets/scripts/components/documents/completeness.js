@@ -30,7 +30,7 @@ const calculateCompleteness = (sections) => {
  *
  * @param {object} atbd ATBD version data
  */
-export const calculateAtbdCompleteness = (atbd) => {
+export const calculateDocumentCompleteness = (atbd) => {
   const allSections = STEPS.reduce((acc, step) => {
     // We can use getInitialValues to get the status of the sections
     // while adding any section that is not yet in the database.
@@ -50,7 +50,7 @@ export const calculateAtbdCompleteness = (atbd) => {
  * @param {object} atbd ATBD version data
  * @param {object} step The step for which to calculate completeness
  */
-export const calculateAtbdStepCompleteness = (atbd, step) => {
+export const calculateDocumentStepCompleteness = (atbd, step) => {
   const { getInitialValues } = step;
   // We can use getInitialValues to get the status of the sections
   // while adding any section that is not yet in the database.

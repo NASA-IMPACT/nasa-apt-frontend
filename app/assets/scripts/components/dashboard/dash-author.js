@@ -13,7 +13,7 @@ import {
   TabsNav,
   useTabs
 } from '../common/tabs';
-import AtbdDashboardEntry from './atbd-dashboard-entry';
+import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
@@ -150,7 +150,7 @@ const TabDocuments = (props) => {
       <DocumentsList>
         {atbds.data.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
-            <AtbdDashboardEntry atbd={atbd} />
+            <DocumentDashboardEntry atbd={atbd} />
           </DocumentsListItem>
         ))}
       </DocumentsList>

@@ -4,7 +4,7 @@ import { confirmDraftMajorVersion } from './document-publishing-modals';
 
 // Convenience method to create a major version of an atbd and show a toast
 // notification.
-export async function atbdDraftMajorConfirmAndToast({
+export async function documentDraftMajorConfirmAndToast({
   atbd,
   createAtbdVersion,
   history

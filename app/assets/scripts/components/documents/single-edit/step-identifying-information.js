@@ -16,6 +16,7 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { formString } from '../../../utils/strings';
 import { formStringSymbol, citationFields } from '../citation';
 import { useSubmitForMetaAndVersionData } from './use-submit';
+import { getDocumentSectionLabel } from './sections';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -48,7 +49,7 @@ export default function StepIdentifyingInformation(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <SectionFieldset label='General'>
+              <SectionFieldset label={getDocumentSectionLabel('general')}>
                 <p>
                   <em>
                     Updates to the general information will affect all versions.
@@ -79,7 +80,7 @@ export default function StepIdentifyingInformation(props) {
               </SectionFieldset>
 
               <FormikSectionFieldset
-                label='Citation'
+                label={getDocumentSectionLabel('citation')}
                 sectionName='sections_completed.citation'
               >
                 {citationFields.map((field) => (

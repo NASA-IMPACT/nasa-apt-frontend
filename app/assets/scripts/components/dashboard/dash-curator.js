@@ -5,7 +5,7 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
 
-import AtbdDashboardEntry from './atbd-dashboard-entry';
+import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
@@ -45,7 +45,7 @@ function DashboardCurator() {
         <DocumentsList>
           {atbds.data.map((atbd) => (
             <DocumentsListItem key={atbd.id}>
-              <AtbdDashboardEntry atbd={atbd} />
+              <DocumentDashboardEntry atbd={atbd} />
             </DocumentsListItem>
           ))}
         </DocumentsList>

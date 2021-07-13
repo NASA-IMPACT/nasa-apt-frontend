@@ -6,7 +6,7 @@ import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 
-import { AtbdStatusPill } from '../common/status-pill';
+import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
 import Datetime, { DATETIME_FORMAT } from '../common/date';
@@ -48,7 +48,7 @@ UpdatedTime.propTypes = {
   date: T.object
 };
 
-function AtbdDashboardEntry(props) {
+function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
 
@@ -93,7 +93,7 @@ function AtbdDashboardEntry(props) {
           </DocumentEntryHgroup>
           <DocumentEntryDetails>
             <li>
-              <AtbdStatusPill atbdVersion={lastVersion} />
+              <DocumentStatusPill atbdVersion={lastVersion} />
             </li>
             <li>
               <UpdatedTime atbd={atbd} date={updateDate} />
@@ -136,9 +136,9 @@ function AtbdDashboardEntry(props) {
   );
 }
 
-AtbdDashboardEntry.propTypes = {
+DocumentDashboardEntry.propTypes = {
   atbd: T.object,
   onDocumentAction: T.func
 };
 
-export default AtbdDashboardEntry;
+export default DocumentDashboardEntry;

@@ -20,8 +20,8 @@ import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentNavHeader from '../document-nav-header';
-import AtbdActionsMenu from '../atbd-actions-menu';
-import AtbdDownloadMenu from '../atbd-download-menu';
+import DocumentActionsMenu from '../document-actions-menu';
+import DocumentDownloadMenu from '../document-download-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
@@ -30,7 +30,7 @@ import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
+import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import {
   useDocumentModals,
   DocumentModals
@@ -136,7 +136,7 @@ function DocumentView() {
 
       switch (menuId) {
         case 'delete':
-          await atbdDeleteVersionConfirmAndToast({
+          await documentDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
@@ -181,9 +181,9 @@ function DocumentView() {
               mode='view'
             />
             <InpageActions>
-              <AtbdDownloadMenu atbd={atbd.data} />
+              <DocumentDownloadMenu atbd={atbd.data} />
               <VerticalDivider variation='light' />
-              <AtbdActionsMenu
+              <DocumentActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
                 // the same.

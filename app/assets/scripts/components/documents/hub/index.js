@@ -15,13 +15,13 @@ import {
 import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
-import AtbdHubEntry from './atbd-hub-entry';
+import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { atbdEdit, atbdView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
-import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
+import { documentDeleteFullConfirmAndToast } from '../document-delete-process';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
 
@@ -58,7 +58,7 @@ function Documents() {
     async (atbd, menuId) => {
       switch (menuId) {
         case 'delete':
-          await atbdDeleteFullConfirmAndToast({
+          await documentDeleteFullConfirmAndToast({
             atbd,
             deleteFullAtbd
           });
@@ -145,7 +145,7 @@ function Documents() {
               <HubList>
                 {atbds.data.map((atbd) => (
                   <HubListItem key={atbd.id}>
-                    <AtbdHubEntry
+                    <DocumentHubEntry
                       atbd={atbd}
                       onDocumentAction={onDocumentAction}
                     />
