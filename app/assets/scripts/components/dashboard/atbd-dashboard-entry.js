@@ -14,43 +14,22 @@ import {
   DocumentEntry,
   DocumentEntryActions,
   DocumentEntryBreadcrumbMenu,
-  DocumentEntryDetails,
   DocumentEntryHeader,
   DocumentEntryHeadline,
-  DocumentEntryHeadNav,
+  DocumentEntryHgroup,
+  DocumentEntryNav,
+  DocumentEntryDetails,
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
 
 import { atbdView } from '../../utils/url-creator';
 
-const UpdatedTimeSelf = styled.span`
-  font-size: 0.875rem;
-
-  ::before {
-    ${collecticon('clock')}
-    margin-right: ${glsp(0.25)};
-  }
-`;
-
-const CommentCount = styled.span`
-  font-size: 0.875rem;
-
-  ::before {
-    ${collecticon('speech-balloon')}
-    margin-right: ${glsp(0.25)};
-  }
-
-  > span {
-    ${visuallyHidden()}
-  }
-`;
-
 const UpdatedTime = ({ date }) => {
   return (
-    <UpdatedTimeSelf>
+    <Button forwardedAs={Link} size='small' useIcon='clock' to='/'>
       Updated on <Datetime date={date} />
-    </UpdatedTimeSelf>
+    </Button>
   );
 };
 
@@ -76,42 +55,57 @@ function AtbdDashboardEntry(props) {
     <DocumentEntry>
       <DocumentEntryHeader>
         <DocumentEntryHeadline>
-          <DocumentEntryTitle>
-            <Link
-              to={atbdView(atbd, lastVersion.version)}
-              title='View document'
-            >
-              {atbd.title}
-            </Link>
-          </DocumentEntryTitle>
-          <DocumentEntryHeadNav role='navigation'>
-            <DocumentEntryBreadcrumbMenu>
-              <li>
-                <VersionsMenu
-                  atbdId={atbd.alias || atbd.id}
-                  versions={atbd.versions}
-                />
-              </li>
-            </DocumentEntryBreadcrumbMenu>
-          </DocumentEntryHeadNav>
-          <AtbdStatusPill atbdVersion={lastVersion} />
+          <DocumentEntryHgroup>
+            <DocumentEntryTitle>
+              <Link
+                to={atbdView(atbd, lastVersion.version)}
+                title='View document'
+              >
+                {atbd.title}
+              </Link>
+            </DocumentEntryTitle>
+            <DocumentEntryNav role='navigation'>
+              <DocumentEntryBreadcrumbMenu>
+                <li>
+                  <VersionsMenu
+                    atbdId={atbd.alias || atbd.id}
+                    versions={atbd.versions}
+                    size='small'
+                  />
+                </li>
+              </DocumentEntryBreadcrumbMenu>
+            </DocumentEntryNav>
+          </DocumentEntryHgroup>
+          <DocumentEntryDetails>
+            <li>
+              <AtbdStatusPill atbdVersion={lastVersion} />
+            </li>
+            <li>
+              <UpdatedTime date={updateDate} />
+            </li>
+            <li>
+              <ContributorsMenu />
+            </li>
+            <li>
+              <Button
+                forwardedAs={Link}
+                size='small'
+                useIcon='speech-balloon'
+                to='/'
+              >
+                8 comments
+              </Button>
+            </li>
+          </DocumentEntryDetails>
         </DocumentEntryHeadline>
-        <DocumentEntryDetails>
-          <li>
-            <UpdatedTime date={updateDate} />
-          </li>
-          <li>
-            <ContributorsMenu />
-          </li>
-          <li>
-            <CommentCount>
-              8 <span>comments</span>
-            </CommentCount>
-          </li>
-        </DocumentEntryDetails>
         <DocumentEntryActions>
           <ContextualDocAction action='approve-review' />
-          <Button variation='base-plain' useIcon='ellipsis-vertical' hideText>
+          <Button
+            variation='base-plain'
+            size='small'
+            useIcon='ellipsis-vertical'
+            hideText
+          >
             Opt
           </Button>
           {/* <AtbdActionsMenu

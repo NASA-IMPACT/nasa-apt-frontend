@@ -4,7 +4,7 @@ import DropdownMenu from '../common/dropdown-menu';
 import { Button } from '@devseed-ui/button';
 
 const AllowDeny = (props) => {
-  const { onSelect, triggerLabel, dropTitle } = props;
+  const { onSelect, triggerLabel, triggerProps, dropTitle } = props;
 
   const menu = useMemo(
     () => [
@@ -32,6 +32,7 @@ const AllowDeny = (props) => {
       menu={menu}
       withChevron
       triggerLabel={triggerLabel}
+      triggerProps={triggerProps}
       alignment='right'
       direction='down'
       dropTitle={dropTitle}
@@ -42,6 +43,7 @@ const AllowDeny = (props) => {
 
 AllowDeny.propTypes = {
   triggerLabel: T.string,
+  triggerProps: T.object,
   dropTitle: T.string,
   onSelect: T.func
 };
@@ -72,6 +74,7 @@ const ContextualDocAction = (props) => {
       return (
         <AllowDeny
           triggerLabel='Approve request'
+          triggerProps={{ size: 'small' }}
           dropTitle='Request for review'
           onSelect={allowDenyCb}
         />
