@@ -10,7 +10,7 @@ import UserIdentity from '../common/user-identity';
 
 // Drop content elements.
 
-const DropdownContributors = styled(Dropdown)`
+const DropdownCollaborators = styled(Dropdown)`
   max-width: 20rem;
 `;
 
@@ -38,7 +38,7 @@ const DropTitle = styled(Heading)`
   margin: 0;
 `;
 
-const ContributorsList = styled.dl`
+const CollaboratorsList = styled.dl`
   display: grid;
   grid-gap: ${glsp()};
 
@@ -52,17 +52,17 @@ const ContributorsList = styled.dl`
   }
 `;
 
-const ContributorEntry = (props) => {
+const CollaboratorEntry = (props) => {
   const { isLead, user } = props;
   return <UserIdentity user={user} role={isLead && 'Lead'} />;
 };
 
-ContributorEntry.propTypes = {
+CollaboratorEntry.propTypes = {
   isLead: T.bool,
   user: T.object
 };
 
-const ContributorsMenuContent = () => {
+const CollaboratorsMenuContent = () => {
   return (
     <React.Fragment>
       <DropHeader>
@@ -77,25 +77,25 @@ const ContributorsMenuContent = () => {
               // onClick={onCancelButtonClick}
               data-dropdown='click.close'
             >
-              Edit contributors
+              Manage collaborators
             </Button>
           </DropActions>
-          <DropTitle size='xsmall'>Contributors</DropTitle>
+          <DropTitle size='xsmall'>Collaborators</DropTitle>
         </DropHeadline>
       </DropHeader>
       <div>
-        <ContributorsList>
+        <CollaboratorsList>
           <dt>Authors</dt>
           <dd>
             <ul>
               <li>
-                <ContributorEntry user={{ name: 'Sean Riley' }} isLead />
+                <CollaboratorEntry user={{ name: 'Sean Riley' }} isLead />
               </li>
               <li>
-                <ContributorEntry user={{ name: 'Monica Anderson' }} />
+                <CollaboratorEntry user={{ name: 'Monica Anderson' }} />
               </li>
               <li>
-                <ContributorEntry user={{ name: 'Carlos Maria' }} />
+                <CollaboratorEntry user={{ name: 'Carlos Maria' }} />
               </li>
             </ul>
           </dd>
@@ -103,25 +103,25 @@ const ContributorsMenuContent = () => {
           <dd>
             <ul>
               <li>
-                <ContributorEntry user={{ name: 'Bruce Wayne' }} />
+                <CollaboratorEntry user={{ name: 'Bruce Wayne' }} />
               </li>
             </ul>
           </dd>
-        </ContributorsList>
+        </CollaboratorsList>
       </div>
     </React.Fragment>
   );
 };
 
-export function ContributorsMenu() {
+export function CollaboratorsMenu() {
   return (
-    <DropdownContributors
+    <DropdownCollaborators
       alignment='center'
       direction='down'
       triggerElement={(props) => (
         <Button
           variation='base-plain'
-          title='Open dropdown'
+          title='View collaborators'
           useIcon='user'
           size='small'
           {...props}
@@ -130,9 +130,9 @@ export function ContributorsMenu() {
         </Button>
       )}
     >
-      <ContributorsMenuContent />
-    </DropdownContributors>
+      <CollaboratorsMenuContent />
+    </DropdownCollaborators>
   );
 }
 
-ContributorsMenu.propTypes = {};
+CollaboratorsMenu.propTypes = {};

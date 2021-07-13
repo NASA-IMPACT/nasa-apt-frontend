@@ -10,7 +10,7 @@ import { AtbdStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
 import Datetime, { DATETIME_FORMAT } from '../common/date';
-import { ContributorsMenu } from './contributors-menu';
+import { CollaboratorsMenu } from './collaborators-menu';
 import {
   DocumentEntry,
   DocumentEntryActions,
@@ -35,8 +35,9 @@ const UpdatedTime = ({ atbd, date }) => {
         size='small'
         useIcon='clock'
         to={atbdView(atbd)}
+        title='View document'
       >
-        Updated on <Datetime date={date} useDistanceToNow />
+        Updated <Datetime date={date} useDistanceToNow />
       </Button>
     </Tip>
   );
@@ -98,7 +99,7 @@ function AtbdDashboardEntry(props) {
               <UpdatedTime atbd={atbd} date={updateDate} />
             </li>
             <li>
-              <ContributorsMenu />
+              <CollaboratorsMenu />
             </li>
             <li>
               <Button
@@ -106,6 +107,7 @@ function AtbdDashboardEntry(props) {
                 size='small'
                 useIcon='speech-balloon'
                 to='/'
+                title='View comments'
               >
                 8 comments
               </Button>
