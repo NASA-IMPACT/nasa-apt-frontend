@@ -51,9 +51,7 @@ function DashboardAuthor() {
   return (
     <DashboardAuthorInner>
       <TabsManager>
-        <Heading size='medium' as='h2'>
-          Documents
-        </Heading>
+        <Heading size='medium'>Documents</Heading>
         <TabsNav>
           {authorTabNav.map((t) => (
             <TabItem key={t.id} label={t.label} tabId={t.id}>
