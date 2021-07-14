@@ -27,6 +27,7 @@ export const DocumentEntryHeader = styled.header`
 export const DocumentEntryHeadline = styled.div`
   display: grid;
   grid-template-columns: 1fr;
+  grid-gap: ${glsp(0.25)};
 `;
 
 export const DocumentEntryHgroup = styled.div`
@@ -64,6 +65,8 @@ export const DocumentEntryDetails = styled.ul`
 
   > * {
     grid-row: 1;
+    display: flex;
+    align-content: center;
   }
 
   a {

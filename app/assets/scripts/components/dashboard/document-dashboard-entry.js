@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
 import { format } from 'date-fns';
-import styled from 'styled-components';
-import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
-import collecticon from '@devseed-ui/collecticons';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
