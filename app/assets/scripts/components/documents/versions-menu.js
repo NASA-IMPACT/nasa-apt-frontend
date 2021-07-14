@@ -7,7 +7,7 @@ import { Link } from '../../styles/clean/link';
 import { atbdView } from '../../utils/url-creator';
 
 export default function VersionsMenu(props) {
-  const { atbdId, versions, variation, version } = props;
+  const { atbdId, versions, variation, size, version } = props;
 
   const dropProps = useMemo(() => {
     const atbdVersions = [...versions].reverse();
@@ -28,14 +28,15 @@ export default function VersionsMenu(props) {
     return {
       menu: versionMenu,
       triggerProps: {
-        variation
+        variation,
+        size
       },
       // If we have a current version pass that to make the menu selectable.
       activeItem: version,
       // Otherwise provide the last one as the label.
       triggerLabel: !version ? lastVersion.version : undefined
     };
-  }, [atbdId, versions, variation, version]);
+  }, [atbdId, versions, variation, size, version]);
 
   return versions.length === 1 ? (
     <strong>{versions[0].version}</strong>
@@ -54,5 +55,6 @@ VersionsMenu.propTypes = {
   atbdId: T.oneOfType([T.string, T.number]),
   versions: T.array,
   variation: T.string,
+  size: T.string,
   version: T.string
 };

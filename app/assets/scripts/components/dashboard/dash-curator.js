@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { Button } from '@devseed-ui/button';
 
-import AtbdDashboardEntry from './atbd-dashboard-entry';
+import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
@@ -30,9 +29,7 @@ function DashboardCurator() {
   return (
     <DashboardCuratorInner>
       {atbds.status === 'loading' && <GlobalLoading />}
-      <Heading size='medium' as='h2'>
-        Documents
-      </Heading>
+      <Heading size='medium'>Documents</Heading>
       {atbds.status === 'succeeded' && !atbds.data?.length && (
         <Empty>
           <p>
@@ -45,7 +42,7 @@ function DashboardCurator() {
         <DocumentsList>
           {atbds.data.map((atbd) => (
             <DocumentsListItem key={atbd.id}>
-              <AtbdDashboardEntry atbd={atbd} />
+              <DocumentDashboardEntry atbd={atbd} />
             </DocumentsListItem>
           ))}
         </DocumentsList>

@@ -11,7 +11,7 @@ import {
 } from '../../styles/inpage';
 import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
-import { AtbdStatusPill } from '../common/status-pill';
+import { DocumentStatusPill } from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
@@ -104,7 +104,7 @@ export default function DocumentNavHeader(props) {
         </InpageSubtitle>
         <dt>Status</dt>
         <dd>
-          <AtbdStatusPill atbdVersion={atbdVersion} />
+          <DocumentStatusPill atbdVersion={atbdVersion} />
         </dd>
       </InpageMeta>
     </React.Fragment>

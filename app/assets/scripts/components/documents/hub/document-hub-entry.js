@@ -12,23 +12,20 @@ import {
   HubEntryBreadcrumbMenu,
   HubEntryActions
 } from '../../../styles/hub';
-import { AtbdStatusPill } from '../../common/status-pill';
+import { DocumentStatusPill } from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
-import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentActionsMenu from '../document-actions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 
 import { atbdView } from '../../../utils/url-creator';
-import { calculateAtbdCompleteness } from '../completeness';
 import { useUser } from '../../../context/user';
 
-function AtbdHubEntry(props) {
+function DocumentHubEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
   const { isLogged } = useUser();
-
-  const { percent } = calculateAtbdCompleteness(lastVersion);
 
   const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
     onDocumentAction,
@@ -71,7 +68,7 @@ function AtbdHubEntry(props) {
           <HubEntryMeta>
             <dt>Status</dt>
             <dd>
-              <AtbdStatusPill atbdVersion={lastVersion} />
+              <DocumentStatusPill atbdVersion={lastVersion} />
             </dd>
           </HubEntryMeta>
         )}
@@ -83,7 +80,7 @@ function AtbdHubEntry(props) {
           </dd>
         </HubEntryDetails>
         <HubEntryActions>
-          <AtbdActionsMenu
+          <DocumentActionsMenu
             origin='hub'
             atbd={atbd}
             atbdVersion={lastVersion}
@@ -95,12 +92,12 @@ function AtbdHubEntry(props) {
   );
 }
 
-AtbdHubEntry.propTypes = {
+DocumentHubEntry.propTypes = {
   atbd: T.object,
   onDocumentAction: T.func
 };
 
-export default AtbdHubEntry;
+export default DocumentHubEntry;
 
 const Creators = ({ creators }) => {
   if (!creators) return null;

@@ -11,7 +11,7 @@ import Tip from '../common/tooltip';
 import { atbdEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
-export default function AtbdActionsMenu(props) {
+export default function DocumentActionsMenu(props) {
   const { atbd, atbdVersion, variation, onSelect, origin } = props;
   const { isLogged } = useUser();
 
@@ -127,7 +127,7 @@ export default function AtbdActionsMenu(props) {
   );
 }
 
-AtbdActionsMenu.propTypes = {
+DocumentActionsMenu.propTypes = {
   origin: T.string,
   onSelect: T.func,
   atbd: T.object,

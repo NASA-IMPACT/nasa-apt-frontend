@@ -8,9 +8,9 @@ import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 
 import { Link } from '../../../styles/clean/link';
 
-import { getATBDEditStep, STEPS } from './steps';
+import { getDocumentEditStep, STEPS } from './steps';
 import { atbdEdit } from '../../../utils/url-creator';
-import { calculateAtbdStepCompleteness } from '../completeness';
+import { calculateDocumentStepCompleteness } from '../completeness';
 import { DropMenuItemEnhanced } from '../../common/dropdown-menu';
 
 // TODO: Remove once the ui library is updated.
@@ -42,7 +42,7 @@ const StepMenuItem = styled(DropMenuItemEnhanced)`
 export default function StepsMenu(props) {
   const { activeStep, atbdId, atbd } = props;
 
-  const activeStepItem = useMemo(() => getATBDEditStep(activeStep), [
+  const activeStepItem = useMemo(() => getDocumentEditStep(activeStep), [
     activeStep
   ]);
 
@@ -70,7 +70,7 @@ export default function StepsMenu(props) {
           {STEPS.map((step) => {
             const { id, label } = step;
 
-            const { complete, total, percent } = calculateAtbdStepCompleteness(
+            const { complete, total, percent } = calculateDocumentStepCompleteness(
               atbd,
               step
             );

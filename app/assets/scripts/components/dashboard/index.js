@@ -17,7 +17,7 @@ import { Can } from '../../a11n';
 
 import { useUser } from '../../context/user';
 
-const DashboardContent = styled.div`
+const DashboardContent = styled.section`
   grid-column: content-start / content-end;
 `;
 

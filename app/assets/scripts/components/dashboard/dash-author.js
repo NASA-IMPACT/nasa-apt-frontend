@@ -13,7 +13,7 @@ import {
   TabsNav,
   useTabs
 } from '../common/tabs';
-import AtbdDashboardEntry from './atbd-dashboard-entry';
+import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
@@ -51,9 +51,7 @@ function DashboardAuthor() {
   return (
     <DashboardAuthorInner>
       <TabsManager>
-        <Heading size='medium' as='h2'>
-          Documents
-        </Heading>
+        <Heading size='medium'>Documents</Heading>
         <TabsNav>
           {authorTabNav.map((t) => (
             <TabItem key={t.id} label={t.label} tabId={t.id}>
@@ -150,7 +148,7 @@ const TabDocuments = (props) => {
       <DocumentsList>
         {atbds.data.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
-            <AtbdDashboardEntry atbd={atbd} />
+            <DocumentDashboardEntry atbd={atbd} />
           </DocumentsListItem>
         ))}
       </DocumentsList>

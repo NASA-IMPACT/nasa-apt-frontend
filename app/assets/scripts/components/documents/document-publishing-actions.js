@@ -9,7 +9,7 @@ import {
 } from './document-publishing-modals';
 
 import useSafeState from '../../utils/use-safe-state';
-import { atbdDraftMajorConfirmAndToast } from './atbd-draft-major-process';
+import { documentDraftMajorConfirmAndToast } from './document-draft-major-process';
 import {
   useSubmitForDocumentInfo,
   useSubmitForMinorVersion,
@@ -87,7 +87,7 @@ export const useDocumentModals = ({
           setUpdatingMinorVersion(true);
           break;
         case 'draft-major':
-          await atbdDraftMajorConfirmAndToast({
+          await documentDraftMajorConfirmAndToast({
             atbd,
             createAtbdVersion,
             history

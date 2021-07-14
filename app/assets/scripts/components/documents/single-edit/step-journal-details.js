@@ -12,6 +12,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 export default function StepJournalDetails(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -41,7 +42,7 @@ export default function StepJournalDetails(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <FormikSectionFieldset
-                  label='Discussion'
+                  label={getDocumentSectionLabel('discussion')}
                   sectionName='sections_completed.discussion'
                 >
                   <FormikInputEditor
@@ -53,7 +54,7 @@ export default function StepJournalDetails(props) {
                 </FormikSectionFieldset>
 
                 <FormikSectionFieldset
-                  label='Acknowledgements'
+                  label={getDocumentSectionLabel('acknowledgements')}
                   sectionName='sections_completed.acknowledgements'
                 >
                   <FormikInputEditor

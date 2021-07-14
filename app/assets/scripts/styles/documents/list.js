@@ -21,9 +21,16 @@ export const DocumentEntryHeader = styled.header`
     divide(themeVal('layout.gap.xsmall'), 2),
     themeVal('layout.gap.xsmall')
   )};
+  align-items: end;
 `;
 
 export const DocumentEntryHeadline = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: ${glsp(0.25)};
+`;
+
+export const DocumentEntryHgroup = styled.div`
   display: inline-grid;
   grid-auto-columns: minmax(min-content, max-content);
   grid-gap: ${glsp(1.25)};
@@ -50,7 +57,6 @@ export const DocumentEntryTitle = styled.h1`
 
 export const DocumentEntryDetails = styled.ul`
   display: grid;
-  grid-row: 2;
   grid-gap: ${glsp(1)};
   align-items: center;
   grid-auto-columns: minmax(min-content, max-content);
@@ -59,6 +65,8 @@ export const DocumentEntryDetails = styled.ul`
 
   > * {
     grid-row: 1;
+    display: flex;
+    align-content: center;
   }
 
   a {
@@ -66,9 +74,9 @@ export const DocumentEntryDetails = styled.ul`
   }
 `;
 
-export const DocumentEntryHeadNav = styled.nav`
+export const DocumentEntryNav = styled.nav`
   font-size: 1rem;
-  line-height: 2rem;
+  line-height: 1.75rem;
 `;
 
 export const DocumentEntryBreadcrumbMenu = styled.ul`
@@ -100,7 +108,7 @@ export const DocumentEntryBreadcrumbMenu = styled.ul`
 export const DocumentEntryActions = styled.div`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
-  align-items: center;
+  align-items: end;
 
   > * {
     grid-row: 1;
