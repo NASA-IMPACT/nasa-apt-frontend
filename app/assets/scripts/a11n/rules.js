@@ -11,9 +11,8 @@ export function defineRulesFor(user) {
     // allow('manage', 'all');
     allow('edit', 'document'); // TODO: Depends on document
     allow('create', 'documents');
-    allow('edit', 'atbd');
     allow('view', 'contacts');
-    allow('edit', 'contacts');
+    allow('edit', 'contact');
     allow('view', 'profile');
     allow('edit', 'profile');
     allow('access', 'dashboard');

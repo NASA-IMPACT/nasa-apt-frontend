@@ -5,7 +5,6 @@ import {
   InpageHeadline,
   InpageHeadHgroup,
   TruncatedInpageTitle,
-  InpageMeta,
   InpageHeadNav,
   BreadcrumbMenu,
   InpageSubtitle
