@@ -16,7 +16,7 @@ import {
   DocumentEntryHeadline,
   DocumentEntryHgroup,
   DocumentEntryNav,
-  DocumentEntryDetails,
+  DocumentEntryMeta,
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
@@ -88,7 +88,7 @@ function DocumentDashboardEntry(props) {
               </DocumentEntryBreadcrumbMenu>
             </DocumentEntryNav>
           </DocumentEntryHgroup>
-          <DocumentEntryDetails>
+          <DocumentEntryMeta>
             <li>
               <DocumentStatusPill atbdVersion={lastVersion} />
             </li>
@@ -111,7 +111,7 @@ function DocumentDashboardEntry(props) {
                 8 comments
               </Button>
             </li>
-          </DocumentEntryDetails>
+          </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
           <ContextualDocAction action='approve-review' />

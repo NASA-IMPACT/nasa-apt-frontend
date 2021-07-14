@@ -55,7 +55,7 @@ export const DocumentEntryTitle = styled.h1`
   }
 `;
 
-export const DocumentEntryDetails = styled.ul`
+export const DocumentEntryMeta = styled.ul`
   display: grid;
   grid-gap: ${glsp(1)};
   align-items: center;
