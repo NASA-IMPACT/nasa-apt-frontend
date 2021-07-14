@@ -3,6 +3,7 @@ import T from 'prop-types';
 
 import {
   InpageHeadline,
+  InpageHeadHgroup,
   TruncatedInpageTitle,
   InpageMeta,
   InpageHeadNav,
@@ -17,7 +18,7 @@ import { contactEdit, contactView } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
 // Component with the Breadcrumb navigation header for a single contact.
-export default function ContactNavHeader({ name, contactId, mode }) {
+export default function ContactHeadline({ name, contactId, mode }) {
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -59,42 +60,42 @@ export default function ContactNavHeader({ name, contactId, mode }) {
   return (
     <React.Fragment>
       <InpageHeadline>
-        <TruncatedInpageTitle>
-          <Link to={contactView(contactId)} title='View contact'>
-            {name}
-          </Link>
-        </TruncatedInpageTitle>
-        <InpageHeadNav role='navigation'>
-          <BreadcrumbMenu>
-            {isLogged && contactModesMenu.items.length > 1 && (
-              <li>
-                <DropdownMenu
-                  alignment='left'
-                  direction='down'
-                  menu={contactModesMenu}
-                  activeItem={mode}
-                  triggerProps={dropdownMenuTriggerProps}
-                  withChevron
-                  dropTitle='Mode'
-                />
-              </li>
-            )}
-          </BreadcrumbMenu>
-        </InpageHeadNav>
-      </InpageHeadline>
-      <InpageMeta>
-        <dt>Under</dt>
-        <InpageSubtitle as='dd'>
+        <InpageHeadHgroup>
+          <TruncatedInpageTitle>
+            <Link to={contactView(contactId)} title='View contact'>
+              {name}
+            </Link>
+          </TruncatedInpageTitle>
+          <InpageHeadNav role='navigation'>
+            <BreadcrumbMenu>
+              {isLogged && contactModesMenu.items.length > 1 && (
+                <li>
+                  <DropdownMenu
+                    alignment='left'
+                    direction='down'
+                    menu={contactModesMenu}
+                    activeItem={mode}
+                    triggerProps={dropdownMenuTriggerProps}
+                    withChevron
+                    dropTitle='Mode'
+                  />
+                </li>
+              )}
+            </BreadcrumbMenu>
+          </InpageHeadNav>
+        </InpageHeadHgroup>
+        <InpageSubtitle>
+          <span>Under</span>
           <Link to='/contacts' title='View all Contacts'>
-            Contact
+            Contacts
           </Link>
         </InpageSubtitle>
-      </InpageMeta>
+      </InpageHeadline>
     </React.Fragment>
   );
 }
 
-ContactNavHeader.propTypes = {
+ContactHeadline.propTypes = {
   name: T.string,
   contactId: T.number,
   mode: T.string

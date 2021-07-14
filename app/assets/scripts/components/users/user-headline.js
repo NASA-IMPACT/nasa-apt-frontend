@@ -3,6 +3,7 @@ import T from 'prop-types';
 
 import {
   InpageHeadline,
+  InpageHeadHgroup,
   TruncatedInpageTitle,
   InpageHeadNav,
   BreadcrumbMenu
@@ -11,7 +12,7 @@ import { Link } from '../../styles/clean/link';
 import DropdownMenu from '../common/dropdown-menu';
 
 // Component with the Breadcrumb navigation header for a single contact.
-export default function UserNavHeader({ name, mode }) {
+export default function UserHeadline({ name, mode }) {
   const userModesMenu = useMemo(() => {
     return {
       id: 'mode',
@@ -45,32 +46,34 @@ export default function UserNavHeader({ name, mode }) {
   return (
     <React.Fragment>
       <InpageHeadline>
-        <TruncatedInpageTitle>
-          <Link to='/account' title='View contact'>
-            {name}
-          </Link>
-        </TruncatedInpageTitle>
-        <InpageHeadNav role='navigation'>
-          <BreadcrumbMenu>
-            <li>
-              <DropdownMenu
-                alignment='left'
-                direction='down'
-                menu={userModesMenu}
-                activeItem={mode}
-                triggerProps={dropdownMenuTriggerProps}
-                withChevron
-                dropTitle='Mode'
-              />
-            </li>
-          </BreadcrumbMenu>
-        </InpageHeadNav>
+        <InpageHeadHgroup>
+          <TruncatedInpageTitle>
+            <Link to='/account' title='View contact'>
+              {name}
+            </Link>
+          </TruncatedInpageTitle>
+          <InpageHeadNav role='navigation'>
+            <BreadcrumbMenu>
+              <li>
+                <DropdownMenu
+                  alignment='left'
+                  direction='down'
+                  menu={userModesMenu}
+                  activeItem={mode}
+                  triggerProps={dropdownMenuTriggerProps}
+                  withChevron
+                  dropTitle='Mode'
+                />
+              </li>
+            </BreadcrumbMenu>
+          </InpageHeadNav>
+        </InpageHeadHgroup>
       </InpageHeadline>
     </React.Fragment>
   );
 }
 
-UserNavHeader.propTypes = {
+UserHeadline.propTypes = {
   name: T.string,
   mode: T.string
 };

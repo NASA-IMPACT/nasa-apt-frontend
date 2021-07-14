@@ -4,10 +4,11 @@ import T from 'prop-types';
 import {
   InpageHeadline,
   TruncatedInpageTitle,
-  InpageMeta,
+  InpageSubtitle,
+  InpageHeadHgroup,
   InpageHeadNav,
   BreadcrumbMenu,
-  InpageSubtitle
+  InpageMeta
 } from '../../styles/inpage';
 import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
@@ -19,7 +20,7 @@ import { useUser } from '../../context/user';
 import { atbdEdit, atbdView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
-export default function DocumentNavHeader(props) {
+export default function DocumentHeadline(props) {
   const { title, atbdId, version, mode, versions } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
@@ -64,54 +65,59 @@ export default function DocumentNavHeader(props) {
   return (
     <React.Fragment>
       <InpageHeadline>
-        <TruncatedInpageTitle>
-          <Link to={atbdView(atbdId, version)} title='View document'>
-            {title}
-          </Link>
-        </TruncatedInpageTitle>
-        <InpageHeadNav role='navigation'>
-          <BreadcrumbMenu>
-            <li>
-              <VersionsMenu
-                atbdId={atbdId}
-                versions={versions}
-                variation='achromic-plain'
-                version={version}
-              />
-            </li>
-            {isLogged && documentModesMenu.items.length > 1 && (
+        <InpageHeadHgroup>
+          <TruncatedInpageTitle>
+            <Link to={atbdView(atbdId, version)} title='View document'>
+              {title}
+            </Link>
+          </TruncatedInpageTitle>
+          <InpageHeadNav role='navigation'>
+            <BreadcrumbMenu>
               <li>
-                <DropdownMenu
-                  alignment='left'
-                  direction='down'
-                  menu={documentModesMenu}
-                  activeItem={mode}
-                  triggerProps={dropdownMenuTriggerProps}
-                  withChevron
-                  dropTitle='Mode'
+                <VersionsMenu
+                  atbdId={atbdId}
+                  versions={versions}
+                  variation='achromic-plain'
+                  version={version}
                 />
               </li>
-            )}
-          </BreadcrumbMenu>
-        </InpageHeadNav>
+              {isLogged && documentModesMenu.items.length > 1 && (
+                <li>
+                  <DropdownMenu
+                    alignment='left'
+                    direction='down'
+                    menu={documentModesMenu}
+                    activeItem={mode}
+                    triggerProps={dropdownMenuTriggerProps}
+                    withChevron
+                    dropTitle='Mode'
+                  />
+                </li>
+              )}
+            </BreadcrumbMenu>
+          </InpageHeadNav>
+        </InpageHeadHgroup>
+        {!isLogged && (
+          <InpageSubtitle>
+            <span>Under</span>
+            <Link to='/documents' title='View all Documents'>
+              Documents
+            </Link>
+          </InpageSubtitle>
+        )}
+        {isLogged && (
+          <InpageMeta>
+            <li>
+              <DocumentStatusPill atbdVersion={atbdVersion} />
+            </li>
+          </InpageMeta>
+        )}
       </InpageHeadline>
-      <InpageMeta>
-        <dt>Under</dt>
-        <InpageSubtitle as='dd'>
-          <Link to='/documents' title='View all Documents'>
-            Documents
-          </Link>
-        </InpageSubtitle>
-        <dt>Status</dt>
-        <dd>
-          <DocumentStatusPill atbdVersion={atbdVersion} />
-        </dd>
-      </InpageMeta>
     </React.Fragment>
   );
 }
 
-DocumentNavHeader.propTypes = {
+DocumentHeadline.propTypes = {
   title: T.string,
   atbdId: T.oneOfType([T.string, T.number]),
   version: T.string,

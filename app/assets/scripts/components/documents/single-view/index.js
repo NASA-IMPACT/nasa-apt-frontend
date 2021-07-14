@@ -19,7 +19,7 @@ import UhOh from '../../uhoh';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
-import DocumentNavHeader from '../document-nav-header';
+import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import DocumentDownloadMenu from '../document-download-menu';
 import DocumentOutline from './document-outline';
@@ -173,7 +173,7 @@ function DocumentView() {
         <Inpage>
           <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
-            <DocumentNavHeader
+            <DocumentHeadline
               atbdId={id}
               title={atbd.data.title}
               version={version}

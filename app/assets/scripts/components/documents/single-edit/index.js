@@ -8,7 +8,7 @@ import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
-import DocumentNavHeader from '../document-nav-header';
+import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
@@ -120,7 +120,7 @@ function DocumentEdit() {
           atbd={atbd.data}
           renderInpageHeader={() => (
             <InpageHeaderSticky>
-              <DocumentNavHeader
+              <DocumentHeadline
                 atbdId={id}
                 title={atbd.data.title}
                 version={version}

@@ -8,7 +8,7 @@ import UhOh from '../../uhoh';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import Tip from '../../common/tooltip';
 import UserActionsMenu from '../user-actions-menu';
-import UserNavHeader from '../user-nav-header';
+import UserHeadline from '../user-headline';
 import UserAccountSections from './user-account-sections';
 import ButtonSecondary from '../../../styles/button-secondary';
 
@@ -33,7 +33,7 @@ export default function UserView() {
         section={sectionDefinition}
         renderInpageHeader={() => (
           <InpageHeaderSticky data-element='inpage-header'>
-            <UserNavHeader name={user.name} mode='edit' />
+            <UserHeadline name={user.name} mode='edit' />
             <InpageActions>
               <UserAccountSections section={section || 'general'} />
               <SaveButton />
