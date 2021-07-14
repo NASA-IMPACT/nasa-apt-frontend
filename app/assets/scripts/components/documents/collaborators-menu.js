@@ -93,7 +93,9 @@ const CollaboratorsMenuContent = () => {
   );
 };
 
-export function CollaboratorsMenu() {
+export function CollaboratorsMenu(props) {
+  const { triggerProps = {} } = props;
+
   return (
     <DropdownCollaborators
       alignment='left'
@@ -103,7 +105,7 @@ export function CollaboratorsMenu() {
           variation='base-plain'
           title='View collaborators'
           useIcon='user'
-          size='small'
+          {...triggerProps}
           {...props}
         >
           Sean Riley +3
@@ -115,4 +117,6 @@ export function CollaboratorsMenu() {
   );
 }
 
-CollaboratorsMenu.propTypes = {};
+CollaboratorsMenu.propTypes = {
+  triggerProps: T.object
+};

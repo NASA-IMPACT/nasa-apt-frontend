@@ -317,9 +317,9 @@ declare module '@devseed-ui/button' {
 }
 
 declare module '@devseed-ui/dropdown' {
-  class DropContent extends React.Component<any> {}
-  class DropTitle extends React.Component<any> {}
-  class DropInset extends React.Component<any> {}
+  class DropContent extends React.Component<any, any> {}
+  class DropTitle extends React.Component<any, any> {}
+  class DropInset extends React.Component<any, any> {}
 
   interface DropMenuProps {
     selectable?: Boolean;
@@ -336,13 +336,13 @@ declare module '@devseed-ui/dropdown' {
 
   interface DropdownProps {
     /*
-     * An id for the dropdown"
+     * An id for the dropdown
      */
     id: string;
 
     /*
      * A function that returns a trigger element. The passed props must be
-     * attached to the trigger element, which can be anything."
+     * attached to the trigger element, which can be anything.
      */
     triggerElement: (triggerProps: {
       ref: object;
@@ -354,14 +354,14 @@ declare module '@devseed-ui/dropdown' {
     }) => any;
 
     /*
-     * Sets opening direction of the dropdown"
+     * Sets opening direction of the dropdown
      */
     direction: 'up' | 'down' | 'left' | 'right';
 
     /*
      * Sets the alignment of the dropdown box. ['left' | 'center' | 'right'] can
      * only be used with ['up' | 'down'] directions. ['top' | 'middle' |
-     * 'bottom'] can only be used with ['left' | 'right'] directions."
+     * 'bottom'] can only be used with ['left' | 'right'] directions.
      */
     alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom';
   }

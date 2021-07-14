@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import { format } from 'date-fns';
 import { Button } from '@devseed-ui/button';
@@ -96,7 +96,9 @@ function DocumentDashboardEntry(props) {
               <UpdatedTime atbd={atbd} date={updateDate} />
             </li>
             <li>
-              <CollaboratorsMenu />
+              <CollaboratorsMenu
+                triggerProps={useMemo(() => ({ size: 'small' }), [])}
+              />
             </li>
             <li>
               <Button
