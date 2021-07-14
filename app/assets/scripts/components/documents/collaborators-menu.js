@@ -35,16 +35,19 @@ const CollaboratorsListTerm = styled.dt`
 `;
 
 const CollaboratorEntry = (props) => {
-  const { isLead, user } = props;
-  return <UserIdentity name={user.name} role={isLead && 'Lead'} />;
+  const { isLead, name, email } = props;
+  return <UserIdentity name={name} email={email} role={isLead && 'Lead'} />;
 };
 
 CollaboratorEntry.propTypes = {
   isLead: T.bool,
-  user: T.object
+  name: T.string,
+  email: T.string
 };
 
-const CollaboratorsMenuContent = () => {
+const CollaboratorsMenuContent = (props) => {
+  const { owner, authors, reviewers } = props;
+
   return (
     <React.Fragment>
       <DropHeader>
@@ -70,31 +73,55 @@ const CollaboratorsMenuContent = () => {
         <dd>
           <ul>
             <li>
-              <CollaboratorEntry user={{ name: 'Sean Riley' }} isLead />
+              <CollaboratorEntry
+                name={owner.preferred_username}
+                email={owner.email}
+                isLead
+              />
             </li>
-            <li>
-              <CollaboratorEntry user={{ name: 'Monica Anderson' }} />
-            </li>
-            <li>
-              <CollaboratorEntry user={{ name: 'Carlos Maria' }} />
-            </li>
+            {authors.map((author) => (
+              <li key={author.sub || author.preferred_username}>
+                <CollaboratorEntry
+                  name={author.preferred_username}
+                  email={author.email}
+                />
+              </li>
+            ))}
           </ul>
         </dd>
-        <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
-        <dd>
-          <ul>
-            <li>
-              <CollaboratorEntry user={{ name: 'Bruce Wayne' }} />
-            </li>
-          </ul>
-        </dd>
+        {!!reviewers.length && (
+          <React.Fragment>
+            <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
+            <dd>
+              <ul>
+                {reviewers.map((reviewer) => (
+                  <li key={reviewer.sub || reviewer.preferred_username}>
+                    <CollaboratorEntry
+                      name={reviewer.preferred_username}
+                      email={reviewer.email}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </React.Fragment>
+        )}
       </CollaboratorsList>
     </React.Fragment>
   );
 };
 
+CollaboratorsMenuContent.propTypes = {
+  owner: T.object,
+  authors: T.array,
+  reviewers: T.array
+};
+
 export function CollaboratorsMenu(props) {
-  const { triggerProps = {} } = props;
+  const { triggerProps = {}, atbdVersion } = props;
+  const { owner, authors = [], reviewers = [] } = atbdVersion;
+
+  const collaboratorCount = authors.length + reviewers.length;
 
   return (
     <DropdownCollaborators
@@ -108,15 +135,21 @@ export function CollaboratorsMenu(props) {
           {...triggerProps}
           {...props}
         >
-          Sean Riley +3
+          {owner.preferred_username}{' '}
+          {!!collaboratorCount && ` +${collaboratorCount}`}
         </Button>
       )}
     >
-      <CollaboratorsMenuContent />
+      <CollaboratorsMenuContent
+        owner={owner}
+        authors={authors}
+        reviewers={reviewers}
+      />
     </DropdownCollaborators>
   );
 }
 
 CollaboratorsMenu.propTypes = {
-  triggerProps: T.object
+  triggerProps: T.object,
+  atbdVersion: T.object
 };
