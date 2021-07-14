@@ -7,7 +7,7 @@ export const DropHeader = styled.header`
   grid-gap: ${glsp(0, themeVal('layout.gap.xsmall'))};
   box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
   margin: ${glsp(-1, -1, 1, -1)};
-  padding: ${glsp()};
+  padding: ${glsp(0.75, 1)};
 `;
 
 export const DropHeadline = styled.div`
