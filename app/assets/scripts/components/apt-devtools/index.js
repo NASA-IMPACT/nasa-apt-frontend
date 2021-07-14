@@ -173,7 +173,7 @@ const DevUsersEntryCmp = (props) => {
         onImpersonate();
       }}
     >
-      <UserIdentity user={entry} role={entry.role} />
+      <UserIdentity name={entry.name} role={entry.role} />
       {entry.description && <p>{entry.description}</p>}
     </a>
   );

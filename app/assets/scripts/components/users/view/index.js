@@ -64,7 +64,11 @@ export default function UserView() {
             <UserContent>
               <Prose>
                 <UserHeader>
-                  <UserImage size='profile' user={user} />
+                  <UserImage
+                    size='profile'
+                    name={user.name}
+                    email={user.attributes?.email}
+                  />
                   <UserName>{user.name}</UserName>
                 </UserHeader>
                 <DetailsList>

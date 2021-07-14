@@ -36,7 +36,7 @@ const CollaboratorsListTerm = styled.dt`
 
 const CollaboratorEntry = (props) => {
   const { isLead, user } = props;
-  return <UserIdentity user={user} role={isLead && 'Lead'} />;
+  return <UserIdentity name={user.name} role={isLead && 'Lead'} />;
 };
 
 CollaboratorEntry.propTypes = {
