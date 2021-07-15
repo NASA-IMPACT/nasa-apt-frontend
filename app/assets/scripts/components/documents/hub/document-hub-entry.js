@@ -19,8 +19,9 @@ import DocumentActionsMenu from '../document-actions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 
-import { documentView } from '../../../utils/url-creator';
+import { atbdView } from '../../../utils/url-creator';
 import { useUser } from '../../../context/user';
+import { documentUpdatedDate } from '../../../utils/date';
 
 function DocumentHubEntry(props) {
   const { atbd, onDocumentAction } = props;
@@ -34,12 +35,7 @@ function DocumentHubEntry(props) {
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
-  const updateDate = new Date(
-    Math.max(
-      new Date(atbd.last_updated_at).getTime(),
-      new Date(lastVersion.last_updated_at).getTime()
-    )
-  );
+  const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
     <HubEntry>
@@ -47,7 +43,7 @@ function DocumentHubEntry(props) {
         <HubEntryHeadline>
           <HubEntryTitle>
             <Link
-              to={documentView(atbd, lastVersion.version)}
+              to={atbdView(atbd, lastVersion.version)}
               title='View document'
             >
               {atbd.title}

@@ -1,12 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { format } from 'date-fns';
 import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
-import Datetime, { DATETIME_FORMAT } from '../common/date';
+import { DateButton } from '../common/date';
 import { CollaboratorsMenu } from '../documents/collaborators-menu';
 import {
   DocumentEntry,
@@ -20,34 +19,13 @@ import {
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
-import Tip from '../common/tooltip';
 
 import { documentView } from '../../utils/url-creator';
-
-const UpdatedTime = ({ atbd, date }) => {
-  return (
-    <Tip title={format(date, DATETIME_FORMAT)}>
-      <Button
-        forwardedAs={Link}
-        size='small'
-        useIcon='clock'
-        to={atbdView(atbd)}
-        title='View document'
-      >
-        Updated <Datetime date={date} useDistanceToNow />
-      </Button>
-    </Tip>
-  );
-};
-
-UpdatedTime.propTypes = {
-  atbd: T.object,
-  date: T.object
-};
+import { documentUpdatedDate } from '../../utils/date';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
-  const lastVersion = atbd.versions[atbd.versions.length - 1];
+  const lastVersion = atbd.versions.last;
 
   // const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
   //   onDocumentAction,
@@ -56,12 +34,7 @@ function DocumentDashboardEntry(props) {
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
-  const updateDate = new Date(
-    Math.max(
-      new Date(atbd.last_updated_at).getTime(),
-      new Date(lastVersion.last_updated_at).getTime()
-    )
-  );
+  const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
     <DocumentEntry>
@@ -93,7 +66,12 @@ function DocumentDashboardEntry(props) {
               <DocumentStatusPill atbdVersion={lastVersion} />
             </li>
             <li>
-              <UpdatedTime atbd={atbd} date={updateDate} />
+              <DateButton
+                prefix='Updated'
+                date={updateDate}
+                to={documentView(atbd)}
+                title='View document'
+              />
             </li>
             <li>
               <CollaboratorsMenu
