@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import { Button } from '@devseed-ui/button';
-import { CollaboratorsMenu } from '../documents/collaborators-menu';
+
 import {
   InpageHeadline,
   TruncatedInpageTitle,
@@ -11,13 +11,14 @@ import {
   BreadcrumbMenu,
   InpageMeta
 } from '../../styles/inpage';
-import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import { DocumentStatusPill } from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 import { DateButton } from '../common/date';
+import { CollaboratorsMenu } from './collaborators-menu';
 
+import { useContextualAbility } from '../../a11n';
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
 
@@ -59,6 +60,11 @@ export default function DocumentHeadline(props) {
     () => ({
       variation: 'achromic-plain'
     }),
+    []
+  );
+
+  const collaboratorsMenuTriggerProps = useMemo(
+    () => ({ size: 'small', variation: 'achromic-plain' }),
     []
   );
 
@@ -119,6 +125,12 @@ export default function DocumentHeadline(props) {
                 date={updatedDate}
                 to={documentView(atbdId, version)}
                 title='View document'
+              />
+            </li>
+            <li>
+              <CollaboratorsMenu
+                atbdVersion={atbdVersion}
+                triggerProps={collaboratorsMenuTriggerProps}
               />
             </li>
             <li>
