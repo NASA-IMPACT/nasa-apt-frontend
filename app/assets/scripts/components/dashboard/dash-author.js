@@ -18,6 +18,7 @@ import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
 import { useAtbds } from '../../context/atbds-list';
+import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 
 const DashboardAuthorInner = styled.div`
   display: grid;
@@ -82,6 +83,7 @@ const TabDocuments = (props) => {
   const { role, status } = props;
   const { activeTab } = useTabs();
   const { atbds, fetchAtbds } = useAtbds({ role, status });
+  const onCreateClick = useDocumentCreate();
 
   useEffect(() => {
     fetchAtbds({ role, status });
@@ -105,7 +107,7 @@ const TabDocuments = (props) => {
               variation='primary-raised-dark'
               title='Create new document'
               useIcon='plus--small'
-              // onClick={onCreateClick}
+              onClick={onCreateClick}
             >
               Create document
             </Button>
@@ -122,7 +124,7 @@ const TabDocuments = (props) => {
               variation='primary-raised-dark'
               title='Create new document'
               useIcon='plus--small'
-              // onClick={onCreateClick}
+              onClick={onCreateClick}
             >
               Create document
             </Button>

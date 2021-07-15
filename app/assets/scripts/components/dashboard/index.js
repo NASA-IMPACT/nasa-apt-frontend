@@ -1,6 +1,7 @@
-import React from 'react';
-import { Heading } from '@devseed-ui/typography';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { useHistory } from 'react-router';
+import { Heading } from '@devseed-ui/typography';
 
 import App from '../common/app';
 import {
@@ -8,14 +9,17 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageActions
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
 import DashboardAuthor from './dash-author';
 import DashboardCurator from './dash-curator';
 import { Can } from '../../a11n';
+import ButtonSecondary from '../../styles/button-secondary';
 
 import { useUser } from '../../context/user';
+import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 
 const DashboardContent = styled.section`
   grid-column: content-start / content-end;
@@ -23,6 +27,7 @@ const DashboardContent = styled.section`
 
 function UserDashboard() {
   const { user } = useUser();
+  const onCreateClick = useDocumentCreate();
 
   return (
     <App pageTitle='Dashboard'>
@@ -31,6 +36,17 @@ function UserDashboard() {
           <InpageHeadline>
             <InpageTitle>Dashboard</InpageTitle>
           </InpageHeadline>
+          <InpageActions>
+            <Can do='create' on='documents'>
+              <ButtonSecondary
+                title='Create new document'
+                useIcon='plus--small'
+                onClick={onCreateClick}
+              >
+                Create
+              </ButtonSecondary>
+            </Can>
+          </InpageActions>
         </InpageHeader>
         <InpageBody>
           <ContentBlock>

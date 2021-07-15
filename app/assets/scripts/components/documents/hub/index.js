@@ -19,14 +19,14 @@ import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { documentEdit, documentView } from '../../../utils/url-creator';
-import { createProcessToast } from '../../common/toasts';
+import { documentView } from '../../../utils/url-creator';
 import { documentDeleteFullConfirmAndToast } from '../document-delete-process';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
+import { useDocumentCreate } from '../single-edit/use-document-create';
 
 function Documents() {
-  const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
+  const { fetchAtbds, deleteFullAtbd, atbds } = useAtbds();
   const history = useHistory();
 
   useEffect(() => {
@@ -42,17 +42,7 @@ function Documents() {
     throw atbds.error;
   }
 
-  const onCreateClick = useCallback(async () => {
-    const processToast = createProcessToast('Creating new Document');
-    const result = await createAtbd();
-
-    if (result.error) {
-      processToast.error(`An error occurred: ${result.error.message}`);
-    } else {
-      processToast.success('Document successfully created');
-      history.push(documentEdit(result.data));
-    }
-  }, [createAtbd, history]);
+  const onCreateClick = useDocumentCreate();
 
   const onDocumentAction = useCallback(
     async (atbd, menuId) => {
