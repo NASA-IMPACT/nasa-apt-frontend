@@ -21,7 +21,7 @@ export function defineRulesFor(user) {
       allow('access', 'curator-dashboard');
     } else {
       // } if (user.groups.find(g => g.toLowerCase() === 'author')) {
-      allow('access', 'author-dashboard'); // TODO: Only with group
+      allow('access', 'contributor-dashboard'); // TODO: Only with group
     }
   }
 

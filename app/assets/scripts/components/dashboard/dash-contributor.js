@@ -20,7 +20,7 @@ import { EmptyHub } from '../common/empty-states';
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 
-const DashboardAuthorInner = styled.div`
+const DashboardContributorInner = styled.div`
   display: grid;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
 `;
@@ -48,9 +48,9 @@ const authorTabNav = [
   }
 ];
 
-function DashboardAuthor() {
+function DashboardContributor() {
   return (
-    <DashboardAuthorInner>
+    <DashboardContributorInner>
       <TabsManager>
         <Heading size='medium'>Documents</Heading>
         <TabsNav>
@@ -73,11 +73,11 @@ function DashboardAuthor() {
           <TabDocuments status='Published' />
         </TabContent>
       </TabsManager>
-    </DashboardAuthorInner>
+    </DashboardContributorInner>
   );
 }
 
-export default DashboardAuthor;
+export default DashboardContributor;
 
 const TabDocuments = (props) => {
   const { role, status } = props;

@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router';
 import { Heading } from '@devseed-ui/typography';
 
 import App from '../common/app';
@@ -13,7 +12,7 @@ import {
   InpageActions
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
-import DashboardAuthor from './dash-author';
+import DashboardContributor from './dash-contributor';
 import DashboardCurator from './dash-curator';
 import { Can } from '../../a11n';
 import ButtonSecondary from '../../styles/button-secondary';
@@ -55,8 +54,8 @@ function UserDashboard() {
               <p>Here&apos;s what is happening in your APT account today.</p>
             </DashboardContent>
             <DashboardContent>
-              <Can do='access' on='author-dashboard'>
-                <DashboardAuthor />
+              <Can do='access' on='contributor-dashboard'>
+                <DashboardContributor />
               </Can>
               <Can do='access' on='curator-dashboard'>
                 <DashboardCurator />
