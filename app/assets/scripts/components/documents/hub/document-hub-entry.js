@@ -19,7 +19,7 @@ import DocumentActionsMenu from '../document-actions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 
-import { atbdView } from '../../../utils/url-creator';
+import { documentView } from '../../../utils/url-creator';
 import { useUser } from '../../../context/user';
 
 function DocumentHubEntry(props) {
@@ -47,7 +47,7 @@ function DocumentHubEntry(props) {
         <HubEntryHeadline>
           <HubEntryTitle>
             <Link
-              to={atbdView(atbd, lastVersion.version)}
+              to={documentView(atbd, lastVersion.version)}
               title='View document'
             >
               {atbd.title}

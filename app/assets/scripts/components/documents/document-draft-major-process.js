@@ -1,4 +1,4 @@
-import { atbdView } from '../../utils/url-creator';
+import { documentView } from '../../utils/url-creator';
 import toasts, { createProcessToast } from '../common/toasts';
 import { confirmDraftMajorVersion } from './document-publishing-modals';
 
@@ -33,7 +33,7 @@ export async function documentDraftMajorConfirmAndToast({
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success(`New Major version created: ${result.data.version}`);
-      history.push(atbdView(result.data, result.data.version));
+      history.push(documentView(result.data, result.data.version));
     }
   }
 }

@@ -22,7 +22,7 @@ import {
 import ContextualDocAction from './document-item-ctx-action';
 import Tip from '../common/tooltip';
 
-import { atbdView } from '../../utils/url-creator';
+import { documentView } from '../../utils/url-creator';
 
 const UpdatedTime = ({ atbd, date }) => {
   return (
@@ -70,7 +70,7 @@ function DocumentDashboardEntry(props) {
           <DocumentEntryHgroup>
             <DocumentEntryTitle>
               <Link
-                to={atbdView(atbd, lastVersion.version)}
+                to={documentView(atbd, lastVersion.version)}
                 title='View document'
               >
                 {atbd.title}

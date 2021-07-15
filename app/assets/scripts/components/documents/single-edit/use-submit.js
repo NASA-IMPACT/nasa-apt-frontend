@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
 
-import { atbdEdit, atbdView } from '../../../utils/url-creator';
+import { documentEdit, documentView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { remindMinorVersionUpdate } from './document-minor-version-reminder';
 
@@ -26,7 +26,7 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
         processToast.success('Changes saved');
         // Update the path in case the alias changed.
         if (values.alias) {
-          history.replace(atbdEdit(values.alias, atbd.version, step.id));
+          history.replace(documentEdit(values.alias, atbd.version, step.id));
         }
 
         if (atbd.status.toLowerCase() === 'published') {
@@ -93,7 +93,7 @@ export function useSubmitForMinorVersion(
         processToast.success(
           `Minor version updated to: ${result.data.version}`
         );
-        history.replace(atbdView(result.data, result.data.version));
+        history.replace(documentView(result.data, result.data.version));
       }
     },
     [updateAtbd, setUpdatingMinorVersion, history]

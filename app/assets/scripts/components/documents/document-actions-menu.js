@@ -8,7 +8,7 @@ import DropdownMenu, {
 import { Link } from '../../styles/clean/link';
 import Tip from '../common/tooltip';
 
-import { atbdEdit } from '../../utils/url-creator';
+import { documentEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
 export default function DocumentActionsMenu(props) {
@@ -37,7 +37,7 @@ export default function DocumentActionsMenu(props) {
       label: 'Edit',
       title: 'Edit document',
       as: Link,
-      to: atbdEdit(atbd, atbdVersion.version)
+      to: documentEdit(atbd, atbdVersion.version)
     };
     const itemPublish = {
       id: 'publish',

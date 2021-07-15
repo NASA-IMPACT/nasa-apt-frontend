@@ -19,7 +19,7 @@ import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdEdit, atbdView } from '../../../utils/url-creator';
+import { documentEdit, documentView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { documentDeleteFullConfirmAndToast } from '../document-delete-process';
 import { Can } from '../../../a11n';
@@ -42,17 +42,17 @@ function Documents() {
     throw atbds.error;
   }
 
-  const onCreateClick = async () => {
-    const processToast = createProcessToast('Creating new ATBD');
+  const onCreateClick = useCallback(async () => {
+    const processToast = createProcessToast('Creating new Document');
     const result = await createAtbd();
 
     if (result.error) {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
-      processToast.success('ATBD successfully created');
-      history.push(atbdEdit(result.data));
+      processToast.success('Document successfully created');
+      history.push(documentEdit(result.data));
     }
-  };
+  }, [createAtbd, history]);
 
   const onDocumentAction = useCallback(
     async (atbd, menuId) => {
@@ -71,7 +71,7 @@ function Documents() {
           // state as the user is sent from one page to another. See explanation
           // on
           // app/assets/scripts/components/documents/document-publishing-actions.js
-          history.push(atbdView(atbd), { menuAction: menuId });
+          history.push(documentView(atbd), { menuAction: menuId });
           break;
       }
     },

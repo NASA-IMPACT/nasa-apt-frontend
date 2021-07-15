@@ -18,7 +18,7 @@ import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 
 import { useUser } from '../../context/user';
-import { atbdEdit, atbdView } from '../../utils/url-creator';
+import { documentEdit, documentView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentHeadline(props) {
@@ -34,7 +34,7 @@ export default function DocumentHeadline(props) {
       label: 'Viewing',
       title: `Switch to viewing mode`,
       as: Link,
-      to: atbdView(atbdId, version)
+      to: documentView(atbdId, version)
     };
     return {
       id: 'mode',
@@ -47,7 +47,7 @@ export default function DocumentHeadline(props) {
               label: 'Editing',
               title: `Switch to editing mode`,
               as: Link,
-              to: atbdEdit(atbdId, version)
+              to: documentEdit(atbdId, version)
             }
           ]
         : [viewATBD]
@@ -68,7 +68,7 @@ export default function DocumentHeadline(props) {
       <InpageHeadline>
         <InpageHeadHgroup>
           <TruncatedInpageTitle>
-            <Link to={atbdView(atbdId, version)} title='Link to document'>
+            <Link to={documentView(atbdId, version)} title='Link to document'>
               {title}
             </Link>
           </TruncatedInpageTitle>

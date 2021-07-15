@@ -20,7 +20,7 @@ import { Link } from '../../styles/clean/link';
 import Pill from '../common/pill';
 import TextHighlight from '../common/text-highlight';
 
-import { atbdView } from '../../utils/url-creator';
+import { documentView } from '../../utils/url-creator';
 
 const SearchResultsWrapper = styled.div`
   grid-column: content-start / content-end;
@@ -117,7 +117,7 @@ function ResultsList(props) {
           <HubListItem key={_id}>
             <HubEntry>
               <ResultLink
-                to={atbdView(result, result.version.version)}
+                to={documentView(result, result.version.version)}
                 title='View document'
               >
                 <HubEntryHeader>

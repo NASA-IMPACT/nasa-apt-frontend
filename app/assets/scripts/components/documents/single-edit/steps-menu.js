@@ -9,7 +9,7 @@ import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 import { Link } from '../../../styles/clean/link';
 
 import { getDocumentEditStep, STEPS } from './steps';
-import { atbdEdit } from '../../../utils/url-creator';
+import { documentEdit } from '../../../utils/url-creator';
 import { calculateDocumentStepCompleteness } from '../completeness';
 import { DropMenuItemEnhanced } from '../../common/dropdown-menu';
 
@@ -82,7 +82,7 @@ export default function StepsMenu(props) {
                   title={`Go to step ${label}`}
                   active={id === activeStepItem.id}
                   data-dropdown='click.close'
-                  to={atbdEdit(atbdId, atbd.version, id)}
+                  to={documentEdit(atbdId, atbd.version, id)}
                 >
                   <span>{label}</span>
                   <small>

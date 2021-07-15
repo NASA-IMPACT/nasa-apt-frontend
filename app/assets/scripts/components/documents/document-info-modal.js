@@ -20,7 +20,7 @@ import {
 import Datetime from '../common/date';
 import { Can } from '../../a11n';
 
-import { atbdEdit } from '../../utils/url-creator';
+import { documentEdit } from '../../utils/url-creator';
 import { citationFields, createBibtexCitation } from './citation';
 import { downloadTextFile } from '../../utils/download-text-file';
 
@@ -215,7 +215,7 @@ function TabCitation(props) {
 
   const citationEditLink = (
     <Link
-      to={atbdEdit(atbd, atbd.version)}
+      to={documentEdit(atbd, atbd.version)}
       title='Edit ATBD identifying information'
     >
       identifying information
