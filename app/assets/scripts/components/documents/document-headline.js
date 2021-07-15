@@ -136,6 +136,7 @@ export default function DocumentHeadline(props) {
             <li>
               <Button
                 variation='achromic-plain'
+                size='small'
                 useIcon='speech-balloon'
                 title='View comments'
               >
