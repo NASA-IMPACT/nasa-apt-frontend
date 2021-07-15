@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
-
+import { Button } from '@devseed-ui/button';
+import { CollaboratorsMenu } from '../documents/collaborators-menu';
 import {
   InpageHeadline,
   TruncatedInpageTitle,
@@ -67,7 +68,7 @@ export default function DocumentHeadline(props) {
       <InpageHeadline>
         <InpageHeadHgroup>
           <TruncatedInpageTitle>
-            <Link to={atbdView(atbdId, version)} title='View document'>
+            <Link to={atbdView(atbdId, version)} title='Link to document'>
               {title}
             </Link>
           </TruncatedInpageTitle>
@@ -109,6 +110,34 @@ export default function DocumentHeadline(props) {
           <InpageMeta>
             <li>
               <DocumentStatusPill atbdVersion={atbdVersion} />
+            </li>
+            <li>
+              <Button
+                forwardedAs={Link}
+                variation='achromic-plain'
+                useIcon='clock'
+                to={atbdView(atbdId, version)}
+                title='Link to document'
+              >
+                Updated <time dateTime='2021-07-14'>about 20 hours ago</time>
+              </Button>
+            </li>
+            <li>
+              <CollaboratorsMenu
+                triggerProps={useMemo(
+                  () => ({ variation: 'achromic-plain' }),
+                  []
+                )}
+              />
+            </li>
+            <li>
+              <Button
+                variation='achromic-plain'
+                useIcon='speech-balloon'
+                title='View comments'
+              >
+                8 comments
+              </Button>
             </li>
           </InpageMeta>
         )}
