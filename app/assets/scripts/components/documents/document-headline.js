@@ -16,17 +16,18 @@ import { Link } from '../../styles/clean/link';
 import { DocumentStatusPill } from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
+import { DateButton } from '../common/date';
 
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentHeadline(props) {
-  const { title, atbdId, version, mode, versions } = props;
+  const { title, atbdId, version, mode, versions, updatedDate } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
-  const canEditATBD = ability.can('edit', 'atbd');
+  const canEditATBD = ability.can('edit', 'document');
 
   const documentModesMenu = useMemo(() => {
     const viewATBD = {
@@ -112,22 +113,12 @@ export default function DocumentHeadline(props) {
               <DocumentStatusPill atbdVersion={atbdVersion} />
             </li>
             <li>
-              <Button
-                forwardedAs={Link}
+              <DateButton
                 variation='achromic-plain'
-                useIcon='clock'
-                to={atbdView(atbdId, version)}
-                title='Link to document'
-              >
-                Updated <time dateTime='2021-07-14'>about 20 hours ago</time>
-              </Button>
-            </li>
-            <li>
-              <CollaboratorsMenu
-                triggerProps={useMemo(
-                  () => ({ variation: 'achromic-plain' }),
-                  []
-                )}
+                prefix='Updated'
+                date={updatedDate}
+                to={documentView(atbdId, version)}
+                title='View document'
               />
             </li>
             <li>
@@ -151,5 +142,6 @@ DocumentHeadline.propTypes = {
   atbdId: T.oneOfType([T.string, T.number]),
   version: T.string,
   versions: T.array,
+  updatedDate: T.object,
   mode: T.string
 };
