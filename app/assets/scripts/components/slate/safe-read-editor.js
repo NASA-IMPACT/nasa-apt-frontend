@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
-import { Node } from 'slate';
+import { Text } from 'slate';
 
 import { ReadEditor } from './editor';
 import { RichContextProvider } from './plugins/common/rich-context';
 import { IMAGE, IMAGE_BLOCK } from './plugins/image';
+import { TABLE } from './plugins/table';
 import { removeNodeFromSlateDocument } from './nodes-from-slate';
 
 export default class SafeReadEditor extends React.Component {
@@ -31,11 +32,37 @@ export default class SafeReadEditor extends React.Component {
   }
 }
 
+/**
+ * Converts a slate document to string taking into account images and empty
+ * tables. An image has no text content so it was being discarded when using the
+ * regular "Node.string(n)", so instead of checking for the "text" we look at
+ * the objectKey.
+ *
+ * @param {object} node The node to serialize
+ * @returns string
+ */
+const serializeToString = (node) => {
+  if (Text.isText(node)) {
+    return node.text.trim();
+  }
+
+  const children = node.children.map((n) => serializeToString(n)).join('');
+
+  switch (node.type) {
+    case IMAGE:
+      return node.objectKey;
+    case TABLE:
+      return '<table>';
+    default:
+      return children;
+  }
+};
+
 const SafeReadEditorComponent = (props) => {
   const { value, whenEmpty, context, contextDeps, ...rest } = props;
 
   const strValue = value?.children
-    ? value.children.map((n) => Node.string(n).trim()).join('')
+    ? value.children.map((n) => serializeToString(n).trim()).join('')
     : '';
 
   // Remove images that were saved mid-upload resulting in them not being saved
