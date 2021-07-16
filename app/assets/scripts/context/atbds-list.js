@@ -84,6 +84,7 @@ export const AtbdsProvider = (props) => {
     getState: getAtbds,
     fetchAtbds,
     deleteFullAtbd,
+    deleteSingleAtbdVersion,
     dispatch: dispatchAtbdList
   } = useContexeedApi(
     {
@@ -113,7 +114,38 @@ export const AtbdsProvider = (props) => {
             // If delete worked, remove the item from the atbd list.
             return state.data.filter((atbd) => atbd.id !== id);
           }
-        }))
+        })),
+        // See explanation about this on the export down below.
+        deleteSingleAtbdVersion: withRequestToken(
+          token,
+          ({ filters = {}, id, version }) => ({
+            sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
+            url: `/atbds/${id}/versions/${version}`,
+            requestOptions: {
+              method: 'delete'
+            },
+            transformData: (data, { state }) => {
+              // If delete worked, remove the version from the atbd list.
+              return state.data
+                .map((atbd) => {
+                  // Not the document we're looking for.
+                  if (atbd.id !== id) return atbd;
+
+                  const versions = atbd.versions.filter(
+                    (atbdVersion) => atbdVersion.version !== version
+                  );
+                  // Remove the whole atbd if there are no more versions.
+                  return versions.length
+                    ? {
+                        ...atbd,
+                        versions
+                      }
+                    : null;
+                })
+                .filter(Boolean);
+            }
+          })
+        )
       }
     },
     [token]
@@ -254,6 +286,10 @@ export const AtbdsProvider = (props) => {
             method: 'delete'
           },
           onDone: (finish, { error, invalidate }) => {
+            // Because a deleted version may be in the atbd list state,
+            // invalidate it all.
+            dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
+
             return !error ? invalidate(`${id}/${version}`) : finish();
           }
         })),
@@ -471,6 +507,24 @@ export const AtbdsProvider = (props) => {
     createAtbd,
     updateAtbd,
     deleteFullAtbd,
+    // The fundamental difference between deleteSingleAtbdVersion and
+    // deleteAtbdVersion is related to how they're used. The `deleteAtbdVersion`
+    // is tied to the single atbd context while `deleteSingleAtbdVersion` is
+    // tied to the atbd list context.
+    // To use `deleteAtbdVersion` we'd need to initialize `useSingleAtbd` with
+    // { id, version } but if we don't have them available (like in the hub)
+    // this is not possible.
+    // The deleteSingleAtbdVersion acts in the atbd list context and the id and
+    // version are passed directly.
+
+    // Ends up being:
+    // const { deleteSingleAtbdVersion } = useAtbds();
+    // deleteSingleAtbdVersion();
+    //
+    // instead of:
+    // const { deleteAtbdVersion } = useSingleAtbd({ id, version });
+    // deleteAtbdVersion()
+    deleteSingleAtbdVersion,
     deleteAtbdVersion,
     createAtbdVersion,
     publishAtbdVersion
@@ -529,12 +583,13 @@ export const useSingleAtbd = ({ id, version }) => {
   };
 };
 
-export const useAtbds = ({ role, status } = {}) => {
+export const useAtbds = (filters = {}) => {
   const {
     getAtbds,
     fetchAtbds,
     createAtbd,
     deleteFullAtbd,
+    deleteSingleAtbdVersion,
     invalidateAtbdListCtx,
     invalidateAtbdSingleCtx
   } = useSafeContextFn('useAtbds');
@@ -542,9 +597,13 @@ export const useAtbds = ({ role, status } = {}) => {
   return {
     invalidateAtbdListCtx,
     invalidateAtbdSingleCtx,
-    atbds: getAtbds(`${role || 'all'}-${status || 'all'}`),
+    atbds: getAtbds(`${filters.role || 'all'}-${filters.status || 'all'}`),
     fetchAtbds,
     createAtbd,
-    deleteFullAtbd
+    deleteFullAtbd,
+    deleteSingleAtbdVersion: useCallback(
+      ({ id, version }) => deleteSingleAtbdVersion({ filters, id, version }),
+      [filters, deleteSingleAtbdVersion]
+    )
   };
 };
