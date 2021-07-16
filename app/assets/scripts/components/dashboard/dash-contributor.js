@@ -19,6 +19,7 @@ import { EmptyHub } from '../common/empty-states';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
+import { useDocumentHubMenuAction } from './use-document-menu-action';
 
 const DashboardContributorInner = styled.div`
   display: grid;
@@ -82,8 +83,15 @@ export default DashboardContributor;
 const TabDocuments = (props) => {
   const { role, status } = props;
   const { activeTab } = useTabs();
-  const { atbds, fetchAtbds } = useAtbds({ role, status });
+  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds({
+    role,
+    status
+  });
+
   const onCreateClick = useDocumentCreate();
+  const onDocumentAction = useDocumentHubMenuAction({
+    deleteAtbdVersion: deleteSingleAtbdVersion
+  });
 
   useEffect(() => {
     fetchAtbds({ role, status });
@@ -150,7 +158,10 @@ const TabDocuments = (props) => {
       <DocumentsList>
         {atbds.data.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
-            <DocumentDashboardEntry atbd={atbd} />
+            <DocumentDashboardEntry
+              atbd={atbd}
+              onDocumentAction={onDocumentAction}
+            />
           </DocumentsListItem>
         ))}
       </DocumentsList>

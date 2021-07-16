@@ -1,7 +1,11 @@
 import { AbilityBuilder, Ability } from '@casl/ability';
 
 // Initial ability definition.
-export const ability = new Ability(defineRulesFor(null));
+export const ability = new Ability(defineRulesFor(null), {
+  detectSubjectType: (object) => {
+    if (object.version && object.status) return 'document-version';
+  }
+});
 
 export function defineRulesFor(user) {
   // The AbilityBuilder is just a way to construct Ability in a declarative way.
@@ -9,7 +13,6 @@ export function defineRulesFor(user) {
 
   if (user?.accessToken) {
     // allow('manage', 'all');
-    allow('edit', 'document'); // TODO: Depends on document
     allow('create', 'documents');
     allow('view', 'contacts');
     allow('edit', 'contact');
@@ -19,9 +22,19 @@ export function defineRulesFor(user) {
 
     if (user.groups?.find?.((g) => g.toLowerCase() === 'curator')) {
       allow('access', 'curator-dashboard');
+      allow('delete', 'document-version');
     } else {
       // } if (user.groups.find(g => g.toLowerCase() === 'author')) {
-      allow('access', 'contributor-dashboard'); // TODO: Only with group
+      allow('access', 'contributor-dashboard');
+      allow('delete', 'document-version', {
+        'owner.sub': user.id
+      });
+      allow('edit', 'document-version', {
+        'owner.sub': user.id
+      });
+      allow('edit', 'document-version', {
+        'authors.sub': user.id
+      });
     }
   }
 

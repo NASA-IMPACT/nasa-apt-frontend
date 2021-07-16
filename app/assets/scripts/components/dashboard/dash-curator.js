@@ -9,6 +9,7 @@ import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
 import { useAtbds } from '../../context/atbds-list';
+import { useDocumentHubMenuAction } from './use-document-menu-action';
 
 const DashboardCuratorInner = styled.div`
   display: grid;
@@ -20,7 +21,10 @@ const Empty = styled(EmptyHub)`
 `;
 
 function DashboardCurator() {
-  const { atbds, fetchAtbds } = useAtbds();
+  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds();
+  const onDocumentAction = useDocumentHubMenuAction({
+    deleteAtbdVersion: deleteSingleAtbdVersion
+  });
 
   useEffect(() => {
     fetchAtbds();
@@ -33,16 +37,19 @@ function DashboardCurator() {
       {atbds.status === 'succeeded' && !atbds.data?.length && (
         <Empty>
           <p>
-            APT is a repository for scientific documents, but none exist yet
+            APT is a repository for scientific documents, but none exist yet.
           </p>
         </Empty>
       )}
 
-      {atbds.status === 'succeeded' && atbds.data?.length && (
+      {atbds.status === 'succeeded' && !!atbds.data?.length && (
         <DocumentsList>
           {atbds.data.map((atbd) => (
             <DocumentsListItem key={atbd.id}>
-              <DocumentDashboardEntry atbd={atbd} />
+              <DocumentDashboardEntry
+                atbd={atbd}
+                onDocumentAction={onDocumentAction}
+              />
             </DocumentsListItem>
           ))}
         </DocumentsList>

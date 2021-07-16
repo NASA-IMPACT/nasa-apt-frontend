@@ -19,18 +19,21 @@ import {
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
+import DocumentActionsMenu from '../documents/document-actions-menu';
 
 import { documentView } from '../../utils/url-creator';
 import { documentUpdatedDate } from '../../utils/date';
+import { computeAtbdVersion } from '../../context/atbds-list';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
   const lastVersion = atbd.versions.last;
 
-  // const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
-  //   onDocumentAction,
-  //   atbd
-  // ]);
+  const onAction = useCallback(
+    (...args) =>
+      onDocumentAction(computeAtbdVersion(atbd, lastVersion), ...args),
+    [onDocumentAction, lastVersion, atbd]
+  );
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
@@ -94,20 +97,13 @@ function DocumentDashboardEntry(props) {
         </DocumentEntryHeadline>
         <DocumentEntryActions>
           <ContextualDocAction action='approve-review' />
-          <Button
-            variation='base-plain'
-            size='small'
-            useIcon='ellipsis-vertical'
-            hideText
-          >
-            Opt
-          </Button>
-          {/* <AtbdActionsMenu
+          <DocumentActionsMenu
             origin='hub'
+            size='small'
             atbd={atbd}
             atbdVersion={lastVersion}
             onSelect={onAction}
-          /> */}
+          />
         </DocumentEntryActions>
       </DocumentEntryHeader>
     </DocumentEntry>

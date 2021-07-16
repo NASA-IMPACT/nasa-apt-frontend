@@ -15,7 +15,7 @@ export async function documentDeleteFullConfirmAndToast({
     if (result.error) {
       toasts.error(`An error occurred: ${result.error.message}`);
     } else {
-      toasts.success('ATBD successfully deleted');
+      toasts.success('Document successfully deleted');
     }
   }
 }
@@ -36,8 +36,8 @@ export async function documentDeleteVersionConfirmAndToast({
     if (result.error) {
       toasts.error(`An error occurred: ${result.error.message}`);
     } else {
-      toasts.success('ATBD version successfully deleted');
-      history.push('/documents');
+      toasts.success('Document version successfully deleted');
+      history.push('/dashboard');
     }
   }
 }

@@ -28,7 +28,9 @@ export default function DocumentHeadline(props) {
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
-  const canEditATBD = ability.can('edit', 'document');
+  const atbdVersion = versions.find((v) => v.version === version);
+
+  const canEditATBD = ability.can('edit', atbdVersion);
 
   const documentModesMenu = useMemo(() => {
     const viewATBD = {
@@ -67,8 +69,6 @@ export default function DocumentHeadline(props) {
     () => ({ size: 'small', variation: 'achromic-plain' }),
     []
   );
-
-  const atbdVersion = versions.find((v) => v.version === version);
 
   return (
     <React.Fragment>

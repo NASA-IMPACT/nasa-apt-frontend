@@ -10,10 +10,13 @@ import Tip from '../common/tooltip';
 
 import { documentEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
+import { useContextualAbility } from '../../a11n';
+import { isDraft } from './status';
 
 export default function DocumentActionsMenu(props) {
-  const { atbd, atbdVersion, variation, onSelect, origin } = props;
-  const { isLogged } = useUser();
+  const { atbd, atbdVersion, variation, size, onSelect, origin } = props;
+  const { isLogged, isCurator } = useUser();
+  const ability = useContextualAbility();
 
   const dropProps = useMemo(() => {
     // Define menu items.
@@ -22,16 +25,22 @@ export default function DocumentActionsMenu(props) {
       label: 'View info...',
       title: 'View document info'
     };
-    const itemUpdateMinor = {
-      id: 'update-minor',
-      label: 'Update minor version...',
-      title: 'Update minor version of document'
-    };
-    const itemDraftMajor = {
-      id: 'draft-major',
-      /* eslint-disable-next-line react/display-name */
-      render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
-    };
+    // TODO: Temporarily removes while document stages are developed
+    // const itemUpdateMinor = {
+    //   id: 'update-minor',
+    //   label: 'Update minor version...',
+    //   title: 'Update minor version of document'
+    // };
+    // const itemDraftMajor = {
+    //   id: 'draft-major',
+    //   /* eslint-disable-next-line react/display-name */
+    //   render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
+    // };
+    // const itemPublish = {
+    //   id: 'publish',
+    //   label: 'Publish...',
+    //   title: 'Publish document'
+    // };
     const itemEdit = {
       id: 'edit',
       label: 'Edit',
@@ -39,40 +48,31 @@ export default function DocumentActionsMenu(props) {
       as: Link,
       to: documentEdit(atbd, atbdVersion.version)
     };
-    const itemPublish = {
-      id: 'publish',
-      label: 'Publish...',
-      title: 'Publish document'
-    };
-
     // The delete option is in a separate menu.
-    const deleteMenu = {
-      id: 'actions2',
-      items: [
-        {
-          id: 'delete',
-          /* eslint-disable-next-line react/display-name */
-          render: (props) => (
-            <DeleteMenuItem
-              {...props}
-              atbd={atbd}
-              atbdVersion={atbdVersion}
-              origin={origin}
-            />
-          )
-        }
-      ]
+    const itemDelete = {
+      id: 'delete',
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => (
+        <DeleteMenuItem
+          {...props}
+          atbdVersion={atbdVersion}
+          isCurator={isCurator}
+        />
+      )
     };
 
     const triggerProps = {
       triggerProps: {
         hideText: true,
         useIcon: 'ellipsis-vertical',
-        variation
+        variation,
+        size
       },
-      triggerLabel: 'ATBD options'
+      triggerLabel: 'Document options'
     };
 
+    // Anonymous users only have one option to view the document info.
+    // Return early.
     if (!isLogged) {
       return {
         ...triggerProps,
@@ -83,38 +83,72 @@ export default function DocumentActionsMenu(props) {
       };
     }
 
-    const editItemMenu = origin !== 'single-edit' ? [itemEdit] : [];
-
-    const isAtbdDraft = atbdVersion.status.toLowerCase() === 'draft';
-    if (isAtbdDraft) {
-      return {
-        ...triggerProps,
-        menu: [
-          {
-            id: 'actions',
-            items: [itemViewInfo, itemPublish, ...editItemMenu]
-          },
-          deleteMenu
+    const menuDefinition = [
+      {
+        id: 'actions',
+        items: [
+          itemViewInfo,
+          // When we are in the single edit, we don't need the edit button
+          // redundancy.
+          origin !== 'single-edit' &&
+            ability.can('edit', atbdVersion) &&
+            itemEdit
+          // itemUpdateMinor,
+          // itemDraftMajor,
+          // itemPublish
         ]
-      };
-    }
+      },
+      {
+        id: 'actions2',
+        items: [ability.can('delete', atbdVersion) && itemDelete]
+      }
+    ];
 
+    // Clean the menu, removing any that has no items.
     return {
       ...triggerProps,
-      menu: [
-        {
-          id: 'actions',
-          items: [
-            itemViewInfo,
-            itemUpdateMinor,
-            itemDraftMajor,
-            ...editItemMenu
-          ]
-        },
-        deleteMenu
-      ]
+      menu: menuDefinition
     };
-  }, [variation, atbd, atbdVersion, isLogged, origin]);
+
+    // const isAtbdDraft = atbdVersion.status.toLowerCase() === 'draft';
+    // if (isAtbdDraft) {
+    //   return {
+    //     ...triggerProps,
+    //     menu: [
+    //       {
+    //         id: 'actions',
+    //         items: [itemViewInfo, itemPublish, ...editItemMenu]
+    //       },
+    //       deleteMenu
+    //     ]
+    //   };
+    // }
+
+    // return {
+    //   ...triggerProps,
+    //   menu: [
+    //     {
+    //       id: 'actions',
+    //       items: [
+    //         itemViewInfo,
+    //         itemUpdateMinor,
+    //         itemDraftMajor,
+    //         ...editItemMenu
+    //       ]
+    //     },
+    //     deleteMenu
+    //   ]
+    // };
+  }, [
+    variation,
+    size,
+    atbd,
+    atbdVersion,
+    isLogged,
+    isCurator,
+    ability,
+    origin
+  ]);
 
   return (
     <DropdownMenu
@@ -132,7 +166,8 @@ DocumentActionsMenu.propTypes = {
   onSelect: T.func,
   atbd: T.object,
   atbdVersion: T.object,
-  variation: T.string
+  variation: T.string,
+  size: T.string
 };
 
 const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
@@ -171,40 +206,22 @@ DraftMajorMenuItem.propTypes = {
 const DeleteMenuItem = ({
   onSelect,
   menuItem,
-  atbd,
   atbdVersion,
-  origin,
+  isCurator,
   ...props
 }) => {
-  const isPublished = atbdVersion.status.toLowerCase() === 'published';
+  // A document can only be deleted:
+  // - By a curator
+  // - By the owner when in draft
+  //   Whether or not it is the owner is checked by the rules. Here we check the
+  //   status to be able to show a message because disabling it in the rules
+  //   would remove the button.
 
-  // The delete action on the hub, deletes the whole document, however this is
-  // not possible if there are published versions. Warn the user of this case.
-  // This is only relevant if the last version if not published, otherwise the
-  // other message is good.
-  if (origin === 'hub') {
-    const hasPublished = atbd.versions.some(
-      (v) => v.status.toLowerCase() === 'published'
-    );
-    if (hasPublished && !isPublished) {
-      return (
-        <Tip title='It is not possible to delete a document that has published versions. You can delete draft versions from the document page'>
-          <DropMenuItemEnhanced
-            disabled
-            title='Delete document'
-            onClick={getMenuClickHandler(onSelect, menuItem)}
-            {...props}
-          >
-            Delete
-          </DropMenuItemEnhanced>
-        </Tip>
-      );
-    }
-  }
+  const shouldDisable = !isCurator && !isDraft(atbdVersion);
 
   const item = (
     <DropMenuItemEnhanced
-      disabled={isPublished}
+      disabled={shouldDisable}
       title='Delete document'
       onClick={getMenuClickHandler(onSelect, menuItem)}
       {...props}
@@ -213,17 +230,18 @@ const DeleteMenuItem = ({
     </DropMenuItemEnhanced>
   );
 
-  return isPublished ? (
-    <Tip title='It is not possible to delete a published document'>{item}</Tip>
+  return shouldDisable ? (
+    <Tip title='It is not possible to delete document that is not in Draft'>
+      {item}
+    </Tip>
   ) : (
     item
   );
 };
 
 DeleteMenuItem.propTypes = {
-  origin: T.string,
+  isCurator: T.bool,
   onSelect: T.func,
   menuItem: T.object,
-  atbd: T.object,
   atbdVersion: T.object
 };

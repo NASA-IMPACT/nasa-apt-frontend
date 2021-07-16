@@ -9,10 +9,10 @@ import {
   BreadcrumbMenu,
   InpageSubtitle
 } from '../../styles/inpage';
-import { useContextualAbility } from '../../a11n';
 import { Link } from '../../styles/clean/link';
 import DropdownMenu from '../common/dropdown-menu';
 
+import { useContextualAbility } from '../../a11n';
 import { contactEdit, contactView } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 
