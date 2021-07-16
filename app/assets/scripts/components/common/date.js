@@ -7,7 +7,7 @@ import { Link } from '../../styles/clean/link';
 import Tip from './tooltip';
 
 export const DATE_FORMAT = 'MMM do, yyyy';
-export const DATETIME_FORMAT = 'MMM do, yyyy hh:mm';
+export const DATETIME_FORMAT = 'MMM do, yyyy HH:mm';
 
 export default function Datetime(props) {
   const { date, format: dateFormat, useDistanceToNow } = props;
