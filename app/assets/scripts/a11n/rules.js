@@ -29,6 +29,8 @@ export function defineRulesFor(user) {
       allow('delete', 'document-version', {
         'owner.sub': user.id
       });
+      // Edit document is used to access the edit page.
+      allow('edit', 'document');
       allow('edit', 'document-version', {
         'owner.sub': user.id
       });
