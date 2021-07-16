@@ -48,12 +48,12 @@ const journalStatusIcons = {
 };
 
 function StatusPill(props) {
-  const { status, fillPercent, completeness, statusIcon } = props;
+  const { status, fillPercent, completeness, statusIcon, ...rest } = props;
 
   const value = typeof fillPercent === 'number' ? fillPercent : 100;
 
   return (
-    <StatusSelf value={value} useIcon={statusIcon}>
+    <StatusSelf value={value} useIcon={statusIcon} {...rest}>
       {status}
       {completeness ? `: ${completeness}` : null}
     </StatusSelf>
@@ -70,7 +70,7 @@ StatusPill.propTypes = {
 export default StatusPill;
 
 export function DocumentStatusPill(props) {
-  const { atbdVersion } = props;
+  const { atbdVersion, ...rest } = props;
   const { status } = atbdVersion;
 
   if (status === 'Draft') {
@@ -80,6 +80,7 @@ export function DocumentStatusPill(props) {
         status={statusMapping[status]}
         fillPercent={percent}
         completeness={`${percent}%`}
+        {...rest}
       />
     );
   }
@@ -91,6 +92,7 @@ export function DocumentStatusPill(props) {
       <StatusPill
         status={statusMapping[status]}
         statusIcon={journalStatusIcons[journalStatus]}
+        {...rest}
       />
     );
   }
