@@ -24,6 +24,9 @@ const emptyUserData = {
   rawCognitoUser: null
 };
 
+export const CURATOR_ROLE = 'curator';
+export const CONTRIBUTOR_ROLE = 'contributor';
+
 const extractUserDataFromCognito = (user) => {
   const { sub, preferred_username } = user.attributes;
   const idTokenData = user.getSignInUserSession().getIdToken().payload;
@@ -139,6 +142,12 @@ export const useUser = () => {
     () => ({
       user: userData,
       isLogged: !!userData.id,
+      isCurator: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CURATOR_ROLE
+      ),
+      isContributor: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CONTRIBUTOR_ROLE
+      ),
       loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
     }),
     [userData, setUserData]
