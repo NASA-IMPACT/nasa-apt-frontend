@@ -36,6 +36,7 @@ const Pill = styled(PillSelf)`
   font-size: 0.75em;
   line-height: 1;
   white-space: nowrap;
+  overflow: hidden;
 
   > * {
     position: relative;
