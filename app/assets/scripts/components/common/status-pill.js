@@ -7,6 +7,7 @@ import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
 import { calculateDocumentCompleteness } from '../documents/completeness';
+import { getDocumentStatusLabel, isDraft } from '../documents/status';
 
 const StatusSelf = styled(Pill)`
   min-width: 6rem;
@@ -33,14 +34,6 @@ const StatusSelf = styled(Pill)`
       }
     `}
 `;
-
-const statusMapping = {
-  Draft: 'Draft',
-  'closed-review': 'In closed review',
-  'in-review': 'In review',
-  'in-publication': 'In publication',
-  Published: 'Published'
-};
 
 const journalStatusIcons = {
   submitted: 'page',
@@ -71,13 +64,12 @@ export default StatusPill;
 
 export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
-  const { status } = atbdVersion;
 
-  if (status === 'Draft') {
+  if (isDraft(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill
-        status={statusMapping[status]}
+        status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${percent}%`}
         {...rest}
@@ -90,7 +82,7 @@ export function DocumentStatusPill(props) {
     const journalStatus = null; // TODO: compute
     return (
       <StatusPill
-        status={statusMapping[status]}
+        status={getDocumentStatusLabel(atbdVersion)}
         statusIcon={journalStatusIcons[journalStatus]}
         {...rest}
       />
