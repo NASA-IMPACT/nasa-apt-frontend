@@ -69,7 +69,7 @@ export const InpageHeadHgroup = styled.div`
 
 export const InpageMeta = styled.ul`
   display: grid;
-  grid-gap: ${glsp(0.5)};
+  grid-gap: ${glsp(1)};
   align-items: center;
   grid-auto-columns: minmax(min-content, max-content);
   font-size: 1rem;
