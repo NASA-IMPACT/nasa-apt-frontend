@@ -19,7 +19,7 @@ import UhOh from '../../uhoh';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
-import DocumentNavHeader from '../document-nav-header';
+import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import DocumentDownloadMenu from '../document-download-menu';
 import DocumentOutline from './document-outline';
@@ -35,6 +35,7 @@ import {
   useDocumentModals,
   DocumentModals
 } from '../document-publishing-actions';
+import { documentUpdatedDate } from '../../../utils/date';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -166,6 +167,12 @@ function DocumentView() {
     ? `Viewing ${atbd.data.title}`
     : 'Document view';
 
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at. In the case of a single ATBD the selected version data is
+  // merged with the ATBD meta and that's why both variables are
+  // the same.
+  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
+
   return (
     <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -173,11 +180,12 @@ function DocumentView() {
         <Inpage>
           <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
-            <DocumentNavHeader
+            <DocumentHeadline
               atbdId={id}
               title={atbd.data.title}
               version={version}
               versions={atbd.data.versions}
+              updatedDate={updatedDate}
               mode='view'
             />
             <InpageActions>

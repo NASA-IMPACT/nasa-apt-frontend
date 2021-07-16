@@ -55,9 +55,9 @@ export const DocumentEntryTitle = styled.h1`
   }
 `;
 
-export const DocumentEntryDetails = styled.ul`
+export const DocumentEntryMeta = styled.ul`
   display: grid;
-  grid-gap: ${glsp(1)};
+  grid-gap: ${glsp(0.75)};
   align-items: center;
   grid-auto-columns: minmax(min-content, max-content);
   font-size: 0.875rem;

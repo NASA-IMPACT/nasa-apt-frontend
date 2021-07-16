@@ -1,12 +1,11 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { format } from 'date-fns';
 import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
-import Datetime, { DATETIME_FORMAT } from '../common/date';
+import { DateButton } from '../common/date';
 import { CollaboratorsMenu } from '../documents/collaborators-menu';
 import {
   DocumentEntry,
@@ -16,52 +15,29 @@ import {
   DocumentEntryHeadline,
   DocumentEntryHgroup,
   DocumentEntryNav,
-  DocumentEntryDetails,
+  DocumentEntryMeta,
   DocumentEntryTitle
 } from '../../styles/documents/list';
 import ContextualDocAction from './document-item-ctx-action';
-import Tip from '../common/tooltip';
+import DocumentActionsMenu from '../documents/document-actions-menu';
 
-import { atbdView } from '../../utils/url-creator';
-
-const UpdatedTime = ({ atbd, date }) => {
-  return (
-    <Tip title={format(date, DATETIME_FORMAT)}>
-      <Button
-        forwardedAs={Link}
-        size='small'
-        useIcon='clock'
-        to={atbdView(atbd)}
-        title='View document'
-      >
-        Updated <Datetime date={date} useDistanceToNow />
-      </Button>
-    </Tip>
-  );
-};
-
-UpdatedTime.propTypes = {
-  atbd: T.object,
-  date: T.object
-};
+import { documentView } from '../../utils/url-creator';
+import { documentUpdatedDate } from '../../utils/date';
+import { computeAtbdVersion } from '../../context/atbds-list';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
-  const lastVersion = atbd.versions[atbd.versions.length - 1];
+  const lastVersion = atbd.versions.last;
 
-  // const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
-  //   onDocumentAction,
-  //   atbd
-  // ]);
+  const onAction = useCallback(
+    (...args) =>
+      onDocumentAction(computeAtbdVersion(atbd, lastVersion), ...args),
+    [onDocumentAction, lastVersion, atbd]
+  );
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
-  const updateDate = new Date(
-    Math.max(
-      new Date(atbd.last_updated_at).getTime(),
-      new Date(lastVersion.last_updated_at).getTime()
-    )
-  );
+  const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
     <DocumentEntry>
@@ -70,7 +46,7 @@ function DocumentDashboardEntry(props) {
           <DocumentEntryHgroup>
             <DocumentEntryTitle>
               <Link
-                to={atbdView(atbd, lastVersion.version)}
+                to={documentView(atbd, lastVersion.version)}
                 title='View document'
               >
                 {atbd.title}
@@ -88,15 +64,21 @@ function DocumentDashboardEntry(props) {
               </DocumentEntryBreadcrumbMenu>
             </DocumentEntryNav>
           </DocumentEntryHgroup>
-          <DocumentEntryDetails>
+          <DocumentEntryMeta>
             <li>
               <DocumentStatusPill atbdVersion={lastVersion} />
             </li>
             <li>
-              <UpdatedTime atbd={atbd} date={updateDate} />
+              <DateButton
+                prefix='Updated'
+                date={updateDate}
+                to={documentView(atbd)}
+                title='View document'
+              />
             </li>
             <li>
               <CollaboratorsMenu
+                atbdVersion={lastVersion}
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
@@ -111,24 +93,17 @@ function DocumentDashboardEntry(props) {
                 8 comments
               </Button>
             </li>
-          </DocumentEntryDetails>
+          </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
           <ContextualDocAction action='approve-review' />
-          <Button
-            variation='base-plain'
-            size='small'
-            useIcon='ellipsis-vertical'
-            hideText
-          >
-            Opt
-          </Button>
-          {/* <AtbdActionsMenu
+          <DocumentActionsMenu
             origin='hub'
+            size='small'
             atbd={atbd}
             atbdVersion={lastVersion}
             onSelect={onAction}
-          /> */}
+          />
         </DocumentEntryActions>
       </DocumentEntryHeader>
     </DocumentEntry>

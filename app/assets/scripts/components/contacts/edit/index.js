@@ -13,7 +13,7 @@ import {
   InpageActions
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import ContactNavHeader from '../contact-nav-header';
+import ContactHeadline from '../contact-headline';
 import ContactActionsMenu from '../contact-actions-menu';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { SectionFieldset } from '../../common/forms/section-fieldset';
@@ -105,7 +105,7 @@ export default function ContactView() {
         >
           <Inpage>
             <InpageHeaderSticky data-element='inpage-header'>
-              <ContactNavHeader
+              <ContactHeadline
                 contactId={data.id}
                 name={`${data.first_name} ${data.last_name}`}
                 mode='edit'

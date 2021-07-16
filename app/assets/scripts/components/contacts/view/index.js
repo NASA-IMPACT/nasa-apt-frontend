@@ -17,7 +17,7 @@ import DetailsList from '../../../styles/typography/details-list';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import ContactActionsMenu from '../contact-actions-menu';
-import ContactNavHeader from '../contact-nav-header';
+import ContactHeadline from '../contact-headline';
 import ContactRelatedDocuments from './contact-related-documents';
 
 import { useContacts, useSingleContact } from '../../../context/contacts-list';
@@ -104,7 +104,7 @@ export default function ContactView() {
       {status === 'succeeded' && (
         <Inpage>
           <InpageHeaderSticky data-element='inpage-header'>
-            <ContactNavHeader
+            <ContactHeadline
               contactId={data.id}
               name={getContactName(data)}
               mode='view'

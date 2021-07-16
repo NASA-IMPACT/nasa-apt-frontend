@@ -121,43 +121,43 @@ const devUsers = [
   {
     name: 'OwnerUser',
     username: 'owner@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: 'User who owns atbd "TITLE"'
   },
   {
     name: 'AuthorUser1',
     username: 'author1@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   },
   {
     name: 'AuthorUser2',
     username: 'author2@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   },
   {
     name: 'AuthorUser3',
     username: 'author3@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   },
   {
     name: 'ReviewerUser1',
     username: 'reviewer1@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   },
   {
     name: 'ReviewerUser2',
     username: 'reviewer2@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   },
   {
     name: 'ReviewerUser3',
     username: 'reviewer3@example.com',
-    role: 'Author',
+    role: 'Contributor',
     description: ''
   }
 ];
@@ -173,7 +173,7 @@ const DevUsersEntryCmp = (props) => {
         onImpersonate();
       }}
     >
-      <UserIdentity user={entry} role={entry.role} />
+      <UserIdentity name={entry.name} role={entry.role} />
       {entry.description && <p>{entry.description}</p>}
     </a>
   );

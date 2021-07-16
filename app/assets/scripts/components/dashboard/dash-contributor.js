@@ -18,8 +18,10 @@ import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 
 import { useAtbds } from '../../context/atbds-list';
+import { useDocumentCreate } from '../documents/single-edit/use-document-create';
+import { useDocumentHubMenuAction } from './use-document-menu-action';
 
-const DashboardAuthorInner = styled.div`
+const DashboardContributorInner = styled.div`
   display: grid;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
 `;
@@ -47,9 +49,9 @@ const authorTabNav = [
   }
 ];
 
-function DashboardAuthor() {
+function DashboardContributor() {
   return (
-    <DashboardAuthorInner>
+    <DashboardContributorInner>
       <TabsManager>
         <Heading size='medium'>Documents</Heading>
         <TabsNav>
@@ -72,16 +74,24 @@ function DashboardAuthor() {
           <TabDocuments status='Published' />
         </TabContent>
       </TabsManager>
-    </DashboardAuthorInner>
+    </DashboardContributorInner>
   );
 }
 
-export default DashboardAuthor;
+export default DashboardContributor;
 
 const TabDocuments = (props) => {
   const { role, status } = props;
   const { activeTab } = useTabs();
-  const { atbds, fetchAtbds } = useAtbds({ role, status });
+  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds({
+    role,
+    status
+  });
+
+  const onCreateClick = useDocumentCreate();
+  const onDocumentAction = useDocumentHubMenuAction({
+    deleteAtbdVersion: deleteSingleAtbdVersion
+  });
 
   useEffect(() => {
     fetchAtbds({ role, status });
@@ -105,7 +115,7 @@ const TabDocuments = (props) => {
               variation='primary-raised-dark'
               title='Create new document'
               useIcon='plus--small'
-              // onClick={onCreateClick}
+              onClick={onCreateClick}
             >
               Create document
             </Button>
@@ -122,7 +132,7 @@ const TabDocuments = (props) => {
               variation='primary-raised-dark'
               title='Create new document'
               useIcon='plus--small'
-              // onClick={onCreateClick}
+              onClick={onCreateClick}
             >
               Create document
             </Button>
@@ -148,7 +158,10 @@ const TabDocuments = (props) => {
       <DocumentsList>
         {atbds.data.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
-            <DocumentDashboardEntry atbd={atbd} />
+            <DocumentDashboardEntry
+              atbd={atbd}
+              onDocumentAction={onDocumentAction}
+            />
           </DocumentsListItem>
         ))}
       </DocumentsList>

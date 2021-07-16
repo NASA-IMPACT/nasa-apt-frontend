@@ -193,21 +193,13 @@ function PageHeader() {
             <li>
               <Button
                 forwardedAs={NavLink}
-                to='/documents'
-                variation='achromic-plain'
-                title='View the documents'
-              >
-                Documents
-              </Button>
-              {/* <Button
-                forwardedAs={NavLink}
                 exact
                 to='/dashboard'
                 variation='achromic-plain'
                 title='Visit the welcome page'
               >
                 Dashboard
-              </Button> */}
+              </Button>
             </li>
           ) : (
             <React.Fragment>
@@ -305,7 +297,12 @@ function PageHeader() {
                     useIcon={['chevron-down--small', 'after']}
                     {...props}
                   >
-                    <UserImage user={user} size='small' /> {user.name}
+                    <UserImage
+                      name={user.name}
+                      email={user.attributes?.email}
+                      size='small'
+                    />{' '}
+                    {user.name}
                   </UserProfileTrigger>
                 )}
               >

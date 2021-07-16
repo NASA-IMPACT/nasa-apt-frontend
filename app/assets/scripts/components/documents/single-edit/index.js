@@ -8,7 +8,7 @@ import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
-import DocumentNavHeader from '../document-nav-header';
+import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
@@ -20,6 +20,7 @@ import {
   useDocumentModals
 } from '../document-publishing-actions';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
+import { documentUpdatedDate } from '../../../utils/date';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -106,6 +107,12 @@ function DocumentEdit() {
     ? `Editing ${atbd.data.title}`
     : 'Document view';
 
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at. In the case of a single ATBD the selected version data is
+  // merged with the ATBD meta and that's why both variables are
+  // the same.
+  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
+
   return (
     <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -120,11 +127,12 @@ function DocumentEdit() {
           atbd={atbd.data}
           renderInpageHeader={() => (
             <InpageHeaderSticky>
-              <DocumentNavHeader
+              <DocumentHeadline
                 atbdId={id}
                 title={atbd.data.title}
                 version={version}
                 versions={atbd.data.versions}
+                updatedDate={updatedDate}
                 mode='edit'
               />
               <InpageActions>

@@ -7,20 +7,21 @@ import Pill from './pill';
 import UserImage from './user-image';
 
 const UserIdentityCmp = (props) => {
-  const { user, role, ...rest } = props;
+  const { name, email, role, ...rest } = props;
 
   return (
-    <div {...rest} title={user.name}>
-      <UserImage user={user} />
-      <strong>{user.name}</strong>
+    <div {...rest} title={name}>
+      <UserImage name={name} email={email} />
+      <strong>{name}</strong>
       {role && <Pill>{role}</Pill>}
     </div>
   );
 };
 
 UserIdentityCmp.propTypes = {
-  user: T.object,
-  role: T.string
+  role: T.string,
+  name: T.string,
+  email: T.string
 };
 
 const UserIdentity = styled(UserIdentityCmp)`
