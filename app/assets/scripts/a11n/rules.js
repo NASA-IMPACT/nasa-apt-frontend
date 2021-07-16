@@ -13,7 +13,6 @@ export function defineRulesFor(user) {
 
   if (user?.accessToken) {
     // allow('manage', 'all');
-    allow('create', 'documents');
     allow('view', 'contacts');
     allow('edit', 'contact');
     allow('view', 'profile');
@@ -26,11 +25,12 @@ export function defineRulesFor(user) {
     } else {
       // } if (user.groups.find(g => g.toLowerCase() === 'author')) {
       allow('access', 'contributor-dashboard');
+      allow('create', 'documents');
+      // Edit document is used to access the edit page.
+      allow('edit', 'document');
       allow('delete', 'document-version', {
         'owner.sub': user.id
       });
-      // Edit document is used to access the edit page.
-      allow('edit', 'document');
       allow('edit', 'document-version', {
         'owner.sub': user.id
       });
