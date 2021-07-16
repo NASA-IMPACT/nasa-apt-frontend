@@ -135,14 +135,24 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   } = props;
 
   // Normalize menu, adding the menu Id to each item. This is useful for referencing.
-  const dropMenu = useMemo(
-    () =>
-      castArray(menuInput).map((m) => ({
-        ...m,
-        items: m.items.map((item) => ({ ...item, menuId: m.id }))
-      })),
-    [menuInput]
-  );
+  const dropMenu = useMemo(() => {
+    const arrayMenu = castArray(menuInput);
+    // Map menu items adding menu id and removing empty.
+    return arrayMenu
+      .map((menu) => {
+        const menuItems = menu.items
+          .filter(Boolean)
+          .map((item) => ({ ...item, menuId: menu.id }));
+        // If there are no items remove the menu altogether.
+        return menuItems.length
+          ? {
+              ...menu,
+              items: menuItems
+            }
+          : null;
+      })
+      .filter(Boolean);
+  }, [menuInput]);
 
   const activeMenuItems = useMemo(() => {
     const active = castArray(activeItem);
