@@ -8,6 +8,7 @@ import { Button } from '@devseed-ui/button';
 import UserIdentity from '../common/user-identity';
 
 import { DropHeader, DropHeadline, DropActions } from '../../styles/drop';
+import { useContextualAbility } from '../../a11n';
 
 // Drop content elements.
 
@@ -46,7 +47,7 @@ CollaboratorEntry.propTypes = {
 };
 
 const CollaboratorsMenuContent = (props) => {
-  const { owner, authors, reviewers } = props;
+  const { onOptionsClick, showOptions, owner, authors, reviewers } = props;
 
   return (
     <React.Fragment>
@@ -54,19 +55,21 @@ const CollaboratorsMenuContent = (props) => {
         <DropHeadline>
           <DropTitle size='xsmall'>Collaborators</DropTitle>
         </DropHeadline>
-        <DropActions>
-          <Button
-            variation='base-plain'
-            title='Manage collaborators'
-            useIcon='pencil'
-            size='small'
-            hideText
-            // onClick={onCancelButtonClick}
-            data-dropdown='click.close'
-          >
-            Manage
-          </Button>
-        </DropActions>
+        {showOptions && (
+          <DropActions>
+            <Button
+              variation='base-plain'
+              title='Manage collaborators'
+              useIcon='pencil'
+              size='small'
+              hideText
+              onClick={onOptionsClick}
+              data-dropdown='click.close'
+            >
+              Manage
+            </Button>
+          </DropActions>
+        )}
       </DropHeader>
       <CollaboratorsList>
         <CollaboratorsListTerm>Authors</CollaboratorsListTerm>
@@ -112,16 +115,23 @@ const CollaboratorsMenuContent = (props) => {
 };
 
 CollaboratorsMenuContent.propTypes = {
+  showOptions: T.bool,
+  onOptionsClick: T.func,
   owner: T.object,
   authors: T.array,
   reviewers: T.array
 };
 
 export function CollaboratorsMenu(props) {
-  const { triggerProps = {}, atbdVersion } = props;
+  const { triggerProps = {}, atbdVersion, onOptionsClick } = props;
   const { owner, authors = [], reviewers = [] } = atbdVersion;
+  const ability = useContextualAbility();
 
   const collaboratorCount = authors.length + reviewers.length;
+
+  const showManageAction =
+    ability.can('manage-authors', atbdVersion) ||
+    ability.can('manage-reviewers', atbdVersion);
 
   return (
     <DropdownCollaborators
@@ -141,6 +151,8 @@ export function CollaboratorsMenu(props) {
       )}
     >
       <CollaboratorsMenuContent
+        onOptionsClick={onOptionsClick}
+        showOptions={showManageAction}
         owner={owner}
         authors={authors}
         reviewers={reviewers}
@@ -150,6 +162,7 @@ export function CollaboratorsMenu(props) {
 }
 
 CollaboratorsMenu.propTypes = {
+  onOptionsClick: T.func,
   triggerProps: T.object,
   atbdVersion: T.object
 };

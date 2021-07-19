@@ -7,10 +7,12 @@ import {
   MinorVersionModal,
   PublishingModal
 } from './document-publishing-modals';
+import DocumentCollaboratorModal from './document-collaborator-modal';
 
 import useSafeState from '../../utils/use-safe-state';
 import { documentDraftMajorConfirmAndToast } from './document-draft-major-process';
 import {
+  useSubmitForCollaborators,
   useSubmitForDocumentInfo,
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
@@ -27,7 +29,10 @@ export function DocumentModals(props) {
     setUpdatingMinorVersion,
     isPublishingDocument,
     onPublishVersionSubmit,
-    setPublishingDocument
+    setPublishingDocument,
+    isManagingCollaborators,
+    onCollaboratorsSubmit,
+    setManagingCollaborators
   } = props;
 
   return (
@@ -50,6 +55,12 @@ export function DocumentModals(props) {
         onSubmit={onPublishVersionSubmit}
         onClose={() => setPublishingDocument(false)}
       />
+      <DocumentCollaboratorModal
+        revealed={isManagingCollaborators}
+        atbd={atbd}
+        onSubmit={onCollaboratorsSubmit}
+        onClose={() => setManagingCollaborators(false)}
+      />
     </React.Fragment>
   );
 }
@@ -64,7 +75,10 @@ DocumentModals.propTypes = {
   setUpdatingMinorVersion: T.func,
   isPublishingDocument: T.bool,
   onPublishVersionSubmit: T.func,
-  setPublishingDocument: T.func
+  setPublishingDocument: T.func,
+  isManagingCollaborators: T.bool,
+  onCollaboratorsSubmit: T.func,
+  setManagingCollaborators: T.func
 };
 
 export const useDocumentModals = ({
@@ -76,9 +90,10 @@ export const useDocumentModals = ({
   const history = useHistory();
   const location = useLocation();
 
-  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useSafeState(false);
-  const [isPublishingDocument, setPublishingDocument] = useSafeState(false);
-  const [isViewingDocumentInfo, setViewingDocumentInfo] = useSafeState(false);
+  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useSafeState(!1);
+  const [isPublishingDocument, setPublishingDocument] = useSafeState(!1);
+  const [isViewingDocumentInfo, setViewingDocumentInfo] = useSafeState(!1);
+  const [isManagingCollaborators, setManagingCollaborators] = useSafeState(!1);
 
   const menuHandler = useCallback(
     async (menuId) => {
@@ -99,6 +114,9 @@ export const useDocumentModals = ({
         case 'view-info':
           setViewingDocumentInfo(true);
           break;
+        case 'manage-collaborators':
+          setManagingCollaborators(true);
+          break;
       }
     },
     [
@@ -107,7 +125,8 @@ export const useDocumentModals = ({
       history,
       setUpdatingMinorVersion,
       setPublishingDocument,
-      setViewingDocumentInfo
+      setViewingDocumentInfo,
+      setManagingCollaborators
     ]
   );
 
@@ -125,13 +144,15 @@ export const useDocumentModals = ({
 
   const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
+  const onCollaboratorsSubmit = useSubmitForCollaborators(updateAtbd);
+
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the
-  // documents hub for example. When the user selects one of the options from
+  // dashboards for example. When the user selects one of the options from
   // the dropdown menu, the user is sent to the atbd view page with {
   // menuAction: <menu-id> } in the history state.
   // We then capture this, show the appropriate modal and clear the history
-  // state to prevent the modal from popping up on refresh.
+  // state to prevent the modal from popping up on route change.
   useEffect(() => {
     const { menuAction, ...rest } = location.state || {};
     if (menuAction) {
@@ -153,7 +174,10 @@ export const useDocumentModals = ({
       setUpdatingMinorVersion,
       isPublishingDocument,
       onPublishVersionSubmit,
-      setPublishingDocument
+      setPublishingDocument,
+      isManagingCollaborators,
+      onCollaboratorsSubmit,
+      setManagingCollaborators
     }
   };
 };

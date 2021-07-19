@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import { Button } from '@devseed-ui/button';
 
@@ -24,7 +24,15 @@ import { documentEdit, documentView } from '../../utils/url-creator';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentHeadline(props) {
-  const { title, atbdId, version, mode, versions, updatedDate } = props;
+  const {
+    title,
+    atbdId,
+    version,
+    mode,
+    versions,
+    updatedDate,
+    onAction
+  } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
 
@@ -68,6 +76,11 @@ export default function DocumentHeadline(props) {
   const collaboratorsMenuTriggerProps = useMemo(
     () => ({ size: 'small', variation: 'achromic-plain' }),
     []
+  );
+
+  const onCollaboratorMenuOptionsClick = useCallback(
+    () => onAction('manage-collaborators'),
+    [onAction]
   );
 
   return (
@@ -129,6 +142,7 @@ export default function DocumentHeadline(props) {
             </li>
             <li>
               <CollaboratorsMenu
+                onOptionsClick={onCollaboratorMenuOptionsClick}
                 atbdVersion={atbdVersion}
                 triggerProps={collaboratorsMenuTriggerProps}
               />
@@ -156,5 +170,6 @@ DocumentHeadline.propTypes = {
   version: T.string,
   versions: T.array,
   updatedDate: T.object,
+  onAction: T.func,
   mode: T.string
 };

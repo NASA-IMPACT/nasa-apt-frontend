@@ -34,7 +34,7 @@ import { documentDeleteVersionConfirmAndToast } from '../document-delete-process
 import {
   useDocumentModals,
   DocumentModals
-} from '../document-publishing-actions';
+} from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
 
 const DocumentCanvas = styled(InpageBody)`
@@ -186,6 +186,7 @@ function DocumentView() {
               version={version}
               versions={atbd.data.versions}
               updatedDate={updatedDate}
+              onAction={onDocumentMenuAction}
               mode='view'
             />
             <InpageActions>
