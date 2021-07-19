@@ -7,6 +7,9 @@ export const ability = new Ability(defineRulesFor(null), {
   }
 });
 
+export const CURATOR_ROLE = 'curator';
+export const CONTRIBUTOR_ROLE = 'contributor';
+
 export function defineRulesFor(user) {
   // The AbilityBuilder is just a way to construct Ability in a declarative way.
   const { can: allow, rules } = new AbilityBuilder(Ability);
@@ -19,11 +22,13 @@ export function defineRulesFor(user) {
     allow('edit', 'profile');
     allow('access', 'dashboard');
 
-    if (user.groups?.find?.((g) => g.toLowerCase() === 'curator')) {
+    if (user.groups?.find?.((g) => g.toLowerCase() === CURATOR_ROLE)) {
       allow('access', 'curator-dashboard');
       allow('delete', 'document-version');
-    } else {
-      // } if (user.groups.find(g => g.toLowerCase() === 'author')) {
+      allow('manage-authors', 'document-version');
+      allow('manage-reviewers', 'document-version');
+    }
+    if (user.groups.find((g) => g.toLowerCase() === CONTRIBUTOR_ROLE)) {
       allow('access', 'contributor-dashboard');
       allow('create', 'documents');
       // Edit document is used to access the edit page.
@@ -37,6 +42,11 @@ export function defineRulesFor(user) {
       allow('edit', 'document-version', {
         'authors.sub': user.id
       });
+      allow('manage-authors', 'document-version', {
+        'owner.sub': user.id
+      });
+      // Only curator can manage reviewers.
+      // allow('manage-reviewers', 'document-version');
     }
   }
 

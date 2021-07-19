@@ -185,7 +185,7 @@ const DevUsersEntry = styled(DevUsersEntryCmp)`
   padding: ${glsp()};
   box-shadow: ${themeVal('boxShadow.elevationA')};
   font-size: 0.875rem;
-  color: inherit;
+  color: ${themeVal('colors.base')};
 
   ${Button} {
     justify-self: end;

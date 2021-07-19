@@ -11,6 +11,7 @@ import Amplify, { Auth } from 'aws-amplify';
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 import config from '../config';
 import { createContextChecker } from '../utils/create-context-checker';
+import { CONTRIBUTOR_ROLE, CURATOR_ROLE } from '../a11n/rules';
 
 Amplify.configure(config.auth);
 
@@ -23,9 +24,6 @@ const emptyUserData = {
   groups: [],
   rawCognitoUser: null
 };
-
-export const CURATOR_ROLE = 'curator';
-export const CONTRIBUTOR_ROLE = 'contributor';
 
 const extractUserDataFromCognito = (user) => {
   const { sub, preferred_username } = user.attributes;
