@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 
@@ -19,6 +19,8 @@ import ButtonSecondary from '../../styles/button-secondary';
 
 import { useUser } from '../../context/user';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
+import { useAtbds } from '../../context/atbds-list';
+import DocumentCollaboratorModal from '../documents/document-collaborator-modal';
 
 const DashboardContent = styled.section`
   grid-column: content-start / content-end;
@@ -27,6 +29,15 @@ const DashboardContent = styled.section`
 function UserDashboard() {
   const { user } = useUser();
   const onCreateClick = useDocumentCreate();
+  const { invalidateAtbdListCtx } = useAtbds();
+
+  // Invalidate list of documents on unmount to ensure any changes made to a
+  // single document are refetched.
+  useEffect(() => {
+    return () => {
+      invalidateAtbdListCtx();
+    };
+  }, [invalidateAtbdListCtx]);
 
   return (
     <App pageTitle='Dashboard'>
