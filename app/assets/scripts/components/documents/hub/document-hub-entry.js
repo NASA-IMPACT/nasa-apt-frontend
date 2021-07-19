@@ -28,10 +28,10 @@ function DocumentHubEntry(props) {
   const lastVersion = atbd.versions[atbd.versions.length - 1];
   const { isLogged } = useUser();
 
-  const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
-    onDocumentAction,
-    atbd
-  ]);
+  const onAction = useCallback(
+    (menuId, payload = {}) => onDocumentAction(menuId, { atbd, ...payload }),
+    [onDocumentAction, atbd]
+  );
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.

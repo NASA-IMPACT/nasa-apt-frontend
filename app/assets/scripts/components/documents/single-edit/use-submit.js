@@ -122,6 +122,12 @@ export function useSubmitForPublishingVersion(
   );
 }
 
+/**
+ * Hook to create the submit callback for the info modal. The info modal
+ * contains the changelog field. This hook shows the appropriate message.
+ *
+ * @param {func} updateAtbd The action to update the document.
+ */
 export function useSubmitForDocumentInfo(updateAtbd) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {

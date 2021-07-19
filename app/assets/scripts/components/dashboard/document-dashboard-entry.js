@@ -30,8 +30,11 @@ function DocumentDashboardEntry(props) {
   const lastVersion = atbd.versions.last;
 
   const onAction = useCallback(
-    (...args) =>
-      onDocumentAction(computeAtbdVersion(atbd, lastVersion), ...args),
+    (menuId, payload = {}) =>
+      onDocumentAction(menuId, {
+        atbd: computeAtbdVersion(atbd, lastVersion),
+        ...payload
+      }),
     [onDocumentAction, lastVersion, atbd]
   );
 

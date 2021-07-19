@@ -45,7 +45,7 @@ function Documents() {
   const onCreateClick = useDocumentCreate();
 
   const onDocumentAction = useCallback(
-    async (atbd, menuId) => {
+    async (menuId, { atbd }) => {
       switch (menuId) {
         case 'delete':
           await documentDeleteFullConfirmAndToast({

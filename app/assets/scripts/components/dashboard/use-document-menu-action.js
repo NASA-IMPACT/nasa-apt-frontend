@@ -19,7 +19,7 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion }) {
   const history = useHistory();
 
   return useCallback(
-    async (atbd, menuId) => {
+    async (menuId, { atbd }) => {
       switch (menuId) {
         case 'delete':
           await documentDeleteVersionConfirmAndToast({
