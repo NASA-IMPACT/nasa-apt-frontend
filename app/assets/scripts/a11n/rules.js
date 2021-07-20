@@ -27,6 +27,7 @@ export function defineRulesFor(user) {
       allow('delete', 'document-version');
       allow('manage-authors', 'document-version');
       allow('manage-reviewers', 'document-version');
+      allow('change-lead-author', 'document-version');
     }
     if (user.groups.find((g) => g.toLowerCase() === CONTRIBUTOR_ROLE)) {
       allow('access', 'contributor-dashboard');
@@ -47,6 +48,9 @@ export function defineRulesFor(user) {
       });
       // Only curator can manage reviewers.
       // allow('manage-reviewers', 'document-version');
+      allow('change-lead-author', 'document-version', {
+        'owner.sub': user.id
+      });
     }
   }
 

@@ -25,6 +25,11 @@ export default function DocumentActionsMenu(props) {
       label: 'View info...',
       title: 'View document info'
     };
+    const itemChangeLeading = {
+      id: 'change-leading',
+      label: 'Change lead author...',
+      title: 'Change the document lead author'
+    };
     // TODO: Temporarily removes while document stages are developed
     // const itemUpdateMinor = {
     //   id: 'update-minor',
@@ -92,7 +97,8 @@ export default function DocumentActionsMenu(props) {
           // redundancy.
           origin !== 'single-edit' &&
             ability.can('edit', atbdVersion) &&
-            itemEdit
+            itemEdit,
+          ability.can('change-lead-author', atbdVersion) && itemChangeLeading
           // itemUpdateMinor,
           // itemDraftMajor,
           // itemPublish

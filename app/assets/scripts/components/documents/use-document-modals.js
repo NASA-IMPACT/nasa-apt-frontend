@@ -7,7 +7,10 @@ import {
   MinorVersionModal,
   PublishingModal
 } from './document-publishing-modals';
-import DocumentCollaboratorModal from './document-collaborator-modal';
+import {
+  DocumentCollaboratorModal,
+  DocumentLeadAuthorModal
+} from './document-collaborator-modal';
 
 import useSafeState from '../../utils/use-safe-state';
 import { documentDraftMajorConfirmAndToast } from './document-draft-major-process';
@@ -32,7 +35,9 @@ export function DocumentModals(props) {
     setPublishingDocument,
     isManagingCollaborators,
     onCollaboratorsSubmit,
-    setManagingCollaborators
+    setManagingCollaborators,
+    isChangingLeadAuthor,
+    setChangingLeadAuthor
   } = props;
 
   return (
@@ -61,6 +66,12 @@ export function DocumentModals(props) {
         onSubmit={onCollaboratorsSubmit}
         onClose={() => setManagingCollaborators(false)}
       />
+      <DocumentLeadAuthorModal
+        revealed={isChangingLeadAuthor}
+        atbd={atbd}
+        onSubmit={onCollaboratorsSubmit}
+        onClose={() => setChangingLeadAuthor(false)}
+      />
     </React.Fragment>
   );
 }
@@ -78,7 +89,9 @@ DocumentModals.propTypes = {
   setPublishingDocument: T.func,
   isManagingCollaborators: T.bool,
   onCollaboratorsSubmit: T.func,
-  setManagingCollaborators: T.func
+  setManagingCollaborators: T.func,
+  isChangingLeadAuthor: T.bool,
+  setChangingLeadAuthor: T.func
 };
 
 export const useDocumentModals = ({
@@ -94,6 +107,7 @@ export const useDocumentModals = ({
   const [isPublishingDocument, setPublishingDocument] = useSafeState(!1);
   const [isViewingDocumentInfo, setViewingDocumentInfo] = useSafeState(!1);
   const [isManagingCollaborators, setManagingCollaborators] = useSafeState(!1);
+  const [isChangingLeadAuthor, setChangingLeadAuthor] = useSafeState(!1);
 
   const menuHandler = useCallback(
     async (menuId) => {
@@ -117,6 +131,9 @@ export const useDocumentModals = ({
         case 'manage-collaborators':
           setManagingCollaborators(true);
           break;
+        case 'change-leading':
+          setChangingLeadAuthor(true);
+          break;
       }
     },
     [
@@ -126,7 +143,8 @@ export const useDocumentModals = ({
       setUpdatingMinorVersion,
       setPublishingDocument,
       setViewingDocumentInfo,
-      setManagingCollaborators
+      setManagingCollaborators,
+      setChangingLeadAuthor
     ]
   );
 
@@ -177,7 +195,9 @@ export const useDocumentModals = ({
       setPublishingDocument,
       isManagingCollaborators,
       onCollaboratorsSubmit,
-      setManagingCollaborators
+      setManagingCollaborators,
+      isChangingLeadAuthor,
+      setChangingLeadAuthor
     }
   };
 };

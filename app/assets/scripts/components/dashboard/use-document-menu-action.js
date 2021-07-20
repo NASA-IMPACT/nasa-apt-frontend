@@ -34,6 +34,7 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion }) {
         case 'publish':
         case 'view-info':
         case 'manage-collaborators':
+        case 'change-leading':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on

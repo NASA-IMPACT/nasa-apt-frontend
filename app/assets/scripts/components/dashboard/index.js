@@ -20,7 +20,6 @@ import ButtonSecondary from '../../styles/button-secondary';
 import { useUser } from '../../context/user';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useAtbds } from '../../context/atbds-list';
-import DocumentCollaboratorModal from '../documents/document-collaborator-modal';
 
 const DashboardContent = styled.section`
   grid-column: content-start / content-end;
