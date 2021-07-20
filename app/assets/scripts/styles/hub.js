@@ -1,19 +1,37 @@
 import styled from 'styled-components';
 import {
   glsp,
+  media,
   themeVal,
   truncated,
   visuallyHidden
 } from '@devseed-ui/theme-provider';
 
 export const HubList = styled.ol`
-  background: transparent;
   grid-column: content-start / content-end;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+
+  ${media.smallUp`
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: ${glsp(themeVal('layout.gap.small'))};
+  `}
+
+  ${media.mediumUp`
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
+  `}
+
+  ${media.largeUp`
+    grid-gap: ${glsp(themeVal('layout.gap.large'))};
+  `}
 `;
 
 export const HubListItem = styled.li`
-  padding: ${glsp(1, 0)};
-  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  > * {
+    height: 100%;
+  }
 `;
 
 export const HubEntry = styled.article`

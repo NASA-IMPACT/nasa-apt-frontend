@@ -1,21 +1,22 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
 
+import { Button } from '@devseed-ui/button';
+
 import {
-  HubEntry,
-  HubEntryHeader,
-  HubEntryHeadline,
-  HubEntryTitle,
-  HubEntryMeta,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryActions
-} from '../../../styles/hub';
-import { DocumentStatusPill } from '../../common/status-pill';
+  Card,
+  CardHeader,
+  CardHeadline,
+  CardHgroup,
+  CardTitle,
+  CardDetails,
+  CardBody,
+  CardExcerpt,
+  CardFooter
+} from '../../../styles/card';
+
 import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
-import DocumentActionsMenu from '../document-actions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 
@@ -38,53 +39,57 @@ function DocumentHubEntry(props) {
   const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
-    <HubEntry>
-      <HubEntryHeader>
-        <HubEntryHeadline>
-          <HubEntryTitle>
-            <Link
-              to={documentView(atbd, lastVersion.version)}
-              title='View document'
-            >
-              {atbd.title}
-            </Link>
-          </HubEntryTitle>
-          <HubEntryHeadNav role='navigation'>
-            <HubEntryBreadcrumbMenu>
-              <li>
-                <VersionsMenu
-                  atbdId={atbd.alias || atbd.id}
-                  versions={atbd.versions}
-                />
-              </li>
-            </HubEntryBreadcrumbMenu>
-          </HubEntryHeadNav>
-        </HubEntryHeadline>
-        {isLogged && (
-          <HubEntryMeta>
-            <dt>Status</dt>
-            <dd>
-              <DocumentStatusPill atbdVersion={lastVersion} />
-            </dd>
-          </HubEntryMeta>
-        )}
-        <HubEntryDetails>
-          <Creators creators={lastVersion.citation?.creators} />
-          <dt>On</dt>
-          <dd>
-            <Datetime date={updateDate} />
-          </dd>
-        </HubEntryDetails>
-        <HubEntryActions>
-          <DocumentActionsMenu
-            origin='hub'
-            atbd={atbd}
-            atbdVersion={lastVersion}
-            onSelect={onAction}
-          />
-        </HubEntryActions>
-      </HubEntryHeader>
-    </HubEntry>
+    <Card>
+      <CardHeader>
+        <CardHeadline>
+          <CardHgroup>
+            <CardTitle>
+              <Link
+                to={documentView(atbd, lastVersion.version)}
+                title='View document'
+              >
+                {atbd.title}
+              </Link>
+            </CardTitle>
+            <VersionsMenu
+              atbdId={atbd.alias || atbd.id}
+              versions={atbd.versions}
+            />
+          </CardHgroup>
+        </CardHeadline>
+        <CardDetails>
+          By <Creators creators={lastVersion.citation?.creators} /> on{' '}
+          <Datetime date={updateDate} />
+        </CardDetails>
+      </CardHeader>
+      <CardBody>
+        <CardExcerpt>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
+            scelerisque mauris. Vestibulum auctor tempor quam eu pharetra. Nunc
+            gravida lacus ipsum, sit amet dictum tellus sodales eget. Praesent
+            elementum volutpat imperdiet. Nunc cursus lorem vulputate, faucibus
+            nunc a, viverra leo
+          </p>
+        </CardExcerpt>
+      </CardBody>
+      <CardFooter>
+        <Button
+          className='toast-close-button'
+          variation='primary-raised-light'
+          useIcon='download-2'
+        >
+          Download
+        </Button>
+        <Button
+          className='toast-close-button'
+          variation='primary-raised-dark'
+          useIcon='arrow-right'
+        >
+          View
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
 
@@ -111,12 +116,7 @@ const Creators = ({ creators }) => {
     );
   }
 
-  return (
-    <React.Fragment>
-      <dt>By</dt>
-      <dd>{creators}</dd>
-    </React.Fragment>
-  );
+  return <React.Fragment>{creators}</React.Fragment>;
 };
 
 Creators.propTypes = {
