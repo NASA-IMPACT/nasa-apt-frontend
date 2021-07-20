@@ -43,7 +43,7 @@ import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
-import AptDevtools from './components/apt-devtools/index.js';
+import AptDevtools from './components/apt-devtools';
 
 const composingComponents = [
   ErrorBoundary,

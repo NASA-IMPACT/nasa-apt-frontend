@@ -99,7 +99,7 @@ function AptDevtools() {
           </PanelHeader>
           <PanelBody>
             <PanelContent>
-              <DevUsersList />
+              <DevUsersList setPanelOpen={setPanelOpen} />
             </PanelContent>
           </PanelBody>
         </Panel>
@@ -185,14 +185,19 @@ const DevUsersEntry = styled(DevUsersEntryCmp)`
   padding: ${glsp()};
   box-shadow: ${themeVal('boxShadow.elevationA')};
   font-size: 0.875rem;
-  color: ${themeVal('colors.base')};
 
   ${Button} {
     justify-self: end;
   }
+
+  &,
+  &:visited {
+    color: inherit;
+  }
 `;
 
 const DevUsersListCmp = (props) => {
+  const { setPanelOpen, ...rest } = props;
   const { loginCognitoUser } = useUser();
   const { invalidateAtbdListCtx, invalidateAtbdSingleCtx } = useAtbds();
 
@@ -207,15 +212,21 @@ const DevUsersListCmp = (props) => {
         processToast.success(
           `Welcome back ${user.attributes.preferred_username}!`
         );
+        setPanelOpen(false);
       } catch (error) {
         processToast.error(error.message);
       }
     },
-    [loginCognitoUser, invalidateAtbdListCtx, invalidateAtbdSingleCtx]
+    [
+      setPanelOpen,
+      loginCognitoUser,
+      invalidateAtbdListCtx,
+      invalidateAtbdSingleCtx
+    ]
   );
 
   return (
-    <div {...props}>
+    <div {...rest}>
       <PanelSectionTitle>Users</PanelSectionTitle>
       <ul>
         {devUsers.map((u) => (
