@@ -162,7 +162,10 @@ export const useDocumentModals = ({
 
   const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
-  const onCollaboratorsSubmit = useSubmitForCollaborators(updateAtbd);
+  const onCollaboratorsSubmit = useSubmitForCollaborators(
+    updateAtbd,
+    setManagingCollaborators
+  );
 
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the

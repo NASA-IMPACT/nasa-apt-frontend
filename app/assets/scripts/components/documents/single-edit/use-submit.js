@@ -148,13 +148,20 @@ export function useSubmitForDocumentInfo(updateAtbd) {
 /**
  * Hook to create the submit callback for the collaborators modal. The owner of
  * the document is also considered a collaborator and this same submit callback
- * is used when transferring the ownership of the document.
- * The message displayed on the toast notification changed depending on whether
- * the `owner` key is present on the payload.
+ * is used when transferring the ownership of the document. The message
+ * displayed on the toast notification changed depending on whether the `owner`
+ * key is present on the payload.
  *
  * @param {func} updateAtbd The action to update the document.
+ * @param {func} setManagingCollaborators The state setter to close the
+ * collaborators modal. This is only used for the collaborators and not the
+ * leading author since that modal is hidden before showing the confirmation
+ * prompt.
  */
-export function useSubmitForCollaborators(updateAtbd) {
+export function useSubmitForCollaborators(
+  updateAtbd,
+  setManagingCollaborators
+) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const msgIn = values.owner
@@ -169,11 +176,12 @@ export function useSubmitForCollaborators(updateAtbd) {
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
+        !values.owner && setManagingCollaborators(false);
         resetForm({ values });
         processToast.success(msgOut);
       }
     },
-    [updateAtbd]
+    [setManagingCollaborators, updateAtbd]
   );
 }
 
