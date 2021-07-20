@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-// import SmartLink from '../components/smart-link';
+
+import SmartLink from '../components/common/smart-link';
 
 export const Card = styled.article`
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: min-content;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  display: flex;
+  flex-flow: column nowrap;
+  gap: ${glsp(themeVal('layout.gap.xsmall'))};
   padding: ${glsp(themeVal('layout.gap.xsmall'))};
-  border-radius: ${themeVal('shape.rounded')};
+  border-radius: ${multiply(themeVal('shape.rounded'), 2)};
   box-shadow: ${themeVal('boxShadow.elevationD')};
   min-height: 8rem;
   overflow: hidden;
@@ -22,12 +21,12 @@ export const Card = styled.article`
 
   ${media.mediumUp`
     padding: ${glsp(themeVal('layout.gap.medium'))};
-    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
+    gap: ${glsp(1.5)};
   `}
 
   ${media.largeUp`
     padding: ${glsp(themeVal('layout.gap.large'))};
-    grid-gap: ${glsp(themeVal('layout.gap.large'))};
+    gap: ${glsp(1.5)};
   `}
 
   > *:not(a) {
@@ -63,11 +62,7 @@ export const Card = styled.article`
 export const CardHeader = styled.header`
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: ${glsp(0.25)};
-
-  ${media.mediumUp`
-    grid-gap: ${glsp(0.5)};
-  `}
+  grid-gap: ${glsp(0.5)};
 `;
 
 export const CardHeadline = styled.div`
@@ -88,11 +83,10 @@ export const CardTitle = styled(Heading)`
 `;
 
 export const CardHgroup = styled.div`
-  display: inline-grid;
-  grid-auto-columns: minmax(min-content, max-content);
-  grid-gap: ${glsp(1.25)};
-  align-items: center;
-  min-width: 0px;
+  display: grid;
+  grid-template-columns: 1fr minmax(min-content, max-content);
+  grid-gap: ${glsp(1.5)};
+  align-items: baseline;
 
   > * {
     grid-row: 1;
@@ -101,7 +95,8 @@ export const CardHgroup = styled.div`
 
 export const CardDetails = styled.p`
   font-size: 0.875rem;
-  line-height: 1rem;
+  line-height: 1.25rem;
+  opacity: 0.64;
   margin: 0;
 `;
 
@@ -157,38 +152,46 @@ export const CardBody = styled.div`
 export const CardExcerpt = styled.div`
   font-size: 0.875rem;
   line-height: 1.25rem;
-  opacity: 0.64;
 
   > *:last-child {
     margin-bottom: 0;
   }
 `;
 
-export const CardFooter = styled.footer`
+export const CardToolbar = styled.div`
   display: flex;
 
   > * {
-    flex-grow: 1;
-    margin-right: ${glsp(0.75)};
+    pointer-events: auto;
   }
 `;
 
-// export const CardLink = styled(SmartLink)`
-//   position: absolute;
-//   z-index: 1;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   pointer-events: auto;
-//   font-size: 0;
-//   background: transparent;
-//   margin: 0;
+export const CardActions = styled.div`
+  display: flex;
+  margin-top: auto;
+  margin-bottom: 0;
 
-//   &:hover {
-//     opacity: 1;
-//   }
-// `;
+  > * {
+    pointer-events: auto;
+  }
+`;
+
+export const CardLink = styled(SmartLink)`
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: auto;
+  font-size: 0;
+  background: transparent;
+  margin: 0;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
 
 // // // // // // // // // // // // // // // // // // // // // // // // // // //
 // React components for the different card types.

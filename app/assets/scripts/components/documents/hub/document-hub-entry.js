@@ -1,60 +1,54 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 
-import { Button } from '@devseed-ui/button';
-
 import {
-  Card,
+  CardInteractive,
   CardHeader,
   CardHeadline,
   CardHgroup,
+  CardToolbar,
   CardTitle,
   CardDetails,
   CardBody,
   CardExcerpt,
-  CardFooter
+  CardActions
 } from '../../../styles/card';
 
-import { Link } from '../../../styles/clean/link';
 import VersionsMenu from '../versions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
+import DocumentDownloadMenu from '../../documents/document-download-menu';
 
 import { documentView } from '../../../utils/url-creator';
-import { useUser } from '../../../context/user';
 import { documentUpdatedDate } from '../../../utils/date';
 
 function DocumentHubEntry(props) {
-  const { atbd, onDocumentAction } = props;
+  const { atbd } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
-  const { isLogged } = useUser();
-
-  const onAction = useCallback((...args) => onDocumentAction(atbd, ...args), [
-    onDocumentAction,
-    atbd
-  ]);
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
   const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
-    <Card>
+    <CardInteractive
+      linkProps={{
+        to: documentView(atbd, lastVersion.version),
+        title: 'View document'
+      }}
+      linkLabel='View'
+    >
       <CardHeader>
         <CardHeadline>
           <CardHgroup>
-            <CardTitle>
-              <Link
-                to={documentView(atbd, lastVersion.version)}
-                title='View document'
-              >
-                {atbd.title}
-              </Link>
-            </CardTitle>
-            <VersionsMenu
-              atbdId={atbd.alias || atbd.id}
-              versions={atbd.versions}
-            />
+            <CardTitle>{atbd.title}</CardTitle>
+            <CardToolbar>
+              <VersionsMenu
+                atbdId={atbd.alias || atbd.id}
+                versions={atbd.versions}
+                alignment='right'
+              />
+            </CardToolbar>
           </CardHgroup>
         </CardHeadline>
         <CardDetails>
@@ -69,33 +63,24 @@ function DocumentHubEntry(props) {
             scelerisque mauris. Vestibulum auctor tempor quam eu pharetra. Nunc
             gravida lacus ipsum, sit amet dictum tellus sodales eget. Praesent
             elementum volutpat imperdiet. Nunc cursus lorem vulputate, faucibus
-            nunc a, viverra leo
+            nunc a, viverra leo...
           </p>
         </CardExcerpt>
       </CardBody>
-      <CardFooter>
-        <Button
-          className='toast-close-button'
-          variation='primary-raised-light'
-          useIcon='download-2'
-        >
-          Download
-        </Button>
-        <Button
-          className='toast-close-button'
+      <CardActions>
+        <DocumentDownloadMenu
+          atbd={lastVersion}
+          alignment='left'
+          direction='up'
           variation='primary-raised-dark'
-          useIcon='arrow-right'
-        >
-          View
-        </Button>
-      </CardFooter>
-    </Card>
+        />
+      </CardActions>
+    </CardInteractive>
   );
 }
 
 DocumentHubEntry.propTypes = {
-  atbd: T.object,
-  onDocumentAction: T.func
+  atbd: T.object
 };
 
 export default DocumentHubEntry;
@@ -106,17 +91,10 @@ const Creators = ({ creators }) => {
   const creatorsList = creators?.split(' and ');
 
   if (creatorsList.length > 1) {
-    return (
-      <React.Fragment>
-        <dt>By</dt>
-        <dd>
-          <Tip title={creators}>{creatorsList[0]} et al.</Tip>
-        </dd>
-      </React.Fragment>
-    );
+    return <Tip title={creators}>{creatorsList[0]} et al.</Tip>;
   }
 
-  return <React.Fragment>{creators}</React.Fragment>;
+  return creators;
 };
 
 Creators.propTypes = {
