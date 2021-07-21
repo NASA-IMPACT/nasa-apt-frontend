@@ -31,10 +31,7 @@ import { CopyField } from '../../common/copy-field';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
-import {
-  useDocumentModals,
-  DocumentModals
-} from '../use-document-modals';
+import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
 
 const DocumentCanvas = styled(InpageBody)`

@@ -7,6 +7,7 @@ import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
+import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
 import UserIdentity from '../common/user-identity';
@@ -14,6 +15,12 @@ import Tip from '../common/tooltip';
 
 import { useContextualAbility } from '../../a11n';
 import { showConfirmationPrompt } from '../common/confirmation-prompt';
+import { useCollaborators } from '../../context/collaborators-list';
+import {
+  LoadingSkeleton,
+  LoadingSkeletonGroup,
+  LoadingSkeletonLine
+} from '../common/loading-skeleton';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -43,36 +50,40 @@ const CollaboratorOption = styled.label`
   }
 `;
 
-const coll = [
-  {
-    email: 'author1@example.com',
-    preferred_username: 'AuthorUser1',
-    sub: 'a7cb6b7c-3312-4282-ba17-4d21a5dcd94e',
-    username: 'author1@example.com'
-  },
-  {
-    email: 'author2@example.com',
-    preferred_username: 'AuthorUser2',
-    sub: 'f506eee7-58f1-4651-83ac-886d5174710d',
-    username: 'author2@example.com'
-  },
-  {
-    email: 'tom@example.com',
-    preferred_username: 'Tom Ripley',
-    sub: 'f506eee7-58f2-4651-83ac-000000000000',
-    username: 'tom@example.com'
-  },
-  {
-    email: 'dick@example.com',
-    preferred_username: 'Richard Greenleaf',
-    sub: 'f506eee7-58f2-4651-83ac-000000000111',
-    username: 'dick@example.com'
+const ShadowScrollbarPadded = styled(ShadowScrollbar).attrs({
+  scrollbarsProps: {
+    autoHeight: true,
+    autoHeightMax: 320
   }
-];
+})`
+  margin-left: ${glsp(-1)};
+  margin-right: ${glsp(-1)};
+`;
+
+const ShadowScrollbarInner = styled.div`
+  padding-left: ${glsp()};
+  padding-right: ${glsp()};
+`;
 
 export function DocumentCollaboratorModal(props) {
   const { atbd, revealed, onClose, onSubmit } = props;
   const ability = useContextualAbility();
+  const {
+    collaborators: collabAuthors,
+    fetchCollaborators: fetchCollabAuthors
+  } = useCollaborators({
+    atbdId: atbd.id,
+    atbdVersion: atbd.version,
+    userFilter: 'invite_authors'
+  });
+  const {
+    collaborators: collabReviewers,
+    fetchCollaborators: fetchCollabReviewers
+  } = useCollaborators({
+    atbdId: atbd.id,
+    atbdVersion: atbd.version,
+    userFilter: 'invite_reviewers'
+  });
 
   const canManageAuthors = ability.can('manage-authors', atbd);
   const canManageReviewers = ability.can('manage-reviewers', atbd);
@@ -88,6 +99,23 @@ export function DocumentCollaboratorModal(props) {
         }
       : { id: atbd.id, authors };
   }, [atbd, canManageReviewers]);
+
+  useEffect(() => {
+    if (revealed) {
+      if (canManageAuthors) {
+        fetchCollabAuthors();
+      }
+      if (canManageReviewers) {
+        fetchCollabReviewers();
+      }
+    }
+  }, [
+    canManageAuthors,
+    fetchCollabAuthors,
+    canManageReviewers,
+    fetchCollabReviewers,
+    revealed
+  ]);
 
   const initialTab =
     canManageReviewers && !canManageAuthors ? 'reviewers' : 'authors';
@@ -118,18 +146,38 @@ export function DocumentCollaboratorModal(props) {
 
                 {canManageAuthors && (
                   <TabContent tabId='authors'>
-                    <CollaboratorsSelectableList
-                      users={coll}
-                      fieldName='authors'
-                    />
+                    {collabAuthors.status === 'loading' && <LoadingBlock />}
+                    {collabAuthors.status === 'succeeded' && (
+                      <ShadowScrollbarPadded>
+                        <ShadowScrollbarInner>
+                          <CollaboratorsSelectableList
+                            users={collabAuthors.data}
+                            fieldName='authors'
+                          />
+                        </ShadowScrollbarInner>
+                      </ShadowScrollbarPadded>
+                    )}
+                    {collabAuthors.status === 'failed' && (
+                      <p>An error occurred while getting the authors.</p>
+                    )}
                   </TabContent>
                 )}
                 {canManageReviewers && (
                   <TabContent tabId='reviewers'>
-                    <CollaboratorsSelectableList
-                      users={coll}
-                      fieldName='reviewers'
-                    />
+                    {collabReviewers.status === 'loading' && <LoadingBlock />}
+                    {collabReviewers.status === 'succeeded' && (
+                      <ShadowScrollbarPadded>
+                        <ShadowScrollbarInner>
+                          <CollaboratorsSelectableList
+                            users={collabReviewers.data}
+                            fieldName='reviewers'
+                          />
+                        </ShadowScrollbarInner>
+                      </ShadowScrollbarPadded>
+                    )}
+                    {collabReviewers.status === 'failed' && (
+                      <p>An error occurred while getting the reviewers.</p>
+                    )}
                   </TabContent>
                 )}
               </Form>
@@ -155,7 +203,15 @@ DocumentCollaboratorModal.propTypes = {
 
 export function DocumentLeadAuthorModal(props) {
   const { atbd, revealed, onClose, onSubmit } = props;
-  const userList = coll;
+
+  const {
+    collaborators: collabLeadAuthor,
+    fetchCollaborators: fetchCollabLeadAuthor
+  } = useCollaborators({
+    atbdId: atbd.id,
+    atbdVersion: atbd.version,
+    userFilter: 'transfer_ownership'
+  });
 
   const initialValues = useMemo(() => {
     return {
@@ -166,7 +222,9 @@ export function DocumentLeadAuthorModal(props) {
 
   const onSubmitConfirm = useCallback(
     async (values, helpers) => {
-      const newLeadAuthor = userList.find((u) => u.sub === values.owner);
+      const newLeadAuthor = collabLeadAuthor.data.find(
+        (u) => u.sub === values.owner
+      );
       // Hide the lead author modal, before showing the confirmation prompt.
       onClose();
       const { result: confirmed } = await confirmChangeLeadAuthor(
@@ -177,8 +235,14 @@ export function DocumentLeadAuthorModal(props) {
 
       return onSubmit(values, helpers);
     },
-    [atbd, userList, onClose, onSubmit]
+    [atbd, collabLeadAuthor.data, onClose, onSubmit]
   );
+
+  useEffect(() => {
+    if (revealed) {
+      fetchCollabLeadAuthor();
+    }
+  }, [fetchCollabLeadAuthor, revealed]);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmitConfirm}>
@@ -192,11 +256,21 @@ export function DocumentLeadAuthorModal(props) {
           title='Document lead author'
           content={
             <Form as={FormikForm}>
-              <CollaboratorsSelectableList
-                users={userList}
-                fieldName='owner'
-                selectOne
-              />
+              {collabLeadAuthor.status === 'loading' && <LoadingBlock />}
+              {collabLeadAuthor.status === 'succeeded' && (
+                <ShadowScrollbarPadded>
+                  <ShadowScrollbarInner>
+                    <CollaboratorsSelectableList
+                      users={collabLeadAuthor.data}
+                      fieldName='owner'
+                      selectOne
+                    />
+                  </ShadowScrollbarInner>
+                </ShadowScrollbarPadded>
+              )}
+              {collabLeadAuthor.status === 'failed' && (
+                <p>An error occurred while getting the reviewers.</p>
+              )}
             </Form>
           }
           renderFooter={(bag) => (
@@ -251,6 +325,19 @@ ModalControls.propTypes = {
   modalHelpers: T.object
 };
 
+function LoadingBlock() {
+  return (
+    <LoadingSkeletonGroup>
+      {[1, 2, 3, 4].map((n) => (
+        <LoadingSkeletonLine key={n}>
+          <LoadingSkeleton size='large' width={1 / 12} />
+          <LoadingSkeleton size='large' width={8 / 12} />
+        </LoadingSkeletonLine>
+      ))}
+    </LoadingSkeletonGroup>
+  );
+}
+
 // Reset the formik state when the modal is hidden.
 function RevealFormikReset({ revealed }) {
   const { resetForm } = useFormikContext();
@@ -265,6 +352,10 @@ function RevealFormikReset({ revealed }) {
 function CollaboratorsSelectableList(props) {
   const { users = [], fieldName, selectOne } = props;
 
+  if (!users.length) {
+    return <p>There are no collaborators available to select.</p>;
+  }
+
   return (
     <CollaboratorsList>
       {users.map((u) => (
@@ -275,7 +366,7 @@ function CollaboratorsSelectableList(props) {
               name={fieldName}
               value={u.sub}
             />
-            <UserIdentity name={u.preferred_username} email={u.email} />
+            <UserIdentity name={u.preferred_username} email={u.username} />
           </CollaboratorOption>
         </li>
       ))}

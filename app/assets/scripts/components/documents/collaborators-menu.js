@@ -4,14 +4,19 @@ import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import Dropdown, { DropTitle } from '@devseed-ui/dropdown';
 import { Button } from '@devseed-ui/button';
+import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import UserIdentity from '../common/user-identity';
-
 import { DropHeader, DropHeadline, DropActions } from '../../styles/drop';
+
 import { useContextualAbility } from '../../a11n';
 
-// Drop content elements.
+const shadowScrollbarProps = {
+  autoHeight: true,
+  autoHeightMax: 320
+};
 
+// Drop content elements.
 const DropdownCollaborators = styled(Dropdown)`
   max-width: 20rem;
 `;
@@ -71,45 +76,47 @@ const CollaboratorsMenuContent = (props) => {
           </DropActions>
         )}
       </DropHeader>
-      <CollaboratorsList>
-        <CollaboratorsListTerm>Authors</CollaboratorsListTerm>
-        <dd>
-          <ul>
-            <li>
-              <CollaboratorEntry
-                name={owner.preferred_username}
-                email={owner.email}
-                isLead
-              />
-            </li>
-            {authors.map((author) => (
-              <li key={author.sub || author.preferred_username}>
+      <ShadowScrollbar scrollbarsProps={shadowScrollbarProps}>
+        <CollaboratorsList>
+          <CollaboratorsListTerm>Authors</CollaboratorsListTerm>
+          <dd>
+            <ul>
+              <li>
                 <CollaboratorEntry
-                  name={author.preferred_username}
-                  email={author.email}
+                  name={owner.preferred_username}
+                  email={owner.email}
+                  isLead
                 />
               </li>
-            ))}
-          </ul>
-        </dd>
-        {!!reviewers.length && (
-          <React.Fragment>
-            <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
-            <dd>
-              <ul>
-                {reviewers.map((reviewer) => (
-                  <li key={reviewer.sub || reviewer.preferred_username}>
-                    <CollaboratorEntry
-                      name={reviewer.preferred_username}
-                      email={reviewer.email}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </React.Fragment>
-        )}
-      </CollaboratorsList>
+              {authors.map((author) => (
+                <li key={author.sub || author.preferred_username}>
+                  <CollaboratorEntry
+                    name={author.preferred_username}
+                    email={author.email}
+                  />
+                </li>
+              ))}
+            </ul>
+          </dd>
+          {!!reviewers.length && (
+            <React.Fragment>
+              <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
+              <dd>
+                <ul>
+                  {reviewers.map((reviewer) => (
+                    <li key={reviewer.sub || reviewer.preferred_username}>
+                      <CollaboratorEntry
+                        name={reviewer.preferred_username}
+                        email={reviewer.email}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </React.Fragment>
+          )}
+        </CollaboratorsList>
+      </ShadowScrollbar>
     </React.Fragment>
   );
 };

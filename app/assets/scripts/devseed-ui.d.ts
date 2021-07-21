@@ -127,10 +127,15 @@ declare module '@devseed-ui/theme-provider' {
     | 'color.warning'
     | 'color.success'
     | 'color.info'
+    /** Opacity: 0.02 */
     | 'color.baseAlphaA'
+    /** Opacity: 0.04 */
     | 'color.baseAlphaB'
+    /** Opacity: 0.08 */
     | 'color.baseAlphaC'
+    /** Opacity: 0.16 */
     | 'color.baseAlphaD'
+    /** Opacity: 0.32 */
     | 'color.baseAlphaE'
     | 'color.silkLight'
     | 'color.silkDark'
