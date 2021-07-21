@@ -1,122 +1,100 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 
 import {
-  HubEntry,
-  HubEntryHeader,
-  HubEntryHeadline,
-  HubEntryTitle,
-  HubEntryMeta,
-  HubEntryDetails,
-  HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryActions
-} from '../../../styles/hub';
-import { DocumentStatusPill } from '../../common/status-pill';
-import { Link } from '../../../styles/clean/link';
+  CardInteractive,
+  CardHeader,
+  CardHeadline,
+  CardHgroup,
+  CardToolbar,
+  CardTitle,
+  CardDetails,
+  CardBody,
+  CardExcerpt,
+  CardActions
+} from '../../../styles/card';
+
 import VersionsMenu from '../versions-menu';
-import DocumentActionsMenu from '../document-actions-menu';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
+import DocumentDownloadMenu from '../../documents/document-download-menu';
 
 import { documentView } from '../../../utils/url-creator';
-import { useUser } from '../../../context/user';
 import { documentUpdatedDate } from '../../../utils/date';
 
 function DocumentHubEntry(props) {
-  const { atbd, onDocumentAction } = props;
+  const { atbd } = props;
   const lastVersion = atbd.versions[atbd.versions.length - 1];
-  const { isLogged } = useUser();
-
-  const onAction = useCallback(
-    (menuId, payload = {}) => onDocumentAction(menuId, { atbd, ...payload }),
-    [onDocumentAction, atbd]
-  );
 
   // The updated at is the most recent between the version updated at and the
   // atbd updated at.
   const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
-    <HubEntry>
-      <HubEntryHeader>
-        <HubEntryHeadline>
-          <HubEntryTitle>
-            <Link
-              to={documentView(atbd, lastVersion.version)}
-              title='View document'
-            >
-              {atbd.title}
-            </Link>
-          </HubEntryTitle>
-          <HubEntryHeadNav role='navigation'>
-            <HubEntryBreadcrumbMenu>
-              <li>
-                <VersionsMenu
-                  atbdId={atbd.alias || atbd.id}
-                  versions={atbd.versions}
-                />
-              </li>
-            </HubEntryBreadcrumbMenu>
-          </HubEntryHeadNav>
-        </HubEntryHeadline>
-        {isLogged && (
-          <HubEntryMeta>
-            <dt>Status</dt>
-            <dd>
-              <DocumentStatusPill atbdVersion={lastVersion} />
-            </dd>
-          </HubEntryMeta>
-        )}
-        <HubEntryDetails>
-          <Creators creators={lastVersion.citation?.creators} />
-          <dt>On</dt>
-          <dd>
-            <Datetime date={updateDate} />
-          </dd>
-        </HubEntryDetails>
-        <HubEntryActions>
-          <DocumentActionsMenu
-            origin='hub'
-            atbd={atbd}
-            atbdVersion={lastVersion}
-            onSelect={onAction}
-          />
-        </HubEntryActions>
-      </HubEntryHeader>
-    </HubEntry>
+    <CardInteractive
+      linkProps={{
+        to: documentView(atbd, lastVersion.version),
+        title: 'View document'
+      }}
+      linkLabel='View'
+    >
+      <CardHeader>
+        <CardHeadline>
+          <CardHgroup>
+            <CardTitle>{atbd.title}</CardTitle>
+            <CardToolbar>
+              <VersionsMenu
+                atbdId={atbd.alias || atbd.id}
+                versions={atbd.versions}
+                alignment='right'
+              />
+            </CardToolbar>
+          </CardHgroup>
+        </CardHeadline>
+        <CardDetails>
+          By <Creators creators={lastVersion.citation?.creators} /> on{' '}
+          <Datetime date={updateDate} />
+        </CardDetails>
+      </CardHeader>
+      <CardBody>
+        <CardExcerpt>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
+            scelerisque mauris. Vestibulum auctor tempor quam eu pharetra. Nunc
+            gravida lacus ipsum, sit amet dictum tellus sodales eget. Praesent
+            elementum volutpat imperdiet. Nunc cursus lorem vulputate, faucibus
+            nunc a, viverra leo...
+          </p>
+        </CardExcerpt>
+      </CardBody>
+      <CardActions>
+        <DocumentDownloadMenu
+          atbd={lastVersion}
+          alignment='left'
+          direction='up'
+          variation='primary-raised-dark'
+        />
+      </CardActions>
+    </CardInteractive>
   );
 }
 
 DocumentHubEntry.propTypes = {
-  atbd: T.object,
-  onDocumentAction: T.func
+  atbd: T.object
 };
 
 export default DocumentHubEntry;
 
 const Creators = ({ creators }) => {
-  if (!creators) return null;
+  if (!creators) return 'Unknown';
 
   const creatorsList = creators?.split(' and ');
 
   if (creatorsList.length > 1) {
-    return (
-      <React.Fragment>
-        <dt>By</dt>
-        <dd>
-          <Tip title={creators}>{creatorsList[0]} et al.</Tip>
-        </dd>
-      </React.Fragment>
-    );
+    return <Tip title={creators}>{creatorsList[0]} et al.</Tip>;
   }
 
-  return (
-    <React.Fragment>
-      <dt>By</dt>
-      <dd>{creators}</dd>
-    </React.Fragment>
-  );
+  return creators;
 };
 
 Creators.propTypes = {

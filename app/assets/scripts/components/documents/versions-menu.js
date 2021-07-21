@@ -7,7 +7,15 @@ import { Link } from '../../styles/clean/link';
 import { documentView } from '../../utils/url-creator';
 
 export default function VersionsMenu(props) {
-  const { atbdId, versions, variation, size, version } = props;
+  const {
+    atbdId,
+    versions,
+    variation,
+    size,
+    version,
+    alignment,
+    direction
+  } = props;
 
   const dropProps = useMemo(() => {
     const atbdVersions = [...versions].reverse();
@@ -43,8 +51,8 @@ export default function VersionsMenu(props) {
   ) : (
     <DropdownMenu
       {...dropProps}
-      alignment='left'
-      direction='down'
+      alignment={alignment || 'left'}
+      direction={direction || 'down'}
       withChevron
       dropTitle='Version'
     />
@@ -56,5 +64,7 @@ VersionsMenu.propTypes = {
   versions: T.array,
   variation: T.string,
   size: T.string,
-  version: T.string
+  version: T.string,
+  alignment: T.string,
+  direction: T.string
 };
