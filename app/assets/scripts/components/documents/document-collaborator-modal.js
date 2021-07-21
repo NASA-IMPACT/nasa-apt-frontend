@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import { useHistory } from 'react-router';
 import { Formik, Form as FormikForm, useFormikContext, Field } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Modal, ModalFooter } from '@devseed-ui/modal';
@@ -30,6 +31,17 @@ import {
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
   padding: ${glsp(0, 2)};
+`;
+
+const CollaboratorLead = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: ${glsp(0.5)};
+  padding: ${glsp(0, 2)};
+
+  ${Button} {
+    margin-left: auto;
+  }
 `;
 
 const CollaboratorsList = styled.ul`
@@ -84,6 +96,8 @@ const ShadowScrollbarPadded = styled(ShadowScrollbar).attrs({
 export function DocumentCollaboratorModal(props) {
   const { atbd, revealed, onClose, onSubmit } = props;
   const ability = useContextualAbility();
+  const history = useHistory();
+
   const {
     collaborators: collabAuthors,
     fetchCollaborators: fetchCollabAuthors
@@ -103,6 +117,16 @@ export function DocumentCollaboratorModal(props) {
 
   const canManageAuthors = ability.can('manage-authors', atbd);
   const canManageReviewers = ability.can('manage-reviewers', atbd);
+  const canChangeLead = ability.can('change-lead-author', atbd);
+
+  const onChangeLeadClick = useCallback(() => {
+    if (!canChangeLead) return;
+    onClose();
+    // Use the history state to trigger the modal. See explanation on
+    // app/assets/scripts/components/documents/use-document-modals.js
+    // Using undefined keeps the same path.
+    history.push(undefined, { menuAction: 'change-leading' });
+  }, [canChangeLead, history, onClose]);
 
   const initialValues = useMemo(() => {
     const authors = atbd.authors.map((u) => u.sub);
@@ -165,6 +189,21 @@ export function DocumentCollaboratorModal(props) {
                     {collabAuthors.status === 'loading' && <LoadingBlock />}
                     {collabAuthors.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
+                        <CollaboratorLead>
+                          <UserIdentity
+                            name={atbd.owner.preferred_username}
+                            email={atbd.owner.username}
+                            role='Lead'
+                          />
+                          <Button
+                            size='small'
+                            variation='base-raised-light'
+                            onClick={onChangeLeadClick}
+                            disabled={!canChangeLead}
+                          >
+                            Change lead author
+                          </Button>
+                        </CollaboratorLead>
                         <CollaboratorsSelectableList
                           users={collabAuthors.data}
                           fieldName='authors'
@@ -256,6 +295,15 @@ export function DocumentLeadAuthorModal(props) {
     }
   }, [fetchCollabLeadAuthor, revealed]);
 
+  const collabLeadSorted = useMemo(() => {
+    if (collabLeadAuthor.status !== 'succeeded') return [];
+
+    return [
+      collabLeadAuthor.data.find((u) => u.sub === atbd.owner.sub),
+      ...collabLeadAuthor.data.filter((u) => u.sub !== atbd.owner.sub)
+    ];
+  }, [collabLeadAuthor, atbd.owner.sub]);
+
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmitConfirm}>
       <React.Fragment>
@@ -272,7 +320,7 @@ export function DocumentLeadAuthorModal(props) {
               {collabLeadAuthor.status === 'succeeded' && (
                 <ShadowScrollbarPadded>
                   <CollaboratorsSelectableList
-                    users={collabLeadAuthor.data}
+                    users={collabLeadSorted}
                     fieldName='owner'
                     selectOne
                   />
