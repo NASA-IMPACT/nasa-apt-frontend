@@ -86,7 +86,7 @@ DocumentHubEntry.propTypes = {
 export default DocumentHubEntry;
 
 const Creators = ({ creators }) => {
-  if (!creators) return null;
+  if (!creators) return 'Unknown';
 
   const creatorsList = creators?.split(' and ');
 
