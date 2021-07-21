@@ -189,7 +189,10 @@ function DocumentView() {
               mode='view'
             />
             <InpageActions>
-              <DocumentDownloadMenu atbd={atbd.data} />
+              <DocumentDownloadMenu
+                atbd={atbd.data}
+                variation='achromic-plain'
+              />
               <VerticalDivider variation='light' />
               <DocumentActionsMenu
                 // In the case of a single ATBD the selected version data is
