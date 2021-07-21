@@ -251,6 +251,13 @@ export const CardInteractive = (props) => {
       isStateOver={isStateOver}
       isStateActive={isStateActive}
       isStateFocus={isStateFocus}
+      onFocus={() => setStateFocus(true)}
+      onBlur={() => setStateFocus(false)}
+      onMouseEnter={() => setStateOver(true)}
+      onMouseLeave={() => {
+        setStateOver(false);
+        setStateActive(false);
+      }}
     >
       {children}
       <CardLink
@@ -259,11 +266,6 @@ export const CardInteractive = (props) => {
         {...linkProps}
         onMouseDown={() => setStateActive(true)}
         onMouseUp={() => setStateActive(false)}
-        onMouseEnter={() => setStateOver(true)}
-        onMouseLeave={() => {
-          setStateOver(false);
-          setStateActive(false);
-        }}
         onFocus={() => setStateFocus(true)}
         onBlur={() => setStateFocus(false)}
       >
