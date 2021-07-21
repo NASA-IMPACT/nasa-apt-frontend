@@ -16,7 +16,6 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
