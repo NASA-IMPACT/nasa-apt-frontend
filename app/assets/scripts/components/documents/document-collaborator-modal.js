@@ -5,7 +5,12 @@ import { Formik, Form as FormikForm, useFormikContext, Field } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
-import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
+import {
+  glsp,
+  rgba,
+  themeVal,
+  visuallyHidden
+} from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
@@ -29,23 +34,40 @@ const TabsNavModal = styled(TabsNav)`
 
 const CollaboratorsList = styled.ul`
   display: grid;
-  grid-gap: ${glsp()};
 `;
 
 const CollaboratorOption = styled.label`
   display: block;
   cursor: pointer;
+  background-color: ${rgba(themeVal('color.link'), 0)};
+  transition: all 0.24s ease-in-out 0s;
+  padding: ${glsp(0.5, 2)};
+
+  &:hover {
+    opacity: 1;
+    background-color: ${rgba(themeVal('color.link'), 0.08)};
+  }
 
   input {
     ${visuallyHidden()}
   }
 
-  input:checked ~ ${UserIdentity} {
+  input ~ ${UserIdentity} {
     grid-template-columns: min-content min-content 1fr;
 
     &::after {
       ${collecticon('tick')}
       justify-self: flex-end;
+      opacity: 0;
+      transition: all 0.24s ease 0s;
+    }
+  }
+
+  input:checked ~ ${UserIdentity} {
+    color: ${themeVal('color.link')};
+
+    &::after {
+      opacity: 1;
     }
   }
 `;
@@ -56,13 +78,7 @@ const ShadowScrollbarPadded = styled(ShadowScrollbar).attrs({
     autoHeightMax: 320
   }
 })`
-  margin-left: ${glsp(-1)};
-  margin-right: ${glsp(-1)};
-`;
-
-const ShadowScrollbarInner = styled.div`
-  padding-left: ${glsp()};
-  padding-right: ${glsp()};
+  margin: ${glsp(-1, -2)};
 `;
 
 export function DocumentCollaboratorModal(props) {
@@ -149,12 +165,10 @@ export function DocumentCollaboratorModal(props) {
                     {collabAuthors.status === 'loading' && <LoadingBlock />}
                     {collabAuthors.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
-                        <ShadowScrollbarInner>
-                          <CollaboratorsSelectableList
-                            users={collabAuthors.data}
-                            fieldName='authors'
-                          />
-                        </ShadowScrollbarInner>
+                        <CollaboratorsSelectableList
+                          users={collabAuthors.data}
+                          fieldName='authors'
+                        />
                       </ShadowScrollbarPadded>
                     )}
                     {collabAuthors.status === 'failed' && (
@@ -167,12 +181,10 @@ export function DocumentCollaboratorModal(props) {
                     {collabReviewers.status === 'loading' && <LoadingBlock />}
                     {collabReviewers.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
-                        <ShadowScrollbarInner>
-                          <CollaboratorsSelectableList
-                            users={collabReviewers.data}
-                            fieldName='reviewers'
-                          />
-                        </ShadowScrollbarInner>
+                        <CollaboratorsSelectableList
+                          users={collabReviewers.data}
+                          fieldName='reviewers'
+                        />
                       </ShadowScrollbarPadded>
                     )}
                     {collabReviewers.status === 'failed' && (
@@ -259,13 +271,11 @@ export function DocumentLeadAuthorModal(props) {
               {collabLeadAuthor.status === 'loading' && <LoadingBlock />}
               {collabLeadAuthor.status === 'succeeded' && (
                 <ShadowScrollbarPadded>
-                  <ShadowScrollbarInner>
-                    <CollaboratorsSelectableList
-                      users={collabLeadAuthor.data}
-                      fieldName='owner'
-                      selectOne
-                    />
-                  </ShadowScrollbarInner>
+                  <CollaboratorsSelectableList
+                    users={collabLeadAuthor.data}
+                    fieldName='owner'
+                    selectOne
+                  />
                 </ShadowScrollbarPadded>
               )}
               {collabLeadAuthor.status === 'failed' && (
