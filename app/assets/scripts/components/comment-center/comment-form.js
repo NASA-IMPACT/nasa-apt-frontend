@@ -88,7 +88,9 @@ const CommentForm = (props) => {
     <Formik
       enableReinitialize
       initialValues={initial}
+      /* eslint-disable-next-line no-console */
       validate={console.log}
+      /* eslint-disable-next-line no-console */
       onSubmit={console.log}
     >
       {({ handleSubmit, values, setFieldValue, isSubmitting, dirty }) => {
@@ -98,7 +100,6 @@ const CommentForm = (props) => {
               id='comment-field'
               name='comment'
               label={getTextareaLabel({ type, values, setFieldValue })}
-              onBlur={console.log}
             />
             <div>
               <Button

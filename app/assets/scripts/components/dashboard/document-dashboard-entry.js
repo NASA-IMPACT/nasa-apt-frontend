@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { Button } from '@devseed-ui/button';
+// import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
@@ -18,7 +18,7 @@ import {
   DocumentEntryMeta,
   DocumentEntryTitle
 } from '../../styles/documents/list';
-import ContextualDocAction from './document-item-ctx-action';
+// import ContextualDocAction from './document-item-ctx-action';
 import DocumentActionsMenu from '../documents/document-actions-menu';
 
 import { documentView } from '../../utils/url-creator';
@@ -91,7 +91,7 @@ function DocumentDashboardEntry(props) {
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
-            <li>
+            {/* <li>
               <Button
                 forwardedAs={Link}
                 size='small'
@@ -101,11 +101,11 @@ function DocumentDashboardEntry(props) {
               >
                 8 comments
               </Button>
-            </li>
+            </li> */}
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
-          <ContextualDocAction action='approve-review' />
+          {/* <ContextualDocAction action='approve-review' /> */}
           <DocumentActionsMenu
             origin='hub'
             size='small'

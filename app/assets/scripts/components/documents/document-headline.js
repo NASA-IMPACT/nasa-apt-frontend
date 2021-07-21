@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { Button } from '@devseed-ui/button';
+// import { Button } from '@devseed-ui/button';
 
 import {
   InpageHeadline,
@@ -147,7 +147,7 @@ export default function DocumentHeadline(props) {
                 triggerProps={collaboratorsMenuTriggerProps}
               />
             </li>
-            <li>
+            {/* <li>
               <Button
                 variation='achromic-plain'
                 size='small'
@@ -156,7 +156,7 @@ export default function DocumentHeadline(props) {
               >
                 8 comments
               </Button>
-            </li>
+            </li> */}
           </InpageMeta>
         )}
       </InpageHeadline>
