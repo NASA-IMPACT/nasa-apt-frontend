@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
@@ -74,8 +74,24 @@ const DocumentProse = styled(Prose)`
 `;
 
 const DocumentContent = styled.div`
-  grid-column: content-start / content-end;
   max-width: 52rem;
+  padding: ${glsp(themeVal('layout.gap.xsmall'))};
+
+  ${media.smallUp`
+    padding: ${glsp(themeVal('layout.gap.small'))};
+  `}
+
+  ${media.mediumUp`
+    padding: ${glsp(themeVal('layout.gap.medium'))};
+  `}
+
+  ${media.largeUp`
+    padding: ${glsp(themeVal('layout.gap.large'))};
+  `}
+
+  ${media.xlargeUp`
+    padding: ${glsp(themeVal('layout.gap.xlarge'))};
+  `}
 `;
 
 const DocumentHeader = styled.header`
@@ -207,32 +223,26 @@ function DocumentView() {
           <ScrollAnchorProvider>
             <DocumentCanvas>
               <DocumentOutline atbd={atbd.data} />
-              <ContentBlock>
-                <DocumentContent>
-                  <DocumentProse>
-                    <DocumentHeader>
-                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
-                      <DocumentMetaDetails>
-                        <dt>Version</dt>
-                        <dd>{atbd.data.version}</dd>
-                        <ReleaseDate date={atbd.data.citation?.release_date} />
-                        <dt>Keywords</dt>
-                        <dd>coming soon</dd>
-                        <dt>Creators</dt>
-                        <dd>
-                          {atbd.data.citation?.creators || 'None provided'}
-                        </dd>
-                        <dt>Editors</dt>
-                        <dd>
-                          {atbd.data.citation?.editors || 'None provided'}
-                        </dd>
-                        <DOIAddress value={atbd.data.doi} />
-                      </DocumentMetaDetails>
-                    </DocumentHeader>
-                    <DocumentBody atbd={atbd.data} />
-                  </DocumentProse>
-                </DocumentContent>
-              </ContentBlock>
+              <DocumentContent>
+                <DocumentProse>
+                  <DocumentHeader>
+                    <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                    <DocumentMetaDetails>
+                      <dt>Version</dt>
+                      <dd>{atbd.data.version}</dd>
+                      <ReleaseDate date={atbd.data.citation?.release_date} />
+                      <dt>Keywords</dt>
+                      <dd>coming soon</dd>
+                      <dt>Creators</dt>
+                      <dd>{atbd.data.citation?.creators || 'None provided'}</dd>
+                      <dt>Editors</dt>
+                      <dd>{atbd.data.citation?.editors || 'None provided'}</dd>
+                      <DOIAddress value={atbd.data.doi} />
+                    </DocumentMetaDetails>
+                  </DocumentHeader>
+                  <DocumentBody atbd={atbd.data} />
+                </DocumentProse>
+              </DocumentContent>
             </DocumentCanvas>
           </ScrollAnchorProvider>
         </Inpage>
