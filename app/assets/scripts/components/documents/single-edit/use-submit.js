@@ -35,7 +35,7 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
             // To trigger the modals to open from other pages, we use the
             // history state as the user is sent from one page to another. See
             // explanation on
-            // app/assets/scripts/components/documents/document-publishing-actions.js
+            // app/assets/scripts/components/documents/use-document-modals.js
             history.replace(undefined, { menuAction: 'update-minor' });
           }
         }
@@ -65,7 +65,7 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
             // To trigger the modals to open from other pages, we use the
             // history state as the user is sent from one page to another. See
             // explanation on
-            // app/assets/scripts/components/documents/document-publishing-actions.js
+            // app/assets/scripts/components/documents/use-document-modals.js
             history.push(undefined, { menuAction: 'update-minor' });
           }
         }
@@ -122,6 +122,12 @@ export function useSubmitForPublishingVersion(
   );
 }
 
+/**
+ * Hook to create the submit callback for the info modal. The info modal
+ * contains the changelog field. This hook shows the appropriate message.
+ *
+ * @param {func} updateAtbd The action to update the document.
+ */
 export function useSubmitForDocumentInfo(updateAtbd) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
@@ -136,6 +142,46 @@ export function useSubmitForDocumentInfo(updateAtbd) {
       }
     },
     [updateAtbd]
+  );
+}
+
+/**
+ * Hook to create the submit callback for the collaborators modal. The owner of
+ * the document is also considered a collaborator and this same submit callback
+ * is used when transferring the ownership of the document. The message
+ * displayed on the toast notification changed depending on whether the `owner`
+ * key is present on the payload.
+ *
+ * @param {func} updateAtbd The action to update the document.
+ * @param {func} setManagingCollaborators The state setter to close the
+ * collaborators modal. This is only used for the collaborators and not the
+ * leading author since that modal is hidden before showing the confirmation
+ * prompt.
+ */
+export function useSubmitForCollaborators(
+  updateAtbd,
+  setManagingCollaborators
+) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const msgIn = values.owner
+        ? 'Changing document lead author'
+        : 'Updating document collaborators';
+      const msgOut = values.owner
+        ? 'Document lead author changed successfully'
+        : 'Document collaborators changed';
+      const processToast = createProcessToast(msgIn);
+      const result = await updateAtbd(values);
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(`An error occurred: ${result.error.message}`);
+      } else {
+        !values.owner && setManagingCollaborators(false);
+        resetForm({ values });
+        processToast.success(msgOut);
+      }
+    },
+    [setManagingCollaborators, updateAtbd]
   );
 }
 

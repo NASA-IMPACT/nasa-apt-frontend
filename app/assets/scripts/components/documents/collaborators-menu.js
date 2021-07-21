@@ -4,13 +4,19 @@ import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import Dropdown, { DropTitle } from '@devseed-ui/dropdown';
 import { Button } from '@devseed-ui/button';
+import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import UserIdentity from '../common/user-identity';
-
 import { DropHeader, DropHeadline, DropActions } from '../../styles/drop';
 
-// Drop content elements.
+import { useContextualAbility } from '../../a11n';
 
+const shadowScrollbarProps = {
+  autoHeight: true,
+  autoHeightMax: 320
+};
+
+// Drop content elements.
 const DropdownCollaborators = styled(Dropdown)`
   max-width: 20rem;
 `;
@@ -46,7 +52,7 @@ CollaboratorEntry.propTypes = {
 };
 
 const CollaboratorsMenuContent = (props) => {
-  const { owner, authors, reviewers } = props;
+  const { onOptionsClick, showOptions, owner, authors, reviewers } = props;
 
   return (
     <React.Fragment>
@@ -54,74 +60,85 @@ const CollaboratorsMenuContent = (props) => {
         <DropHeadline>
           <DropTitle size='xsmall'>Collaborators</DropTitle>
         </DropHeadline>
-        <DropActions>
-          <Button
-            variation='base-plain'
-            title='Manage collaborators'
-            useIcon='pencil'
-            size='small'
-            hideText
-            // onClick={onCancelButtonClick}
-            data-dropdown='click.close'
-          >
-            Manage
-          </Button>
-        </DropActions>
+        {showOptions && (
+          <DropActions>
+            <Button
+              variation='base-plain'
+              title='Manage collaborators'
+              useIcon='pencil'
+              size='small'
+              hideText
+              onClick={onOptionsClick}
+              data-dropdown='click.close'
+            >
+              Manage
+            </Button>
+          </DropActions>
+        )}
       </DropHeader>
-      <CollaboratorsList>
-        <CollaboratorsListTerm>Authors</CollaboratorsListTerm>
-        <dd>
-          <ul>
-            <li>
-              <CollaboratorEntry
-                name={owner.preferred_username}
-                email={owner.email}
-                isLead
-              />
-            </li>
-            {authors.map((author) => (
-              <li key={author.sub || author.preferred_username}>
+      <ShadowScrollbar scrollbarsProps={shadowScrollbarProps}>
+        <CollaboratorsList>
+          <CollaboratorsListTerm>Authors</CollaboratorsListTerm>
+          <dd>
+            <ul>
+              <li>
                 <CollaboratorEntry
-                  name={author.preferred_username}
-                  email={author.email}
+                  name={owner.preferred_username}
+                  email={owner.email}
+                  isLead
                 />
               </li>
-            ))}
-          </ul>
-        </dd>
-        {!!reviewers.length && (
-          <React.Fragment>
-            <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
-            <dd>
-              <ul>
-                {reviewers.map((reviewer) => (
-                  <li key={reviewer.sub || reviewer.preferred_username}>
-                    <CollaboratorEntry
-                      name={reviewer.preferred_username}
-                      email={reviewer.email}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </React.Fragment>
-        )}
-      </CollaboratorsList>
+              {authors.map((author) => (
+                <li key={author.sub || author.preferred_username}>
+                  <CollaboratorEntry
+                    name={author.preferred_username}
+                    email={author.email}
+                  />
+                </li>
+              ))}
+            </ul>
+          </dd>
+          {!!reviewers.length && (
+            <React.Fragment>
+              <CollaboratorsListTerm>Reviewers</CollaboratorsListTerm>
+              <dd>
+                <ul>
+                  {reviewers.map((reviewer) => (
+                    <li key={reviewer.sub || reviewer.preferred_username}>
+                      <CollaboratorEntry
+                        name={reviewer.preferred_username}
+                        email={reviewer.email}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </React.Fragment>
+          )}
+        </CollaboratorsList>
+      </ShadowScrollbar>
     </React.Fragment>
   );
 };
 
 CollaboratorsMenuContent.propTypes = {
+  showOptions: T.bool,
+  onOptionsClick: T.func,
   owner: T.object,
   authors: T.array,
   reviewers: T.array
 };
 
 export function CollaboratorsMenu(props) {
-  const { triggerProps = {}, atbdVersion } = props;
+  const { triggerProps = {}, atbdVersion, onOptionsClick } = props;
   const { owner, authors = [], reviewers = [] } = atbdVersion;
+  const ability = useContextualAbility();
 
   const collaboratorCount = authors.length + reviewers.length;
+
+  const showManageAction =
+    ability.can('manage-authors', atbdVersion) ||
+    ability.can('manage-reviewers', atbdVersion);
 
   return (
     <DropdownCollaborators
@@ -141,6 +158,8 @@ export function CollaboratorsMenu(props) {
       )}
     >
       <CollaboratorsMenuContent
+        onOptionsClick={onOptionsClick}
+        showOptions={showManageAction}
         owner={owner}
         authors={authors}
         reviewers={reviewers}
@@ -150,6 +169,7 @@ export function CollaboratorsMenu(props) {
 }
 
 CollaboratorsMenu.propTypes = {
+  onOptionsClick: T.func,
   triggerProps: T.object,
   atbdVersion: T.object
 };

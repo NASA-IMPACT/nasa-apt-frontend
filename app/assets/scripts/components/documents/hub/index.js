@@ -45,7 +45,7 @@ function Documents() {
   const onCreateClick = useDocumentCreate();
 
   const onDocumentAction = useCallback(
-    async (atbd, menuId) => {
+    async (menuId, { atbd }) => {
       switch (menuId) {
         case 'delete':
           await documentDeleteFullConfirmAndToast({
@@ -60,7 +60,7 @@ function Documents() {
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
-          // app/assets/scripts/components/documents/document-publishing-actions.js
+          // app/assets/scripts/components/documents/use-document-modals.js
           history.push(documentView(atbd), { menuAction: menuId });
           break;
       }

@@ -4,7 +4,8 @@ import DropdownMenu from '../common/dropdown-menu';
 import { Button } from '@devseed-ui/button';
 
 const contextualBtnProps = {
-  size: 'small'
+  size: 'small',
+  variation: 'primary-raised-dark'
 };
 
 const AllowDeny = (props) => {

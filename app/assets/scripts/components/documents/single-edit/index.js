@@ -15,10 +15,7 @@ import Tip from '../../common/tooltip';
 
 import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import {
-  DocumentModals,
-  useDocumentModals
-} from '../document-publishing-actions';
+import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
 
@@ -133,6 +130,7 @@ function DocumentEdit() {
                 version={version}
                 versions={atbd.data.versions}
                 updatedDate={updatedDate}
+                onAction={onDocumentMenuAction}
                 mode='edit'
               />
               <InpageActions>

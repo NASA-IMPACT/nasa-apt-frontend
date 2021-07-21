@@ -30,9 +30,17 @@ function DocumentDashboardEntry(props) {
   const lastVersion = atbd.versions.last;
 
   const onAction = useCallback(
-    (...args) =>
-      onDocumentAction(computeAtbdVersion(atbd, lastVersion), ...args),
+    (menuId, payload = {}) =>
+      onDocumentAction(menuId, {
+        atbd: computeAtbdVersion(atbd, lastVersion),
+        ...payload
+      }),
     [onDocumentAction, lastVersion, atbd]
+  );
+
+  const onCollaboratorMenuOptionsClick = useCallback(
+    () => onAction('manage-collaborators'),
+    [onAction]
   );
 
   // The updated at is the most recent between the version updated at and the
@@ -78,6 +86,7 @@ function DocumentDashboardEntry(props) {
             </li>
             <li>
               <CollaboratorsMenu
+                onOptionsClick={onCollaboratorMenuOptionsClick}
                 atbdVersion={lastVersion}
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />

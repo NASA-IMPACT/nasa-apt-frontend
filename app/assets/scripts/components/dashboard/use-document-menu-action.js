@@ -19,7 +19,7 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion }) {
   const history = useHistory();
 
   return useCallback(
-    async (atbd, menuId) => {
+    async (menuId, { atbd }) => {
       switch (menuId) {
         case 'delete':
           await documentDeleteVersionConfirmAndToast({
@@ -33,10 +33,12 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion }) {
         case 'draft-major':
         case 'publish':
         case 'view-info':
+        case 'manage-collaborators':
+        case 'change-leading':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
-          // app/assets/scripts/components/documents/document-publishing-actions.js
+          // app/assets/scripts/components/documents/use-document-modals.js
           history.push(documentView(atbd), { menuAction: menuId });
           break;
       }
