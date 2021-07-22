@@ -192,7 +192,7 @@ export function DocumentCollaboratorModal(props) {
                         <CollaboratorLead>
                           <UserIdentity
                             name={atbd.owner.preferred_username}
-                            email={atbd.owner.username}
+                            email={atbd.owner.email}
                             role='Lead'
                           />
                           <Button
@@ -424,7 +424,7 @@ function CollaboratorsSelectableList(props) {
               name={fieldName}
               value={u.sub}
             />
-            <UserIdentity name={u.preferred_username} email={u.username} />
+            <UserIdentity name={u.preferred_username} email={u.email} />
           </CollaboratorOption>
         </li>
       ))}
