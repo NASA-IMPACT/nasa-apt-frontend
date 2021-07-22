@@ -14,22 +14,26 @@ export function defineRulesFor(user) {
   // The AbilityBuilder is just a way to construct Ability in a declarative way.
   const { can: allow, rules } = new AbilityBuilder(Ability);
 
+  const is = (r) => user?.groups?.some?.((g) => g.toLowerCase() === r);
+
   if (user?.accessToken) {
     // allow('manage', 'all');
-    allow('view', 'contacts');
-    allow('edit', 'contact');
     allow('view', 'profile');
     allow('edit', 'profile');
     allow('access', 'dashboard');
 
-    if (user.groups?.find?.((g) => g.toLowerCase() === CURATOR_ROLE)) {
+    if (is(CURATOR_ROLE)) {
+      allow('view', 'contacts');
+      allow('edit', 'contact');
       allow('access', 'curator-dashboard');
       allow('delete', 'document-version');
       allow('manage-authors', 'document-version');
       allow('manage-reviewers', 'document-version');
       allow('change-lead-author', 'document-version');
     }
-    if (user.groups.find((g) => g.toLowerCase() === CONTRIBUTOR_ROLE)) {
+    if (is(CONTRIBUTOR_ROLE)) {
+      allow('view', 'contacts');
+      allow('edit', 'contact');
       allow('access', 'contributor-dashboard');
       allow('create', 'documents');
       // Edit document is used to access the edit page.
