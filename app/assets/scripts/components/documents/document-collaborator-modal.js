@@ -454,8 +454,7 @@ const confirmChangeLeadAuthor = async (atbd, newLeadAuthor) => {
         <strong>{atbd.version}</strong> of <strong>{atbd.title}</strong> to{' '}
         <strong>{newLeadAuthor}</strong>.
         <br />
-        The current lead author will be removed from the document and will no
-        longer have access to it.
+        The current lead author will still be a collaborator in the document.
       </p>
     ),
     /* eslint-disable-next-line react/display-name, react/prop-types */

@@ -15,7 +15,7 @@ import { documentDeleteVersionConfirmAndToast } from '../documents/document-dele
  *
  * @returns callback hook
  */
-export function useDocumentHubMenuAction({ deleteAtbdVersion }) {
+export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
   const history = useHistory();
 
   return useCallback(
