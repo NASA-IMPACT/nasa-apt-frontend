@@ -113,52 +113,52 @@ export default AptDevtools;
 const devUserPwd = 'Password123!';
 const devUsers = [
   {
-    name: 'CuratorUser',
+    name: 'Carlos Curator',
     username: 'curator@example.com',
     role: 'Curator',
     description: 'Curator user with access to all documents'
   },
   {
-    name: 'OwnerUser',
+    name: 'Owner Olivia',
     username: 'owner@example.com',
     role: 'Contributor',
-    description: 'User who owns atbd "TITLE"'
+    description: 'User who owns atbd "Test ATBD 1"'
   },
   {
-    name: 'AuthorUser1',
+    name: 'Andre Author',
     username: 'author1@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Co-author on atbd "Test ATBD 1"'
   },
   {
-    name: 'AuthorUser2',
+    name: 'Anita Author',
     username: 'author2@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Co-author on atbd "Test ATBD 1"'
   },
   {
-    name: 'AuthorUser3',
+    name: 'Allison Author',
     username: 'author3@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Regular user with no ties to any document'
   },
   {
-    name: 'ReviewerUser1',
+    name: 'Ricardo Reviewer',
     username: 'reviewer1@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Reviewer on atbd "Test ATBD 1"'
   },
   {
-    name: 'ReviewerUser2',
+    name: 'Ronald Reviewer',
     username: 'reviewer2@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Reviewer on atbd "Test ATBD 1"'
   },
   {
-    name: 'ReviewerUser3',
+    name: 'Rita Reviewer',
     username: 'reviewer3@example.com',
     role: 'Contributor',
-    description: ''
+    description: 'Regular user with no ties to any document'
   }
 ];
 
