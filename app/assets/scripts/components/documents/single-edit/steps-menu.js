@@ -8,9 +8,9 @@ import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 
 import { Link } from '../../../styles/clean/link';
 
-import { getATBDEditStep, STEPS } from './steps';
-import { atbdEdit } from '../../../utils/url-creator';
-import { calculateAtbdStepCompleteness } from '../completeness';
+import { getDocumentEditStep, STEPS } from './steps';
+import { documentEdit } from '../../../utils/url-creator';
+import { calculateDocumentStepCompleteness } from '../completeness';
 import { DropMenuItemEnhanced } from '../../common/dropdown-menu';
 
 // TODO: Remove once the ui library is updated.
@@ -42,7 +42,7 @@ const StepMenuItem = styled(DropMenuItemEnhanced)`
 export default function StepsMenu(props) {
   const { activeStep, atbdId, atbd } = props;
 
-  const activeStepItem = useMemo(() => getATBDEditStep(activeStep), [
+  const activeStepItem = useMemo(() => getDocumentEditStep(activeStep), [
     activeStep
   ]);
 
@@ -70,10 +70,11 @@ export default function StepsMenu(props) {
           {STEPS.map((step) => {
             const { id, label } = step;
 
-            const { complete, total, percent } = calculateAtbdStepCompleteness(
-              atbd,
-              step
-            );
+            const {
+              complete,
+              total,
+              percent
+            } = calculateDocumentStepCompleteness(atbd, step);
 
             return (
               <li key={id}>
@@ -82,7 +83,7 @@ export default function StepsMenu(props) {
                   title={`Go to step ${label}`}
                   active={id === activeStepItem.id}
                   data-dropdown='click.close'
-                  to={atbdEdit(atbdId, atbd.version, id)}
+                  to={documentEdit(atbdId, atbd.version, id)}
                 >
                   <span>{label}</span>
                   <small>

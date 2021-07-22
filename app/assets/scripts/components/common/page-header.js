@@ -22,6 +22,7 @@ import { Can } from '../../a11n';
 import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
+import { useAtbds } from '../../context/atbds-list';
 
 import UserImage from './user-image';
 
@@ -157,6 +158,7 @@ function PageHeader() {
   const { expireToken } = useAuthToken();
   const { isLogged, user } = useUser();
   const history = useHistory();
+  const { invalidateAtbdListCtx, invalidateAtbdSingleCtx } = useAtbds();
 
   const onLogoutClick = useCallback(async () => {
     try {
@@ -166,9 +168,11 @@ function PageHeader() {
       /* eslint-disable-next-line no-console */
       console.log('error signing out: ', error);
     }
+    invalidateAtbdListCtx();
+    invalidateAtbdSingleCtx();
     expireToken();
     history.push('/');
-  }, [history, expireToken]);
+  }, [history, expireToken, invalidateAtbdListCtx, invalidateAtbdSingleCtx]);
 
   return (
     <PageHeaderSelf role='banner'>
@@ -189,21 +193,13 @@ function PageHeader() {
             <li>
               <Button
                 forwardedAs={NavLink}
-                to='/documents'
-                variation='achromic-plain'
-                title='View the documents'
-              >
-                Documents
-              </Button>
-              {/* <Button
-                forwardedAs={NavLink}
                 exact
                 to='/dashboard'
                 variation='achromic-plain'
                 title='Visit the welcome page'
               >
                 Dashboard
-              </Button> */}
+              </Button>
             </li>
           ) : (
             <React.Fragment>
@@ -301,7 +297,12 @@ function PageHeader() {
                     useIcon={['chevron-down--small', 'after']}
                     {...props}
                   >
-                    <UserImage user={user} /> {user.name}
+                    <UserImage
+                      name={user.name}
+                      email={user.attributes?.email}
+                      size='small'
+                    />{' '}
+                    {user.name}
                   </UserProfileTrigger>
                 )}
               >

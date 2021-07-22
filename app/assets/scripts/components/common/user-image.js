@@ -47,22 +47,24 @@ const getBG = (name) => {
 const getPxSize = (size) => {
   if (size === 'profile') {
     return 128;
-  } else {
+  } else if (size === 'small') {
     return 24;
+  } else {
+    return 32;
   }
 };
 
 function UserImage(props) {
-  const { size, user } = props;
+  const { size, email, name } = props;
 
-  const emailMd5 = md5(user?.attributes?.email || '');
+  const emailMd5 = md5(email || '');
   // Replace spaces with encoded + sign (%2B)
-  const name = user?.name?.replace(/ /g, '%2B') || '';
+  const endName = name.replace(/ /g, '%2B') || '';
   const px = getPxSize(size);
 
   // https://eu.ui-avatars.com/
-  const initialsAvatarUrl = `https://eu.ui-avatars.com/api/${name}/${px}/${getBG(
-    name
+  const initialsAvatarUrl = `https://eu.ui-avatars.com/api/${endName}/${px}/${getBG(
+    endName
   )}`;
 
   return (
@@ -78,7 +80,8 @@ function UserImage(props) {
 
 UserImage.propTypes = {
   size: T.string,
-  user: T.object
+  name: T.string,
+  email: T.string
 };
 
 export default UserImage;

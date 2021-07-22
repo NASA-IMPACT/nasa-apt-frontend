@@ -16,7 +16,7 @@ import {
   HubEntryDetails
 } from '../../../styles/hub';
 
-import { atbdView } from '../../../utils/url-creator';
+import { documentView } from '../../../utils/url-creator';
 import { renderMultipleRoles } from '../contact-utils';
 
 const ContactRelated = styled.section`
@@ -56,7 +56,7 @@ const RelatedAtbdEntry = (props) => {
         <HubEntryHeadline>
           <HubEntryTitle>
             <Link
-              to={atbdView(atbdVersion.atbd, atbdVersion.version)}
+              to={documentView(atbdVersion.atbd, atbdVersion.version)}
               title='View document'
             >
               {title}

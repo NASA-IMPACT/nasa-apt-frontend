@@ -15,18 +15,18 @@ import {
 import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
-import AtbdHubEntry from './atbd-hub-entry';
+import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { atbdEdit, atbdView } from '../../../utils/url-creator';
-import { createProcessToast } from '../../common/toasts';
-import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
+import { documentView } from '../../../utils/url-creator';
+import { documentDeleteFullConfirmAndToast } from '../document-delete-process';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
+import { useDocumentCreate } from '../single-edit/use-document-create';
 
 function Documents() {
-  const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
+  const { fetchAtbds, deleteFullAtbd, atbds } = useAtbds();
   const history = useHistory();
 
   useEffect(() => {
@@ -42,23 +42,13 @@ function Documents() {
     throw atbds.error;
   }
 
-  const onCreateClick = async () => {
-    const processToast = createProcessToast('Creating new ATBD');
-    const result = await createAtbd();
-
-    if (result.error) {
-      processToast.error(`An error occurred: ${result.error.message}`);
-    } else {
-      processToast.success('ATBD successfully created');
-      history.push(atbdEdit(result.data));
-    }
-  };
+  const onCreateClick = useDocumentCreate();
 
   const onDocumentAction = useCallback(
-    async (atbd, menuId) => {
+    async (menuId, { atbd }) => {
       switch (menuId) {
         case 'delete':
-          await atbdDeleteFullConfirmAndToast({
+          await documentDeleteFullConfirmAndToast({
             atbd,
             deleteFullAtbd
           });
@@ -70,8 +60,8 @@ function Documents() {
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
-          // app/assets/scripts/components/documents/document-publishing-actions.js
-          history.push(atbdView(atbd), { menuAction: menuId });
+          // app/assets/scripts/components/documents/use-document-modals.js
+          history.push(documentView(atbd), { menuAction: menuId });
           break;
       }
     },
@@ -145,7 +135,7 @@ function Documents() {
               <HubList>
                 {atbds.data.map((atbd) => (
                   <HubListItem key={atbd.id}>
-                    <AtbdHubEntry
+                    <DocumentHubEntry
                       atbd={atbd}
                       onDocumentAction={onDocumentAction}
                     />

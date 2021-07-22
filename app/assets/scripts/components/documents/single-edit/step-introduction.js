@@ -12,6 +12,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 export default function StepIntroduction(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -37,7 +38,7 @@ export default function StepIntroduction(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <FormikSectionFieldset
-                  label='Introduction'
+                  label={getDocumentSectionLabel('introduction')}
                   sectionName='sections_completed.introduction'
                 >
                   <FormikInputEditor
@@ -49,7 +50,7 @@ export default function StepIntroduction(props) {
                 </FormikSectionFieldset>
 
                 <FormikSectionFieldset
-                  label='Historical Perspective'
+                  label={getDocumentSectionLabel('historical_perspective')}
                   sectionName='sections_completed.historical_perspective'
                 >
                   <FormikInputEditor

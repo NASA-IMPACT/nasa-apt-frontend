@@ -2,20 +2,19 @@ import React, { useMemo } from 'react';
 import T from 'prop-types';
 
 import DropdownMenu from '../common/dropdown-menu';
-import ButtonSecondary from '../../styles/button-secondary';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
 
-export default function AtbdDownloadMenu(props) {
-  const { atbd } = props;
+export default function DocumentDownloadMenu(props) {
+  const { atbd, variation, alignment, direction } = props;
   const { token } = useAuthToken();
 
   const dropProps = useMemo(() => {
     const triggerProps = {
       triggerProps: {
         useIcon: 'download-2',
-        as: ButtonSecondary
+        variation
       },
       triggerLabel: 'Download'
     };
@@ -51,18 +50,21 @@ export default function AtbdDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [token, atbd]);
+  }, [variation, token, atbd]);
 
   return (
     <DropdownMenu
       {...dropProps}
-      alignment='right'
-      direction='down'
+      alignment={alignment || 'right'}
+      direction={direction || 'down'}
       dropTitle='Download'
     />
   );
 }
 
-AtbdDownloadMenu.propTypes = {
-  atbd: T.object
+DocumentDownloadMenu.propTypes = {
+  atbd: T.object,
+  alignment: T.string,
+  direction: T.string,
+  variation: T.string
 };

@@ -8,9 +8,26 @@ import Dropdown, {
   DropMenu,
   DropMenuItem
 } from '@devseed-ui/dropdown';
-import { disabled, themeVal, rgba } from '@devseed-ui/theme-provider';
+import { disabled, themeVal, rgba, glsp } from '@devseed-ui/theme-provider';
+import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import Try from './try-render';
+
+/**
+ * Override Dropdown styles to play well with the shadow scrollbar.
+ */
+const DropdownWithScroll = styled(Dropdown)`
+  padding: 0;
+
+  ${DropTitle} {
+    margin: 0;
+    padding: ${glsp(1, 1, 0, 1)};
+  }
+
+  ${DropMenu} {
+    margin: 0;
+  }
+`;
 
 export const DropMenuItemEnhanced = styled(DropMenuItem)`
   ${({ focused }) =>
@@ -63,6 +80,11 @@ export const getMenuClickHandler = (fn, menuItem) => {
   };
 };
 
+const shadowScrollbarProps = {
+  autoHeight: true,
+  autoHeightMax: 320
+};
+
 /*
 Definition of a menu.
 
@@ -100,6 +122,7 @@ interface Menu {
  */
 const DropdownMenu = React.forwardRef((props, ref) => {
   const {
+    className,
     menu: menuInput,
     activeItem,
     dropTitle,
@@ -112,14 +135,24 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   } = props;
 
   // Normalize menu, adding the menu Id to each item. This is useful for referencing.
-  const dropMenu = useMemo(
-    () =>
-      castArray(menuInput).map((m) => ({
-        ...m,
-        items: m.items.map((item) => ({ ...item, menuId: m.id }))
-      })),
-    [menuInput]
-  );
+  const dropMenu = useMemo(() => {
+    const arrayMenu = castArray(menuInput);
+    // Map menu items adding menu id and removing empty.
+    return arrayMenu
+      .map((menu) => {
+        const menuItems = menu.items
+          .filter(Boolean)
+          .map((item) => ({ ...item, menuId: menu.id }));
+        // If there are no items remove the menu altogether.
+        return menuItems.length
+          ? {
+              ...menu,
+              items: menuItems
+            }
+          : null;
+      })
+      .filter(Boolean);
+  }, [menuInput]);
 
   const activeMenuItems = useMemo(() => {
     const active = castArray(activeItem);
@@ -145,8 +178,9 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   };
 
   return (
-    <Dropdown
+    <DropdownWithScroll
       ref={ref}
+      className={className}
       alignment={alignment}
       direction={direction}
       triggerElement={(props) => (
@@ -161,69 +195,72 @@ const DropdownMenu = React.forwardRef((props, ref) => {
         </Button>
       )}
     >
-      <DropTitle>{dropTitle}</DropTitle>
-      {dropMenu.map((menu) => (
-        <DropMenu
-          key={menu.id}
-          selectable={menu.selectable}
-          iconified={menu.iconified}
-        >
-          {menu.items.map((menuItem) => {
-            const {
-              id,
-              icon,
-              title,
-              label,
-              keepOpen,
-              render,
-              /* eslint-disable-next-line no-unused-vars */
-              menuId, // Remove from the arg spreading.
-              ...rest
-            } = menuItem;
+      <ShadowScrollbar scrollbarsProps={shadowScrollbarProps}>
+        <DropTitle>{dropTitle}</DropTitle>
+        {dropMenu.map((menu) => (
+          <DropMenu
+            key={menu.id}
+            selectable={menu.selectable}
+            iconified={menu.iconified}
+          >
+            {menu.items.map((menuItem) => {
+              const {
+                id,
+                icon,
+                title,
+                label,
+                keepOpen,
+                render,
+                /* eslint-disable-next-line no-unused-vars */
+                menuId, // Remove from the arg spreading.
+                ...rest
+              } = menuItem;
 
-            const closeProp = keepOpen
-              ? {}
-              : { 'data-dropdown': 'click.close' };
+              const closeProp = keepOpen
+                ? {}
+                : { 'data-dropdown': 'click.close' };
 
-            const itemProps = {
-              active: isItemActive(id),
-              ...closeProp
-            };
+              const itemProps = {
+                active: isItemActive(id),
+                ...closeProp
+              };
 
-            return (
-              <li key={id}>
-                <Try
-                  fn={render}
-                  {...itemProps}
-                  menuItem={menuItem}
-                  onSelect={onSelect}
-                >
-                  <DropMenuItemEnhanced
-                    useIcon={icon}
-                    title={title}
+              return (
+                <li key={id}>
+                  <Try
+                    fn={render}
                     {...itemProps}
-                    {...rest}
-                    onClick={getMenuClickHandler(onSelect, menuItem)}
+                    menuItem={menuItem}
+                    onSelect={onSelect}
                   >
-                    {label}
-                  </DropMenuItemEnhanced>
-                </Try>
-              </li>
-            );
-          })}
-        </DropMenu>
-      ))}
-    </Dropdown>
+                    <DropMenuItemEnhanced
+                      useIcon={icon}
+                      title={title}
+                      {...itemProps}
+                      {...rest}
+                      onClick={getMenuClickHandler(onSelect, menuItem)}
+                    >
+                      {label}
+                    </DropMenuItemEnhanced>
+                  </Try>
+                </li>
+              );
+            })}
+          </DropMenu>
+        ))}
+      </ShadowScrollbar>
+    </DropdownWithScroll>
   );
 });
 
 DropdownMenu.propTypes = {
+  className: T.string,
   menu: T.oneOfType([T.array, T.object]),
   withChevron: T.bool,
   activeItem: T.oneOfType([T.array, T.string]),
   dropTitle: T.string,
   triggerProps: T.object,
-  triggerLabel: T.string,
+  triggerLabel: T.oneOfType([T.func, T.string]),
   alignment: T.string,
   direction: T.string,
   onSelect: T.func

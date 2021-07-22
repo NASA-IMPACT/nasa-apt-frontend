@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
@@ -16,12 +16,11 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
-import DocumentNavHeader from '../document-nav-header';
-import AtbdActionsMenu from '../atbd-actions-menu';
-import AtbdDownloadMenu from '../atbd-download-menu';
+import DocumentHeadline from '../document-headline';
+import DocumentActionsMenu from '../document-actions-menu';
+import DocumentDownloadMenu from '../document-download-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
@@ -30,12 +29,9 @@ import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { calculateAtbdCompleteness } from '../completeness';
-import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
-import {
-  useDocumentModals,
-  DocumentModals
-} from '../document-publishing-actions';
+import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
+import { useDocumentModals, DocumentModals } from '../use-document-modals';
+import { documentUpdatedDate } from '../../../utils/date';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -77,8 +73,24 @@ const DocumentProse = styled(Prose)`
 `;
 
 const DocumentContent = styled.div`
-  grid-column: content-start / content-end;
   max-width: 52rem;
+  padding: ${glsp(themeVal('layout.gap.xsmall'))};
+
+  ${media.smallUp`
+    padding: ${glsp(themeVal('layout.gap.small'))};
+  `}
+
+  ${media.mediumUp`
+    padding: ${glsp(themeVal('layout.gap.medium'))};
+  `}
+
+  ${media.largeUp`
+    padding: ${glsp(themeVal('layout.gap.large'))};
+  `}
+
+  ${media.xlargeUp`
+    padding: ${glsp(themeVal('layout.gap.xlarge'))};
+  `}
 `;
 
 const DocumentHeader = styled.header`
@@ -137,7 +149,7 @@ function DocumentView() {
 
       switch (menuId) {
         case 'delete':
-          await atbdDeleteVersionConfirmAndToast({
+          await documentDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
@@ -163,13 +175,15 @@ function DocumentView() {
     }
   }
 
-  const completeness = atbd.data
-    ? calculateAtbdCompleteness(atbd.data).percent
-    : 0;
-
   const pageTitle = atbd.data?.title
     ? `Viewing ${atbd.data.title}`
     : 'Document view';
+
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at. In the case of a single ATBD the selected version data is
+  // merged with the ATBD meta and that's why both variables are
+  // the same.
+  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
 
   return (
     <App pageTitle={pageTitle}>
@@ -178,19 +192,22 @@ function DocumentView() {
         <Inpage>
           <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
-            <DocumentNavHeader
+            <DocumentHeadline
               atbdId={id}
               title={atbd.data.title}
-              status={atbd.data.status}
               version={version}
               versions={atbd.data.versions}
-              completeness={completeness}
+              updatedDate={updatedDate}
+              onAction={onDocumentMenuAction}
               mode='view'
             />
             <InpageActions>
-              <AtbdDownloadMenu atbd={atbd.data} />
+              <DocumentDownloadMenu
+                atbd={atbd.data}
+                variation='achromic-plain'
+              />
               <VerticalDivider variation='light' />
-              <AtbdActionsMenu
+              <DocumentActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
                 // the same.
@@ -205,32 +222,26 @@ function DocumentView() {
           <ScrollAnchorProvider>
             <DocumentCanvas>
               <DocumentOutline atbd={atbd.data} />
-              <ContentBlock>
-                <DocumentContent>
-                  <DocumentProse>
-                    <DocumentHeader>
-                      <DocumentTitle>{atbd.data.title}</DocumentTitle>
-                      <DocumentMetaDetails>
-                        <dt>Version</dt>
-                        <dd>{atbd.data.version}</dd>
-                        <ReleaseDate date={atbd.data.citation?.release_date} />
-                        <dt>Keywords</dt>
-                        <dd>coming soon</dd>
-                        <dt>Creators</dt>
-                        <dd>
-                          {atbd.data.citation?.creators || 'None provided'}
-                        </dd>
-                        <dt>Editors</dt>
-                        <dd>
-                          {atbd.data.citation?.editors || 'None provided'}
-                        </dd>
-                        <DOIAddress value={atbd.data.doi} />
-                      </DocumentMetaDetails>
-                    </DocumentHeader>
-                    <DocumentBody atbd={atbd.data} />
-                  </DocumentProse>
-                </DocumentContent>
-              </ContentBlock>
+              <DocumentContent>
+                <DocumentProse>
+                  <DocumentHeader>
+                    <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                    <DocumentMetaDetails>
+                      <dt>Version</dt>
+                      <dd>{atbd.data.version}</dd>
+                      <ReleaseDate date={atbd.data.citation?.release_date} />
+                      <dt>Keywords</dt>
+                      <dd>coming soon</dd>
+                      <dt>Creators</dt>
+                      <dd>{atbd.data.citation?.creators || 'None provided'}</dd>
+                      <dt>Editors</dt>
+                      <dd>{atbd.data.citation?.editors || 'None provided'}</dd>
+                      <DOIAddress value={atbd.data.doi} />
+                    </DocumentMetaDetails>
+                  </DocumentHeader>
+                  <DocumentBody atbd={atbd.data} />
+                </DocumentProse>
+              </DocumentContent>
             </DocumentCanvas>
           </ScrollAnchorProvider>
         </Inpage>

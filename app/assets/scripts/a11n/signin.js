@@ -69,7 +69,7 @@ function SignIn() {
         processToast.success(
           `Welcome back ${user.attributes.preferred_username}!`
         );
-        history.push('/');
+        history.push('/dashboard');
       } catch (error) {
         if (error.code === 'UserNotConfirmedException') {
           processToast.error(

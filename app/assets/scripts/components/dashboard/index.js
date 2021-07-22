@@ -1,6 +1,6 @@
-import React from 'react';
-import { Heading } from '@devseed-ui/typography';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { Heading } from '@devseed-ui/typography';
 
 import App from '../common/app';
 import {
@@ -8,18 +8,43 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageActions
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
+import DashboardContributor from './dash-contributor';
+import DashboardCurator from './dash-curator';
+import { Can, useContextualAbility } from '../../a11n';
+import ButtonSecondary from '../../styles/button-secondary';
 
 import { useUser } from '../../context/user';
+import { useDocumentCreate } from '../documents/single-edit/use-document-create';
+import { useAtbds } from '../../context/atbds-list';
+import DashboardNoRole from './dash-no-role';
 
-const DashboardContent = styled.div`
+const DashboardContent = styled.section`
   grid-column: content-start / content-end;
 `;
 
 function UserDashboard() {
   const { user } = useUser();
+  const onCreateClick = useDocumentCreate();
+  const { invalidateAtbdListCtx } = useAtbds();
+  const ability = useContextualAbility();
+
+  // Invalidate list of documents on unmount to ensure any changes made to a
+  // single document are refetched.
+  useEffect(() => {
+    return () => {
+      invalidateAtbdListCtx();
+    };
+  }, [invalidateAtbdListCtx]);
+
+  const conAccessContributorDash = ability.can(
+    'access',
+    'contributor-dashboard'
+  );
+  const conAccessCuratorDash = ability.can('access', 'curator-dashboard');
 
   return (
     <App pageTitle='Dashboard'>
@@ -28,12 +53,36 @@ function UserDashboard() {
           <InpageHeadline>
             <InpageTitle>Dashboard</InpageTitle>
           </InpageHeadline>
+          <InpageActions>
+            <Can do='create' on='documents'>
+              <ButtonSecondary
+                title='Create new document'
+                useIcon='plus--small'
+                onClick={onCreateClick}
+              >
+                Create
+              </ButtonSecondary>
+            </Can>
+          </InpageActions>
         </InpageHeader>
         <InpageBody>
           <ContentBlock>
             <DashboardContent>
               <Heading size='medium'>Welcome {user.name}</Heading>
-              <p>Here&apos;s a summary of what&apos;s going on.</p>
+              <p>Here&apos;s what is happening in your APT account today.</p>
+              {!conAccessContributorDash && !conAccessCuratorDash && (
+                <p>
+                  Your account has not yet been approved. You can only access{' '}
+                  <strong>published</strong> documents.
+                </p>
+              )}
+            </DashboardContent>
+            <DashboardContent>
+              {conAccessContributorDash && <DashboardContributor />}
+              {conAccessCuratorDash && <DashboardCurator />}
+              {!conAccessContributorDash && !conAccessCuratorDash && (
+                <DashboardNoRole />
+              )}
             </DashboardContent>
           </ContentBlock>
         </InpageBody>

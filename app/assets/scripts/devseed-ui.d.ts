@@ -127,10 +127,15 @@ declare module '@devseed-ui/theme-provider' {
     | 'color.warning'
     | 'color.success'
     | 'color.info'
+    /** Opacity: 0.02 */
     | 'color.baseAlphaA'
+    /** Opacity: 0.04 */
     | 'color.baseAlphaB'
+    /** Opacity: 0.08 */
     | 'color.baseAlphaC'
+    /** Opacity: 0.16 */
     | 'color.baseAlphaD'
+    /** Opacity: 0.32 */
     | 'color.baseAlphaE'
     | 'color.silkLight'
     | 'color.silkDark'
@@ -178,7 +183,8 @@ declare module '@devseed-ui/theme-provider' {
     | 'mediaRanges.small'
     | 'mediaRanges.medium'
     | 'mediaRanges.large'
-    | 'mediaRanges.xlarge';
+    | 'mediaRanges.xlarge'
+    | string;
   /**
    * Returns a function to be used with styled-components and gets a value from
    * the theme property.
@@ -301,12 +307,24 @@ declare module '@devseed-ui/button' {
      */
     useIcon: string | [iconName: string, position: 'before' | 'after'];
   }
+
+  /**
+   * Renders a wrapper for buttons to create a group
+   */
+  class ButtonGroup extends React.Component<ButtonGroupProps, any> {}
+
+  interface ButtonGroupProps {
+    /**
+     * Orientation of the button group.
+     */
+    orientation: 'horizontal' | 'vertical';
+  }
 }
 
 declare module '@devseed-ui/dropdown' {
-  class DropContent extends React.Component<any> {}
-  class DropTitle extends React.Component<any> {}
-  class DropInset extends React.Component<any> {}
+  class DropContent extends React.Component<any, any> {}
+  class DropTitle extends React.Component<any, any> {}
+  class DropInset extends React.Component<any, any> {}
 
   interface DropMenuProps {
     selectable?: Boolean;
@@ -323,13 +341,13 @@ declare module '@devseed-ui/dropdown' {
 
   interface DropdownProps {
     /*
-     * An id for the dropdown"
+     * An id for the dropdown
      */
     id: string;
 
     /*
      * A function that returns a trigger element. The passed props must be
-     * attached to the trigger element, which can be anything."
+     * attached to the trigger element, which can be anything.
      */
     triggerElement: (triggerProps: {
       ref: object;
@@ -341,14 +359,14 @@ declare module '@devseed-ui/dropdown' {
     }) => any;
 
     /*
-     * Sets opening direction of the dropdown"
+     * Sets opening direction of the dropdown
      */
     direction: 'up' | 'down' | 'left' | 'right';
 
     /*
      * Sets the alignment of the dropdown box. ['left' | 'center' | 'right'] can
      * only be used with ['up' | 'down'] directions. ['top' | 'middle' |
-     * 'bottom'] can only be used with ['left' | 'right'] directions."
+     * 'bottom'] can only be used with ['left' | 'right'] directions.
      */
     alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom';
   }
@@ -365,4 +383,137 @@ declare module '@devseed-ui/collecticons' {
    * @param name Name of the collecticon to show
    */
   export default function collecticon(name: string): any;
+}
+
+declare module '@devseed-ui/shadow-scrollbar' {
+  interface ShadowScrollbarProps {
+    /**
+     * Variation for the top shadow.
+     * @default light
+     */
+    topShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the bottom shadow.
+     * @default light
+     */
+    bottomShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the left shadow.
+     * @default light
+     */
+    leftShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the right shadow.
+     * @default light
+     */
+    rightShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Props for `react-custom-scrollbars`.
+     * See https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+     */
+    scrollbarsProps: any;
+  }
+
+  /**
+   * Component to add custom scrollbars to ensure that they're consistent in all
+   * browsers. It also includes shadows on the sides of the container to
+   * indicate there's more content to scroll through. These shadows gradually
+   * disappear when the user reaches the end of the content.
+   */
+  export default class ShadowScrollbar extends React.Component<
+    ShadowScrollbarProps,
+    any
+  > {}
+}
+
+declare module '@devseed-ui/global-loading' {
+  /**
+   * Base component for the global loading
+   * @param {object} props Component props
+   */
+  export default class GlobalLoadingProvider extends React.Component<any> {}
+
+  interface GlobalLoadingHideProps {
+    /**
+     * Define how many loadings to show. This will not show multiple loadings
+     * on the page but will increment a counter. This is helpful when there are
+     * many actions that require a loading. The global loading will only be
+     * dismissed once all counters shown are hidden. Each function call will
+     * increment the counter. Default 1.
+     */
+    count: number;
+
+    /**
+     * Sets the count to the given value without incrementing. Default false.
+     */
+    force: boolean;
+  }
+
+  interface GlobalLoadingShowProps extends GlobalLoadingHideProps {
+    /**
+     * Sets an optional message to display. Default to empty.
+     */
+    message: string;
+  }
+
+  /**
+   * Programmatic api to show a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * The loading has a minimum visible time defined by the MIN_TIME constant.
+   * This will prevent flickers in the interface when the action is very fast.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function showGlobalLoading(options: GlobalLoadingShowProps): void;
+
+  /**
+   * Programmatic api to hide a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function hideGlobalLoading(options: GlobalLoadingHideProps): void;
+
+  /**
+   * Programmatic api to show a global loading with a message.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * Each call to showGlobalLoadingMessage will update the global loading message
+   * but not increment the internal counter, show a single call to
+   * hideGlobalLoading will dismiss it
+   *
+   * @param {string} message Message to display
+   */
+  function showGlobalLoadingMessage(message: string): void;
+
+  /**
+   * React component to show/hide a Global loading via mounting and unmounting.
+   * If children are passed, they are used as a message, so it is recommended to
+   * use a string.
+   *
+   * @param {*} props Component props
+   */
+  export class GlobalLoading extends React.Component<any> {}
 }

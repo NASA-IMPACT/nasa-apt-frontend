@@ -1,29 +1,32 @@
 import {
-  confirmDeleteAtbdVersion,
-  confirmDeleteAtbd
+  confirmDeleteDocumentVersion,
+  confirmDeleteDocument
 } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
 
 // Convenience method to delete an atbd and show a toast notification.
-export async function atbdDeleteFullConfirmAndToast({ atbd, deleteFullAtbd }) {
-  const { result: confirmed } = await confirmDeleteAtbd(atbd.title);
+export async function documentDeleteFullConfirmAndToast({
+  atbd,
+  deleteFullAtbd
+}) {
+  const { result: confirmed } = await confirmDeleteDocument(atbd.title);
   if (confirmed) {
     const result = await deleteFullAtbd({ id: atbd.id });
     if (result.error) {
       toasts.error(`An error occurred: ${result.error.message}`);
     } else {
-      toasts.success('ATBD successfully deleted');
+      toasts.success('Document successfully deleted');
     }
   }
 }
 
 // Convenience method to delete an atbd version and show a toast notification.
-export async function atbdDeleteVersionConfirmAndToast({
+export async function documentDeleteVersionConfirmAndToast({
   atbd,
   deleteAtbdVersion,
   history
 }) {
-  const { result: confirmed } = await confirmDeleteAtbdVersion(
+  const { result: confirmed } = await confirmDeleteDocumentVersion(
     atbd?.title,
     atbd?.version
   );
@@ -33,8 +36,8 @@ export async function atbdDeleteVersionConfirmAndToast({
     if (result.error) {
       toasts.error(`An error occurred: ${result.error.message}`);
     } else {
-      toasts.success('ATBD version successfully deleted');
-      history.push('/documents');
+      toasts.success('Document version successfully deleted');
+      history.push('/dashboard');
     }
   }
 }

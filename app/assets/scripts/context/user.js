@@ -11,6 +11,7 @@ import Amplify, { Auth } from 'aws-amplify';
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 import config from '../config';
 import { createContextChecker } from '../utils/create-context-checker';
+import { CONTRIBUTOR_ROLE, CURATOR_ROLE } from '../a11n/rules';
 
 Amplify.configure(config.auth);
 
@@ -139,6 +140,12 @@ export const useUser = () => {
     () => ({
       user: userData,
       isLogged: !!userData.id,
+      isCurator: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CURATOR_ROLE
+      ),
+      isContributor: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CONTRIBUTOR_ROLE
+      ),
       loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
     }),
     [userData, setUserData]

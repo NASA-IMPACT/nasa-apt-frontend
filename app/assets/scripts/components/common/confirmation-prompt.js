@@ -221,7 +221,7 @@ const deleteControls = ({ confirm, cancel }) => (
  * @param {any} data Any extra data that the confirmation prompt should keep
  *              track of. Useful to know what confirmation we're working with.
  */
-export const confirmDeleteAtbd = async (name) => {
+export const confirmDeleteDocument = async (name) => {
   return showConfirmationPrompt({
     title: 'Delete this document?',
     content: (
@@ -244,7 +244,7 @@ export const confirmDeleteAtbd = async (name) => {
  * @param {any} data Any extra data that the confirmation prompt should keep
  *              track of. Useful to know what confirmation we're working with.
  */
-export const confirmDeleteAtbdVersion = async (name, version) => {
+export const confirmDeleteDocumentVersion = async (name, version) => {
   return showConfirmationPrompt({
     title: 'Delete this document version?',
     content: (

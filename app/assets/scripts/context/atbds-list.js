@@ -1,5 +1,6 @@
 import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
+import qs from 'qs';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
@@ -72,17 +73,35 @@ const getUpdatedVersions = (versions, currentVersion, newVersionData) => {
   });
 };
 
+const RESET_STATE_ACTION_TYPE = 'reset-state';
+
 // Context provider
 export const AtbdsProvider = (props) => {
   const { children } = props;
   const { token } = useAuthToken();
 
-  const { getState: getAtbds, fetchAtbds, deleteFullAtbd } = useContexeedApi(
+  const {
+    getState: getAtbds,
+    fetchAtbds,
+    deleteFullAtbd,
+    deleteSingleAtbdVersion,
+    dispatch: dispatchAtbdList
+  } = useContexeedApi(
     {
       name: 'atbdList',
+      slicedState: true,
+      interceptor: (state, action) => {
+        switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
+          }
+        }
+        return { state, action };
+      },
       requests: {
-        fetchAtbds: withRequestToken(token, () => ({
-          url: '/atbds'
+        fetchAtbds: withRequestToken(token, (filters = {}) => ({
+          sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
+          url: `/atbds?${qs.stringify(filters, { skipNulls: true })}`
         }))
       },
       mutations: {
@@ -95,7 +114,38 @@ export const AtbdsProvider = (props) => {
             // If delete worked, remove the item from the atbd list.
             return state.data.filter((atbd) => atbd.id !== id);
           }
-        }))
+        })),
+        // See explanation about this on the export down below.
+        deleteSingleAtbdVersion: withRequestToken(
+          token,
+          ({ filters = {}, id, version }) => ({
+            sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
+            url: `/atbds/${id}/versions/${version}`,
+            requestOptions: {
+              method: 'delete'
+            },
+            transformData: (data, { state }) => {
+              // If delete worked, remove the version from the atbd list.
+              return state.data
+                .map((atbd) => {
+                  // Not the document we're looking for.
+                  if (atbd.id !== id) return atbd;
+
+                  const versions = atbd.versions.filter(
+                    (atbdVersion) => atbdVersion.version !== version
+                  );
+                  // Remove the whole atbd if there are no more versions.
+                  return versions.length
+                    ? {
+                        ...atbd,
+                        versions
+                      }
+                    : null;
+                })
+                .filter(Boolean);
+            }
+          })
+        )
       }
     },
     [token]
@@ -138,7 +188,8 @@ export const AtbdsProvider = (props) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    publishAtbdVersion,
+    dispatch: dispatchAtbdSingle
   } = useContexeedApi(
     {
       name: 'atbdSingle',
@@ -148,6 +199,9 @@ export const AtbdsProvider = (props) => {
         // when the alias changes the key must updated as well. This code captures
         // the action and does that.
         switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
+          }
           case 'atbdSingle/move-key': {
             const { [action.from]: prevKey, ...rest } = state;
             return {
@@ -232,6 +286,10 @@ export const AtbdsProvider = (props) => {
             method: 'delete'
           },
           onDone: (finish, { error, invalidate }) => {
+            // Because a deleted version may be in the atbd list state,
+            // invalidate it all.
+            dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
+
             return !error ? invalidate(`${id}/${version}`) : finish();
           }
         })),
@@ -434,6 +492,14 @@ export const AtbdsProvider = (props) => {
   );
 
   const contextValue = {
+    invalidateAtbdListCtx: useCallback(
+      () => dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdList]
+    ),
+    invalidateAtbdSingleCtx: useCallback(
+      () => dispatchAtbdSingle({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdSingle]
+    ),
     getAtbds,
     fetchAtbds,
     getSingleAtbd,
@@ -441,6 +507,24 @@ export const AtbdsProvider = (props) => {
     createAtbd,
     updateAtbd,
     deleteFullAtbd,
+    // The fundamental difference between deleteSingleAtbdVersion and
+    // deleteAtbdVersion is related to how they're used. The `deleteAtbdVersion`
+    // is tied to the single atbd context while `deleteSingleAtbdVersion` is
+    // tied to the atbd list context.
+    // To use `deleteAtbdVersion` we'd need to initialize `useSingleAtbd` with
+    // { id, version } but if we don't have them available (like in the hub)
+    // this is not possible.
+    // The deleteSingleAtbdVersion acts in the atbd list context and the id and
+    // version are passed directly.
+
+    // Ends up being:
+    // const { deleteSingleAtbdVersion } = useAtbds();
+    // deleteSingleAtbdVersion();
+    //
+    // instead of:
+    // const { deleteAtbdVersion } = useSingleAtbd({ id, version });
+    // deleteAtbdVersion()
+    deleteSingleAtbdVersion,
     deleteAtbdVersion,
     createAtbdVersion,
     publishAtbdVersion
@@ -499,9 +583,27 @@ export const useSingleAtbd = ({ id, version }) => {
   };
 };
 
-export const useAtbds = () => {
-  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useSafeContextFn(
-    'useAtbds'
-  );
-  return { atbds: getAtbds(), fetchAtbds, createAtbd, deleteFullAtbd };
+export const useAtbds = (filters = {}) => {
+  const {
+    getAtbds,
+    fetchAtbds,
+    createAtbd,
+    deleteFullAtbd,
+    deleteSingleAtbdVersion,
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx
+  } = useSafeContextFn('useAtbds');
+
+  return {
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx,
+    atbds: getAtbds(`${filters.role || 'all'}-${filters.status || 'all'}`),
+    fetchAtbds,
+    createAtbd,
+    deleteFullAtbd,
+    deleteSingleAtbdVersion: useCallback(
+      ({ id, version }) => deleteSingleAtbdVersion({ filters, id, version }),
+      [filters, deleteSingleAtbdVersion]
+    )
+  };
 };

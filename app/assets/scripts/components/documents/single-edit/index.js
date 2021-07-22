@@ -8,19 +8,16 @@ import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
-import DocumentNavHeader from '../document-nav-header';
-import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentHeadline from '../document-headline';
+import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 
-import { getATBDEditStep } from './steps';
+import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { calculateAtbdCompleteness } from '../completeness';
-import {
-  DocumentModals,
-  useDocumentModals
-} from '../document-publishing-actions';
-import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
+import { DocumentModals, useDocumentModals } from '../use-document-modals';
+import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
+import { documentUpdatedDate } from '../../../utils/date';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -52,7 +49,7 @@ function DocumentEdit() {
 
       switch (menuId) {
         case 'delete':
-          await atbdDeleteVersionConfirmAndToast({
+          await documentDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
@@ -78,7 +75,7 @@ function DocumentEdit() {
     }
   }
 
-  const stepDefinition = getATBDEditStep(step);
+  const stepDefinition = getDocumentEditStep(step);
   const { StepComponent } = stepDefinition;
 
   if (!StepComponent) {
@@ -103,13 +100,15 @@ function DocumentEdit() {
   // component and include it on every component, it gets passed as a render
   // prop.
 
-  const completeness = atbd.data
-    ? calculateAtbdCompleteness(atbd.data).percent
-    : 0;
-
   const pageTitle = atbd.data?.title
     ? `Editing ${atbd.data.title}`
     : 'Document view';
+
+  // The updated at is the most recent between the version updated at and the
+  // atbd updated at. In the case of a single ATBD the selected version data is
+  // merged with the ATBD meta and that's why both variables are
+  // the same.
+  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
 
   return (
     <App pageTitle={pageTitle}>
@@ -125,20 +124,20 @@ function DocumentEdit() {
           atbd={atbd.data}
           renderInpageHeader={() => (
             <InpageHeaderSticky>
-              <DocumentNavHeader
+              <DocumentHeadline
                 atbdId={id}
                 title={atbd.data.title}
-                status={atbd.data.status}
                 version={version}
                 versions={atbd.data.versions}
-                completeness={completeness}
+                updatedDate={updatedDate}
+                onAction={onDocumentMenuAction}
                 mode='edit'
               />
               <InpageActions>
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
                 <VerticalDivider variation='light' />
-                <AtbdActionsMenu
+                <DocumentActionsMenu
                   // In the case of a single ATBD the selected version data is
                   // merged with the ATBD meta and that's why both variables are
                   // the same.

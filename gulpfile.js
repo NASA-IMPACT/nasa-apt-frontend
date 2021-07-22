@@ -133,6 +133,11 @@ function javascript() {
     brs = brs.ignore(['./app/assets/scripts/components/sandbox/index.js']);
   }
 
+  // Ignore the devtools when not in dev.
+  if (!isDev()) {
+    brs = brs.ignore(['./app/assets/scripts/components/apt-devtools/index.js']);
+  }
+
   if (isDev()) {
     brs.plugin(watchify).plugin(errorify).on('update', bundler);
   }

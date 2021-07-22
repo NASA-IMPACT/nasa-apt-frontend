@@ -255,7 +255,7 @@ export const STEPS = [
   }
 ];
 
-export const getATBDEditStep = (id) => {
+export const getDocumentEditStep = (id) => {
   // If no id is set, use the first step.
   const idx = id ? STEPS.findIndex((step) => step.id === id) : 0;
 
