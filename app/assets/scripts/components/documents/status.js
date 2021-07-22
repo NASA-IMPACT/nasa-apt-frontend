@@ -7,27 +7,27 @@
 // 3.  (CLOSED_REVIEW_REQUESTED) --> Deny closed review request --> (DRAFT)
 // 4.  (CLOSED_REVIEW_REQUESTED) --> Accept closed review request --> (CLOSED_REVIEW)
 // 5.  (CLOSED_REVIEW) --> Open Review --> (OPEN_REVIEW)
-// 6.  (OPEN_REVIEW) --> Request Curation --> (CURATION_REQUESTED)
-// 7.  (CURATION_REQUESTED) --> Cancel Curation Request --> (OPEN_REVIEW)
-// 8.  (CURATION_REQUESTED) --> Deny Curation Request --> (OPEN_REVIEW)
-// 9.  (CURATION_REQUESTED) -->  Accept Curation Request --> (CURATION)
-// 10. (CURATION) --> Publish --> (PUBLISHED)
+// 6.  (OPEN_REVIEW) --> Request Publication --> (PUBLICATION_REQUESTED)
+// 7.  (PUBLICATION_REQUESTED) --> Cancel Publication Request --> (OPEN_REVIEW)
+// 8.  (PUBLICATION_REQUESTED) --> Deny Publication Request --> (OPEN_REVIEW)
+// 9.  (PUBLICATION_REQUESTED) -->  Accept Publication Request --> (PUBLICATION)
+// 10. (PUBLICATION) --> Publish --> (PUBLISHED)
 
-const DRAFT = 'Draft';
-const CLOSED_REVIEW_REQUESTED = 'CLOSED_REVIEW_REQUESTED';
-const CLOSED_REVIEW = 'CLOSED_REVIEW';
-const OPEN_REVIEW = 'OPEN_REVIEW';
-const CURATION_REQUESTED = 'CURATION_REQUESTED';
-const CURATION = 'CURATION';
-const PUBLISHED = 'Published';
+export const DRAFT = 'DRAFT';
+export const CLOSED_REVIEW_REQUESTED = 'CLOSED_REVIEW_REQUESTED';
+export const CLOSED_REVIEW = 'CLOSED_REVIEW';
+export const OPEN_REVIEW = 'OPEN_REVIEW';
+export const PUBLICATION_REQUESTED = 'PUBLICATION_REQUESTED';
+export const PUBLICATION = 'PUBLICATION';
+export const PUBLISHED = 'PUBLISHED';
 
 export const DOCUMENT_STATUS = [
   { id: DRAFT, label: 'Draft' },
   { id: CLOSED_REVIEW_REQUESTED, label: 'Draft' },
   { id: CLOSED_REVIEW, label: 'In closed review' },
   { id: OPEN_REVIEW, label: 'In review' },
-  { id: CURATION_REQUESTED, label: 'In review' },
-  { id: CURATION, label: 'In publication' },
+  { id: PUBLICATION_REQUESTED, label: 'In review' },
+  { id: PUBLICATION, label: 'In publication' },
   { id: PUBLISHED, label: 'Published' }
 ];
 

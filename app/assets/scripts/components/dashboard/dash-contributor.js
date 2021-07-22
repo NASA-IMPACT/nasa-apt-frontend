@@ -20,6 +20,7 @@ import { EmptyHub } from '../common/empty-states';
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
+import { PUBLISHED } from '../documents/status';
 
 const DashboardContributorInner = styled.div`
   display: grid;
@@ -71,7 +72,7 @@ function DashboardContributor() {
           <TabDocuments role='reviewer' />
         </TabContent>
         <TabContent tabId='public'>
-          <TabDocuments status='Published' />
+          <TabDocuments status={PUBLISHED} />
         </TabContent>
       </TabsManager>
     </DashboardContributorInner>
