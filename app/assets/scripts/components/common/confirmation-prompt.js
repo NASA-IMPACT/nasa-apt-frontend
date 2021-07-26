@@ -221,29 +221,6 @@ const deleteControls = ({ confirm, cancel }) => (
  * @param {any} data Any extra data that the confirmation prompt should keep
  *              track of. Useful to know what confirmation we're working with.
  */
-export const confirmDeleteDocument = async (name) => {
-  return showConfirmationPrompt({
-    title: 'Delete this document?',
-    content: (
-      <p>
-        The document <strong>{name}</strong> and all its versions will be
-        deleted.
-      </p>
-    ),
-    renderControls: deleteControls
-  });
-};
-
-/**
- * Convenience method to show a delete confirmation prompt for a document.
- * Will display a "Cancel/Delete" buttons and:
- * title: 'Delete this document?'
- * content: <p>The document <strong>{name}</strong> will be deleted.</p>
- *
- * @param {string} name Name of the document to delete
- * @param {any} data Any extra data that the confirmation prompt should keep
- *              track of. Useful to know what confirmation we're working with.
- */
 export const confirmDeleteDocumentVersion = async (name, version) => {
   return showConfirmationPrompt({
     title: 'Delete this document version?',

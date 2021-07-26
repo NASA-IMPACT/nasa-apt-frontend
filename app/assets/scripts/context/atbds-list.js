@@ -83,7 +83,6 @@ export const AtbdsProvider = (props) => {
   const {
     getState: getAtbds,
     fetchAtbds,
-    deleteFullAtbd,
     deleteSingleAtbdVersion,
     dispatch: dispatchAtbdList
   } = useContexeedApi(
@@ -105,16 +104,6 @@ export const AtbdsProvider = (props) => {
         }))
       },
       mutations: {
-        deleteFullAtbd: withRequestToken(token, ({ id }) => ({
-          url: `/atbds/${id}`,
-          requestOptions: {
-            method: 'delete'
-          },
-          transformData: (data, { state }) => {
-            // If delete worked, remove the item from the atbd list.
-            return state.data.filter((atbd) => atbd.id !== id);
-          }
-        })),
         // See explanation about this on the export down below.
         deleteSingleAtbdVersion: withRequestToken(
           token,
@@ -506,7 +495,6 @@ export const AtbdsProvider = (props) => {
     fetchSingleAtbd,
     createAtbd,
     updateAtbd,
-    deleteFullAtbd,
     // The fundamental difference between deleteSingleAtbdVersion and
     // deleteAtbdVersion is related to how they're used. The `deleteAtbdVersion`
     // is tied to the single atbd context while `deleteSingleAtbdVersion` is
@@ -588,7 +576,6 @@ export const useAtbds = (filters = {}) => {
     getAtbds,
     fetchAtbds,
     createAtbd,
-    deleteFullAtbd,
     deleteSingleAtbdVersion,
     invalidateAtbdListCtx,
     invalidateAtbdSingleCtx
@@ -600,7 +587,6 @@ export const useAtbds = (filters = {}) => {
     atbds: getAtbds(`${filters.role || 'all'}-${filters.status || 'all'}`),
     fetchAtbds,
     createAtbd,
-    deleteFullAtbd,
     deleteSingleAtbdVersion: useCallback(
       ({ id, version }) => deleteSingleAtbdVersion({ filters, id, version }),
       [filters, deleteSingleAtbdVersion]
