@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
@@ -11,7 +11,8 @@ import {
   PanelHeader,
   PanelHeadline,
   PanelTitleAlt,
-  PanelBody
+  PanelBody,
+  PanelActions
 } from '../../styles/panel';
 import DropdownMenu from '../common/dropdown-menu';
 import CommentForm from './comment-form';
@@ -36,40 +37,49 @@ const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
 `;
 
-const CommentCenterSelf = styled.aside`
+const CommentCenterPanel = styled(Panel)`
   position: fixed;
   top: 0;
   right: 0;
   height: 100%;
   z-index: 100;
-  display: grid;
-  grid-gap: ${glsp()};
-  grid-template-columns: auto 1fr;
+  width: 22rem;
+  background: ${themeVal('color.surface')};
+  box-shadow: ${themeVal('boxShadow.elevationC')};
 
-  .comment-center-enter {
-    margin-right: -22rem;
+  &.comment-center-enter {
+    transform: translateX(calc(100% + 2rem));
   }
-  .comment-center-enter-active {
-    margin-right: 0;
-    transition: margin-right 320ms ease-in-out;
+  &.comment-center-enter-active {
+    transform: translateX(0);
+    transition: transform 320ms ease-in-out;
   }
-  .comment-center-exit {
-    margin-right: 0;
+  &.comment-center-exit {
+    transform: translateX(0);
   }
-  .comment-center-exit-active {
-    margin-right: -22rem;
-    transition: margin-right 320ms ease-in-out;
-  }
-
-  ${Panel} {
-    background: ${themeVal('color.surface')};
-    width: 22rem;
+  &.comment-center-exit-active {
+    transform: translateX(calc(100% + 2rem));
+    transition: transform 320ms ease-in-out;
   }
 `;
 
-const CommentCenterTrigger = styled(Button)`
-  align-self: flex-start;
-  margin-top: ${glsp(0.5)};
+const PanelBodyTransitioned = styled(PanelBody)`
+  &.fade-enter {
+    opacity: 0;
+  }
+  &.fade-exit {
+    opacity: 1;
+  }
+  &.fade-enter-active {
+    opacity: 1;
+  }
+  &.fade-exit-active {
+    opacity: 0;
+  }
+  &.fade-enter-active,
+  &.fade-exit-active {
+    transition: opacity 160ms;
+  }
 `;
 
 const CommentList = styled.ol`
@@ -173,6 +183,9 @@ const COMMENT_STATUSES = [
   }
 ];
 
+const transitionEndListener = (node, done) =>
+  node.addEventListener('transitionend', done, false);
+
 function CommentCenter() {
   const {
     isPanelOpen,
@@ -184,10 +197,6 @@ function CommentCenter() {
     openThreadId,
     setOpenThreadId
   } = useCommentCenter();
-
-  const togglePanel = useCallback(() => {
-    setPanelOpen((v) => !v);
-  }, [setPanelOpen]);
 
   const onCommentSectionMenuSelect = useCallback(
     (id, { menuItem }) => {
@@ -258,118 +267,126 @@ function CommentCenter() {
   const isCommentThread = !!singleComment;
 
   return (
-    <CommentCenterSelf ref={elementRef}>
-      <CommentCenterTrigger
-        hideText
-        useIcon='speech-balloon'
-        variation='base-raised-light'
-        onClick={togglePanel}
-        active={isPanelOpen}
-      >
-        Toggle comment panel
-      </CommentCenterTrigger>
-      <CSSTransition
-        in={isPanelOpen}
-        timeout={320}
-        classNames='comment-center'
-        appear
-        unmountOnExit
-      >
-        <Panel as='div'>
-          <PanelHeader>
-            <PanelHeadline>
-              <PanelTitleAlt>
-                {isCommentThread ? 'Comment Thread' : 'Comments'}
-              </PanelTitleAlt>
-              {isCommentThread ? (
-                <Button
-                  useIcon='arrow-left'
-                  title='See all comments'
-                  onClick={() => setOpenThreadId(null)}
-                >
-                  View all
-                </Button>
-              ) : (
-                <SectionsDropdownMenu
-                  menu={commentSectionMenu}
-                  activeItem={menuActiveItems}
-                  alignment='left'
-                  direction='down'
-                  withChevron
-                  dropTitle='Options'
-                  onSelect={onCommentSectionMenuSelect}
-                />
-              )}
-            </PanelHeadline>
-          </PanelHeader>
-          <PanelBody>
-            <CommentShadowScrollbar>
-              {isCommentThread ? (
-                <React.Fragment>
-                  <CommentEntry
-                    type={COMMENT_THREAD}
-                    commentId={singleComment.id}
-                    author={singleComment.author}
-                    isResolved={singleComment.isResolved}
-                    isEdited={singleComment.isEdited}
-                    isEditing={singleComment.isEditing}
-                    date={singleComment.date}
-                    section={singleComment.section}
-                    replyCount={singleComment.replies?.length}
-                    comment={singleComment.comment}
-                  />
-                  {singleComment.replies?.length ? (
-                    <CommentList>
-                      {singleComment.replies.map((c) => (
-                        <li key={c.id}>
-                          <CommentEntry
-                            type={COMMENT_THREAD_REPLY}
-                            commentId={c.id}
-                            author={c.author}
-                            isEdited={c.isEdited}
-                            isEditing={c.isEditing}
-                            date={c.date}
-                            comment={c.comment}
-                          />
-                        </li>
-                      ))}
-                    </CommentList>
-                  ) : (
-                    <EmptyComment>
-                      <p>There are no replies.</p>
-                      <p>Say something!</p>
-                    </EmptyComment>
-                  )}
-                </React.Fragment>
-              ) : (
-                <CommentList>
-                  {COMMENTS.map((c) => (
-                    <li key={c.id}>
-                      <CommentEntry
-                        type={COMMENT}
-                        commentId={c.id}
-                        author={c.author}
-                        isResolved={c.isResolved}
-                        isEdited={c.isEdited}
-                        isEditing={c.isEditing}
-                        date={c.date}
-                        section={c.section}
-                        replyCount={c.replies?.length}
-                        comment={c.comment}
-                        onViewClick={setOpenThreadId}
-                      />
-                    </li>
-                  ))}
-                </CommentList>
-              )}
-            </CommentShadowScrollbar>
-            <CommentFormWrapper>
-              <CommentForm type={isCommentThread ? 'reply' : 'new'} />
-            </CommentFormWrapper>
-          </PanelBody>
-        </Panel>
-      </CSSTransition>
-    </CommentCenterSelf>
+    <CSSTransition
+      in={isPanelOpen}
+      timeout={320}
+      classNames='comment-center'
+      appear
+      unmountOnExit
+    >
+      <CommentCenterPanel as='aside' ref={elementRef}>
+        <PanelHeader>
+          <PanelHeadline>
+            <PanelTitleAlt>
+              {isCommentThread ? 'Comment Thread' : 'Comments'}
+            </PanelTitleAlt>
+            {isCommentThread ? (
+              <Button
+                useIcon='arrow-left'
+                title='See all comments'
+                onClick={() => setOpenThreadId(null)}
+              >
+                View all
+              </Button>
+            ) : (
+              <SectionsDropdownMenu
+                menu={commentSectionMenu}
+                activeItem={menuActiveItems}
+                alignment='left'
+                direction='down'
+                withChevron
+                dropTitle='Options'
+                onSelect={onCommentSectionMenuSelect}
+              />
+            )}
+          </PanelHeadline>
+          <PanelActions>
+            <Button
+              useIcon='xmark--small'
+              size='small'
+              hideText
+              title='Close panel'
+              onClick={() => setPanelOpen(false)}
+            >
+              Close panel
+            </Button>
+          </PanelActions>
+        </PanelHeader>
+        <SwitchTransition>
+          <CSSTransition
+            key={isCommentThread ? 'thread' : 'single'}
+            addEndListener={transitionEndListener}
+            classNames='fade'
+          >
+            <PanelBodyTransitioned>
+              <CommentShadowScrollbar>
+                {isCommentThread ? (
+                  <React.Fragment>
+                    <CommentEntry
+                      type={COMMENT_THREAD}
+                      commentId={singleComment.id}
+                      author={singleComment.author}
+                      isResolved={singleComment.isResolved}
+                      isEdited={singleComment.isEdited}
+                      isEditing={singleComment.isEditing}
+                      date={singleComment.date}
+                      section={singleComment.section}
+                      replyCount={singleComment.replies?.length}
+                      comment={singleComment.comment}
+                    />
+                    {singleComment.replies?.length ? (
+                      <CommentList>
+                        {singleComment.replies.map((c) => (
+                          <li key={c.id}>
+                            <CommentEntry
+                              type={COMMENT_THREAD_REPLY}
+                              commentId={c.id}
+                              author={c.author}
+                              isEdited={c.isEdited}
+                              isEditing={c.isEditing}
+                              date={c.date}
+                              comment={c.comment}
+                            />
+                          </li>
+                        ))}
+                      </CommentList>
+                    ) : (
+                      <EmptyComment>
+                        <p>There are no replies.</p>
+                        <p>Say something!</p>
+                      </EmptyComment>
+                    )}
+                  </React.Fragment>
+                ) : (
+                  <CommentList>
+                    {COMMENTS.map((c) => (
+                      <li key={c.id}>
+                        <CommentEntry
+                          type={COMMENT}
+                          commentId={c.id}
+                          author={c.author}
+                          isResolved={c.isResolved}
+                          isEdited={c.isEdited}
+                          isEditing={c.isEditing}
+                          date={c.date}
+                          section={c.section}
+                          replyCount={c.replies?.length}
+                          comment={c.comment}
+                          onViewClick={setOpenThreadId}
+                        />
+                      </li>
+                    ))}
+                  </CommentList>
+                )}
+              </CommentShadowScrollbar>
+              <CommentFormWrapper>
+                <CommentForm type={isCommentThread ? 'reply' : 'new'} />
+              </CommentFormWrapper>
+            </PanelBodyTransitioned>
+          </CSSTransition>
+        </SwitchTransition>
+      </CommentCenterPanel>
+    </CSSTransition>
   );
 }
 

@@ -14,7 +14,7 @@ import ErrorBoundary from './components/uhoh/fatal-error';
 import { ToastsContainer } from './components/common/toasts';
 import AccessRoute from './a11n/access-route';
 import ConfirmationPrompt from './components/common/confirmation-prompt';
-// import CommentCenter from './components/comment-center';
+import CommentCenter from './components/comment-center';
 import AptDevtools from './components/apt-devtools';
 
 // Views
@@ -142,7 +142,7 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
-          {/* <CommentCenter /> */}
+          <CommentCenter />
           {process.env.NODE_ENV === 'development' && <AptDevtools />}
         </Composer>
         <ToastsContainer />

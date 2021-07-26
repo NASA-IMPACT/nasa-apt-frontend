@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-// import { Button } from '@devseed-ui/button';
+import { Button } from '@devseed-ui/button';
 
 import {
   InpageHeadline,
@@ -21,6 +21,7 @@ import { CollaboratorsMenu } from './collaborators-menu';
 import { useContextualAbility } from '../../a11n';
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
+import { useCommentCenter } from '../../context/comment-center';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentHeadline(props) {
@@ -35,6 +36,11 @@ export default function DocumentHeadline(props) {
   } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
+  const { isPanelOpen, setPanelOpen } = useCommentCenter();
+
+  const togglePanel = useCallback(() => setPanelOpen((v) => !v), [
+    setPanelOpen
+  ]);
 
   const atbdVersion = versions.find((v) => v.version === version);
 
@@ -147,16 +153,18 @@ export default function DocumentHeadline(props) {
                 triggerProps={collaboratorsMenuTriggerProps}
               />
             </li>
-            {/* <li>
+            <li>
               <Button
                 variation='achromic-plain'
                 size='small'
                 useIcon='speech-balloon'
                 title='View comments'
+                onClick={togglePanel}
+                active={isPanelOpen}
               >
                 8 comments
               </Button>
-            </li> */}
+            </li>
           </InpageMeta>
         )}
       </InpageHeadline>

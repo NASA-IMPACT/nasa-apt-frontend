@@ -26,6 +26,9 @@ export const PanelHeader = styled.header`
   z-index: 9999;
   padding: ${glsp(0.5, themeVal('layout.gap.xsmall'))};
   box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-gap: ${glsp(0.5, 1)};
 
   ${media.mediumUp`
     padding: ${glsp(1, themeVal('layout.gap.medium'))};
@@ -33,6 +36,10 @@ export const PanelHeader = styled.header`
 `;
 
 export const PanelHeadline = styled.div`
+  /* Styled component */
+`;
+
+export const PanelActions = styled.div`
   /* Styled component */
 `;
 
