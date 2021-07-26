@@ -161,7 +161,11 @@ export function DocumentCollaboratorModal(props) {
     canManageReviewers && !canManageAuthors ? 'reviewers' : 'authors';
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+    <Formik
+      initialValues={initialValues}
+      enableReinitialize
+      onSubmit={onSubmit}
+    >
       <React.Fragment>
         <RevealFormikReset revealed={revealed} />
         <Modal
