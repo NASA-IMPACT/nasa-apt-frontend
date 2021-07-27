@@ -65,3 +65,57 @@ const isInStatus = (versionOsStatus, statuses) =>
 export const isDraft = (versionOsStatus) => {
   return isInStatus(versionOsStatus, [DRAFT]);
 };
+
+/**
+ * Checks that the given document or status string is in Closed Review Requested
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isReviewRequested = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [CLOSED_REVIEW_REQUESTED]);
+};
+
+/**
+ * Checks that the given document or status string is in Closed Review
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isClosedReview = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [CLOSED_REVIEW]);
+};
+
+/**
+ * Checks that the given document or status string is in Open Review
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isOpenReview = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [OPEN_REVIEW]);
+};
+
+/**
+ * Checks that the given document or status string is in Publication Requested
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublicationRequested = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [PUBLICATION_REQUESTED]);
+};
+
+/**
+ * Checks that the given document or status string is in Publication
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublication = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [PUBLICATION]);
+};
+
+/**
+ * Checks that the given document or status string is Published
+ * @param {object|string} versionOsStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublished = (versionOsStatus) => {
+  return isInStatus(versionOsStatus, [PUBLISHED]);
+};
