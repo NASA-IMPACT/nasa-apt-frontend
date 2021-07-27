@@ -83,7 +83,7 @@ export interface ContexeedApiAction {
    */
   onDone(
     /** Finish callback. It will send the data or the error to the state. It is
-     * also possible to change the data being sent to the stat by passing
+     * also possible to change the data being sent to the state by passing
      * arguments to the finish function (error, data).
      */
     finish: FnType,
