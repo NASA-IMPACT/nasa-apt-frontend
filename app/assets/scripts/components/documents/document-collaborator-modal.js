@@ -18,15 +18,16 @@ import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
 import UserIdentity from '../common/user-identity';
 import Tip from '../common/tooltip';
-
-import { useContextualAbility } from '../../a11n';
-import { showConfirmationPrompt } from '../common/confirmation-prompt';
-import { useCollaborators } from '../../context/collaborators-list';
 import {
   LoadingSkeleton,
   LoadingSkeletonGroup,
   LoadingSkeletonLine
 } from '../common/loading-skeleton';
+import { FormikResetReveal } from '../common/forms/formik-reset-reveal';
+
+import { useContextualAbility } from '../../a11n';
+import { showConfirmationPrompt } from '../common/confirmation-prompt';
+import { useCollaborators } from '../../context/collaborators-list';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -167,7 +168,7 @@ export function DocumentCollaboratorModal(props) {
       onSubmit={onSubmit}
     >
       <React.Fragment>
-        <RevealFormikReset revealed={revealed} />
+        <FormikResetReveal revealed={revealed} />
         <Modal
           id='modal'
           size='small'
@@ -311,7 +312,7 @@ export function DocumentLeadAuthorModal(props) {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmitConfirm}>
       <React.Fragment>
-        <RevealFormikReset revealed={revealed} />
+        <FormikResetReveal revealed={revealed} />
         <Modal
           id='modal'
           size='small'
@@ -398,17 +399,6 @@ function LoadingBlock() {
       ))}
     </LoadingSkeletonGroup>
   );
-}
-
-// Reset the formik state when the modal is hidden.
-function RevealFormikReset({ revealed }) {
-  const { resetForm } = useFormikContext();
-  useEffect(() => {
-    if (!revealed) {
-      resetForm();
-    }
-  }, [resetForm, revealed]);
-  return null;
 }
 
 function CollaboratorsSelectableList(props) {
