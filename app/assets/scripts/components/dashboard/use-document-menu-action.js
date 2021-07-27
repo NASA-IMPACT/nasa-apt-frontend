@@ -3,6 +3,8 @@ import { useHistory } from 'react-router';
 
 import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
+import { useSingleAtbd } from '../../context/atbds-list';
+import { eventProcessToasts } from '../documents/use-document-modals';
 
 /**
  * Creates a callback to be used with the DocumentActionMenu component in the
@@ -17,16 +19,36 @@ import { documentDeleteVersionConfirmAndToast } from '../documents/document-dele
  */
 export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
   const history = useHistory();
+  const { fevReqReview, fevCancelReviewReq } = useSingleAtbd({});
 
   return useCallback(
     async (menuId, { atbd }) => {
+      const base = { id: atbd?.id, version: atbd?.version };
+
       switch (menuId) {
         case 'delete':
           await documentDeleteVersionConfirmAndToast({
             atbd,
-            deleteAtbdVersion: () =>
-              deleteAtbdVersion({ id: atbd.id, version: atbd.version }),
+            deleteAtbdVersion: () => deleteAtbdVersion(base),
             history
+          });
+          break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/documents/use-document-modals.js
+        case 'req-review':
+          await eventProcessToasts({
+            promise: fevReqReview(base),
+            success: 'Review requested successfully',
+            error: 'Error while requesting review'
+          });
+          break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/documents/use-document-modals.js
+        case 'cancel-req-review':
+          await eventProcessToasts({
+            promise: fevCancelReviewReq(base),
+            success: 'Review request cancelled successfully',
+            error: 'Error while cancelling requested review'
           });
           break;
         case 'update-minor':
@@ -35,6 +57,8 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
         case 'view-info':
         case 'manage-collaborators':
         case 'change-leading':
+        case 'req-review-allow':
+        case 'req-review-deny':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
@@ -43,6 +67,6 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
           break;
       }
     },
-    [deleteAtbdVersion, history]
+    [deleteAtbdVersion, history, fevReqReview, fevCancelReviewReq]
   );
 }

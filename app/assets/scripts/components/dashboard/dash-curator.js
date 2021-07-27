@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -10,7 +10,6 @@ import { EmptyHub } from '../common/empty-states';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
-import { useDocumentGovernance } from '../documents/use-document-governance';
 
 const DashboardCuratorInner = styled.div`
   display: grid;
@@ -24,18 +23,9 @@ const Empty = styled(EmptyHub)`
 function DashboardCurator() {
   const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds();
 
-  const documentHubAction = useDocumentHubMenuAction({
+  const onDocumentAction = useDocumentHubMenuAction({
     deleteAtbdVersion: deleteSingleAtbdVersion
   });
-  const documentGovernanceAction = useDocumentGovernance();
-  // Merge both documentHubAction and documentGovernanceAction.
-  const onDocumentAction = useCallback(
-    (...args) => {
-      documentHubAction(...args);
-      documentGovernanceAction(...args);
-    },
-    [documentHubAction, documentGovernanceAction]
-  );
 
   useEffect(() => {
     if (atbds.status === 'idle') {

@@ -42,7 +42,7 @@ export default function DocumentGovernanceAction(props) {
             atbd
           ])}
         >
-          Submit review
+          Request review
         </control.El>
       </Can>
       <Can do='cancel-req-review' on={atbd}>

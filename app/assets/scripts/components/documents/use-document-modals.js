@@ -20,18 +20,38 @@ import {
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
+import { ReqReviewDenyModal } from './document-governance-modals';
+import toasts from '../common/toasts';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
 const MODAL_MINOR_VERSION = 'modal-minor-version';
 const MODAL_PUBLISHING = 'modal-publishing';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
+const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
+
+/**
+ * Waits for a promise showing a message in case of error or success.
+ *
+ * @param {Promise} opt.promise The promise to wait for.
+ * @param {Promise} opt.success The message in case the promise succeeds
+ * @param {Promise} opt.error The message in case of error. The error message
+ * itself is shown after this message
+ */
+export const eventProcessToasts = async ({ promise, success, error }) => {
+  const result = await promise;
+  if (result.error) {
+    toasts.error(`${error}: ${result.error.message}`);
+  } else {
+    toasts.success(success);
+  }
+};
 
 export function DocumentModals(props) {
   const {
     atbd,
     activeModal,
-    setActiveModal,
+    hideModal,
     onDocumentInfoSubmit,
     onMinorVersionSubmit,
     onPublishVersionSubmit,
@@ -44,31 +64,37 @@ export function DocumentModals(props) {
         revealed={activeModal === MODAL_DOCUMENT_INFO}
         atbd={atbd}
         onSubmit={onDocumentInfoSubmit}
-        onClose={() => setActiveModal(MODAL_DOCUMENT_INFO)}
+        onClose={hideModal}
       />
       <MinorVersionModal
         revealed={activeModal === MODAL_MINOR_VERSION}
         atbd={atbd}
         onSubmit={onMinorVersionSubmit}
-        onClose={() => setActiveModal(MODAL_MINOR_VERSION)}
+        onClose={hideModal}
       />
       <PublishingModal
         revealed={activeModal === MODAL_PUBLISHING}
         atbd={atbd}
         onSubmit={onPublishVersionSubmit}
-        onClose={() => setActiveModal(MODAL_PUBLISHING)}
+        onClose={hideModal}
       />
       <DocumentCollaboratorModal
         revealed={activeModal === MODAL_DOCUMENT_COLLABORATOR}
         atbd={atbd}
         onSubmit={onCollaboratorsSubmit}
-        onClose={() => setActiveModal(MODAL_DOCUMENT_COLLABORATOR)}
+        onClose={hideModal}
       />
       <DocumentLeadAuthorModal
         revealed={activeModal === MODAL_DOCUMENT_LEAD_AUTHOR}
         atbd={atbd}
         onSubmit={onCollaboratorsSubmit}
-        onClose={() => setActiveModal(MODAL_DOCUMENT_LEAD_AUTHOR)}
+        onClose={hideModal}
+      />
+      <ReqReviewDenyModal
+        revealed={activeModal === MODAL_REQ_REVIEW_DENY}
+        atbd={atbd}
+        // onSubmit={}
+        onClose={hideModal}
       />
     </React.Fragment>
   );
@@ -77,7 +103,7 @@ export function DocumentModals(props) {
 DocumentModals.propTypes = {
   atbd: T.object,
   activeModal: T.string,
-  setActiveModal: T.func,
+  hideModal: T.func,
   onDocumentInfoSubmit: T.func,
   onMinorVersionSubmit: T.func,
   onPublishVersionSubmit: T.func,
@@ -88,7 +114,9 @@ export const useDocumentModals = ({
   atbd,
   createAtbdVersion,
   updateAtbd,
-  publishAtbdVersion
+  publishAtbdVersion,
+  fevReqReview,
+  fevCancelReviewReq
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -120,9 +148,40 @@ export const useDocumentModals = ({
         case 'change-leading':
           setActiveModal(MODAL_DOCUMENT_LEAD_AUTHOR);
           break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/dashboard/use-document-menu-action.js
+        case 'req-review':
+          await eventProcessToasts({
+            promise: fevReqReview({ id: atbd.id, version: atbd.version }),
+            success: 'Review requested successfully',
+            error: 'Error while requesting review'
+          });
+          break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/dashboard/use-document-menu-action.js
+        case 'cancel-req-review':
+          await eventProcessToasts({
+            promise: fevCancelReviewReq({ id: atbd.id, version: atbd.version }),
+            success: 'Review request cancelled successfully',
+            error: 'Error while cancelling requested review'
+          });
+          break;
+        // case 'req-review-allow':
+        //   setActiveModal(MODAL_REQ_REVIEW_ALLOW);
+        //   break;
+        case 'req-review-deny':
+          setActiveModal(MODAL_REQ_REVIEW_DENY);
+          break;
       }
     },
-    [atbd, createAtbdVersion, history, setActiveModal]
+    [
+      atbd,
+      createAtbdVersion,
+      history,
+      setActiveModal,
+      fevReqReview,
+      fevCancelReviewReq
+    ]
   );
 
   const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
@@ -167,7 +226,7 @@ export const useDocumentModals = ({
     documentModalProps: {
       atbd,
       activeModal,
-      setActiveModal,
+      hideModal,
       onDocumentInfoSubmit,
       onMinorVersionSubmit,
       onPublishVersionSubmit,

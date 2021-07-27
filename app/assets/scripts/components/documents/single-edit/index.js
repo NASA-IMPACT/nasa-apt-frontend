@@ -19,7 +19,6 @@ import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
-import { useDocumentGovernance } from '../use-document-governance';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -30,7 +29,9 @@ function DocumentEdit() {
     createAtbdVersion,
     updateAtbd,
     publishAtbdVersion,
-    deleteAtbdVersion
+    deleteAtbdVersion,
+    fevReqReview,
+    fevCancelReviewReq
   } = useSingleAtbd({ id, version });
 
   useEffect(() => {
@@ -41,7 +42,9 @@ function DocumentEdit() {
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion
+    publishAtbdVersion,
+    fevReqReview,
+    fevCancelReviewReq
   });
 
   const onDocumentMenuAction = useCallback(
@@ -61,8 +64,6 @@ function DocumentEdit() {
     },
     [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
-
-  const onDocumentGovernanceAction = useDocumentGovernance({ id, version });
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -141,7 +142,7 @@ function DocumentEdit() {
                 <DocumentGovernanceAction
                   atbd={atbd.data}
                   origin='single-edit'
-                  onAction={onDocumentGovernanceAction}
+                  onAction={onDocumentMenuAction}
                 />
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />

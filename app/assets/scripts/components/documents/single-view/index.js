@@ -33,7 +33,6 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
-import { useDocumentGovernance } from '../use-document-governance';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -127,7 +126,9 @@ function DocumentView() {
     fetchSingleAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    publishAtbdVersion,
+    fevReqReview,
+    fevCancelReviewReq
   } = useSingleAtbd({
     id,
     version
@@ -141,7 +142,9 @@ function DocumentView() {
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion
+    publishAtbdVersion,
+    fevReqReview,
+    fevCancelReviewReq
   });
 
   const onDocumentMenuAction = useCallback(
@@ -161,8 +164,6 @@ function DocumentView() {
     },
     [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
-
-  const onDocumentGovernanceAction = useDocumentGovernance({ id, version });
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -209,7 +210,7 @@ function DocumentView() {
               <DocumentGovernanceAction
                 atbd={atbd.data}
                 origin='single-view'
-                onAction={onDocumentGovernanceAction}
+                onAction={onDocumentMenuAction}
               />
               <DocumentDownloadMenu
                 atbd={atbd.data}

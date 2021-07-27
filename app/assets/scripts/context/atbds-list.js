@@ -499,7 +499,7 @@ export const AtbdsProvider = (props) => {
               // have been initialized because no single fetch request was made.
               // If that's the case we don't have data to work with and just
               // throw an error which will be captured in the onDone.
-              if (!state) {
+              if (!state?.data) {
                 throw new Error('state not initialized');
               }
               // Ensure that the structure is always the same. See rationale on
