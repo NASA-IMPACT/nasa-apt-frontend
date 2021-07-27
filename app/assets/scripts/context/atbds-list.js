@@ -1,4 +1,4 @@
-import React, { createContext, useCallback } from 'react';
+import React, { createContext, useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import qs from 'qs';
 
@@ -178,6 +178,7 @@ export const AtbdsProvider = (props) => {
     deleteAtbdVersion,
     createAtbdVersion,
     publishAtbdVersion,
+    fireAtbdEvent,
     dispatch: dispatchAtbdSingle
   } = useContexeedApi(
     {
@@ -474,7 +475,68 @@ export const AtbdsProvider = (props) => {
               return { ...actionResult };
             }
           };
-        })
+        }),
+
+        // Even though the events work on a separate endpoint, these events are
+        // specifically tied to the ATBDs since their returned response is an
+        // updated document.
+        fireAtbdEvent: withRequestToken(
+          token,
+          ({ id, version, action, payload }) => ({
+            sliceKey: `${id}/${version}`,
+            url: `/events`,
+            requestOptions: {
+              method: 'post',
+              data: {
+                atbd_id: id,
+                version,
+                action,
+                payload
+              }
+            },
+            transformData: (data, { state }) => {
+              // If the request is fired from the dashboard the state will not
+              // have been initialized because no single fetch request was made.
+              // If that's the case we don't have data to work with and just
+              // throw an error which will be captured in the onDone.
+              if (!state) {
+                throw new Error('state not initialized');
+              }
+              // Ensure that the structure is always the same. See rationale on
+              // fetchSingleAtbd
+              const updatedVersion = data.versions[0];
+
+              return {
+                ...computeAtbdVersion(state.data, updatedVersion),
+                // When the content gets updated we also have to update the
+                // corresponding version in the versions array. This is needed
+                // to ensure consistency with the returned structure from
+                // fetchSingleAtbd.
+                versions: getUpdatedVersions(
+                  state.data.versions,
+                  version,
+                  updatedVersion
+                )
+              };
+            },
+            onDone: (finish, { error, invalidate }) => {
+              // Because a document for which an event was fired may be in the
+              // atbd list state, invalidate it all.
+              dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
+
+              // If the state is not initialized set the data as null and
+              // invalidate. This will ensure that when the single page is
+              // opened, data will load.
+              if (error?.message === 'state not initialized') {
+                const result = finish(null, null);
+                invalidate(`${id}/${version}`);
+                return result;
+              }
+
+              return finish();
+            }
+          })
+        )
       }
     },
     [token]
@@ -515,7 +577,8 @@ export const AtbdsProvider = (props) => {
     deleteSingleAtbdVersion,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    publishAtbdVersion,
+    fireAtbdEvent
   };
 
   return (
@@ -540,8 +603,22 @@ export const useSingleAtbd = ({ id, version }) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    publishAtbdVersion,
+    fireAtbdEvent
   } = useSafeContextFn('useSingleAtbd');
+
+  // Function to create fire event callbacks. By default single atbd context
+  // actions are bound to the provided id and version. The events can also be
+  // fired from the dashboard where there is an atbd list instead of single
+  // ones. In these cases we cannot initialize the useSingleAtbd with an id and
+  // version, therefore these actions allow for those values to be passed as
+  // arguments.
+  const createFireEvent = useCallback(
+    (action) => ({ id: inId = id, version: inVersion = version } = {}) => {
+      return fireAtbdEvent({ action, id: inId, version: inVersion });
+    },
+    [id, version, fireAtbdEvent]
+  );
 
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
@@ -567,7 +644,25 @@ export const useSingleAtbd = ({ id, version }) => {
     createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
       id,
       createAtbdVersion
-    ])
+    ]),
+
+    // Events:
+    // fev -> Fire EVent
+    fevReqReview: useMemo(() => createFireEvent('request_closed_review'), [
+      createFireEvent
+    ]),
+    fevCancelReviewReq: useMemo(
+      () => createFireEvent('cancel_closed_review_request'),
+      [createFireEvent]
+    ),
+    fevApproveReviewReq: useMemo(
+      () => createFireEvent('accept_closed_review_request'),
+      [createFireEvent]
+    ),
+    fevDenyReviewReq: useMemo(
+      () => createFireEvent('deny_closed_review_request'),
+      [createFireEvent]
+    )
   };
 };
 

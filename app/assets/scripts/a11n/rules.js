@@ -1,5 +1,7 @@
 import { AbilityBuilder, Ability } from '@casl/ability';
 
+import { CLOSED_REVIEW_REQUESTED, DRAFT } from '../components/documents/status';
+
 // Initial ability definition.
 export const ability = new Ability(defineRulesFor(null), {
   detectSubjectType: (object) => {
@@ -30,6 +32,9 @@ export function defineRulesFor(user) {
       allow('manage-authors', 'document-version');
       allow('manage-reviewers', 'document-version');
       allow('change-lead-author', 'document-version');
+      allow('manage-req-review', 'document-version', {
+        status: CLOSED_REVIEW_REQUESTED
+      });
     }
     if (is(CONTRIBUTOR_ROLE)) {
       allow('view', 'contacts');
@@ -54,6 +59,16 @@ export function defineRulesFor(user) {
       // allow('manage-reviewers', 'document-version');
       allow('change-lead-author', 'document-version', {
         'owner.sub': user.id
+      });
+
+      // Governance actions
+      allow('req-review', 'document-version', {
+        'owner.sub': user.id,
+        status: DRAFT
+      });
+      allow('cancel-req-review', 'document-version', {
+        'owner.sub': user.id,
+        status: CLOSED_REVIEW_REQUESTED
       });
     }
   }

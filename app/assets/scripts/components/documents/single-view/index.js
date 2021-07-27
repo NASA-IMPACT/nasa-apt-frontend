@@ -27,11 +27,13 @@ import { ScrollAnchorProvider } from './scroll-manager';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
+import DocumentGovernanceAction from '../document-governance-action';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
+import { useDocumentGovernance } from '../use-document-governance';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -160,6 +162,8 @@ function DocumentView() {
     [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
 
+  const onDocumentGovernanceAction = useDocumentGovernance({ id, version });
+
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
   // handlers.
@@ -202,6 +206,11 @@ function DocumentView() {
               mode='view'
             />
             <InpageActions>
+              <DocumentGovernanceAction
+                atbd={atbd.data}
+                origin='single-view'
+                onAction={onDocumentGovernanceAction}
+              />
               <DocumentDownloadMenu
                 atbd={atbd.data}
                 variation='achromic-plain'

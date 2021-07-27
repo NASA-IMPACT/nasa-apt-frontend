@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
@@ -21,6 +21,7 @@ import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
 import { PUBLISHED } from '../documents/status';
+import { useDocumentGovernance } from '../documents/use-document-governance';
 
 const DashboardContributorInner = styled.div`
   display: grid;
@@ -90,13 +91,25 @@ const TabDocuments = (props) => {
   });
 
   const onCreateClick = useDocumentCreate();
-  const onDocumentAction = useDocumentHubMenuAction({
+
+  const documentHubAction = useDocumentHubMenuAction({
     deleteAtbdVersion: deleteSingleAtbdVersion
   });
+  const documentGovernanceAction = useDocumentGovernance();
+  // Merge both documentHubAction and documentGovernanceAction.
+  const onDocumentAction = useCallback(
+    (...args) => {
+      documentHubAction(...args);
+      documentGovernanceAction(...args);
+    },
+    [documentHubAction, documentGovernanceAction]
+  );
 
   useEffect(() => {
-    fetchAtbds({ role, status });
-  }, [fetchAtbds, role, status]);
+    if (atbds.status === 'idle') {
+      fetchAtbds({ role, status });
+    }
+  }, [atbds.status, fetchAtbds, role, status]);
 
   if (atbds.status === 'loading') {
     return <GlobalLoading />;

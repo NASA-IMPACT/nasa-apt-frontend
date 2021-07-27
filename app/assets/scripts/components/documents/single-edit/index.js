@@ -12,12 +12,14 @@ import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
+import { DocumentModals, useDocumentModals } from '../use-document-modals';
+import DocumentGovernanceAction from '../document-governance-action';
 
 import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
+import { useDocumentGovernance } from '../use-document-governance';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -59,6 +61,8 @@ function DocumentEdit() {
     },
     [atbd.data, deleteAtbdVersion, history, menuHandler]
   );
+
+  const onDocumentGovernanceAction = useDocumentGovernance({ id, version });
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
   // tracked by the `mutationStatus` property are handled in the submit
@@ -134,6 +138,11 @@ function DocumentEdit() {
                 mode='edit'
               />
               <InpageActions>
+                <DocumentGovernanceAction
+                  atbd={atbd.data}
+                  origin='single-edit'
+                  onAction={onDocumentGovernanceAction}
+                />
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
                 <VerticalDivider variation='light' />

@@ -7,7 +7,11 @@ import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
 import { calculateDocumentCompleteness } from '../documents/completeness';
-import { getDocumentStatusLabel, isDraft } from '../documents/status';
+import {
+  getDocumentStatusLabel,
+  isDraft,
+  isReviewRequested
+} from '../documents/status';
 
 const StatusSelf = styled(Pill)`
   min-width: 6rem;
@@ -65,7 +69,7 @@ export default StatusPill;
 export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
 
-  if (isDraft(atbdVersion)) {
+  if (isDraft(atbdVersion) || isReviewRequested(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill

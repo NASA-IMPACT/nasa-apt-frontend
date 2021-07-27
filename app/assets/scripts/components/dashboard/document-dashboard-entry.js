@@ -18,34 +18,33 @@ import {
   DocumentEntryMeta,
   DocumentEntryTitle
 } from '../../styles/documents/list';
-// import ContextualDocAction from './document-item-ctx-action';
 import DocumentActionsMenu from '../documents/document-actions-menu';
+import DocumentGovernanceAction from '../documents/document-governance-action';
 
 import { documentView } from '../../utils/url-creator';
-import { documentUpdatedDate } from '../../utils/date';
 import { computeAtbdVersion } from '../../context/atbds-list';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
-  const lastVersion = atbd.versions.last;
+
+  const lastVersion = useMemo(
+    () => computeAtbdVersion(atbd, atbd.versions.last),
+    [atbd]
+  );
 
   const onAction = useCallback(
     (menuId, payload = {}) =>
       onDocumentAction(menuId, {
-        atbd: computeAtbdVersion(atbd, lastVersion),
+        atbd: lastVersion,
         ...payload
       }),
-    [onDocumentAction, lastVersion, atbd]
+    [onDocumentAction, lastVersion]
   );
 
   const onCollaboratorMenuOptionsClick = useCallback(
     () => onAction('manage-collaborators'),
     [onAction]
   );
-
-  // The updated at is the most recent between the version updated at and the
-  // atbd updated at.
-  const updateDate = documentUpdatedDate(atbd, lastVersion);
 
   return (
     <DocumentEntry>
@@ -79,7 +78,7 @@ function DocumentDashboardEntry(props) {
             <li>
               <DateButton
                 prefix='Updated'
-                date={updateDate}
+                date={new Date(lastVersion.last_updated_at)}
                 to={documentView(atbd)}
                 title='View document'
               />
@@ -105,7 +104,11 @@ function DocumentDashboardEntry(props) {
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
-          {/* <ContextualDocAction action='approve-review' /> */}
+          <DocumentGovernanceAction
+            atbd={lastVersion}
+            origin='hub'
+            onAction={onAction}
+          />
           <DocumentActionsMenu
             origin='hub'
             size='small'
