@@ -75,11 +75,7 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
   );
 }
 
-export function useSubmitForMinorVersion(
-  updateAtbd,
-  setUpdatingMinorVersion,
-  history
-) {
+export function useSubmitForMinorVersion(updateAtbd, hideModal, history) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const processToast = createProcessToast('Updating minor version');
@@ -89,21 +85,21 @@ export function useSubmitForMinorVersion(
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
         resetForm();
-        setUpdatingMinorVersion(false);
+        hideModal();
         processToast.success(
           `Minor version updated to: ${result.data.version}`
         );
         history.replace(documentView(result.data, result.data.version));
       }
     },
-    [updateAtbd, setUpdatingMinorVersion, history]
+    [updateAtbd, hideModal, history]
   );
 }
 
 export function useSubmitForPublishingVersion(
   atbdVersion,
   publishAtbdVersion,
-  setPublishingDocument
+  hideModal
 ) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
@@ -114,11 +110,11 @@ export function useSubmitForPublishingVersion(
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
         resetForm({ values });
-        setPublishingDocument(false);
+        hideModal();
         processToast.success(`Version ${atbdVersion} was published.`);
       }
     },
-    [atbdVersion, publishAtbdVersion, setPublishingDocument]
+    [atbdVersion, publishAtbdVersion, hideModal]
   );
 }
 
@@ -158,10 +154,7 @@ export function useSubmitForDocumentInfo(updateAtbd) {
  * leading author since that modal is hidden before showing the confirmation
  * prompt.
  */
-export function useSubmitForCollaborators(
-  updateAtbd,
-  setManagingCollaborators
-) {
+export function useSubmitForCollaborators(updateAtbd, hideModal) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const msgIn = values.owner
@@ -176,12 +169,12 @@ export function useSubmitForCollaborators(
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
-        !values.owner && setManagingCollaborators(false);
+        !values.owner && hideModal();
         resetForm({ values });
         processToast.success(msgOut);
       }
     },
-    [setManagingCollaborators, updateAtbd]
+    [hideModal, updateAtbd]
   );
 }
 

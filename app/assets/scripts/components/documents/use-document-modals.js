@@ -21,56 +21,54 @@ import {
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
 
+const MODAL_DOCUMENT_INFO = 'modal-document-info';
+const MODAL_MINOR_VERSION = 'modal-minor-version';
+const MODAL_PUBLISHING = 'modal-publishing';
+const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
+const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
+
 export function DocumentModals(props) {
   const {
     atbd,
-    isViewingDocumentInfo,
+    activeModal,
+    setActiveModal,
     onDocumentInfoSubmit,
-    setViewingDocumentInfo,
-    isUpdatingMinorVersion,
     onMinorVersionSubmit,
-    setUpdatingMinorVersion,
-    isPublishingDocument,
     onPublishVersionSubmit,
-    setPublishingDocument,
-    isManagingCollaborators,
-    onCollaboratorsSubmit,
-    setManagingCollaborators,
-    isChangingLeadAuthor,
-    setChangingLeadAuthor
+    onCollaboratorsSubmit
   } = props;
 
   return (
     <React.Fragment>
       <DocumentInfoModal
-        revealed={isViewingDocumentInfo}
+        revealed={activeModal === MODAL_DOCUMENT_INFO}
         atbd={atbd}
         onSubmit={onDocumentInfoSubmit}
-        onClose={() => setViewingDocumentInfo(false)}
+        onClose={() => setActiveModal(MODAL_DOCUMENT_INFO)}
       />
       <MinorVersionModal
-        revealed={isUpdatingMinorVersion}
+        revealed={activeModal === MODAL_MINOR_VERSION}
         atbd={atbd}
         onSubmit={onMinorVersionSubmit}
-        onClose={() => setUpdatingMinorVersion(false)}
+        onClose={() => setActiveModal(MODAL_MINOR_VERSION)}
       />
       <PublishingModal
-        revealed={isPublishingDocument}
+        revealed={activeModal === MODAL_PUBLISHING}
         atbd={atbd}
         onSubmit={onPublishVersionSubmit}
-        onClose={() => setPublishingDocument(false)}
+        onClose={() => setActiveModal(MODAL_PUBLISHING)}
       />
       <DocumentCollaboratorModal
-        revealed={isManagingCollaborators}
+        revealed={activeModal === MODAL_DOCUMENT_COLLABORATOR}
         atbd={atbd}
         onSubmit={onCollaboratorsSubmit}
-        onClose={() => setManagingCollaborators(false)}
+        onClose={() => setActiveModal(MODAL_DOCUMENT_COLLABORATOR)}
       />
       <DocumentLeadAuthorModal
-        revealed={isChangingLeadAuthor}
+        revealed={activeModal === MODAL_DOCUMENT_LEAD_AUTHOR}
         atbd={atbd}
         onSubmit={onCollaboratorsSubmit}
-        onClose={() => setChangingLeadAuthor(false)}
+        onClose={() => setActiveModal(MODAL_DOCUMENT_LEAD_AUTHOR)}
       />
     </React.Fragment>
   );
@@ -78,20 +76,12 @@ export function DocumentModals(props) {
 
 DocumentModals.propTypes = {
   atbd: T.object,
-  isViewingDocumentInfo: T.bool,
+  activeModal: T.string,
+  setActiveModal: T.func,
   onDocumentInfoSubmit: T.func,
-  setViewingDocumentInfo: T.func,
-  isUpdatingMinorVersion: T.bool,
   onMinorVersionSubmit: T.func,
-  setUpdatingMinorVersion: T.func,
-  isPublishingDocument: T.bool,
   onPublishVersionSubmit: T.func,
-  setPublishingDocument: T.func,
-  isManagingCollaborators: T.bool,
-  onCollaboratorsSubmit: T.func,
-  setManagingCollaborators: T.func,
-  isChangingLeadAuthor: T.bool,
-  setChangingLeadAuthor: T.func
+  onCollaboratorsSubmit: T.func
 };
 
 export const useDocumentModals = ({
@@ -103,17 +93,13 @@ export const useDocumentModals = ({
   const history = useHistory();
   const location = useLocation();
 
-  const [isUpdatingMinorVersion, setUpdatingMinorVersion] = useSafeState(!1);
-  const [isPublishingDocument, setPublishingDocument] = useSafeState(!1);
-  const [isViewingDocumentInfo, setViewingDocumentInfo] = useSafeState(!1);
-  const [isManagingCollaborators, setManagingCollaborators] = useSafeState(!1);
-  const [isChangingLeadAuthor, setChangingLeadAuthor] = useSafeState(!1);
+  const [activeModal, setActiveModal] = useSafeState(null);
 
   const menuHandler = useCallback(
     async (menuId) => {
       switch (menuId) {
         case 'update-minor':
-          setUpdatingMinorVersion(true);
+          setActiveModal(MODAL_MINOR_VERSION);
           break;
         case 'draft-major':
           await documentDraftMajorConfirmAndToast({
@@ -123,48 +109,41 @@ export const useDocumentModals = ({
           });
           break;
         case 'publish':
-          setPublishingDocument(true);
+          setActiveModal(MODAL_PUBLISHING);
           break;
         case 'view-info':
-          setViewingDocumentInfo(true);
+          setActiveModal(MODAL_DOCUMENT_INFO);
           break;
         case 'manage-collaborators':
-          setManagingCollaborators(true);
+          setActiveModal(MODAL_DOCUMENT_COLLABORATOR);
           break;
         case 'change-leading':
-          setChangingLeadAuthor(true);
+          setActiveModal(MODAL_DOCUMENT_LEAD_AUTHOR);
           break;
       }
     },
-    [
-      atbd,
-      createAtbdVersion,
-      history,
-      setUpdatingMinorVersion,
-      setPublishingDocument,
-      setViewingDocumentInfo,
-      setManagingCollaborators,
-      setChangingLeadAuthor
-    ]
+    [atbd, createAtbdVersion, history, setActiveModal]
   );
+
+  const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
 
   const onMinorVersionSubmit = useSubmitForMinorVersion(
     updateAtbd,
-    setUpdatingMinorVersion,
+    hideModal,
     history
   );
 
   const onPublishVersionSubmit = useSubmitForPublishingVersion(
     atbd?.version,
     publishAtbdVersion,
-    setPublishingDocument
+    hideModal
   );
 
   const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
 
   const onCollaboratorsSubmit = useSubmitForCollaborators(
     updateAtbd,
-    setManagingCollaborators
+    hideModal
   );
 
   // To trigger the modals to open from other pages, we use the history state as
@@ -187,20 +166,12 @@ export const useDocumentModals = ({
     menuHandler,
     documentModalProps: {
       atbd,
-      isViewingDocumentInfo,
+      activeModal,
+      setActiveModal,
       onDocumentInfoSubmit,
-      setViewingDocumentInfo,
-      isUpdatingMinorVersion,
       onMinorVersionSubmit,
-      setUpdatingMinorVersion,
-      isPublishingDocument,
       onPublishVersionSubmit,
-      setPublishingDocument,
-      isManagingCollaborators,
-      onCollaboratorsSubmit,
-      setManagingCollaborators,
-      isChangingLeadAuthor,
-      setChangingLeadAuthor
+      onCollaboratorsSubmit
     }
   };
 };
