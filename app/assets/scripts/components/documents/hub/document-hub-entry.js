@@ -91,7 +91,11 @@ const Creators = ({ creators }) => {
   const creatorsList = creators?.split(' and ');
 
   if (creatorsList.length > 1) {
-    return <Tip title={creators}>{creatorsList[0]} et al.</Tip>;
+    return (
+      <Tip title={creators} style={{ pointerEvents: 'auto' }}>
+        {creatorsList[0]} et al.
+      </Tip>
+    );
   }
 
   return creators;
