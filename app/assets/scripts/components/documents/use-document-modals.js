@@ -11,6 +11,10 @@ import {
   DocumentCollaboratorModal,
   DocumentLeadAuthorModal
 } from './document-collaborator-modal';
+import {
+  ReqReviewApproveModal,
+  ReqReviewDenyModal
+} from './document-governance-modals';
 
 import useSafeState from '../../utils/use-safe-state';
 import { documentDraftMajorConfirmAndToast } from './document-draft-major-process';
@@ -20,7 +24,6 @@ import {
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
-import { ReqReviewDenyModal } from './document-governance-modals';
 import toasts from '../common/toasts';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
@@ -29,6 +32,7 @@ const MODAL_PUBLISHING = 'modal-publishing';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
 const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
+const MODAL_REQ_REVIEW_ALLOW = 'modal-req-review-allow';
 
 /**
  * Waits for a promise showing a message in case of error or success.
@@ -90,8 +94,16 @@ export function DocumentModals(props) {
         onSubmit={onCollaboratorsSubmit}
         onClose={hideModal}
       />
+
+      {/* Governance modals */}
       <ReqReviewDenyModal
         revealed={activeModal === MODAL_REQ_REVIEW_DENY}
+        atbd={atbd}
+        // onSubmit={}
+        onClose={hideModal}
+      />
+      <ReqReviewApproveModal
+        revealed={activeModal === MODAL_REQ_REVIEW_ALLOW}
         atbd={atbd}
         // onSubmit={}
         onClose={hideModal}
@@ -166,9 +178,9 @@ export const useDocumentModals = ({
             error: 'Error while cancelling requested review'
           });
           break;
-        // case 'req-review-allow':
-        //   setActiveModal(MODAL_REQ_REVIEW_ALLOW);
-        //   break;
+        case 'req-review-allow':
+          setActiveModal(MODAL_REQ_REVIEW_ALLOW);
+          break;
         case 'req-review-deny':
           setActiveModal(MODAL_REQ_REVIEW_DENY);
           break;

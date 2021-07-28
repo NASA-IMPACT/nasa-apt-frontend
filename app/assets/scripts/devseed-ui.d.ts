@@ -375,7 +375,7 @@ declare module '@devseed-ui/dropdown' {
 declare module '@devseed-ui/collecticons' {
   function collecticonsFont(): any;
 
-  class CollecticonsGlobalStyle extends React.Component<any> {}
+  class CollecticonsGlobalStyle extends React.Component<any, any> {}
 
   /**
    * Function to get the collecticon for use in a styled component
@@ -434,7 +434,10 @@ declare module '@devseed-ui/global-loading' {
    * Base component for the global loading
    * @param {object} props Component props
    */
-  export default class GlobalLoadingProvider extends React.Component<any> {}
+  export default class GlobalLoadingProvider extends React.Component<
+    any,
+    any
+  > {}
 
   interface GlobalLoadingHideProps {
     /**
@@ -514,5 +517,99 @@ declare module '@devseed-ui/global-loading' {
    *
    * @param {*} props Component props
    */
-  export class GlobalLoading extends React.Component<any> {}
+  export class GlobalLoading extends React.Component<any, any> {}
+}
+
+declare module '@devseed-ui/form' {
+  /**
+   * Styled component function to apply the form control skin. Components
+   * implementing this function will support `size`, `invalid` and
+   * `stressed`props.
+   */
+  function controlSkin(): any;
+  /**
+   * Base <form>
+   */
+  export class Form extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form group structure
+   */
+  export class FormGroup extends React.Component<any, any> {}
+  /**
+   * Element to create the form group structure header
+   */
+  export class FormGroupHeader extends React.Component<
+    { isHidden: boolean },
+    any
+  > {}
+  /**
+   * Element to create the form group structure body
+   */
+  export class FormGroupBody extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form fieldset structure
+   */
+  export class FormFieldset extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure header
+   */
+  export class FormFieldsetHeader extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure body
+   */
+  export class FormFieldsetBody extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure legend
+   */
+  export class FormLegend extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form helper structure
+   */
+  export class FormHelper extends React.Component<any, any> {}
+  /**
+   * Element to hold the helper message
+   */
+  export class FormHelperMessage extends React.Component<{ invalid: boolean}, any> {}
+  /**
+   * Counter component that changes color according to the passed values.
+   */
+  export class FormHelperCounter extends React.Component<{
+    /* Current counter value */
+    value: number;
+    /* Max allowed values */
+    max: number;
+    /* At what point to warn the user the max is being reached. 90% of max by
+    default. */
+    warnAt: number
+  }, any> {}
+
+  /**
+   * Component to create the label for the form field
+   */
+  export class FormLabel extends React.Component<any, any> {}
+
+  // Form structure example
+  // <FormGroup>
+  //   <FormGroupHeader>
+  //     <FormLabel htmlFor='field id'>
+  //       Label here
+  //     </FormLabel>
+  //   </FormGroupHeader>
+  //   <FormGroupBody>
+  //     Field here
+  //     <FormHelper>
+  //       <FormHelperMessage>message here</FormHelperMessage>
+  //     </FormHelper>
+  //   </FormGroupBody>
+  // </FormGroup>
+
+  export class FormCheckable extends React.Component<any, any> {}
+  export class FormCheckableGroup extends React.Component<any, any> {}
+  export class FormInput extends React.Component<any, any> {}
+  export class FormSelect extends React.Component<any, any> {}
+  export class FormTextarea extends React.Component<any, any> {}
+  export class FormSwitch extends React.Component<any, any> {}
 }
