@@ -9,8 +9,10 @@ import Pill from './pill';
 import { calculateDocumentCompleteness } from '../documents/completeness';
 import {
   getDocumentStatusLabel,
+  isClosedReview,
   isDraft,
-  isReviewRequested
+  isReviewRequested,
+  REVIEW_DONE
 } from '../documents/status';
 
 const StatusSelf = styled(Pill)`
@@ -76,6 +78,21 @@ export function DocumentStatusPill(props) {
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${percent}%`}
+        {...rest}
+      />
+    );
+  } else if (isClosedReview(atbdVersion)) {
+    const revTotal = atbdVersion.reviewers.length;
+    const revCompleted = atbdVersion.reviewers.filter(
+      (r) => r.review_status === REVIEW_DONE
+    ).length;
+    const percent = (revCompleted / revTotal) * 100;
+
+    return (
+      <StatusPill
+        status={getDocumentStatusLabel(atbdVersion)}
+        fillPercent={percent}
+        completeness={`${revCompleted}/${revTotal}`}
         {...rest}
       />
     );
