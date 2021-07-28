@@ -23,6 +23,7 @@ import DocumentGovernanceAction from '../documents/document-governance-action';
 
 import { documentView } from '../../utils/url-creator';
 import { computeAtbdVersion } from '../../context/atbds-list';
+import getDocumentIdKey from '../documents/get-document-id-key';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
@@ -63,7 +64,7 @@ function DocumentDashboardEntry(props) {
               <DocumentEntryBreadcrumbMenu>
                 <li>
                   <VersionsMenu
-                    atbdId={atbd.alias || atbd.id}
+                    atbdId={getDocumentIdKey(atbd).id}
                     versions={atbd.versions}
                     size='small'
                   />

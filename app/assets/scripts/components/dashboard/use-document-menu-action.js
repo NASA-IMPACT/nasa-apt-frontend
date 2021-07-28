@@ -5,6 +5,7 @@ import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
 import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
 import { eventProcessToasts } from '../documents/use-document-modals';
+import getDocumentIdKey from '../documents/get-document-id-key';
 
 /**
  * Creates a callback to be used with the DocumentActionMenu component in the
@@ -24,13 +25,13 @@ export function useDocumentHubMenuAction() {
 
   return useCallback(
     async (menuId, { atbd }) => {
-      const base = { id: atbd?.id, version: atbd?.version };
+      const atbdIdKey = getDocumentIdKey(atbd);
 
       switch (menuId) {
         case 'delete':
           await documentDeleteVersionConfirmAndToast({
             atbd,
-            deleteAtbdVersion: () => deleteAtbdVersion(base),
+            deleteAtbdVersion: () => deleteAtbdVersion(atbdIdKey),
             history
           });
           break;
@@ -38,7 +39,7 @@ export function useDocumentHubMenuAction() {
         // app/assets/scripts/components/documents/use-document-modals.js
         case 'req-review':
           await eventProcessToasts({
-            promise: fevReqReview(base),
+            promise: fevReqReview(atbdIdKey),
             start: 'Requesting review',
             success: 'Review requested successfully',
             error: 'Error while requesting review'
@@ -48,7 +49,7 @@ export function useDocumentHubMenuAction() {
         // app/assets/scripts/components/documents/use-document-modals.js
         case 'cancel-req-review':
           await eventProcessToasts({
-            promise: fevCancelReviewReq(base),
+            promise: fevCancelReviewReq(atbdIdKey),
             start: 'Cancelling requested review',
             success: 'Review request cancelled successfully',
             error: 'Error while cancelling requested review'
