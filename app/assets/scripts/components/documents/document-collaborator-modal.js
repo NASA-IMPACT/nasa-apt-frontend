@@ -2,28 +2,21 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
-import { Formik, Form as FormikForm, useFormikContext, Field } from 'formik';
+import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
-import {
-  glsp,
-  rgba,
-  themeVal,
-  visuallyHidden
-} from '@devseed-ui/theme-provider';
-import collecticon from '@devseed-ui/collecticons';
+import { glsp } from '@devseed-ui/theme-provider';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
 import UserIdentity from '../common/user-identity';
 import Tip from '../common/tooltip';
-import {
-  LoadingSkeleton,
-  LoadingSkeletonGroup,
-  LoadingSkeletonLine
-} from '../common/loading-skeleton';
 import { FormikResetReveal } from '../common/forms/formik-reset-reveal';
+import {
+  UserSelectableList,
+  UserSelectableListLoadingSkeleton
+} from '../common/user-selectable-list';
 
 import { useContextualAbility } from '../../a11n';
 import { showConfirmationPrompt } from '../common/confirmation-prompt';
@@ -42,46 +35,6 @@ const CollaboratorLead = styled.div`
 
   ${Button} {
     margin-left: auto;
-  }
-`;
-
-const CollaboratorsList = styled.ul`
-  display: grid;
-`;
-
-const CollaboratorOption = styled.label`
-  display: block;
-  cursor: pointer;
-  background-color: ${rgba(themeVal('color.link'), 0)};
-  transition: all 0.24s ease-in-out 0s;
-  padding: ${glsp(0.5, 2)};
-
-  &:hover {
-    opacity: 1;
-    background-color: ${rgba(themeVal('color.link'), 0.08)};
-  }
-
-  input {
-    ${visuallyHidden()}
-  }
-
-  input ~ ${UserIdentity} {
-    grid-template-columns: min-content min-content 1fr;
-
-    &::after {
-      ${collecticon('tick')}
-      justify-self: flex-end;
-      opacity: 0;
-      transition: all 0.24s ease 0s;
-    }
-  }
-
-  input:checked ~ ${UserIdentity} {
-    color: ${themeVal('color.link')};
-
-    &::after {
-      opacity: 1;
-    }
   }
 `;
 
@@ -191,7 +144,9 @@ export function DocumentCollaboratorModal(props) {
 
                 {canManageAuthors && (
                   <TabContent tabId='authors'>
-                    {collabAuthors.status === 'loading' && <LoadingBlock />}
+                    {collabAuthors.status === 'loading' && (
+                      <UserSelectableListLoadingSkeleton />
+                    )}
                     {collabAuthors.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
                         <CollaboratorLead>
@@ -209,7 +164,7 @@ export function DocumentCollaboratorModal(props) {
                             Change lead author
                           </Button>
                         </CollaboratorLead>
-                        <CollaboratorsSelectableList
+                        <UserSelectableList
                           users={collabAuthors.data}
                           fieldName='authors'
                         />
@@ -222,10 +177,12 @@ export function DocumentCollaboratorModal(props) {
                 )}
                 {canManageReviewers && (
                   <TabContent tabId='reviewers'>
-                    {collabReviewers.status === 'loading' && <LoadingBlock />}
+                    {collabReviewers.status === 'loading' && (
+                      <UserSelectableListLoadingSkeleton />
+                    )}
                     {collabReviewers.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
-                        <CollaboratorsSelectableList
+                        <UserSelectableList
                           users={collabReviewers.data}
                           fieldName='reviewers'
                         />
@@ -321,10 +278,12 @@ export function DocumentLeadAuthorModal(props) {
           title='Document lead author'
           content={
             <Form as={FormikForm}>
-              {collabLeadAuthor.status === 'loading' && <LoadingBlock />}
+              {collabLeadAuthor.status === 'loading' && (
+                <UserSelectableListLoadingSkeleton />
+              )}
               {collabLeadAuthor.status === 'succeeded' && (
                 <ShadowScrollbarPadded>
-                  <CollaboratorsSelectableList
+                  <UserSelectableList
                     users={collabLeadSorted}
                     fieldName='owner'
                     selectOne
@@ -386,50 +345,6 @@ const ModalControls = (props) => {
 
 ModalControls.propTypes = {
   modalHelpers: T.object
-};
-
-function LoadingBlock() {
-  return (
-    <LoadingSkeletonGroup>
-      {[1, 2, 3, 4].map((n) => (
-        <LoadingSkeletonLine key={n}>
-          <LoadingSkeleton size='large' width={1 / 12} />
-          <LoadingSkeleton size='large' width={8 / 12} />
-        </LoadingSkeletonLine>
-      ))}
-    </LoadingSkeletonGroup>
-  );
-}
-
-function CollaboratorsSelectableList(props) {
-  const { users = [], fieldName, selectOne } = props;
-
-  if (!users.length) {
-    return <p>There are no collaborators available to select.</p>;
-  }
-
-  return (
-    <CollaboratorsList>
-      {users.map((u) => (
-        <li key={u.sub}>
-          <CollaboratorOption>
-            <Field
-              type={selectOne ? 'radio' : 'checkbox'}
-              name={fieldName}
-              value={u.sub}
-            />
-            <UserIdentity name={u.preferred_username} email={u.email} />
-          </CollaboratorOption>
-        </li>
-      ))}
-    </CollaboratorsList>
-  );
-}
-
-CollaboratorsSelectableList.propTypes = {
-  fieldName: T.string,
-  users: T.array,
-  selectOne: T.bool
 };
 
 /**
