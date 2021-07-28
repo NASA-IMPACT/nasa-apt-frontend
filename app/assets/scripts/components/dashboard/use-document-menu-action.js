@@ -3,7 +3,7 @@ import { useHistory } from 'react-router';
 
 import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
-import { useSingleAtbdEvents } from '../../context/atbds-list';
+import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
 import { eventProcessToasts } from '../documents/use-document-modals';
 
 /**
@@ -17,9 +17,10 @@ import { eventProcessToasts } from '../documents/use-document-modals';
  *
  * @returns callback hook
  */
-export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
+export function useDocumentHubMenuAction() {
   const history = useHistory();
   const { fevReqReview, fevCancelReviewReq } = useSingleAtbdEvents({});
+  const { deleteAtbdVersion } = useSingleAtbd({});
 
   return useCallback(
     async (menuId, { atbd }) => {

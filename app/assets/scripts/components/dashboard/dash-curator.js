@@ -21,11 +21,9 @@ const Empty = styled(EmptyHub)`
 `;
 
 function DashboardCurator() {
-  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds();
+  const { atbds, fetchAtbds } = useAtbds();
 
-  const onDocumentAction = useDocumentHubMenuAction({
-    deleteAtbdVersion: deleteSingleAtbdVersion
-  });
+  const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
     if (atbds.status === 'idle') {

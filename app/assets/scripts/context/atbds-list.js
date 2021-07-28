@@ -83,7 +83,6 @@ export const AtbdsProvider = (props) => {
   const {
     getState: getAtbds,
     fetchAtbds,
-    deleteSingleAtbdVersion,
     dispatch: dispatchAtbdList
   } = useContexeedApi(
     {
@@ -102,39 +101,6 @@ export const AtbdsProvider = (props) => {
           sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
           url: `/atbds?${qs.stringify(filters, { skipNulls: true })}`
         }))
-      },
-      mutations: {
-        // See explanation about this on the export down below.
-        deleteSingleAtbdVersion: withRequestToken(
-          token,
-          ({ filters = {}, id, version }) => ({
-            sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
-            url: `/atbds/${id}/versions/${version}`,
-            requestOptions: {
-              method: 'delete'
-            },
-            transformData: (data, { state }) => {
-              // If delete worked, remove the version from the atbd list.
-              return state.data
-                .map((atbd) => {
-                  // Not the document we're looking for.
-                  if (atbd.id !== id) return atbd;
-
-                  const versions = atbd.versions.filter(
-                    (atbdVersion) => atbdVersion.version !== version
-                  );
-                  // Remove the whole atbd if there are no more versions.
-                  return versions.length
-                    ? {
-                        ...atbd,
-                        versions
-                      }
-                    : null;
-                })
-                .filter(Boolean);
-            }
-          })
-        )
       }
     },
     [token]
@@ -557,24 +523,6 @@ export const AtbdsProvider = (props) => {
     fetchSingleAtbd,
     createAtbd,
     updateAtbd,
-    // The fundamental difference between deleteSingleAtbdVersion and
-    // deleteAtbdVersion is related to how they're used. The `deleteAtbdVersion`
-    // is tied to the single atbd context while `deleteSingleAtbdVersion` is
-    // tied to the atbd list context.
-    // To use `deleteAtbdVersion` we'd need to initialize `useSingleAtbd` with
-    // { id, version } but if we don't have them available (like in the hub)
-    // this is not possible.
-    // The deleteSingleAtbdVersion acts in the atbd list context and the id and
-    // version are passed directly.
-
-    // Ends up being:
-    // const { deleteSingleAtbdVersion } = useAtbds();
-    // deleteSingleAtbdVersion();
-    //
-    // instead of:
-    // const { deleteAtbdVersion } = useSingleAtbd({ id, version });
-    // deleteAtbdVersion()
-    deleteSingleAtbdVersion,
     deleteAtbdVersion,
     createAtbdVersion,
     publishAtbdVersion,
@@ -618,11 +566,18 @@ export const useSingleAtbd = ({ id, version }) => {
       version,
       updateAtbd
     ]),
-    deleteAtbdVersion: useCallback(() => deleteAtbdVersion({ id, version }), [
-      id,
-      version,
-      deleteAtbdVersion
-    ]),
+    // This action is special as it allows an id and a version to be passed as
+    // parameters and override the ones passed to the context function
+    // (useSingleAtbd). To use `deleteAtbdVersion` normally we'd need to
+    // initialize `useSingleAtbd` with { id, version } but if we don't have them
+    // available (like in the hub) this is not possible.
+    // In this was we can initialize useSingleAtbd({}) without params and then
+    // pass them to the deleteAtbdVersion({ id, version }) when it is used.
+    deleteAtbdVersion: useCallback(
+      ({ id: inId = id, version: inVersion = version } = {}) =>
+        deleteAtbdVersion({ id: inId, version: inVersion }),
+      [id, version, deleteAtbdVersion]
+    ),
     publishAtbdVersion: useCallback(
       (data) => publishAtbdVersion({ id, version, data }),
       [id, version, publishAtbdVersion]
@@ -680,7 +635,6 @@ export const useAtbds = (filters = {}) => {
     getAtbds,
     fetchAtbds,
     createAtbd,
-    deleteSingleAtbdVersion,
     invalidateAtbdListCtx,
     invalidateAtbdSingleCtx
   } = useSafeContextFn('useAtbds');
@@ -690,10 +644,6 @@ export const useAtbds = (filters = {}) => {
     invalidateAtbdSingleCtx,
     atbds: getAtbds(`${filters.role || 'all'}-${filters.status || 'all'}`),
     fetchAtbds,
-    createAtbd,
-    deleteSingleAtbdVersion: useCallback(
-      ({ id, version }) => deleteSingleAtbdVersion({ filters, id, version }),
-      [filters, deleteSingleAtbdVersion]
-    )
+    createAtbd
   };
 };

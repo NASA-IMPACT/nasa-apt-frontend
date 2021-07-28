@@ -84,16 +84,14 @@ export default DashboardContributor;
 const TabDocuments = (props) => {
   const { role, status } = props;
   const { activeTab } = useTabs();
-  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds({
+  const { atbds, fetchAtbds } = useAtbds({
     role,
     status
   });
 
   const onCreateClick = useDocumentCreate();
 
-  const onDocumentAction = useDocumentHubMenuAction({
-    deleteAtbdVersion: deleteSingleAtbdVersion
-  });
+  const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
     if (atbds.status === 'idle') {
