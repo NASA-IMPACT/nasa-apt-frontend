@@ -63,6 +63,25 @@ export default function DocumentGovernanceAction(props) {
           Cancel request
         </control.El>
       </Can>
+      <Can do='set-own-review-done' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Conclude review of this document'
+          disabled={isMutating}
+          onClick={() => onAction('set-own-review-done', { atbd })}
+        >
+          Conclude review
+        </control.El>
+      </Can>
+      {/* <Can do='open-review' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Cancel review submission'
+          onClick={() => onAction('open-review', { atbd })}
+        >
+          Cancel request
+        </control.El>
+      </Can> */}
       <Can do='manage-req-review' on={atbd}>
         <AllowDeny
           id='req-review'

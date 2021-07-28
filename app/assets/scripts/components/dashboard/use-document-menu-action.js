@@ -5,6 +5,7 @@ import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
 import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
 import { eventProcessToasts } from '../documents/use-document-modals';
+import { REVIEW_DONE } from '../documents/status';
 import getDocumentIdKey from '../documents/get-document-id-key';
 
 /**
@@ -20,7 +21,11 @@ import getDocumentIdKey from '../documents/get-document-id-key';
  */
 export function useDocumentHubMenuAction() {
   const history = useHistory();
-  const { fevReqReview, fevCancelReviewReq } = useSingleAtbdEvents({});
+  const {
+    fevReqReview,
+    fevCancelReviewReq,
+    fevSetOwnReviewStatus
+  } = useSingleAtbdEvents({});
   const { deleteAtbdVersion } = useSingleAtbd({});
 
   return useCallback(
@@ -55,6 +60,19 @@ export function useDocumentHubMenuAction() {
             error: 'Error while cancelling requested review'
           });
           break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/documents/use-document-modals.js
+        case 'set-own-review-done':
+          await eventProcessToasts({
+            promise: fevSetOwnReviewStatus({
+              ...atbdIdKey,
+              payload: { review_status: REVIEW_DONE }
+            }),
+            start: 'Concluding review',
+            success: 'Review concluded successfully',
+            error: 'Error while concluding review'
+          });
+          break;
         case 'update-minor':
         case 'draft-major':
         case 'publish':
@@ -71,6 +89,12 @@ export function useDocumentHubMenuAction() {
           break;
       }
     },
-    [deleteAtbdVersion, history, fevReqReview, fevCancelReviewReq]
+    [
+      deleteAtbdVersion,
+      history,
+      fevReqReview,
+      fevCancelReviewReq,
+      fevSetOwnReviewStatus
+    ]
   );
 }

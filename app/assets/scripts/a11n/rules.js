@@ -1,6 +1,11 @@
 import { AbilityBuilder, Ability } from '@casl/ability';
 
-import { CLOSED_REVIEW_REQUESTED, DRAFT } from '../components/documents/status';
+import {
+  CLOSED_REVIEW,
+  CLOSED_REVIEW_REQUESTED,
+  DRAFT,
+  REVIEW_PROGRESS
+} from '../components/documents/status';
 
 // Initial ability definition.
 export const ability = new Ability(defineRulesFor(null), {
@@ -69,6 +74,12 @@ export function defineRulesFor(user) {
       allow('cancel-req-review', 'document-version', {
         'owner.sub': user.id,
         status: CLOSED_REVIEW_REQUESTED
+      });
+      allow('set-own-review-done', 'document-version', {
+        reviewers: {
+          $elemMatch: { sub: user.id, review_status: REVIEW_PROGRESS }
+        },
+        status: CLOSED_REVIEW
       });
     }
   }

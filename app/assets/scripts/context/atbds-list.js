@@ -626,6 +626,10 @@ export const useSingleAtbdEvents = ({ id, version }) => {
     fevDenyReviewReq: useMemo(
       () => createFireEvent('deny_closed_review_request'),
       [createFireEvent]
+    ),
+    fevSetOwnReviewStatus: useMemo(
+      () => createFireEvent('update_review_status'),
+      [createFireEvent]
     )
   };
 };

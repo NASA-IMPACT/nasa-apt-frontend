@@ -26,6 +26,7 @@ import {
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
 import { createProcessToast } from '../common/toasts';
+import { REVIEW_DONE } from './status';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
 const MODAL_MINOR_VERSION = 'modal-minor-version';
@@ -144,7 +145,8 @@ export const useDocumentModals = ({
   fevReqReview,
   fevCancelReviewReq,
   fevApproveReviewReq,
-  fevDenyReviewReq
+  fevDenyReviewReq,
+  fevSetOwnReviewStatus
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -222,7 +224,8 @@ export const useDocumentModals = ({
       history,
       setActiveModal,
       fevReqReview,
-      fevCancelReviewReq
+      fevCancelReviewReq,
+      fevSetOwnReviewStatus
     ]
   );
 
