@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Heading } from '@devseed-ui/typography';
+import { Heading, headingAlt } from '@devseed-ui/typography';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
@@ -31,6 +31,32 @@ const EmptyTab = styled(EmptyHub)`
   grid-column: 1;
 `;
 
+const DocsNav = styled.nav`
+  display: grid;
+  grid-template-columns: 1fr min-content;
+`;
+
+const Filters = styled.ul`
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-gap: ${glsp()};
+  min-height: 2rem;
+  box-shadow: 0 ${themeVal('layout.border')} 0 0 ${themeVal('color.baseAlphaC')};
+
+  > * {
+    grid-row: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: ${glsp(0.125)};
+    align-items: center;
+    margin-top: ${glsp(-1)};
+  }
+`;
+
+const FilterLabel = styled.span`
+  ${headingAlt()}
+`;
+
 const authorTabNav = [
   {
     id: 'leading',
@@ -55,13 +81,32 @@ function DashboardContributor() {
     <DashboardContributorInner>
       <TabsManager>
         <Heading size='medium'>Documents</Heading>
-        <TabsNav>
-          {authorTabNav.map((t) => (
-            <TabItem key={t.id} label={t.label} tabId={t.id}>
-              {t.label}
-            </TabItem>
-          ))}
-        </TabsNav>
+        <DocsNav>
+          <TabsNav>
+            {authorTabNav.map((t) => (
+              <TabItem key={t.id} label={t.label} tabId={t.id}>
+                {t.label}
+              </TabItem>
+            ))}
+          </TabsNav>
+          <Filters>
+            <li>
+              <FilterLabel>Status</FilterLabel>
+              <Button title='Filter' useIcon={['chevron-down--small', 'after']}>
+                All
+              </Button>
+            </li>
+            <li>
+              <FilterLabel>Order</FilterLabel>
+              <Button
+                title='Order by'
+                useIcon={['chevron-down--small', 'after']}
+              >
+                Recent
+              </Button>
+            </li>
+          </Filters>
+        </DocsNav>
         <TabContent tabId='leading'>
           <TabDocuments role='owner' />
         </TabContent>
