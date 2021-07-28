@@ -39,6 +39,7 @@ export function useDocumentHubMenuAction() {
         case 'req-review':
           await eventProcessToasts({
             promise: fevReqReview(base),
+            start: 'Requesting review',
             success: 'Review requested successfully',
             error: 'Error while requesting review'
           });
@@ -48,6 +49,7 @@ export function useDocumentHubMenuAction() {
         case 'cancel-req-review':
           await eventProcessToasts({
             promise: fevCancelReviewReq(base),
+            start: 'Cancelling requested review',
             success: 'Review request cancelled successfully',
             error: 'Error while cancelling requested review'
           });

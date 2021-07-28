@@ -25,7 +25,7 @@ import {
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
-import toasts from '../common/toasts';
+import { createProcessToast } from '../common/toasts';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
 const MODAL_MINOR_VERSION = 'modal-minor-version';
@@ -39,16 +39,25 @@ const MODAL_REQ_REVIEW_ALLOW = 'modal-req-review-allow';
  * Waits for a promise showing a message in case of error or success.
  *
  * @param {Promise} opt.promise The promise to wait for.
+ * @param {Promise} opt.start The message to show when the process starts
  * @param {Promise} opt.success The message in case the promise succeeds
  * @param {Promise} opt.error The message in case of error. The error message
  * itself is shown after this message
  */
-export const eventProcessToasts = async ({ promise, success, error }) => {
+export const eventProcessToasts = async ({
+  promise,
+  start,
+  success,
+  error
+}) => {
+  const processToast = createProcessToast(start);
   const result = await promise;
   if (result.error) {
-    toasts.error(`${error}: ${result.error.message}`);
+    processToast.error(
+      `${error || 'An error occurred'}: ${result.error.message}`
+    );
   } else {
-    toasts.success(success);
+    processToast.success(success);
   }
 };
 
@@ -172,6 +181,7 @@ export const useDocumentModals = ({
         case 'req-review':
           await eventProcessToasts({
             promise: fevReqReview({ id: atbd.id, version: atbd.version }),
+            start: 'Requesting review',
             success: 'Review requested successfully',
             error: 'Error while requesting review'
           });
@@ -181,6 +191,7 @@ export const useDocumentModals = ({
         case 'cancel-req-review':
           await eventProcessToasts({
             promise: fevCancelReviewReq({ id: atbd.id, version: atbd.version }),
+            start: 'Cancelling requested review',
             success: 'Review request cancelled successfully',
             error: 'Error while cancelling requested review'
           });
