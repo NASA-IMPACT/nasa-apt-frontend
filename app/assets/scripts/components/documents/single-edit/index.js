@@ -142,6 +142,8 @@ function DocumentEdit() {
               />
               <InpageActions>
                 <DocumentGovernanceAction
+                  atbdId={id}
+                  version={version}
                   atbd={atbd.data}
                   origin='single-edit'
                   onAction={onDocumentMenuAction}

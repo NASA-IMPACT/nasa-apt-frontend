@@ -207,6 +207,8 @@ function DocumentView() {
             />
             <InpageActions>
               <DocumentGovernanceAction
+                atbdId={id}
+                version={version}
                 atbd={atbd.data}
                 origin='single-view'
                 onAction={onDocumentMenuAction}

@@ -180,7 +180,7 @@ export const useDocumentModals = ({
         // app/assets/scripts/components/dashboard/use-document-menu-action.js
         case 'req-review':
           await eventProcessToasts({
-            promise: fevReqReview({ id: atbd.id, version: atbd.version }),
+            promise: fevReqReview(),
             start: 'Requesting review',
             success: 'Review requested successfully',
             error: 'Error while requesting review'
@@ -190,10 +190,22 @@ export const useDocumentModals = ({
         // app/assets/scripts/components/dashboard/use-document-menu-action.js
         case 'cancel-req-review':
           await eventProcessToasts({
-            promise: fevCancelReviewReq({ id: atbd.id, version: atbd.version }),
+            promise: fevCancelReviewReq(),
             start: 'Cancelling requested review',
             success: 'Review request cancelled successfully',
             error: 'Error while cancelling requested review'
+          });
+          break;
+        // eventProcessToasts messages must also be updated in
+        // app/assets/scripts/components/dashboard/use-document-menu-action.js
+        case 'set-own-review-done':
+          await eventProcessToasts({
+            promise: fevSetOwnReviewStatus({
+              payload: { review_status: REVIEW_DONE }
+            }),
+            start: 'Concluding review',
+            success: 'Review concluded successfully',
+            error: 'Error while concluding review'
           });
           break;
         case 'req-review-allow':

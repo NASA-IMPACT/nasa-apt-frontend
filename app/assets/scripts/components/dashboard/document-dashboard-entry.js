@@ -106,6 +106,8 @@ function DocumentDashboardEntry(props) {
         </DocumentEntryHeadline>
         <DocumentEntryActions>
           <DocumentGovernanceAction
+            atbdId={getDocumentIdKey(lastVersion).id}
+            version={lastVersion.version}
             atbd={lastVersion}
             origin='hub'
             onAction={onAction}

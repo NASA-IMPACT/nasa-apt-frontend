@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import { Button } from '@devseed-ui/button';
 
@@ -6,8 +6,18 @@ import DropdownMenu from '../common/dropdown-menu';
 import ButtonSecondary from '../../styles/button-secondary';
 import { Can } from '../../a11n';
 
+import { useSingleAtbd } from '../../context/atbds-list';
+
 export default function DocumentGovernanceAction(props) {
-  const { atbd, origin, onAction } = props;
+  const { atbdId, version, atbd, origin, onAction } = props;
+
+  // We need to access the mutation status to disable the action buttons when
+  // the action is in flight.
+  const {
+    atbd: { mutationStatus }
+  } = useSingleAtbd({ id: atbdId, version });
+
+  const isMutating = mutationStatus === 'loading';
 
   const control = useMemo(() => {
     if (origin === 'hub') {
@@ -37,10 +47,8 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Submit document for review'
-          onClick={useCallback(() => onAction('req-review', { atbd }), [
-            onAction,
-            atbd
-          ])}
+          disabled={isMutating}
+          onClick={() => onAction('req-review', { atbd })}
         >
           Request review
         </control.El>
@@ -49,10 +57,8 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Cancel review submission'
-          onClick={useCallback(() => onAction('cancel-req-review', { atbd }), [
-            onAction,
-            atbd
-          ])}
+          disabled={isMutating}
+          onClick={() => onAction('cancel-req-review', { atbd })}
         >
           Cancel request
         </control.El>
@@ -71,6 +77,8 @@ export default function DocumentGovernanceAction(props) {
 }
 
 DocumentGovernanceAction.propTypes = {
+  atbdId: T.oneOfType([T.number, T.string]),
+  version: T.string,
   onAction: T.func,
   atbd: T.object,
   origin: T.oneOf(['hub', 'single-view', 'single-edit'])
