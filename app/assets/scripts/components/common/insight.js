@@ -39,7 +39,7 @@ export default function Insight() {
         <svg
           width='100%'
           height='100%'
-          viewBox='0 0 42 42'
+          viewBox='0 0 40 40'
           aria-labelledby='docs-draft-title docs-draft-desc'
           role='img'
         >
@@ -48,28 +48,28 @@ export default function Insight() {
             Donut chart showing the percentage of documents in draft.
           </desc>
           <circle
-            cx='21'
-            cy='21'
+            cx='20'
+            cy='20'
             r='15.91549430918954'
             fill='transparent'
             stroke={theme.color.baseAlphaC}
-            strokeWidth='3'
+            strokeWidth='2'
             role='presentation'
           />
           <circle
-            cx='21'
-            cy='21'
+            cx='20'
+            cy='20'
             r='15.91549430918954'
             fill='transparent'
             stroke={theme.color.primary}
-            strokeWidth='3'
+            strokeWidth='2'
             strokeDasharray='25 75'
             strokeDashoffset='25'
             aria-labelledby='docs-draft-donut-segment-title docs-draft-donut-segment-desc'
           >
             <title id='docs-draft-donut-segment-title'>Draft</title>
             <desc id='docs-draft-donut-segment-desc'>
-              Blue chart segment spanning 25% of the whole, which correspond to
+              Blue chart segment spanning 25% of the whole, which corresponds to
               80 documents in draft out of 200 total.
             </desc>
           </circle>
