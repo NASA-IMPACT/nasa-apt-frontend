@@ -16,7 +16,10 @@ import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import DocumentGovernanceAction from '../document-governance-action';
 
 import { getDocumentEditStep } from './steps';
-import { useSingleAtbd } from '../../../context/atbds-list';
+import {
+  useSingleAtbd,
+  useSingleAtbdEvents
+} from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
 
@@ -29,10 +32,10 @@ function DocumentEdit() {
     createAtbdVersion,
     updateAtbd,
     publishAtbdVersion,
-    deleteAtbdVersion,
-    fevReqReview,
-    fevCancelReviewReq
+    deleteAtbdVersion
   } = useSingleAtbd({ id, version });
+  // Get all fire event actions.
+  const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -43,8 +46,7 @@ function DocumentEdit() {
     createAtbdVersion,
     updateAtbd,
     publishAtbdVersion,
-    fevReqReview,
-    fevCancelReviewReq
+    ...atbdFevActions
   });
 
   const onDocumentMenuAction = useCallback(

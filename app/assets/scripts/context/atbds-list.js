@@ -603,22 +603,8 @@ export const useSingleAtbd = ({ id, version }) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion,
-    fireAtbdEvent
+    publishAtbdVersion
   } = useSafeContextFn('useSingleAtbd');
-
-  // Function to create fire event callbacks. By default single atbd context
-  // actions are bound to the provided id and version. The events can also be
-  // fired from the dashboard where there is an atbd list instead of single
-  // ones. In these cases we cannot initialize the useSingleAtbd with an id and
-  // version, therefore these actions allow for those values to be passed as
-  // arguments.
-  const createFireEvent = useCallback(
-    (action) => ({ id: inId = id, version: inVersion = version } = {}) => {
-      return fireAtbdEvent({ action, id: inId, version: inVersion });
-    },
-    [id, version, fireAtbdEvent]
-  );
 
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
@@ -644,8 +630,31 @@ export const useSingleAtbd = ({ id, version }) => {
     createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
       id,
       createAtbdVersion
-    ]),
+    ])
+  };
+};
 
+export const useSingleAtbdEvents = ({ id, version }) => {
+  const { fireAtbdEvent } = useSafeContextFn('useSingleAtbdEvents');
+
+  // Function to create fire event callbacks. By default single atbd context
+  // actions are bound to the provided id and version. The events can also be
+  // fired from the dashboard where there is an atbd list instead of single
+  // ones. In these cases we cannot initialize the useSingleAtbdEvents with an
+  // id and version, therefore these actions allow for those values to be passed
+  // as arguments.
+  const createFireEvent = useCallback(
+    (action) => ({
+      id: inId = id,
+      version: inVersion = version,
+      payload = {}
+    } = {}) => {
+      return fireAtbdEvent({ action, payload, id: inId, version: inVersion });
+    },
+    [id, version, fireAtbdEvent]
+  );
+
+  return {
     // Events:
     // fev -> Fire EVent
     fevReqReview: useMemo(() => createFireEvent('request_closed_review'), [

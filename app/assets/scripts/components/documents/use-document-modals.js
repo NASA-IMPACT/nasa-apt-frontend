@@ -21,6 +21,7 @@ import { documentDraftMajorConfirmAndToast } from './document-draft-major-proces
 import {
   useSubmitForCollaborators,
   useSubmitForDocumentInfo,
+  useSubmitForGovernance,
   useSubmitForMinorVersion,
   useSubmitForPublishingVersion
 } from './single-edit/use-submit';
@@ -59,7 +60,9 @@ export function DocumentModals(props) {
     onDocumentInfoSubmit,
     onMinorVersionSubmit,
     onPublishVersionSubmit,
-    onCollaboratorsSubmit
+    onCollaboratorsSubmit,
+    onReviewReqDenySubmit,
+    onReviewReqApproveSubmit
   } = props;
 
   return (
@@ -99,13 +102,13 @@ export function DocumentModals(props) {
       <ReqReviewDenyModal
         revealed={activeModal === MODAL_REQ_REVIEW_DENY}
         atbd={atbd}
-        // onSubmit={}
+        onSubmit={onReviewReqDenySubmit}
         onClose={hideModal}
       />
       <ReqReviewApproveModal
         revealed={activeModal === MODAL_REQ_REVIEW_ALLOW}
         atbd={atbd}
-        // onSubmit={}
+        onSubmit={onReviewReqApproveSubmit}
         onClose={hideModal}
       />
     </React.Fragment>
@@ -119,7 +122,9 @@ DocumentModals.propTypes = {
   onDocumentInfoSubmit: T.func,
   onMinorVersionSubmit: T.func,
   onPublishVersionSubmit: T.func,
-  onCollaboratorsSubmit: T.func
+  onCollaboratorsSubmit: T.func,
+  onReviewReqDenySubmit: T.func,
+  onReviewReqApproveSubmit: T.func
 };
 
 export const useDocumentModals = ({
@@ -128,7 +133,9 @@ export const useDocumentModals = ({
   updateAtbd,
   publishAtbdVersion,
   fevReqReview,
-  fevCancelReviewReq
+  fevCancelReviewReq,
+  fevApproveReviewReq,
+  fevDenyReviewReq
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -217,6 +224,26 @@ export const useDocumentModals = ({
     hideModal
   );
 
+  const onReviewReqDenySubmit = useSubmitForGovernance(
+    fevDenyReviewReq,
+    hideModal,
+    {
+      start: 'Denying request for review',
+      success: 'Review request denied successfully',
+      error: 'Error denying review request'
+    }
+  );
+
+  const onReviewReqApproveSubmit = useSubmitForGovernance(
+    fevApproveReviewReq,
+    hideModal,
+    {
+      start: 'Approving request for review',
+      success: 'Review request approved successfully',
+      error: 'Error approving review request'
+    }
+  );
+
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the
   // dashboards for example. When the user selects one of the options from
@@ -242,7 +269,9 @@ export const useDocumentModals = ({
       onDocumentInfoSubmit,
       onMinorVersionSubmit,
       onPublishVersionSubmit,
-      onCollaboratorsSubmit
+      onCollaboratorsSubmit,
+      onReviewReqDenySubmit,
+      onReviewReqApproveSubmit
     }
   };
 };

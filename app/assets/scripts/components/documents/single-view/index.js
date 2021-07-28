@@ -29,7 +29,10 @@ import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
 import DocumentGovernanceAction from '../document-governance-action';
 
-import { useSingleAtbd } from '../../../context/atbds-list';
+import {
+  useSingleAtbd,
+  useSingleAtbdEvents
+} from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
@@ -126,13 +129,10 @@ function DocumentView() {
     fetchSingleAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion,
-    fevReqReview,
-    fevCancelReviewReq
-  } = useSingleAtbd({
-    id,
-    version
-  });
+    publishAtbdVersion
+  } = useSingleAtbd({ id, version });
+  // Get all fire event actions.
+  const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -143,8 +143,7 @@ function DocumentView() {
     createAtbdVersion,
     updateAtbd,
     publishAtbdVersion,
-    fevReqReview,
-    fevCancelReviewReq
+    ...atbdFevActions
   });
 
   const onDocumentMenuAction = useCallback(

@@ -53,12 +53,12 @@ function clean() {
 function serve() {
   bs.init({
     port: 9000,
+    ghostMode: false,
     server: {
       baseDir: ['.tmp', 'app', 'dist'],
       routes: {
         '/node_modules': './node_modules'
       },
-      ghostMode: false,
       middleware: [
         historyApiFallback({
           // Having the version in the url was being treated as a static file.

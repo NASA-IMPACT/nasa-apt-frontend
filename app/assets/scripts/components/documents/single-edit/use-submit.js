@@ -149,10 +149,9 @@ export function useSubmitForDocumentInfo(updateAtbd) {
  * key is present on the payload.
  *
  * @param {func} updateAtbd The action to update the document.
- * @param {func} setManagingCollaborators The state setter to close the
- * collaborators modal. This is only used for the collaborators and not the
- * leading author since that modal is hidden before showing the confirmation
- * prompt.
+ * @param {func} hideModal  The state setter to close the collaborators modal.
+ * This is only used for the collaborators and not the leading author since that
+ * modal is hidden before showing the confirmation prompt.
  */
 export function useSubmitForCollaborators(updateAtbd, hideModal) {
   return useCallback(
@@ -175,6 +174,37 @@ export function useSubmitForCollaborators(updateAtbd, hideModal) {
       }
     },
     [hideModal, updateAtbd]
+  );
+}
+
+/**
+ * Hook to create the submit callback for governance events. All the modals
+ * using this hook will have some sort of payload to submit.
+ *
+ * @param {func} eventAction The action to fire the event.
+ * @param {func} hideModal The state setter to close the modal.
+ * @param {object} messages The messages to display on the toasts.
+ * @param {object} messages.start The messages to display while processing.
+ * @param {string} messages.success  The messages to display on success.
+ * @param {string} messages.error  The messages to display on error.
+ */
+export function useSubmitForGovernance(eventAction, hideModal, messages) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast(messages.start);
+      const result = await eventAction({ payload: values });
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(
+          `${messages.error || 'An error occurred'}: ${result.error.message}`
+        );
+      } else {
+        hideModal();
+        resetForm();
+        processToast.success(messages.success);
+      }
+    },
+    [hideModal, eventAction, messages.start, messages.success, messages.error]
   );
 }
 
