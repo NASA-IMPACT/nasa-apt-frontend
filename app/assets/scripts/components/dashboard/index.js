@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
-import { glsp } from '@devseed-ui/theme-provider';
+import { glsp, media, visuallyHidden } from '@devseed-ui/theme-provider';
 
 import App from '../common/app';
 import {
@@ -31,24 +31,48 @@ const DashboardCanvas = styled(ContentBlock)`
 `;
 
 const WelcomeBlock = styled.section`
-  grid-column: content-start / content-7;
+  grid-column: content-start / content-end;
   display: flex;
   flex-flow: column nowrap;
   gap: ${glsp()};
+
+  ${media.largeUp`
+    grid-column: content-start / content-7;
+  `}
+`;
+
+const WelcomeBlockProse = styled(Prose)`
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 `;
 
 const WelcomeBlockTitle = styled(Heading)`
+  font-size: 2rem;
+  line-height: 2.5rem;
   margin: 0;
 `;
 
 const InsightsBlock = styled.section`
-  grid-column: content-7 / content-end;
+  grid-column: content-start / content-end;
   display: flex;
   flex-flow: column nowrap;
   gap: ${glsp()};
+
+  ${media.smallUp`
+    grid-column: content-start / content-3;
+  `}
+
+  ${media.mediumUp`
+    grid-column: content-start / content-6;
+  `}
+
+  ${media.largeUp`
+    grid-column: content-7 / content-end;
+  `}
 `;
 
 const InsightsBlockTitle = styled(Heading)`
+  ${visuallyHidden()}
   margin: 0;
 `;
 
@@ -104,8 +128,8 @@ function UserDashboard() {
         <InpageBody>
           <DashboardCanvas>
             <WelcomeBlock>
-              <WelcomeBlockTitle>Welcome back, {user.name}</WelcomeBlockTitle>
-              <Prose>
+              <WelcomeBlockTitle>Welcome back, {user.name}!</WelcomeBlockTitle>
+              <WelcomeBlockProse>
                 <p>Here&apos;s what is happening in your APT account today.</p>
                 {!conAccessContributorDash && !conAccessCuratorDash && (
                   <p>
@@ -113,17 +137,19 @@ function UserDashboard() {
                     <strong>published</strong> documents.
                   </p>
                 )}
-              </Prose>
+              </WelcomeBlockProse>
             </WelcomeBlock>
-            <InsightsBlock>
-              <InsightsBlockTitle>Insights</InsightsBlockTitle>
-              <InsightsBlockContent>
-                <Insight />
-                <Insight />
-                <Insight />
-                <Insight />
-              </InsightsBlockContent>
-            </InsightsBlock>
+            {conAccessCuratorDash && (
+              <InsightsBlock>
+                <InsightsBlockTitle>Insights</InsightsBlockTitle>
+                <InsightsBlockContent>
+                  <Insight />
+                  <Insight />
+                  <Insight />
+                  <Insight />
+                </InsightsBlockContent>
+              </InsightsBlock>
+            )}
             <DocumentsBlock>
               {conAccessContributorDash && <DashboardContributor />}
               {conAccessCuratorDash && <DashboardCurator />}
