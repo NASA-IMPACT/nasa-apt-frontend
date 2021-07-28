@@ -27,6 +27,10 @@ import {
 } from './single-edit/use-submit';
 import { createProcessToast } from '../common/toasts';
 import { REVIEW_DONE } from './status';
+import {
+  createBinaryControlsRenderer,
+  showConfirmationPrompt
+} from '../common/confirmation-prompt';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
 const MODAL_MINOR_VERSION = 'modal-minor-version';
@@ -178,36 +182,24 @@ export const useDocumentModals = ({
         case 'change-leading':
           setActiveModal(MODAL_DOCUMENT_LEAD_AUTHOR);
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/dashboard/use-document-menu-action.js
         case 'req-review':
-          await eventProcessToasts({
-            promise: fevReqReview(),
-            start: 'Requesting review',
-            success: 'Review requested successfully',
-            error: 'Error while requesting review'
+          await handleRequestReview({
+            fn: fevReqReview
           });
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/dashboard/use-document-menu-action.js
         case 'cancel-req-review':
-          await eventProcessToasts({
-            promise: fevCancelReviewReq(),
-            start: 'Cancelling requested review',
-            success: 'Review request cancelled successfully',
-            error: 'Error while cancelling requested review'
+          await handleCancelRequestReview({
+            fn: fevCancelReviewReq
           });
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/dashboard/use-document-menu-action.js
         case 'set-own-review-done':
-          await eventProcessToasts({
-            promise: fevSetOwnReviewStatus({
-              payload: { review_status: REVIEW_DONE }
-            }),
-            start: 'Concluding review',
-            success: 'Review concluded successfully',
-            error: 'Error while concluding review'
+          await handleSetOwnReviewDone({
+            fn: fevSetOwnReviewStatus,
+            args: [
+              {
+                payload: { review_status: REVIEW_DONE }
+              }
+            ]
           });
           break;
         case 'req-review-allow':
@@ -301,3 +293,50 @@ export const useDocumentModals = ({
     }
   };
 };
+
+export async function handleRequestReview({ fn, args = [] }) {
+  return eventProcessToasts({
+    promise: fn(...args),
+    start: 'Requesting review',
+    success: 'Review requested successfully',
+    error: 'Error while requesting review'
+  });
+}
+
+export async function handleCancelRequestReview({ fn, args = [] }) {
+  return eventProcessToasts({
+    promise: fn(...args),
+    start: 'Cancelling requested review',
+    success: 'Review request cancelled successfully',
+    error: 'Error while cancelling requested review'
+  });
+}
+
+export async function handleSetOwnReviewDone({ fn, args = [] }) {
+  const { result } = await showConfirmationPrompt({
+    title: 'Are you sure?',
+    content: (
+      <p>
+        You&apos;re about to conclude your review for the closed phase of the
+        review process.
+      </p>
+    ),
+    /* eslint-disable-next-line react/display-name, react/prop-types */
+    renderControls: createBinaryControlsRenderer({
+      confirmVariation: 'primary-raised-dark',
+      confirmIcon: 'tick--small',
+      confirmTitle: 'Conclude review',
+      cancelVariation: 'base-raised-light',
+      cancelIcon: 'xmark--small'
+    })
+  });
+
+  if (result) {
+    return eventProcessToasts({
+      promise: fn(...args),
+      start: 'Concluding review',
+      success: 'Review concluded successfully',
+      error: 'Error while concluding review'
+    });
+  }
+}

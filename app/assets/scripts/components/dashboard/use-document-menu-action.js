@@ -4,7 +4,11 @@ import { useHistory } from 'react-router';
 import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
 import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
-import { eventProcessToasts } from '../documents/use-document-modals';
+import {
+  handleCancelRequestReview,
+  handleRequestReview,
+  handleSetOwnReviewDone
+} from '../documents/use-document-modals';
 import { REVIEW_DONE } from '../documents/status';
 import getDocumentIdKey from '../documents/get-document-id-key';
 
@@ -40,37 +44,27 @@ export function useDocumentHubMenuAction() {
             history
           });
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/documents/use-document-modals.js
         case 'req-review':
-          await eventProcessToasts({
-            promise: fevReqReview(atbdIdKey),
-            start: 'Requesting review',
-            success: 'Review requested successfully',
-            error: 'Error while requesting review'
+          await handleRequestReview({
+            fn: fevReqReview,
+            args: [atbdIdKey]
           });
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/documents/use-document-modals.js
         case 'cancel-req-review':
-          await eventProcessToasts({
-            promise: fevCancelReviewReq(atbdIdKey),
-            start: 'Cancelling requested review',
-            success: 'Review request cancelled successfully',
-            error: 'Error while cancelling requested review'
+          await handleCancelRequestReview({
+            fn: fevCancelReviewReq,
+            args: [atbdIdKey]
           });
           break;
-        // eventProcessToasts messages must also be updated in
-        // app/assets/scripts/components/documents/use-document-modals.js
         case 'set-own-review-done':
-          await eventProcessToasts({
-            promise: fevSetOwnReviewStatus({
-              ...atbdIdKey,
-              payload: { review_status: REVIEW_DONE }
-            }),
-            start: 'Concluding review',
-            success: 'Review concluded successfully',
-            error: 'Error while concluding review'
+          await handleSetOwnReviewDone({
+            fn: fevSetOwnReviewStatus,
+            args: [
+              {
+                ...atbdIdKey,
+                payload: { review_status: REVIEW_DONE }
+              }
+            ]
           });
           break;
         case 'update-minor':
