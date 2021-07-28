@@ -10,6 +10,7 @@ import UserIdentity from '../common/user-identity';
 import { DropHeader, DropHeadline, DropActions } from '../../styles/drop';
 
 import { useContextualAbility } from '../../a11n';
+import { isReviewDone } from './status';
 
 const shadowScrollbarProps = {
   autoHeight: true,
@@ -41,12 +42,19 @@ const CollaboratorsListTerm = styled.dt`
 `;
 
 const CollaboratorEntry = (props) => {
-  const { isLead, name, email } = props;
-  return <UserIdentity name={name} email={email} role={isLead && 'Lead'} />;
+  const { isLead, isReviewComplete, name, email } = props;
+  return (
+    <UserIdentity
+      name={name}
+      email={email}
+      role={(isLead && 'Lead') || (isReviewComplete && 'Reviewed')}
+    />
+  );
 };
 
 CollaboratorEntry.propTypes = {
   isLead: T.bool,
+  isReviewComplete: T.bool,
   name: T.string,
   email: T.string
 };
@@ -108,6 +116,7 @@ const CollaboratorsMenuContent = (props) => {
                       <CollaboratorEntry
                         name={reviewer.preferred_username}
                         email={reviewer.email}
+                        isReviewComplete={isReviewDone(reviewer)}
                       />
                     </li>
                   ))}
