@@ -110,8 +110,8 @@ const TabDocuments = (props) => {
         return (
           <EmptyTab>
             <p>
-              APT is a repository for scientific documents, but none exist.
-              Start by creating one.
+              You are not the lead author of any documents, but can always
+              create one.
             </p>
             <Button
               variation='primary-raised-dark'
