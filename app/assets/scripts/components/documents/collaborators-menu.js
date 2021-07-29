@@ -6,8 +6,8 @@ import Dropdown, { DropTitle } from '@devseed-ui/dropdown';
 import { Button } from '@devseed-ui/button';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
-import UserIdentity from '../common/user-identity';
 import { DropHeader, DropHeadline, DropActions } from '../../styles/drop';
+import { CollaboratorUserIdentity } from '../common/user-selectable-list';
 
 import { useContextualAbility } from '../../a11n';
 import { isReviewDone } from './status';
@@ -41,24 +41,6 @@ const CollaboratorsListTerm = styled.dt`
   line-height: 1.25rem;
 `;
 
-const CollaboratorEntry = (props) => {
-  const { isLead, isReviewComplete, name, email } = props;
-  return (
-    <UserIdentity
-      name={name}
-      email={email}
-      role={(isLead && 'Lead') || (isReviewComplete && 'Reviewed')}
-    />
-  );
-};
-
-CollaboratorEntry.propTypes = {
-  isLead: T.bool,
-  isReviewComplete: T.bool,
-  name: T.string,
-  email: T.string
-};
-
 const CollaboratorsMenuContent = (props) => {
   const { onOptionsClick, showOptions, owner, authors, reviewers } = props;
 
@@ -90,7 +72,7 @@ const CollaboratorsMenuContent = (props) => {
           <dd>
             <ul>
               <li>
-                <CollaboratorEntry
+                <CollaboratorUserIdentity
                   name={owner.preferred_username}
                   email={owner.email}
                   isLead
@@ -98,7 +80,7 @@ const CollaboratorsMenuContent = (props) => {
               </li>
               {authors.map((author) => (
                 <li key={author.sub || author.preferred_username}>
-                  <CollaboratorEntry
+                  <CollaboratorUserIdentity
                     name={author.preferred_username}
                     email={author.email}
                   />
@@ -113,7 +95,7 @@ const CollaboratorsMenuContent = (props) => {
                 <ul>
                   {reviewers.map((reviewer) => (
                     <li key={reviewer.sub || reviewer.preferred_username}>
-                      <CollaboratorEntry
+                      <CollaboratorUserIdentity
                         name={reviewer.preferred_username}
                         email={reviewer.email}
                         isReviewComplete={isReviewDone(reviewer)}

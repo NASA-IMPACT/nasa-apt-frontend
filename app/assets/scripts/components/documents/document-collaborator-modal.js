@@ -10,10 +10,10 @@ import { glsp } from '@devseed-ui/theme-provider';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
-import UserIdentity from '../common/user-identity';
 import Tip from '../common/tooltip';
 import { FormikResetReveal } from '../common/forms/formik-reset-reveal';
 import {
+  CollaboratorUserIdentity,
   UserSelectableList,
   UserSelectableListLoadingSkeleton
 } from '../common/user-selectable-list';
@@ -21,7 +21,7 @@ import {
 import { useContextualAbility } from '../../a11n';
 import { showConfirmationPrompt } from '../common/confirmation-prompt';
 import { useCollaborators } from '../../context/collaborators-list';
-import { isDraftEquivalent } from './status';
+import { isDraftEquivalent, isReviewDone } from './status';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -84,6 +84,13 @@ export function DocumentCollaboratorModal(props) {
     // Using undefined keeps the same path.
     history.push(undefined, { menuAction: 'change-leading' });
   }, [canChangeLead, history, onClose]);
+
+  // Get the ids of the reviewers that concluded the review.
+  // Used to display the badge.
+  const reviewersConcluded = useMemo(
+    () => atbd.reviewers.filter(isReviewDone).map((u) => u.sub),
+    [atbd]
+  );
 
   const initialValues = useMemo(() => {
     const authors = atbd.authors.map((u) => u.sub);
@@ -154,18 +161,18 @@ export function DocumentCollaboratorModal(props) {
                     {collabAuthors.status === 'succeeded' && (
                       <ShadowScrollbarPadded>
                         <CollaboratorLead>
-                          <UserIdentity
+                          <CollaboratorUserIdentity
                             name={atbd.owner.preferred_username}
                             email={atbd.owner.email}
-                            role='Lead'
+                            isLead
                           />
                           <Button
                             size='small'
-                            variation='base-raised-light'
+                            variation='base-plain'
                             onClick={onChangeLeadClick}
                             disabled={!canChangeLead}
                           >
-                            Change lead author
+                            Change
                           </Button>
                         </CollaboratorLead>
                         <UserSelectableList
@@ -188,6 +195,7 @@ export function DocumentCollaboratorModal(props) {
                       <ShadowScrollbarPadded>
                         <UserSelectableList
                           users={collabReviewers.data}
+                          reviewersConcluded={reviewersConcluded}
                           fieldName='reviewers'
                         />
                       </ShadowScrollbarPadded>
