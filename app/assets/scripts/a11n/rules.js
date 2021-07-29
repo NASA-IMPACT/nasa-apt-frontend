@@ -40,6 +40,9 @@ export function defineRulesFor(user) {
       allow('manage-req-review', 'document-version', {
         status: CLOSED_REVIEW_REQUESTED
       });
+      allow('open-review', 'document-version', {
+        status: CLOSED_REVIEW
+      });
     }
     if (is(CONTRIBUTOR_ROLE)) {
       allow('view', 'contacts');

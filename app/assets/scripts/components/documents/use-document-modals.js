@@ -28,6 +28,7 @@ import {
 import { createProcessToast } from '../common/toasts';
 import { REVIEW_DONE } from './status';
 import {
+  ConfirmationModalProse,
   createBinaryControlsRenderer,
   showConfirmationPrompt
 } from '../common/confirmation-prompt';
@@ -150,7 +151,8 @@ export const useDocumentModals = ({
   fevCancelReviewReq,
   fevApproveReviewReq,
   fevDenyReviewReq,
-  fevSetOwnReviewStatus
+  fevSetOwnReviewStatus,
+  fevOpenReview
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -194,12 +196,19 @@ export const useDocumentModals = ({
           break;
         case 'set-own-review-done':
           await handleSetOwnReviewDone({
+            atbd,
             fn: fevSetOwnReviewStatus,
             args: [
               {
                 payload: { review_status: REVIEW_DONE }
               }
             ]
+          });
+          break;
+        case 'open-review':
+          await handleOpenReview({
+            atbd,
+            fn: fevOpenReview
           });
           break;
         case 'req-review-allow':
@@ -217,7 +226,8 @@ export const useDocumentModals = ({
       setActiveModal,
       fevReqReview,
       fevCancelReviewReq,
-      fevSetOwnReviewStatus
+      fevSetOwnReviewStatus,
+      fevOpenReview
     ]
   );
 
@@ -312,13 +322,14 @@ export async function handleCancelRequestReview({ fn, args = [] }) {
   });
 }
 
-export async function handleSetOwnReviewDone({ fn, args = [] }) {
+export async function handleSetOwnReviewDone({ atbd, fn, args = [] }) {
   const { result } = await showConfirmationPrompt({
     title: 'Are you sure?',
     content: (
       <p>
-        You&apos;re about to conclude your review for the closed phase of the
-        review process.
+        You&apos;re about to conclude your review for version{' '}
+        <strong>{atbd.version}</strong> of document{' '}
+        <strong>{atbd.title}</strong>.
       </p>
     ),
     /* eslint-disable-next-line react/display-name, react/prop-types */
@@ -337,6 +348,55 @@ export async function handleSetOwnReviewDone({ fn, args = [] }) {
       start: 'Concluding review',
       success: 'Review concluded successfully',
       error: 'Error while concluding review'
+    });
+  }
+}
+
+export async function handleOpenReview({ atbd, fn, args = [] }) {
+  const revTotal = atbd.reviewers.length;
+  const revCompleted = atbd.reviewers.filter(
+    (r) => r.review_status === REVIEW_DONE
+  ).length;
+
+  const { result } = await showConfirmationPrompt({
+    title: 'Are you sure?',
+    content: (
+      <ConfirmationModalProse>
+        {!!revTotal &&
+          (revCompleted === 0 ? (
+            <p>No reviewer has concluded their review yet.</p>
+          ) : revTotal === revCompleted ? (
+            <p>All reviewers have concluded their review.</p>
+          ) : (
+            <p>
+              Only {revCompleted} out of {revTotal} reviewers have concluded
+              their review.
+            </p>
+          ))}
+        <p>
+          You&apos;re about to transition the version{' '}
+          <strong>{atbd.version}</strong> of document{' '}
+          <strong>{atbd.title}</strong> to the open review stage.
+        </p>
+        <p>The authors will be able to edit the document again.</p>
+      </ConfirmationModalProse>
+    ),
+    /* eslint-disable-next-line react/display-name, react/prop-types */
+    renderControls: createBinaryControlsRenderer({
+      confirmVariation: 'primary-raised-dark',
+      confirmIcon: 'tick--small',
+      confirmTitle: 'Transition document to open review',
+      cancelVariation: 'base-raised-light',
+      cancelIcon: 'xmark--small'
+    })
+  });
+
+  if (result) {
+    return eventProcessToasts({
+      promise: fn(...args),
+      start: 'Transitioning document to open review',
+      success: 'Review opened successfully',
+      error: 'Error while opening review'
     });
   }
 }

@@ -6,6 +6,7 @@ import { documentDeleteVersionConfirmAndToast } from '../documents/document-dele
 import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
 import {
   handleCancelRequestReview,
+  handleOpenReview,
   handleRequestReview,
   handleSetOwnReviewDone
 } from '../documents/use-document-modals';
@@ -28,7 +29,8 @@ export function useDocumentHubMenuAction() {
   const {
     fevReqReview,
     fevCancelReviewReq,
-    fevSetOwnReviewStatus
+    fevSetOwnReviewStatus,
+    fevOpenReview
   } = useSingleAtbdEvents({});
   const { deleteAtbdVersion } = useSingleAtbd({});
 
@@ -58,6 +60,7 @@ export function useDocumentHubMenuAction() {
           break;
         case 'set-own-review-done':
           await handleSetOwnReviewDone({
+            atbd,
             fn: fevSetOwnReviewStatus,
             args: [
               {
@@ -65,6 +68,13 @@ export function useDocumentHubMenuAction() {
                 payload: { review_status: REVIEW_DONE }
               }
             ]
+          });
+          break;
+        case 'open-review':
+          await handleOpenReview({
+            atbd,
+            fn: fevOpenReview,
+            args: [atbdIdKey]
           });
           break;
         case 'update-minor':
@@ -88,7 +98,8 @@ export function useDocumentHubMenuAction() {
       history,
       fevReqReview,
       fevCancelReviewReq,
-      fevSetOwnReviewStatus
+      fevSetOwnReviewStatus,
+      fevOpenReview
     ]
   );
 }

@@ -4,9 +4,16 @@ import styled from 'styled-components';
 import { Modal, ModalFooter, ModalHeadline } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { headingAlt } from '@devseed-ui/typography';
+import { glsp } from '@devseed-ui/theme-provider';
 
 const ConfirmationModalFooter = styled(ModalFooter)`
   justify-content: center;
+`;
+
+export const ConfirmationModalProse = styled.div`
+  display: flex;
+  flex-flow: column;
+  gap: ${glsp(0.5)};
 `;
 
 export const ModalSubtitle = styled.p`
@@ -274,7 +281,7 @@ export const confirmDeleteContact = async (name, docsCount) => {
   return showConfirmationPrompt({
     title: 'Delete this contact?',
     content: (
-      <React.Fragment>
+      <ConfirmationModalProse>
         {docsCount ? (
           <p>
             The contact <strong>{name}</strong> will be removed from APT and
@@ -286,7 +293,7 @@ export const confirmDeleteContact = async (name, docsCount) => {
           </p>
         )}
         <p>This action is irreversible.</p>
-      </React.Fragment>
+      </ConfirmationModalProse>
     ),
     renderControls: deleteControls
   });

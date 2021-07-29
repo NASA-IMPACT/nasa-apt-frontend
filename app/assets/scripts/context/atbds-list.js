@@ -630,7 +630,10 @@ export const useSingleAtbdEvents = ({ id, version }) => {
     fevSetOwnReviewStatus: useMemo(
       () => createFireEvent('update_review_status'),
       [createFireEvent]
-    )
+    ),
+    fevOpenReview: useMemo(() => createFireEvent('open_review'), [
+      createFireEvent
+    ])
   };
 };
 

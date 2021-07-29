@@ -19,6 +19,8 @@ export default function DocumentGovernanceAction(props) {
 
   const isMutating = mutationStatus === 'loading';
 
+  // The governance actions are present on the dashboard and on the document
+  // header, but they have a different style.
   const control = useMemo(() => {
     if (origin === 'hub') {
       const base = {
@@ -73,15 +75,6 @@ export default function DocumentGovernanceAction(props) {
           Conclude review
         </control.El>
       </Can>
-      {/* <Can do='open-review' on={atbd}>
-        <control.El
-          {...control.props}
-          title='Cancel review submission'
-          onClick={() => onAction('open-review', { atbd })}
-        >
-          Cancel request
-        </control.El>
-      </Can> */}
       <Can do='manage-req-review' on={atbd}>
         <AllowDeny
           id='req-review'
@@ -90,6 +83,15 @@ export default function DocumentGovernanceAction(props) {
           dropTitle='Request for review'
           onSelect={onAction}
         />
+      </Can>
+      <Can do='open-review' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Transition document to open review stage'
+          onClick={() => onAction('open-review', { atbd })}
+        >
+          Open review
+        </control.El>
       </Can>
     </React.Fragment>
   );
