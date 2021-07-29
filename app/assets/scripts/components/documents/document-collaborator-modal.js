@@ -21,6 +21,7 @@ import {
 import { useContextualAbility } from '../../a11n';
 import { showConfirmationPrompt } from '../common/confirmation-prompt';
 import { useCollaborators } from '../../context/collaborators-list';
+import { isDraftEquivalent } from './status';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -73,6 +74,8 @@ export function DocumentCollaboratorModal(props) {
   const canManageReviewers = ability.can('manage-reviewers', atbd);
   const canChangeLead = ability.can('change-lead-author', atbd);
 
+  const validStateToManageReviewers = !isDraftEquivalent(atbd);
+
   const onChangeLeadClick = useCallback(() => {
     if (!canChangeLead) return;
     onClose();
@@ -99,7 +102,7 @@ export function DocumentCollaboratorModal(props) {
       if (canManageAuthors) {
         fetchCollabAuthors();
       }
-      if (canManageReviewers) {
+      if (canManageReviewers && validStateToManageReviewers) {
         fetchCollabReviewers();
       }
     }
@@ -108,7 +111,8 @@ export function DocumentCollaboratorModal(props) {
     fetchCollabAuthors,
     canManageReviewers,
     fetchCollabReviewers,
-    revealed
+    revealed,
+    validStateToManageReviewers
   ]);
 
   const initialTab =
@@ -175,7 +179,7 @@ export function DocumentCollaboratorModal(props) {
                     )}
                   </TabContent>
                 )}
-                {canManageReviewers && (
+                {canManageReviewers && validStateToManageReviewers ? (
                   <TabContent tabId='reviewers'>
                     {collabReviewers.status === 'loading' && (
                       <UserSelectableListLoadingSkeleton />
@@ -192,7 +196,14 @@ export function DocumentCollaboratorModal(props) {
                       <p>An error occurred while getting the reviewers.</p>
                     )}
                   </TabContent>
-                )}
+                ) : canManageReviewers ? (
+                  <TabContent tabId='reviewers'>
+                    <p>
+                      Reviewers can only be managed once the document is no
+                      longer in draft.
+                    </p>
+                  </TabContent>
+                ) : null}
               </Form>
             </TabsManager>
           }

@@ -67,6 +67,16 @@ export const isDraft = (versionOrStatus) => {
 };
 
 /**
+ * Checks that the given document or status string is in Draft or Closed Review
+ * Requested which is like draft until approved by the curator.
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isDraftEquivalent = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [DRAFT, CLOSED_REVIEW_REQUESTED]);
+};
+
+/**
  * Checks that the given document or status string is in Closed Review Requested
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
