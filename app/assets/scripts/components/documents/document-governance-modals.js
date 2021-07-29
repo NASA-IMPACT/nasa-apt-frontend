@@ -62,11 +62,11 @@ export function ReqDenyModal(props) {
           content={
             <Form as={FormikForm}>
               {content}
-              <p>Please provide a reason to help the authors.</p>
+              <p>Please help the authors understand what happened.</p>
               <FormikInputTextarea
                 id='comment'
                 name='comment'
-                label='Reason'
+                label='Write a comment'
                 labelHint='(required)'
               />
             </Form>
