@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { divide, glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
+import { divide, glsp, themeVal } from '@devseed-ui/theme-provider';
 
 export const DocumentsList = styled.ol`
   background: transparent;

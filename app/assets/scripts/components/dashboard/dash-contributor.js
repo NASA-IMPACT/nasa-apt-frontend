@@ -5,6 +5,7 @@ import { Heading, headingAlt } from '@devseed-ui/typography';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
+import { Toolbar, ToolbarButton, ToolbarLabel } from '@devseed-ui/toolbar';
 
 import {
   TabContent,
@@ -36,25 +37,13 @@ const DocsNav = styled.nav`
   grid-template-columns: 1fr min-content;
 `;
 
-const Filters = styled.ul`
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-gap: ${glsp()};
+const DocsFilters = styled(Toolbar)`
   min-height: 2rem;
   box-shadow: 0 ${themeVal('layout.border')} 0 0 ${themeVal('color.baseAlphaC')};
 
   > * {
-    grid-row: 1;
-    display: flex;
-    flex-flow: row nowrap;
-    gap: ${glsp(0.125)};
-    align-items: center;
     margin-top: ${glsp(-1)};
   }
-`;
-
-const FilterLabel = styled.span`
-  ${headingAlt()}
 `;
 
 const authorTabNav = [
@@ -89,23 +78,19 @@ function DashboardContributor() {
               </TabItem>
             ))}
           </TabsNav>
-          <Filters>
-            <li>
-              <FilterLabel>Status</FilterLabel>
-              <Button title='Filter' useIcon={['chevron-down--small', 'after']}>
-                All
-              </Button>
-            </li>
-            <li>
-              <FilterLabel>Order</FilterLabel>
-              <Button
-                title='Order by'
-                useIcon={['chevron-down--small', 'after']}
-              >
-                Recent
-              </Button>
-            </li>
-          </Filters>
+          <DocsFilters>
+            <ToolbarLabel>Status</ToolbarLabel>
+            <ToolbarButton
+              title='Filter by'
+              useIcon={['chevron-down--small', 'after']}
+            >
+              All
+            </ToolbarButton>
+            <ToolbarLabel>Order</ToolbarLabel>
+            <Button title='Order by' useIcon={['chevron-down--small', 'after']}>
+              Recent
+            </Button>
+          </DocsFilters>
         </DocsNav>
         <TabContent tabId='leading'>
           <TabDocuments role='owner' />
