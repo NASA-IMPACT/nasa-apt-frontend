@@ -4,6 +4,8 @@ import {
   CLOSED_REVIEW,
   CLOSED_REVIEW_REQUESTED,
   DRAFT,
+  OPEN_REVIEW,
+  PUBLICATION_REQUESTED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
 
@@ -42,6 +44,9 @@ export function defineRulesFor(user) {
       });
       allow('open-review', 'document-version', {
         status: CLOSED_REVIEW
+      });
+      allow('manage-req-publication', 'document-version', {
+        status: PUBLICATION_REQUESTED
       });
     }
     if (is(CONTRIBUTOR_ROLE)) {
@@ -83,6 +88,14 @@ export function defineRulesFor(user) {
           $elemMatch: { sub: user.id, review_status: REVIEW_PROGRESS }
         },
         status: CLOSED_REVIEW
+      });
+      allow('req-publication', 'document-version', {
+        'owner.sub': user.id,
+        status: OPEN_REVIEW
+      });
+      allow('cancel-req-publication', 'document-version', {
+        'owner.sub': user.id,
+        status: PUBLICATION_REQUESTED
       });
     }
   }

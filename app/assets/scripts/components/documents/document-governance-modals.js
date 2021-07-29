@@ -31,9 +31,9 @@ const ShadowScrollbarPadded = styled(ShadowScrollbar).attrs({
   margin: ${glsp(0, -2)};
 `;
 
-// Modal to deny the request for review.
-export function ReqReviewDenyModal(props) {
-  const { atbd, revealed, onClose, onSubmit } = props;
+// Modal to deny requests with a comment field.
+export function ReqDenyModal(props) {
+  const { title, content, revealed, onClose, onSubmit } = props;
 
   const validate = useCallback((values) => {
     let errors = {};
@@ -57,15 +57,11 @@ export function ReqReviewDenyModal(props) {
           id='modal'
           size='small'
           revealed={revealed}
-          title='Deny review request'
+          title={title}
           onCloseClick={onClose}
           content={
             <Form as={FormikForm}>
-              <p>
-                You are about to deny the request to start the review process
-                for version <strong>{atbd.version}</strong> of document{' '}
-                <strong>{atbd.title}</strong>
-              </p>
+              {content}
               <p>Please provide a reason to help the authors.</p>
               <FormikInputTextarea
                 id='comment'
@@ -80,7 +76,7 @@ export function ReqReviewDenyModal(props) {
               <GovernanceModalControls
                 modalHelpers={bag}
                 submitLabel='Deny request'
-                submitTitle='Deny review request of document'
+                submitTitle='Deny request'
               />
             </ModalFooter>
           )}
@@ -90,11 +86,12 @@ export function ReqReviewDenyModal(props) {
   );
 }
 
-ReqReviewDenyModal.propTypes = {
-  atbd: T.object,
+ReqDenyModal.propTypes = {
   revealed: T.bool,
   onClose: T.func,
-  onSubmit: T.func
+  onSubmit: T.func,
+  title: T.string,
+  content: T.node
 };
 
 // Modal to deny the request for review.

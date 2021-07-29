@@ -13,7 +13,7 @@ import {
 } from './document-collaborator-modal';
 import {
   ReqReviewApproveModal,
-  ReqReviewDenyModal
+  ReqDenyModal
 } from './document-governance-modals';
 
 import useSafeState from '../../utils/use-safe-state';
@@ -40,6 +40,7 @@ const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
 const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
 const MODAL_REQ_REVIEW_ALLOW = 'modal-req-review-allow';
+const MODAL_REQ_PUBLICATION_DENY = 'modal-req-publication-deny';
 
 /**
  * Waits for a promise showing a message in case of error or success.
@@ -77,7 +78,8 @@ export function DocumentModals(props) {
     onPublishVersionSubmit,
     onCollaboratorsSubmit,
     onReviewReqDenySubmit,
-    onReviewReqApproveSubmit
+    onReviewReqApproveSubmit,
+    onPublicationReqDenySubmit
   } = props;
 
   return (
@@ -114,9 +116,16 @@ export function DocumentModals(props) {
       />
 
       {/* Governance modals */}
-      <ReqReviewDenyModal
+      <ReqDenyModal
         revealed={activeModal === MODAL_REQ_REVIEW_DENY}
-        atbd={atbd}
+        title='Deny review request'
+        content={
+          <p>
+            You are about to deny the request to start the review process for
+            version <strong>{atbd.version}</strong> of document{' '}
+            <strong>{atbd.title}</strong>
+          </p>
+        }
         onSubmit={onReviewReqDenySubmit}
         onClose={hideModal}
       />
@@ -124,6 +133,19 @@ export function DocumentModals(props) {
         revealed={activeModal === MODAL_REQ_REVIEW_ALLOW}
         atbd={atbd}
         onSubmit={onReviewReqApproveSubmit}
+        onClose={hideModal}
+      />
+      <ReqDenyModal
+        revealed={activeModal === MODAL_REQ_PUBLICATION_DENY}
+        title='Deny publication request'
+        content={
+          <p>
+            You are about to deny the publication request for version{' '}
+            <strong>{atbd.version}</strong> of document{' '}
+            <strong>{atbd.title}</strong>
+          </p>
+        }
+        onSubmit={onPublicationReqDenySubmit}
         onClose={hideModal}
       />
     </React.Fragment>
@@ -139,7 +161,8 @@ DocumentModals.propTypes = {
   onPublishVersionSubmit: T.func,
   onCollaboratorsSubmit: T.func,
   onReviewReqDenySubmit: T.func,
-  onReviewReqApproveSubmit: T.func
+  onReviewReqApproveSubmit: T.func,
+  onPublicationReqDenySubmit: T.func
 };
 
 export const useDocumentModals = ({
@@ -152,7 +175,11 @@ export const useDocumentModals = ({
   fevApproveReviewReq,
   fevDenyReviewReq,
   fevSetOwnReviewStatus,
-  fevOpenReview
+  fevOpenReview,
+  fevReqPublication,
+  fevCancelPublicationReq,
+  fevApprovePublicationReq,
+  fevDenyPublicationReq
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -194,6 +221,12 @@ export const useDocumentModals = ({
             fn: fevCancelReviewReq
           });
           break;
+        case 'req-review-allow':
+          setActiveModal(MODAL_REQ_REVIEW_ALLOW);
+          break;
+        case 'req-review-deny':
+          setActiveModal(MODAL_REQ_REVIEW_DENY);
+          break;
         case 'set-own-review-done':
           await handleSetOwnReviewDone({
             atbd,
@@ -211,11 +244,24 @@ export const useDocumentModals = ({
             fn: fevOpenReview
           });
           break;
-        case 'req-review-allow':
-          setActiveModal(MODAL_REQ_REVIEW_ALLOW);
+        case 'req-publication':
+          await handleRequestPublication({
+            fn: fevReqPublication
+          });
           break;
-        case 'req-review-deny':
-          setActiveModal(MODAL_REQ_REVIEW_DENY);
+        case 'cancel-req-publication':
+          await handleCancelRequestPublication({
+            fn: fevCancelPublicationReq
+          });
+          break;
+        case 'req-publication-allow':
+          await handleRequestPublicationAllow({
+            atbd,
+            fn: fevApprovePublicationReq
+          });
+          break;
+        case 'req-publication-deny':
+          setActiveModal(MODAL_REQ_PUBLICATION_DENY);
           break;
       }
     },
@@ -227,7 +273,10 @@ export const useDocumentModals = ({
       fevReqReview,
       fevCancelReviewReq,
       fevSetOwnReviewStatus,
-      fevOpenReview
+      fevOpenReview,
+      fevReqPublication,
+      fevApprovePublicationReq,
+      fevCancelPublicationReq
     ]
   );
 
@@ -272,6 +321,16 @@ export const useDocumentModals = ({
     }
   );
 
+  const onPublicationReqDenySubmit = useSubmitForGovernance(
+    fevDenyPublicationReq,
+    hideModal,
+    {
+      start: 'Denying request for publication',
+      success: 'Review publication denied successfully',
+      error: 'Error denying publication request'
+    }
+  );
+
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the
   // dashboards for example. When the user selects one of the options from
@@ -299,7 +358,8 @@ export const useDocumentModals = ({
       onPublishVersionSubmit,
       onCollaboratorsSubmit,
       onReviewReqDenySubmit,
-      onReviewReqApproveSubmit
+      onReviewReqApproveSubmit,
+      onPublicationReqDenySubmit
     }
   };
 };
@@ -397,6 +457,56 @@ export async function handleOpenReview({ atbd, fn, args = [] }) {
       start: 'Transitioning document to open review',
       success: 'Review opened successfully',
       error: 'Error while opening review'
+    });
+  }
+}
+
+export async function handleRequestPublication({ fn, args = [] }) {
+  return eventProcessToasts({
+    promise: fn(...args),
+    start: 'Requesting publication',
+    success: 'Publication requested successfully',
+    error: 'Error while requesting publication'
+  });
+}
+
+export async function handleCancelRequestPublication({ fn, args = [] }) {
+  return eventProcessToasts({
+    promise: fn(...args),
+    start: 'Cancelling requested publication',
+    success: 'Publication request cancelled successfully',
+    error: 'Error while cancelling requested publication'
+  });
+}
+
+export async function handleRequestPublicationAllow({ atbd, fn, args = [] }) {
+  const { result } = await showConfirmationPrompt({
+    title: 'Are you sure?',
+    content: (
+      <ConfirmationModalProse>
+        <p>
+          You&apos;re about to transition the version{' '}
+          <strong>{atbd.version}</strong> of document{' '}
+          <strong>{atbd.title}</strong> to the publication stage.
+        </p>
+      </ConfirmationModalProse>
+    ),
+    /* eslint-disable-next-line react/display-name, react/prop-types */
+    renderControls: createBinaryControlsRenderer({
+      confirmVariation: 'primary-raised-dark',
+      confirmIcon: 'tick--small',
+      confirmTitle: 'Transition document to publication',
+      cancelVariation: 'base-raised-light',
+      cancelIcon: 'xmark--small'
+    })
+  });
+
+  if (result) {
+    return eventProcessToasts({
+      promise: fn(...args),
+      start: 'Transitioning document to publication',
+      success: 'Document is now in publication',
+      error: 'Error while moving to publication'
     });
   }
 }

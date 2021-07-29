@@ -5,8 +5,10 @@ import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
 import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
 import {
+  handleCancelRequestPublication,
   handleCancelRequestReview,
   handleOpenReview,
+  handleRequestPublication,
   handleRequestReview,
   handleSetOwnReviewDone
 } from '../documents/use-document-modals';
@@ -30,7 +32,9 @@ export function useDocumentHubMenuAction() {
     fevReqReview,
     fevCancelReviewReq,
     fevSetOwnReviewStatus,
-    fevOpenReview
+    fevOpenReview,
+    fevReqPublication,
+    fevCancelPublicationReq
   } = useSingleAtbdEvents({});
   const { deleteAtbdVersion } = useSingleAtbd({});
 
@@ -77,6 +81,18 @@ export function useDocumentHubMenuAction() {
             args: [atbdIdKey]
           });
           break;
+        case 'req-publication':
+          await handleRequestPublication({
+            fn: fevReqPublication,
+            args: [atbdIdKey]
+          });
+          break;
+        case 'cancel-req-publication':
+          await handleCancelRequestPublication({
+            fn: fevCancelPublicationReq,
+            args: [atbdIdKey]
+          });
+          break;
         case 'update-minor':
         case 'draft-major':
         case 'publish':
@@ -85,6 +101,8 @@ export function useDocumentHubMenuAction() {
         case 'change-leading':
         case 'req-review-allow':
         case 'req-review-deny':
+        case 'req-publication-allow':
+        case 'req-publication-deny':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
@@ -99,7 +117,9 @@ export function useDocumentHubMenuAction() {
       fevReqReview,
       fevCancelReviewReq,
       fevSetOwnReviewStatus,
-      fevOpenReview
+      fevOpenReview,
+      fevReqPublication,
+      fevCancelPublicationReq
     ]
   );
 }

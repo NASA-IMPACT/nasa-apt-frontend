@@ -59,7 +59,7 @@ export default function DocumentGovernanceAction(props) {
       <Can do='cancel-req-review' on={atbd}>
         <control.El
           {...control.props}
-          title='Cancel review submission'
+          title='Cancel review request'
           useIcon='xmark--small'
           disabled={isMutating}
           onClick={() => onAction('cancel-req-review', { atbd })}
@@ -97,6 +97,37 @@ export default function DocumentGovernanceAction(props) {
           Conclude closed review
         </control.El>
       </Can>
+      <Can do='req-publication' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Submit document for publication'
+          useIcon='arrow-up-right'
+          disabled={isMutating}
+          onClick={() => onAction('req-publication', { atbd })}
+        >
+          Request publication
+        </control.El>
+      </Can>
+      <Can do='cancel-req-publication' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Cancel publication request'
+          useIcon='xmark--small'
+          disabled={isMutating}
+          onClick={() => onAction('cancel-req-publication', { atbd })}
+        >
+          Cancel request
+        </control.El>
+      </Can>
+      <Can do='manage-req-publication' on={atbd}>
+        <AllowDeny
+          id='req-publication'
+          triggerLabel='Approve request'
+          triggerProps={control.triggerProps}
+          dropTitle='Request for publication'
+          onSelect={onAction}
+        />
+      </Can>
     </React.Fragment>
   );
 }
@@ -119,12 +150,12 @@ const AllowDeny = (props) => {
         items: [
           {
             id: `${id}-allow`,
-            label: 'Allow',
+            label: 'Allow...',
             title: `Allow action ${dropTitle.toLowerCase()}`
           },
           {
             id: `${id}-deny`,
-            label: 'Deny',
+            label: 'Deny...',
             title: `Deny action ${dropTitle.toLowerCase()}`
           }
         ]

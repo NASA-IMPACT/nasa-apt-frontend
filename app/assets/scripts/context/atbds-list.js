@@ -633,7 +633,22 @@ export const useSingleAtbdEvents = ({ id, version }) => {
     ),
     fevOpenReview: useMemo(() => createFireEvent('open_review'), [
       createFireEvent
-    ])
+    ]),
+    fevReqPublication: useMemo(() => createFireEvent('request_publication'), [
+      createFireEvent
+    ]),
+    fevCancelPublicationReq: useMemo(
+      () => createFireEvent('cancel_publication_request'),
+      [createFireEvent]
+    ),
+    fevApprovePublicationReq: useMemo(
+      () => createFireEvent('accept_publication_request'),
+      [createFireEvent]
+    ),
+    fevDenyPublicationReq: useMemo(
+      () => createFireEvent('deny_publication_request'),
+      [createFireEvent]
+    )
   };
 };
 
