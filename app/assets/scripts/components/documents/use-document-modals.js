@@ -340,12 +340,12 @@ export const useDocumentModals = ({
   // state to prevent the modal from popping up on route change.
   useEffect(() => {
     const { menuAction, ...rest } = location.state || {};
-    if (menuAction) {
+    if (atbd && menuAction) {
       menuHandler(menuAction);
       // Using undefined keeps the same path.
       history.replace(undefined, rest);
     }
-  }, [menuHandler, history, location]);
+  }, [menuHandler, atbd, history, location]);
 
   return {
     menuHandler,
