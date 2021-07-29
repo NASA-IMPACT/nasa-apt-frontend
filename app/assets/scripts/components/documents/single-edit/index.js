@@ -13,11 +13,13 @@ import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 import { DocumentModals, useDocumentModals } from '../use-document-modals';
+import ClosedReviewForbidden from './closed-review-forbidden';
 
 import { getDocumentEditStep } from './steps';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
+import { isClosedReview } from '../status';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -76,7 +78,12 @@ function DocumentEdit() {
   }
 
   const stepDefinition = getDocumentEditStep(step);
-  const { StepComponent } = stepDefinition;
+
+  // During the closed review process the document can't be edited.
+  // Show a message instead of a step.
+  const StepComponent = isClosedReview(atbd.data)
+    ? ClosedReviewForbidden
+    : stepDefinition.StepComponent;
 
   if (!StepComponent) {
     return <UhOh />;
@@ -135,7 +142,7 @@ function DocumentEdit() {
               />
               <InpageActions>
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
-                <SaveButton />
+                {!isClosedReview(atbd.data) && <SaveButton />}
                 <VerticalDivider variation='light' />
                 <DocumentActionsMenu
                   // In the case of a single ATBD the selected version data is
