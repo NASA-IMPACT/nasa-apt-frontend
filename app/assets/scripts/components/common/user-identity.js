@@ -8,16 +8,20 @@ import Pill from './pill';
 import UserImage from './user-image';
 import Tip from './tooltip';
 
+const Div = styled.div`
+  /* styled-component */
+`;
+
 const UserIdentityCmp = (props) => {
   const { name, email, role, badge, ...rest } = props;
 
   return (
-    <div {...rest} title={name}>
+    <Div {...rest} title={name}>
       <UserImage name={name} email={email} />
       <strong>{name}</strong>
       {badge}
       {role && <Pill>{role}</Pill>}
-    </div>
+    </Div>
   );
 };
 
@@ -58,9 +62,14 @@ const IconPill = styled(Pill)`
     `}
 `;
 
+const badgeProps = {
+  tag: 'span',
+  position: 'top'
+};
+
 export function ReviewBadge(props) {
   return (
-    <Tip title='Review concluded' {...props}>
+    <Tip title='Review concluded' {...badgeProps} {...props}>
       <IconPill useIcon='hand-thumbs-up'>Review concluded</IconPill>
     </Tip>
   );
@@ -68,7 +77,7 @@ export function ReviewBadge(props) {
 
 export function LeadBadge(props) {
   return (
-    <Tip title='Lead author' {...props}>
+    <Tip title='Lead author' {...badgeProps} {...props}>
       <IconPill useIcon='flag-pole'>Lead author</IconPill>
     </Tip>
   );

@@ -36,6 +36,7 @@ export function CollaboratorUserIdentity(props) {
   const { isLead, isReviewComplete, name, email } = props;
   return (
     <UserIdentity
+      forwardedAs='span'
       name={name}
       email={email}
       badge={isLead ? <LeadBadge /> : isReviewComplete ? <ReviewBadge /> : null}
