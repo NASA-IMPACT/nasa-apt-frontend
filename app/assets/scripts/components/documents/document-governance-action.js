@@ -49,6 +49,7 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Submit document for review'
+          useIcon='arrow-up-right'
           disabled={isMutating}
           onClick={() => onAction('req-review', { atbd })}
         >
@@ -59,6 +60,7 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Cancel review submission'
+          useIcon='xmark--small'
           disabled={isMutating}
           onClick={() => onAction('cancel-req-review', { atbd })}
         >
@@ -69,6 +71,7 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Conclude review of this document'
+          useIcon='tick--small'
           disabled={isMutating}
           onClick={() => onAction('set-own-review-done', { atbd })}
         >
@@ -88,9 +91,10 @@ export default function DocumentGovernanceAction(props) {
         <control.El
           {...control.props}
           title='Transition document to open review stage'
+          useIcon='tick--small'
           onClick={() => onAction('open-review', { atbd })}
         >
-          Open review
+          Conclude closed review
         </control.El>
       </Can>
     </React.Fragment>
