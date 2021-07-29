@@ -1,14 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Field } from 'formik';
-import {
-  glsp,
-  rgba,
-  themeVal,
-  visuallyHidden
-} from '@devseed-ui/theme-provider';
-import collecticon from '@devseed-ui/collecticons';
+import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 
 import UserIdentity, { LeadBadge, ReviewBadge } from './user-identity';
 import {
@@ -16,26 +9,15 @@ import {
   LoadingSkeletonGroup,
   LoadingSkeletonLine
 } from './loading-skeleton';
+import { FormikInputCheckable } from './forms/input-checkable';
 
 export const CollaboratorsList = styled.ul`
   display: grid;
 `;
 
-const CollaboratorCheckableControl = styled.span`
-  position: relative;
-  margin-left: auto;
-
-  &::after {
-    ${collecticon('tick')}
-    opacity: 0;
-    transition: all 0.24s ease 0s;
-  }
-`;
-
-export const CollaboratorOption = styled.label`
+const CollaboratorOption = styled(FormikInputCheckable)`
   display: flex;
   align-items: center;
-  cursor: pointer;
   background-color: ${rgba(themeVal('color.link'), 0)};
   transition: all 0.24s ease-in-out 0s;
   padding: ${glsp(0.5, 2)};
@@ -45,14 +27,8 @@ export const CollaboratorOption = styled.label`
     background-color: ${rgba(themeVal('color.link'), 0.08)};
   }
 
-  input {
-    ${visuallyHidden()}
-  }
-
-  input:checked ~ ${CollaboratorCheckableControl} {
-    &::after {
-      opacity: 1;
-    }
+  > *:last-child {
+    margin-left: auto;
   }
 `;
 
@@ -85,12 +61,12 @@ export function UserSelectableList(props) {
     <CollaboratorsList>
       {users.map((u) => (
         <li key={u.sub}>
-          <CollaboratorOption>
-            <Field
-              type={selectOne ? 'radio' : 'checkbox'}
-              name={fieldName}
-              value={u.sub}
-            />
+          <CollaboratorOption
+            textPlacement='left'
+            type={selectOne ? 'radio' : 'checkbox'}
+            name={fieldName}
+            value={u.sub}
+          >
             <CollaboratorUserIdentity
               name={u.preferred_username}
               email={u.email}
@@ -98,7 +74,6 @@ export function UserSelectableList(props) {
                 fieldName === 'reviewers' && reviewersConcluded.includes(u.sub)
               }
             />
-            <CollaboratorCheckableControl />
           </CollaboratorOption>
         </li>
       ))}
