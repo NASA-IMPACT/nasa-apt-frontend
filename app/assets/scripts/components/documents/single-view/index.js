@@ -48,6 +48,12 @@ const DocumentCanvas = styled(InpageBody)`
   }
 `;
 
+const InpageViewActions = styled(InpageActions)`
+  ${VerticalDivider}:first-child {
+    display: none;
+  }
+`;
+
 const DocumentProse = styled(Prose)`
   > * {
     position: relative;
@@ -205,7 +211,7 @@ function DocumentView() {
               onAction={onDocumentMenuAction}
               mode='view'
             />
-            <InpageActions>
+            <InpageViewActions>
               <DocumentGovernanceAction
                 atbdId={id}
                 version={version}
@@ -213,6 +219,7 @@ function DocumentView() {
                 origin='single-view'
                 onAction={onDocumentMenuAction}
               />
+              <VerticalDivider variation='light' />
               <DocumentDownloadMenu
                 atbd={atbd.data}
                 variation='achromic-plain'
@@ -228,7 +235,7 @@ function DocumentView() {
                 onSelect={onDocumentMenuAction}
                 origin='single-view'
               />
-            </InpageActions>
+            </InpageViewActions>
           </InpageHeaderSticky>
           <ScrollAnchorProvider>
             <DocumentCanvas>
