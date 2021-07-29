@@ -13,13 +13,9 @@ import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 import { DocumentModals, useDocumentModals } from '../use-document-modals';
-import DocumentGovernanceAction from '../document-governance-action';
 
 import { getDocumentEditStep } from './steps';
-import {
-  useSingleAtbd,
-  useSingleAtbdEvents
-} from '../../../context/atbds-list';
+import { useSingleAtbd } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
 
@@ -34,8 +30,6 @@ function DocumentEdit() {
     publishAtbdVersion,
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
-  // Get all fire event actions.
-  const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -45,8 +39,7 @@ function DocumentEdit() {
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion,
-    ...atbdFevActions
+    publishAtbdVersion
   });
 
   const onDocumentMenuAction = useCallback(
@@ -141,13 +134,6 @@ function DocumentEdit() {
                 mode='edit'
               />
               <InpageActions>
-                <DocumentGovernanceAction
-                  atbdId={id}
-                  version={version}
-                  atbd={atbd.data}
-                  origin='single-edit'
-                  onAction={onDocumentMenuAction}
-                />
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
                 <SaveButton />
                 <VerticalDivider variation='light' />
