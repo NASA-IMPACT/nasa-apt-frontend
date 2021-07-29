@@ -43,7 +43,6 @@ export const DocumentEntryHgroup = styled.div`
 `;
 
 export const DocumentEntryTitle = styled.h1`
-  ${truncated()}
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: 0;
