@@ -128,6 +128,17 @@ export default function DocumentGovernanceAction(props) {
           onSelect={onAction}
         />
       </Can>
+      <Can do='publish' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Publish document'
+          useIcon='arrow-up'
+          disabled={isMutating}
+          onClick={() => onAction('publish', { atbd })}
+        >
+          Publish
+        </control.El>
+      </Can>
     </React.Fragment>
   );
 }

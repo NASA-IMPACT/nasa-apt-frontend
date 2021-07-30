@@ -134,8 +134,7 @@ function DocumentView() {
     updateAtbd,
     fetchSingleAtbd,
     deleteAtbdVersion,
-    createAtbdVersion,
-    publishAtbdVersion
+    createAtbdVersion
   } = useSingleAtbd({ id, version });
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
@@ -148,7 +147,6 @@ function DocumentView() {
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion,
     ...atbdFevActions
   });
 

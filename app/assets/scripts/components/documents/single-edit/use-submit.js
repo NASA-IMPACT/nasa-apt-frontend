@@ -96,28 +96,6 @@ export function useSubmitForMinorVersion(updateAtbd, hideModal, history) {
   );
 }
 
-export function useSubmitForPublishingVersion(
-  atbdVersion,
-  publishAtbdVersion,
-  hideModal
-) {
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Publishing version.');
-      const result = await publishAtbdVersion(values);
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        hideModal();
-        processToast.success(`Version ${atbdVersion} was published.`);
-      }
-    },
-    [atbdVersion, publishAtbdVersion, hideModal]
-  );
-}
-
 /**
  * Hook to create the submit callback for the info modal. The info modal
  * contains the changelog field. This hook shows the appropriate message.
@@ -200,7 +178,7 @@ export function useSubmitForGovernance(eventAction, hideModal, messages) {
         );
       } else {
         hideModal();
-        resetForm();
+        resetForm({ values });
         processToast.success(messages.success);
       }
     },

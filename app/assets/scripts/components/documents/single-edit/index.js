@@ -29,7 +29,6 @@ function DocumentEdit() {
     fetchSingleAtbd,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion,
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
 
@@ -40,8 +39,7 @@ function DocumentEdit() {
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
     createAtbdVersion,
-    updateAtbd,
-    publishAtbdVersion
+    updateAtbd
   });
 
   const onDocumentMenuAction = useCallback(

@@ -143,7 +143,6 @@ export const AtbdsProvider = (props) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion,
     fireAtbdEvent,
     dispatch: dispatchAtbdSingle
   } = useContexeedApi(
@@ -249,42 +248,6 @@ export const AtbdsProvider = (props) => {
             return !error ? invalidate(`${id}/${version}`) : finish();
           }
         })),
-        publishAtbdVersion: withRequestToken(token, ({ id, version, data }) => {
-          /* eslint-disable-next-line no-unused-vars */
-          const { id: _, ...rest } = data;
-
-          return {
-            sliceKey: `${id}/${version}`,
-            url: `/atbds/${id}/publish`,
-            requestOptions: {
-              method: 'post',
-              data: {
-                ...rest
-              }
-            },
-            transformData: (data, { state, dispatch }) => {
-              const updatedVersion = data.versions[0];
-
-              const updatedData = {
-                ...computeAtbdVersion(state.data, updatedVersion),
-                // When the content gets updated we also have to update the
-                // corresponding version in the versions array. This is needed
-                // to ensure consistency with the returned structure from
-                // fetchSingleAtbd.
-                versions: getUpdatedVersions(
-                  state.data.versions,
-                  version,
-                  updatedVersion
-                )
-              };
-
-              // See explanation before contexeed declaration.
-              dispatch(invalidateOtherAtbdVersions(id, version));
-
-              return updatedData;
-            }
-          };
-        }),
         // Updating an ATBD is simple most of the times. The vast majority of the
         // fields belong to an ATBD version and we'd use the versions endpoint.
         // However when updating global fields like the tile or alias, we need to
@@ -525,7 +488,6 @@ export const AtbdsProvider = (props) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion,
     fireAtbdEvent
   };
 
@@ -550,8 +512,7 @@ export const useSingleAtbd = ({ id, version }) => {
     fetchSingleAtbd,
     updateAtbd,
     deleteAtbdVersion,
-    createAtbdVersion,
-    publishAtbdVersion
+    createAtbdVersion
   } = useSafeContextFn('useSingleAtbd');
 
   return {
@@ -577,10 +538,6 @@ export const useSingleAtbd = ({ id, version }) => {
       ({ id: inId = id, version: inVersion = version } = {}) =>
         deleteAtbdVersion({ id: inId, version: inVersion }),
       [id, version, deleteAtbdVersion]
-    ),
-    publishAtbdVersion: useCallback(
-      (data) => publishAtbdVersion({ id, version, data }),
-      [id, version, publishAtbdVersion]
     ),
     createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
       id,
@@ -648,7 +605,8 @@ export const useSingleAtbdEvents = ({ id, version }) => {
     fevDenyPublicationReq: useMemo(
       () => createFireEvent('deny_publication_request'),
       [createFireEvent]
-    )
+    ),
+    fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent])
   };
 };
 

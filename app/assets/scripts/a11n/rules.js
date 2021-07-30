@@ -5,6 +5,7 @@ import {
   CLOSED_REVIEW_REQUESTED,
   DRAFT,
   OPEN_REVIEW,
+  PUBLICATION,
   PUBLICATION_REQUESTED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
@@ -47,6 +48,9 @@ export function defineRulesFor(user) {
       });
       allow('manage-req-publication', 'document-version', {
         status: PUBLICATION_REQUESTED
+      });
+      allow('publish', 'document-version', {
+        status: PUBLICATION
       });
     }
     if (is(CONTRIBUTOR_ROLE)) {

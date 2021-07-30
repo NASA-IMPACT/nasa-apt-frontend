@@ -11,7 +11,7 @@ import Tip from '../common/tooltip';
 import { documentEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 import { useContextualAbility } from '../../a11n';
-import { isDraft } from './status';
+import { isDraftEquivalent } from './status';
 
 export default function DocumentActionsMenu(props) {
   const { atbd, atbdVersion, variation, size, onSelect, origin } = props;
@@ -40,11 +40,6 @@ export default function DocumentActionsMenu(props) {
     //   id: 'draft-major',
     //   /* eslint-disable-next-line react/display-name */
     //   render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
-    // };
-    // const itemPublish = {
-    //   id: 'publish',
-    //   label: 'Publish...',
-    //   title: 'Publish document'
     // };
     const itemEdit = {
       id: 'edit',
@@ -100,8 +95,7 @@ export default function DocumentActionsMenu(props) {
             itemEdit,
           ability.can('change-lead-author', atbdVersion) && itemChangeLeading
           // itemUpdateMinor,
-          // itemDraftMajor,
-          // itemPublish
+          // itemDraftMajor
         ]
       },
       {
@@ -223,7 +217,7 @@ const DeleteMenuItem = ({
   //   status to be able to show a message because disabling it in the rules
   //   would remove the button.
 
-  const shouldDisable = !isCurator && !isDraft(atbdVersion);
+  const shouldDisable = !isCurator && !isDraftEquivalent(atbdVersion);
 
   const item = (
     <DropMenuItemEnhanced
