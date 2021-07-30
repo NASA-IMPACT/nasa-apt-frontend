@@ -5,14 +5,16 @@ import {
   CLOSED_REVIEW_REQUESTED,
   DRAFT,
   OPEN_REVIEW,
+  PUBLICATION,
   PUBLICATION_REQUESTED,
+  PUBLISHED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
 
 // Initial ability definition.
 export const ability = new Ability(defineRulesFor(null), {
   detectSubjectType: (object) => {
-    if (object.version && object.status) return 'document-version';
+    if (object?.version && object?.status) return 'document-version';
   }
 });
 
@@ -47,6 +49,9 @@ export function defineRulesFor(user) {
       });
       allow('manage-req-publication', 'document-version', {
         status: PUBLICATION_REQUESTED
+      });
+      allow('publish', 'document-version', {
+        status: PUBLICATION
       });
     }
     if (is(CONTRIBUTOR_ROLE)) {
@@ -96,6 +101,14 @@ export function defineRulesFor(user) {
       allow('cancel-req-publication', 'document-version', {
         'owner.sub': user.id,
         status: PUBLICATION_REQUESTED
+      });
+      allow('up-minor-version', 'document-version', {
+        'owner.sub': user.id,
+        status: PUBLISHED
+      });
+      allow('up-minor-version', 'document-version', {
+        'authors.sub': user.id,
+        status: PUBLISHED
       });
     }
   }

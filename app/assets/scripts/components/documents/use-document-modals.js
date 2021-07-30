@@ -22,8 +22,7 @@ import {
   useSubmitForCollaborators,
   useSubmitForDocumentInfo,
   useSubmitForGovernance,
-  useSubmitForMinorVersion,
-  useSubmitForPublishingVersion
+  useSubmitForMinorVersion
 } from './single-edit/use-submit';
 import { createProcessToast } from '../common/toasts';
 import { REVIEW_DONE } from './status';
@@ -96,12 +95,6 @@ export function DocumentModals(props) {
         onSubmit={onMinorVersionSubmit}
         onClose={hideModal}
       />
-      <PublishingModal
-        revealed={activeModal === MODAL_PUBLISHING}
-        atbd={atbd}
-        onSubmit={onPublishVersionSubmit}
-        onClose={hideModal}
-      />
       <DocumentCollaboratorModal
         revealed={activeModal === MODAL_DOCUMENT_COLLABORATOR}
         atbd={atbd}
@@ -148,6 +141,12 @@ export function DocumentModals(props) {
         onSubmit={onPublicationReqDenySubmit}
         onClose={hideModal}
       />
+      <PublishingModal
+        revealed={activeModal === MODAL_PUBLISHING}
+        atbd={atbd}
+        onSubmit={onPublishVersionSubmit}
+        onClose={hideModal}
+      />
     </React.Fragment>
   );
 }
@@ -169,7 +168,6 @@ export const useDocumentModals = ({
   atbd,
   createAtbdVersion,
   updateAtbd,
-  publishAtbdVersion,
   fevReqReview,
   fevCancelReviewReq,
   fevApproveReviewReq,
@@ -179,7 +177,9 @@ export const useDocumentModals = ({
   fevReqPublication,
   fevCancelPublicationReq,
   fevApprovePublicationReq,
-  fevDenyPublicationReq
+  fevDenyPublicationReq,
+  fevPublish,
+  fevMinorVersion
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -283,14 +283,7 @@ export const useDocumentModals = ({
   const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
 
   const onMinorVersionSubmit = useSubmitForMinorVersion(
-    updateAtbd,
-    hideModal,
-    history
-  );
-
-  const onPublishVersionSubmit = useSubmitForPublishingVersion(
-    atbd?.version,
-    publishAtbdVersion,
+    fevMinorVersion,
     hideModal
   );
 
@@ -330,6 +323,12 @@ export const useDocumentModals = ({
       error: 'Error denying publication request'
     }
   );
+
+  const onPublishVersionSubmit = useSubmitForGovernance(fevPublish, hideModal, {
+    start: 'Publishing document version',
+    success: `Version ${atbd?.version} was published`,
+    error: 'Error publishing version'
+  });
 
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the
