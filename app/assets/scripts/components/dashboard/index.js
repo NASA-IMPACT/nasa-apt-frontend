@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 import { glsp, media, visuallyHidden } from '@devseed-ui/theme-provider';
@@ -18,12 +18,24 @@ import DashboardContributor from './dash-contributor';
 import DashboardCurator from './dash-curator';
 import { Can, useContextualAbility } from '../../a11n';
 import ButtonSecondary from '../../styles/button-secondary';
+import DashboardNoRole from './dash-no-role';
+import Insight from '../common/insight';
 
 import { useUser } from '../../context/user';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useAtbds } from '../../context/atbds-list';
-import DashboardNoRole from './dash-no-role';
-import Insight from '../common/insight';
+import {
+  DRAFT,
+  getDocumentStatusLabel,
+  isDraftEquivalent,
+  isPublication,
+  isPublished,
+  isReviewEquivalent,
+  OPEN_REVIEW,
+  PUBLICATION,
+  PUBLISHED
+} from '../documents/status';
+import { round } from '../../utils/format';
 
 const DashboardCanvas = styled(ContentBlock)`
   background: transparent;
@@ -139,17 +151,7 @@ function UserDashboard() {
                 )}
               </WelcomeBlockProse>
             </WelcomeBlock>
-            {conAccessCuratorDash && (
-              <InsightsBlock>
-                <InsightsBlockTitle>Insights</InsightsBlockTitle>
-                <InsightsBlockContent>
-                  <Insight />
-                  <Insight />
-                  <Insight />
-                  <Insight />
-                </InsightsBlockContent>
-              </InsightsBlock>
-            )}
+            {conAccessCuratorDash && <CuratorInsights />}
             <DocumentsBlock>
               {conAccessContributorDash && <DashboardContributor />}
               {conAccessCuratorDash && <DashboardCurator />}
@@ -165,3 +167,101 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
+
+const inisghtsA11y = {
+  DRAFT: {
+    title: () => 'Documents in draft',
+    description: () =>
+      'Donut chart showing the percentage of documents in draft.',
+    segmentTitle: () => 'Draft',
+    segmentDescription: ({ value, total }) =>
+      `Colored chart segment spanning ${round(
+        (value / total) * 100
+      )}% of the whole, which corresponds to ${value} document${
+        value === 1 ? 's' : ''
+      } in draft out of ${total} total.`
+  },
+  OPEN_REVIEW: {
+    title: () => 'Documents in review',
+    description: () =>
+      'Donut chart showing the percentage of documents in review.',
+    segmentTitle: () => 'In review',
+    segmentDescription: ({ value, total }) =>
+      `Colored chart segment spanning ${round(
+        (value / total) * 100
+      )}% of the whole, which corresponds to ${value} document${
+        value === 1 ? 's' : ''
+      } in review out of ${total} total.`
+  },
+  PUBLICATION: {
+    title: () => 'Documents in publication',
+    description: () =>
+      'Donut chart showing the percentage of documents in publication.',
+    segmentTitle: () => 'In publication',
+    segmentDescription: ({ value, total }) =>
+      `Colored chart segment spanning ${round(
+        (value / total) * 100
+      )}% of the whole, which corresponds to ${value} document${
+        value === 1 ? 's' : ''
+      } in publication out of ${total} total.`
+  },
+  PUBLISHED: {
+    title: () => 'Published documents',
+    description: () =>
+      'Donut chart showing the percentage of published documents.',
+    segmentTitle: () => 'Published',
+    segmentDescription: ({ value, total }) =>
+      `Colored chart segment spanning ${round(
+        (value / total) * 100
+      )}% of the whole, which corresponds to ${value} published document${
+        value === 1 ? 's' : ''
+      } out of ${total} total.`
+  }
+};
+
+function CuratorInsights() {
+  const { atbds } = useAtbds();
+
+  const statCount = useMemo(() => {
+    if (!atbds.data) return;
+
+    const initial = {
+      total: 0,
+      DRAFT: 0,
+      OPEN_REVIEW: 0,
+      PUBLICATION: 0,
+      PUBLISHED: 0
+    };
+    return atbds.data.reduce((acc, doc) => {
+      return doc.versions.reduce((docAcc, ver) => {
+        return {
+          total: docAcc.total + 1,
+          DRAFT: docAcc.DRAFT + Number(isDraftEquivalent(ver)),
+          OPEN_REVIEW: docAcc.OPEN_REVIEW + Number(isReviewEquivalent(ver)),
+          PUBLICATION: docAcc.PUBLICATION + Number(isPublication(ver)),
+          PUBLISHED: docAcc.PUBLISHED + Number(isPublished(ver))
+        };
+      }, acc);
+    }, initial);
+  }, [atbds.data]);
+
+  if (!atbds.data) return null;
+
+  return (
+    <InsightsBlock>
+      <InsightsBlockTitle>Insights</InsightsBlockTitle>
+      <InsightsBlockContent>
+        {[DRAFT, OPEN_REVIEW, PUBLICATION, PUBLISHED].map((status) => (
+          <Insight
+            key={status}
+            id={status.toLowerCase()}
+            total={statCount.total}
+            value={statCount[status]}
+            description={getDocumentStatusLabel(status)}
+            a11y={inisghtsA11y[status]}
+          />
+        ))}
+      </InsightsBlockContent>
+    </InsightsBlock>
+  );
+}
