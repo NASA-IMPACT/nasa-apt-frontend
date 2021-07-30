@@ -7,13 +7,14 @@ import {
   OPEN_REVIEW,
   PUBLICATION,
   PUBLICATION_REQUESTED,
+  PUBLISHED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
 
 // Initial ability definition.
 export const ability = new Ability(defineRulesFor(null), {
   detectSubjectType: (object) => {
-    if (object.version && object.status) return 'document-version';
+    if (object?.version && object?.status) return 'document-version';
   }
 });
 
@@ -100,6 +101,14 @@ export function defineRulesFor(user) {
       allow('cancel-req-publication', 'document-version', {
         'owner.sub': user.id,
         status: PUBLICATION_REQUESTED
+      });
+      allow('up-minor-version', 'document-version', {
+        'owner.sub': user.id,
+        status: PUBLISHED
+      });
+      allow('up-minor-version', 'document-version', {
+        'authors.sub': user.id,
+        status: PUBLISHED
       });
     }
   }

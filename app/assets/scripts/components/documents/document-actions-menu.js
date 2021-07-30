@@ -30,12 +30,12 @@ export default function DocumentActionsMenu(props) {
       label: 'Change lead author...',
       title: 'Change the document lead author'
     };
+    const itemUpdateMinor = {
+      id: 'update-minor',
+      label: 'Update minor version...',
+      title: 'Update minor version of document'
+    };
     // TODO: Temporarily removes while document stages are developed
-    // const itemUpdateMinor = {
-    //   id: 'update-minor',
-    //   label: 'Update minor version...',
-    //   title: 'Update minor version of document'
-    // };
     // const itemDraftMajor = {
     //   id: 'draft-major',
     //   /* eslint-disable-next-line react/display-name */
@@ -93,8 +93,8 @@ export default function DocumentActionsMenu(props) {
           origin !== 'single-edit' &&
             ability.can('edit', atbdVersion) &&
             itemEdit,
-          ability.can('change-lead-author', atbdVersion) && itemChangeLeading
-          // itemUpdateMinor,
+          ability.can('change-lead-author', atbdVersion) && itemChangeLeading,
+          ability.can('up-minor-version', atbdVersion) && itemUpdateMinor
           // itemDraftMajor
         ]
       },

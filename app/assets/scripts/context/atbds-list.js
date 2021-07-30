@@ -6,6 +6,7 @@ import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 import { createContextChecker } from '../utils/create-context-checker';
 import { useContexeedApi } from '../utils/contexeed-v2';
+import getDocumentIdKey from '../components/documents/get-document-id-key';
 
 // Context
 export const AtbdsContext = createContext(null);
@@ -401,7 +402,7 @@ export const AtbdsProvider = (props) => {
               }
 
               // Return the data receiving action.
-              return { ...actionResult };
+              return actionResult;
             }
           };
         }),
@@ -448,7 +449,7 @@ export const AtbdsProvider = (props) => {
                 )
               };
             },
-            onDone: (finish, { error, invalidate }) => {
+            onDone: (finish, { data, error, dispatch, invalidate }) => {
               // Because a document for which an event was fired may be in the
               // atbd list state, invalidate it all.
               dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
@@ -460,9 +461,38 @@ export const AtbdsProvider = (props) => {
                 const result = finish(null, null);
                 invalidate(`${id}/${version}`);
                 return result;
+              } else if (error) {
+                return finish();
               }
 
-              return finish();
+              // In case the version changes due to the minor version bump we
+              // have to move the state to the correct new key, which is made up
+              // of id and version.
+              const currentKey = `${id}/${version}`;
+              const docKeyObj = getDocumentIdKey(data);
+              const newKey = `${docKeyObj.id}/${docKeyObj.version}`;
+
+              // Dispatch the action to have the action result.
+              const actionResult = finish();
+              if (currentKey !== newKey) {
+                // Direct access to the dispatch function.
+                dispatch({
+                  type: 'atbdSingle/move-key',
+                  from: currentKey,
+                  to: newKey
+                });
+
+                // See explanation before contexeed declaration.
+                dispatch(
+                  invalidateOtherAtbdVersions(docKeyObj.id, docKeyObj.version)
+                );
+
+                // Ensure everything is correct, even the new key.
+                return { ...actionResult, key: newKey };
+              }
+
+              // Return the data receiving action.
+              return actionResult;
             }
           })
         )
@@ -606,7 +636,10 @@ export const useSingleAtbdEvents = ({ id, version }) => {
       () => createFireEvent('deny_publication_request'),
       [createFireEvent]
     ),
-    fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent])
+    fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent]),
+    fevMinorVersion: useMemo(() => createFireEvent('bump_minor_version'), [
+      createFireEvent
+    ])
   };
 };
 

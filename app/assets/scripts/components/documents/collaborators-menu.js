@@ -122,8 +122,11 @@ CollaboratorsMenuContent.propTypes = {
 
 export function CollaboratorsMenu(props) {
   const { triggerProps = {}, atbdVersion, onOptionsClick } = props;
-  const { owner, authors = [], reviewers = [] } = atbdVersion;
   const ability = useContextualAbility();
+
+  if (!atbdVersion) return null;
+
+  const { owner, authors = [], reviewers = [] } = atbdVersion;
 
   const collaboratorCount = authors.length + reviewers.length;
 

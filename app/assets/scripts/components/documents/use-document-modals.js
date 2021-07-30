@@ -22,8 +22,7 @@ import {
   useSubmitForCollaborators,
   useSubmitForDocumentInfo,
   useSubmitForGovernance,
-  useSubmitForMinorVersion,
-  useSubmitForPublishingVersion
+  useSubmitForMinorVersion
 } from './single-edit/use-submit';
 import { createProcessToast } from '../common/toasts';
 import { REVIEW_DONE } from './status';
@@ -179,7 +178,8 @@ export const useDocumentModals = ({
   fevCancelPublicationReq,
   fevApprovePublicationReq,
   fevDenyPublicationReq,
-  fevPublish
+  fevPublish,
+  fevMinorVersion
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -283,9 +283,8 @@ export const useDocumentModals = ({
   const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
 
   const onMinorVersionSubmit = useSubmitForMinorVersion(
-    updateAtbd,
-    hideModal,
-    history
+    fevMinorVersion,
+    hideModal
   );
 
   const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);

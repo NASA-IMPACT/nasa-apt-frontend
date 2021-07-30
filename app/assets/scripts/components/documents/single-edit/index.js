@@ -16,7 +16,10 @@ import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import ClosedReviewForbidden from './closed-review-forbidden';
 
 import { getDocumentEditStep } from './steps';
-import { useSingleAtbd } from '../../../context/atbds-list';
+import {
+  useSingleAtbd,
+  useSingleAtbdEvents
+} from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
 import { isClosedReview } from '../status';
@@ -31,6 +34,8 @@ function DocumentEdit() {
     updateAtbd,
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
+  // Get all fire event actions.
+  const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -39,7 +44,8 @@ function DocumentEdit() {
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
     createAtbdVersion,
-    updateAtbd
+    updateAtbd,
+    ...atbdFevActions
   });
 
   const onDocumentMenuAction = useCallback(
