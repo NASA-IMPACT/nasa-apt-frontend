@@ -11,7 +11,7 @@ import Tip from '../common/tooltip';
 import { documentEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
 import { useContextualAbility } from '../../a11n';
-import { isDraftEquivalent } from './status';
+import { isDraftEquivalent, isPublished } from './status';
 
 export default function DocumentActionsMenu(props) {
   const { atbd, atbdVersion, variation, size, onSelect, origin } = props;
@@ -35,12 +35,11 @@ export default function DocumentActionsMenu(props) {
       label: 'Update minor version...',
       title: 'Update minor version of document'
     };
-    // TODO: Temporarily removes while document stages are developed
-    // const itemDraftMajor = {
-    //   id: 'draft-major',
-    //   /* eslint-disable-next-line react/display-name */
-    //   render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
-    // };
+    const itemDraftMajor = {
+      id: 'draft-major',
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
+    };
     const itemEdit = {
       id: 'edit',
       label: 'Edit',
@@ -94,8 +93,10 @@ export default function DocumentActionsMenu(props) {
             ability.can('edit', atbdVersion) &&
             itemEdit,
           ability.can('change-lead-author', atbdVersion) && itemChangeLeading,
-          ability.can('up-minor-version', atbdVersion) && itemUpdateMinor
-          // itemDraftMajor
+          ability.can('up-minor-version', atbdVersion) && itemUpdateMinor,
+          // Anyone that can edit the document can create a major draft and
+          // become the new owner.
+          ability.can('edit', atbdVersion) && itemDraftMajor
         ]
       },
       {
@@ -109,36 +110,6 @@ export default function DocumentActionsMenu(props) {
       ...triggerProps,
       menu: menuDefinition
     };
-
-    // const isAtbdDraft = atbdVersion.status.toLowerCase() === 'draft';
-    // if (isAtbdDraft) {
-    //   return {
-    //     ...triggerProps,
-    //     menu: [
-    //       {
-    //         id: 'actions',
-    //         items: [itemViewInfo, itemPublish, ...editItemMenu]
-    //       },
-    //       deleteMenu
-    //     ]
-    //   };
-    // }
-
-    // return {
-    //   ...triggerProps,
-    //   menu: [
-    //     {
-    //       id: 'actions',
-    //       items: [
-    //         itemViewInfo,
-    //         itemUpdateMinor,
-    //         itemDraftMajor,
-    //         ...editItemMenu
-    //       ]
-    //     },
-    //     deleteMenu
-    //   ]
-    // };
   }, [
     variation,
     size,
@@ -172,11 +143,12 @@ DocumentActionsMenu.propTypes = {
 
 const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
   const lastVersion = atbd.versions.last;
-  const isLastDraft = lastVersion.status.toLowerCase() === 'draft';
+  // Creating a new draft is not allowed if the last version is not published.
+  const isNewDraftForbidden = !isPublished(lastVersion);
 
   const item = (
     <DropMenuItemEnhanced
-      disabled={isLastDraft}
+      disabled={isNewDraftForbidden}
       title='Draft a new major version of document'
       onClick={getMenuClickHandler(onSelect, menuItem)}
       {...props}
@@ -186,9 +158,9 @@ const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
   );
 
   // There can only be 1 major draft version.
-  return isLastDraft ? (
+  return isNewDraftForbidden ? (
     <Tip
-      title={`A Major draft version (${lastVersion.version}) already exists.`}
+      title={`A Major non published version (${lastVersion.version}) already exists.`}
     >
       {item}
     </Tip>
