@@ -203,12 +203,13 @@ function TabCitation(props) {
   const { atbd } = props;
   const citation = atbd.citation;
 
-  const citationText = citation
-    ? citationFields
-        .filter((f) => !!citation[f.name].trim())
-        .map((f) => citation[f.name])
-        .join(', ')
-    : '';
+  const citationText =
+    citation && Object.keys(citation).length
+      ? citationFields
+          .filter((f) => !!citation[f.name].trim())
+          .map((f) => citation[f.name])
+          .join(', ')
+      : '';
 
   const citationEditLink = (
     <Link
