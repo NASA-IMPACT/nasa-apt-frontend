@@ -1,27 +1,35 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import T from 'prop-types';
-import { glsp, truncated } from '@devseed-ui/theme-provider';
+import { glsp, truncated, visuallyHidden } from '@devseed-ui/theme-provider';
+import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
 import UserImage from './user-image';
+import Tip from './tooltip';
+
+const Div = styled.div`
+  /* styled-component */
+`;
 
 const UserIdentityCmp = (props) => {
-  const { name, email, role, ...rest } = props;
+  const { name, email, role, badge, ...rest } = props;
 
   return (
-    <div {...rest} title={name}>
+    <Div {...rest} title={name}>
       <UserImage name={name} email={email} />
       <strong>{name}</strong>
+      {badge}
       {role && <Pill>{role}</Pill>}
-    </div>
+    </Div>
   );
 };
 
 UserIdentityCmp.propTypes = {
   role: T.string,
   name: T.string,
-  email: T.string
+  email: T.string,
+  badge: T.node
 };
 
 const UserIdentity = styled(UserIdentityCmp)`
@@ -38,3 +46,39 @@ const UserIdentity = styled(UserIdentityCmp)`
 `;
 
 export default UserIdentity;
+
+const IconPill = styled(Pill)`
+  span {
+    ${visuallyHidden()}
+  }
+
+  ${({ useIcon }) =>
+    useIcon &&
+    css`
+      &::after {
+        ${collecticon(useIcon)}
+        z-index: 2;
+      }
+    `}
+`;
+
+const badgeProps = {
+  tag: 'span',
+  position: 'top'
+};
+
+export function ReviewBadge(props) {
+  return (
+    <Tip title='Review concluded' {...badgeProps} {...props}>
+      <IconPill useIcon='hand-thumbs-up'>Review concluded</IconPill>
+    </Tip>
+  );
+}
+
+export function LeadBadge(props) {
+  return (
+    <Tip title='Lead author' {...badgeProps} {...props}>
+      <IconPill useIcon='flag-pole'>Lead author</IconPill>
+    </Tip>
+  );
+}

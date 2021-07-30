@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import md5 from 'md5';
 import { themeVal } from '@devseed-ui/theme-provider';
 
-const Figure = styled.figure`
+const UserImageWrapper = styled.span`
   position: relative;
   display: block;
   overflow: hidden;
@@ -68,13 +68,13 @@ function UserImage(props) {
   )}`;
 
   return (
-    <Figure>
+    <UserImageWrapper>
       <img
         src={`https://www.gravatar.com/avatar/${emailMd5}?s=${px}&d=${initialsAvatarUrl}`}
         width={px}
         height={px}
       />
-    </Figure>
+    </UserImageWrapper>
   );
 }
 

@@ -120,8 +120,14 @@ export const makeApiAction = (params) => (...args) => {
           end({
             key: sliceKey,
             isMutation,
-            data: replacementData || data || null,
-            error: replacementError || error || null
+            data:
+              typeof replacementData !== 'undefined'
+                ? replacementData
+                : data || null,
+            error:
+              typeof replacementError !== 'undefined'
+                ? replacementError
+                : error || null
           })
         );
 

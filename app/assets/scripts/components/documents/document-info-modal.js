@@ -146,7 +146,7 @@ function TabGeneral(props) {
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
       </DocInfoList>
 
-      <Can do='edit' on='document'>
+      <Can do='edit' on={atbd}>
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           <Form as={FormikForm}>
             <FormikInputTextarea
@@ -162,7 +162,7 @@ function TabGeneral(props) {
         </Formik>
       </Can>
 
-      <Can not do='edit' on='document'>
+      <Can not do='edit' on={atbd}>
         <InputTextarea
           id='changelog'
           name='changelog'
@@ -201,17 +201,15 @@ const SaveButton = () => {
 
 function TabCitation(props) {
   const { atbd } = props;
-
   const citation = atbd.citation;
 
-  const hasCitation = !!Object.keys(citation || {}).length;
-
-  const citationText = citation
-    ? citationFields
-        .filter((f) => !!citation[f.name])
-        .map((f) => citation[f.name])
-        .join(', ')
-    : '';
+  const citationText =
+    citation && Object.keys(citation).length
+      ? citationFields
+          .filter((f) => !!citation[f.name].trim())
+          .map((f) => citation[f.name])
+          .join(', ')
+      : '';
 
   const citationEditLink = (
     <Link
@@ -232,10 +230,10 @@ function TabCitation(props) {
 
   return (
     <TabContent tabId='citation'>
-      {!hasCitation && (
+      {!citationText && (
         <Prose>
           <p>There is no citation data available.</p>
-          <Can do='edit' on='document'>
+          <Can do='edit' on={atbd}>
             <p>
               The citation information can be edited through the{' '}
               {citationEditLink} form.

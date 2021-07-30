@@ -21,6 +21,7 @@ import DocumentDownloadMenu from '../../documents/document-download-menu';
 
 import { documentView } from '../../../utils/url-creator';
 import { documentUpdatedDate } from '../../../utils/date';
+import getDocumentIdKey from '../get-document-id-key';
 
 function DocumentHubEntry(props) {
   const { atbd } = props;
@@ -44,7 +45,7 @@ function DocumentHubEntry(props) {
             <CardTitle>{atbd.title}</CardTitle>
             <CardToolbar>
               <VersionsMenu
-                atbdId={atbd.alias || atbd.id}
+                atbdId={getDocumentIdKey(atbd).id}
                 versions={atbd.versions}
                 alignment='right'
               />
@@ -91,7 +92,11 @@ const Creators = ({ creators }) => {
   const creatorsList = creators?.split(' and ');
 
   if (creatorsList.length > 1) {
-    return <Tip title={creators}>{creatorsList[0]} et al.</Tip>;
+    return (
+      <Tip title={creators} style={{ pointerEvents: 'auto' }}>
+        {creatorsList[0]} et al.
+      </Tip>
+    );
   }
 
   return creators;

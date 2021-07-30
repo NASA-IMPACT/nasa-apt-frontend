@@ -1,8 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
-
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -19,11 +17,10 @@ import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
 import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
-import { useAtbds } from '../../../context/atbds-list';
-import { documentView } from '../../../utils/url-creator';
-import { documentDeleteFullConfirmAndToast } from '../document-delete-process';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
+
+import { useAtbds } from '../../../context/atbds-list';
 import { useDocumentCreate } from '../single-edit/use-document-create';
 
 export const DocList = styled.ol`
@@ -54,8 +51,7 @@ export const DocListItem = styled.li`
 `;
 
 function Documents() {
-  const { fetchAtbds, deleteFullAtbd, atbds } = useAtbds();
-  const history = useHistory();
+  const { fetchAtbds, atbds } = useAtbds();
 
   useEffect(() => {
     fetchAtbds();
@@ -71,30 +67,6 @@ function Documents() {
   }
 
   const onCreateClick = useDocumentCreate();
-
-  const onDocumentAction = useCallback(
-    async (menuId, { atbd }) => {
-      switch (menuId) {
-        case 'delete':
-          await documentDeleteFullConfirmAndToast({
-            atbd,
-            deleteFullAtbd
-          });
-          break;
-        case 'update-minor':
-        case 'draft-major':
-        case 'publish':
-        case 'view-info':
-          // To trigger the modals to open from other pages, we use the history
-          // state as the user is sent from one page to another. See explanation
-          // on
-          // app/assets/scripts/components/documents/use-document-modals.js
-          history.push(documentView(atbd), { menuAction: menuId });
-          break;
-      }
-    },
-    [deleteFullAtbd, history]
-  );
 
   return (
     <App pageTitle='Documents'>
@@ -163,10 +135,7 @@ function Documents() {
               <DocList>
                 {atbds.data.map((atbd) => (
                   <DocListItem key={atbd.id}>
-                    <DocumentHubEntry
-                      atbd={atbd}
-                      onDocumentAction={onDocumentAction}
-                    />
+                    <DocumentHubEntry atbd={atbd} />
                   </DocListItem>
                 ))}
               </DocList>

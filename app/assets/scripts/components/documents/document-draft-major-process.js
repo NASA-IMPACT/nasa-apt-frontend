@@ -1,6 +1,7 @@
 import { documentView } from '../../utils/url-creator';
 import toasts, { createProcessToast } from '../common/toasts';
 import { confirmDraftMajorVersion } from './document-publishing-modals';
+import { isPublished } from './status';
 
 // Convenience method to create a major version of an atbd and show a toast
 // notification.
@@ -12,10 +13,10 @@ export async function documentDraftMajorConfirmAndToast({
   // We have to increment from the most recent major.
   const lastVersion = atbd.versions.last;
 
-  // There can only be 1 major draft version.
-  if (lastVersion.status === 'Draft') {
+  // Creating a new draft is not allowed if the last version is not published.
+  if (!isPublished(lastVersion)) {
     toasts.error(
-      `There is already a Major draft version. (${lastVersion.version})`
+      `There is already a Major version that is not published. (${lastVersion.version})`
     );
     return;
   }

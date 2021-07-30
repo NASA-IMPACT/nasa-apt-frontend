@@ -147,10 +147,7 @@ const UserProfileTrigger = styled(Button)`
   > span {
     display: inline-flex;
     align-items: center;
-  }
-
-  figure {
-    margin-right: ${glsp(0.5)};
+    gap: ${glsp(0.5)};
   }
 `;
 

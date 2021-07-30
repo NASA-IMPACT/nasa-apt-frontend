@@ -63,7 +63,7 @@ export function useContexeedApi(config, deps = []) {
         ...params,
         type: `end/${name}`
       }),
-      invalidate: (params) => ({ ...params, type: `invalidate/${name}` })
+      invalidate: (key) => ({ key, type: `invalidate/${name}` })
     };
 
     return {

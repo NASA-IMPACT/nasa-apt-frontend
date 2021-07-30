@@ -41,27 +41,104 @@ export const getDocumentStatus = (id) => {
 
 /**
  * Return the label for a given status.
- * @param {object|string} versionOsStatus The doc version or the status string.
+ * @param {object|string} versionOrStatus The doc version or the status string.
  */
-export const getDocumentStatusLabel = (versionOsStatus) => {
-  return getDocumentStatus(versionOsStatus?.status || versionOsStatus)?.label;
+export const getDocumentStatusLabel = (versionOrStatus) => {
+  return getDocumentStatus(versionOrStatus?.status || versionOrStatus)?.label;
 };
 
 /**
  * Checks that the given document or status string matched the given statuses
  * options.
- * @param {object|string} versionOsStatus The doc version or the status string
+ * @param {object|string} versionOrStatus The doc version or the status string
  * @param {array} statuses Status to check
  * @returns boolean
  */
-const isInStatus = (versionOsStatus, statuses) =>
-  statuses.includes(versionOsStatus?.status || versionOsStatus);
+const isInStatus = (versionOrStatus, statuses) =>
+  statuses.includes(versionOrStatus?.status || versionOrStatus);
 
 /**
  * Checks that the given document or status string is in Draft
- * @param {object|string} versionOsStatus The doc version or the status string
+ * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
  */
-export const isDraft = (versionOsStatus) => {
-  return isInStatus(versionOsStatus, [DRAFT]);
+export const isDraft = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [DRAFT]);
+};
+
+/**
+ * Checks that the given document or status string is in Draft or Closed Review
+ * Requested which is like draft until approved by the curator.
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isDraftEquivalent = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [DRAFT, CLOSED_REVIEW_REQUESTED]);
+};
+
+/**
+ * Checks that the given document or status string is in Closed Review Requested
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isReviewRequested = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [CLOSED_REVIEW_REQUESTED]);
+};
+
+/**
+ * Checks that the given document or status string is in Closed Review
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isClosedReview = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [CLOSED_REVIEW]);
+};
+
+/**
+ * Checks that the given document or status string is in Open Review
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isOpenReview = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [OPEN_REVIEW]);
+};
+
+/**
+ * Checks that the given document or status string is in Publication Requested
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublicationRequested = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [PUBLICATION_REQUESTED]);
+};
+
+/**
+ * Checks that the given document or status string is in Publication
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublication = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [PUBLICATION]);
+};
+
+/**
+ * Checks that the given document or status string is Published
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublished = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [PUBLISHED]);
+};
+
+export const REVIEW_PROGRESS = 'IN_PROGRESS';
+export const REVIEW_DONE = 'DONE';
+
+/**
+ * Checks that the given reviewer has completed the review.
+ * @param {object|string} reviewerOrStatus The reviewer review status or
+ * reviewer object.
+ * @returns boolean
+ */
+export const isReviewDone = (reviewerOrStatus) => {
+  return (reviewerOrStatus?.review_status || reviewerOrStatus) === REVIEW_DONE;
 };
