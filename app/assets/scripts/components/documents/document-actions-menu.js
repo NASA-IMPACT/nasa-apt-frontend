@@ -33,12 +33,34 @@ export default function DocumentActionsMenu(props) {
     const itemUpdateMinor = {
       id: 'update-minor',
       label: 'Update minor version...',
-      title: 'Update minor version of document'
+      title: 'Update minor version of document',
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => {
+        const lastVersion = atbd.versions.last;
+        return (
+          <MenuItemReasonDisabled
+            {...props}
+            isDisabled={!isPublished(lastVersion)}
+            tipMessage='Minor versions can only be updated for published documents.'
+          />
+        );
+      }
     };
     const itemDraftMajor = {
       id: 'draft-major',
+      label: 'Draft a new major version',
+      title: 'Draft a new major version of document',
       /* eslint-disable-next-line react/display-name */
-      render: (props) => <DraftMajorMenuItem {...props} atbd={atbd} />
+      render: (props) => {
+        const lastVersion = atbd.versions.last;
+        return (
+          <MenuItemReasonDisabled
+            {...props}
+            isDisabled={!isPublished(lastVersion)}
+            tipMessage={`A Major non published version (${lastVersion.version}) already exists.`}
+          />
+        );
+      }
     };
     const itemEdit = {
       id: 'edit',
@@ -93,10 +115,10 @@ export default function DocumentActionsMenu(props) {
             ability.can('edit', atbdVersion) &&
             itemEdit,
           ability.can('change-lead-author', atbdVersion) && itemChangeLeading,
-          ability.can('up-minor-version', atbdVersion) && itemUpdateMinor,
-          // Anyone that can edit the document can create a major draft and
-          // become the new owner.
-          ability.can('edit', atbdVersion) && itemDraftMajor
+          ability.can('draft-major', atbdVersion) && itemDraftMajor,
+          // Anyone that can edit the published document and update the minor
+          // version.
+          ability.can('edit', atbdVersion) && itemUpdateMinor
         ]
       },
       {
@@ -141,39 +163,67 @@ DocumentActionsMenu.propTypes = {
   size: T.string
 };
 
-const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
-  const lastVersion = atbd.versions.last;
-  // Creating a new draft is not allowed if the last version is not published.
-  const isNewDraftForbidden = !isPublished(lastVersion);
-
+const MenuItemReasonDisabled = ({
+  isDisabled,
+  onSelect,
+  menuItem,
+  tipMessage,
+  ...props
+}) => {
   const item = (
     <DropMenuItemEnhanced
-      disabled={isNewDraftForbidden}
-      title='Draft a new major version of document'
+      disabled={isDisabled}
+      title={menuItem.title}
       onClick={getMenuClickHandler(onSelect, menuItem)}
       {...props}
     >
-      Draft a new major version
+      {menuItem.label}
     </DropMenuItemEnhanced>
   );
 
-  // There can only be 1 major draft version.
-  return isNewDraftForbidden ? (
-    <Tip
-      title={`A Major non published version (${lastVersion.version}) already exists.`}
-    >
-      {item}
-    </Tip>
-  ) : (
-    item
-  );
+  return isDisabled ? <Tip title={tipMessage}>{item}</Tip> : item;
 };
 
-DraftMajorMenuItem.propTypes = {
+MenuItemReasonDisabled.propTypes = {
+  isDisabled: T.bool,
   onSelect: T.func,
   menuItem: T.object,
-  atbd: T.object
+  tipMessage: T.string
 };
+
+// const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
+//   const lastVersion = atbd.versions.last;
+//   // Creating a new draft is not allowed if the last version is not published.
+//   const isNewDraftForbidden = !isPublished(lastVersion);
+
+//   const item = (
+//     <DropMenuItemEnhanced
+//       disabled={isNewDraftForbidden}
+//       title='Draft a new major version of document'
+//       onClick={getMenuClickHandler(onSelect, menuItem)}
+//       {...props}
+//     >
+//       Draft a new major version
+//     </DropMenuItemEnhanced>
+//   );
+
+//   // There can only be 1 major draft version.
+//   return isNewDraftForbidden ? (
+//     <Tip
+//       title={`A Major non published version (${lastVersion.version}) already exists.`}
+//     >
+//       {item}
+//     </Tip>
+//   ) : (
+//     item
+//   );
+// };
+
+// DraftMajorMenuItem.propTypes = {
+//   onSelect: T.func,
+//   menuItem: T.object,
+//   atbd: T.object
+// };
 
 const DeleteMenuItem = ({
   onSelect,

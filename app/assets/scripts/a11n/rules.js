@@ -7,7 +7,6 @@ import {
   OPEN_REVIEW,
   PUBLICATION,
   PUBLICATION_REQUESTED,
-  PUBLISHED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
 
@@ -102,13 +101,8 @@ export function defineRulesFor(user) {
         'owner.sub': user.id,
         status: PUBLICATION_REQUESTED
       });
-      allow('up-minor-version', 'document-version', {
-        'owner.sub': user.id,
-        status: PUBLISHED
-      });
-      allow('up-minor-version', 'document-version', {
-        'authors.sub': user.id,
-        status: PUBLISHED
+      allow('draft-major', 'document-version', {
+        'owner.sub': user.id
       });
     }
   }
