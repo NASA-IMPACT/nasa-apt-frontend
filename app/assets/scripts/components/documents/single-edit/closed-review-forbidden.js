@@ -7,8 +7,10 @@ import Prose from '../../../styles/typography/prose';
 import { BlockMessage } from '../../../styles/block-message';
 import { Link } from '../../../styles/clean/link';
 
+import { documentView } from '../../../utils/url-creator';
+
 export default function ClosedReviewForbidden(props) {
-  const { renderInpageHeader } = props;
+  const { renderInpageHeader, id, version } = props;
 
   return (
     <Inpage>
@@ -23,8 +25,11 @@ export default function ClosedReviewForbidden(props) {
               </p>
               <p>
                 In the meantime, feel free to{' '}
-                <Link to='#' title='Visit'>
-                  visit the draft version
+                <Link
+                  to={documentView(id, version)}
+                  title='Visit document page'
+                >
+                  read the document
                 </Link>
                 .
               </p>
@@ -37,9 +42,7 @@ export default function ClosedReviewForbidden(props) {
 }
 
 ClosedReviewForbidden.propTypes = {
-  renderInpageHeader: T.func,
-  atbd: T.shape({
-    id: T.number,
-    document: T.object
-  })
+  id: T.oneOfType([T.string, T.number]),
+  version: T.string,
+  renderInpageHeader: T.func
 };
