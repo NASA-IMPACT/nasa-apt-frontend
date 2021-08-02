@@ -27,8 +27,12 @@ import { ScrollAnchorProvider } from './scroll-manager';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 import { CopyField } from '../../common/copy-field';
+import DocumentGovernanceAction from '../document-governance-action';
 
-import { useSingleAtbd } from '../../../context/atbds-list';
+import {
+  useSingleAtbd,
+  useSingleAtbdEvents
+} from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
@@ -41,6 +45,12 @@ const DocumentCanvas = styled(InpageBody)`
 
   > * {
     grid-row: 1;
+  }
+`;
+
+const InpageViewActions = styled(InpageActions)`
+  ${VerticalDivider}:first-child {
+    display: none;
   }
 `;
 
@@ -124,12 +134,10 @@ function DocumentView() {
     updateAtbd,
     fetchSingleAtbd,
     deleteAtbdVersion,
-    createAtbdVersion,
-    publishAtbdVersion
-  } = useSingleAtbd({
-    id,
-    version
-  });
+    createAtbdVersion
+  } = useSingleAtbd({ id, version });
+  // Get all fire event actions.
+  const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   useEffect(() => {
     fetchSingleAtbd();
@@ -139,7 +147,7 @@ function DocumentView() {
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion
+    ...atbdFevActions
   });
 
   const onDocumentMenuAction = useCallback(
@@ -201,7 +209,15 @@ function DocumentView() {
               onAction={onDocumentMenuAction}
               mode='view'
             />
-            <InpageActions>
+            <InpageViewActions>
+              <DocumentGovernanceAction
+                atbdId={id}
+                version={version}
+                atbd={atbd.data}
+                origin='single-view'
+                onAction={onDocumentMenuAction}
+              />
+              <VerticalDivider variation='light' />
               <DocumentDownloadMenu
                 atbd={atbd.data}
                 variation='achromic-plain'
@@ -217,7 +233,7 @@ function DocumentView() {
                 onSelect={onDocumentMenuAction}
                 origin='single-view'
               />
-            </InpageActions>
+            </InpageViewActions>
           </InpageHeaderSticky>
           <ScrollAnchorProvider>
             <DocumentCanvas>

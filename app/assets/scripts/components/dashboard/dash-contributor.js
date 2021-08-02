@@ -84,19 +84,20 @@ export default DashboardContributor;
 const TabDocuments = (props) => {
   const { role, status } = props;
   const { activeTab } = useTabs();
-  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds({
+  const { atbds, fetchAtbds } = useAtbds({
     role,
     status
   });
 
   const onCreateClick = useDocumentCreate();
-  const onDocumentAction = useDocumentHubMenuAction({
-    deleteAtbdVersion: deleteSingleAtbdVersion
-  });
+
+  const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
-    fetchAtbds({ role, status });
-  }, [fetchAtbds, role, status]);
+    if (atbds.status === 'idle') {
+      fetchAtbds({ role, status });
+    }
+  }, [atbds.status, fetchAtbds, role, status]);
 
   if (atbds.status === 'loading') {
     return <GlobalLoading />;
@@ -109,8 +110,8 @@ const TabDocuments = (props) => {
         return (
           <EmptyTab>
             <p>
-              APT is a repository for scientific documents, but none exist.
-              Start by creating one.
+              You are not the lead author of any documents, but can always
+              create one.
             </p>
             <Button
               variation='primary-raised-dark'

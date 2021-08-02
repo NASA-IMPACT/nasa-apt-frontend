@@ -27,16 +27,15 @@ const emptyUserData = {
 
 const extractUserDataFromCognito = (user) => {
   const { sub, preferred_username } = user.attributes;
-  const idTokenData = user.getSignInUserSession().getIdToken().payload;
-  const accessToken = user.getSignInUserSession().getAccessToken();
+  const idToken = user.getSignInUserSession().getIdToken();
 
   return {
     id: sub,
     name: preferred_username,
-    accessToken: accessToken.jwtToken,
-    accessTokenExpire: accessToken.payload.exp * 1000,
+    accessToken: idToken.jwtToken,
+    accessTokenExpire: idToken.payload.exp * 1000,
     attributes: user.attributes,
-    groups: idTokenData['cognito:groups'] || [],
+    groups: idToken.payload['cognito:groups'] || [],
     rawCognitoUser: user
   };
 };

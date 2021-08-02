@@ -3,6 +3,17 @@ import { useHistory } from 'react-router';
 
 import { documentView } from '../../utils/url-creator';
 import { documentDeleteVersionConfirmAndToast } from '../documents/document-delete-process';
+import { useSingleAtbd, useSingleAtbdEvents } from '../../context/atbds-list';
+import {
+  handleCancelRequestPublication,
+  handleCancelRequestReview,
+  handleOpenReview,
+  handleRequestPublication,
+  handleRequestReview,
+  handleSetOwnReviewDone
+} from '../documents/use-document-modals';
+import { REVIEW_DONE } from '../documents/status';
+import getDocumentIdKey from '../documents/get-document-id-key';
 
 /**
  * Creates a callback to be used with the DocumentActionMenu component in the
@@ -15,18 +26,71 @@ import { documentDeleteVersionConfirmAndToast } from '../documents/document-dele
  *
  * @returns callback hook
  */
-export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
+export function useDocumentHubMenuAction() {
   const history = useHistory();
+  const {
+    fevReqReview,
+    fevCancelReviewReq,
+    fevSetOwnReviewStatus,
+    fevOpenReview,
+    fevReqPublication,
+    fevCancelPublicationReq
+  } = useSingleAtbdEvents({});
+  const { deleteAtbdVersion } = useSingleAtbd({});
 
   return useCallback(
     async (menuId, { atbd }) => {
+      const atbdIdKey = getDocumentIdKey(atbd);
+
       switch (menuId) {
         case 'delete':
           await documentDeleteVersionConfirmAndToast({
             atbd,
-            deleteAtbdVersion: () =>
-              deleteAtbdVersion({ id: atbd.id, version: atbd.version }),
+            deleteAtbdVersion: () => deleteAtbdVersion(atbdIdKey),
             history
+          });
+          break;
+        case 'req-review':
+          await handleRequestReview({
+            fn: fevReqReview,
+            args: [atbdIdKey]
+          });
+          break;
+        case 'cancel-req-review':
+          await handleCancelRequestReview({
+            fn: fevCancelReviewReq,
+            args: [atbdIdKey]
+          });
+          break;
+        case 'set-own-review-done':
+          await handleSetOwnReviewDone({
+            atbd,
+            fn: fevSetOwnReviewStatus,
+            args: [
+              {
+                ...atbdIdKey,
+                payload: { review_status: REVIEW_DONE }
+              }
+            ]
+          });
+          break;
+        case 'open-review':
+          await handleOpenReview({
+            atbd,
+            fn: fevOpenReview,
+            args: [atbdIdKey]
+          });
+          break;
+        case 'req-publication':
+          await handleRequestPublication({
+            fn: fevReqPublication,
+            args: [atbdIdKey]
+          });
+          break;
+        case 'cancel-req-publication':
+          await handleCancelRequestPublication({
+            fn: fevCancelPublicationReq,
+            args: [atbdIdKey]
           });
           break;
         case 'update-minor':
@@ -35,6 +99,10 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
         case 'view-info':
         case 'manage-collaborators':
         case 'change-leading':
+        case 'req-review-allow':
+        case 'req-review-deny':
+        case 'req-publication-allow':
+        case 'req-publication-deny':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
           // on
@@ -43,6 +111,15 @@ export function useDocumentHubMenuAction({ deleteAtbdVersion } = {}) {
           break;
       }
     },
-    [deleteAtbdVersion, history]
+    [
+      deleteAtbdVersion,
+      history,
+      fevReqReview,
+      fevCancelReviewReq,
+      fevSetOwnReviewStatus,
+      fevOpenReview,
+      fevReqPublication,
+      fevCancelPublicationReq
+    ]
   );
 }
