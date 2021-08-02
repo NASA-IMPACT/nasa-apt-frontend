@@ -319,7 +319,7 @@ export const useDocumentModals = ({
     hideModal,
     {
       start: 'Denying request for publication',
-      success: 'Review publication denied successfully',
+      success: 'Publication request denied successfully',
       error: 'Error denying publication request'
     }
   );
