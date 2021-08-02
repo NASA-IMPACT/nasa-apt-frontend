@@ -55,7 +55,7 @@ function DocumentDashboardEntry(props) {
             <DocumentEntryTitle>
               <Link
                 to={documentView(atbd, lastVersion.version)}
-                title='View document'
+                title={`View ${atbd.title}`}
               >
                 {atbd.title}
               </Link>
@@ -81,7 +81,7 @@ function DocumentDashboardEntry(props) {
                 prefix='Updated'
                 date={new Date(lastVersion.last_updated_at)}
                 to={documentView(atbd)}
-                title='View document'
+                title={`View ${atbd.title}`}
               />
             </li>
             <li>

@@ -191,40 +191,6 @@ MenuItemReasonDisabled.propTypes = {
   tipMessage: T.string
 };
 
-// const DraftMajorMenuItem = ({ onSelect, menuItem, atbd, ...props }) => {
-//   const lastVersion = atbd.versions.last;
-//   // Creating a new draft is not allowed if the last version is not published.
-//   const isNewDraftForbidden = !isPublished(lastVersion);
-
-//   const item = (
-//     <DropMenuItemEnhanced
-//       disabled={isNewDraftForbidden}
-//       title='Draft a new major version of document'
-//       onClick={getMenuClickHandler(onSelect, menuItem)}
-//       {...props}
-//     >
-//       Draft a new major version
-//     </DropMenuItemEnhanced>
-//   );
-
-//   // There can only be 1 major draft version.
-//   return isNewDraftForbidden ? (
-//     <Tip
-//       title={`A Major non published version (${lastVersion.version}) already exists.`}
-//     >
-//       {item}
-//     </Tip>
-//   ) : (
-//     item
-//   );
-// };
-
-// DraftMajorMenuItem.propTypes = {
-//   onSelect: T.func,
-//   menuItem: T.object,
-//   atbd: T.object
-// };
-
 const DeleteMenuItem = ({
   onSelect,
   menuItem,
