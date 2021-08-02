@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Heading, headingAlt } from '@devseed-ui/typography';
+import { Heading } from '@devseed-ui/typography';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
-import { Toolbar, ToolbarButton, ToolbarLabel } from '@devseed-ui/toolbar';
 
 import {
   TabContent,
@@ -17,6 +16,7 @@ import {
 import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
+import DocListSettings, { useDocListSettings } from './document-list-settings';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
@@ -35,15 +35,7 @@ const EmptyTab = styled(EmptyHub)`
 const DocsNav = styled.nav`
   display: grid;
   grid-template-columns: 1fr min-content;
-`;
-
-const DocsFilters = styled(Toolbar)`
-  min-height: 2rem;
-  box-shadow: 0 ${themeVal('layout.border')} 0 0 ${themeVal('color.baseAlphaC')};
-
-  > * {
-    margin-top: ${glsp(-1)};
-  }
+  grid-row-gap: ${glsp()};
 `;
 
 const authorTabNav = [
@@ -66,6 +58,12 @@ const authorTabNav = [
 ];
 
 function DashboardContributor() {
+  const {
+    listSettingsValues,
+    listSettingsSetter,
+    applyListSettings
+  } = useDocListSettings();
+
   return (
     <DashboardContributorInner>
       <TabsManager>
@@ -78,31 +76,38 @@ function DashboardContributor() {
               </TabItem>
             ))}
           </TabsNav>
-          <DocsFilters>
-            <ToolbarLabel>Status</ToolbarLabel>
-            <ToolbarButton
-              title='Filter by'
-              useIcon={['chevron-down--small', 'after']}
-            >
-              All
-            </ToolbarButton>
-            <ToolbarLabel>Order</ToolbarLabel>
-            <Button title='Order by' useIcon={['chevron-down--small', 'after']}>
-              Recent
-            </Button>
-          </DocsFilters>
+          <DocListSettings
+            values={listSettingsValues}
+            onSelect={listSettingsSetter}
+          />
         </DocsNav>
         <TabContent tabId='leading'>
-          <TabDocuments role='owner' />
+          <TabDocuments
+            role='owner'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='contrib'>
-          <TabDocuments role='author' />
+          <TabDocuments
+            role='author'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='reviews'>
-          <TabDocuments role='reviewer' />
+          <TabDocuments
+            role='reviewer'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='public'>
-          <TabDocuments status={PUBLISHED} />
+          <TabDocuments
+            status={PUBLISHED}
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
       </TabsManager>
     </DashboardContributorInner>
@@ -112,15 +117,13 @@ function DashboardContributor() {
 export default DashboardContributor;
 
 const TabDocuments = (props) => {
-  const { role, status } = props;
+  const { role, status, applyListSettings } = props;
   const { activeTab } = useTabs();
   const { atbds, fetchAtbds } = useAtbds({
     role,
     status
   });
-
   const onCreateClick = useDocumentCreate();
-
   const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
@@ -186,9 +189,11 @@ const TabDocuments = (props) => {
   }
 
   if (atbds.status === 'succeeded' && atbds.data?.length) {
-    return (
+    const preparedAtbds = applyListSettings(atbds.data);
+
+    return preparedAtbds.length ? (
       <DocumentsList>
-        {atbds.data.map((atbd) => (
+        {preparedAtbds.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
             <DocumentDashboardEntry
               atbd={atbd}
@@ -197,6 +202,10 @@ const TabDocuments = (props) => {
           </DocumentsListItem>
         ))}
       </DocumentsList>
+    ) : (
+      <EmptyTab>
+        <p>There are no documents that match the current filters.</p>
+      </EmptyTab>
     );
   }
 
@@ -205,5 +214,6 @@ const TabDocuments = (props) => {
 
 TabDocuments.propTypes = {
   role: T.string,
-  status: T.string
+  status: T.string,
+  applyListSettings: T.func
 };
