@@ -37,6 +37,7 @@ export function CollaboratorUserIdentity(props) {
   return (
     <UserIdentity
       forwardedAs='span'
+      size='small'
       name={name}
       email={email}
       badge={isLead ? <LeadBadge /> : isReviewComplete ? <ReviewBadge /> : null}
@@ -65,6 +66,7 @@ export function UserSelectableList(props) {
           <CollaboratorOption
             textPlacement='left'
             type={selectOne ? 'radio' : 'checkbox'}
+            id={`${fieldName}-${u.sub}`}
             name={fieldName}
             value={u.sub}
           >
@@ -94,8 +96,8 @@ export function UserSelectableListLoadingSkeleton() {
     <LoadingSkeletonGroup>
       {[...Array(6).keys()].map((n) => (
         <LoadingSkeletonLine key={n}>
-          <LoadingSkeleton size='large' width={1 / 12} />
-          <LoadingSkeleton size='large' width={8 / 12} />
+          <LoadingSkeleton width={1 / 12} />
+          <LoadingSkeleton width={8 / 12} />
         </LoadingSkeletonLine>
       ))}
     </LoadingSkeletonGroup>

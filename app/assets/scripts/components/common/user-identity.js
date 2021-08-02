@@ -13,11 +13,11 @@ const Div = styled.div`
 `;
 
 const UserIdentityCmp = (props) => {
-  const { name, email, role, badge, ...rest } = props;
+  const { name, email, role, badge, size, ...rest } = props;
 
   return (
     <Div {...rest} title={name}>
-      <UserImage name={name} email={email} />
+      <UserImage name={name} email={email} size={size} />
       <strong>{name}</strong>
       {badge}
       {role && <Pill>{role}</Pill>}
@@ -27,6 +27,7 @@ const UserIdentityCmp = (props) => {
 
 UserIdentityCmp.propTypes = {
   role: T.string,
+  size: T.string,
   name: T.string,
   email: T.string,
   badge: T.node
