@@ -178,7 +178,7 @@ const inisghtsA11y = {
       `Colored chart segment spanning ${round(
         (value / total) * 100
       )}% of the whole, which corresponds to ${value} document${
-        value === 1 ? 's' : ''
+        value !== 1 ? 's' : ''
       } in draft out of ${total} total.`
   },
   OPEN_REVIEW: {
@@ -190,7 +190,7 @@ const inisghtsA11y = {
       `Colored chart segment spanning ${round(
         (value / total) * 100
       )}% of the whole, which corresponds to ${value} document${
-        value === 1 ? 's' : ''
+        value !== 1 ? 's' : ''
       } in review out of ${total} total.`
   },
   PUBLICATION: {
@@ -202,7 +202,7 @@ const inisghtsA11y = {
       `Colored chart segment spanning ${round(
         (value / total) * 100
       )}% of the whole, which corresponds to ${value} document${
-        value === 1 ? 's' : ''
+        value !== 1 ? 's' : ''
       } in publication out of ${total} total.`
   },
   PUBLISHED: {
@@ -214,7 +214,7 @@ const inisghtsA11y = {
       `Colored chart segment spanning ${round(
         (value / total) * 100
       )}% of the whole, which corresponds to ${value} published document${
-        value === 1 ? 's' : ''
+        value !== 1 ? 's' : ''
       } out of ${total} total.`
   }
 };
