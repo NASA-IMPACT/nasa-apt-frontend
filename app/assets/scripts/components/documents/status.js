@@ -104,6 +104,20 @@ export const isOpenReview = (versionOrStatus) => {
 };
 
 /**
+ * Checks that the given document or status string is in Closed Review Requested
+ * or Open Review or Publication Requested.
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isReviewEquivalent = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [
+    CLOSED_REVIEW,
+    OPEN_REVIEW,
+    PUBLICATION_REQUESTED
+  ]);
+};
+
+/**
  * Checks that the given document or status string is in Publication Requested
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
