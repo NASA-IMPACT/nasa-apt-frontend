@@ -18,7 +18,7 @@ const UserIdentityCmp = (props) => {
   return (
     <Div {...rest} title={name}>
       <UserImage name={name} email={email} size={size} />
-      <strong>{name}</strong>
+      <strong title={name}>{name}</strong>
       {badge}
       {role && <Pill>{role}</Pill>}
     </Div>
@@ -35,7 +35,7 @@ UserIdentityCmp.propTypes = {
 
 const UserIdentity = styled(UserIdentityCmp)`
   display: grid;
-  grid-template-columns: min-content;
+  grid-template-columns: min-content auto;
   grid-auto-columns: min-content;
   grid-auto-flow: column;
   grid-gap: ${glsp(0.5)};
