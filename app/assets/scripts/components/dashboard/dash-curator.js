@@ -8,9 +8,11 @@ import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 import DocListSettings, { useDocListSettings } from './document-list-settings';
+import DocCountIndicator from './document-count-indicator';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
+
 const DashboardCuratorInner = styled.div`
   display: grid;
   grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
@@ -32,7 +34,8 @@ function DashboardCurator() {
   const {
     listSettingsValues,
     listSettingsSetter,
-    applyListSettings
+    applyListSettings,
+    applyListSettingsFilters
   } = useDocListSettings();
 
   useEffect(() => {
@@ -64,6 +67,9 @@ function DashboardCurator() {
             <DocListSettings
               values={listSettingsValues}
               onSelect={listSettingsSetter}
+            />
+            <DocCountIndicator
+              applyListSettingsFilters={applyListSettingsFilters}
             />
           </DocsNav>
           <DocumentsList>

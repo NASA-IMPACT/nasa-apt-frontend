@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
@@ -17,6 +17,7 @@ import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
 import DocListSettings, { useDocListSettings } from './document-list-settings';
+import DocCountIndicator from './document-count-indicator';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
@@ -59,28 +60,22 @@ const authorTabNav = [
 
 function DashboardContributor() {
   const {
+    resetListSettings,
     listSettingsValues,
     listSettingsSetter,
-    applyListSettings
+    applyListSettings,
+    applyListSettingsFilters
   } = useDocListSettings();
 
   return (
     <DashboardContributorInner>
-      <TabsManager>
+      <TabsManager onTabChange={resetListSettings}>
         <Heading size='medium'>Documents</Heading>
-        <DocsNav>
-          <TabsNav>
-            {authorTabNav.map((t) => (
-              <TabItem key={t.id} label={t.label} tabId={t.id}>
-                {t.label}
-              </TabItem>
-            ))}
-          </TabsNav>
-          <DocListSettings
-            values={listSettingsValues}
-            onSelect={listSettingsSetter}
-          />
-        </DocsNav>
+        <DocumentNavigation
+          listSettingsValues={listSettingsValues}
+          listSettingsSetter={listSettingsSetter}
+          applyListSettingsFilters={applyListSettingsFilters}
+        />
         <TabContent tabId='leading'>
           <TabDocuments
             role='owner'
@@ -115,6 +110,50 @@ function DashboardContributor() {
 }
 
 export default DashboardContributor;
+
+// Moving the <DocsNav> to a separate component to access the tabs context
+// provided by the TabManager.
+const DocumentNavigation = (props) => {
+  const {
+    listSettingsValues,
+    listSettingsSetter,
+    applyListSettingsFilters
+  } = props;
+
+  const { activeTab } = useTabs();
+
+  // Hide the filter status on the public tab since public is already a status.
+  const hideSettings = useMemo(
+    () => ({
+      filterStatus: activeTab === 'public'
+    }),
+    [activeTab]
+  );
+
+  return (
+    <DocsNav>
+      <TabsNav>
+        {authorTabNav.map((t) => (
+          <TabItem key={t.id} label={t.label} tabId={t.id}>
+            {t.label}
+          </TabItem>
+        ))}
+      </TabsNav>
+      <DocListSettings
+        hideSettings={hideSettings}
+        values={listSettingsValues}
+        onSelect={listSettingsSetter}
+      />
+      <DocCountIndicator applyListSettingsFilters={applyListSettingsFilters} />
+    </DocsNav>
+  );
+};
+
+DocumentNavigation.propTypes = {
+  listSettingsValues: T.object,
+  listSettingsSetter: T.func,
+  applyListSettingsFilters: T.func
+};
 
 const TabDocuments = (props) => {
   const { role, status, applyListSettings } = props;

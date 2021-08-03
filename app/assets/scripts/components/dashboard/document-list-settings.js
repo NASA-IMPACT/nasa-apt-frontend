@@ -124,8 +124,8 @@ const orderOptions = [
   },
   {
     id: 'actions',
-    label: 'With action',
-    title: 'Order by action required',
+    label: 'Actionable',
+    title: 'Show documents with actions first',
     // Ordering by action is a tricky one. We must take the latest version into
     // account, since there are no actions available on previous versions (hence
     // the computeAtbdVersion).
@@ -162,30 +162,41 @@ const orderDropMenu = {
  * @returns Component
  */
 function DocListSettings(props) {
-  const { values = {}, onSelect } = props;
+  const { values = {}, onSelect, hideSettings = {} } = props;
+  const { filterStatus: hideFilterStatus, order: hideOrder } = hideSettings;
+
+  if (hideFilterStatus && hideOrder) return null;
 
   return (
     <DocsFilters>
-      <ToolbarLabel>Status</ToolbarLabel>
-      <DropdownMenu
-        menu={statusFilterDropMenu}
-        activeItem={values?.filterStatus}
-        alignment='right'
-        direction='down'
-        withChevron
-        dropTitle='Filter'
-        onSelect={(id) => onSelect({ ...values, filterStatus: id })}
-      />
-      <ToolbarLabel>Order</ToolbarLabel>
-      <DropdownMenu
-        menu={orderDropMenu}
-        activeItem={values?.order}
-        alignment='right'
-        direction='down'
-        withChevron
-        dropTitle='Order'
-        onSelect={(id) => onSelect({ ...values, order: id })}
-      />
+      {!hideFilterStatus && (
+        <React.Fragment>
+          <ToolbarLabel>Status</ToolbarLabel>
+          <DropdownMenu
+            menu={statusFilterDropMenu}
+            activeItem={values?.filterStatus}
+            alignment='right'
+            direction='down'
+            withChevron
+            dropTitle='Filter'
+            onSelect={(id) => onSelect({ ...values, filterStatus: id })}
+          />
+        </React.Fragment>
+      )}
+      {!hideOrder && (
+        <React.Fragment>
+          <ToolbarLabel>Order</ToolbarLabel>
+          <DropdownMenu
+            menu={orderDropMenu}
+            activeItem={values?.order}
+            alignment='right'
+            direction='down'
+            withChevron
+            dropTitle='Order'
+            onSelect={(id) => onSelect({ ...values, order: id })}
+          />
+        </React.Fragment>
+      )}
     </DocsFilters>
   );
 }
@@ -195,10 +206,19 @@ DocListSettings.propTypes = {
   values: T.shape({
     filterStatus: T.string,
     order: T.string
+  }),
+  hideSettings: T.shape({
+    filterStatus: T.bool,
+    order: T.bool
   })
 };
 
 export default DocListSettings;
+
+const intialDocListSettingsState = {
+  filterStatus: FILTER_STATUS_DEFAULT,
+  order: ORDER_DEFAULT
+};
 
 /**
  * Hook to use with the Document list settings.
@@ -210,47 +230,82 @@ export default DocListSettings;
  *  listSettingsValues: object
  *  listSettingsSetter: function
  *  applyListSettings: function
+ *  applyListSettingsFilters: function
+ *  applyListSettingsOrder: function
  * }
  */
 export function useDocListSettings() {
   const ability = useContextualAbility();
-  const [docListSettings, setDocListSettings] = useState({
-    filterStatus: FILTER_STATUS_DEFAULT,
-    order: ORDER_DEFAULT
-  });
+  const [docListSettings, setDocListSettings] = useState(
+    intialDocListSettingsState
+  );
 
-  const applyListSettings = useCallback(
-    (atbds) =>
-      applyListSettingsFn({
-        atbds,
+  // Function to reset to initial.
+  const resetListSettings = useCallback(
+    () => setDocListSettings(intialDocListSettingsState),
+    []
+  );
+
+  // Function to just apply the filters.
+  const applyListSettingsFilters = useCallback(
+    (list) =>
+      applyListSettingsFiltersFn(list, {
         settings: docListSettings,
         ability
       }),
     [docListSettings, ability]
   );
 
+  // Function to just apply the order.
+  const applyListSettingsOrder = useCallback(
+    (list) =>
+      applyListSettingsOrderFn(list, {
+        settings: docListSettings,
+        ability
+      }),
+    [docListSettings, ability]
+  );
+
+  // Function to apply all settings.
+  const applyListSettings = useCallback(
+    (atbds) => applyListSettingsOrder(applyListSettingsFilters(atbds)),
+    [applyListSettingsFilters, applyListSettingsOrder]
+  );
+
   return {
+    resetListSettings,
     listSettingsValues: docListSettings,
     listSettingsSetter: setDocListSettings,
-    applyListSettings
+    applyListSettings,
+    applyListSettingsFilters,
+    applyListSettingsOrder
   };
 }
 
 /**
- * Function to apply the document list settings to the document list. Used by
- * the useDocListSettings hook.
+ * Function to apply the document list settings filters to the document list.
+ * Used by the useDocListSettings hook.
  * @param {ops} opts Options object
  */
-function applyListSettingsFn({ atbds, settings, ability }) {
-  const { filterStatus, order } = settings;
+function applyListSettingsFiltersFn(list, { settings }) {
+  const { filterStatus } = settings;
   const { filterFn } = statusOptions.find((s) => s.id === filterStatus) || {};
-  const { orderFn } = orderOptions.find((o) => o.id === order) || {};
 
-  const filtered = atbds.filter((doc) => {
+  return list.filter((doc) => {
     return filterFn ? filterFn(doc.versions.last) : true;
   });
+}
 
-  return orderFn(filtered, { ability });
+/**
+ * Function to apply the document list settings ordering to the document list.
+ * Used by the useDocListSettings hook.
+ * @param {ops} opts Options object
+ */
+function applyListSettingsOrderFn(list, { settings, ability }) {
+  const { order } = settings;
+  const { orderFn } = orderOptions.find((o) => o.id === order) || {};
+
+  return orderFn(list, { ability });
 }
 
 /**
