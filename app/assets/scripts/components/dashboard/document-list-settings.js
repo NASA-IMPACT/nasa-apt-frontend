@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -162,55 +162,63 @@ const orderDropMenu = {
  * @returns Component
  */
 function DocListSettings(props) {
-  const { values = {}, onSelect, hideSettings = {} } = props;
-  const { filterStatus: hideFilterStatus, order: hideOrder } = hideSettings;
+  const { values = {}, onSelect, alignment, direction, origin } = props;
 
-  if (hideFilterStatus && hideOrder) return null;
+  // If we're are in the public tab the settings are different.
+  const orderDropMenuFiltered = useMemo(
+    () =>
+      origin === 'tab-public'
+        ? {
+            ...orderDropMenu,
+            items: orderDropMenu.items.filter((item) => item.id !== 'actions')
+          }
+        : orderDropMenu,
+    [origin]
+  );
+
+  const shouldShowFilters = origin !== 'tab-public';
 
   return (
     <DocsFilters>
-      {!hideFilterStatus && (
+      {shouldShowFilters && (
         <React.Fragment>
           <ToolbarLabel>Status</ToolbarLabel>
           <DropdownMenu
             menu={statusFilterDropMenu}
             activeItem={values?.filterStatus}
-            alignment='right'
-            direction='down'
+            alignment={alignment || 'left'}
+            direction={direction || 'down'}
             withChevron
-            dropTitle='Filter'
+            dropTitle='Filter by status'
             onSelect={(id) => onSelect({ ...values, filterStatus: id })}
           />
         </React.Fragment>
       )}
-      {!hideOrder && (
-        <React.Fragment>
-          <ToolbarLabel>Order</ToolbarLabel>
-          <DropdownMenu
-            menu={orderDropMenu}
-            activeItem={values?.order}
-            alignment='right'
-            direction='down'
-            withChevron
-            dropTitle='Order'
-            onSelect={(id) => onSelect({ ...values, order: id })}
-          />
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <ToolbarLabel>Order</ToolbarLabel>
+        <DropdownMenu
+          menu={orderDropMenuFiltered}
+          activeItem={values?.order}
+          alignment={alignment || 'left'}
+          direction={direction || 'down'}
+          withChevron
+          dropTitle='Order'
+          onSelect={(id) => onSelect({ ...values, order: id })}
+        />
+      </React.Fragment>
     </DocsFilters>
   );
 }
 
 DocListSettings.propTypes = {
+  alignment: T.string,
+  direction: T.string,
   onSelect: T.func,
   values: T.shape({
     filterStatus: T.string,
     order: T.string
   }),
-  hideSettings: T.shape({
-    filterStatus: T.bool,
-    order: T.bool
-  })
+  origin: T.string
 };
 
 export default DocListSettings;

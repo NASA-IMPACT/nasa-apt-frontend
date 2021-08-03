@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
@@ -122,14 +122,6 @@ const DocumentNavigation = (props) => {
 
   const { activeTab } = useTabs();
 
-  // Hide the filter status on the public tab since public is already a status.
-  const hideSettings = useMemo(
-    () => ({
-      filterStatus: activeTab === 'public'
-    }),
-    [activeTab]
-  );
-
   return (
     <DocsNav>
       <TabsNav>
@@ -140,7 +132,8 @@ const DocumentNavigation = (props) => {
         ))}
       </TabsNav>
       <DocListSettings
-        hideSettings={hideSettings}
+        alignment='right'
+        origin={`tab-${activeTab}`}
         values={listSettingsValues}
         onSelect={listSettingsSetter}
       />
