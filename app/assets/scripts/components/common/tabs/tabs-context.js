@@ -25,7 +25,7 @@ export function TabsManager({ children, initialActive, onTabChange }) {
   const setActiveTabEnhanced = useCallback(
     (newTab) =>
       setActiveTab((oldTab) => {
-        onTabChange(newTab, oldTab);
+        typeof onTabChange === 'function' && onTabChange(newTab, oldTab);
         return newTab;
       }),
     [onTabChange]
