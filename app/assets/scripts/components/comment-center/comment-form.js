@@ -1,16 +1,26 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
+import styled from 'styled-components';
 import { Formik } from 'formik';
+import { truncated } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import { Form } from '@devseed-ui/form';
 
 import DropdownMenu from '../common/dropdown-menu';
 import { FormikInputTextarea } from '../common/forms/input-textarea';
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
-import styled from 'styled-components';
 
 const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
+`;
+
+const SectionTrigger = styled(Button).attrs({ as: 'a' })`
+  max-width: calc(100%);
+
+  span {
+    ${truncated()}
+    max-width: calc(100% - 1.5rem);
+  }
 `;
 
 const sectionMenu = {
@@ -23,7 +33,7 @@ const sectionMenu = {
 };
 
 const sectionMenuTriggerProps = {
-  forwardedAs: 'a',
+  forwardedAs: SectionTrigger,
   href: '#comment-field'
 };
 
@@ -77,23 +87,29 @@ const getInitialValues = ({ type, comment }) => {
 };
 
 const CommentForm = (props) => {
-  const { type, comment } = props;
+  const { type, comment, onSubmit } = props;
 
   const initial = useMemo(() => getInitialValues({ type, comment }), [
     type,
     comment
   ]);
 
+  const validate = useCallback((values) => {
+    let errors = {};
+    if (!values.comment.trim()) {
+      errors.comment = 'The comment cannot be empty.';
+    }
+    return errors;
+  }, []);
+
   return (
     <Formik
       enableReinitialize
       initialValues={initial}
-      /* eslint-disable-next-line no-console */
-      validate={console.log}
-      /* eslint-disable-next-line no-console */
-      onSubmit={console.log}
+      validate={validate}
+      onSubmit={onSubmit}
     >
-      {({ handleSubmit, values, setFieldValue, isSubmitting, dirty }) => {
+      {({ handleSubmit, values, setFieldValue, isSubmitting }) => {
         return (
           <Form onSubmit={handleSubmit}>
             <FormikInputTextarea
@@ -103,8 +119,9 @@ const CommentForm = (props) => {
             />
             <div>
               <Button
+                onClick={handleSubmit}
                 variation='primary-raised-dark'
-                disabled={isSubmitting || !dirty}
+                disabled={isSubmitting || !values.comment.trim()}
               >
                 Post
               </Button>
@@ -118,7 +135,8 @@ const CommentForm = (props) => {
 
 CommentForm.propTypes = {
   type: T.oneOf(['new', 'reply', 'edit']),
-  comment: T.string
+  comment: T.string,
+  onSubmit: T.func
 };
 
 export default CommentForm;

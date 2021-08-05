@@ -28,7 +28,9 @@ export const CommentCenterProvider = ({ children }) => {
     useMemo(
       () => ({
         key: 'threadId',
-        default: null
+        default: null,
+        hydrator: Number,
+        dehydrator: String
       }),
       []
     )

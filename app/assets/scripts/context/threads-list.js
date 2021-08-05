@@ -45,8 +45,11 @@ export const computeThread = (thread) => {
 
   return {
     ...threadData,
+    // If we have a comment count we're dealing with a thread:
     // Decrease 1 from the total count, because the first is tied to the thread.
-    comment_count: comment_count - 1,
+    // If not count the number of comments, which is already correct because the
+    // 1st was removed above.
+    comment_count: comment_count ? comment_count - 1 : comments.length,
     comments,
     body: firstComment.body,
     ...getUpdatedTimes(thread, firstComment)
@@ -58,9 +61,11 @@ export const ThreadsProvider = ({ children }) => {
   const { token } = useAuthToken();
 
   const {
+    invalidate: invalidateListThreads,
     dispatch: threadsListDispatch,
     getState: getThreads,
-    fetchThreadsList
+    fetchThreadsList,
+    createThread
   } = useContexeedApi(
     {
       name: 'threadsList',
@@ -102,6 +107,30 @@ export const ThreadsProvider = ({ children }) => {
               version: atbdVersion
             })}`,
             transformData: (data) => data.map(computeThread)
+          })
+        )
+      },
+      mutations: {
+        createThread: withRequestToken(
+          token,
+          ({ atbdId, atbdVersion, section, comment }) => ({
+            skipStateCheck: true,
+            sliceKey: `${atbdId}-${atbdVersion}`,
+            url: `/threads`,
+            requestOptions: {
+              method: 'POST',
+              data: {
+                comment: {
+                  body: comment
+                },
+                atbd_id: atbdId,
+                version: atbdVersion,
+                section
+              }
+            },
+            transformData: (data, { state }) => {
+              return [computeThread(data), ...state.data];
+            }
           })
         )
       }
@@ -163,11 +192,13 @@ export const ThreadsProvider = ({ children }) => {
   );
 
   const contextValue = {
+    invalidateListThreads,
     getThreads,
     fetchThreadsList,
     getSingleThread,
     fetchThreadsSingle,
-    updateThreadsSingle
+    updateThreadsSingle,
+    createThread
   };
 
   return (
@@ -186,15 +217,31 @@ ThreadsProvider.propTypes = {
 const useSafeContextFn = createContextChecker(ThreadsContext, 'ThreadsContext');
 
 export const useThreads = ({ atbdId, atbdVersion }) => {
-  const { getThreads, fetchThreadsList } = useSafeContextFn('useThreads');
+  const {
+    getThreads,
+    fetchThreadsList,
+    invalidateListThreads,
+    createThread
+  } = useSafeContextFn('useThreads');
+
+  const sliceKey = `${atbdId}-${atbdVersion}`;
 
   return {
-    threads: getThreads(`${atbdId}-${atbdVersion}`),
+    invalidate: useCallback(() => invalidateListThreads(sliceKey), [
+      sliceKey,
+      invalidateListThreads
+    ]),
+    threads: getThreads(sliceKey),
     fetchThreads: useCallback(() => fetchThreadsList({ atbdId, atbdVersion }), [
       atbdId,
       atbdVersion,
       fetchThreadsList
-    ])
+    ]),
+    createThread: useCallback(
+      ({ comment, section }) =>
+        createThread({ atbdId, atbdVersion, comment, section }),
+      [atbdId, atbdVersion, createThread]
+    )
   };
 };
 
