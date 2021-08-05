@@ -44,7 +44,8 @@ import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
-import { CollaboratorsProvider } from './context/collaborators-list.js';
+import { CollaboratorsProvider } from './context/collaborators-list';
+import { ThreadsProvider } from './context/threads-list';
 
 const composingComponents = [
   ErrorBoundary,
@@ -54,6 +55,7 @@ const composingComponents = [
   AtbdsProvider,
   ContactsProvider,
   CollaboratorsProvider,
+  ThreadsProvider,
   JsonPagesProvider,
   SearchProvider
 ];

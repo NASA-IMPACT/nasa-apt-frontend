@@ -175,6 +175,7 @@ export default function CommentEntry(props) {
   const {
     commentId,
     onViewClick,
+    onResolveClick,
     author,
     type,
     isResolved,
@@ -248,6 +249,7 @@ export default function CommentEntry(props) {
                     ? 'Unresolve comment thread'
                     : 'Resolve comment thread'
                 }
+                onClick={getDefaultPrevented(onResolveClick, commentId)}
               >
                 {isResolved ? 'Unresolve' : 'Resolve'} comment
               </Button>
@@ -283,8 +285,9 @@ export default function CommentEntry(props) {
 }
 
 CommentEntry.propTypes = {
-  commentId: T.string,
+  commentId: T.number,
   onViewClick: T.func,
+  onResolveClick: T.func,
   author: T.object,
   type: T.oneOf([COMMENT, COMMENT_THREAD, COMMENT_THREAD_REPLY]),
   isResolved: T.bool,

@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import T from 'prop-types';
 import styled from 'styled-components';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -28,6 +29,12 @@ import {
   DOCUMENT_SECTIONS,
   getDocumentSection
 } from '../documents/single-edit/sections';
+import { useSingleThread, useThreads } from '../../context/threads-list';
+import {
+  LoadingSkeleton,
+  LoadingSkeletonGroup,
+  LoadingSkeletonLine
+} from '../common/loading-skeleton';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
@@ -102,71 +109,43 @@ const CommentFormWrapper = styled.div`
   }
 `;
 
-const EmptyComment = styled.div`
+const InfoMsgComment = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
   padding: ${glsp(2, 1)};
 
   ::before {
-    ${collecticon('speech-balloon')}
+    ${({ useIcon }) => useIcon && collecticon(useIcon)}
     font-size: 3rem;
     color: ${themeVal('color.baseAlphaE')};
   }
 `;
 
-const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const COMMENTS = [
-  {
-    id: '1',
-    author: { name: 'Monica Anderson' },
-    isResolved: false,
-    isEdited: false,
-    date: new Date(rand(Date.now(), Date.now() - 20 * 86400000)),
-    section: getDocumentSection('general'),
-    comment:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
-    replies: [
-      {
-        id: '11',
-        author: { name: 'Tom Ridley' },
-        isEdited: false,
-        isEditing: true,
-        date: new Date(rand(Date.now(), Date.now() - 20 * 86400000)),
-        comment: 'This is a very nice reply'
-      },
-      {
-        id: '12',
-        author: { name: 'Chiara Cortegazza' },
-        isEdited: true,
-        isEditing: false,
-        date: new Date(rand(Date.now(), Date.now() - 20 * 86400000)),
-        comment: '👋\nWhat if the reply has emojies? 😁😁'
-      }
-    ]
-  },
-  {
-    id: '2',
-    author: { name: 'Tom Ridley' },
-    isResolved: false,
-    isEdited: true,
-    isEditing: true,
-    date: new Date(rand(Date.now(), Date.now() - 20 * 86400000)),
-    section: getDocumentSection('data_access_related_urls'),
-    comment:
-      'Lorem ipsum may be used as a placeholder before final copy is available.'
-  },
-  {
-    id: '3',
-    author: { name: 'Bruce Wayne' },
-    isResolved: true,
-    isEdited: false,
-    date: new Date(rand(Date.now(), Date.now() - 20 * 86400000)),
-    section: getDocumentSection('algorithm_implementations'),
-    comment:
-      'Lorem ipsum is a placeholder\n\ntext commonly used to demonstrate the visual form before final copy is available.'
-  }
-];
+const EmptyComment = styled(InfoMsgComment).attrs({
+  useIcon: 'speech-balloon'
+})`
+  /* styled-component */
+`;
+
+const ErrorComment = styled(InfoMsgComment).attrs({ useIcon: 'sign-danger' })`
+  /* styled-component */
+  padding: ${glsp(2)};
+`;
+
+const THREAD_CLOSED = 'CLOSED';
+const THREAD_OPEN = 'OPEN';
+
+/**
+ * Verifies that two dates are the same by checking if the difference between
+ * them is less than a second.
+ * @param {date} a The date
+ * @param {date} b The date
+ */
+const isSameAproxDate = (a, b) => {
+  const deltaT = Math.abs(a.getTime() - b.getTime());
+  return deltaT < 1000;
+};
 
 const COMMENT_STATUSES = [
   {
@@ -263,8 +242,7 @@ function CommentCenter() {
     []
   );
 
-  const singleComment = COMMENTS.find((c) => c.id === openThreadId);
-  const isCommentThread = !!singleComment;
+  const isCommentThread = !!openThreadId;
 
   return (
     <CSSTransition
@@ -314,69 +292,16 @@ function CommentCenter() {
         </PanelHeader>
         <SwitchTransition>
           <CSSTransition
-            key={isCommentThread ? 'thread' : 'single'}
+            key={isCommentThread ? 'single' : 'list'}
             addEndListener={transitionEndListener}
             classNames='fade'
           >
             <PanelBodyTransitioned>
               <CommentShadowScrollbar>
                 {isCommentThread ? (
-                  <React.Fragment>
-                    <CommentEntry
-                      type={COMMENT_THREAD}
-                      commentId={singleComment.id}
-                      author={singleComment.author}
-                      isResolved={singleComment.isResolved}
-                      isEdited={singleComment.isEdited}
-                      isEditing={singleComment.isEditing}
-                      date={singleComment.date}
-                      section={singleComment.section}
-                      replyCount={singleComment.replies?.length}
-                      comment={singleComment.comment}
-                    />
-                    {singleComment.replies?.length ? (
-                      <CommentList>
-                        {singleComment.replies.map((c) => (
-                          <li key={c.id}>
-                            <CommentEntry
-                              type={COMMENT_THREAD_REPLY}
-                              commentId={c.id}
-                              author={c.author}
-                              isEdited={c.isEdited}
-                              isEditing={c.isEditing}
-                              date={c.date}
-                              comment={c.comment}
-                            />
-                          </li>
-                        ))}
-                      </CommentList>
-                    ) : (
-                      <EmptyComment>
-                        <p>There are no replies.</p>
-                        <p>Say something!</p>
-                      </EmptyComment>
-                    )}
-                  </React.Fragment>
+                  <CommentThreadsSingle threadId={openThreadId} />
                 ) : (
-                  <CommentList>
-                    {COMMENTS.map((c) => (
-                      <li key={c.id}>
-                        <CommentEntry
-                          type={COMMENT}
-                          commentId={c.id}
-                          author={c.author}
-                          isResolved={c.isResolved}
-                          isEdited={c.isEdited}
-                          isEditing={c.isEditing}
-                          date={c.date}
-                          section={c.section}
-                          replyCount={c.replies?.length}
-                          comment={c.comment}
-                          onViewClick={setOpenThreadId}
-                        />
-                      </li>
-                    ))}
-                  </CommentList>
+                  <CommentThreadsList setOpenThreadId={setOpenThreadId} />
                 )}
               </CommentShadowScrollbar>
               <CommentFormWrapper>
@@ -391,3 +316,202 @@ function CommentCenter() {
 }
 
 export default CommentCenter;
+
+const LoadingWrapper = styled.div`
+  padding: ${glsp(2)};
+`;
+
+function CommentThreadsList(props) {
+  const { setOpenThreadId } = props;
+
+  const atbdId = 1;
+  const atbdVersion = 'v2.0';
+
+  const { threads, fetchThreads } = useThreads({
+    atbdId,
+    atbdVersion
+  });
+  const { updateThreadStatus } = useSingleThread();
+
+  useEffect(() => {
+    fetchThreads();
+  }, [fetchThreads]);
+
+  const onResolveClick = useCallback(
+    (threadId) => {
+      const t = threads.data.find((thread) => thread.id === threadId);
+      updateThreadStatus({
+        atbdId,
+        atbdVersion,
+        threadId,
+        status: t.status === THREAD_CLOSED ? THREAD_OPEN : THREAD_CLOSED
+      });
+    },
+    [threads.data, updateThreadStatus]
+  );
+
+  if (threads.status === 'loading') {
+    return (
+      <LoadingWrapper>
+        {[...Array(3).keys()].map((n) => (
+          <LoadingSkeletonGroup key={n}>
+            <LoadingSkeletonLine>
+              <LoadingSkeleton size='large' width={2 / 12} />
+              <LoadingSkeleton size='large' width={8 / 12} />
+            </LoadingSkeletonLine>
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton width={8 / 12} />
+          </LoadingSkeletonGroup>
+        ))}
+      </LoadingWrapper>
+    );
+  }
+
+  if (threads.status === 'failed') {
+    return (
+      <ErrorComment>
+        <p>Something went wrong loading the comments.</p>
+      </ErrorComment>
+    );
+  }
+
+  if (threads.status === 'succeeded') {
+    return threads.data.length ? (
+      <CommentList>
+        {threads.data.map((c) => (
+          <li key={c.id}>
+            <CommentEntry
+              type={COMMENT}
+              commentId={c.id}
+              author={{ name: 'miu miu' }}
+              isResolved={c.status === THREAD_CLOSED}
+              isEdited={
+                !isSameAproxDate(
+                  new Date(c.created_at),
+                  new Date(c.last_updated_at)
+                )
+              }
+              // isEditing={c.isEditing}
+              date={new Date(c.last_updated_at)}
+              section={getDocumentSection(c.section)}
+              replyCount={c.comment_count}
+              comment={c.body}
+              onViewClick={setOpenThreadId}
+              onResolveClick={onResolveClick}
+            />
+          </li>
+        ))}
+      </CommentList>
+    ) : (
+      <EmptyComment>
+        <p>There are no threads for this document.</p>
+        <p>Say something!</p>
+      </EmptyComment>
+    );
+  }
+
+  return null;
+}
+
+CommentThreadsList.propTypes = {
+  setOpenThreadId: T.func
+};
+
+function CommentThreadsSingle(props) {
+  const { threadId } = props;
+
+  const { thread, fetchSingleThread } = useSingleThread({
+    threadId
+  });
+
+  useEffect(() => {
+    fetchSingleThread();
+  }, [fetchSingleThread]);
+
+  if (thread.status === 'loading') {
+    return (
+      <LoadingWrapper>
+        {[...Array(2).keys()].map((n) => (
+          <LoadingSkeletonGroup key={n}>
+            <LoadingSkeletonLine>
+              <LoadingSkeleton size='large' width={2 / 12} />
+              <LoadingSkeleton size='large' width={8 / 12} />
+            </LoadingSkeletonLine>
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton />
+            <LoadingSkeleton width={8 / 12} />
+          </LoadingSkeletonGroup>
+        ))}
+      </LoadingWrapper>
+    );
+  }
+
+  if (thread.status === 'failed') {
+    return (
+      <ErrorComment>
+        <p>Something went wrong loading the comment.</p>
+      </ErrorComment>
+    );
+  }
+
+  if (thread.status === 'succeeded') {
+    const t = thread.data;
+    return (
+      <React.Fragment>
+        <CommentEntry
+          type={COMMENT_THREAD}
+          commentId={t.id}
+          author={{ name: 'Alberto Macca' }}
+          isResolved={t.status === THREAD_CLOSED}
+          isEdited={
+            !isSameAproxDate(
+              new Date(t.created_at),
+              new Date(t.last_updated_at)
+            )
+          }
+          // isEditing={t.isEditing}
+          date={new Date(t.last_updated_at)}
+          section={getDocumentSection(t.section)}
+          replyCount={t.comment_count}
+          comment={t.body}
+        />
+        {t.comments?.length ? (
+          <CommentList>
+            {t.comments.map((c) => (
+              <li key={c.id}>
+                <CommentEntry
+                  type={COMMENT_THREAD_REPLY}
+                  commentId={c.id}
+                  author={{ name: 'Alberto Macca' }}
+                  isEdited={
+                    !isSameAproxDate(
+                      new Date(c.created_at),
+                      new Date(c.last_updated_at)
+                    )
+                  }
+                  // isEditing={c.isEditing}
+                  date={new Date(c.last_updated_at)}
+                  comment={c.body}
+                />
+              </li>
+            ))}
+          </CommentList>
+        ) : (
+          <EmptyComment>
+            <p>There are no replies.</p>
+            <p>Say something!</p>
+          </EmptyComment>
+        )}
+      </React.Fragment>
+    );
+  }
+
+  return null;
+}
+
+CommentThreadsSingle.propTypes = {
+  threadId: T.number
+};

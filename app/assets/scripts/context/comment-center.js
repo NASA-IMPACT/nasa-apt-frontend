@@ -1,9 +1,9 @@
 import React, { createContext, useMemo, useState } from 'react';
 import T from 'prop-types';
-
-import { createContextChecker } from '../utils/create-context-checker';
 import { useHistory, useLocation } from 'react-router';
 import useQsStateCreator from 'qs-state-hook';
+
+import { createContextChecker } from '../utils/create-context-checker';
 
 // Context
 export const CommentsCenterContext = createContext(null);
