@@ -75,6 +75,8 @@ export const ThreadsProvider = ({ children }) => {
           case 'threadsList/update-item': {
             const stateSlice = state[action.key];
 
+            // If there's no data in the list state we don't have to do
+            // anything.
             if (stateSlice.status !== 'succeeded') {
               break;
             }
@@ -88,6 +90,29 @@ export const ThreadsProvider = ({ children }) => {
                   ...stateSlice,
                   data: stateSlice.data.map((thread) =>
                     thread.id === action.data.id ? action.data : thread
+                  )
+                }
+              }
+            };
+          }
+          case 'threadsList/delete-item': {
+            const stateSlice = state[action.key];
+
+            // If there's no data in the list state we don't have to do
+            // anything.
+            if (stateSlice.status !== 'succeeded') {
+              break;
+            }
+
+            // Remove the appropriate thread.
+            return {
+              action,
+              state: {
+                ...state,
+                [action.key]: {
+                  ...stateSlice,
+                  data: stateSlice.data.filter(
+                    (thread) => thread.id !== action.threadId
                   )
                 }
               }
@@ -142,7 +167,9 @@ export const ThreadsProvider = ({ children }) => {
     getState: getSingleThread,
     fetchThreadsSingle,
     updateThreadsSingle,
-    createThreadComment
+    createThreadsComment,
+    deleteThreadsSingle,
+    deleteThreadsComment
   } = useContexeedApi(
     {
       name: 'threadsSingle',
@@ -187,7 +214,54 @@ export const ThreadsProvider = ({ children }) => {
             }
           })
         ),
-        createThreadComment: withRequestToken(
+        deleteThreadsSingle: withRequestToken(
+          token,
+          ({ atbdId, atbdVersion, threadId }) => ({
+            skipStateCheck: true,
+            sliceKey: `${threadId}`,
+            url: `/threads/${threadId}`,
+            requestOptions: {
+              method: 'DELETE'
+            },
+            onDone: (finish, { error, invalidate }) => {
+              if (error) {
+                return finish();
+              }
+
+              // If an atbdId and atbdVersion were passed to the function it
+              // means we want to update the list in the threadList contexeed.
+              if (atbdId && atbdVersion) {
+                threadsListDispatch({
+                  type: 'threadsList/delete-item',
+                  key: `${atbdId}-${atbdVersion}`,
+                  threadId
+                });
+              }
+
+              return invalidate(`${threadId}`);
+            }
+          })
+        ),
+        deleteThreadsComment: withRequestToken(
+          token,
+          ({ threadId, commentId }) => ({
+            skipStateCheck: true,
+            sliceKey: `${threadId}`,
+            url: `/threads/${threadId}/comments/${commentId}`,
+            requestOptions: {
+              method: 'DELETE'
+            },
+            transformData: (data, { state }) => {
+              // Remove the comment from the thread comment array.
+              return {
+                ...state.data,
+                comment_count: state.data.comment_count - 1,
+                comments: state.data.comments.filter((c) => c.id !== commentId)
+              };
+            }
+          })
+        ),
+        createThreadsComment: withRequestToken(
           token,
           ({ threadId, comment }) => ({
             skipStateCheck: true,
@@ -222,7 +296,9 @@ export const ThreadsProvider = ({ children }) => {
     fetchThreadsSingle,
     updateThreadsSingle,
     createThread,
-    createThreadComment
+    createThreadsComment,
+    deleteThreadsSingle,
+    deleteThreadsComment
   };
 
   return (
@@ -274,7 +350,9 @@ export const useSingleThread = ({ threadId } = {}) => {
     getSingleThread,
     fetchThreadsSingle,
     updateThreadsSingle,
-    createThreadComment
+    createThreadsComment,
+    deleteThreadsSingle,
+    deleteThreadsComment
   } = useSafeContextFn('useSingleThread');
 
   return {
@@ -294,9 +372,22 @@ export const useSingleThread = ({ threadId } = {}) => {
         }),
       [threadId, updateThreadsSingle]
     ),
+    deleteThread: useCallback(
+      ({ atbdId, atbdVersion, threadId: threadIdIn }) =>
+        deleteThreadsSingle({
+          atbdId,
+          atbdVersion,
+          threadId: threadIdIn || threadId
+        }),
+      [threadId, deleteThreadsSingle]
+    ),
     createThreadComment: useCallback(
-      ({ comment }) => createThreadComment({ comment, threadId }),
-      [threadId, createThreadComment]
+      ({ comment }) => createThreadsComment({ comment, threadId }),
+      [threadId, createThreadsComment]
+    ),
+    deleteThreadComment: useCallback(
+      ({ commentId }) => deleteThreadsComment({ commentId, threadId }),
+      [threadId, deleteThreadsComment]
     )
   };
 };

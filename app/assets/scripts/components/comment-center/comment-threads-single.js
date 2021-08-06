@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 
-import CommentEntry, {
-  COMMENT_THREAD,
-  COMMENT_THREAD_REPLY
-} from './comment-entry';
+import CommentEntry, { THREAD_SINGLE, THREAD_REPLY } from './comment-entry';
 import CommentLoadingProcess from './comment-loading-process';
 
 import { getDocumentSection } from '../documents/single-edit/sections';
@@ -17,11 +14,21 @@ import {
   CommentList,
   EmptyComment
 } from './common';
+import {
+  commentDeleteConfirmAndToast,
+  threadDeleteConfirmAndToast
+} from './comment-delete-process';
 
 export default function CommentThreadsSingle(props) {
-  const { threadId } = props;
+  const { threadId, setOpenThreadId } = props;
 
-  const { thread, fetchSingleThread, updateThreadStatus } = useSingleThread({
+  const {
+    thread,
+    fetchSingleThread,
+    updateThreadStatus,
+    deleteThread,
+    deleteThreadComment
+  } = useSingleThread({
     threadId
   });
 
@@ -40,6 +47,29 @@ export default function CommentThreadsSingle(props) {
     [thread.data, updateThreadStatus]
   );
 
+  const onMenuAction = useCallback(
+    async (menuId, { commentId }) => {
+      switch (menuId) {
+        case 'delete-thread': {
+          const result = await threadDeleteConfirmAndToast({
+            threadId,
+            deleteFn: deleteThread
+          });
+          result && setOpenThreadId(null);
+          break;
+        }
+        case 'delete-comment':
+          await commentDeleteConfirmAndToast({
+            threadId,
+            commentId,
+            deleteFn: deleteThreadComment
+          });
+          break;
+      }
+    },
+    [setOpenThreadId, threadId, deleteThread, deleteThreadComment]
+  );
+
   return (
     <CommentLoadingProcess
       status={thread.status}
@@ -53,8 +83,9 @@ export default function CommentThreadsSingle(props) {
         return (
           <React.Fragment>
             <CommentEntry
-              type={COMMENT_THREAD}
+              type={THREAD_SINGLE}
               commentId={t.id}
+              onMenuAction={onMenuAction}
               author={t.created_by}
               isResolved={t.status === THREAD_CLOSED}
               onResolveClick={onResolveClick}
@@ -76,8 +107,9 @@ export default function CommentThreadsSingle(props) {
                 {t.comments.map((c) => (
                   <li key={c.id}>
                     <CommentEntry
-                      type={COMMENT_THREAD_REPLY}
+                      type={THREAD_REPLY}
                       commentId={c.id}
+                      onMenuAction={onMenuAction}
                       author={c.created_by}
                       isEdited={
                         !isSameAproxDate(
@@ -105,5 +137,6 @@ export default function CommentThreadsSingle(props) {
   );
 }
 CommentThreadsSingle.propTypes = {
+  setOpenThreadId: T.func,
   threadId: T.number
 };

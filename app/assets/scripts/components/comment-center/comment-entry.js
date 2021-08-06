@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import T from 'prop-types';
 import nl2br from 'react-nl2br';
@@ -8,8 +8,14 @@ import collecticon from '@devseed-ui/collecticons';
 
 import Datetime from '../common/date';
 import UserIdentity from '../common/user-identity';
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, {
+  DropMenuItemEnhanced,
+  getMenuClickHandler
+} from '../common/dropdown-menu';
 import CommentForm from './comment-form';
+import Tip from '../common/tooltip';
+
+import { useUser } from '../../context/user';
 
 const getDefaultPrevented = (fn, ...args) => (e) => {
   e?.preventDefault?.();
@@ -167,13 +173,14 @@ CommentBody.propTypes = {
   comment: T.string
 };
 
-export const COMMENT = 'comment';
-export const COMMENT_THREAD = 'comment-thread';
-export const COMMENT_THREAD_REPLY = 'comment-thread-reply';
+export const THREAD_LIST_ITEM = 'thread-list-item';
+export const THREAD_SINGLE = 'thread-single';
+export const THREAD_REPLY = 'thread-reply';
 
 export default function CommentEntry(props) {
   const {
     commentId,
+    onMenuAction,
     onViewClick,
     onResolveClick,
     author,
@@ -187,8 +194,10 @@ export default function CommentEntry(props) {
     comment
   } = props;
 
-  const isReply = type === COMMENT_THREAD_REPLY;
-  const isThread = type === COMMENT_THREAD;
+  const { user, isCurator } = useUser();
+
+  const isReply = type === THREAD_REPLY;
+  const isThread = type === THREAD_SINGLE;
 
   const commentMenuProps = useMemo(
     () => ({
@@ -198,18 +207,49 @@ export default function CommentEntry(props) {
         size: 'small'
       },
       triggerLabel: 'ATBD options',
-      menu: {
-        id: 'actions',
-        items: [
-          {
-            id: 'edit',
-            label: 'Edit',
-            title: 'Edit this comment'
-          }
-        ]
-      }
+      menu: [
+        {
+          id: 'actions',
+          items: [
+            {
+              id: 'edit',
+              label: 'Edit',
+              title: 'Edit this comment'
+            }
+          ]
+        },
+        {
+          id: 'actions2',
+          items: [
+            {
+              id: `delete-${type === THREAD_REPLY ? 'comment' : 'thread'}`,
+              /* eslint-disable-next-line react/display-name */
+              render: (props) => (
+                <DeleteMenuItem
+                  {...props}
+                  type={type}
+                  isAuthor={author.sub === user.id}
+                  isCurator={isCurator}
+                />
+              )
+            }
+          ]
+        }
+      ]
     }),
-    []
+    [type, author.sub, user.id, isCurator]
+  );
+
+  const onSelect = useCallback(
+    (menuItem, payload = {}) =>
+      onMenuAction(
+        menuItem,
+        type === THREAD_REPLY
+          ? { ...payload, commentId }
+          : // When dealing with a thread the commentId prop is actually the thread id.
+            { ...payload, threadId: commentId }
+      ),
+    [type, onMenuAction, commentId]
   );
 
   return (
@@ -261,6 +301,7 @@ export default function CommentEntry(props) {
             direction='down'
             withChevron
             dropTitle='Options'
+            onSelect={onSelect}
           />
         </CommentEntryActions>
       </CommentEntryHeader>
@@ -286,10 +327,11 @@ export default function CommentEntry(props) {
 
 CommentEntry.propTypes = {
   commentId: T.number,
+  onMenuAction: T.func,
   onViewClick: T.func,
   onResolveClick: T.func,
   author: T.object,
-  type: T.oneOf([COMMENT, COMMENT_THREAD, COMMENT_THREAD_REPLY]),
+  type: T.oneOf([THREAD_LIST_ITEM, THREAD_SINGLE, THREAD_REPLY]),
   isResolved: T.bool,
   isEdited: T.bool,
   isEditing: T.bool,
@@ -300,4 +342,43 @@ CommentEntry.propTypes = {
   }),
   replyCount: T.number,
   comment: T.string
+};
+
+const DeleteMenuItem = ({
+  onSelect,
+  menuItem,
+  type,
+  isAuthor,
+  isCurator,
+  ...props
+}) => {
+  const shouldDisable = !isAuthor && !isCurator;
+
+  const btnTitle =
+    type === THREAD_REPLY ? 'Delete comment' : 'Delete comment thread';
+  const tipTitle =
+    type === THREAD_REPLY
+      ? 'You can only delete your own comments'
+      : 'You can only delete your own comment threads';
+
+  const item = (
+    <DropMenuItemEnhanced
+      disabled={shouldDisable}
+      title={btnTitle}
+      onClick={getMenuClickHandler(onSelect, menuItem)}
+      {...props}
+    >
+      Delete
+    </DropMenuItemEnhanced>
+  );
+
+  return shouldDisable ? <Tip title={tipTitle}>{item}</Tip> : item;
+};
+
+DeleteMenuItem.propTypes = {
+  onSelect: T.func,
+  menuItem: T.object,
+  type: T.string,
+  isAuthor: T.bool,
+  isCurator: T.bool
 };

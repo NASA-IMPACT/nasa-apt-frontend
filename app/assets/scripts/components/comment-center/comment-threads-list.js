@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 
-import CommentEntry, { COMMENT } from './comment-entry';
+import CommentEntry, { THREAD_LIST_ITEM } from './comment-entry';
 import CommentLoadingProcess from './comment-loading-process';
 
 import { getDocumentSection } from '../documents/single-edit/sections';
@@ -14,6 +14,7 @@ import {
   isSameAproxDate,
   EmptyComment
 } from './common';
+import { threadDeleteConfirmAndToast } from './comment-delete-process';
 
 export default function CommentThreadsList(props) {
   const { setOpenThreadId } = props;
@@ -29,7 +30,11 @@ export default function CommentThreadsList(props) {
   // updateThreadStatus which we use to update the thread status. The function
   // will accept an id when executed without having to rely on parameters passed
   // to the useSingleThread.
-  const { getSingleThread, updateThreadStatus } = useSingleThread();
+  const {
+    getSingleThread,
+    updateThreadStatus,
+    deleteThread
+  } = useSingleThread();
 
   useEffect(() => {
     fetchThreads();
@@ -52,6 +57,22 @@ export default function CommentThreadsList(props) {
     [threads.data, updateThreadStatus]
   );
 
+  const onMenuAction = useCallback(
+    async (menuId, { threadId }) => {
+      switch (menuId) {
+        case 'delete-thread':
+          await threadDeleteConfirmAndToast({
+            atbdId,
+            atbdVersion,
+            threadId,
+            deleteFn: deleteThread
+          });
+          break;
+      }
+    },
+    [deleteThread]
+  );
+
   return (
     <CommentLoadingProcess
       status={threads.status}
@@ -66,7 +87,8 @@ export default function CommentThreadsList(props) {
             {threads.data.map((c) => (
               <li key={c.id}>
                 <CommentEntry
-                  type={COMMENT}
+                  type={THREAD_LIST_ITEM}
+                  onMenuAction={onMenuAction}
                   commentId={c.id}
                   author={c.created_by}
                   isResolved={c.status === THREAD_CLOSED}

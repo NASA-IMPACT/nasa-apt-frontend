@@ -234,7 +234,10 @@ function CommentCenter() {
         <PanelBody>
           <CommentShadowScrollbar>
             {isCommentThread ? (
-              <CommentThreadsSingle threadId={openThreadId} />
+              <CommentThreadsSingle
+                threadId={openThreadId}
+                setOpenThreadId={setOpenThreadId}
+              />
             ) : (
               <CommentThreadsList setOpenThreadId={setOpenThreadId} />
             )}
