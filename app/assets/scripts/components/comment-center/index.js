@@ -346,7 +346,7 @@ function CommentThreadsList(props) {
                 <CommentEntry
                   type={COMMENT}
                   commentId={c.id}
-                  author={{ name: 'miu miu' }}
+                  author={c.created_by}
                   isResolved={c.status === THREAD_CLOSED}
                   isEdited={
                     !isSameAproxDate(
@@ -406,7 +406,7 @@ function CommentThreadsSingle(props) {
             <CommentEntry
               type={COMMENT_THREAD}
               commentId={t.id}
-              author={{ name: 'Alberto Macca' }}
+              author={t.created_by}
               isResolved={t.status === THREAD_CLOSED}
               isEdited={
                 !isSameAproxDate(
@@ -427,7 +427,7 @@ function CommentThreadsSingle(props) {
                     <CommentEntry
                       type={COMMENT_THREAD_REPLY}
                       commentId={c.id}
-                      author={{ name: 'Alberto Macca' }}
+                      author={c.created_by}
                       isEdited={
                         !isSameAproxDate(
                           new Date(c.created_at),

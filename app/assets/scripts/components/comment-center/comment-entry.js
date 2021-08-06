@@ -216,7 +216,7 @@ export default function CommentEntry(props) {
     <CommentEntrySelf isResolved={isResolved} isReply={isReply}>
       <CommentEntryHeader>
         <CommentEntryHeadline>
-          <UserIdentity name={author.name} />
+          <UserIdentity name={author.preferred_username} email={author.email} />
           <AuthoringInfo
             date={date}
             isEdited={isEdited}
