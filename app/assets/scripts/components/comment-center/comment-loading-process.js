@@ -60,15 +60,17 @@ export default function CommentLoadingProcess(props) {
 
   if (status === 'idle') return null;
 
+  const statusWithLoading = isLoadingDone ? status : 'loading';
+
   return (
     <SwitchTransition>
       <CSSTransition
-        key={status}
+        key={statusWithLoading}
         addEndListener={transitionEndListener}
         classNames='fade'
       >
         <TransitionWrapper>
-          {!isLoadingDone && (
+          {statusWithLoading === 'loading' && (
             <LoadingWrapper>
               {[...Array(3).keys()].map((n) => (
                 <LoadingSkeletonGroup key={n}>
@@ -84,8 +86,8 @@ export default function CommentLoadingProcess(props) {
               ))}
             </LoadingWrapper>
           )}
-          {isLoadingDone && status === 'failed' && renderError()}
-          {isLoadingDone && status === 'succeeded' && renderData()}
+          {statusWithLoading === 'failed' && renderError()}
+          {statusWithLoading === 'succeeded' && renderData()}
         </TransitionWrapper>
       </CSSTransition>
     </SwitchTransition>

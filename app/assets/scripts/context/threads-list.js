@@ -124,13 +124,23 @@ export const ThreadsProvider = ({ children }) => {
       requests: {
         fetchThreadsList: withRequestToken(
           token,
-          ({ atbdId, atbdVersion }) => ({
+          ({
+            atbdId,
+            atbdVersion,
+            status = 'all-status',
+            section = 'all-section'
+          }) => ({
             skipStateCheck: true,
             sliceKey: `${atbdId}-${atbdVersion}`,
-            url: `/threads/?${qs.stringify({
-              atbd_id: atbdId,
-              version: atbdVersion
-            })}`,
+            url: `/threads/?${qs.stringify(
+              {
+                atbd_id: atbdId,
+                version: atbdVersion,
+                status: status !== 'all-status' ? status : null,
+                section: section !== 'all-section' ? section : null
+              },
+              { skipNulls: true }
+            )}`,
             transformData: (data) => data.map(computeThread)
           })
         )
@@ -332,11 +342,11 @@ export const useThreads = ({ atbdId, atbdVersion }) => {
       invalidateListThreads
     ]),
     threads: getThreads(sliceKey),
-    fetchThreads: useCallback(() => fetchThreadsList({ atbdId, atbdVersion }), [
-      atbdId,
-      atbdVersion,
-      fetchThreadsList
-    ]),
+    fetchThreads: useCallback(
+      ({ status, section }) =>
+        fetchThreadsList({ atbdId, atbdVersion, status, section }),
+      [atbdId, atbdVersion, fetchThreadsList]
+    ),
     createThread: useCallback(
       ({ comment, section }) =>
         createThread({ atbdId, atbdVersion, comment, section }),

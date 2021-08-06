@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Formik } from 'formik';
@@ -94,21 +94,8 @@ const CommentForm = (props) => {
     comment
   ]);
 
-  const validate = useCallback((values) => {
-    let errors = {};
-    if (!values.comment.trim()) {
-      errors.comment = 'The comment cannot be empty.';
-    }
-    return errors;
-  }, []);
-
   return (
-    <Formik
-      enableReinitialize
-      initialValues={initial}
-      validate={validate}
-      onSubmit={onSubmit}
-    >
+    <Formik enableReinitialize initialValues={initial} onSubmit={onSubmit}>
       {({ handleSubmit, values, setFieldValue, isSubmitting }) => {
         return (
           <Form onSubmit={handleSubmit}>

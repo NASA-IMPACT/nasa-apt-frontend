@@ -17,7 +17,7 @@ import {
 import { threadDeleteConfirmAndToast } from './comment-delete-process';
 
 export default function CommentThreadsList(props) {
-  const { setOpenThreadId } = props;
+  const { setOpenThreadId, filterStatus, filterSection } = props;
 
   const atbdId = 1;
   const atbdVersion = 'v2.0';
@@ -37,8 +37,8 @@ export default function CommentThreadsList(props) {
   } = useSingleThread();
 
   useEffect(() => {
-    fetchThreads();
-  }, [fetchThreads]);
+    fetchThreads({ status: filterStatus, section: filterSection });
+  }, [fetchThreads, filterStatus, filterSection]);
 
   useEffect(() => {
     return () => invalidate();
@@ -114,8 +114,15 @@ export default function CommentThreadsList(props) {
           </CommentList>
         ) : (
           <EmptyComment>
-            <p>There are no threads for this document.</p>
-            <p>Say something!</p>
+            {filterSection !== 'all-section' ||
+            filterSection !== 'all-status' ? (
+              <p>There are no threads that match the current filters.</p>
+            ) : (
+              <React.Fragment>
+                <p>There are no threads for this document.</p>
+                <p>Say something!</p>
+              </React.Fragment>
+            )}
           </EmptyComment>
         );
       }}
@@ -123,5 +130,7 @@ export default function CommentThreadsList(props) {
   );
 }
 CommentThreadsList.propTypes = {
-  setOpenThreadId: T.func
+  setOpenThreadId: T.func,
+  filterStatus: T.string,
+  filterSection: T.string
 };

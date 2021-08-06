@@ -23,6 +23,7 @@ import { useCommentCenter } from '../../context/comment-center';
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
 import { useSingleThread, useThreads } from '../../context/threads-list';
 import { useSubmitThread, useSubmitThreadComment } from './use-submit-comment';
+import { THREAD_CLOSED, THREAD_OPEN } from './common';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
@@ -80,11 +81,11 @@ const COMMENT_STATUSES = [
     label: 'All'
   },
   {
-    id: 'resolved',
+    id: THREAD_CLOSED,
     label: 'Resolved'
   },
   {
-    id: 'unresolved',
+    id: THREAD_OPEN,
     label: 'Unresolved'
   }
 ];
@@ -239,7 +240,11 @@ function CommentCenter() {
                 setOpenThreadId={setOpenThreadId}
               />
             ) : (
-              <CommentThreadsList setOpenThreadId={setOpenThreadId} />
+              <CommentThreadsList
+                setOpenThreadId={setOpenThreadId}
+                filterStatus={selectedStatus}
+                filterSection={selectedSection}
+              />
             )}
           </CommentShadowScrollbar>
           <CommentFormWrapper>
