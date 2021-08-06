@@ -1,9 +1,19 @@
 import { AbilityBuilder, Ability } from '@casl/ability';
 
+import {
+  CLOSED_REVIEW,
+  CLOSED_REVIEW_REQUESTED,
+  DRAFT,
+  OPEN_REVIEW,
+  PUBLICATION,
+  PUBLICATION_REQUESTED,
+  REVIEW_PROGRESS
+} from '../components/documents/status';
+
 // Initial ability definition.
 export const ability = new Ability(defineRulesFor(null), {
   detectSubjectType: (object) => {
-    if (object.version && object.status) return 'document-version';
+    if (object?.version && object?.status) return 'document-version';
   }
 });
 
@@ -30,6 +40,18 @@ export function defineRulesFor(user) {
       allow('manage-authors', 'document-version');
       allow('manage-reviewers', 'document-version');
       allow('change-lead-author', 'document-version');
+      allow('manage-req-review', 'document-version', {
+        status: CLOSED_REVIEW_REQUESTED
+      });
+      allow('open-review', 'document-version', {
+        status: CLOSED_REVIEW
+      });
+      allow('manage-req-publication', 'document-version', {
+        status: PUBLICATION_REQUESTED
+      });
+      allow('publish', 'document-version', {
+        status: PUBLICATION
+      });
     }
     if (is(CONTRIBUTOR_ROLE)) {
       allow('view', 'contacts');
@@ -53,6 +75,33 @@ export function defineRulesFor(user) {
       // Only curator can manage reviewers.
       // allow('manage-reviewers', 'document-version');
       allow('change-lead-author', 'document-version', {
+        'owner.sub': user.id
+      });
+
+      // Governance actions
+      allow('req-review', 'document-version', {
+        'owner.sub': user.id,
+        status: DRAFT
+      });
+      allow('cancel-req-review', 'document-version', {
+        'owner.sub': user.id,
+        status: CLOSED_REVIEW_REQUESTED
+      });
+      allow('set-own-review-done', 'document-version', {
+        reviewers: {
+          $elemMatch: { sub: user.id, review_status: REVIEW_PROGRESS }
+        },
+        status: CLOSED_REVIEW
+      });
+      allow('req-publication', 'document-version', {
+        'owner.sub': user.id,
+        status: OPEN_REVIEW
+      });
+      allow('cancel-req-publication', 'document-version', {
+        'owner.sub': user.id,
+        status: PUBLICATION_REQUESTED
+      });
+      allow('draft-major', 'document-version', {
         'owner.sub': user.id
       });
     }

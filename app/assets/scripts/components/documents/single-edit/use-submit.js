@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 
 import { documentEdit, documentView } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
+import { isPublished } from '../status';
 import { remindMinorVersionUpdate } from './document-minor-version-reminder';
 
 export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
@@ -59,7 +60,7 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
         resetForm({ values });
         processToast.success('Changes saved');
 
-        if (atbd.status.toLowerCase() === 'published') {
+        if (isPublished(atbd.status)) {
           const { result } = await remindMinorVersionUpdate(atbd.version);
           if (result) {
             // To trigger the modals to open from other pages, we use the
@@ -75,50 +76,32 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
   );
 }
 
-export function useSubmitForMinorVersion(
-  updateAtbd,
-  setUpdatingMinorVersion,
-  history
-) {
+/**
+ * Hook to create the submit callback for the update minor version modal.
+ *
+ * @param {func} eventFn The action to fire the update minor event.
+ * @param {func} hideModal The state setter to close the modal.
+ */
+export function useSubmitForMinorVersion(eventFn, hideModal) {
+  const history = useHistory();
+
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const processToast = createProcessToast('Updating minor version');
-      const result = await updateAtbd(values);
+      const result = await eventFn({ payload: values });
       setSubmitting(false);
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
         resetForm();
-        setUpdatingMinorVersion(false);
+        hideModal();
         processToast.success(
           `Minor version updated to: ${result.data.version}`
         );
         history.replace(documentView(result.data, result.data.version));
       }
     },
-    [updateAtbd, setUpdatingMinorVersion, history]
-  );
-}
-
-export function useSubmitForPublishingVersion(
-  atbdVersion,
-  publishAtbdVersion,
-  setPublishingDocument
-) {
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Publishing version.');
-      const result = await publishAtbdVersion(values);
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        setPublishingDocument(false);
-        processToast.success(`Version ${atbdVersion} was published.`);
-      }
-    },
-    [atbdVersion, publishAtbdVersion, setPublishingDocument]
+    [eventFn, hideModal, history]
   );
 }
 
@@ -153,15 +136,11 @@ export function useSubmitForDocumentInfo(updateAtbd) {
  * key is present on the payload.
  *
  * @param {func} updateAtbd The action to update the document.
- * @param {func} setManagingCollaborators The state setter to close the
- * collaborators modal. This is only used for the collaborators and not the
- * leading author since that modal is hidden before showing the confirmation
- * prompt.
+ * @param {func} hideModal  The state setter to close the collaborators modal.
+ * This is only used for the collaborators and not the leading author since that
+ * modal is hidden before showing the confirmation prompt.
  */
-export function useSubmitForCollaborators(
-  updateAtbd,
-  setManagingCollaborators
-) {
+export function useSubmitForCollaborators(updateAtbd, hideModal) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
       const msgIn = values.owner
@@ -176,12 +155,43 @@ export function useSubmitForCollaborators(
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
-        !values.owner && setManagingCollaborators(false);
+        !values.owner && hideModal();
         resetForm({ values });
         processToast.success(msgOut);
       }
     },
-    [setManagingCollaborators, updateAtbd]
+    [hideModal, updateAtbd]
+  );
+}
+
+/**
+ * Hook to create the submit callback for governance events. All the modals
+ * using this hook will have some sort of payload to submit.
+ *
+ * @param {func} eventAction The action to fire the event.
+ * @param {func} hideModal The state setter to close the modal.
+ * @param {object} messages The messages to display on the toasts.
+ * @param {object} messages.start The messages to display while processing.
+ * @param {string} messages.success  The messages to display on success.
+ * @param {string} messages.error  The messages to display on error.
+ */
+export function useSubmitForGovernance(eventAction, hideModal, messages) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast(messages.start);
+      const result = await eventAction({ payload: values });
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(
+          `${messages.error || 'An error occurred'}: ${result.error.message}`
+        );
+      } else {
+        hideModal();
+        resetForm({ values });
+        processToast.success(messages.success);
+      }
+    },
+    [hideModal, eventAction, messages.start, messages.success, messages.error]
   );
 }
 

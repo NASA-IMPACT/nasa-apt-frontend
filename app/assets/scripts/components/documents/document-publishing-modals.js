@@ -7,7 +7,8 @@ import { Button } from '@devseed-ui/button';
 
 import {
   showConfirmationPrompt,
-  ModalSubtitle
+  ModalSubtitle,
+  ConfirmationModalProse
 } from '../common/confirmation-prompt';
 import { FormikInputTextarea } from '../common/forms/input-textarea';
 
@@ -211,13 +212,17 @@ export const confirmDraftMajorVersion = async (
     title: 'Draft a new major version',
     subtitle: `Current version is ${currentVersion}`,
     content: (
-      <p>
-        This action will create a new draft major version ({newVersion}), from
-        the latest existing version ({latestVersion})
-        <br />
-        All document content will be copied to the new draft, with the exception
-        of the DOI information.
-      </p>
+      <ConfirmationModalProse>
+        <p>
+          This action will create a new draft major version ({newVersion}), from
+          the latest existing version ({latestVersion})
+        </p>
+        <p>
+          All document content will be copied to the new draft, with the
+          exception of the DOI information.
+        </p>
+        <p>You will become the Lead author of the new version.</p>
+      </ConfirmationModalProse>
     ),
     /* eslint-disable-next-line react/display-name, react/prop-types */
     renderControls: ({ confirm, cancel }) => (

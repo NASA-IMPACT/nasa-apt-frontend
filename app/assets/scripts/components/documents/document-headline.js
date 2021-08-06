@@ -88,7 +88,7 @@ export default function DocumentHeadline(props) {
       <InpageHeadline>
         <InpageHeadHgroup>
           <TruncatedInpageTitle>
-            <Link to={documentView(atbdId, version)} title='Link to document'>
+            <Link to={documentView(atbdId, version)} title={`View ${title}`}>
               {title}
             </Link>
           </TruncatedInpageTitle>
@@ -137,7 +137,7 @@ export default function DocumentHeadline(props) {
                 prefix='Updated'
                 date={updatedDate}
                 to={documentView(atbdId, version)}
-                title='View document'
+                title={`View ${title}`}
               />
             </li>
             <li>

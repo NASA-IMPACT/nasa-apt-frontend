@@ -16,10 +16,20 @@ const TabsContext = createContext(null);
  *
  * @prop {node} children Children to render.
  * @prop {node} initialActive Initial active tab
+ * @prop {func} onTabChange Callback when the tab will change.
  */
-export function TabsManager({ children, initialActive }) {
+export function TabsManager({ children, initialActive, onTabChange }) {
   const [activeTab, setActiveTab] = useState(initialActive);
   const [tabList, setTabList] = useState([]);
+
+  const setActiveTabEnhanced = useCallback(
+    (newTab) =>
+      setActiveTab((oldTab) => {
+        typeof onTabChange === 'function' && onTabChange(newTab, oldTab);
+        return newTab;
+      }),
+    [onTabChange]
+  );
 
   const registerTab = useCallback(({ id }) => {
     setTabList((list) => {
@@ -39,13 +49,13 @@ export function TabsManager({ children, initialActive }) {
   // If there's no initial tab set, activate the first one being registered.
   useEffect(() => {
     if (!initialActive && tabList.length) {
-      setActiveTab(tabList[0].id);
+      setActiveTabEnhanced(tabList[0].id);
     }
-  }, [initialActive, tabList]);
+  }, [setActiveTabEnhanced, initialActive, tabList]);
 
   const value = {
     activeTab,
-    setActiveTab,
+    setActiveTab: setActiveTabEnhanced,
     registerTab,
     unregisterTab,
     tabList
@@ -56,7 +66,8 @@ export function TabsManager({ children, initialActive }) {
 
 TabsManager.propTypes = {
   children: T.node,
-  initialActive: T.string
+  initialActive: T.string,
+  onTabChange: T.func
 };
 
 /**

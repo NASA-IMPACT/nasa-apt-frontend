@@ -4,14 +4,74 @@ import styled from 'styled-components';
 import { Modal, ModalFooter, ModalHeadline } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { headingAlt } from '@devseed-ui/typography';
+import { glsp } from '@devseed-ui/theme-provider';
 
 const ConfirmationModalFooter = styled(ModalFooter)`
   justify-content: center;
 `;
 
+export const ConfirmationModalProse = styled.div`
+  display: flex;
+  flex-flow: column;
+  gap: ${glsp(0.5)};
+`;
+
 export const ModalSubtitle = styled.p`
   ${headingAlt()}
 `;
+
+/**
+ * Creates binary controls renderer for the modal.
+ * Renders two buttons, the first to confirm the action, the second to cancel and close the modal.
+ *
+ * @param {option} opts The options to create the buttons
+ * @param {string} opts.confirmVariation Variation for the confirm button
+ * @param {string} opts.confirmIcon Icon for the confirm button
+ * @param {string} opts.confirmTitle Title for the confirm button
+ * @param {string} opts.confirmLabel Label for the confirm button
+ * @param {string} opts.cancelVariation Variation for the cancel button
+ * @param {string} opts.cancelIcon Icon for the cancel button
+ * @param {string} opts.cancelTitle Title for the cancel button
+ * @param {string} opts.cancelLabel Label for the cancel button
+ *
+ * @returns {function} The render function.
+ */
+export function createBinaryControlsRenderer(opts = {}) {
+  const vOrD = (v, d) => (typeof v !== 'undefined' ? v : d);
+
+  const {
+    confirmVariation,
+    confirmIcon,
+    confirmTitle,
+    confirmLabel,
+    cancelVariation,
+    cancelIcon,
+    cancelTitle,
+    cancelLabel
+  } = opts;
+
+  // eslint-disable-next-line
+  return ({ confirm, cancel }) => (
+    <React.Fragment>
+      <Button
+        variation={vOrD(cancelVariation, 'base-plain')}
+        useIcon={vOrD(cancelIcon, undefined)}
+        title={vOrD(cancelTitle, 'Cancel this action')}
+        onClick={cancel}
+      >
+        {vOrD(cancelLabel, 'Cancel')}
+      </Button>
+      <Button
+        variation={vOrD(confirmVariation, 'base-plain')}
+        useIcon={vOrD(confirmIcon, undefined)}
+        title={vOrD(confirmTitle, 'Confirm this action')}
+        onClick={confirm}
+      >
+        {vOrD(confirmLabel, 'Confirm')}
+      </Button>
+    </React.Fragment>
+  );
+}
 
 const noop = () => {};
 // Once the component is mounted we store it to be able to access it from
@@ -24,24 +84,7 @@ const baseState = {
   subtitle: null,
   content: <p>This action will be carried out.</p>,
   // eslint-disable-next-line
-  renderControls: ({ cancel, confirm }) => (
-    <React.Fragment>
-      <Button
-        variation='base-plain'
-        title='Cancel this action'
-        onClick={cancel}
-      >
-        Cancel
-      </Button>
-      <Button
-        variation='base-plain'
-        title='Confirm this action'
-        onClick={confirm}
-      >
-        Confirm
-      </Button>
-    </React.Fragment>
-  ),
+  renderControls: createBinaryControlsRenderer(),
   data: null
 };
 
@@ -190,49 +233,15 @@ export function showConfirmationPrompt(opts = {}) {
   });
 }
 
-const deleteControls = ({ confirm, cancel }) => (
-  <React.Fragment>
-    <Button
-      variation='base-raised-light'
-      title='Cancel deletion'
-      useIcon='xmark--small'
-      onClick={cancel}
-    >
-      Cancel
-    </Button>
-    <Button
-      variation='danger-raised-dark'
-      title='Confirm deletion'
-      useIcon='trash-bin'
-      onClick={confirm}
-    >
-      Delete
-    </Button>
-  </React.Fragment>
-);
-
-/**
- * Convenience method to show a delete confirmation prompt for a document.
- * Will display a "Cancel/Delete" buttons and:
- * title: 'Delete this document?'
- * content: <p>The document <strong>{name}</strong> will be deleted.</p>
- *
- * @param {string} name Name of the document to delete
- * @param {any} data Any extra data that the confirmation prompt should keep
- *              track of. Useful to know what confirmation we're working with.
- */
-export const confirmDeleteDocument = async (name) => {
-  return showConfirmationPrompt({
-    title: 'Delete this document?',
-    content: (
-      <p>
-        The document <strong>{name}</strong> and all its versions will be
-        deleted.
-      </p>
-    ),
-    renderControls: deleteControls
-  });
-};
+const deleteControls = createBinaryControlsRenderer({
+  confirmVariation: 'danger-raised-dark',
+  confirmIcon: 'trash-bin',
+  confirmTitle: 'Confirm deletion',
+  confirmLabel: 'Delete',
+  cancelVariation: 'base-raised-light',
+  cancelTitle: 'Cancel deletion',
+  cancelIcon: 'xmark--small'
+});
 
 /**
  * Convenience method to show a delete confirmation prompt for a document.
@@ -272,7 +281,7 @@ export const confirmDeleteContact = async (name, docsCount) => {
   return showConfirmationPrompt({
     title: 'Delete this contact?',
     content: (
-      <React.Fragment>
+      <ConfirmationModalProse>
         {docsCount ? (
           <p>
             The contact <strong>{name}</strong> will be removed from APT and
@@ -284,7 +293,7 @@ export const confirmDeleteContact = async (name, docsCount) => {
           </p>
         )}
         <p>This action is irreversible.</p>
-      </React.Fragment>
+      </ConfirmationModalProse>
     ),
     renderControls: deleteControls
   });

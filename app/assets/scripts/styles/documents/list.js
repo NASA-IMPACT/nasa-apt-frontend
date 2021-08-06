@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { divide, glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
+import { divide, glsp, themeVal } from '@devseed-ui/theme-provider';
 
 export const DocumentsList = styled.ol`
   background: transparent;
@@ -34,7 +34,7 @@ export const DocumentEntryHgroup = styled.div`
   display: inline-grid;
   grid-auto-columns: minmax(min-content, max-content);
   grid-gap: ${glsp(1.25)};
-  align-items: center;
+  align-items: baseline;
   min-width: 0px;
 
   > * {
@@ -43,11 +43,9 @@ export const DocumentEntryHgroup = styled.div`
 `;
 
 export const DocumentEntryTitle = styled.h1`
-  ${truncated()}
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: 0;
-  max-width: 24rem;
 
   a {
     display: block;

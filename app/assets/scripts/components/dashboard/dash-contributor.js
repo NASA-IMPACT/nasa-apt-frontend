@@ -16,6 +16,8 @@ import {
 import DocumentDashboardEntry from './document-dashboard-entry';
 import { DocumentsList, DocumentsListItem } from '../../styles/documents/list';
 import { EmptyHub } from '../common/empty-states';
+import DocListSettings, { useDocListSettings } from './document-list-settings';
+import DocCountIndicator from './document-count-indicator';
 
 import { useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
@@ -29,6 +31,12 @@ const DashboardContributorInner = styled.div`
 
 const EmptyTab = styled(EmptyHub)`
   grid-column: 1;
+`;
+
+const DocsNav = styled.nav`
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-row-gap: ${glsp()};
 `;
 
 const authorTabNav = [
@@ -51,28 +59,50 @@ const authorTabNav = [
 ];
 
 function DashboardContributor() {
+  const {
+    resetListSettings,
+    listSettingsValues,
+    listSettingsSetter,
+    applyListSettings,
+    applyListSettingsFilters
+  } = useDocListSettings();
+
   return (
     <DashboardContributorInner>
-      <TabsManager>
+      <TabsManager onTabChange={resetListSettings}>
         <Heading size='medium'>Documents</Heading>
-        <TabsNav>
-          {authorTabNav.map((t) => (
-            <TabItem key={t.id} label={t.label} tabId={t.id}>
-              {t.label}
-            </TabItem>
-          ))}
-        </TabsNav>
+        <DocumentNavigation
+          listSettingsValues={listSettingsValues}
+          listSettingsSetter={listSettingsSetter}
+          applyListSettingsFilters={applyListSettingsFilters}
+        />
         <TabContent tabId='leading'>
-          <TabDocuments role='owner' />
+          <TabDocuments
+            role='owner'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='contrib'>
-          <TabDocuments role='author' />
+          <TabDocuments
+            role='author'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='reviews'>
-          <TabDocuments role='reviewer' />
+          <TabDocuments
+            role='reviewer'
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
         <TabContent tabId='public'>
-          <TabDocuments status={PUBLISHED} />
+          <TabDocuments
+            status={PUBLISHED}
+            listSettings={listSettingsValues}
+            applyListSettings={applyListSettings}
+          />
         </TabContent>
       </TabsManager>
     </DashboardContributorInner>
@@ -81,22 +111,58 @@ function DashboardContributor() {
 
 export default DashboardContributor;
 
-const TabDocuments = (props) => {
-  const { role, status } = props;
+// Moving the <DocsNav> to a separate component to access the tabs context
+// provided by the TabManager.
+const DocumentNavigation = (props) => {
+  const {
+    listSettingsValues,
+    listSettingsSetter,
+    applyListSettingsFilters
+  } = props;
+
   const { activeTab } = useTabs();
-  const { atbds, fetchAtbds, deleteSingleAtbdVersion } = useAtbds({
+
+  return (
+    <DocsNav>
+      <TabsNav>
+        {authorTabNav.map((t) => (
+          <TabItem key={t.id} label={t.label} tabId={t.id}>
+            {t.label}
+          </TabItem>
+        ))}
+      </TabsNav>
+      <DocListSettings
+        alignment='right'
+        origin={`tab-${activeTab}`}
+        values={listSettingsValues}
+        onSelect={listSettingsSetter}
+      />
+      <DocCountIndicator applyListSettingsFilters={applyListSettingsFilters} />
+    </DocsNav>
+  );
+};
+
+DocumentNavigation.propTypes = {
+  listSettingsValues: T.object,
+  listSettingsSetter: T.func,
+  applyListSettingsFilters: T.func
+};
+
+const TabDocuments = (props) => {
+  const { role, status, applyListSettings } = props;
+  const { activeTab } = useTabs();
+  const { atbds, fetchAtbds } = useAtbds({
     role,
     status
   });
-
   const onCreateClick = useDocumentCreate();
-  const onDocumentAction = useDocumentHubMenuAction({
-    deleteAtbdVersion: deleteSingleAtbdVersion
-  });
+  const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
-    fetchAtbds({ role, status });
-  }, [fetchAtbds, role, status]);
+    if (atbds.status === 'idle') {
+      fetchAtbds({ role, status });
+    }
+  }, [atbds.status, fetchAtbds, role, status]);
 
   if (atbds.status === 'loading') {
     return <GlobalLoading />;
@@ -109,8 +175,8 @@ const TabDocuments = (props) => {
         return (
           <EmptyTab>
             <p>
-              APT is a repository for scientific documents, but none exist.
-              Start by creating one.
+              You are not the lead author of any documents, but can always
+              create one.
             </p>
             <Button
               variation='primary-raised-dark'
@@ -155,9 +221,11 @@ const TabDocuments = (props) => {
   }
 
   if (atbds.status === 'succeeded' && atbds.data?.length) {
-    return (
+    const preparedAtbds = applyListSettings(atbds.data);
+
+    return preparedAtbds.length ? (
       <DocumentsList>
-        {atbds.data.map((atbd) => (
+        {preparedAtbds.map((atbd) => (
           <DocumentsListItem key={atbd.id}>
             <DocumentDashboardEntry
               atbd={atbd}
@@ -166,6 +234,10 @@ const TabDocuments = (props) => {
           </DocumentsListItem>
         ))}
       </DocumentsList>
+    ) : (
+      <EmptyTab>
+        <p>There are no documents that match the current filters.</p>
+      </EmptyTab>
     );
   }
 
@@ -174,5 +246,6 @@ const TabDocuments = (props) => {
 
 TabDocuments.propTypes = {
   role: T.string,
-  status: T.string
+  status: T.string,
+  applyListSettings: T.func
 };

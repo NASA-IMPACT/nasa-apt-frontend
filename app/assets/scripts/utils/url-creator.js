@@ -1,3 +1,4 @@
+import getDocumentIdKey from '../components/documents/get-document-id-key';
 import { apiUrl } from '../config';
 
 /**
@@ -19,7 +20,7 @@ export const documentView = (atbd, version = 'last') => {
     return `/documents/${atbd}/${version}`;
   }
 
-  const atbdId = atbd.alias || atbd.id;
+  const atbdId = getDocumentIdKey(atbd).id;
 
   let v = '';
   if (version === 'last') {
