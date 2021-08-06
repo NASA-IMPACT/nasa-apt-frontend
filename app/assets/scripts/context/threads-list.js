@@ -141,7 +141,8 @@ export const ThreadsProvider = ({ children }) => {
   const {
     getState: getSingleThread,
     fetchThreadsSingle,
-    updateThreadsSingle
+    updateThreadsSingle,
+    createThreadComment
   } = useContexeedApi(
     {
       name: 'threadsSingle',
@@ -185,6 +186,28 @@ export const ThreadsProvider = ({ children }) => {
               return finish();
             }
           })
+        ),
+        createThreadComment: withRequestToken(
+          token,
+          ({ threadId, comment }) => ({
+            skipStateCheck: true,
+            sliceKey: `${threadId}`,
+            url: `/threads/${threadId}/comments`,
+            requestOptions: {
+              method: 'POST',
+              data: {
+                body: comment
+              }
+            },
+            transformData: (data, { state }) => {
+              // Add the newly created comment to the thread comment array.
+              return {
+                ...state.data,
+                comment_count: state.data.comment_count + 1,
+                comments: [...state.data.comments, data]
+              };
+            }
+          })
         )
       }
     },
@@ -198,7 +221,8 @@ export const ThreadsProvider = ({ children }) => {
     getSingleThread,
     fetchThreadsSingle,
     updateThreadsSingle,
-    createThread
+    createThread,
+    createThreadComment
   };
 
   return (
@@ -249,10 +273,12 @@ export const useSingleThread = ({ threadId } = {}) => {
   const {
     getSingleThread,
     fetchThreadsSingle,
-    updateThreadsSingle
+    updateThreadsSingle,
+    createThreadComment
   } = useSafeContextFn('useSingleThread');
 
   return {
+    getSingleThread,
     thread: getSingleThread(`${threadId}`),
     fetchSingleThread: useCallback(() => fetchThreadsSingle({ threadId }), [
       threadId,
@@ -267,6 +293,10 @@ export const useSingleThread = ({ threadId } = {}) => {
           payload: { status }
         }),
       [threadId, updateThreadsSingle]
+    ),
+    createThreadComment: useCallback(
+      ({ comment }) => createThreadComment({ comment, threadId }),
+      [threadId, createThreadComment]
     )
   };
 };

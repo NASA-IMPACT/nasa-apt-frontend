@@ -31,7 +31,7 @@ import {
   getDocumentSection
 } from '../documents/single-edit/sections';
 import { useSingleThread, useThreads } from '../../context/threads-list';
-import { useSubmitThread } from './use-submit-comment';
+import { useSubmitThread, useSubmitThreadComment } from './use-submit-comment';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
@@ -227,7 +227,14 @@ function CommentCenter() {
     atbdVersion
   });
 
+  const { createThreadComment } = useSingleThread({
+    threadId: openThreadId
+  });
+
+  // The submit function being used is picked according to whether or not we're
+  // looking at a single thread or thread list.
   const onSubmitThread = useSubmitThread(createThread);
+  const onSubmitThreadComment = useSubmitThreadComment(createThreadComment);
 
   return (
     <CSSTransition
@@ -286,7 +293,9 @@ function CommentCenter() {
           <CommentFormWrapper>
             <CommentForm
               type={isCommentThread ? 'reply' : 'new'}
-              onSubmit={isCommentThread ? console.log : onSubmitThread}
+              onSubmit={
+                isCommentThread ? onSubmitThreadComment : onSubmitThread
+              }
             />
           </CommentFormWrapper>
         </PanelBody>
@@ -307,7 +316,11 @@ function CommentThreadsList(props) {
     atbdId,
     atbdVersion
   });
-  const { updateThreadStatus } = useSingleThread();
+  // Init the useSingleThread without passing any argument to use the
+  // updateThreadStatus which we use to update the thread status. The function
+  // will accept an id when executed without having to rely on parameters passed
+  // to the useSingleThread.
+  const { getSingleThread, updateThreadStatus } = useSingleThread();
 
   useEffect(() => {
     fetchThreads();
@@ -348,6 +361,9 @@ function CommentThreadsList(props) {
                   commentId={c.id}
                   author={c.created_by}
                   isResolved={c.status === THREAD_CLOSED}
+                  disabled={
+                    getSingleThread(`${c.id}`)?.mutationStatus === 'loading'
+                  }
                   isEdited={
                     !isSameAproxDate(
                       new Date(c.created_at),
@@ -383,13 +399,24 @@ CommentThreadsList.propTypes = {
 function CommentThreadsSingle(props) {
   const { threadId } = props;
 
-  const { thread, fetchSingleThread } = useSingleThread({
+  const { thread, fetchSingleThread, updateThreadStatus } = useSingleThread({
     threadId
   });
 
   useEffect(() => {
     fetchSingleThread();
   }, [fetchSingleThread]);
+
+  const onResolveClick = useCallback(
+    (threadId) => {
+      const t = thread.data;
+      updateThreadStatus({
+        threadId,
+        status: t.status === THREAD_CLOSED ? THREAD_OPEN : THREAD_CLOSED
+      });
+    },
+    [thread.data, updateThreadStatus]
+  );
 
   return (
     <CommentLoadingProcess
@@ -408,6 +435,8 @@ function CommentThreadsSingle(props) {
               commentId={t.id}
               author={t.created_by}
               isResolved={t.status === THREAD_CLOSED}
+              onResolveClick={onResolveClick}
+              disabled={t.mutationStatus === 'loading'}
               isEdited={
                 !isSameAproxDate(
                   new Date(t.created_at),
