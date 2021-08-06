@@ -1,12 +1,8 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 
-import DropdownMenu, {
-  DropMenuItemEnhanced,
-  getMenuClickHandler
-} from '../common/dropdown-menu';
+import DropdownMenu, { MenuItemReasonDisabled } from '../common/dropdown-menu';
 import { Link } from '../../styles/clean/link';
-import Tip from '../common/tooltip';
 
 import { documentEdit } from '../../utils/url-creator';
 import { useUser } from '../../context/user';
@@ -72,12 +68,20 @@ export default function DocumentActionsMenu(props) {
     // The delete option is in a separate menu.
     const itemDelete = {
       id: 'delete',
+      title: 'Delete document',
+      label: 'Delete',
       /* eslint-disable-next-line react/display-name */
       render: (props) => (
-        <DeleteMenuItem
+        <MenuItemReasonDisabled
           {...props}
-          atbdVersion={atbdVersion}
-          isCurator={isCurator}
+          // A document can only be deleted:
+          // - By a curator
+          // - By the owner when in draft
+          //   Whether or not it is the owner is checked by the rules. Here we check the
+          //   status to be able to show a message because disabling it in the rules
+          //   would remove the button.
+          isDisabled={!isCurator && !isDraftEquivalent(atbdVersion)}
+          tipMessage='It is not possible to delete document that is not in Draft'
         />
       )
     };
@@ -161,75 +165,4 @@ DocumentActionsMenu.propTypes = {
   atbdVersion: T.object,
   variation: T.string,
   size: T.string
-};
-
-const MenuItemReasonDisabled = ({
-  isDisabled,
-  onSelect,
-  menuItem,
-  tipMessage,
-  ...props
-}) => {
-  const item = (
-    <DropMenuItemEnhanced
-      disabled={isDisabled}
-      title={menuItem.title}
-      onClick={getMenuClickHandler(onSelect, menuItem)}
-      {...props}
-    >
-      {menuItem.label}
-    </DropMenuItemEnhanced>
-  );
-
-  return isDisabled ? <Tip title={tipMessage}>{item}</Tip> : item;
-};
-
-MenuItemReasonDisabled.propTypes = {
-  isDisabled: T.bool,
-  onSelect: T.func,
-  menuItem: T.object,
-  tipMessage: T.string
-};
-
-const DeleteMenuItem = ({
-  onSelect,
-  menuItem,
-  atbdVersion,
-  isCurator,
-  ...props
-}) => {
-  // A document can only be deleted:
-  // - By a curator
-  // - By the owner when in draft
-  //   Whether or not it is the owner is checked by the rules. Here we check the
-  //   status to be able to show a message because disabling it in the rules
-  //   would remove the button.
-
-  const shouldDisable = !isCurator && !isDraftEquivalent(atbdVersion);
-
-  const item = (
-    <DropMenuItemEnhanced
-      disabled={shouldDisable}
-      title='Delete document'
-      onClick={getMenuClickHandler(onSelect, menuItem)}
-      {...props}
-    >
-      Delete
-    </DropMenuItemEnhanced>
-  );
-
-  return shouldDisable ? (
-    <Tip title='It is not possible to delete document that is not in Draft'>
-      {item}
-    </Tip>
-  ) : (
-    item
-  );
-};
-
-DeleteMenuItem.propTypes = {
-  isCurator: T.bool,
-  onSelect: T.func,
-  menuItem: T.object,
-  atbdVersion: T.object
 };

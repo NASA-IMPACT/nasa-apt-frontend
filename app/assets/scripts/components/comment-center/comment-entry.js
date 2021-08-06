@@ -8,12 +8,8 @@ import collecticon from '@devseed-ui/collecticons';
 
 import Datetime from '../common/date';
 import UserIdentity from '../common/user-identity';
-import DropdownMenu, {
-  DropMenuItemEnhanced,
-  getMenuClickHandler
-} from '../common/dropdown-menu';
+import DropdownMenu, { MenuItemReasonDisabled } from '../common/dropdown-menu';
 import CommentForm from './comment-form';
-import Tip from '../common/tooltip';
 
 import { useUser } from '../../context/user';
 
@@ -199,6 +195,8 @@ export default function CommentEntry(props) {
   const isReply = type === THREAD_REPLY;
   const isThread = type === THREAD_SINGLE;
 
+  const isEntryAuthor = author.sub === user.id;
+
   const commentMenuProps = useMemo(
     () => ({
       triggerProps: {
@@ -214,30 +212,53 @@ export default function CommentEntry(props) {
             {
               id: 'edit',
               label: 'Edit',
-              title: 'Edit this comment'
+              title: 'Edit this comment',
+              /* eslint-disable-next-line react/display-name */
+              render: (props) => (
+                <MenuItemReasonDisabled
+                  {...props}
+                  isDisabled={!isEntryAuthor && !isCurator}
+                  tipMessage='You can only edit your own comments'
+                />
+              )
             }
           ]
         },
         {
           id: 'actions2',
           items: [
-            {
-              id: `delete-${type === THREAD_REPLY ? 'comment' : 'thread'}`,
-              /* eslint-disable-next-line react/display-name */
-              render: (props) => (
-                <DeleteMenuItem
-                  {...props}
-                  type={type}
-                  isAuthor={author.sub === user.id}
-                  isCurator={isCurator}
-                />
-              )
-            }
+            type === THREAD_REPLY
+              ? {
+                  id: 'delete-comment',
+                  title: 'Delete comment',
+                  label: 'Delete',
+                  /* eslint-disable-next-line react/display-name */
+                  render: (props) => (
+                    <MenuItemReasonDisabled
+                      {...props}
+                      isDisabled={!isEntryAuthor && !isCurator}
+                      tipMessage='You can only delete your own comments'
+                    />
+                  )
+                }
+              : {
+                  id: 'delete-thread',
+                  title: 'Delete thread',
+                  label: 'Delete',
+                  /* eslint-disable-next-line react/display-name */
+                  render: (props) => (
+                    <MenuItemReasonDisabled
+                      {...props}
+                      isDisabled={!isEntryAuthor && !isCurator}
+                      tipMessage='You can only delete your own comments threads'
+                    />
+                  )
+                }
           ]
         }
       ]
     }),
-    [type, author.sub, user.id, isCurator]
+    [type, isEntryAuthor, isCurator]
   );
 
   const onSelect = useCallback(
@@ -342,43 +363,4 @@ CommentEntry.propTypes = {
   }),
   replyCount: T.number,
   comment: T.string
-};
-
-const DeleteMenuItem = ({
-  onSelect,
-  menuItem,
-  type,
-  isAuthor,
-  isCurator,
-  ...props
-}) => {
-  const shouldDisable = !isAuthor && !isCurator;
-
-  const btnTitle =
-    type === THREAD_REPLY ? 'Delete comment' : 'Delete comment thread';
-  const tipTitle =
-    type === THREAD_REPLY
-      ? 'You can only delete your own comments'
-      : 'You can only delete your own comment threads';
-
-  const item = (
-    <DropMenuItemEnhanced
-      disabled={shouldDisable}
-      title={btnTitle}
-      onClick={getMenuClickHandler(onSelect, menuItem)}
-      {...props}
-    >
-      Delete
-    </DropMenuItemEnhanced>
-  );
-
-  return shouldDisable ? <Tip title={tipTitle}>{item}</Tip> : item;
-};
-
-DeleteMenuItem.propTypes = {
-  onSelect: T.func,
-  menuItem: T.object,
-  type: T.string,
-  isAuthor: T.bool,
-  isCurator: T.bool
 };
