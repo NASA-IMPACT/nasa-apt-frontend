@@ -52,6 +52,9 @@ export const computeThread = (thread) => {
     comment_count: comment_count ? comment_count - 1 : comments.length,
     comments,
     body: firstComment.body,
+    // Id of the comment that is used as the thread body. This is needed for
+    // when we need to update this comment.
+    threadCommentId: firstComment.id,
     ...getUpdatedTimes(thread, firstComment)
   };
 };
@@ -118,6 +121,45 @@ export const ThreadsProvider = ({ children }) => {
               }
             };
           }
+          case 'threadsList/update-item-comment': {
+            const stateSlice = state[action.key];
+
+            // If there's no data in the list state we don't have to do
+            // anything.
+            if (stateSlice.status !== 'succeeded') {
+              break;
+            }
+
+            // This action is only ever fired when the thread is being edited
+            // from the thread list panel. In this case we need to use a
+            // function that updates the individual comment, but we also have to
+            // update the content in the thread list context hence this function.
+            // Since this list only shows the thread's first comment, which
+            // we're treating as the thread body, we just need to update that
+            // and there's no need to search for the comment in the comment's
+            // array.
+            const threadId = action.data.thread_id;
+            return {
+              action,
+              state: {
+                ...state,
+                [action.key]: {
+                  ...stateSlice,
+                  data: stateSlice.data.map((thread) => {
+                    if (thread.id === threadId) {
+                      return {
+                        ...thread,
+                        body: action.data.body,
+                        ...getUpdatedTimes(thread, action.data)
+                      };
+                    }
+
+                    return thread;
+                  })
+                }
+              }
+            };
+          }
         }
         return { state, action };
       },
@@ -179,7 +221,8 @@ export const ThreadsProvider = ({ children }) => {
     updateThreadsSingle,
     createThreadsComment,
     deleteThreadsSingle,
-    deleteThreadsComment
+    deleteThreadsComment,
+    updateThreadsComment
   } = useContexeedApi(
     {
       name: 'threadsSingle',
@@ -239,7 +282,9 @@ export const ThreadsProvider = ({ children }) => {
               }
 
               // If an atbdId and atbdVersion were passed to the function it
-              // means we want to update the list in the threadList contexeed.
+              // means we want to update the list in the threadList contexeed
+              // because the request was made from the menu on the thread list
+              // panel.
               if (atbdId && atbdVersion) {
                 threadsListDispatch({
                   type: 'threadsList/delete-item',
@@ -284,12 +329,103 @@ export const ThreadsProvider = ({ children }) => {
               }
             },
             transformData: (data, { state }) => {
-              // Add the newly created comment to the thread comment array.
+              // Add comment to the array.
               return {
                 ...state.data,
-                comment_count: state.data.comment_count + 1,
-                comments: [...state.data.comments, data]
+                comments: state.data.comments.concat(data)
               };
+            }
+          })
+        ),
+        updateThreadsComment: withRequestToken(
+          token,
+          ({ atbdId, atbdVersion, threadId, commentId, comment }) => ({
+            skipStateCheck: true,
+            sliceKey: `${threadId}`,
+            url: `/threads/${threadId}/comments/${commentId}`,
+            requestOptions: {
+              method: 'POST',
+              data: {
+                body: comment
+              }
+            },
+            transformData: (data, { state }) => {
+              // If there's no stored data it means the request originated from
+              // the thread list panel, so we don't care about updating the
+              // individual thread. The thread list update is dispatched in the
+              // onDone step.
+              if (!state?.data) {
+                return {
+                  // The contextual data is only used to dispatch the correct
+                  // action in the onDone step. Only the updated data will be
+                  // kept.
+                  contextualData: {
+                    response: data
+                  },
+                  updatedData: null
+                };
+              }
+
+              // This api request returns the updated comment data, but we're
+              // storing the whole thread, with the comments inside a comment's
+              // array. We need to search for the comment and update it.
+              const thread = state.data;
+              const commentId = data.id;
+
+              // If we're updating the thread's first comment the behavior is
+              // slightly different since we're treating the first comment as
+              // the thread body it is not inside the comment's array.
+              if (thread.threadCommentId === commentId) {
+                return {
+                  // The contextual data is only used to dispatch the correct
+                  // action in the onDone step. Only the updated data will be
+                  // kept.
+                  contextualData: {
+                    response: data
+                  },
+                  updatedData: {
+                    ...thread,
+                    body: data.body,
+                    ...getUpdatedTimes(thread, data)
+                  }
+                };
+              }
+
+              // Find and replace the updated comment.
+              return {
+                // The contextual data is only used to dispatch the correct
+                // action in the onDone step. Only the updated data will be
+                // kept.
+                contextualData: {
+                  response: data
+                },
+                updatedData: {
+                  ...thread,
+                  comments: thread.comments.map((comment) =>
+                    comment.id === commentId ? data : comment
+                  )
+                }
+              };
+            },
+            onDone: (finish, { data, error }) => {
+              if (error) {
+                return finish();
+              }
+
+              // If an atbdId and atbdVersion were passed to the function it
+              // means we want to update the list in the threadList contexeed
+              // because the edition was made from the thread list panel.
+              if (atbdId && atbdVersion) {
+                threadsListDispatch({
+                  type: 'threadsList/update-item-comment',
+                  key: `${atbdId}-${atbdVersion}`,
+                  // Original API response.
+                  data: data.contextualData.response
+                });
+              }
+
+              // Return the data receiving action.
+              return finish(null, data.updatedData);
             }
           })
         )
@@ -308,7 +444,8 @@ export const ThreadsProvider = ({ children }) => {
     createThread,
     createThreadsComment,
     deleteThreadsSingle,
-    deleteThreadsComment
+    deleteThreadsComment,
+    updateThreadsComment
   };
 
   return (
@@ -362,7 +499,8 @@ export const useSingleThread = ({ threadId } = {}) => {
     updateThreadsSingle,
     createThreadsComment,
     deleteThreadsSingle,
-    deleteThreadsComment
+    deleteThreadsComment,
+    updateThreadsComment
   } = useSafeContextFn('useSingleThread');
 
   return {
@@ -398,6 +536,17 @@ export const useSingleThread = ({ threadId } = {}) => {
     deleteThreadComment: useCallback(
       ({ commentId }) => deleteThreadsComment({ commentId, threadId }),
       [threadId, deleteThreadsComment]
+    ),
+    updateThreadComment: useCallback(
+      ({ atbdId, atbdVersion, threadId: threadIdIn, commentId, comment }) =>
+        updateThreadsComment({
+          atbdId,
+          atbdVersion,
+          commentId,
+          comment,
+          threadId: threadIdIn || threadId
+        }),
+      [threadId, updateThreadsComment]
     )
   };
 };

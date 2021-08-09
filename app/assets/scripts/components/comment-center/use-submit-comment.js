@@ -21,9 +21,11 @@ function useSubmitCreator(submitFunction, messages) {
         processToast.error(
           `${messages.error || 'An error occurred'}: ${result.error.message}`
         );
+        return false;
       } else {
-        resetForm({ values });
+        resetForm();
         processToast.success(messages.success);
+        return true;
       }
     },
     [submitFunction, messages.start, messages.success, messages.error]
@@ -42,4 +44,27 @@ export function useSubmitThreadComment(submitFunction) {
     start: 'Creating new comment',
     success: 'Comment created'
   });
+}
+
+export function useSubmitUpdateThread({
+  submitFunction,
+  dismissEditField,
+  atbdId,
+  atbdVersion
+}) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast('Updating thread');
+      const result = await submitFunction({ ...values, atbdId, atbdVersion });
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(`An error occurred: ${result.error.message}`);
+      } else {
+        resetForm({ values });
+        processToast.success('Thread updated');
+        dismissEditField?.(null);
+      }
+    },
+    [submitFunction, dismissEditField, atbdId, atbdVersion]
+  );
 }

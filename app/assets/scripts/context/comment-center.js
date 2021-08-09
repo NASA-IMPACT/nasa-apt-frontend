@@ -19,6 +19,8 @@ export const CommentCenterProvider = ({ children }) => {
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('all-section');
   const [selectedStatus, setSelectedStatus] = useState('all-status');
+  // The key of the editing comment will be `threadId-commentId`
+  const [editingCommentKey, setEditingCommentKey] = useState(null);
 
   const useQsState = useQsStateCreator({
     commit: history.push
@@ -44,7 +46,9 @@ export const CommentCenterProvider = ({ children }) => {
     selectedStatus,
     setSelectedStatus,
     openThreadId,
-    setOpenThreadId
+    setOpenThreadId,
+    editingCommentKey,
+    setEditingCommentKey
   };
 
   return (

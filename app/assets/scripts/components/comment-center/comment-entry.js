@@ -116,8 +116,15 @@ const CommentEntryContent = styled.div`
 
   textarea {
     min-height: 4rem;
+    // The little 80ms delay is very important. It gives enough time to the
+    // Cancel/Update button to receive the click event. Without this, clicking
+    // the button while focused on the textarea would immediately start the
+    // animation and the click event would not reach the button because it would
+    // have moved.
+    transition: min-height ease-in-out 160ms 80ms;
 
     &:focus {
+      transition: min-height ease-in-out 160ms;
       min-height: 20rem;
     }
   }
@@ -175,10 +182,13 @@ export const THREAD_REPLY = 'thread-reply';
 
 export default function CommentEntry(props) {
   const {
+    threadId,
     commentId,
     onMenuAction,
     onViewClick,
     onResolveClick,
+    onCommentEditSubmit,
+    onCommentEditCancel,
     author,
     type,
     isResolved,
@@ -266,11 +276,10 @@ export default function CommentEntry(props) {
       onMenuAction(
         menuItem,
         type === THREAD_REPLY
-          ? { ...payload, commentId }
-          : // When dealing with a thread the commentId prop is actually the thread id.
-            { ...payload, threadId: commentId }
+          ? { ...payload, threadId, commentId }
+          : { ...payload, threadId, commentId }
       ),
-    [type, onMenuAction, commentId]
+    [type, onMenuAction, commentId, threadId]
   );
 
   return (
@@ -283,7 +292,7 @@ export default function CommentEntry(props) {
             isEdited={isEdited}
             isThread={isReply || isThread}
             href='#'
-            onClick={getDefaultPrevented(onViewClick, commentId)}
+            onClick={getDefaultPrevented(onViewClick, threadId)}
           />
         </CommentEntryHeadline>
         <CommentEntryActions>
@@ -297,7 +306,7 @@ export default function CommentEntry(props) {
                   replyCount ? `Reply comment (${replyCount})` : 'Reply Comment'
                 }
                 data-reply-count={replyCount > 99 ? '99+' : replyCount || null}
-                onClick={getDefaultPrevented(onViewClick, commentId)}
+                onClick={getDefaultPrevented(onViewClick, threadId)}
               >
                 Reply
               </CommentReplyButton>
@@ -310,7 +319,7 @@ export default function CommentEntry(props) {
                     ? 'Unresolve comment thread'
                     : 'Resolve comment thread'
                 }
-                onClick={getDefaultPrevented(onResolveClick, commentId)}
+                onClick={getDefaultPrevented(onResolveClick, threadId)}
               >
                 {isResolved ? 'Unresolve' : 'Resolve'} comment
               </Button>
@@ -333,12 +342,19 @@ export default function CommentEntry(props) {
           </p>
         )}
         {isEditing ? (
-          <CommentForm type='edit' comment={comment} />
+          <CommentForm
+            type='edit'
+            threadId={threadId}
+            commentId={commentId}
+            comment={comment}
+            onSubmit={onCommentEditSubmit}
+            onCancel={onCommentEditCancel}
+          />
         ) : (
           <CommentBody
             comment={comment}
             truncateComment={!isReply && !isThread}
-            onReadMore={getDefaultPrevented(onViewClick, commentId)}
+            onReadMore={getDefaultPrevented(onViewClick, threadId)}
           />
         )}
       </CommentEntryContent>
@@ -347,10 +363,13 @@ export default function CommentEntry(props) {
 }
 
 CommentEntry.propTypes = {
+  threadId: T.number,
   commentId: T.number,
   onMenuAction: T.func,
   onViewClick: T.func,
   onResolveClick: T.func,
+  onCommentEditSubmit: T.func,
+  onCommentEditCancel: T.func,
   author: T.object,
   type: T.oneOf([THREAD_LIST_ITEM, THREAD_SINGLE, THREAD_REPLY]),
   isResolved: T.bool,

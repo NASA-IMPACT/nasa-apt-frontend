@@ -35,6 +35,21 @@ export const ErrorComment = styled(InfoMsgComment).attrs({
 export const THREAD_CLOSED = 'CLOSED';
 export const THREAD_OPEN = 'OPEN';
 
+export const COMMENT_STATUSES = [
+  {
+    id: 'all-status',
+    label: 'All'
+  },
+  {
+    id: THREAD_CLOSED,
+    label: 'Resolved'
+  },
+  {
+    id: THREAD_OPEN,
+    label: 'Unresolved'
+  }
+];
+
 /**
  * Verifies that two dates are the same by checking if the difference between
  * them is less than a second.
