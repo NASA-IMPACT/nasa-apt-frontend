@@ -11,6 +11,7 @@ import {
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import StatusPill from '../../common/status-pill';
+import { ProgressEntry, ProgressList, ProgressListItem, ProgressTracker } from '../../../styles/progress-tracker';
 
 function SandboxElements() {
   return (
@@ -42,6 +43,31 @@ function SandboxElements() {
                 <StatusPill status='In publication' statusIcon='page-tick' />
                 <StatusPill status='Published' statusIcon='page-tick' />
               </div>
+              <h2>Progress tracker</h2>
+              <ProgressTracker>
+                <ProgressList>
+                  <ProgressListItem>
+                    <ProgressEntry>
+                      <h1>Entry 1</h1>
+                      <p>Lorem ipsum dolor</p>
+                    </ProgressEntry>
+                  </ProgressListItem>
+
+                  <ProgressListItem>
+                    <ProgressEntry>
+                      <h1>Entry 2</h1>
+                      <p>Lorem ipsum dolor</p>
+                    </ProgressEntry>
+                  </ProgressListItem>
+
+                  <ProgressListItem>
+                    <ProgressEntry>
+                      <h1>Entry 3</h1>
+                      <p>Lorem ipsum dolor</p>
+                    </ProgressEntry>
+                  </ProgressListItem>
+                </ProgressList>
+              </ProgressTracker>
             </Prose>
           </ContentBlock>
         </InpageBody>
