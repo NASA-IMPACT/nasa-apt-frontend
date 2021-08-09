@@ -36,6 +36,8 @@ import {
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
+import { useUser } from '../../../context/user';
+import { useCommentCenter } from '../../../context/comment-center';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -129,6 +131,7 @@ const DOIValue = styled.dd`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
+  const { isLogged } = useUser();
   const {
     atbd,
     updateAtbd,
@@ -139,9 +142,11 @@ function DocumentView() {
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
 
+  const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
   useEffect(() => {
-    fetchSingleAtbd();
-  }, [id, version, fetchSingleAtbd]);
+    isLogged && fetchSingleAtbd();
+  }, [isLogged, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
@@ -163,9 +168,27 @@ function DocumentView() {
             history
           });
           break;
+        case 'toggle-comments':
+          if (isPanelOpen) {
+            setPanelOpen(false);
+          } else {
+            openPanelOn({
+              // The atbdId must be numeric. The alias does not work.
+              atbdId: atbd.data.id,
+              atbdVersion: atbd.data.version
+            });
+          }
       }
     },
-    [atbd.data, deleteAtbdVersion, history, menuHandler]
+    [
+      atbd.data,
+      deleteAtbdVersion,
+      history,
+      menuHandler,
+      isPanelOpen,
+      setPanelOpen,
+      openPanelOn
+    ]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,

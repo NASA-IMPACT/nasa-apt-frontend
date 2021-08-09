@@ -33,12 +33,14 @@ import {
   commentDeleteConfirmAndToast,
   threadDeleteConfirmAndToast
 } from './comment-delete-process';
+import { useUser } from '../../context/user';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
 `;
 
 function ThreadSinglePanelContents() {
+  const { isLogged } = useUser();
   const {
     setPanelOpen,
     openThreadId: threadId,
@@ -60,8 +62,8 @@ function ThreadSinglePanelContents() {
   });
 
   useEffect(() => {
-    fetchSingleThread();
-  }, [fetchSingleThread]);
+    isLogged && fetchSingleThread();
+  }, [isLogged, fetchSingleThread]);
 
   const onCommentEditCancel = useCallback(() => setEditingCommentKey(null), [
     setEditingCommentKey

@@ -28,13 +28,17 @@ import {
   THREAD_OPEN
 } from './common';
 import { getDocumentSection } from '../documents/single-edit/sections';
+import { useUser } from '../../context/user';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
 `;
 
 function ThreadListPanelContents() {
+  const { isLogged } = useUser();
   const {
+    atbdId,
+    atbdVersion,
     setPanelOpen,
     selectedSection,
     setSelectedSection,
@@ -45,9 +49,6 @@ function ThreadListPanelContents() {
     editingCommentKey,
     setEditingCommentKey
   } = useCommentCenter();
-
-  const atbdId = 1;
-  const atbdVersion = 'v2.0';
 
   const { createThread, invalidate, threads, fetchThreads } = useThreads({
     atbdId,
@@ -68,8 +69,9 @@ function ThreadListPanelContents() {
 
   // Fetch threads when parameters change.
   useEffect(() => {
-    fetchThreads({ status: selectedStatus, section: selectedSection });
-  }, [fetchThreads, selectedStatus, selectedSection]);
+    isLogged &&
+      fetchThreads({ status: selectedStatus, section: selectedSection });
+  }, [isLogged, fetchThreads, selectedStatus, selectedSection]);
 
   // Clear the state when we leave this panel.
   useEffect(() => {
@@ -129,7 +131,7 @@ function ThreadListPanelContents() {
         }
       }
     },
-    [deleteThread, setEditingCommentKey, threads.data]
+    [atbdId, atbdVersion, deleteThread, setEditingCommentKey, threads.data]
   );
 
   const onResolveClick = useCallback(
@@ -142,7 +144,7 @@ function ThreadListPanelContents() {
         status: t.status === THREAD_CLOSED ? THREAD_OPEN : THREAD_CLOSED
       });
     },
-    [threads.data, updateThreadStatus]
+    [atbdId, atbdVersion, threads.data, updateThreadStatus]
   );
 
   return (

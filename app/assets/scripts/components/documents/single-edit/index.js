@@ -23,10 +23,13 @@ import {
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { documentUpdatedDate } from '../../../utils/date';
 import { isClosedReview } from '../status';
+import { useUser } from '../../../context/user';
+import { useCommentCenter } from '../../../context/comment-center';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
   const history = useHistory();
+  const { isLogged } = useUser();
   const {
     atbd,
     fetchSingleAtbd,
@@ -37,9 +40,11 @@ function DocumentEdit() {
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
 
+  const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
   useEffect(() => {
-    fetchSingleAtbd();
-  }, [id, version, fetchSingleAtbd]);
+    isLogged && fetchSingleAtbd();
+  }, [isLogged, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
@@ -61,9 +66,26 @@ function DocumentEdit() {
             history
           });
           break;
+        case 'toggle-comments':
+          if (isPanelOpen) {
+            setPanelOpen(false);
+          } else {
+            openPanelOn({
+              atbdId: atbd.data.id,
+              atbdVersion: atbd.data.version
+            });
+          }
       }
     },
-    [atbd.data, deleteAtbdVersion, history, menuHandler]
+    [
+      atbd.data,
+      deleteAtbdVersion,
+      history,
+      menuHandler,
+      isPanelOpen,
+      setPanelOpen,
+      openPanelOn
+    ]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,

@@ -36,11 +36,7 @@ export default function DocumentHeadline(props) {
   } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
-  const { isPanelOpen, setPanelOpen } = useCommentCenter();
-
-  const togglePanel = useCallback(() => setPanelOpen((v) => !v), [
-    setPanelOpen
-  ]);
+  const { isPanelOpen } = useCommentCenter();
 
   const atbdVersion = versions.find((v) => v.version === version);
 
@@ -88,6 +84,10 @@ export default function DocumentHeadline(props) {
     () => onAction('manage-collaborators'),
     [onAction]
   );
+
+  const onCommentsClick = useCallback(() => onAction('toggle-comments'), [
+    onAction
+  ]);
 
   return (
     <React.Fragment>
@@ -159,7 +159,7 @@ export default function DocumentHeadline(props) {
                 size='small'
                 useIcon='speech-balloon'
                 title='View comments'
-                onClick={togglePanel}
+                onClick={onCommentsClick}
                 active={isPanelOpen}
               >
                 8 comments

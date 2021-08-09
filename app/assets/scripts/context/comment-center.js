@@ -1,4 +1,10 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import T from 'prop-types';
 import { useHistory, useLocation } from 'react-router';
 import useQsStateCreator from 'qs-state-hook';
@@ -19,6 +25,8 @@ export const CommentCenterProvider = ({ children }) => {
   const [isPanelOpen, setPanelOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState('all-section');
   const [selectedStatus, setSelectedStatus] = useState('all-status');
+  const [atbdId, setAtbdId] = useState(null);
+  const [atbdVersion, setAtbdVersion] = useState(null);
   // The key of the editing comment will be `threadId-commentId`
   const [editingCommentKey, setEditingCommentKey] = useState(null);
 
@@ -38,6 +46,28 @@ export const CommentCenterProvider = ({ children }) => {
     )
   );
 
+  useEffect(() => {
+    // When the panel is closed, reset everything.
+    if (!isPanelOpen) {
+      setSelectedSection('all-section');
+      setSelectedStatus('all-status');
+      setAtbdId(null);
+      setAtbdVersion(null);
+      setOpenThreadId(null);
+      setEditingCommentKey(null);
+    }
+  }, [setOpenThreadId, isPanelOpen]);
+
+  const openPanelOn = useCallback(
+    ({ atbdId, atbdVersion, section = 'all-section' }) => {
+      setPanelOpen(true);
+      setAtbdId(atbdId);
+      setAtbdVersion(atbdVersion);
+      setSelectedSection(section);
+    },
+    []
+  );
+
   const contextValue = {
     isPanelOpen,
     setPanelOpen,
@@ -48,7 +78,12 @@ export const CommentCenterProvider = ({ children }) => {
     openThreadId,
     setOpenThreadId,
     editingCommentKey,
-    setEditingCommentKey
+    setEditingCommentKey,
+    atbdId,
+    setAtbdId,
+    atbdVersion,
+    setAtbdVersion,
+    openPanelOn
   };
 
   return (
@@ -68,6 +103,33 @@ const useSafeContextFn = createContextChecker(
   'CommentsCenterContext'
 );
 
-export const useCommentCenter = () => {
-  return useSafeContextFn('useCommentCenter');
+/**
+ * Enables the use of the comment center
+ * When an atbd is provided the stored id and version will be updated when they
+ * change.
+ *
+ * @param {object} opts Options
+ * @param {object} atbd The atbd for which to load comments.
+ */
+export const useCommentCenter = ({ atbd = null } = {}) => {
+  const ctx = useSafeContextFn('useCommentCenter');
+
+  useEffect(() => {
+    if (!atbd?.data) return;
+    // If the panel is open and the atbd changes update the values.
+    // This happens when switching versions.
+
+    // The atbdId must be numeric. The alias does not work.
+    const { id, version } = atbd.data || {};
+    if (ctx.isPanelOpen && id && version) {
+      ctx.openPanelOn({
+        // The atbdId must be numeric. The alias does not work.
+        atbdId: id,
+        atbdVersion: version
+      });
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [atbd, ctx.isPanelOpen, ctx.openPanelOn]);
+
+  return ctx;
 };
