@@ -24,7 +24,10 @@ import { documentDeleteVersionConfirmAndToast } from '../document-delete-process
 import { documentUpdatedDate } from '../../../utils/date';
 import { isClosedReview } from '../status';
 import { useUser } from '../../../context/user';
-import { useCommentCenter } from '../../../context/comment-center';
+import {
+  useCommentCenter,
+  useCommentCenterHistoryHandler
+} from '../../../context/comment-center';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -41,6 +44,9 @@ function DocumentEdit() {
   const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
+  // Se function definition for explanation.
+  useCommentCenterHistoryHandler({ atbd });
 
   useEffect(() => {
     isLogged && fetchSingleAtbd();

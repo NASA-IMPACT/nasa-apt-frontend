@@ -133,3 +133,35 @@ export const useCommentCenter = ({ atbd = null } = {}) => {
 
   return ctx;
 };
+
+/**
+ * To trigger the comment center to open from other pages, we use the history
+ * state as the user is sent from one page to another. This is happening with
+ * the dashboards for example. When the user clicks the comment button, the user
+ * is sent to the atbd view page with {menuAction: <menu-id> } in the history
+ * state. We then capture this, show the comment center and clear the history
+ * state to prevent the modal from popping up on route change.
+ *
+ * @param {object} opts Options
+ * @param {object} atbd The atbd for which to load comments.
+ */
+export const useCommentCenterHistoryHandler = ({ atbd = null } = {}) => {
+  const { openPanelOn } = useSafeContextFn('useCommentCenter');
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    // The atbdId must be numeric. The alias does not work.
+    const { menuAction, ...rest } = location.state || {};
+
+    if (atbd?.data && menuAction === 'toggle-comments') {
+      const { id, version } = atbd.data || {};
+      openPanelOn({
+        atbdId: id,
+        atbdVersion: version
+      });
+      // Using undefined keeps the same path.
+      history.replace(undefined, rest);
+    }
+  }, [atbd, history, location, openPanelOn]);
+};

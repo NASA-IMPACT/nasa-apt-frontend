@@ -332,6 +332,7 @@ export const ThreadsProvider = ({ children }) => {
               // Add comment to the array.
               return {
                 ...state.data,
+                comment_count: state.data.comment_count + 1,
                 comments: state.data.comments.concat(data)
               };
             }

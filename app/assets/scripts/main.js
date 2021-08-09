@@ -144,7 +144,9 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
-          <CommentCenter />
+          <Route path='/documents/:id/:version'>
+            <CommentCenter />
+          </Route>
           {process.env.NODE_ENV === 'development' && <AptDevtools />}
         </Composer>
         <ToastsContainer />

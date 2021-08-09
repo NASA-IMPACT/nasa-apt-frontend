@@ -37,7 +37,10 @@ import { documentDeleteVersionConfirmAndToast } from '../document-delete-process
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
 import { documentUpdatedDate } from '../../../utils/date';
 import { useUser } from '../../../context/user';
-import { useCommentCenter } from '../../../context/comment-center';
+import {
+  useCommentCenter,
+  useCommentCenterHistoryHandler
+} from '../../../context/comment-center';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -143,6 +146,9 @@ function DocumentView() {
   const atbdFevActions = useSingleAtbdEvents({ id, version });
 
   const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
+  // Se function definition for explanation.
+  useCommentCenterHistoryHandler({ atbd });
 
   useEffect(() => {
     isLogged && fetchSingleAtbd();

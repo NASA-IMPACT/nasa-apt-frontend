@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-// import { Button } from '@devseed-ui/button';
+import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
@@ -44,6 +44,14 @@ function DocumentDashboardEntry(props) {
 
   const onCollaboratorMenuOptionsClick = useCallback(
     () => onAction('manage-collaborators'),
+    [onAction]
+  );
+
+  const onViewCommentsClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      onAction('toggle-comments');
+    },
     [onAction]
   );
 
@@ -91,17 +99,18 @@ function DocumentDashboardEntry(props) {
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
-            {/* <li>
+            <li>
               <Button
                 forwardedAs={Link}
                 size='small'
                 useIcon='speech-balloon'
-                to='/'
+                to={documentView(atbd)}
+                onClick={onViewCommentsClick}
                 title='View comments'
               >
                 8 comments
               </Button>
-            </li> */}
+            </li>
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
