@@ -12,12 +12,11 @@ import { ContentBlock, Wrapper } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
 import StatusPill from '../../common/status-pill';
 import {
-  ProgressEntry,
-  ProgressItem,
-  ProgressTracker,
-  EntryTitle,
-  SubEntryTitle,
-  SubTracker
+  Tracker,
+  TrackerEntry,
+  TrackerEntryTitle,
+  SubTracker,
+  SubTrackerEntryTitle
 } from '../../../styles/progress-tracker';
 
 function SandboxElements() {
@@ -53,51 +52,65 @@ function SandboxElements() {
               <h2>Progress tracker</h2>
             </Prose>
             <Wrapper>
-              <ProgressTracker>
-                <ProgressItem>
-                  <ProgressEntry>
-                    <EntryTitle>Draft</EntryTitle>
+              <Tracker>
+                <li>
+                  <TrackerEntry>
+                    <TrackerEntryTitle>One</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
                       libero urna. Cras luctus, lorem ac commodo placerat, augue
                       leo eleifend nisi, vel sollicitudin felis orci ut leo.
                     </p>
-                  </ProgressEntry>
+                  </TrackerEntry>
                   <SubTracker>
                     <li>
-                      <SubEntryTitle>Sub entry 1</SubEntryTitle>
+                      <TrackerEntry>
+                        <SubTrackerEntryTitle>Sub entry 1</SubTrackerEntryTitle>
+                      </TrackerEntry>
                     </li>
                     <li>
-                      <SubEntryTitle>Sub entry 2</SubEntryTitle>
+                      <TrackerEntry>
+                        <SubTrackerEntryTitle>Sub entry 2</SubTrackerEntryTitle>
+                      </TrackerEntry>
                     </li>
                   </SubTracker>
-                </ProgressItem>
-
-                <ProgressItem>
-                  <ProgressEntry>
-                    <EntryTitle>In closed review</EntryTitle>
+                </li>
+                <li>
+                  <TrackerEntry>
+                    <TrackerEntryTitle>Two</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
                       libero urna. Cras luctus, lorem ac commodo placerat, augue
                       leo eleifend nisi, vel sollicitudin felis orci ut leo.
                     </p>
-                  </ProgressEntry>
-                </ProgressItem>
-
-                <ProgressItem>
-                  <ProgressEntry>
-                    <EntryTitle>In review</EntryTitle>
+                  </TrackerEntry>
+                </li>
+                <li>
+                  <TrackerEntry>
+                    <TrackerEntryTitle>Third</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
                       libero urna. Cras luctus, lorem ac commodo placerat, augue
                       leo eleifend nisi, vel sollicitudin felis orci ut leo.
                     </p>
-                  </ProgressEntry>
-                </ProgressItem>
-              </ProgressTracker>
+                  </TrackerEntry>
+                  <SubTracker>
+                    <li>
+                      <TrackerEntry>
+                        <SubTrackerEntryTitle>Sub entry 1</SubTrackerEntryTitle>
+                      </TrackerEntry>
+                    </li>
+                    <li>
+                      <TrackerEntry>
+                        <SubTrackerEntryTitle>Sub entry 2</SubTrackerEntryTitle>
+                      </TrackerEntry>
+                    </li>
+                  </SubTracker>
+                </li>
+              </Tracker>
             </Wrapper>
           </ContentBlock>
         </InpageBody>

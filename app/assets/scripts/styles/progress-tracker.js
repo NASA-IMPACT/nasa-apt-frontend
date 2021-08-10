@@ -1,112 +1,110 @@
 import styled from 'styled-components';
 import { tint } from 'polished';
-import { glsp, stylizeFunction, themeVal } from '@devseed-ui/theme-provider';
+import {
+  divide,
+  glsp,
+  stylizeFunction,
+  themeVal
+} from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
 const _tint = stylizeFunction(tint);
 const railSize = '1.75rem';
 
-export const ProgressTracker = styled.ol`
-  list-style: none !important;
-  padding: ${glsp(0)} !important;
-  margin: 0 !important;
-  position: relative;
+export const Tracker = styled.ol`
+  li {
+    position: relative;
+    padding-left: ${glsp(3)};
+    padding-top: ${glsp(2)};
 
-  &::before {
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    content: '';
-    width: ${railSize};
-    border-radius: ${themeVal('shape.ellipsoid')};
-    pointer-events: none;
-    background: transparent
-      linear-gradient(
-        90deg,
-        ${themeVal('color.baseAlphaC')},
-        ${themeVal('color.baseAlphaC')}
-      )
-      50% / 4px auto no-repeat;
+    &::before {
+      position: absolute;
+      left: 0;
+      z-index: 2;
+      content: '';
+      display: inline-flex;
+      height: ${railSize};
+      aspect-ratio: 1 / 1;
+      align-items: center;
+      justify-content: center;
+      font-weight: ${themeVal('type.base.bold')};
+      color: ${themeVal('color.baseLight')};
+      background: ${_tint(0.36, themeVal('color.base'))};
+      box-shadow: 0 0 0 4px ${themeVal('color.surface')};
+      border-radius: ${themeVal('shape.ellipsoid')};
+      font-size: 0.75em;
+      line-height: inherit;
+      overflow: hidden;
+    }
+
+    &::after {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      content: '';
+      width: ${railSize};
+      pointer-events: none;
+      background: transparent
+        linear-gradient(
+          90deg,
+          ${_tint(0.92, themeVal('color.base'))},
+          ${_tint(0.92, themeVal('color.base'))}
+        )
+        50% / 4px auto no-repeat;
+    }
+  }
+
+  > li {
+    counter-increment: item;
+
+    &::before {
+      content: counter(item);
+    }
+  }
+
+  > li:first-child {
+    padding-top: 0;
+  }
+
+  > li > ol {
+    margin-left: -${glsp(3)};
+  }
+
+  > li > ol > li {
+    padding-top: ${glsp(1)};
+  }
+
+  > li > ol > li::before {
+    height: ${divide(railSize, 2)};
+    transform: translate(50%, 0);
+    margin-top: 0.3rem;
   }
 `;
 
-export const ProgressItem = styled.li`
-  padding: ${glsp(0, 0, 0, 2.5)};
-  margin-bottom: ${glsp(2)};
-  counter-increment: item;
-
-  &:last-child {
-    margin-bottom: 0;
+export const TrackerEntry = styled.article`
+  > *:last-child {
+    margin-bottom: 0px;
   }
 `;
 
-export const ProgressEntry = styled.article`
-  background: transparent;
-`;
-
-export const EntryTitle = styled(Heading)`
+export const TrackerEntryTitle = styled(Heading).attrs({
+  as: 'h1'
+})`
   font-size: 1.25rem;
   line-height: 1.75rem;
-  margin: 0;
-
-  &::before {
-    transform: translate(-2rem, 0);
-    z-index: 2;
-    content: counter(item);
-    display: inline-flex;
-    height: 2rem;
-    aspect-ratio: 1 / 1;
-    align-items: center;
-    justify-content: center;
-    font-weight: ${themeVal('type.base.bold')};
-    color: ${themeVal('color.baseLight')};
-    background: ${_tint(0.36, themeVal('color.base'))};
-    box-shadow: 0 0 0 4px ${themeVal('color.surface')};
-    border-radius: ${themeVal('shape.ellipsoid')};
-    font-size: 0.75em;
-    line-height: inherit;
-    overflow: hidden;
-  }
+  margin: ${glsp(0, 0, 0.25, 0)};
 `;
 
 export const SubTracker = styled.ol`
-  list-style: none !important;
-  padding: ${glsp(0)} !important;
-  margin: 0 !important;
-
-  > * {
-    margin: 0.5rem 0 !important;
-  }
+  background: transparent;
 `;
 
-export const SubEntryTitle = styled(Heading)`
+export const SubTrackerEntryTitle = styled(Heading).attrs({
+  as: 'h2'
+})`
   font-size: 1rem;
   line-height: 1.5rem;
-  margin: 0;
-
-  &::before {
-    position: absolute;
-    left: 0;
-    z-index: 2;
-    content: '';
-    display: flex;
-    width: ${railSize};
-    height: ${railSize};
-    align-items: center;
-    justify-content: center;
-    font-weight: ${themeVal('type.base.bold')};
-    text-transform: uppercase;
-    color: ${themeVal('color.baseLight')};
-    background: ${_tint(0.36, themeVal('color.base'))};
-    box-shadow: 0 0 0 4px ${themeVal('color.surface')};
-    border-radius: ${themeVal('shape.ellipsoid')};
-    padding: 0.5em 1em;
-    font-size: 0.75em;
-    line-height: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    pointer-events: none;
-  }
+  margin: ${glsp(0, 0, 0.25, 0)};
 `;
