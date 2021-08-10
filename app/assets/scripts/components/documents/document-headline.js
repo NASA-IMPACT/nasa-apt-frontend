@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { Button } from '@devseed-ui/button';
 
 import {
   InpageHeadline,
@@ -17,26 +16,24 @@ import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 import { DateButton } from '../common/date';
 import { CollaboratorsMenu } from './collaborators-menu';
+import DocumentCommentsButton from './document-comment-button';
 
 import { useContextualAbility } from '../../a11n';
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
 import { useCommentCenter } from '../../context/comment-center';
+import getDocumentIdKey from './get-document-id-key';
 
 // Component with the Breadcrumb navigation header for a single ATBD.
 export default function DocumentHeadline(props) {
-  const {
-    title,
-    atbdId,
-    version,
-    mode,
-    versions,
-    updatedDate,
-    onAction
-  } = props;
+  const { atbd, mode, onAction } = props;
   const { isLogged } = useUser();
   const ability = useContextualAbility();
   const { isPanelOpen } = useCommentCenter();
+
+  const { title, version, versions, last_updated_at } = atbd;
+  const atbdIdOrAlias = getDocumentIdKey(atbd).id;
+  const updatedDate = new Date(last_updated_at);
 
   const atbdVersion = versions.find((v) => v.version === version);
 
@@ -48,7 +45,7 @@ export default function DocumentHeadline(props) {
       label: 'Viewing',
       title: `Switch to viewing mode`,
       as: Link,
-      to: documentView(atbdId, version)
+      to: documentView(atbd, version)
     };
     return {
       id: 'mode',
@@ -61,12 +58,12 @@ export default function DocumentHeadline(props) {
               label: 'Editing',
               title: `Switch to editing mode`,
               as: Link,
-              to: documentEdit(atbdId, version)
+              to: documentEdit(atbd, version)
             }
           ]
         : [viewATBD]
     };
-  }, [atbdId, version, canEditATBD]);
+  }, [atbd, version, canEditATBD]);
 
   const dropdownMenuTriggerProps = useMemo(
     () => ({
@@ -94,7 +91,7 @@ export default function DocumentHeadline(props) {
       <InpageHeadline>
         <InpageHeadHgroup>
           <TruncatedInpageTitle>
-            <Link to={documentView(atbdId, version)} title={`View ${title}`}>
+            <Link to={documentView(atbd, version)} title={`View ${title}`}>
               {title}
             </Link>
           </TruncatedInpageTitle>
@@ -102,7 +99,7 @@ export default function DocumentHeadline(props) {
             <BreadcrumbMenu>
               <li>
                 <VersionsMenu
-                  atbdId={atbdId}
+                  atbdId={atbdIdOrAlias}
                   versions={versions}
                   variation='achromic-plain'
                   version={version}
@@ -142,7 +139,7 @@ export default function DocumentHeadline(props) {
                 variation='achromic-plain'
                 prefix='Updated'
                 date={updatedDate}
-                to={documentView(atbdId, version)}
+                to={documentView(atbd, version)}
                 title={`View ${title}`}
               />
             </li>
@@ -154,16 +151,13 @@ export default function DocumentHeadline(props) {
               />
             </li>
             <li>
-              <Button
+              <DocumentCommentsButton
                 variation='achromic-plain'
                 size='small'
-                useIcon='speech-balloon'
-                title='View comments'
                 onClick={onCommentsClick}
                 active={isPanelOpen}
-              >
-                8 comments
-              </Button>
+                atbd={atbd}
+              />
             </li>
           </InpageMeta>
         )}
@@ -173,11 +167,7 @@ export default function DocumentHeadline(props) {
 }
 
 DocumentHeadline.propTypes = {
-  title: T.string,
-  atbdId: T.oneOfType([T.string, T.number]),
-  version: T.string,
-  versions: T.array,
-  updatedDate: T.object,
+  atbd: T.object,
   onAction: T.func,
   mode: T.string
 };

@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
@@ -20,6 +19,7 @@ import {
 } from '../../styles/documents/list';
 import DocumentActionsMenu from '../documents/document-actions-menu';
 import DocumentGovernanceAction from '../documents/document-governance-action';
+import DocumentCommentsButton from '../documents/document-comment-button';
 
 import { documentView } from '../../utils/url-creator';
 import { computeAtbdVersion } from '../../context/atbds-list';
@@ -95,21 +95,17 @@ function DocumentDashboardEntry(props) {
             <li>
               <CollaboratorsMenu
                 onOptionsClick={onCollaboratorMenuOptionsClick}
-                atbdVersion={lastVersion}
+                atbdId={lastVersion.id}
+                version={lastVersion.version}
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
             <li>
-              <Button
-                forwardedAs={Link}
-                size='small'
-                useIcon='speech-balloon'
-                to={documentView(atbd)}
+              <DocumentCommentsButton
                 onClick={onViewCommentsClick}
-                title='View comments'
-              >
-                8 comments
-              </Button>
+                size='small'
+                atbd={lastVersion}
+              />
             </li>
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
