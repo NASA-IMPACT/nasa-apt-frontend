@@ -1,65 +1,41 @@
 import styled from 'styled-components';
-import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { tint } from 'polished';
+import { glsp, stylizeFunction, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 
-export const ProgressTracker = styled.section`
-  display: grid;
-  grid-template-rows: 1fr;
-`;
+const _tint = stylizeFunction(tint);
+const railSize = '1.75rem';
 
-export const ProgressList = styled.ol`
+export const ProgressTracker = styled.ol`
   list-style: none !important;
-  padding: ${glsp(2, 0)} !important;
+  padding: ${glsp(0)} !important;
   margin: 0 !important;
-
   position: relative;
 
   &::before {
     position: absolute;
-    left: 50%;
-    top: 0;
-    content: '';
-    display: block;
-    width: 2px;
-    height: 100%;
-    background: ${themeVal('color.baseAlphaC')};
     z-index: 1;
-    transform: translate(-50%, 0);
+    left: 0;
+    top: 0;
+    bottom: 0;
+    content: '';
+    width: ${railSize};
+    border-radius: ${themeVal('shape.ellipsoid')};
     pointer-events: none;
+    background: transparent
+      linear-gradient(
+        90deg,
+        ${themeVal('color.baseAlphaC')},
+        ${themeVal('color.baseAlphaC')}
+      )
+      50% / 4px auto no-repeat;
   }
 `;
 
-export const ProgressListItem = styled.li`
-  background: transparent;
-  width: calc(50% - 2rem);
+export const ProgressItem = styled.li`
+  padding: ${glsp(0, 0, 0, 2.5)};
   margin-bottom: ${glsp(2)};
   counter-increment: item;
-  clear: both;
-
-  &::before {
-    position: absolute;
-    left: 50%;
-    z-index: 2;
-    transform: translate(-50%, 0);
-    pointer-events: none;
-    content: counter(item);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 2rem;
-    width: 2rem;
-    color: ${themeVal('color.baseLight')};
-    background-color: ${rgba(themeVal('color.base'), 0.48)};
-    border-radius: ${themeVal('shape.ellipsoid')};
-  }
-
-  &:nth-child(odd) {
-    float: left;
-  }
-
-  &:nth-child(even) {
-    float: right;
-  }
 
   &:last-child {
     margin-bottom: 0;
@@ -67,20 +43,70 @@ export const ProgressListItem = styled.li`
 `;
 
 export const ProgressEntry = styled.article`
-  padding: ${glsp(themeVal('layout.gap.xsmall'))};
-  border-radius: ${themeVal('shape.rounded')};
-  box-shadow: ${themeVal('boxShadow.elevationB')};
-  background: ${themeVal('color.surface')};
-
-  h1 {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    margin: 0;
-  }
+  background: transparent;
 `;
 
-export const ProgressEntryTitle = styled(Heading)`
+export const EntryTitle = styled(Heading)`
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: 0;
+
+  &::before {
+    transform: translate(-2rem, 0);
+    z-index: 2;
+    content: counter(item);
+    display: inline-flex;
+    height: 2rem;
+    aspect-ratio: 1 / 1;
+    align-items: center;
+    justify-content: center;
+    font-weight: ${themeVal('type.base.bold')};
+    color: ${themeVal('color.baseLight')};
+    background: ${_tint(0.36, themeVal('color.base'))};
+    box-shadow: 0 0 0 4px ${themeVal('color.surface')};
+    border-radius: ${themeVal('shape.ellipsoid')};
+    font-size: 0.75em;
+    line-height: inherit;
+    overflow: hidden;
+  }
+`;
+
+export const SubTracker = styled.ol`
+  list-style: none !important;
+  padding: ${glsp(0)} !important;
+  margin: 0 !important;
+
+  > * {
+    margin: 0.5rem 0 !important;
+  }
+`;
+
+export const SubEntryTitle = styled(Heading)`
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin: 0;
+
+  &::before {
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    content: '';
+    display: flex;
+    width: ${railSize};
+    height: ${railSize};
+    align-items: center;
+    justify-content: center;
+    font-weight: ${themeVal('type.base.bold')};
+    text-transform: uppercase;
+    color: ${themeVal('color.baseLight')};
+    background: ${_tint(0.36, themeVal('color.base'))};
+    box-shadow: 0 0 0 4px ${themeVal('color.surface')};
+    border-radius: ${themeVal('shape.ellipsoid')};
+    padding: 0.5em 1em;
+    font-size: 0.75em;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
 `;
