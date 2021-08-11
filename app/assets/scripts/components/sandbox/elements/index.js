@@ -13,6 +13,7 @@ import Prose from '../../../styles/typography/prose';
 import StatusPill from '../../common/status-pill';
 import {
   Tracker,
+  TrackerItem,
   TrackerEntry,
   TrackerEntryTitle,
   SubTracker,
@@ -53,7 +54,7 @@ function SandboxElements() {
             </Prose>
             <Wrapper>
               <Tracker>
-                <li>
+                <TrackerItem status='complete'>
                   <TrackerEntry>
                     <TrackerEntryTitle>One</TrackerEntryTitle>
                     <p>
@@ -64,19 +65,19 @@ function SandboxElements() {
                     </p>
                   </TrackerEntry>
                   <SubTracker>
-                    <li>
+                    <TrackerItem>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 1</SubTrackerEntryTitle>
                       </TrackerEntry>
-                    </li>
-                    <li>
+                    </TrackerItem>
+                    <TrackerItem>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 2</SubTrackerEntryTitle>
                       </TrackerEntry>
-                    </li>
+                    </TrackerItem>
                   </SubTracker>
-                </li>
-                <li>
+                </TrackerItem>
+                <TrackerItem>
                   <TrackerEntry>
                     <TrackerEntryTitle>Two</TrackerEntryTitle>
                     <p>
@@ -86,8 +87,8 @@ function SandboxElements() {
                       leo eleifend nisi, vel sollicitudin felis orci ut leo.
                     </p>
                   </TrackerEntry>
-                </li>
-                <li>
+                </TrackerItem>
+                <TrackerItem>
                   <TrackerEntry>
                     <TrackerEntryTitle>Third</TrackerEntryTitle>
                     <p>
@@ -98,18 +99,18 @@ function SandboxElements() {
                     </p>
                   </TrackerEntry>
                   <SubTracker>
-                    <li>
+                    <TrackerItem>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 1</SubTrackerEntryTitle>
                       </TrackerEntry>
-                    </li>
-                    <li>
+                    </TrackerItem>
+                    <TrackerItem>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 2</SubTrackerEntryTitle>
                       </TrackerEntry>
-                    </li>
+                    </TrackerItem>
                   </SubTracker>
-                </li>
+                </TrackerItem>
               </Tracker>
             </Wrapper>
           </ContentBlock>

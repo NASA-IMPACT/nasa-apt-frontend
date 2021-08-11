@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { tint } from 'polished';
 import {
+  add,
   divide,
   glsp,
   stylizeFunction,
@@ -10,11 +11,12 @@ import { Heading } from '@devseed-ui/typography';
 
 const _tint = stylizeFunction(tint);
 const railSize = '1.75rem';
+const innerSpace = 0.75;
 
 export const Tracker = styled.ol`
   li {
     position: relative;
-    padding-left: ${glsp(3)};
+    padding-left: ${add(railSize, innerSpace)};
     padding-top: ${glsp(2)};
 
     &::before {
@@ -22,7 +24,7 @@ export const Tracker = styled.ol`
       left: 0;
       z-index: 2;
       content: '';
-      display: inline-flex;
+      display: flex;
       height: ${railSize};
       aspect-ratio: 1 / 1;
       align-items: center;
@@ -33,8 +35,7 @@ export const Tracker = styled.ol`
       box-shadow: 0 0 0 4px ${themeVal('color.surface')};
       border-radius: ${themeVal('shape.ellipsoid')};
       font-size: 0.75em;
-      line-height: inherit;
-      overflow: hidden;
+      line-height: 1;
     }
 
     &::after {
@@ -52,7 +53,7 @@ export const Tracker = styled.ol`
           ${_tint(0.92, themeVal('color.base'))},
           ${_tint(0.92, themeVal('color.base'))}
         )
-        50% / 4px auto no-repeat;
+        50% / ${glsp(0.25)} auto no-repeat;
     }
   }
 
@@ -69,11 +70,11 @@ export const Tracker = styled.ol`
   }
 
   > li > ol {
-    margin-left: -${glsp(3)};
+    margin-left: -${add(railSize, innerSpace)};
   }
 
   > li > ol > li {
-    padding-top: ${glsp(1)};
+    padding-top: ${glsp()};
   }
 
   > li > ol > li::before {
@@ -81,6 +82,25 @@ export const Tracker = styled.ol`
     transform: translate(50%, 0);
     margin-top: 0.3rem;
   }
+`;
+
+export const TrackerItem = styled.li`
+  background: transparent;
+
+  ${({ status }) =>
+    status === 'progress'
+      ? css`
+          &&::before {
+            background: yellow;
+          }
+        `
+      : status === 'complete'
+      ? css`
+          &&::before {
+            background: green;
+          }
+        `
+      : null}
 `;
 
 export const TrackerEntry = styled.article`
