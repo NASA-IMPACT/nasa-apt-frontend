@@ -83,6 +83,7 @@ export default function StepContacts(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('contacts')}
                   sectionName='sections_completed.contacts'
+                  commentSection='contacts'
                 >
                   <p>
                     <em>

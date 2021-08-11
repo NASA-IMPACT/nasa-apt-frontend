@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Button } from '@devseed-ui/button';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
+import { glsp } from '@devseed-ui/theme-provider';
 
 import {
   PanelHeader,
@@ -36,6 +37,10 @@ import { useUser } from '../../context/user';
 
 const CommentShadowScrollbar = styled(ShadowScrollbar)`
   height: 100%;
+`;
+
+const EmptyCommentList = styled(EmptyComment)`
+  padding: ${glsp(2)};
 `;
 
 function ThreadListPanelContents() {
@@ -247,7 +252,7 @@ function ThreadListPanelContents() {
                   ))}
                 </CommentList>
               ) : (
-                <EmptyComment>
+                <EmptyCommentList>
                   {selectedSection !== 'all-section' ||
                   selectedStatus !== 'all-status' ? (
                     <p>There are no threads that match the current filters.</p>
@@ -257,7 +262,7 @@ function ThreadListPanelContents() {
                       <p>Say something!</p>
                     </React.Fragment>
                   )}
-                </EmptyComment>
+                </EmptyCommentList>
               );
             }}
           />

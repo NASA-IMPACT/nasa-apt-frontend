@@ -10,6 +10,7 @@ import { useHistory, useLocation } from 'react-router';
 import useQsStateCreator from 'qs-state-hook';
 
 import { createContextChecker } from '../utils/create-context-checker';
+import { useEffectPrevious } from '../utils/use-effect-previous';
 
 // Context
 export const CommentsCenterContext = createContext(null);
@@ -49,8 +50,10 @@ export const CommentCenterProvider = ({ children }) => {
   const openPanelOn = useCallback(
     ({ atbdId, atbdVersion, section = 'all-section' }) => {
       setPanelOpen(true);
-      setAtbdId(atbdId);
-      setAtbdVersion(atbdVersion);
+      if (atbdId && atbdVersion) {
+        setAtbdId(atbdId);
+        setAtbdVersion(atbdVersion);
+      }
       setSelectedSection(section);
       setEditingCommentKey(null);
     },
@@ -103,22 +106,27 @@ const useSafeContextFn = createContextChecker(
 export const useCommentCenter = ({ atbd = null } = {}) => {
   const ctx = useSafeContextFn('useCommentCenter');
 
-  useEffect(() => {
-    if (!atbd?.data) return;
-    // If the panel is open and the atbd changes update the values.
-    // This happens when switching versions.
+  const { id, version } = atbd?.data || {};
 
-    // The atbdId must be numeric. The alias does not work.
-    const { id, version } = atbd.data || {};
-    if (ctx.isPanelOpen && id && version) {
-      ctx.openPanelOn({
-        // The atbdId must be numeric. The alias does not work.
-        atbdId: id,
-        atbdVersion: version
-      });
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [atbd, ctx.isPanelOpen, ctx.openPanelOn]);
+  useEffectPrevious(
+    (prev) => {
+      if (!id || !version) return;
+      ctx.setAtbdId(id);
+      ctx.setAtbdVersion(version);
+
+      // If the panel is open and the atbd changes update the values.
+      // This happens when switching versions.
+      const [prevId, prevVersion] = prev || [];
+      if ((prevId !== id || prevVersion !== version) && ctx.isPanelOpen) {
+        ctx.openPanelOn({
+          // The atbdId must be numeric. The alias does not work.
+          atbdId: id,
+          atbdVersion: version
+        });
+      }
+    },
+    [id, version, ctx.isPanelOpen, ctx.openPanelOn]
+  );
 
   return ctx;
 };

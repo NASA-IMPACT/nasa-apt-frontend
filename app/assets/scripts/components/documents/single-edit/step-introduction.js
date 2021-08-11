@@ -40,6 +40,7 @@ export default function StepIntroduction(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('introduction')}
                   sectionName='sections_completed.introduction'
+                  commentSection='introduction'
                 >
                   <FormikInputEditor
                     id='introduction'
@@ -52,6 +53,7 @@ export default function StepIntroduction(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('historical_perspective')}
                   sectionName='sections_completed.historical_perspective'
+                  commentSection='historical_perspective'
                 >
                   <FormikInputEditor
                     id='historical_perspective'

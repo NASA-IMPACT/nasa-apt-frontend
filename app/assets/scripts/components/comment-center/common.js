@@ -11,6 +11,8 @@ const InfoMsgComment = styled.div`
   flex-flow: column;
   align-items: center;
   padding: ${glsp(2, 1)};
+  gap: ${glsp()};
+  text-align: center;
 
   ::before {
     ${({ useIcon }) => useIcon && collecticon(useIcon)}
