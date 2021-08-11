@@ -23,6 +23,7 @@ import { Can } from '../../a11n';
 import { documentEdit } from '../../utils/url-creator';
 import { citationFields, createBibtexCitation } from './citation';
 import { downloadTextFile } from '../../utils/download-text-file';
+import { getDocumentStatusLabel } from './status';
 
 const TabsNavModal = styled(TabsNav)`
   margin: ${glsp(0, -2, 1, -2)};
@@ -141,7 +142,7 @@ function TabGeneral(props) {
         <dt>Created by</dt>
         <dd>Admin</dd>
         <dt>Status</dt>
-        <dd>{atbd.status}</dd>
+        <dd>{getDocumentStatusLabel(atbd)}</dd>
         <dt>Last update</dt>
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
       </DocInfoList>
