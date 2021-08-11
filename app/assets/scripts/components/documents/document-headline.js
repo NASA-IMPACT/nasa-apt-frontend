@@ -82,9 +82,13 @@ export default function DocumentHeadline(props) {
     [onAction]
   );
 
-  const onCommentsClick = useCallback(() => onAction('toggle-comments'), [
-    onAction
-  ]);
+  const onCommentsClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      onAction('toggle-comments');
+    },
+    [onAction]
+  );
 
   return (
     <React.Fragment>

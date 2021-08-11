@@ -46,24 +46,13 @@ export const CommentCenterProvider = ({ children }) => {
     )
   );
 
-  useEffect(() => {
-    // When the panel is closed, reset everything.
-    if (!isPanelOpen) {
-      setSelectedSection('all-section');
-      setSelectedStatus('all-status');
-      setAtbdId(null);
-      setAtbdVersion(null);
-      setOpenThreadId(null);
-      setEditingCommentKey(null);
-    }
-  }, [setOpenThreadId, isPanelOpen]);
-
   const openPanelOn = useCallback(
     ({ atbdId, atbdVersion, section = 'all-section' }) => {
       setPanelOpen(true);
       setAtbdId(atbdId);
       setAtbdVersion(atbdVersion);
       setSelectedSection(section);
+      setEditingCommentKey(null);
     },
     []
   );

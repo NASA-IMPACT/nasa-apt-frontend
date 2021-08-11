@@ -27,6 +27,7 @@ import {
   useCommentCenter,
   useCommentCenterHistoryHandler
 } from '../../../context/comment-center';
+import { useThreadStats } from '../../../context/threads-list';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -41,11 +42,22 @@ function DocumentEdit() {
   } = useSingleAtbd({ id, version });
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
+  // Thread stats - function for initial fetching which stores the document for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
 
   const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
 
   // Se function definition for explanation.
   useCommentCenterHistoryHandler({ atbd });
+
+  // Fetch the thread stats list to show in the button when the document loads.
+  useEffect(() => {
+    if (atbd.status === 'succeeded') {
+      fetchThreadsStatsForAtbds(atbd.data);
+    }
+  }, [atbd, fetchThreadsStatsForAtbds]);
 
   useEffect(() => {
     isLogged && fetchSingleAtbd();

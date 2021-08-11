@@ -15,7 +15,7 @@ import CommentEntry, { THREAD_REPLY, THREAD_SINGLE } from './comment-entry';
 import CommentLoadingProcess from './comment-loading-process';
 
 import { useCommentCenter } from '../../context/comment-center';
-import { useSingleThread } from '../../context/threads-list';
+import { useSingleThread, useThreadStats } from '../../context/threads-list';
 import {
   useSubmitThreadComment,
   useSubmitUpdateThread
@@ -65,6 +65,8 @@ function ThreadSinglePanelContents() {
     isLogged && fetchSingleThread();
   }, [isLogged, fetchSingleThread]);
 
+  const { refreshThreadStats } = useThreadStats();
+
   const onCommentEditCancel = useCallback(() => setEditingCommentKey(null), [
     setEditingCommentKey
   ]);
@@ -77,14 +79,18 @@ function ThreadSinglePanelContents() {
   });
 
   const onResolveClick = useCallback(
-    (threadId) => {
+    async (threadId) => {
       const thread = threadCtx.data;
-      updateThreadStatus({
+      const result = await updateThreadStatus({
         threadId,
         status: thread.status === THREAD_CLOSED ? THREAD_OPEN : THREAD_CLOSED
       });
+      // If a thread was updated refetch the stats. The atbd to fetch for was
+      // stored when the stats were first fetched. This is just a refetching
+      // function.
+      !result.error && refreshThreadStats();
     },
-    [threadCtx.data, updateThreadStatus]
+    [threadCtx.data, updateThreadStatus, refreshThreadStats]
   );
 
   const onCommentEntryMenuAction = useCallback(
@@ -96,6 +102,10 @@ function ThreadSinglePanelContents() {
             deleteFn: deleteThread
           });
           result && setOpenThreadId(null);
+          // If a thread was deleted refetch the stats. The atbd to fetch for
+          // was stored when the stats were first fetched. This is just a
+          // refetching function.
+          result && refreshThreadStats();
           break;
         }
         case 'delete-comment':
@@ -117,7 +127,8 @@ function ThreadSinglePanelContents() {
       threadId,
       setEditingCommentKey,
       deleteThread,
-      deleteThreadComment
+      deleteThreadComment,
+      refreshThreadStats
     ]
   );
 

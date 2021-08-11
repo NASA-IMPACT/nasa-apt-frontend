@@ -1,11 +1,13 @@
 import React, { createContext, useCallback } from 'react';
 import T from 'prop-types';
 import qs from 'qs';
+import castArray from 'lodash.castarray';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 import { useContexeedApi } from '../utils/contexeed-v2';
 import { createContextChecker } from '../utils/create-context-checker';
+import useSafeState from '../utils/use-safe-state';
 
 // Context
 export const ThreadsContext = createContext(null);
@@ -435,6 +437,28 @@ export const ThreadsProvider = ({ children }) => {
     [token]
   );
 
+  const [atbdsForStats, setAtbdsForStats] = useSafeState(null);
+
+  const { getState: getThreadsStats, fetchThreadsStats } = useContexeedApi(
+    {
+      name: 'threadsStats',
+      requests: {
+        fetchThreadsStats: withRequestToken(token, ({ atbds }) => ({
+          skipStateCheck: true,
+          url: `/threads/stats?${qs.stringify(
+            {
+              atbds: castArray(atbds).map(
+                ({ id, version }) => `${id}_${version}`
+              )
+            },
+            { arrayFormat: 'repeat' }
+          )}`
+        }))
+      }
+    },
+    [token]
+  );
+
   const contextValue = {
     invalidateListThreads,
     getThreads,
@@ -446,7 +470,11 @@ export const ThreadsProvider = ({ children }) => {
     createThreadsComment,
     deleteThreadsSingle,
     deleteThreadsComment,
-    updateThreadsComment
+    updateThreadsComment,
+    atbdsForStats,
+    setAtbdsForStats,
+    getThreadsStats,
+    fetchThreadsStats
   };
 
   return (
@@ -481,8 +509,11 @@ export const useThreads = ({ atbdId, atbdVersion }) => {
     ]),
     threads: getThreads(sliceKey),
     fetchThreads: useCallback(
-      ({ status, section }) =>
-        fetchThreadsList({ atbdId, atbdVersion, status, section }),
+      ({ status, section }) => {
+        return atbdId && atbdVersion
+          ? fetchThreadsList({ atbdId, atbdVersion, status, section })
+          : null;
+      },
       [atbdId, atbdVersion, fetchThreadsList]
     ),
     createThread: useCallback(
@@ -548,6 +579,55 @@ export const useSingleThread = ({ threadId } = {}) => {
           threadId: threadIdIn || threadId
         }),
       [threadId, updateThreadsComment]
+    )
+  };
+};
+
+/**
+ * The thread stats need to be refetched every time something happens that
+ * changes the thread stats. This can be a thread being resolved, created or
+ * deleted.
+ * It is hard to carry around the ids and versions of the documents to fetch the
+ * stats for, therefore they are stored when the first fetch is done with
+ * fetchThreadsStatsForAtbds and reused with refreshThreadStats.
+ * Refreshing the thread stats will always happen in the context of an atbd
+ * being viewed, which means that there will be an initial fetch and atbds will
+ * have been set.
+ */
+export const useThreadStats = () => {
+  const {
+    getThreadsStats,
+    fetchThreadsStats,
+    atbdsForStats,
+    setAtbdsForStats
+  } = useSafeContextFn('useThreadStats');
+
+  return {
+    fetchThreadsStatsForAtbds: useCallback(
+      (atbds) => {
+        if (!atbds) return;
+        const docs = castArray(atbds);
+        setAtbdsForStats(docs);
+        fetchThreadsStats({ atbds: docs });
+      },
+      [setAtbdsForStats, fetchThreadsStats]
+    ),
+    refreshThreadStats: useCallback(
+      () => atbdsForStats && fetchThreadsStats({ atbds: atbdsForStats }),
+      [atbdsForStats, fetchThreadsStats]
+    ),
+    getThreadsStats: useCallback(
+      ({ atbdId, atbdVersion }) => {
+        const state = getThreadsStats();
+        if (state.status !== 'succeeded') return null;
+
+        return (
+          state.data.find(
+            (stat) => stat.atbd_id === atbdId && stat.version === atbdVersion
+          ) || null
+        );
+      },
+      [getThreadsStats]
     )
   };
 };

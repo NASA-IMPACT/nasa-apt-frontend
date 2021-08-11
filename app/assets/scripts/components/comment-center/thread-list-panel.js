@@ -16,7 +16,11 @@ import CommentSectionsMenu from './comment-sections-menu';
 import CommentLoadingProcess from './comment-loading-process';
 
 import { useCommentCenter } from '../../context/comment-center';
-import { useSingleThread, useThreads } from '../../context/threads-list';
+import {
+  useSingleThread,
+  useThreads,
+  useThreadStats
+} from '../../context/threads-list';
 import { useSubmitThread, useSubmitUpdateThread } from './use-submit-comment';
 import { threadDeleteConfirmAndToast } from './comment-delete-process';
 import {
@@ -73,6 +77,15 @@ function ThreadListPanelContents() {
       fetchThreads({ status: selectedStatus, section: selectedSection });
   }, [isLogged, fetchThreads, selectedStatus, selectedSection]);
 
+  const { refreshThreadStats } = useThreadStats();
+  // Re fetch the thread stats list when a mutation on the threads (like
+  // adding one).
+  useEffect(() => {
+    if (threads.mutationStatus === 'succeeded') {
+      refreshThreadStats();
+    }
+  }, [threads, refreshThreadStats]);
+
   // Clear the state when we leave this panel.
   useEffect(() => {
     return () => invalidate();
@@ -113,12 +126,18 @@ function ThreadListPanelContents() {
     async (menuId, { threadId }) => {
       switch (menuId) {
         case 'delete-thread':
-          await threadDeleteConfirmAndToast({
-            atbdId,
-            atbdVersion,
-            threadId,
-            deleteFn: deleteThread
-          });
+          {
+            const result = await threadDeleteConfirmAndToast({
+              atbdId,
+              atbdVersion,
+              threadId,
+              deleteFn: deleteThread
+            });
+            // If a thread was deleted refetch the stats. The atbd to fetch for
+            // was stored when the stats were first fetched. This is just a
+            // refetching function.
+            result && refreshThreadStats();
+          }
           break;
         case 'edit': {
           const t = threads.data.find((thread) => thread.id === threadId);
@@ -131,20 +150,31 @@ function ThreadListPanelContents() {
         }
       }
     },
-    [atbdId, atbdVersion, deleteThread, setEditingCommentKey, threads.data]
+    [
+      atbdId,
+      atbdVersion,
+      deleteThread,
+      setEditingCommentKey,
+      threads.data,
+      refreshThreadStats
+    ]
   );
 
   const onResolveClick = useCallback(
-    (threadId) => {
+    async (threadId) => {
       const t = threads.data.find((thread) => thread.id === threadId);
-      updateThreadStatus({
+      const result = await updateThreadStatus({
         atbdId,
         atbdVersion,
         threadId,
         status: t.status === THREAD_CLOSED ? THREAD_OPEN : THREAD_CLOSED
       });
+      // If a thread was updated refetch the stats. The atbd to fetch for was
+      // stored when the stats were first fetched. This is just a refetching
+      // function.
+      !result.error && refreshThreadStats();
     },
-    [atbdId, atbdVersion, threads.data, updateThreadStatus]
+    [atbdId, atbdVersion, threads.data, updateThreadStatus, refreshThreadStats]
   );
 
   return (

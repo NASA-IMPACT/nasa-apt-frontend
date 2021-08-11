@@ -10,8 +10,9 @@ import { EmptyHub } from '../common/empty-states';
 import DocListSettings, { useDocListSettings } from './document-list-settings';
 import DocCountIndicator from './document-count-indicator';
 
-import { useAtbds } from '../../context/atbds-list';
+import { computeAtbdVersion, useAtbds } from '../../context/atbds-list';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
+import { useThreadStats } from '../../context/threads-list';
 
 const DashboardCuratorInner = styled.div`
   display: grid;
@@ -30,6 +31,10 @@ const DocsNav = styled.nav`
 
 function DashboardCurator() {
   const { atbds, fetchAtbds } = useAtbds();
+  // Thread stats - function for initial fetching which stores the documents for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
   const onDocumentAction = useDocumentHubMenuAction();
   const {
     listSettingsValues,
@@ -43,6 +48,18 @@ function DashboardCurator() {
       fetchAtbds();
     }
   }, [atbds.status, fetchAtbds]);
+
+  // Fetch the thread stats list to show in the button.
+  // We do the fetching here, at a higher level, and then request the values
+  // when rendering each line.
+  useEffect(() => {
+    if (atbds.status === 'succeeded') {
+      const atbdList = atbds.data.map((a) =>
+        computeAtbdVersion(a, a.versions.last)
+      );
+      fetchThreadsStatsForAtbds(atbdList);
+    }
+  }, [atbds, fetchThreadsStatsForAtbds]);
 
   const preparedAtbds =
     atbds.status === 'succeeded' &&
