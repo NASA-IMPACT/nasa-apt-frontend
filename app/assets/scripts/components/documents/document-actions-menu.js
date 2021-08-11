@@ -32,11 +32,10 @@ export default function DocumentActionsMenu(props) {
       title: 'Update minor version of document',
       /* eslint-disable-next-line react/display-name */
       render: (props) => {
-        const lastVersion = atbd.versions.last;
         return (
           <MenuItemReasonDisabled
             {...props}
-            isDisabled={!isPublished(lastVersion)}
+            isDisabled={!isPublished(atbdVersion)}
             tipMessage='Minor versions can only be updated for published documents.'
           />
         );
