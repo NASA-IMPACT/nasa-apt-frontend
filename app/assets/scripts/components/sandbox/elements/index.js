@@ -65,19 +65,19 @@ function SandboxElements() {
                     </p>
                   </TrackerEntry>
                   <SubTracker>
-                    <TrackerItem>
+                    <TrackerItem status='complete'>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 1</SubTrackerEntryTitle>
                       </TrackerEntry>
                     </TrackerItem>
-                    <TrackerItem>
+                    <TrackerItem status='complete'>
                       <TrackerEntry>
                         <SubTrackerEntryTitle>Sub entry 2</SubTrackerEntryTitle>
                       </TrackerEntry>
                     </TrackerItem>
                   </SubTracker>
                 </TrackerItem>
-                <TrackerItem>
+                <TrackerItem status='progress'>
                   <TrackerEntry>
                     <TrackerEntryTitle>Two</TrackerEntryTitle>
                     <p>
@@ -110,6 +110,17 @@ function SandboxElements() {
                       </TrackerEntry>
                     </TrackerItem>
                   </SubTracker>
+                </TrackerItem>
+                <TrackerItem>
+                  <TrackerEntry>
+                    <TrackerEntryTitle>Four</TrackerEntryTitle>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Pellentesque vehicula non ipsum tincidunt hendrerit. In et
+                      libero urna. Cras luctus, lorem ac commodo placerat, augue
+                      leo eleifend nisi, vel sollicitudin felis orci ut leo.
+                    </p>
+                  </TrackerEntry>
                 </TrackerItem>
               </Tracker>
             </Wrapper>

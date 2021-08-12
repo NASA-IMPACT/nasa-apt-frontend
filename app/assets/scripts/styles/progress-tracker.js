@@ -8,6 +8,7 @@ import {
   themeVal
 } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
+import collecticon from '@devseed-ui/collecticons';
 
 const _tint = stylizeFunction(tint);
 const railSize = '1.75rem';
@@ -17,12 +18,17 @@ export const Tracker = styled.ol`
   li {
     position: relative;
     padding-left: ${add(railSize, innerSpace)};
-    padding-top: ${glsp(2)};
+    display: grid;
+    gap: ${glsp(1.5)};
+
+    &:not(:last-child) {
+      padding-bottom: ${glsp(1.5)};
+    }
 
     &::before {
       position: absolute;
       left: 0;
-      z-index: 2;
+      z-index: 4;
       content: '';
       display: flex;
       height: ${railSize};
@@ -41,19 +47,16 @@ export const Tracker = styled.ol`
     &::after {
       position: absolute;
       z-index: 1;
-      left: 0;
       top: 0;
       bottom: 0;
+      left: ${divide(railSize, 2)};
+      transform: translate(-50%, 0);
       content: '';
-      width: ${railSize};
+      display: block;
+      width: ${glsp(0.25)};
       pointer-events: none;
-      background: transparent
-        linear-gradient(
-          90deg,
-          ${_tint(0.92, themeVal('color.base'))},
-          ${_tint(0.92, themeVal('color.base'))}
-        )
-        50% / ${glsp(0.25)} auto no-repeat;
+      border-radius: ${themeVal('shape.ellipsoid')};
+      background: ${_tint(0.92, themeVal('color.base'))};
     }
   }
 
@@ -65,8 +68,8 @@ export const Tracker = styled.ol`
     }
   }
 
-  > li:first-child {
-    padding-top: 0;
+  > li:last-child::after {
+    display: none;
   }
 
   > li > ol {
@@ -74,13 +77,16 @@ export const Tracker = styled.ol`
   }
 
   > li > ol > li {
-    padding-top: ${glsp()};
-  }
+    &::before {
+      height: ${divide(railSize, 2)};
+      transform: translate(50%, 0);
+      margin-top: 0.3rem;
+      font-size: 0;
+    }
 
-  > li > ol > li::before {
-    height: ${divide(railSize, 2)};
-    transform: translate(50%, 0);
-    margin-top: 0.3rem;
+    &::after {
+      z-index: 2;
+    }
   }
 `;
 
@@ -91,13 +97,32 @@ export const TrackerItem = styled.li`
     status === 'progress'
       ? css`
           &&::before {
-            background: yellow;
+            background: ${themeVal('color.primary')};
+          }
+
+          &&::after {
+            background: transparent
+              linear-gradient(
+                180deg,
+                ${themeVal('color.primary')} 64%,
+                ${_tint(0.92, themeVal('color.base'))} 64%
+              );
           }
         `
       : status === 'complete'
       ? css`
           &&::before {
-            background: green;
+            font-size: 1rem;
+            content: ${collecticon('tick--small')};
+            background: ${themeVal('color.primary')};
+          }
+
+          &&::after {
+            background: ${themeVal('color.primary')};
+          }
+
+          ${TrackerItem}::before {
+            font-size: 0;
           }
         `
       : null}
