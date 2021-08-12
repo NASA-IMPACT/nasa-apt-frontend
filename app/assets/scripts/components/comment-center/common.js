@@ -37,9 +37,12 @@ export const ErrorComment = styled(InfoMsgComment).attrs({
 export const THREAD_CLOSED = 'CLOSED';
 export const THREAD_OPEN = 'OPEN';
 
-export const COMMENT_STATUSES = [
+export const THREAD_STATUS_ALL = 'all-status';
+export const THREAD_SECTION_ALL = 'all-section';
+
+export const THREAD_STATUSES = [
   {
-    id: 'all-status',
+    id: THREAD_STATUS_ALL,
     label: 'All'
   },
   {

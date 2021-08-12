@@ -11,6 +11,10 @@ import useQsStateCreator from 'qs-state-hook';
 
 import { createContextChecker } from '../utils/create-context-checker';
 import { useEffectPrevious } from '../utils/use-effect-previous';
+import {
+  THREAD_SECTION_ALL,
+  THREAD_STATUS_ALL
+} from '../components/comment-center/common';
 
 // Context
 export const CommentsCenterContext = createContext(null);
@@ -24,8 +28,8 @@ export const CommentCenterProvider = ({ children }) => {
   useLocation();
 
   const [isPanelOpen, setPanelOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState('all-section');
-  const [selectedStatus, setSelectedStatus] = useState('all-status');
+  const [selectedSection, setSelectedSection] = useState(THREAD_SECTION_ALL);
+  const [selectedStatus, setSelectedStatus] = useState(THREAD_STATUS_ALL);
   const [atbdId, setAtbdId] = useState(null);
   const [atbdVersion, setAtbdVersion] = useState(null);
   // The key of the editing comment will be `threadId-commentId`
@@ -48,7 +52,7 @@ export const CommentCenterProvider = ({ children }) => {
   );
 
   const openPanelOn = useCallback(
-    ({ atbdId, atbdVersion, section = 'all-section' }) => {
+    ({ atbdId, atbdVersion, section = THREAD_SECTION_ALL }) => {
       setPanelOpen(true);
       if (atbdId && atbdVersion) {
         setAtbdId(atbdId);

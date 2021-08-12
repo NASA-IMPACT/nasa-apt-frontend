@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import DropdownMenu from '../common/dropdown-menu';
 
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
-import { COMMENT_STATUSES } from './common';
+import { THREAD_SECTION_ALL, THREAD_STATUSES } from './common';
 
 const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
@@ -15,7 +15,7 @@ const commentSectionMenu = [
   {
     id: 'status',
     selectable: true,
-    items: COMMENT_STATUSES.map((s) => ({
+    items: THREAD_STATUSES.map((s) => ({
       ...s,
       title: `View ${s.label} comments`,
       keepOpen: true
@@ -26,7 +26,7 @@ const commentSectionMenu = [
     selectable: true,
     items: [
       {
-        id: 'all-section',
+        id: THREAD_SECTION_ALL,
         label: 'All',
         title: 'View all threads',
         keepOpen: true
