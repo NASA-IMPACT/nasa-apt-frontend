@@ -28,6 +28,7 @@ import {
   useCommentCenterHistoryHandler
 } from '../../../context/comment-center';
 import { useThreadStats } from '../../../context/threads-list';
+import { useEffectPrevious } from '../../../utils/use-effect-previous';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -53,11 +54,18 @@ function DocumentEdit() {
   useCommentCenterHistoryHandler({ atbd });
 
   // Fetch the thread stats list to show in the button when the document loads.
-  useEffect(() => {
-    if (atbd.status === 'succeeded') {
-      fetchThreadsStatsForAtbds(atbd.data);
-    }
-  }, [atbd, fetchThreadsStatsForAtbds]);
+  useEffectPrevious(
+    (prev) => {
+      const prevStatus = prev?.[0]?.status;
+      // This hook is called when the "atbd" changes, which happens also when
+      // there's a mutation, but we don't want to fetch stats on mutations, only
+      // when the atbd is fetched (tracked by a .status change.)
+      if (prevStatus !== atbd.status && atbd.status === 'succeeded') {
+        fetchThreadsStatsForAtbds(atbd.data);
+      }
+    },
+    [atbd, fetchThreadsStatsForAtbds]
+  );
 
   useEffect(() => {
     isLogged && fetchSingleAtbd();
