@@ -1,4 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
+import { Button } from '@devseed-ui/button';
+import { glsp } from '@devseed-ui/theme-provider';
 
 import App from '../../common/app';
 import {
@@ -19,6 +22,42 @@ import {
   SubTracker,
   SubTrackerEntryTitle
 } from '../../../styles/progress-tracker';
+
+const Headx = styled.h1`
+  position: relative;
+  font-size: 3rem;
+  line-height: 3.5rem;
+  display: flex;
+  flex-flow: row-reverse nowrap;
+  align-items: baseline;
+
+  span + span {
+    position: absolute;
+    right: calc(100% + ${glsp(0.5)});
+    z-index: 2;
+    display: inline-block;
+    line-height: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.24s ease-in-out 0.16s;
+
+    > * {
+      vertical-align: 0.64em;
+
+      &:not(:last-child) {
+        margin-right: ${glsp(0.25)};
+      }
+    }
+  }
+
+  &:hover {
+    span + span {
+      opacity: 1;
+      transition-delay: 0s;
+    }
+  }
+`;
 
 function SandboxElements() {
   return (
@@ -50,6 +89,38 @@ function SandboxElements() {
                 <StatusPill status='In publication' statusIcon='page-tick' />
                 <StatusPill status='Published' statusIcon='page-tick' />
               </div>
+
+              <Headx as='h2'>
+                <span>
+                  Testing a really long title with side options lorem ipsum
+                  dolor sit amet consectetur adipiscing elit ellentesque
+                  vehicula non ipsum tincidunt hendrerit
+                </span>
+                <span>
+                  <Button
+                    to='/dashboard'
+                    variation='base-plain'
+                    title='Visit the welcome page'
+                    hideText
+                    size='small'
+                    useIcon='link'
+                  >
+                    Dashboard
+                  </Button>
+
+                  <Button
+                    to='/dashboard'
+                    variation='base-plain'
+                    title='Visit the welcome page'
+                    hideText
+                    size='small'
+                    useIcon='speech-balloon'
+                  >
+                    Dashboard
+                  </Button>
+                </span>
+              </Headx>
+
               <h2>Progress tracker</h2>
             </Prose>
             <Wrapper>
