@@ -20,11 +20,11 @@ const SectionsDropdownMenu = styled(DropdownMenu)`
 `;
 
 const SectionTrigger = styled(Button).attrs({ as: 'a' })`
-  max-width: calc(100%);
+  max-width: 100%;
+  display: flex;
 
   span {
     ${truncated()}
-    max-width: calc(100% - 1.5rem);
   }
 `;
 

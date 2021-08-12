@@ -37,6 +37,7 @@ export const PanelHeader = styled.header`
 
 export const PanelHeadline = styled.div`
   /* Styled component */
+  min-width: 0;
 `;
 
 export const PanelActions = styled.div`

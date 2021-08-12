@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import { Button } from '@devseed-ui/button';
+import { truncated } from '@devseed-ui/theme-provider';
 
 import DropdownMenu from '../common/dropdown-menu';
 
@@ -9,6 +11,15 @@ import { THREAD_SECTION_ALL, THREAD_STATUSES } from './common';
 
 const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
+`;
+
+const SectionTrigger = styled(Button)`
+  max-width: 100%;
+  display: flex;
+
+  span {
+    ${truncated()}
+  }
 `;
 
 const commentSectionMenu = [
@@ -43,7 +54,10 @@ const commentSectionMenu = [
 function CommentSectionsMenu(props) {
   const { activeItem, onSelect } = props;
 
-  const triggerProps = useMemo(() => ({ size: 'small' }), []);
+  const triggerProps = useMemo(
+    () => ({ size: 'small', as: SectionTrigger }),
+    []
+  );
 
   return (
     <SectionsDropdownMenu
