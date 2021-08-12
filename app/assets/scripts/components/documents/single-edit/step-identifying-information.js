@@ -17,6 +17,7 @@ import { formString } from '../../../utils/strings';
 import { formStringSymbol, citationFields } from '../citation';
 import { useSubmitForMetaAndVersionData } from './use-submit';
 import { getDocumentSectionLabel } from './sections';
+import { isPublished } from '../status';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -36,6 +37,10 @@ export default function StepIdentifyingInformation(props) {
 
     return errors;
   }, []);
+
+  // If the current major is greater than 1 means that other versions exist, and
+  // they have to be published.
+  const hasAnyVersionPublished = isPublished(atbd) || atbd.major > 1;
 
   return (
     <Formik
@@ -64,7 +69,7 @@ export default function StepIdentifyingInformation(props) {
                   label='Title'
                   description={formString('identifying_information.title')}
                 />
-                <FieldAtbdAlias />
+                <FieldAtbdAlias disabled={hasAnyVersionPublished} />
               </SectionFieldset>
 
               <SectionFieldset label='DOI'>
@@ -121,6 +126,7 @@ StepIdentifyingInformation.propTypes = {
     id: T.number,
     title: T.string,
     alias: T.string,
-    document: T.object
+    document: T.object,
+    major: T.number
   })
 };

@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import T from 'prop-types';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
 import deburr from 'lodash.deburr';
 import debounce from 'lodash.debounce';
-import { FormHelperMessage } from '@devseed-ui/form';
+import { FormHelperCounter, FormHelperMessage } from '@devseed-ui/form';
 
 import { InputText } from './input-text';
 
@@ -12,12 +13,13 @@ import useSafeState from '../../../utils/use-safe-state';
 import { useAuthToken } from '../../../context/user';
 import { formString } from '../../../utils/strings';
 
-window.axiosAPI = axiosAPI;
+const MAX_ALIAS_CHARS = 32;
 
 const toAliasFormat = (v) =>
   deburr(v)
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '-');
+    .replace(/[^a-z0-9-]/g, '-')
+    .slice(0, MAX_ALIAS_CHARS);
 
 const isValidAtbdAlias = async (alias, cancelToken, userToken) => {
   const headers = userToken
@@ -44,7 +46,8 @@ const isValidAtbdAlias = async (alias, cancelToken, userToken) => {
 };
 
 // The alias field needs to be a component so we can access the formik context.
-export default function FieldAtbdAlias() {
+export default function FieldAtbdAlias(props) {
+  const { disabled } = props;
   const {
     values: { title, alias },
     initialValues,
@@ -118,7 +121,7 @@ export default function FieldAtbdAlias() {
       // Check if the alias is available. If not append a number up to -5. If
       // everything is taken show an error.
       for (let count = 0; count <= 5; count++) {
-        const aliasValue = count ? `${value}-${count}` : value;
+        const aliasValue = count ? `${value.slice(0, -2)}-${count}` : value;
 
         const checkResult = await isValidAtbdAlias(
           aliasValue,
@@ -146,7 +149,6 @@ export default function FieldAtbdAlias() {
       setFieldError('alias', 'This alias is already in use');
     };
 
-    // return debounce(checker, 1000);
     const debouncedFn = debounce(checker, 1000);
 
     const fn = (...args) => {
@@ -210,6 +212,7 @@ export default function FieldAtbdAlias() {
       id='alias'
       name='alias'
       label='Alias'
+      disabled={disabled}
       description={formString('identifying_information.alias')}
       value={alias}
       onBlur={(e) => {
@@ -224,7 +227,12 @@ export default function FieldAtbdAlias() {
       }}
       invalid={!!errors.alias}
       helper={
-        errors.alias ? (
+        disabled ? (
+          <FormHelperMessage>
+            It is not possible to change the alias of a document that has
+            published versions.
+          </FormHelperMessage>
+        ) : errors.alias ? (
           <FormHelperMessage invalid>{errors.alias}</FormHelperMessage>
         ) : (
           <>
@@ -237,18 +245,24 @@ export default function FieldAtbdAlias() {
                   </strong>
                 </FormHelperMessage>
               )}
-              <FormHelperMessage>
-                Only alphanumeric characters and dashes are allowed.
-              </FormHelperMessage>
+              {aliasStatus === 'checking' ? (
+                <FormHelperMessage>
+                  Checking if alias is available.
+                </FormHelperMessage>
+              ) : (
+                <FormHelperMessage>
+                  Only alphanumeric characters and dashes are allowed.
+                </FormHelperMessage>
+              )}
             </div>
-            {aliasStatus === 'checking' && (
-              <FormHelperMessage>
-                Checking if alias is available.
-              </FormHelperMessage>
-            )}
+            <FormHelperCounter value={alias.length} max={MAX_ALIAS_CHARS} />
           </>
         )
       }
     />
   );
 }
+
+FieldAtbdAlias.propTypes = {
+  disabled: T.bool
+};
