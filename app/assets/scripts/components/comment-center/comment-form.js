@@ -13,6 +13,7 @@ import Tip from '../common/tooltip';
 
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
 import { modKey } from '../slate/plugins/common/utils';
+import { THREAD_SECTION_ALL } from './common';
 
 const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
@@ -90,11 +91,12 @@ const getTextareaLabel = ({ type, values, setFieldValue }) => {
   }
 };
 
-const getInitialValues = ({ type, comment, threadId, commentId }) => {
+const getInitialValues = ({ type, section, comment, threadId, commentId }) => {
   switch (type) {
     case 'new':
       return {
-        section: 'general',
+        section:
+          !section || section === THREAD_SECTION_ALL ? 'general' : section,
         comment: ''
       };
     case 'reply':
@@ -115,7 +117,15 @@ const getInitialValues = ({ type, comment, threadId, commentId }) => {
 };
 
 const CommentForm = (props) => {
-  const { type, comment, threadId, commentId, onSubmit, onCancel } = props;
+  const {
+    type,
+    comment,
+    initialSection,
+    threadId,
+    commentId,
+    onSubmit,
+    onCancel
+  } = props;
 
   const formRef = useRef(null);
 
@@ -128,8 +138,15 @@ const CommentForm = (props) => {
   );
 
   const initial = useMemo(
-    () => getInitialValues({ type, comment, threadId, commentId }),
-    [type, comment, threadId, commentId]
+    () =>
+      getInitialValues({
+        type,
+        comment,
+        threadId,
+        commentId,
+        section: initialSection
+      }),
+    [type, comment, threadId, commentId, initialSection]
   );
 
   return (
@@ -191,6 +208,7 @@ CommentForm.propTypes = {
   threadId: T.number,
   commentId: T.number,
   comment: T.string,
+  initialSection: T.string,
   onSubmit: T.func,
   onCancel: T.func
 };

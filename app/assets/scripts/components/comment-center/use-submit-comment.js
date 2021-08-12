@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
+import { unstable_batchedUpdates } from 'react-dom';
 
 import { createProcessToast } from '../common/toasts';
+import { THREAD_SECTION_ALL, THREAD_STATUS_ALL, THREAD_CLOSED } from './common';
 
 /**
  * Hook to create the submit callback for comments,
@@ -32,11 +34,51 @@ function useSubmitCreator(submitFunction, messages) {
   );
 }
 
-export function useSubmitThread(submitFunction) {
-  return useSubmitCreator(submitFunction, {
-    start: 'Creating new comment thread',
-    success: 'Comment thread created'
-  });
+export function useSubmitThread({
+  submitFunction,
+  setSelectedSection,
+  selectedSection,
+  selectedStatus,
+  setSelectedStatus
+}) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast('Creating new comment thread');
+      const result = await submitFunction(values);
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(`An error occurred: ${result.error.message}`);
+        return false;
+      } else {
+        resetForm();
+        processToast.success('Comment thread created');
+
+        // When the status and section changes a request is made for the list of
+        // threads. We want to batch these state operations to avoid requests
+        // when only one changes.
+        // https://dev.to/raibima/batch-your-react-updates-120b
+        unstable_batchedUpdates(() => {
+          if (
+            selectedSection !== THREAD_SECTION_ALL &&
+            selectedSection !== values.section
+          ) {
+            setSelectedSection(THREAD_SECTION_ALL);
+          }
+          if (selectedStatus === THREAD_CLOSED) {
+            setSelectedStatus(THREAD_STATUS_ALL);
+          }
+        });
+        return true;
+      }
+    },
+    [
+      submitFunction,
+      setSelectedSection,
+      selectedSection,
+      selectedStatus,
+      setSelectedStatus
+    ]
+  );
 }
 
 export function useSubmitThreadComment(submitFunction) {

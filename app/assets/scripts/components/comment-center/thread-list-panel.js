@@ -100,7 +100,13 @@ function ThreadListPanelContents() {
     setEditingCommentKey
   ]);
 
-  const onSubmitThread = useSubmitThread(createThread);
+  const onSubmitThread = useSubmitThread({
+    submitFunction: createThread,
+    setSelectedSection,
+    selectedSection,
+    selectedStatus,
+    setSelectedStatus
+  });
   const onCommentEditSubmit = useSubmitUpdateThread({
     submitFunction: updateThreadComment,
     dismissEditField: setEditingCommentKey,
@@ -270,6 +276,7 @@ function ThreadListPanelContents() {
         <CommentFormWrapper>
           <CommentForm
             threadId={openThreadId}
+            initialSection={selectedSection}
             type='new'
             onSubmit={onSubmitThread}
           />
