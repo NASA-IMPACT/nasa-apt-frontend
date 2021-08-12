@@ -14,7 +14,7 @@ import ErrorBoundary from './components/uhoh/fatal-error';
 import { ToastsContainer } from './components/common/toasts';
 import AccessRoute from './a11n/access-route';
 import ConfirmationPrompt from './components/common/confirmation-prompt';
-// import CommentCenter from './components/comment-center';
+import CommentCenter from './components/comment-center';
 import AptDevtools from './components/apt-devtools';
 
 // Views
@@ -44,7 +44,8 @@ import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
-import { CollaboratorsProvider } from './context/collaborators-list.js';
+import { CollaboratorsProvider } from './context/collaborators-list';
+import { ThreadsProvider } from './context/threads-list';
 
 const composingComponents = [
   ErrorBoundary,
@@ -54,6 +55,7 @@ const composingComponents = [
   AtbdsProvider,
   ContactsProvider,
   CollaboratorsProvider,
+  ThreadsProvider,
   JsonPagesProvider,
   SearchProvider
 ];
@@ -142,7 +144,9 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
-          {/* <CommentCenter /> */}
+          <Route path='/documents/:id/:version'>
+            <CommentCenter />
+          </Route>
           {process.env.NODE_ENV === 'development' && <AptDevtools />}
         </Composer>
         <ToastsContainer />

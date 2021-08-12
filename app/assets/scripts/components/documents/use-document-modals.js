@@ -263,7 +263,12 @@ export const useDocumentModals = ({
         case 'req-publication-deny':
           setActiveModal(MODAL_REQ_PUBLICATION_DENY);
           break;
+        default:
+          // Was not handled
+          return false;
       }
+      // Was handled.
+      return true;
     },
     [
       atbd,
@@ -340,9 +345,9 @@ export const useDocumentModals = ({
   useEffect(() => {
     const { menuAction, ...rest } = location.state || {};
     if (atbd && menuAction) {
-      menuHandler(menuAction);
+      const r = menuHandler(menuAction);
       // Using undefined keeps the same path.
-      history.replace(undefined, rest);
+      r && history.replace(undefined, rest);
     }
   }, [menuHandler, atbd, history, location]);
 

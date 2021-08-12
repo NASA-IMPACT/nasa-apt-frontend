@@ -1,9 +1,20 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import T from 'prop-types';
-
-import { createContextChecker } from '../utils/create-context-checker';
 import { useHistory, useLocation } from 'react-router';
 import useQsStateCreator from 'qs-state-hook';
+
+import { createContextChecker } from '../utils/create-context-checker';
+import { useEffectPrevious } from '../utils/use-effect-previous';
+import {
+  THREAD_SECTION_ALL,
+  THREAD_STATUS_ALL
+} from '../components/comment-center/common';
 
 // Context
 export const CommentsCenterContext = createContext(null);
@@ -17,8 +28,12 @@ export const CommentCenterProvider = ({ children }) => {
   useLocation();
 
   const [isPanelOpen, setPanelOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState('all-section');
-  const [selectedStatus, setSelectedStatus] = useState('all-status');
+  const [selectedSection, setSelectedSection] = useState(THREAD_SECTION_ALL);
+  const [selectedStatus, setSelectedStatus] = useState(THREAD_STATUS_ALL);
+  const [atbdId, setAtbdId] = useState(null);
+  const [atbdVersion, setAtbdVersion] = useState(null);
+  // The key of the editing comment will be `threadId-commentId`
+  const [editingCommentKey, setEditingCommentKey] = useState(null);
 
   const useQsState = useQsStateCreator({
     commit: history.push
@@ -28,10 +43,25 @@ export const CommentCenterProvider = ({ children }) => {
     useMemo(
       () => ({
         key: 'threadId',
-        default: null
+        default: null,
+        hydrator: Number,
+        dehydrator: String
       }),
       []
     )
+  );
+
+  const openPanelOn = useCallback(
+    ({ atbdId, atbdVersion, section = THREAD_SECTION_ALL }) => {
+      setPanelOpen(true);
+      if (atbdId && atbdVersion) {
+        setAtbdId(atbdId);
+        setAtbdVersion(atbdVersion);
+      }
+      setSelectedSection(section);
+      setEditingCommentKey(null);
+    },
+    []
   );
 
   const contextValue = {
@@ -42,7 +72,14 @@ export const CommentCenterProvider = ({ children }) => {
     selectedStatus,
     setSelectedStatus,
     openThreadId,
-    setOpenThreadId
+    setOpenThreadId,
+    editingCommentKey,
+    setEditingCommentKey,
+    atbdId,
+    setAtbdId,
+    atbdVersion,
+    setAtbdVersion,
+    openPanelOn
   };
 
   return (
@@ -62,6 +99,70 @@ const useSafeContextFn = createContextChecker(
   'CommentsCenterContext'
 );
 
-export const useCommentCenter = () => {
-  return useSafeContextFn('useCommentCenter');
+/**
+ * Enables the use of the comment center
+ * When an atbd is provided the stored id and version will be updated when they
+ * change.
+ *
+ * @param {object} opts Options
+ * @param {object} atbd The atbd for which to load comments.
+ */
+export const useCommentCenter = ({ atbd = null } = {}) => {
+  const ctx = useSafeContextFn('useCommentCenter');
+
+  const { id, version } = atbd?.data || {};
+
+  useEffectPrevious(
+    (prev) => {
+      if (!id || !version) return;
+      ctx.setAtbdId(id);
+      ctx.setAtbdVersion(version);
+
+      // If the panel is open and the atbd changes update the values.
+      // This happens when switching versions.
+      const [prevId, prevVersion] = prev || [];
+      if ((prevId !== id || prevVersion !== version) && ctx.isPanelOpen) {
+        ctx.openPanelOn({
+          // The atbdId must be numeric. The alias does not work.
+          atbdId: id,
+          atbdVersion: version
+        });
+      }
+    },
+    [id, version, ctx.isPanelOpen, ctx.openPanelOn]
+  );
+
+  return ctx;
+};
+
+/**
+ * To trigger the comment center to open from other pages, we use the history
+ * state as the user is sent from one page to another. This is happening with
+ * the dashboards for example. When the user clicks the comment button, the user
+ * is sent to the atbd view page with {menuAction: <menu-id> } in the history
+ * state. We then capture this, show the comment center and clear the history
+ * state to prevent the modal from popping up on route change.
+ *
+ * @param {object} opts Options
+ * @param {object} atbd The atbd for which to load comments.
+ */
+export const useCommentCenterHistoryHandler = ({ atbd = null } = {}) => {
+  const { openPanelOn } = useSafeContextFn('useCommentCenter');
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    // The atbdId must be numeric. The alias does not work.
+    const { menuAction, ...rest } = location.state || {};
+
+    if (atbd?.data && menuAction === 'toggle-comments') {
+      const { id, version } = atbd.data || {};
+      openPanelOn({
+        atbdId: id,
+        atbdVersion: version
+      });
+      // Using undefined keeps the same path.
+      history.replace(undefined, rest);
+    }
+  }, [atbd, history, location, openPanelOn]);
 };

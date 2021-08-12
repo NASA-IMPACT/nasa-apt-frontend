@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 import T from 'prop-types';
 import nl2br from 'react-nl2br';
@@ -8,8 +8,10 @@ import collecticon from '@devseed-ui/collecticons';
 
 import Datetime from '../common/date';
 import UserIdentity from '../common/user-identity';
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, { MenuItemReasonDisabled } from '../common/dropdown-menu';
 import CommentForm from './comment-form';
+
+import { useUser } from '../../context/user';
 
 const getDefaultPrevented = (fn, ...args) => (e) => {
   e?.preventDefault?.();
@@ -58,28 +60,36 @@ const CommentEntrySelf = styled.article`
       padding-left: ${glsp(3)};
     `}
 
-  ${({ isResolved }) =>
-    isResolved &&
-    css`
-      &::before {
-        ${collecticon('tick--small')}
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 4;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        width: 2rem;
-        height: 2rem;
-        color: ${themeVal('color.surface')};
-        line-height: 1;
-        background: ${themeVal('color.link')};
-        padding: ${glsp(0.125)};
-        clip-path: polygon(0 0, 100% 0, 0 100%);
-        pointer-events: none;
-      }
-    `}
+  &::before {
+    ${collecticon('tick--small')}
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 2rem;
+    height: 2rem;
+    color: ${themeVal('color.surface')};
+    line-height: 1;
+    background: ${themeVal('color.link')};
+    padding: ${glsp(0.125)};
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    pointer-events: none;
+    transition: all 0.16s ease-in-out 0s;
+    transform: scale(0) translate(-100%, 0);
+    transform-origin: top left;
+
+    ${({ isResolved }) =>
+      isResolved
+        ? css`
+            transform: scale(1) translate(0, 0);
+          `
+        : css`
+            transform: scale(0) translate(-100%, 0);
+          `}
+  }
 `;
 
 const CommentEntryHeader = styled.header`
@@ -114,8 +124,15 @@ const CommentEntryContent = styled.div`
 
   textarea {
     min-height: 4rem;
+    // The little 80ms delay is very important. It gives enough time to the
+    // Cancel/Update button to receive the click event. Without this, clicking
+    // the button while focused on the textarea would immediately start the
+    // animation and the click event would not reach the button because it would
+    // have moved.
+    transition: min-height ease-in-out 160ms 80ms;
 
     &:focus {
+      transition: min-height ease-in-out 160ms;
       min-height: 20rem;
     }
   }
@@ -167,14 +184,19 @@ CommentBody.propTypes = {
   comment: T.string
 };
 
-export const COMMENT = 'comment';
-export const COMMENT_THREAD = 'comment-thread';
-export const COMMENT_THREAD_REPLY = 'comment-thread-reply';
+export const THREAD_LIST_ITEM = 'thread-list-item';
+export const THREAD_SINGLE = 'thread-single';
+export const THREAD_REPLY = 'thread-reply';
 
 export default function CommentEntry(props) {
   const {
+    threadId,
     commentId,
+    onMenuAction,
     onViewClick,
+    onResolveClick,
+    onCommentEditSubmit,
+    onCommentEditCancel,
     author,
     type,
     isResolved,
@@ -186,8 +208,12 @@ export default function CommentEntry(props) {
     comment
   } = props;
 
-  const isReply = type === COMMENT_THREAD_REPLY;
-  const isThread = type === COMMENT_THREAD;
+  const { user, isCurator } = useUser();
+
+  const isReply = type === THREAD_REPLY;
+  const isThread = type === THREAD_SINGLE;
+
+  const isEntryAuthor = author.sub === user.id;
 
   const commentMenuProps = useMemo(
     () => ({
@@ -197,31 +223,84 @@ export default function CommentEntry(props) {
         size: 'small'
       },
       triggerLabel: 'ATBD options',
-      menu: {
-        id: 'actions',
-        items: [
-          {
-            id: 'edit',
-            label: 'Edit',
-            title: 'Edit this comment'
-          }
-        ]
-      }
+      menu: [
+        {
+          id: 'actions',
+          items: [
+            {
+              id: 'edit',
+              label: 'Edit',
+              title: 'Edit this comment',
+              /* eslint-disable-next-line react/display-name */
+              render: (props) => (
+                <MenuItemReasonDisabled
+                  {...props}
+                  isDisabled={!isEntryAuthor && !isCurator}
+                  tipMessage='You can only edit your own comments'
+                />
+              )
+            }
+          ]
+        },
+        {
+          id: 'actions2',
+          items: [
+            type === THREAD_REPLY
+              ? {
+                  id: 'delete-comment',
+                  title: 'Delete comment',
+                  label: 'Delete',
+                  /* eslint-disable-next-line react/display-name */
+                  render: (props) => (
+                    <MenuItemReasonDisabled
+                      {...props}
+                      isDisabled={!isEntryAuthor && !isCurator}
+                      tipMessage='You can only delete your own comments'
+                    />
+                  )
+                }
+              : {
+                  id: 'delete-thread',
+                  title: 'Delete thread',
+                  label: 'Delete',
+                  /* eslint-disable-next-line react/display-name */
+                  render: (props) => (
+                    <MenuItemReasonDisabled
+                      {...props}
+                      isDisabled={!isEntryAuthor && !isCurator}
+                      tipMessage='You can only delete your own comments threads'
+                    />
+                  )
+                }
+          ]
+        }
+      ]
     }),
-    []
+    [type, isEntryAuthor, isCurator]
+  );
+
+  const onSelect = useCallback(
+    (menuItem, payload = {}) =>
+      onMenuAction(
+        menuItem,
+        type === THREAD_REPLY
+          ? { ...payload, threadId, commentId }
+          : { ...payload, threadId, commentId }
+      ),
+    [type, onMenuAction, commentId, threadId]
   );
 
   return (
     <CommentEntrySelf isResolved={isResolved} isReply={isReply}>
       <CommentEntryHeader>
         <CommentEntryHeadline>
-          <UserIdentity name={author.name} />
+          <UserIdentity name={author.preferred_username} email={author.email} />
           <AuthoringInfo
             date={date}
             isEdited={isEdited}
             isThread={isReply || isThread}
             href='#'
-            onClick={getDefaultPrevented(onViewClick, commentId)}
+            onClick={getDefaultPrevented(onViewClick, threadId)}
           />
         </CommentEntryHeadline>
         <CommentEntryActions>
@@ -235,7 +314,7 @@ export default function CommentEntry(props) {
                   replyCount ? `Reply comment (${replyCount})` : 'Reply Comment'
                 }
                 data-reply-count={replyCount > 99 ? '99+' : replyCount || null}
-                onClick={getDefaultPrevented(onViewClick, commentId)}
+                onClick={getDefaultPrevented(onViewClick, threadId)}
               >
                 Reply
               </CommentReplyButton>
@@ -248,6 +327,7 @@ export default function CommentEntry(props) {
                     ? 'Unresolve comment thread'
                     : 'Resolve comment thread'
                 }
+                onClick={getDefaultPrevented(onResolveClick, threadId)}
               >
                 {isResolved ? 'Unresolve' : 'Resolve'} comment
               </Button>
@@ -259,6 +339,7 @@ export default function CommentEntry(props) {
             direction='down'
             withChevron
             dropTitle='Options'
+            onSelect={onSelect}
           />
         </CommentEntryActions>
       </CommentEntryHeader>
@@ -269,12 +350,19 @@ export default function CommentEntry(props) {
           </p>
         )}
         {isEditing ? (
-          <CommentForm type='edit' comment={comment} />
+          <CommentForm
+            type='edit'
+            threadId={threadId}
+            commentId={commentId}
+            comment={comment}
+            onSubmit={onCommentEditSubmit}
+            onCancel={onCommentEditCancel}
+          />
         ) : (
           <CommentBody
             comment={comment}
             truncateComment={!isReply && !isThread}
-            onReadMore={getDefaultPrevented(onViewClick, commentId)}
+            onReadMore={getDefaultPrevented(onViewClick, threadId)}
           />
         )}
       </CommentEntryContent>
@@ -283,10 +371,15 @@ export default function CommentEntry(props) {
 }
 
 CommentEntry.propTypes = {
-  commentId: T.string,
+  threadId: T.number,
+  commentId: T.number,
+  onMenuAction: T.func,
   onViewClick: T.func,
+  onResolveClick: T.func,
+  onCommentEditSubmit: T.func,
+  onCommentEditCancel: T.func,
   author: T.object,
-  type: T.oneOf([COMMENT, COMMENT_THREAD, COMMENT_THREAD_REPLY]),
+  type: T.oneOf([THREAD_LIST_ITEM, THREAD_SINGLE, THREAD_REPLY]),
   isResolved: T.bool,
   isEdited: T.bool,
   isEditing: T.bool,

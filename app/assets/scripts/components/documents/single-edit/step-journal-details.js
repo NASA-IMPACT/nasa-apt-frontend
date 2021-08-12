@@ -44,6 +44,7 @@ export default function StepJournalDetails(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('discussion')}
                   sectionName='sections_completed.discussion'
+                  commentSection='discussion'
                 >
                   <FormikInputEditor
                     id='journal_discussion'
@@ -56,6 +57,7 @@ export default function StepJournalDetails(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('acknowledgements')}
                   sectionName='sections_completed.acknowledgements'
+                  commentSection='acknowledgements'
                 >
                   <FormikInputEditor
                     id='journal_acknowledgements'

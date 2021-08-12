@@ -1,7 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, themeVal, visuallyHidden } from '@devseed-ui/theme-provider';
 import Dropdown, { DropTitle } from '@devseed-ui/dropdown';
 import { Button } from '@devseed-ui/button';
 import ShadowScrollbar from '@devseed-ui/shadow-scrollbar';
@@ -16,6 +16,10 @@ const shadowScrollbarProps = {
   autoHeight: true,
   autoHeightMax: 320
 };
+
+const Hide = styled.span`
+  ${visuallyHidden()}
+`;
 
 // Drop content elements.
 const DropdownCollaborators = styled(Dropdown)`
@@ -146,6 +150,7 @@ export function CollaboratorsMenu(props) {
           {...triggerProps}
           {...props}
         >
+          <Hide>By </Hide>
           {owner.preferred_username}{' '}
           {!!collaboratorCount && ` +${collaboratorCount}`}
         </Button>

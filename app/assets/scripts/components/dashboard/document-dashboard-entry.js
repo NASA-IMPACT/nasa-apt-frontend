@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
-// import { Button } from '@devseed-ui/button';
 
 import { DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
@@ -20,6 +19,7 @@ import {
 } from '../../styles/documents/list';
 import DocumentActionsMenu from '../documents/document-actions-menu';
 import DocumentGovernanceAction from '../documents/document-governance-action';
+import DocumentCommentsButton from '../documents/document-comment-button';
 
 import { documentView } from '../../utils/url-creator';
 import { computeAtbdVersion } from '../../context/atbds-list';
@@ -44,6 +44,14 @@ function DocumentDashboardEntry(props) {
 
   const onCollaboratorMenuOptionsClick = useCallback(
     () => onAction('manage-collaborators'),
+    [onAction]
+  );
+
+  const onViewCommentsClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      onAction('toggle-comments');
+    },
     [onAction]
   );
 
@@ -87,21 +95,18 @@ function DocumentDashboardEntry(props) {
             <li>
               <CollaboratorsMenu
                 onOptionsClick={onCollaboratorMenuOptionsClick}
-                atbdVersion={lastVersion}
+                atbdId={lastVersion.id}
+                version={lastVersion.version}
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
-            {/* <li>
-              <Button
-                forwardedAs={Link}
+            <li>
+              <DocumentCommentsButton
+                onClick={onViewCommentsClick}
                 size='small'
-                useIcon='speech-balloon'
-                to='/'
-                title='View comments'
-              >
-                8 comments
-              </Button>
-            </li> */}
+                atbd={lastVersion}
+              />
+            </li>
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>

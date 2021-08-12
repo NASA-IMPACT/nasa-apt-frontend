@@ -35,7 +35,13 @@ import {
 } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
-import { documentUpdatedDate } from '../../../utils/date';
+import { useUser } from '../../../context/user';
+import {
+  useCommentCenter,
+  useCommentCenterHistoryHandler
+} from '../../../context/comment-center';
+import { useThreadStats } from '../../../context/threads-list';
+import { useEffectPrevious } from '../../../utils/use-effect-previous';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -129,6 +135,7 @@ const DOIValue = styled.dd`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
+  const { isLogged } = useUser();
   const {
     atbd,
     updateAtbd,
@@ -138,10 +145,33 @@ function DocumentView() {
   } = useSingleAtbd({ id, version });
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
+  // Thread stats - function for initial fetching which stores the document for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
+
+  const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
+  // Se function definition for explanation.
+  useCommentCenterHistoryHandler({ atbd });
+
+  // Fetch the thread stats list to show in the button when the document loads.
+  useEffectPrevious(
+    (prev) => {
+      const prevStatus = prev?.[0]?.status;
+      // This hook is called when the "atbd" changes, which happens also when
+      // there's a mutation, but we don't want to fetch stats on mutations, only
+      // when the atbd is fetched (tracked by a .status change.)
+      if (prevStatus !== atbd.status && atbd.status === 'succeeded') {
+        fetchThreadsStatsForAtbds(atbd.data);
+      }
+    },
+    [atbd, fetchThreadsStatsForAtbds]
+  );
 
   useEffect(() => {
-    fetchSingleAtbd();
-  }, [id, version, fetchSingleAtbd]);
+    isLogged && fetchSingleAtbd();
+  }, [isLogged, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
@@ -163,9 +193,27 @@ function DocumentView() {
             history
           });
           break;
+        case 'toggle-comments':
+          if (isPanelOpen) {
+            setPanelOpen(false);
+          } else {
+            openPanelOn({
+              // The atbdId must be numeric. The alias does not work.
+              atbdId: atbd.data.id,
+              atbdVersion: atbd.data.version
+            });
+          }
       }
     },
-    [atbd.data, deleteAtbdVersion, history, menuHandler]
+    [
+      atbd.data,
+      deleteAtbdVersion,
+      history,
+      menuHandler,
+      isPanelOpen,
+      setPanelOpen,
+      openPanelOn
+    ]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -187,12 +235,6 @@ function DocumentView() {
     ? `Viewing ${atbd.data.title}`
     : 'Document view';
 
-  // The updated at is the most recent between the version updated at and the
-  // atbd updated at. In the case of a single ATBD the selected version data is
-  // merged with the ATBD meta and that's why both variables are
-  // the same.
-  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
-
   return (
     <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -201,11 +243,7 @@ function DocumentView() {
           <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentHeadline
-              atbdId={id}
-              title={atbd.data.title}
-              version={version}
-              versions={atbd.data.versions}
-              updatedDate={updatedDate}
+              atbd={atbd.data}
               onAction={onDocumentMenuAction}
               mode='view'
             />

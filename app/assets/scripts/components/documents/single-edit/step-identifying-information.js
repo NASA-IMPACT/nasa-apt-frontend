@@ -49,7 +49,10 @@ export default function StepIdentifyingInformation(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <SectionFieldset label={getDocumentSectionLabel('general')}>
+              <SectionFieldset
+                label={getDocumentSectionLabel('general')}
+                commentSection='general'
+              >
                 <p>
                   <em>
                     Updates to the general information will affect all versions.
@@ -82,6 +85,7 @@ export default function StepIdentifyingInformation(props) {
               <FormikSectionFieldset
                 label={getDocumentSectionLabel('citation')}
                 sectionName='sections_completed.citation'
+                commentSection='citation'
               >
                 {citationFields.map((field) => (
                   <FormikInputText

@@ -56,6 +56,7 @@ export default function StepAlgoImplementation(props) {
                     'algorithm_implementations'
                   )}
                   sectionName='sections_completed.algorithm_implementations'
+                  commentSection='algorithm_implementations'
                   fieldLabel='Algorithm Implementations'
                   fieldName='document.algorithm_implementations'
                   fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
@@ -66,6 +67,7 @@ export default function StepAlgoImplementation(props) {
                     'data_access_input_data'
                   )}
                   sectionName='sections_completed.data_access_input_data'
+                  commentSection='data_access_input_data'
                   fieldLabel='Data Access Inputs'
                   fieldName='document.data_access_input_data'
                   fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
@@ -76,6 +78,7 @@ export default function StepAlgoImplementation(props) {
                     'data_access_output_data'
                   )}
                   sectionName='sections_completed.data_access_output_data'
+                  commentSection='data_access_output_data'
                   fieldLabel='Data Access Outputs'
                   fieldName='document.data_access_output_data'
                   fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
@@ -86,6 +89,7 @@ export default function StepAlgoImplementation(props) {
                     'data_access_related_urls'
                   )}
                   sectionName='sections_completed.data_access_related_urls'
+                  commentSection='data_access_related_urls'
                   fieldLabel='Data Access Related Urls'
                   fieldName='document.data_access_related_urls'
                   fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
@@ -116,6 +120,7 @@ const UrlDescriptionSection = (props) => {
   const {
     sectionLabel,
     sectionName,
+    commentSection,
     fieldLabel,
     fieldName,
     fieldEmptyMessage
@@ -132,7 +137,11 @@ const UrlDescriptionSection = (props) => {
   );
 
   return (
-    <FormikSectionFieldset label={sectionLabel} sectionName={sectionName}>
+    <FormikSectionFieldset
+      label={sectionLabel}
+      sectionName={sectionName}
+      commentSection={commentSection}
+    >
       <FieldArray
         name={fieldName}
         render={({ remove, push, form, name }) => (
@@ -175,6 +184,7 @@ const UrlDescriptionSection = (props) => {
 UrlDescriptionSection.propTypes = {
   sectionLabel: T.string,
   sectionName: T.string,
+  commentSection: T.string,
   fieldLabel: T.string,
   fieldName: T.string,
   fieldEmptyMessage: T.node

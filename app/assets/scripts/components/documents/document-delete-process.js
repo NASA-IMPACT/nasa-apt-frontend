@@ -1,7 +1,14 @@
 import { confirmDeleteDocumentVersion } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
 
-// Convenience method to delete an atbd version and show a toast notification.
+/**
+ * Convenience method to delete an atbd version and show a toast notification.
+ *
+ * @param {object} opt
+ * @param {object} opt.atbd The document to delete
+ * @param {func} opt.deleteAtbdVersion The delete action
+ * @param {object} opt.history The history for navigation
+ */
 export async function documentDeleteVersionConfirmAndToast({
   atbd,
   deleteAtbdVersion,

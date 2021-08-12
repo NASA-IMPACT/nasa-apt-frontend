@@ -40,6 +40,7 @@ export default function StepAlgoUsage(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('constraints')}
                   sectionName='sections_completed.constraints'
+                  commentSection='constraints'
                 >
                   <FormikInputEditor
                     id='algorithm_usage_constraints'
@@ -54,6 +55,7 @@ export default function StepAlgoUsage(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('validation')}
                   sectionName='sections_completed.validation'
+                  commentSection='validation'
                 >
                   <FormikInputEditor
                     id='performance_assessment_validation_methods'

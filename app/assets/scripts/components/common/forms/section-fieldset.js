@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import { useField } from 'formik';
 import {
   FormFieldset,
   FormFieldsetHeader,
@@ -9,9 +10,12 @@ import {
 } from '@devseed-ui/form';
 import { headingAlt } from '@devseed-ui/typography';
 import { glsp } from '@devseed-ui/theme-provider';
+import { Toolbar, VerticalDivider } from '@devseed-ui/toolbar';
+import { Button } from '@devseed-ui/button';
 
 import DropdownMenu from '../dropdown-menu';
-import { useField } from 'formik';
+
+import { useCommentCenter } from '../../../context/comment-center';
 
 const StatusAction = styled.div`
   display: flex;
@@ -49,26 +53,48 @@ export const SECTION_STATUS_DEFAULT = SECTION_STATUS_MENU.items[0].id;
  * @prop {function} onStatusChange On change event handler for the status dropdown
  */
 export function SectionFieldset(props) {
-  const { children, label, status, onStatusChange } = props;
+  const { children, label, status, onStatusChange, commentSection } = props;
 
   const triggerProps = useMemo(() => ({ size: 'small' }), []);
+  const { openPanelOn } = useCommentCenter();
+
+  const openCommentsOnSection = useCallback(
+    () => openPanelOn({ section: commentSection }),
+    [openPanelOn, commentSection]
+  );
 
   return (
     <FormFieldset>
       <FormFieldsetHeader>
         <FormLegend>{label}</FormLegend>
-        {status && (
-          <StatusAction>
-            <StatusLabel>Marked as</StatusLabel>
-            <DropdownMenu
-              menu={SECTION_STATUS_MENU}
-              activeItem={status}
-              dropTitle='Section status'
-              withChevron
-              triggerProps={triggerProps}
-              onSelect={onStatusChange}
-            />
-          </StatusAction>
+        {(status || commentSection) && (
+          <Toolbar>
+            {status && (
+              <StatusAction>
+                <StatusLabel>Marked as</StatusLabel>
+                <DropdownMenu
+                  menu={SECTION_STATUS_MENU}
+                  activeItem={status}
+                  dropTitle='Section status'
+                  withChevron
+                  triggerProps={triggerProps}
+                  onSelect={onStatusChange}
+                />
+              </StatusAction>
+            )}
+            {status && commentSection && <VerticalDivider />}
+            {commentSection && (
+              <Button
+                size='small'
+                useIcon='speech-balloon'
+                title='Show comments for this section'
+                hideText
+                onClick={openCommentsOnSection}
+              >
+                Show comments
+              </Button>
+            )}
+          </Toolbar>
         )}
       </FormFieldsetHeader>
       <FormFieldsetBody>{children}</FormFieldsetBody>
@@ -80,7 +106,8 @@ SectionFieldset.propTypes = {
   children: T.node,
   label: T.string,
   status: T.string,
-  onStatusChange: T.func
+  onStatusChange: T.func,
+  commentSection: T.string
 };
 
 export function FormikSectionFieldset(props) {

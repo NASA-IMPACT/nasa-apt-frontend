@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { PropTypes as T } from 'prop-types';
 import {
   FormGroup,
-  FormGroupHeader,
+  FormGroupHeader as FormGroupHeader$,
   FormGroupBody,
-  FormLabel,
+  FormLabel as FormLabel$,
   FormHelper
 } from '@devseed-ui/form';
 import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
@@ -14,6 +14,14 @@ import Tip from '../tooltip';
 
 const FormGroupFooter = styled.div`
   /* styled-component */
+`;
+
+const FormGroupHeader = styled(FormGroupHeader$)`
+  min-width: 0;
+`;
+
+const FormLabel = styled(FormLabel$)`
+  min-width: 0;
 `;
 
 // This is needed so that the tooltip doesn't have a div wrapper and the focus

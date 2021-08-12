@@ -19,10 +19,11 @@ import { EmptyHub } from '../common/empty-states';
 import DocListSettings, { useDocListSettings } from './document-list-settings';
 import DocCountIndicator from './document-count-indicator';
 
-import { useAtbds } from '../../context/atbds-list';
+import { computeAtbdVersion, useAtbds } from '../../context/atbds-list';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
 import { PUBLISHED } from '../documents/status';
+import { useThreadStats } from '../../context/threads-list';
 
 const DashboardContributorInner = styled.div`
   display: grid;
@@ -151,6 +152,10 @@ DocumentNavigation.propTypes = {
 const TabDocuments = (props) => {
   const { role, status, applyListSettings } = props;
   const { activeTab } = useTabs();
+  // Thread stats - function for initial fetching which stores the documents for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
   const { atbds, fetchAtbds } = useAtbds({
     role,
     status
@@ -163,6 +168,18 @@ const TabDocuments = (props) => {
       fetchAtbds({ role, status });
     }
   }, [atbds.status, fetchAtbds, role, status]);
+
+  // Fetch the thread stats list to show in the button.
+  // We do the fetching here, at a higher level, and then request the values
+  // when rendering each line.
+  useEffect(() => {
+    if (atbds.status === 'succeeded') {
+      const atbdList = atbds.data.map((a) =>
+        computeAtbdVersion(a, a.versions.last)
+      );
+      fetchThreadsStatsForAtbds(atbdList);
+    }
+  }, [atbds, fetchThreadsStatsForAtbds]);
 
   if (atbds.status === 'loading') {
     return <GlobalLoading />;

@@ -28,7 +28,7 @@ const DeletableFieldsetTriptic = styled(DeletableFieldset)`
   }
 `;
 
-const variableFieldsFormattigOprions = ['subsupscript'];
+const variableFieldsFormattingOptions = ['subsupscript'];
 
 const variableFieldsEmptyValue = {
   name: editorEmptyValue,
@@ -62,6 +62,7 @@ export default function StepAlgoDescription(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('scientific_theory')}
                   sectionName='sections_completed.scientific_theory'
+                  commentSection='scientific_theory'
                 >
                   <FormikInputEditor
                     id='scientific_theory'
@@ -85,6 +86,7 @@ export default function StepAlgoDescription(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('mathematical_theory')}
                   sectionName='sections_completed.mathematical_theory'
+                  commentSection='mathematical_theory'
                 >
                   <FormikInputEditor
                     id='mathematical_theory'
@@ -108,6 +110,7 @@ export default function StepAlgoDescription(props) {
                 <VariablesSection
                   sectionLabel={getDocumentSectionLabel('input_variables')}
                   sectionName='sections_completed.input_variables'
+                  commentSection='input_variables'
                   fieldLabel='Variables'
                   fieldName='document.algorithm_input_variables'
                   fieldEmptyMessage='There are no Input Variables. You can start by adding one.'
@@ -116,6 +119,7 @@ export default function StepAlgoDescription(props) {
                 <VariablesSection
                   sectionLabel={getDocumentSectionLabel('output_variables')}
                   sectionName='sections_completed.output_variables'
+                  commentSection='output_variables'
                   fieldLabel='Variables'
                   fieldName='document.algorithm_output_variables'
                   fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
@@ -144,6 +148,7 @@ const VariablesSection = (props) => {
   const {
     sectionLabel,
     sectionName,
+    commentSection,
     fieldLabel,
     fieldName,
     fieldEmptyMessage
@@ -160,7 +165,11 @@ const VariablesSection = (props) => {
   const unitFieldInfo = formString(`algorithm_description.${path}.unit`);
 
   return (
-    <FormikSectionFieldset label={sectionLabel} sectionName={sectionName}>
+    <FormikSectionFieldset
+      label={sectionLabel}
+      sectionName={sectionName}
+      commentSection={commentSection}
+    >
       <FieldArray
         name={fieldName}
         render={({ remove, push, form, name }) => (
@@ -182,21 +191,21 @@ const VariablesSection = (props) => {
                 <FormikInlineInputEditor
                   id={`${name}.${index}.name`}
                   name={`${name}.${index}.name`}
-                  formattingOptions={variableFieldsFormattigOprions}
+                  formattingOptions={variableFieldsFormattingOptions}
                   label='Name'
                   description={nameFieldInfo}
                 />
                 <FormikInlineInputEditor
                   id={`${name}.${index}.long_name`}
                   name={`${name}.${index}.long_name`}
-                  formattingOptions={variableFieldsFormattigOprions}
+                  formattingOptions={variableFieldsFormattingOptions}
                   label='Long name'
                   description={longNameFieldInfo}
                 />
                 <FormikInlineInputEditor
                   id={`${name}.${index}.unit`}
                   name={`${name}.${index}.unit`}
-                  formattingOptions={variableFieldsFormattigOprions}
+                  formattingOptions={variableFieldsFormattingOptions}
                   label='Unit'
                   description={unitFieldInfo}
                 />
@@ -212,6 +221,7 @@ const VariablesSection = (props) => {
 VariablesSection.propTypes = {
   sectionLabel: T.string,
   sectionName: T.string,
+  commentSection: T.string,
   fieldLabel: T.string,
   fieldName: T.string,
   fieldEmptyMessage: T.node
