@@ -35,6 +35,10 @@ export const CommentFormWrapper = styled.div`
   z-index: 9999;
   padding: ${glsp(1, 2)};
 
+  label {
+    font-size: 0.875rem;
+  }
+
   textarea {
     min-height: 4rem;
 
@@ -59,6 +63,7 @@ const sectionMenu = {
 };
 
 const sectionMenuTriggerProps = {
+  size: 'small',
   forwardedAs: SectionTrigger,
   href: '#comment-field'
 };

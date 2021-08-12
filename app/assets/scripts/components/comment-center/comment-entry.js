@@ -60,28 +60,36 @@ const CommentEntrySelf = styled.article`
       padding-left: ${glsp(3)};
     `}
 
-  ${({ isResolved }) =>
-    isResolved &&
-    css`
-      &::before {
-        ${collecticon('tick--small')}
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 4;
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        width: 2rem;
-        height: 2rem;
-        color: ${themeVal('color.surface')};
-        line-height: 1;
-        background: ${themeVal('color.link')};
-        padding: ${glsp(0.125)};
-        clip-path: polygon(0 0, 100% 0, 0 100%);
-        pointer-events: none;
-      }
-    `}
+  &::before {
+    ${collecticon('tick--small')}
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 2rem;
+    height: 2rem;
+    color: ${themeVal('color.surface')};
+    line-height: 1;
+    background: ${themeVal('color.link')};
+    padding: ${glsp(0.125)};
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    pointer-events: none;
+    transition: all 0.16s ease-in-out 0s;
+    transform: scale(0) translate(-100%, 0);
+    transform-origin: top left;
+
+    ${({ isResolved }) =>
+      isResolved
+        ? css`
+            transform: scale(1) translate(0, 0);
+          `
+        : css`
+            transform: scale(0) translate(-100%, 0);
+          `}
+  }
 `;
 
 const CommentEntryHeader = styled.header`

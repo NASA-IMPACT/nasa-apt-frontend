@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 
@@ -43,12 +43,15 @@ const commentSectionMenu = [
 function CommentSectionsMenu(props) {
   const { activeItem, onSelect } = props;
 
+  const triggerProps = useMemo(() => ({ size: 'small' }), []);
+
   return (
     <SectionsDropdownMenu
       menu={commentSectionMenu}
       activeItem={activeItem}
       alignment='left'
       direction='down'
+      triggerProps={triggerProps}
       withChevron
       dropTitle='Options'
       onSelect={onSelect}

@@ -140,6 +140,7 @@ function ThreadSinglePanelContents() {
           <Button
             useIcon='arrow-left'
             title='See all comments'
+            size='small'
             onClick={() => setOpenThreadId(null)}
           >
             View all
