@@ -11,6 +11,7 @@ import {
   FormikInlineInputEditor,
   FormikInputEditor
 } from '../../common/forms/input-editor';
+import { FormikInputText } from '../../common/forms/input-text';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
 import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
@@ -111,6 +112,8 @@ export default function StepAlgoDescription(props) {
                   sectionLabel={getDocumentSectionLabel('input_variables')}
                   sectionName='sections_completed.input_variables'
                   commentSection='input_variables'
+                  captionLabel='Algorithm input variables table caption'
+                  captionName='document.algorithm_input_variables_caption'
                   fieldLabel='Algorithm input variables'
                   fieldName='document.algorithm_input_variables'
                   fieldEmptyMessage='There are no Input Variables. You can start by adding one.'
@@ -120,6 +123,8 @@ export default function StepAlgoDescription(props) {
                   sectionLabel={getDocumentSectionLabel('output_variables')}
                   sectionName='sections_completed.output_variables'
                   commentSection='output_variables'
+                  captionLabel='Algorithm output variables table caption'
+                  captionName='document.algorithm_output_variables_caption'
                   fieldLabel='Algorithm output variables'
                   fieldName='document.algorithm_output_variables'
                   fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
@@ -149,6 +154,8 @@ const VariablesSection = (props) => {
     sectionLabel,
     sectionName,
     commentSection,
+    captionLabel,
+    captionName,
     fieldLabel,
     fieldName,
     fieldEmptyMessage
@@ -157,6 +164,7 @@ const VariablesSection = (props) => {
   const path = fieldName.replace(/^document\./, '');
 
   const fieldDescription = formString(`algorithm_description.${path}.fieldset`);
+  const captionFieldInfo = formString(`algorithm_description.${path}.caption`);
 
   const nameFieldInfo = formString(`algorithm_description.${path}.name`);
   const longNameFieldInfo = formString(
@@ -170,6 +178,12 @@ const VariablesSection = (props) => {
       sectionName={sectionName}
       commentSection={commentSection}
     >
+      <FormikInputText
+        id={captionName}
+        name={captionName}
+        label={captionLabel}
+        description={captionFieldInfo}
+      />
       <FieldArray
         name={fieldName}
         render={({ remove, push, form, name }) => (
@@ -222,6 +236,8 @@ VariablesSection.propTypes = {
   sectionLabel: T.string,
   sectionName: T.string,
   commentSection: T.string,
+  captionLabel: T.string,
+  captionName: T.string,
   fieldLabel: T.string,
   fieldName: T.string,
   fieldEmptyMessage: T.node

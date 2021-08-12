@@ -135,6 +135,7 @@ export const STEPS = [
           scientific_theory_assumptions: EDITOR_SYM,
           mathematical_theory: EDITOR_SYM,
           mathematical_theory_assumptions: EDITOR_SYM,
+          algorithm_input_variables_caption: '',
           algorithm_input_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
@@ -143,6 +144,7 @@ export const STEPS = [
             //   unit: EDITOR_SYM
             // }
           ],
+          algorithm_output_variables_caption: '',
           algorithm_output_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
