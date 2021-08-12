@@ -63,6 +63,14 @@ export default function StepIntroduction(props) {
                       'introduction.historical_perspective'
                     )}
                   />
+                  <FormikInputEditor
+                    id='additional_information'
+                    name='document.additional_information'
+                    label='Additional information'
+                    description={formString(
+                      'introduction.additional_information'
+                    )}
+                  />
                 </FormikSectionFieldset>
               </RichTextContex2Formik>
             </Form>

@@ -112,6 +112,7 @@ export const STEPS = [
         document: {
           introduction: EDITOR_SYM,
           historical_perspective: EDITOR_SYM,
+          additional_information: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []

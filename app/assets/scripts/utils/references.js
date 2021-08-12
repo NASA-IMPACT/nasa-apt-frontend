@@ -123,6 +123,7 @@ export const formatReference = (reference) => {
 const fieldsWithReferences = [
   'introduction',
   'historical_perspective',
+  'additional_information',
   'scientific_theory',
   'scientific_theory_assumptions',
   'mathematical_theory',

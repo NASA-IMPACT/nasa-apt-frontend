@@ -1,2 +1,3 @@
 introduction: A brief description of the ATBD which concisely provides users with the information needed to understand the relevance and usefulness of the ATBD.
 historical_perspective: A brief description of the algorithm history or lineage.  Describe how the algorithm came to be in its current form.
+additional_information: Provide additional information such as statistical model description or other preparatory work that led to the algorithm described in this document.

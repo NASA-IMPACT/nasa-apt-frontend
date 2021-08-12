@@ -336,6 +336,23 @@ export const atbdContentSections = [
             withEditor
           />
         )
+      },
+      {
+        label: 'Additional information',
+        id: 'additional_information',
+        editorSubsections: (document, { id }) =>
+          subsectionsFromSlateDocument(document.additional_information, id),
+        render: (props) => (
+          <FragmentWithOptionalEditor
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.additional_information}
+            HLevel='h3'
+            subsectionLevel='h4'
+            withEditor
+          />
+        )
       }
     ]
   },
