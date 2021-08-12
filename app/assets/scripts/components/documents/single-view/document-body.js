@@ -316,25 +316,28 @@ export const atbdContentSections = [
     )
   },
   {
-    label: 'Historical Perspective',
-    id: 'historical_perspective',
-    editorSubsections: (document, { id }) =>
-      subsectionsFromSlateDocument(document.historical_perspective, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <SafeReadEditor
-          context={{
-            subsectionLevel: 'h3',
-            sectionId: element.id,
-            references: document.publication_references,
-            referencesUseIndex,
-            atbd
-          }}
-          value={document.historical_perspective}
-          whenEmpty={<EmptySection />}
-        />
-      </AtbdSection>
-    )
+    label: 'Context / Background',
+    id: 'context_background',
+    render: AtbdSectionPassThrough,
+    children: [
+      {
+        label: 'Historical Perspective',
+        id: 'historical_perspective',
+        editorSubsections: (document, { id }) =>
+          subsectionsFromSlateDocument(document.historical_perspective, id),
+        render: (props) => (
+          <FragmentWithOptionalEditor
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.historical_perspective}
+            HLevel='h3'
+            subsectionLevel='h4'
+            withEditor
+          />
+        )
+      }
+    ]
   },
   {
     label: 'Algorithm Description',
@@ -433,7 +436,7 @@ export const atbdContentSections = [
       },
       {
         label: 'Algorithm Input Variables',
-        id: 'input_variables_',
+        id: 'input_variables',
         render: ({ element, children }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
@@ -480,15 +483,15 @@ export const atbdContentSections = [
     ]
   },
   {
-    label: 'Algorithm Implementations',
-    id: 'algorithm_implementations',
+    label: 'Algorithm Availability',
+    id: 'algorithm_availability',
     render: AtbdSectionPassThrough,
     children: ({ document }) => {
       const items = document.algorithm_implementations || [];
 
       return items.map((o, idx) => ({
-        label: `Entry #${idx + 1}`,
-        id: `algorithm_implementations_${idx + 1}`,
+        label: `Location of Implemented Algorithm #${idx + 1}`,
+        id: `algorithm_availability_${idx + 1}`,
         render: ({ element, document }) => (
           <AtbdSubSection
             key={element.id}
@@ -624,7 +627,7 @@ export const atbdContentSections = [
     render: AtbdSectionPassThrough,
     children: [
       {
-        label: 'Data Access Input Data',
+        label: 'Input Data Data Access',
         id: 'data_access_input_data',
         render: (props) => (
           <FragmentWithOptionalEditor
@@ -659,7 +662,7 @@ export const atbdContentSections = [
         }
       },
       {
-        label: 'Data Access Output Data',
+        label: 'Output Data Data Access',
         id: 'data_access_output_data',
         render: (props) => (
           <FragmentWithOptionalEditor
@@ -694,7 +697,7 @@ export const atbdContentSections = [
         }
       },
       {
-        label: 'Data Access Related URLs',
+        label: 'Important Related URLs',
         id: 'data_access_related_urls',
         render: (props) => (
           <FragmentWithOptionalEditor

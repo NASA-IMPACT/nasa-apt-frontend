@@ -61,7 +61,7 @@ export default function StepIdentifyingInformation(props) {
                 <FormikInputText
                   id='title'
                   name='title'
-                  label='Title'
+                  label='ATBD Title'
                   description={formString('identifying_information.title')}
                 />
                 <FieldAtbdAlias />

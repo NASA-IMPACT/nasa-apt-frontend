@@ -53,11 +53,11 @@ export default function StepAlgoImplementation(props) {
               <RichTextContex2Formik>
                 <UrlDescriptionSection
                   sectionLabel={getDocumentSectionLabel(
-                    'algorithm_implementations'
+                    'algorithm_availability'
                   )}
-                  sectionName='sections_completed.algorithm_implementations'
-                  commentSection='algorithm_implementations'
-                  fieldLabel='Algorithm Implementations'
+                  sectionName='sections_completed.algorithm_availability'
+                  commentSection='algorithm_availability'
+                  fieldLabel='Location of Implemented Algorithm'
                   fieldName='document.algorithm_implementations'
                   fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
                 />
@@ -68,9 +68,9 @@ export default function StepAlgoImplementation(props) {
                   )}
                   sectionName='sections_completed.data_access_input_data'
                   commentSection='data_access_input_data'
-                  fieldLabel='Data Access Inputs'
+                  fieldLabel='Input Data Access'
                   fieldName='document.data_access_input_data'
-                  fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
+                  fieldEmptyMessage='There are no entries for Input Data Access. You can start by adding one.'
                 />
 
                 <UrlDescriptionSection
@@ -79,9 +79,9 @@ export default function StepAlgoImplementation(props) {
                   )}
                   sectionName='sections_completed.data_access_output_data'
                   commentSection='data_access_output_data'
-                  fieldLabel='Data Access Outputs'
+                  fieldLabel='Output Data Access'
                   fieldName='document.data_access_output_data'
-                  fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
+                  fieldEmptyMessage='There are no entries for Output Data Access. You can start by adding one.'
                 />
 
                 <UrlDescriptionSection
@@ -90,9 +90,9 @@ export default function StepAlgoImplementation(props) {
                   )}
                   sectionName='sections_completed.data_access_related_urls'
                   commentSection='data_access_related_urls'
-                  fieldLabel='Data Access Related Urls'
+                  fieldLabel='Important Related Urls'
                   fieldName='document.data_access_related_urls'
-                  fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
+                  fieldEmptyMessage='There are no Important Related Urls. You can start by adding one.'
                 />
               </RichTextContex2Formik>
             </Form>

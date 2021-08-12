@@ -49,7 +49,7 @@ export default function StepJournalDetails(props) {
                   <FormikInputEditor
                     id='journal_discussion'
                     name='document.journal_discussion'
-                    label='List discussion points'
+                    label='Significance Discussion'
                     description={formString('journal_details.discussion')}
                   />
                 </FormikSectionFieldset>
@@ -62,7 +62,7 @@ export default function StepJournalDetails(props) {
                   <FormikInputEditor
                     id='journal_acknowledgements'
                     name='document.journal_acknowledgements'
-                    label='List of acknowledgements'
+                    label='Acknowledgment List'
                     description={formString('journal_details.acknowledgements')}
                   />
                 </FormikSectionFieldset>

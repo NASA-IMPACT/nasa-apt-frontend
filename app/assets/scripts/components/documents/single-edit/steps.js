@@ -118,7 +118,7 @@ export const STEPS = [
         },
         sections_completed: {
           introduction: 'incomplete',
-          historical_perspective: 'incomplete'
+          context_background: 'incomplete'
         }
       });
     }
@@ -225,7 +225,7 @@ export const STEPS = [
           publication_references: []
         },
         sections_completed: {
-          algorithm_implementations: 'incomplete',
+          algorithm_availability: 'incomplete',
           data_access_input_data: 'incomplete',
           data_access_output_data: 'incomplete',
           data_access_related_urls: 'incomplete'

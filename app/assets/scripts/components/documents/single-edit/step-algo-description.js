@@ -111,7 +111,7 @@ export default function StepAlgoDescription(props) {
                   sectionLabel={getDocumentSectionLabel('input_variables')}
                   sectionName='sections_completed.input_variables'
                   commentSection='input_variables'
-                  fieldLabel='Variables'
+                  fieldLabel='Algorithm input variables'
                   fieldName='document.algorithm_input_variables'
                   fieldEmptyMessage='There are no Input Variables. You can start by adding one.'
                 />
@@ -120,7 +120,7 @@ export default function StepAlgoDescription(props) {
                   sectionLabel={getDocumentSectionLabel('output_variables')}
                   sectionName='sections_completed.output_variables'
                   commentSection='output_variables'
-                  fieldLabel='Variables'
+                  fieldLabel='Algorithm output variables'
                   fieldName='document.algorithm_output_variables'
                   fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
                 />
