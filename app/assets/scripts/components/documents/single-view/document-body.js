@@ -304,6 +304,27 @@ const renderElements = (elements, props) =>
 //    same structure.
 export const atbdContentSections = [
   {
+    label: 'Abstract',
+    id: 'abstract',
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.abstract, id),
+    render: ({ element, document, referencesUseIndex, atbd }) => (
+      <AtbdSection key={element.id} id={element.id} title={element.label}>
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
+          value={document.abstract}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
     label: 'Introduction',
     id: 'introduction',
     editorSubsections: (document, { id }) =>
