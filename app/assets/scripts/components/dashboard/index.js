@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 import { glsp, media, visuallyHidden } from '@devseed-ui/theme-provider';
 
@@ -221,6 +221,17 @@ const inisghtsA11y = {
 
 function CuratorInsights() {
   const { atbds } = useAtbds();
+  const theme = useTheme();
+
+  const statusMapping = useMemo(
+    () => ({
+      DRAFT: theme.color.statusDraft,
+      OPEN_REVIEW: theme.color.statusReview,
+      PUBLICATION: theme.color.statusPublication,
+      PUBLISHED: theme.color.statusPublished
+    }),
+    [theme]
+  );
 
   const statCount = useMemo(() => {
     if (!atbds.data) return;
@@ -257,6 +268,7 @@ function CuratorInsights() {
             id={status.toLowerCase()}
             total={statCount.total}
             value={statCount[status]}
+            segmentColor={statusMapping[status]}
             description={getDocumentStatusLabel(status)}
             a11y={inisghtsA11y[status]}
           />

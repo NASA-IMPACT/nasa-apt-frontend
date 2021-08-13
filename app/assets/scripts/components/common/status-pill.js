@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 
 import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
@@ -39,6 +39,12 @@ const StatusSelf = styled(Pill)`
         margin-left: ${glsp(0.25)};
       }
     `}
+
+  ${({ pillColor }) =>
+    pillColor &&
+    css`
+      background: ${pillColor};
+    `}
 `;
 
 const journalStatusIcons = {
@@ -70,11 +76,26 @@ export default StatusPill;
 
 export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
+  const theme = useTheme();
+
+  const statusMapping = useMemo(
+    () => ({
+      DRAFT: theme.color.statusDraft,
+      CLOSED_REVIEW_REQUESTED: theme.color.statusDraft,
+      CLOSED_REVIEW: theme.color.statusReview,
+      OPEN_REVIEW: theme.color.statusReview,
+      PUBLICATION_REQUESTED: theme.color.statusReview,
+      PUBLICATION: theme.color.statusPublication,
+      PUBLISHED: theme.color.statusPublished
+    }),
+    [theme]
+  );
 
   if (isDraft(atbdVersion) || isReviewRequested(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill
+        pillColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${percent}%`}
@@ -90,6 +111,7 @@ export function DocumentStatusPill(props) {
 
     return (
       <StatusPill
+        pillColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${revCompleted}/${revTotal}`}
@@ -103,6 +125,7 @@ export function DocumentStatusPill(props) {
     const journalStatus = null; // TODO: compute
     return (
       <StatusPill
+        pillColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         statusIcon={journalStatusIcons[journalStatus]}
         {...rest}
