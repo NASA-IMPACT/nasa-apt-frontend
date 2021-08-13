@@ -95,8 +95,7 @@ function DocumentDashboardEntry(props) {
             <li>
               <CollaboratorsMenu
                 onOptionsClick={onCollaboratorMenuOptionsClick}
-                atbdId={lastVersion.id}
-                version={lastVersion.version}
+                atbdVersion={lastVersion}
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
