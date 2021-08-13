@@ -156,9 +156,9 @@ const FragmentWithOptionalEditor = ({
 
 const DataAccessItem = ({ id, label, url, description }) => (
   <AtbdSubSection key={id} itemScope itemType='https://schema.org/Dataset'>
-    <h3 id={id} itemProp='name' data-scroll='target'>
+    <h4 id={id} itemProp='name' data-scroll='target'>
       {label}
-    </h3>
+    </h4>
     <DetailsList>
       <dt>Url</dt>
       <dd>
