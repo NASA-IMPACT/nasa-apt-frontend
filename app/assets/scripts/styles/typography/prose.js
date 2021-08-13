@@ -6,7 +6,7 @@ import {
   media,
   multiply,
   stylizeFunction,
-  themeVal,
+  themeVal
 } from '@devseed-ui/theme-provider';
 
 const _tint = stylizeFunction(tint);

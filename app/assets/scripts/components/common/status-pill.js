@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled, { css, useTheme } from 'styled-components';
 
-import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, multiply, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
@@ -27,7 +27,7 @@ const StatusSelf = styled(Pill)`
     width: ${({ value }) => `${value}%`};
     content: '';
     pointer-events: none;
-    background-color: ${rgba(themeVal('color.base'), 0.32)};
+    background-color: ${rgba(themeVal('color.base'), 0.64)};
   }
 
   ${({ useIcon }) =>
@@ -40,11 +40,29 @@ const StatusSelf = styled(Pill)`
       }
     `}
 
-  ${({ pillColor }) =>
-    pillColor &&
-    css`
-      background: ${pillColor};
-    `}
+  span {
+    position: relative;
+    display: inline-flex;
+    gap: 0.75em;
+    align-items: center;
+
+    &::before {
+      content: '';
+      display: inline-flex;
+      height: 0.75em;
+      aspect-ratio: 1 / 1;
+      border-radius: ${themeVal('shape.ellipsoid')};
+      background: ${themeVal('color.baseLight')};
+      box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
+        ${themeVal('color.baseLight')};
+
+      ${({ pillColor }) =>
+        pillColor &&
+        css`
+          background: ${pillColor};
+        `}
+    }
+  }
 `;
 
 const journalStatusIcons = {
