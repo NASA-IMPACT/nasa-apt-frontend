@@ -20,6 +20,7 @@ import {
 } from '../../contacts/contact-utils';
 import { DOCUMENT_SECTIONS } from '../single-edit/sections';
 import { useCommentCenter } from '../../../context/comment-center';
+import { isJournalPublicationIntended } from '../status';
 
 const HeadingContextualActions = ({ id }) => {
   const { openPanelOn } = useCommentCenter();
@@ -272,6 +273,12 @@ const EmptySection = () => <p>No content available.</p>;
 const renderElements = (elements, props) =>
   elements
     ? elements.map((el) => {
+        if (
+          typeof el.shouldRender === 'function' &&
+          !el.shouldRender({ element: el, ...props })
+        ) {
+          return null;
+        }
         // If children is a function means it needs props to dynamically render
         // them, like the case of array fields.
         const resultingChildren =
@@ -285,6 +292,8 @@ const renderElements = (elements, props) =>
 // Each node has the following properties:
 // label: Human readable title to print
 // id: Unique id in the whole page to be used as anchor
+// shouldRender: Whether or not this section should be rendered. If not
+// provided, the default is true.
 // editorSubsections: For the fields edited through slate, we need to extract the
 //    subsections which are user generated. These will be added to the children
 //    when rendering.
@@ -810,6 +819,7 @@ export const atbdContentSections = [
   {
     label: 'Journal Details',
     id: 'journal_details',
+    shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
     render: ({ element, children }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <p>
@@ -823,8 +833,8 @@ export const atbdContentSections = [
     ),
     children: [
       {
-        label: 'Acknowledgements',
-        id: 'acknowledgements',
+        label: 'Significance Discussion',
+        id: 'discussion',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.journal_discussion, id),
         render: (props) => (
@@ -840,8 +850,25 @@ export const atbdContentSections = [
         )
       },
       {
-        label: 'Discussion',
-        id: 'discussion',
+        label: 'Data availability statements',
+        id: 'data_availability',
+        editorSubsections: (document, { id }) =>
+          subsectionsFromSlateDocument(document.data_availability, id),
+        render: (props) => (
+          <FragmentWithOptionalEditor
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.data_availability}
+            HLevel='h3'
+            subsectionLevel='h4'
+            withEditor
+          />
+        )
+      },
+      {
+        label: 'Acknowledgements',
+        id: 'acknowledgements',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.journal_acknowledgements, id),
         render: (props) => (

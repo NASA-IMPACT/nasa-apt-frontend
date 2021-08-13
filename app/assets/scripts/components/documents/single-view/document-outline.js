@@ -97,9 +97,16 @@ OutlineMenuLink.propTypes = {
 
 // Component to recursively render the outline menu.
 const OutlineMenu = (props) => {
-  const { items, atbdDocument = {}, atbd = {} } = props;
+  const { items: inputItems = [], atbdDocument = {}, atbd = {} } = props;
 
   const { activeId, getScrollToId } = useScrollLink();
+
+  const items = inputItems.filter((item) => {
+    // Check if the item should be rendered, if a function exists.
+    return typeof item.shouldRender === 'function'
+      ? item.shouldRender({ document: atbdDocument, atbd })
+      : true;
+  });
 
   return items?.length ? (
     <OutlineMenuSelf>
