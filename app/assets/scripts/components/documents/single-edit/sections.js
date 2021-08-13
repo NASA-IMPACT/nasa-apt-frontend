@@ -20,6 +20,7 @@ export const DOCUMENT_SECTIONS = [
   { id: 'data_access_input_data', label: 'Input Data Access' },
   { id: 'data_access_output_data', label: 'Output Data Access' },
   { id: 'data_access_related_urls', label: 'Important Related Urls' },
+  { id: 'abstract', label: 'Abstract' },
   { id: 'discussion', label: 'Discussion' },
   { id: 'acknowledgements', label: 'Acknowledgements' }
 ];

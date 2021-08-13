@@ -133,7 +133,9 @@ const fieldsWithReferences = [
   'performance_assessment_validation_uncertainties',
   'performance_assessment_validation_errors',
   'journal_discussion',
-  'journal_acknowledgements'
+  'journal_acknowledgements',
+  'data_availability',
+  'abstract'
 ];
 
 /**

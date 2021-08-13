@@ -1,13 +1,14 @@
 import { getValuesFromObj, EDITOR_SYM } from '../../../utils/get-values-object';
+import { JOURNAL_NO_PUBLICATION } from '../status';
 
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
 import StepAlgoDescription from './step-algo-description';
 import StepAlgoUsage from './step-algo-usage';
-import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
 import StepReferences from './step-references';
 import StepContacts from './step-contacts';
+import StepCloseout from './step-closeout';
 
 export const STEPS = [
   {
@@ -237,19 +238,23 @@ export const STEPS = [
     }
   },
   {
-    id: 'journal_details',
-    label: 'Journal details',
-    StepComponent: StepJournalDetails,
+    id: 'closeout',
+    label: 'Closeout',
+    StepComponent: StepCloseout,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
+        journal_status: JOURNAL_NO_PUBLICATION,
         document: {
+          abstract: EDITOR_SYM,
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,
+          data_availability: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
         },
         sections_completed: {
+          abstract: 'incomplete',
           discussion: 'incomplete',
           acknowledgements: 'incomplete'
         }

@@ -136,6 +136,15 @@ export const isPublication = (versionOrStatus) => {
 };
 
 /**
+ * Checks that the given document or status string is in Publication or after
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublicationOrAfter = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [PUBLICATION, PUBLISHED]);
+};
+
+/**
  * Checks that the given document or status string is Published
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
@@ -155,4 +164,19 @@ export const REVIEW_DONE = 'DONE';
  */
 export const isReviewDone = (reviewerOrStatus) => {
   return (reviewerOrStatus?.review_status || reviewerOrStatus) === REVIEW_DONE;
+};
+
+export const JOURNAL_NO_PUBLICATION = 'NO_PUBLICATION';
+export const JOURNAL_PUB_INTENDED = 'PUBLICATION_INTENDED';
+export const JOURNAL_SUBMITTED = 'PUBLICATION_REQUESTED';
+export const JOURNAL_PUBLISHED = 'PUBLISHED';
+
+/**
+ * Checks that the given document or status is intended for journal publication
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isJournalPublicationIntended = (versionOrStatus) => {
+  const status = versionOrStatus?.journal_status || versionOrStatus;
+  return !!status && status !== JOURNAL_NO_PUBLICATION;
 };
