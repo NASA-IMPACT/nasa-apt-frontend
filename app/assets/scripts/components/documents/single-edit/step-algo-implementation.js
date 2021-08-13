@@ -152,12 +152,16 @@ const UrlDescriptionSection = (props) => {
             emptyMessage={fieldEmptyMessage}
             onAddClick={() => push(emptyFieldValue)}
           >
-            {get(form.values, name).map((field, index) => (
+            {get(form.values, name).map((field, index, all) => (
               <DeletableFieldset
                 /* eslint-disable-next-line react/no-array-index-key */
                 key={index}
                 id={`${name}.${index}`}
                 label={`Entry #${index + 1}`}
+                disableDelete={all.length === 1}
+                deleteDescription={
+                  all.length === 1 ? 'At least 1 entry is required.' : null
+                }
                 onDeleteClick={() => remove(index)}
               >
                 <FormikInputText

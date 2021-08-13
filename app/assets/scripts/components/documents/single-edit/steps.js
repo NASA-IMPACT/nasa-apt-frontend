@@ -197,32 +197,32 @@ export const STEPS = [
       return getValuesFromObj(atbd, {
         document: {
           algorithm_implementations: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_input_data: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_output_data: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_related_urls: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
