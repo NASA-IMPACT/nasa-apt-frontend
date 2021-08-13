@@ -2,17 +2,21 @@ import styled, { css } from 'styled-components';
 import { tint } from 'polished';
 
 import {
-  themeVal,
+  divide,
   glsp,
   media,
-  stylizeFunction
+  multiply,
+  stylizeFunction,
+  themeVal,
 } from '@devseed-ui/theme-provider';
 
 const _tint = stylizeFunction(tint);
 
+const spacing = '1.5rem';
+
 export const proseInnerSpacing = () => css`
   > * {
-    margin-bottom: ${glsp(1.5)};
+    margin-bottom: ${spacing};
   }
 
   > *:last-child {
@@ -35,6 +39,10 @@ const Prose = styled.div`
     font-weight: ${themeVal('type.heading.weight')};
     font-style: ${themeVal('type.heading.style')};
     font-variation-settings: ${themeVal('type.heading.settings')};
+
+    &:not(:first-child) {
+      margin-top: ${multiply(spacing, 2)};
+    }
   }
 
   h1 {
