@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components';
 import { tint } from 'polished';
 
 import {
-  divide,
   glsp,
   media,
   multiply,
@@ -12,11 +11,11 @@ import {
 
 const _tint = stylizeFunction(tint);
 
-const spacing = '1.5rem';
+export const proseSpacing = '1.5rem';
 
 export const proseInnerSpacing = () => css`
   > * {
-    margin-bottom: ${spacing};
+    margin-bottom: ${proseSpacing};
   }
 
   > *:last-child {
@@ -41,7 +40,7 @@ const Prose = styled.div`
     font-variation-settings: ${themeVal('type.heading.settings')};
 
     &:not(:first-child) {
-      margin-top: ${multiply(spacing, 2)};
+      margin-top: ${multiply(proseSpacing, 2)};
     }
   }
 
