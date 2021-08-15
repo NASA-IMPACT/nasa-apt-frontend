@@ -14,8 +14,8 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageBody,
-  InpageMeta,
-  InpageSubtitle
+  InpageSubtitle,
+  InpageHeadHgroup
 } from '../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../styles/form-block';
 import { FormikInputText } from '../common/forms/input-text';
@@ -158,16 +158,16 @@ function Search() {
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Search</InpageTitle>
-          </InpageHeadline>
-          <InpageMeta>
-            <dt>Under</dt>
-            <InpageSubtitle as='dd'>
+            <InpageHeadHgroup>
+              <InpageTitle>Search</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
+              <span>Under</span>
               <Link to='/documents' title='View all Documents'>
                 Documents
               </Link>
             </InpageSubtitle>
-          </InpageMeta>
+          </InpageHeadline>
         </InpageHeaderSticky>
         <InpageBody>
           <FormBlock>
