@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Heading } from '@devseed-ui/typography';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Button } from '@devseed-ui/button';
 
@@ -24,11 +23,7 @@ import { useDocumentCreate } from '../documents/single-edit/use-document-create'
 import { useDocumentHubMenuAction } from './use-document-menu-action';
 import { PUBLISHED } from '../documents/status';
 import { useThreadStats } from '../../context/threads-list';
-
-const DashboardContributorInner = styled.div`
-  display: grid;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-`;
+import { DocumentsBlockTitle } from '.';
 
 const EmptyTab = styled(EmptyHub)`
   grid-column: 1;
@@ -69,9 +64,9 @@ function DashboardContributor() {
   } = useDocListSettings();
 
   return (
-    <DashboardContributorInner>
+    <React.Fragment>
       <TabsManager onTabChange={resetListSettings}>
-        <Heading size='medium'>Documents</Heading>
+        <DocumentsBlockTitle>Documents</DocumentsBlockTitle>
         <DocumentNavigation
           listSettingsValues={listSettingsValues}
           listSettingsSetter={listSettingsSetter}
@@ -106,7 +101,7 @@ function DashboardContributor() {
           />
         </TabContent>
       </TabsManager>
-    </DashboardContributorInner>
+    </React.Fragment>
   );
 }
 

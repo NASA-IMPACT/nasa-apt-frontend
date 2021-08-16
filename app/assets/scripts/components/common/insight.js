@@ -32,7 +32,7 @@ const InsightCaption = styled.figcaption`
 `;
 
 export default function Insight(props) {
-  const { id, total, value, description, a11y } = props;
+  const { id, total, value, description, segmentColor, a11y } = props;
   const theme = useTheme();
 
   // We want the circumference to be 100 because of the dasharray calculations.
@@ -69,7 +69,7 @@ export default function Insight(props) {
             cy={boxSize / 2}
             r={radius}
             fill='transparent'
-            stroke={theme.color.primary}
+            stroke={segmentColor}
             strokeWidth='2'
             strokeDasharray={`${percent} ${empty}`}
             strokeDashoffset='25'
@@ -92,6 +92,7 @@ export default function Insight(props) {
 
 Insight.propTypes = {
   id: T.string,
+  segmentColor: T.string,
   total: T.number,
   value: T.number,
   description: T.string,

@@ -7,7 +7,9 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageSubtitle,
+  InpageHeadHgroup
 } from '../../../styles/inpage';
 import { ContentBlock } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
@@ -15,6 +17,7 @@ import Prose from '../../../styles/typography/prose';
 import toasts from '../../common/toasts';
 import { showConfirmationPrompt } from '../../common/confirmation-prompt';
 import { TabContent, TabItem, TabsManager, TabsNav } from '../../common/tabs';
+import { Link } from 'react-router-dom';
 
 function SandboxInteractive() {
   return (
@@ -22,7 +25,14 @@ function SandboxInteractive() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>Interactive</InpageTitle>
+            <InpageHeadHgroup>
+              <InpageTitle>Interactive</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
+              <Link to='/sandbox' title='Visit Sandbox hub'>
+                Sandbox
+              </Link>
+            </InpageSubtitle>
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>

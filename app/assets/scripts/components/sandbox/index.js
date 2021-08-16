@@ -8,6 +8,7 @@ import {
   Inpage,
   InpageHeader,
   InpageHeadline,
+  InpageHeadHgroup,
   InpageTitle,
   InpageBody
 } from '../../styles/inpage';
@@ -18,6 +19,7 @@ import SandboxInteractive from './interactive';
 import SandboxStructure from './structure';
 import SandboxStickyStructure from './structure/sticky';
 import SandboxElements from './elements';
+import { ContentBlock } from '../../styles/content-block';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -55,11 +57,13 @@ function Sandbox() {
           <Inpage>
             <InpageHeader>
               <InpageHeadline>
-                <InpageTitle>Sandbox</InpageTitle>
+                <InpageHeadHgroup>
+                  <InpageTitle>Sandbox</InpageTitle>
+                </InpageHeadHgroup>
               </InpageHeadline>
             </InpageHeader>
             <InpageBodyScroll>
-              <Constrainer>
+              <ContentBlock>
                 <Prose>
                   <h6>Contents</h6>
                   <ol>
@@ -98,7 +102,7 @@ function Sandbox() {
                     </li>
                   </ol>
                 </Prose>
-              </Constrainer>
+              </ContentBlock>
             </InpageBodyScroll>
           </Inpage>
         </App>

@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import nl2br from 'react-nl2br';
+import { glsp } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 
 import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
@@ -73,7 +74,7 @@ const AtbdSection = styled(AtbdSectionBase)`
 
   &:not(:last-child) {
     &::after {
-      width: 8rem;
+      width: ${glsp(8)};
     }
   }
 `;

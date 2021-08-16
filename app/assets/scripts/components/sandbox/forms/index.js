@@ -12,8 +12,8 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
-  InpageMeta,
-  InpageBody
+  InpageBody,
+  InpageHeadHgroup
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
 import { InputText } from '../../common/forms/input-text';
@@ -86,16 +86,15 @@ function SandboxForms() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>Forms</InpageTitle>
-          </InpageHeadline>
-          <InpageMeta>
-            <dt>Under</dt>
-            <InpageSubtitle as='dd'>
+            <InpageHeadHgroup>
+              <InpageTitle>Forms</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
               <Link to='/sandbox' title='Visit Sandbox hub'>
                 Sandbox
               </Link>
             </InpageSubtitle>
-          </InpageMeta>
+          </InpageHeadline>
         </InpageHeader>
         <InpageBodyScroll>
           <Constrainer>
