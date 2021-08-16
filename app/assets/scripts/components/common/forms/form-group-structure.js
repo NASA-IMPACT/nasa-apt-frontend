@@ -8,7 +8,10 @@ import {
   FormLabel as FormLabel$,
   FormHelper
 } from '@devseed-ui/form';
-import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
+import {
+  Toolbar,
+  ToolbarIconButton as ToolbarIconButton$
+} from '@devseed-ui/toolbar';
 
 import Tip from '../tooltip';
 
@@ -22,6 +25,10 @@ const FormGroupHeader = styled(FormGroupHeader$)`
 
 const FormLabel = styled(FormLabel$)`
   min-width: 0;
+`;
+
+const ToolbarIconButton = styled(ToolbarIconButton$)`
+  justify-content: center;
 `;
 
 // This is needed so that the tooltip doesn't have a div wrapper and the focus
