@@ -12,7 +12,6 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
-  InpageMeta,
   InpageBody,
   InpageHeadHgroup
 } from '../../../styles/inpage';

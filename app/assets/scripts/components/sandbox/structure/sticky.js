@@ -1,20 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import throttle from 'lodash.throttle';
-import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
-import StatusPill from '../../common/status-pill';
 import { Link } from '../../../styles/clean/link';
-import { VerticalDivider } from '@devseed-ui/toolbar';
 import {
   Inpage,
   InpageHeadline,
   InpageTitle,
-  InpageMeta,
-  InpageHeadNav,
-  BreadcrumbMenu,
-  InpageActions,
   InpageBody,
   InpageSubtitle,
   InpageHeaderSticky,

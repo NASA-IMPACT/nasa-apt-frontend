@@ -2,28 +2,19 @@ import React from 'react';
 import styled from 'styled-components';
 
 import App from '../../common/app';
-import StatusPill from '../../common/status-pill';
 
 import { Link } from '../../../styles/clean/link';
-
-import { Button } from '@devseed-ui/button';
-import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import {
   Inpage,
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageMeta,
-  InpageHeadNav,
-  BreadcrumbMenu,
-  InpageActions,
   InpageBody,
   InpageSubtitle,
   InpageHeadHgroup
 } from '../../../styles/inpage';
 
-import Constrainer from '../../../styles/constrainer';
 import Prose from '../../../styles/typography/prose';
 import { ContentBlock } from '../../../styles/content-block';
 
