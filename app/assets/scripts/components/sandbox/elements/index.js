@@ -7,7 +7,9 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageHeadHgroup,
+  InpageSubtitle
 } from '../../../styles/inpage';
 import { ContentBlock, Wrapper } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
@@ -21,6 +23,7 @@ import {
   SubTrackerEntryTitle
 } from '../../../styles/progress-tracker';
 import HeadingWActions from '../../../styles/heading-with-actions';
+import { Link } from 'react-router-dom';
 
 function SandboxElements() {
   return (
@@ -28,7 +31,14 @@ function SandboxElements() {
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>Elements</InpageTitle>
+            <InpageHeadHgroup>
+              <InpageTitle>Elements</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
+              <Link to='/sandbox' title='Visit Sandbox hub'>
+                Sandbox
+              </Link>
+            </InpageSubtitle>
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>

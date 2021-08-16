@@ -19,11 +19,13 @@ import {
   BreadcrumbMenu,
   InpageActions,
   InpageBody,
-  InpageSubtitle
+  InpageSubtitle,
+  InpageHeadHgroup
 } from '../../../styles/inpage';
 
 import Constrainer from '../../../styles/constrainer';
 import Prose from '../../../styles/typography/prose';
+import { ContentBlock } from '../../../styles/content-block';
 
 const InpageHeaderSticky = styled(InpageHeader)`
   position: sticky;
@@ -36,56 +38,21 @@ function SandboxStructure() {
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>
-              GPM Integrated Multi-Satellite Retrievals for GPM (IMERG)
-              Algorithm Theoretical Basis Document
-            </InpageTitle>
-            <InpageHeadNav role='navigation'>
-              <BreadcrumbMenu>
-                <li>
-                  <strong>V1.0</strong>
-                </li>
-                <li>
-                  <Button to='/' variation='achromic-plain' title='Create new'>
-                    Viewing
-                  </Button>
-                </li>
-              </BreadcrumbMenu>
-            </InpageHeadNav>
-          </InpageHeadline>
-          <InpageMeta>
-            <dt>Under</dt>
-            <InpageSubtitle as='dd'>
+            <InpageHeadHgroup>
+              <InpageTitle>
+                GPM Integrated Multi-Satellite Retrievals for GPM (IMERG)
+                Algorithm Theoretical Basis Document
+              </InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
               <Link to='/sandbox' title='Visit Sandbox hub'>
                 Sandbox
               </Link>
             </InpageSubtitle>
-            <dt>Status</dt>
-            <dd>
-              <StatusPill status='draft' fillPercent={56} completeness='56%' />
-            </dd>
-            <dt>Discussion</dt>
-            <dd>
-              <a href='#' title='View threads'>
-                2 unsolved threads
-              </a>
-            </dd>
-          </InpageMeta>
-          <InpageActions>
-            <Button to='/' variation='achromic-plain' title='Create new'>
-              Button 1A
-            </Button>
-            <VerticalDivider variation='light' />
-            <Button to='/' variation='achromic-plain' title='Create new'>
-              Button 2A
-            </Button>
-            <Button to='/' variation='achromic-plain' title='Create new'>
-              Button 2B
-            </Button>
-          </InpageActions>
+          </InpageHeadline>
         </InpageHeaderSticky>
         <InpageBody>
-          <Constrainer>
+          <ContentBlock>
             <Prose>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
@@ -152,7 +119,7 @@ function SandboxStructure() {
                 faucibus, dictum felis nec, dignissim justo.{' '}
               </p>
             </Prose>
-          </Constrainer>
+          </ContentBlock>
         </InpageBody>
       </Inpage>
     </App>
