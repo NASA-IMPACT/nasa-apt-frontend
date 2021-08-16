@@ -1,5 +1,6 @@
 import React from 'react';
 import T from 'prop-types';
+import nl2br from 'react-nl2br';
 
 import {
   CardInteractive,
@@ -57,17 +58,14 @@ function DocumentHubEntry(props) {
           <Datetime date={updateDate} />
         </CardDetails>
       </CardHeader>
-      <CardBody>
-        <CardExcerpt>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
-            scelerisque mauris. Vestibulum auctor tempor quam eu pharetra. Nunc
-            gravida lacus ipsum, sit amet dictum tellus sodales eget. Praesent
-            elementum volutpat imperdiet. Nunc cursus lorem vulputate, faucibus
-            nunc a, viverra leo...
-          </p>
-        </CardExcerpt>
-      </CardBody>
+      {lastVersion.document?.abstract &&
+        typeof lastVersion.document.abstract === 'string' && (
+          <CardBody>
+            <CardExcerpt>
+              <p>{nl2br(lastVersion.document.abstract)}</p>
+            </CardExcerpt>
+          </CardBody>
+        )}
       <CardActions>
         <DocumentDownloadMenu
           atbd={lastVersion}
