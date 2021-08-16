@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
@@ -16,7 +16,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import Prose from '../../../styles/typography/prose';
+import Prose, { proseSpacing } from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
@@ -63,8 +63,8 @@ const InpageViewActions = styled(InpageActions)`
 const DocumentProse = styled(Prose)`
   > * {
     position: relative;
-    padding-bottom: ${glsp(3)};
-    margin-bottom: ${glsp(3)};
+    padding-bottom: ${multiply(proseSpacing, 2)};
+    margin-bottom: ${multiply(proseSpacing, 2)};
 
     &::after {
       position: absolute;

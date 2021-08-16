@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { Heading } from '@devseed-ui/typography';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
+import { glsp } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import DocumentDashboardEntry from './document-dashboard-entry';
@@ -13,11 +12,7 @@ import DocCountIndicator from './document-count-indicator';
 import { computeAtbdVersion, useAtbds } from '../../context/atbds-list';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
 import { useThreadStats } from '../../context/threads-list';
-
-const DashboardCuratorInner = styled.div`
-  display: grid;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-`;
+import { DocumentsBlockTitle } from '.';
 
 const Empty = styled(EmptyHub)`
   grid-column: 1;
@@ -67,9 +62,9 @@ function DashboardCurator() {
     applyListSettings(atbds.data);
 
   return (
-    <DashboardCuratorInner>
+    <>
       {atbds.status === 'loading' && <GlobalLoading />}
-      <Heading size='medium'>Documents</Heading>
+      <DocumentsBlockTitle>Documents</DocumentsBlockTitle>
       {atbds.status === 'succeeded' && !atbds.data?.length && (
         <Empty>
           <p>
@@ -109,7 +104,7 @@ function DashboardCurator() {
           </DocumentsList>
         </React.Fragment>
       )}
-    </DashboardCuratorInner>
+    </>
   );
 }
 

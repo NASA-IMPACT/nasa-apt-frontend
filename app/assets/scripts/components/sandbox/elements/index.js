@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@devseed-ui/button';
+import { Link } from 'react-router-dom';
 
 import App from '../../common/app';
 import {
@@ -7,7 +8,9 @@ import {
   InpageHeader,
   InpageHeadline,
   InpageTitle,
-  InpageBody
+  InpageBody,
+  InpageHeadHgroup,
+  InpageSubtitle
 } from '../../../styles/inpage';
 import { ContentBlock, Wrapper } from '../../../styles/content-block';
 import Prose from '../../../styles/typography/prose';
@@ -22,13 +25,30 @@ import {
 } from '../../../styles/progress-tracker';
 import HeadingWActions from '../../../styles/heading-with-actions';
 
+import { useStatusColors } from '../../../utils/use-status-colors';
+import {
+  DRAFT,
+  CLOSED_REVIEW,
+  OPEN_REVIEW,
+  PUBLICATION,
+  PUBLISHED
+} from '../../documents/status';
+
 function SandboxElements() {
+  const { statusMapping } = useStatusColors();
   return (
     <App pageTitle='Sandbox/Elements'>
       <Inpage>
         <InpageHeader>
           <InpageHeadline>
-            <InpageTitle>Elements</InpageTitle>
+            <InpageHeadHgroup>
+              <InpageTitle>Elements</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
+              <Link to='/sandbox' title='Visit Sandbox hub'>
+                Sandbox
+              </Link>
+            </InpageSubtitle>
           </InpageHeadline>
         </InpageHeader>
         <InpageBody>
@@ -37,20 +57,40 @@ function SandboxElements() {
               <h2>Status</h2>
               <div>
                 <StatusPill
+                  pillColor={statusMapping[DRAFT]}
                   status='Draft'
                   fillPercent={50}
                   completeness='50%'
                 />
                 <StatusPill
+                  pillColor={statusMapping[CLOSED_REVIEW]}
                   status='In closed review'
                   fillPercent={100 / 3}
                   completeness='1/3'
                 />
-                <StatusPill status='In review' />
-                <StatusPill status='In publication' />
-                <StatusPill status='In publication' statusIcon='page' />
-                <StatusPill status='In publication' statusIcon='page-tick' />
-                <StatusPill status='Published' statusIcon='page-tick' />
+                <StatusPill
+                  pillColor={statusMapping[OPEN_REVIEW]}
+                  status='In review'
+                />
+                <StatusPill
+                  pillColor={statusMapping[PUBLICATION]}
+                  status='In publication'
+                />
+                <StatusPill
+                  pillColor={statusMapping[PUBLICATION]}
+                  status='In publication'
+                  statusIcon='page'
+                />
+                <StatusPill
+                  pillColor={statusMapping[PUBLICATION]}
+                  status='In publication'
+                  statusIcon='page-tick'
+                />
+                <StatusPill
+                  pillColor={statusMapping[PUBLISHED]}
+                  status='Published'
+                  statusIcon='page-tick'
+                />
               </div>
 
               <HeadingWActions as='h2'>

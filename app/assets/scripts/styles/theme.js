@@ -17,7 +17,11 @@ export function themeOverridesAPT(uiTheme) {
         baseAlphaC: rgba(baseColor, 0.08),
         baseAlphaD: rgba(baseColor, 0.16),
         baseAlphaE: rgba(baseColor, 0.32),
-        baseAlphaF: rgba(baseColor, 0.64)
+        baseAlphaF: rgba(baseColor, 0.64),
+        statusDraft: '#FCAB10',
+        statusReview: '#F4442E',
+        statusPublication: '#643A71',
+        statusPublished: '#2CA58D'
       },
       type: {
         base: {
