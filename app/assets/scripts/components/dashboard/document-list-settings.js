@@ -35,11 +35,15 @@ const DocsFilters = styled(Toolbar)`
 `;
 
 const DropMenuStatusItem = styled(DropMenuItemEnhanced)`
-  &::after {
-    ${statusSwatch}
-    position: absolute;
-    top: 0.65em;
-    right: ${glsp()};
+  > span {
+    flex-grow: 1;
+
+    &::after {
+      ${statusSwatch}
+      position: absolute;
+      top: 0.65em;
+      right: ${glsp()};
+    }
   }
 `;
 
@@ -110,7 +114,7 @@ function DropMenuStatusItemCmp(props) {
       onClick={getMenuClickHandler(onSelect, menuItem)}
       {...props}
     >
-      {menuItem.label}
+      <span>{menuItem.label}</span>
     </DropMenuStatusItem>
   );
 }
