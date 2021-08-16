@@ -1,22 +1,16 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Formik, Form as FormikForm, useFormikContext } from 'formik';
-import { Form, FormTextarea } from '@devseed-ui/form';
+import { FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { glsp } from '@devseed-ui/theme-provider';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
 import DetailsList from '../../styles/typography/details-list';
-import Tip from '../common/tooltip';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 import { CopyField } from '../common/copy-field';
-import {
-  FormikInputTextarea,
-  InputTextarea
-} from '../common/forms/input-textarea';
 import Datetime from '../common/date';
 import { Can } from '../../a11n';
 
@@ -82,7 +76,7 @@ const DocInfoList = styled(DetailsList)`
 `;
 
 export default function DocumentInfoModal(props) {
-  const { atbd, revealed, onClose, onSubmit } = props;
+  const { atbd, revealed, onClose } = props;
   return (
     <Modal
       id='modal'
@@ -101,7 +95,7 @@ export default function DocumentInfoModal(props) {
             </TabItem>
           </TabsNavModal>
 
-          <TabGeneral atbd={atbd} onSubmit={onSubmit} />
+          <TabGeneral atbd={atbd} />
           <TabCitation atbd={atbd} />
         </TabsManager>
       }
@@ -112,20 +106,11 @@ export default function DocumentInfoModal(props) {
 DocumentInfoModal.propTypes = {
   atbd: T.object,
   revealed: T.bool,
-  onClose: T.func,
-  onSubmit: T.func
+  onClose: T.func
 };
 
 function TabGeneral(props) {
-  const { atbd, onSubmit } = props;
-
-  const initialValues = useMemo(
-    () => ({
-      id: atbd.id,
-      changelog: atbd.changelog || ''
-    }),
-    [atbd]
-  );
+  const { atbd } = props;
 
   const createdAt = atbd.created_at ? new Date(atbd.created_at) : null;
   const updatedAt = atbd.last_updated_at
@@ -140,64 +125,18 @@ function TabGeneral(props) {
         <dt>Created on</dt>
         <dd>{createdAt ? <Datetime date={createdAt} /> : 'n/a'}</dd>
         <dt>Created by</dt>
-        <dd>Admin</dd>
+        <dd>{atbd.created_by.preferred_username}</dd>
         <dt>Status</dt>
         <dd>{getDocumentStatusLabel(atbd)}</dd>
         <dt>Last update</dt>
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
       </DocInfoList>
-
-      <Can do='edit' on={atbd}>
-        <Formik initialValues={initialValues} onSubmit={onSubmit}>
-          <Form as={FormikForm}>
-            <FormikInputTextarea
-              id='changelog'
-              name='changelog'
-              label='Changelog'
-              description='Use the changelog to register what changed in relation to the previous version.'
-            />
-            <TabActions>
-              <SaveButton />
-            </TabActions>
-          </Form>
-        </Formik>
-      </Can>
-
-      <Can not do='edit' on={atbd}>
-        <InputTextarea
-          id='changelog'
-          name='changelog'
-          label='Changelog'
-          value={initialValues.changelog}
-          readOnly
-        />
-      </Can>
     </TabContent>
   );
 }
 
 TabGeneral.propTypes = {
-  atbd: T.object,
-  onSubmit: T.func
-};
-
-// Moving the save button to a component of its own to use Formik context.
-const SaveButton = () => {
-  const { dirty, isSubmitting, submitForm } = useFormikContext();
-
-  return (
-    <Tip position='right' title='There are unsaved changes' open={dirty}>
-      <Button
-        variation='primary-raised-dark'
-        title='Save current changes'
-        disabled={isSubmitting || !dirty}
-        onClick={submitForm}
-        useIcon='tick--small'
-      >
-        Update
-      </Button>
-    </Tip>
-  );
+  atbd: T.object
 };
 
 function TabCitation(props) {

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
 
-import { documentEdit, documentView } from '../../../utils/url-creator';
+import { documentEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { isPublished } from '../status';
 import { remindMinorVersionUpdate } from './document-minor-version-reminder';
@@ -30,7 +30,7 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
           history.replace(documentEdit(values.alias, atbd.version, step.id));
         }
 
-        if (atbd.status.toLowerCase() === 'published') {
+        if (isPublished(atbd.status)) {
           const { result } = await remindMinorVersionUpdate(atbd.version);
           if (result) {
             // To trigger the modals to open from other pages, we use the
@@ -73,58 +73,6 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
       }
     },
     [updateAtbd, history, atbd.version, atbd.status]
-  );
-}
-
-/**
- * Hook to create the submit callback for the update minor version modal.
- *
- * @param {func} eventFn The action to fire the update minor event.
- * @param {func} hideModal The state setter to close the modal.
- */
-export function useSubmitForMinorVersion(eventFn, hideModal) {
-  const history = useHistory();
-
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Updating minor version');
-      const result = await eventFn({ payload: values });
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm();
-        hideModal();
-        processToast.success(
-          `Minor version updated to: ${result.data.version}`
-        );
-        history.replace(documentView(result.data, result.data.version));
-      }
-    },
-    [eventFn, hideModal, history]
-  );
-}
-
-/**
- * Hook to create the submit callback for the info modal. The info modal
- * contains the changelog field. This hook shows the appropriate message.
- *
- * @param {func} updateAtbd The action to update the document.
- */
-export function useSubmitForDocumentInfo(updateAtbd) {
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Updating changelog');
-      const result = await updateAtbd(values);
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        processToast.success('Changelog updated');
-      }
-    },
-    [updateAtbd]
   );
 }
 
