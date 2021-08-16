@@ -37,6 +37,7 @@ export const STEPS = [
           version_description: EDITOR_SYM
         },
         sections_completed: {
+          version_description: 'incomplete',
           citation: 'incomplete'
         }
       });

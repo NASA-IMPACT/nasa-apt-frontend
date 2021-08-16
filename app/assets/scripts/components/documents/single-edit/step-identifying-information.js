@@ -88,7 +88,11 @@ export default function StepIdentifyingInformation(props) {
                 />
               </SectionFieldset>
 
-              <SectionFieldset label='Version information'>
+              <FormikSectionFieldset
+                label={getDocumentSectionLabel('version_description')}
+                sectionName='sections_completed.version_description'
+                commentSection='version_description'
+              >
                 <FormikInputEditor
                   id='version_description'
                   name='document.version_description'
@@ -103,7 +107,7 @@ export default function StepIdentifyingInformation(props) {
                     </FormHelperMessage>
                   }
                 />
-              </SectionFieldset>
+              </FormikSectionFieldset>
 
               <FormikSectionFieldset
                 label={getDocumentSectionLabel('citation')}

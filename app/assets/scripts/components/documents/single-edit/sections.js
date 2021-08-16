@@ -6,6 +6,7 @@
 
 export const DOCUMENT_SECTIONS = [
   { id: 'general', label: 'General' },
+  { id: 'version_description', label: 'Version Information' },
   { id: 'citation', label: 'Citation' },
   { id: 'contacts', label: 'Contacts' },
   { id: 'introduction', label: 'Introduction' },
