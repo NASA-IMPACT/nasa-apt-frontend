@@ -105,7 +105,7 @@ function Root() {
               component={Contacts}
             />
             <AccessRoute
-              permission={['edit', 'contacts']}
+              permission={['edit', 'contact']}
               exact
               path='/contacts/:id/edit'
               component={ContactsEdit}
