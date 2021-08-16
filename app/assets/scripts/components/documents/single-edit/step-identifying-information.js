@@ -6,6 +6,7 @@ import { Form, FormHelperMessage } from '@devseed-ui/form';
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
+import { FormikInputEditor } from '../../common/forms/input-editor';
 import {
   FormikSectionFieldset,
   SectionFieldset
@@ -77,6 +78,23 @@ export default function StepIdentifyingInformation(props) {
                     <FormHelperMessage>
                       Use the DOI name (ex: 10.1000/xyz123) instead of the full
                       url
+                    </FormHelperMessage>
+                  }
+                />
+              </SectionFieldset>
+
+              <SectionFieldset label='Version information'>
+                <FormikInputEditor
+                  id='version_description'
+                  name='document.version_description'
+                  label='Version description'
+                  description={formString(
+                    'identifying_information.version_description'
+                  )}
+                  helper={
+                    <FormHelperMessage>
+                      This field is only important when document version is
+                      greater than 1.
                     </FormHelperMessage>
                   }
                 />

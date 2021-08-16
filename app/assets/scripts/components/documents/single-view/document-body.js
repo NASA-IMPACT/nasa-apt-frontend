@@ -21,6 +21,7 @@ import {
 import { DOCUMENT_SECTIONS } from '../single-edit/sections';
 import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
+import serializeSlateToString from '../../slate/serialize-to-string';
 
 const HeadingContextualActions = ({ id }) => {
   const { openPanelOn } = useCommentCenter();
@@ -319,6 +320,29 @@ export const atbdContentSections = [
             atbd
           }}
           value={document.abstract}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
+    label: 'Version description',
+    id: 'version_description',
+    shouldRender: ({ document }) =>
+      !!serializeSlateToString(document.version_description),
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.version_description, id),
+    render: ({ element, document, referencesUseIndex, atbd }) => (
+      <AtbdSection key={element.id} id={element.id} title={element.label}>
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
+          value={document.version_description}
           whenEmpty={<EmptySection />}
         />
       </AtbdSection>
