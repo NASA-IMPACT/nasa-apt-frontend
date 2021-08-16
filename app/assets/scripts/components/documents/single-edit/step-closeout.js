@@ -7,6 +7,7 @@ import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import RichTextContex2Formik from './rich-text-ctx-formik';
 import { FormikInputEditor } from '../../common/forms/input-editor';
+import { FormikInputTextarea } from '../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 import { FormikInputCheckable } from '../../common/forms/input-checkable';
 import FormGroupStructure from '../../common/forms/form-group-structure';
@@ -53,7 +54,7 @@ export default function StepCloseout(props) {
                   sectionName='sections_completed.abstract'
                   commentSection='abstract'
                 >
-                  <FormikInputEditor
+                  <FormikInputTextarea
                     id='abstract'
                     name='document.abstract'
                     label='Short ATBD summary'

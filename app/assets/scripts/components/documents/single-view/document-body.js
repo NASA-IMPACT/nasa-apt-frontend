@@ -2,6 +2,7 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import nl2br from 'react-nl2br';
 import { Button } from '@devseed-ui/button';
 
 import { SafeReadEditor, subsectionsFromSlateDocument } from '../../slate';
@@ -104,21 +105,7 @@ const MultilineString = ({ value, whenEmpty, ...rest }) => {
     return whenEmpty;
   }
 
-  const pieces = value.split('\n');
-  return pieces.length > 1 ? (
-    <p {...rest}>
-      {pieces.slice(0, -1).map((v, i) => (
-        /* eslint-disable-next-line react/no-array-index-key */
-        <React.Fragment key={i}>
-          {v}
-          <br />
-        </React.Fragment>
-      ))}
-      {pieces[pieces.length - 1]}
-    </p>
-  ) : (
-    <p>{value}</p>
-  );
+  return <p {...rest}>{nl2br(value)}</p>;
 };
 
 const FragmentWithOptionalEditor = ({
@@ -307,18 +294,9 @@ export const atbdContentSections = [
   {
     label: 'Abstract',
     id: 'abstract',
-    editorSubsections: (document, { id }) =>
-      subsectionsFromSlateDocument(document.abstract, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <SafeReadEditor
-          context={{
-            subsectionLevel: 'h3',
-            sectionId: element.id,
-            references: document.publication_references,
-            referencesUseIndex,
-            atbd
-          }}
+        <MultilineString
           value={document.abstract}
           whenEmpty={<EmptySection />}
         />
