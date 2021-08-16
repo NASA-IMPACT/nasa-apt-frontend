@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
 import {
   glsp,
@@ -29,6 +29,7 @@ import Insight from '../common/insight';
 import { useUser } from '../../context/user';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useAtbds } from '../../context/atbds-list';
+import { useStatusColors } from '../../utils/use-status-colors';
 import {
   DRAFT,
   getDocumentStatusLabel,
@@ -236,17 +237,7 @@ const inisghtsA11y = {
 
 function CuratorInsights() {
   const { atbds } = useAtbds();
-  const theme = useTheme();
-
-  const statusMapping = useMemo(
-    () => ({
-      DRAFT: theme.color.statusDraft,
-      OPEN_REVIEW: theme.color.statusReview,
-      PUBLICATION: theme.color.statusPublication,
-      PUBLISHED: theme.color.statusPublished
-    }),
-    [theme]
-  );
+  const { statusMapping } = useStatusColors();
 
   const statCount = useMemo(() => {
     if (!atbds.data) return;

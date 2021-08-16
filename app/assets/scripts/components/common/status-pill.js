@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import T from 'prop-types';
-import styled, { css, useTheme } from 'styled-components';
-
+import styled, { css } from 'styled-components';
 import { glsp, multiply, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
+
 import { calculateDocumentCompleteness } from '../documents/completeness';
 import {
   getDocumentStatusLabel,
@@ -14,6 +14,24 @@ import {
   isReviewRequested,
   REVIEW_DONE
 } from '../documents/status';
+import { useStatusColors } from '../../utils/use-status-colors';
+
+export const statusSwatch = css`
+  content: '';
+  display: inline-flex;
+  height: 0.75em;
+  aspect-ratio: 1 / 1;
+  border-radius: ${themeVal('shape.ellipsoid')};
+  background: ${themeVal('color.baseLight')};
+  box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
+    ${themeVal('color.baseLight')};
+
+  ${({ pillColor }) =>
+    pillColor &&
+    css`
+      background: ${pillColor};
+    `}
+`;
 
 const StatusSelf = styled(Pill)`
   min-width: 6rem;
@@ -47,20 +65,7 @@ const StatusSelf = styled(Pill)`
     align-items: center;
 
     &::before {
-      content: '';
-      display: inline-flex;
-      height: 0.75em;
-      aspect-ratio: 1 / 1;
-      border-radius: ${themeVal('shape.ellipsoid')};
-      background: ${themeVal('color.baseLight')};
-      box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
-        ${themeVal('color.baseLight')};
-
-      ${({ pillColor }) =>
-        pillColor &&
-        css`
-          background: ${pillColor};
-        `}
+      ${statusSwatch}
     }
   }
 `;
@@ -94,20 +99,7 @@ export default StatusPill;
 
 export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
-  const theme = useTheme();
-
-  const statusMapping = useMemo(
-    () => ({
-      DRAFT: theme.color.statusDraft,
-      CLOSED_REVIEW_REQUESTED: theme.color.statusDraft,
-      CLOSED_REVIEW: theme.color.statusReview,
-      OPEN_REVIEW: theme.color.statusReview,
-      PUBLICATION_REQUESTED: theme.color.statusReview,
-      PUBLICATION: theme.color.statusPublication,
-      PUBLISHED: theme.color.statusPublished
-    }),
-    [theme]
-  );
+  const { statusMapping } = useStatusColors();
 
   if (isDraft(atbdVersion) || isReviewRequested(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
