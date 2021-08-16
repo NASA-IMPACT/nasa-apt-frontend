@@ -29,6 +29,7 @@ import {
 } from '../../../context/comment-center';
 import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
+import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -228,6 +229,9 @@ const SaveButton = () => {
     !isValid && touched.id
       ? 'There are errors in the form'
       : 'There are unsaved changes';
+
+  // See hook definition file for explanation
+  useSaveTooltipPlacement({ showing: dirty, tipMessage });
 
   return (
     <Tip position='top-end' title={tipMessage} open={dirty}>
