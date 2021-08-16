@@ -38,7 +38,7 @@ export default function Insight(props) {
   // We want the circumference to be 100 because of the dasharray calculations.
   const radius = 100 / (2 * Math.PI);
   const boxSize = 40;
-  const percent = (value / total) * 100;
+  const percent = total ? (value / total) * 100 : 0;
   const empty = 100 - percent;
 
   return (
