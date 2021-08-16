@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Toolbar, ToolbarLabel } from '@devseed-ui/toolbar';
 
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, {
+  DropMenuItemEnhanced,
+  getMenuClickHandler
+} from '../common/dropdown-menu';
 
 import {
   getDocumentStatusLabel,
@@ -19,6 +22,8 @@ import {
 } from '../documents/status';
 import { computeAtbdVersion } from '../../context/atbds-list';
 import { useContextualAbility } from '../../a11n';
+import { statusSwatch } from '../common/status-pill';
+import { useStatusColors } from '../../utils/use-status-colors';
 
 const DocsFilters = styled(Toolbar)`
   min-height: 2rem;
@@ -26,6 +31,15 @@ const DocsFilters = styled(Toolbar)`
 
   > * {
     margin-top: ${glsp(-1)};
+  }
+`;
+
+const DropMenuStatusItem = styled(DropMenuItemEnhanced)`
+  &::after {
+    ${statusSwatch}
+    position: absolute;
+    top: 0.65em;
+    right: ${glsp()};
   }
 `;
 
@@ -76,10 +90,34 @@ const statusFilterDropMenu = {
       return {
         id: s.id,
         label: l,
-        title: `Show all documents with status: ${l}`
+        title: `Show all documents with status: ${l}`,
+        /* eslint-disable react/display-name, react/prop-types */
+        render: DropMenuStatusItemCmp
+        /* eslint-enable react/display-name, react/prop-types */
       };
     })
   ]
+};
+
+function DropMenuStatusItemCmp(props) {
+  const { statusMapping } = useStatusColors();
+
+  const { menuItem, onSelect } = props;
+  return (
+    <DropMenuStatusItem
+      pillColor={statusMapping[menuItem.id]}
+      title={menuItem.title}
+      onClick={getMenuClickHandler(onSelect, menuItem)}
+      {...props}
+    >
+      {menuItem.label}
+    </DropMenuStatusItem>
+  );
+}
+
+DropMenuStatusItemCmp.propTypes = {
+  onSelect: T.func,
+  menuItem: T.object
 };
 
 /**
