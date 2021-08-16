@@ -120,7 +120,10 @@ export const formatReference = (reference) => {
 };
 
 // Fields that can have references.
+// The order must be the same as it gets printed in the document view page.
 const fieldsWithReferences = [
+  'abstract',
+  'version_description',
   'introduction',
   'historical_perspective',
   'additional_information',
@@ -133,9 +136,8 @@ const fieldsWithReferences = [
   'performance_assessment_validation_uncertainties',
   'performance_assessment_validation_errors',
   'journal_discussion',
-  'journal_acknowledgements',
   'data_availability',
-  'abstract'
+  'journal_acknowledgements'
 ];
 
 /**
