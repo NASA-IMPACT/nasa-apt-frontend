@@ -346,7 +346,7 @@ export default function CommentEntry(props) {
       <CommentEntryContent>
         {section && (
           <p>
-            In <strong>{section.label}</strong>
+            In <strong>{section.label}</strong>:
           </p>
         )}
         {isEditing ? (

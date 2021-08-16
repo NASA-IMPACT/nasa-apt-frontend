@@ -185,14 +185,14 @@ function ThreadSinglePanelContents() {
                     isEdited={
                       !isSameAproxDate(
                         new Date(threadData.created_at),
-                        new Date(threadData.last_updated_at)
+                        new Date(threadData.threadCommentLastUpdatedAt)
                       )
                     }
                     isEditing={
                       editingCommentKey ===
                       `${threadData.id}-${threadData.threadCommentId}`
                     }
-                    date={new Date(threadData.last_updated_at)}
+                    date={new Date(threadData.threadCommentLastUpdatedAt)}
                     section={getDocumentSection(threadData.section)}
                     replyCount={threadData.comment_count}
                     comment={threadData.body}

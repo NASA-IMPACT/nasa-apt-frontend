@@ -57,6 +57,7 @@ export const computeThread = (thread) => {
     // Id of the comment that is used as the thread body. This is needed for
     // when we need to update this comment.
     threadCommentId: firstComment.id,
+    threadCommentLastUpdatedAt: firstComment.last_updated_at,
     ...getUpdatedTimes(thread, firstComment)
   };
 };
@@ -152,6 +153,7 @@ export const ThreadsProvider = ({ children }) => {
                       return {
                         ...thread,
                         body: action.data.body,
+                        threadCommentLastUpdatedAt: action.data.last_updated_at,
                         ...getUpdatedTimes(thread, action.data)
                       };
                     }
@@ -389,6 +391,7 @@ export const ThreadsProvider = ({ children }) => {
                   updatedData: {
                     ...thread,
                     body: data.body,
+                    threadCommentLastUpdatedAt: data.last_updated_at,
                     ...getUpdatedTimes(thread, data)
                   }
                 };
