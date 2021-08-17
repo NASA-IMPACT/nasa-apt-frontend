@@ -13,6 +13,12 @@ import collecticon from '@devseed-ui/collecticons';
 const _tint = stylizeFunction(tint);
 const railSize = '1.75rem';
 const innerSpace = 0.75;
+const inactiveCSSColor = css`
+  ${_tint(0.92, themeVal('color.base'))}
+`;
+const activeCSSColor = css`
+  ${_tint(0.24, themeVal('color.base'))}
+`;
 
 export const Tracker = styled.ol`
   li {
@@ -36,11 +42,9 @@ export const Tracker = styled.ol`
       align-items: center;
       justify-content: center;
       font-weight: ${themeVal('type.base.bold')};
-      color: ${themeVal('color.baseLight')};
-      background: ${_tint(0.36, themeVal('color.base'))};
-      box-shadow: 0 0 0 4px ${themeVal('color.surface')};
+      box-shadow: inset 0 0 0 0.125rem ${themeVal('color.surface')};
       border-radius: ${themeVal('shape.ellipsoid')};
-      font-size: 0.75em;
+      font-size: 0.875em;
       line-height: 1;
     }
 
@@ -56,7 +60,11 @@ export const Tracker = styled.ol`
       width: ${glsp(0.25)};
       pointer-events: none;
       border-radius: ${themeVal('shape.ellipsoid')};
-      background: ${_tint(0.92, themeVal('color.base'))};
+    }
+
+    &::before,
+    &::after {
+      background: ${inactiveCSSColor};
     }
   }
 
@@ -81,7 +89,7 @@ export const Tracker = styled.ol`
       height: ${divide(railSize, 2)};
       transform: translate(50%, 0);
       margin-top: 0.3rem;
-      font-size: 0;
+      content: '';
     }
 
     &::after {
@@ -97,32 +105,35 @@ export const TrackerItem = styled.li`
     status === 'progress'
       ? css`
           &&::before {
-            background: ${themeVal('color.primary')};
+            color: ${themeVal('color.baseLight')};
+            background: ${activeCSSColor};
           }
 
           &&::after {
             background: transparent
               linear-gradient(
                 180deg,
-                ${themeVal('color.primary')} 64%,
-                ${_tint(0.92, themeVal('color.base'))} 64%
+                ${activeCSSColor} 64%,
+                ${inactiveCSSColor} 64%
               );
           }
         `
       : status === 'complete'
       ? css`
           &&::before {
+            color: ${themeVal('color.baseLight')};
             font-size: 1rem;
             content: ${collecticon('tick--small')};
-            background: ${themeVal('color.primary')};
+            background: ${activeCSSColor};
           }
 
           &&::after {
-            background: ${themeVal('color.primary')};
+            background: ${activeCSSColor};
           }
 
           ${TrackerItem}::before {
             font-size: 0;
+            content: '';
           }
         `
       : null}
@@ -140,6 +151,22 @@ export const TrackerEntryTitle = styled(Heading).attrs({
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: ${glsp(0, 0, 0.25, 0)};
+  position: relative;
+  z-index: 2;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: -2.75rem;
+    z-index: 4;
+    transform: translateY(-50%);
+    content: '';
+    height: calc(${railSize} + 0.5rem);
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 0 0 0.125rem ${themeVal('color.surface')};
+    border-radius: ${themeVal('shape.ellipsoid')};
+    background: red;
+  }
 `;
 
 export const SubTracker = styled.ol`
