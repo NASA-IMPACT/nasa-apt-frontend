@@ -130,7 +130,7 @@ function SandboxElements() {
               <Tracker>
                 <TrackerItem status='complete'>
                   <TrackerEntry>
-                    <TrackerEntryTitle>One</TrackerEntryTitle>
+                    <TrackerEntryTitle>Draft</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
@@ -153,7 +153,7 @@ function SandboxElements() {
                 </TrackerItem>
                 <TrackerItem status='progress'>
                   <TrackerEntry>
-                    <TrackerEntryTitle>Two</TrackerEntryTitle>
+                    <TrackerEntryTitle>In review</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
@@ -164,7 +164,7 @@ function SandboxElements() {
                 </TrackerItem>
                 <TrackerItem>
                   <TrackerEntry>
-                    <TrackerEntryTitle>Third</TrackerEntryTitle>
+                    <TrackerEntryTitle>In publication</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
@@ -187,7 +187,7 @@ function SandboxElements() {
                 </TrackerItem>
                 <TrackerItem>
                   <TrackerEntry>
-                    <TrackerEntryTitle>Four</TrackerEntryTitle>
+                    <TrackerEntryTitle>Published</TrackerEntryTitle>
                     <p>
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       Pellentesque vehicula non ipsum tincidunt hendrerit. In et
