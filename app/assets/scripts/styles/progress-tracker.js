@@ -42,7 +42,7 @@ export const Tracker = styled.ol`
       align-items: center;
       justify-content: center;
       font-weight: ${themeVal('type.base.bold')};
-      box-shadow: inset 0 0 0 0.125rem ${themeVal('color.surface')};
+      box-shadow: 0 0 0 0.25rem ${themeVal('color.surface')};
       border-radius: ${themeVal('shape.ellipsoid')};
       font-size: 0.875em;
       line-height: 1;
@@ -151,19 +151,15 @@ export const TrackerEntryTitle = styled(Heading).attrs({
   font-size: 1.25rem;
   line-height: 1.75rem;
   margin: ${glsp(0, 0, 0.25, 0)};
-  position: relative;
-  z-index: 2;
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
 
   &::before {
-    position: absolute;
-    top: 50%;
-    left: -2.75rem;
-    z-index: 4;
-    transform: translateY(-50%);
     content: '';
-    height: calc(${railSize} + 0.5rem);
+    height: 0.5rem;
     aspect-ratio: 1 / 1;
-    box-shadow: 0 0 0 0.125rem ${themeVal('color.surface')};
+    box-shadow: 0 0 0 0.25rem ${themeVal('color.surface')};
     border-radius: ${themeVal('shape.ellipsoid')};
     background: red;
   }
