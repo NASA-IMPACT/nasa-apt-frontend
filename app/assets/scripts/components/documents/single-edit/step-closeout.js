@@ -62,7 +62,7 @@ export default function StepCloseout(props) {
                   />
                 </FormikSectionFieldset>
 
-                <JournalDetails />
+                <JournalDetails atbd={atbd} />
               </RichTextContex2Formik>
             </Form>
           </FormBlock>

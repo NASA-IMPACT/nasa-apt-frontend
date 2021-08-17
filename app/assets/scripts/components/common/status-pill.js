@@ -12,6 +12,8 @@ import {
   isClosedReview,
   isDraft,
   isReviewRequested,
+  JOURNAL_PUBLISHED,
+  JOURNAL_SUBMITTED,
   REVIEW_DONE
 } from '../documents/status';
 import { useStatusColors } from '../../utils/use-status-colors';
@@ -20,7 +22,7 @@ export const statusSwatch = css`
   content: '';
   display: inline-flex;
   height: 0.75em;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1; /* stylelint-disable-line */
   border-radius: ${themeVal('shape.ellipsoid')};
   background: ${themeVal('color.baseLight')};
   box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
@@ -71,8 +73,8 @@ const StatusSelf = styled(Pill)`
 `;
 
 const journalStatusIcons = {
-  submitted: 'page',
-  published: 'page-tick'
+  [JOURNAL_SUBMITTED]: 'page',
+  [JOURNAL_PUBLISHED]: 'page-tick'
 };
 
 function StatusPill(props) {
@@ -128,16 +130,13 @@ export function DocumentStatusPill(props) {
         {...rest}
       />
     );
-  }
-
-  // TODO: Other statuses
-  else {
-    const journalStatus = null; // TODO: compute
+  } else {
+    const { journal_status } = atbdVersion;
     return (
       <StatusPill
         pillColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
-        statusIcon={journalStatusIcons[journalStatus]}
+        statusIcon={journalStatusIcons[journal_status]}
         {...rest}
       />
     );
