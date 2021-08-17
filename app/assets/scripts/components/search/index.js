@@ -20,7 +20,7 @@ import {
 import { FormBlock, FormBlockHeading } from '../../styles/form-block';
 import { FormikInputText } from '../common/forms/input-text';
 import { FormikInputSelect } from '../common/forms/input-select';
-import SearchResults from './search-results';
+import SearchResults, { NoResultsMessage } from './search-results';
 import { Link } from '../../styles/clean/link';
 
 import { useSearch } from '../../context/search';
@@ -211,6 +211,12 @@ function Search() {
             {results.status === 'succeeded' && (
               <SearchResults results={results.data} searchValue={searchValue} />
             )}
+            {results.status === 'failed' &&
+              results.error?.response?.status === 404 && (
+                <NoResultsMessage>
+                  <p>There are no document to search.</p>
+                </NoResultsMessage>
+              )}
           </FormBlock>
         </InpageBody>
       </Inpage>

@@ -22,10 +22,7 @@ export const SearchProvider = ({ children }) => {
       name: 'searchResults',
       requests: {
         fetchSearchResults: withRequestToken(token, ({ data }) => {
-          const { term, year, status } = data;
-
-          const statusFilter =
-            status === 'all' ? 'Draft OR Published' : status.toLowerCase();
+          const { term, year } = data;
 
           const elasticQuery = {
             bool: {
@@ -39,10 +36,6 @@ export const SearchProvider = ({ children }) => {
               filter: []
             }
           };
-
-          elasticQuery.bool.filter.push({
-            match: { 'version.status': statusFilter }
-          });
 
           if (year !== 'all') {
             elasticQuery.bool.filter.push({
