@@ -16,6 +16,7 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
+import Forbidden from '../../../a11n/forbidden';
 import Prose, { proseSpacing } from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
@@ -224,6 +225,8 @@ function DocumentView() {
 
     if (errCode === 400 || errCode === 404) {
       return <UhOh />;
+    } else if (errCode === 403) {
+      return <Forbidden />;
     } else if (atbd.error) {
       // This is a serious server error. By throwing it will be caught by the
       // error boundary. There's no recovery from this error.

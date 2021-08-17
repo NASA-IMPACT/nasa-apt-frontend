@@ -10,6 +10,8 @@ import {
 import { Heading } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
 
+import { statusSwatch } from '../components/common/status-pill';
+
 const _tint = stylizeFunction(tint);
 const railSize = '1.75rem';
 const innerSpace = 0.75;
@@ -24,12 +26,9 @@ export const Tracker = styled.ol`
   li {
     position: relative;
     padding-left: ${add(railSize, innerSpace)};
+    padding-bottom: ${glsp(1.5)};
     display: grid;
     gap: ${glsp(1.5)};
-
-    &:not(:last-child) {
-      padding-bottom: ${glsp(1.5)};
-    }
 
     &::before {
       position: absolute;
@@ -38,7 +37,7 @@ export const Tracker = styled.ol`
       content: '';
       display: flex;
       height: ${railSize};
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 1 / 1; /* stylelint-disable-line */
       align-items: center;
       justify-content: center;
       font-weight: ${themeVal('type.base.bold')};
@@ -76,10 +75,6 @@ export const Tracker = styled.ol`
     }
   }
 
-  > li:last-child::after {
-    display: none;
-  }
-
   > li > ol {
     margin-left: -${add(railSize, innerSpace)};
   }
@@ -95,6 +90,14 @@ export const Tracker = styled.ol`
     &::after {
       z-index: 2;
     }
+  }
+
+  > li:last-child::after {
+    display: none;
+  }
+
+  > li:last-child {
+    padding-bottom: 0;
   }
 `;
 
@@ -136,6 +139,19 @@ export const TrackerItem = styled.li`
             content: '';
           }
         `
+      : /* Used when a sub tracker item is in progress. This will be the status
+        of the parent. */
+      status === 'progress-child'
+      ? css`
+          &&::before {
+            color: ${themeVal('color.baseLight')};
+            background: ${activeCSSColor};
+          }
+
+          &&::after {
+            background: ${activeCSSColor};
+          }
+        `
       : null}
 `;
 
@@ -145,34 +161,53 @@ export const TrackerEntry = styled.article`
   }
 `;
 
+export const TrackerTrigger = styled.a`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  &,
+  &:visited {
+    color: inherit;
+  }
+
+  &:after {
+    ${collecticon('chevron-down--small')}
+    margin-left: auto;
+    transition: transform 240ms ease-in-out;
+    transform: ${({ isExpanded }) =>
+      isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};
+  }
+`;
+
 export const TrackerEntryTitle = styled(Heading).attrs({
   as: 'h1'
 })`
-  font-size: 1.25rem;
+  font-weight: ${themeVal('type.base.bold')};
+  text-transform: uppercase;
+  font-size: 1rem;
   line-height: 1.75rem;
   margin: ${glsp(0, 0, 0.25, 0)};
   display: flex;
-  gap: 0.375rem;
+  gap: 0.5em;
   align-items: center;
 
   &::before {
-    content: '';
-    height: 0.5rem;
-    aspect-ratio: 1 / 1;
-    box-shadow: 0 0 0 0.25rem ${themeVal('color.surface')};
-    border-radius: ${themeVal('shape.ellipsoid')};
-    background: red;
+    ${statusSwatch}
   }
 `;
 
 export const SubTracker = styled.ol`
   background: transparent;
+  margin-bottom: ${glsp(-1.5)};
 `;
 
 export const SubTrackerEntryTitle = styled(Heading).attrs({
   as: 'h2'
 })`
-  font-size: 1rem;
+  font-weight: ${themeVal('type.base.bold')};
+  text-transform: uppercase;
+  font-size: 0.75rem;
   line-height: 1.5rem;
-  margin: ${glsp(0, 0, 0.25, 0)};
+  margin: 0;
 `;

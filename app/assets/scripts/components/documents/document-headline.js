@@ -11,7 +11,7 @@ import {
   InpageMeta
 } from '../../styles/inpage';
 import { Link } from '../../styles/clean/link';
-import { DocumentStatusPill } from '../common/status-pill';
+import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
 import DropdownMenu from '../common/dropdown-menu';
 import VersionsMenu from './versions-menu';
 import { DateButton } from '../common/date';
@@ -90,6 +90,14 @@ export default function DocumentHeadline(props) {
     [onAction]
   );
 
+  const onDocumentStatusClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      onAction('view-tracker');
+    },
+    [onAction]
+  );
+
   return (
     <React.Fragment>
       <InpageHeadline>
@@ -136,7 +144,13 @@ export default function DocumentHeadline(props) {
         {isLogged && (
           <InpageMeta>
             <li>
-              <DocumentStatusPill atbdVersion={atbdVersion} />
+              <DocumentStatusLink
+                to={documentView(atbd, version)}
+                title='View document progress tracker'
+                onClick={onDocumentStatusClick}
+              >
+                <DocumentStatusPill atbdVersion={atbdVersion} />
+              </DocumentStatusLink>
             </li>
             <li>
               <DateButton

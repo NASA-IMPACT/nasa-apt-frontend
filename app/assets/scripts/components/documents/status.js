@@ -58,6 +58,20 @@ const isInStatus = (versionOrStatus, statuses) =>
   statuses.includes(versionOrStatus?.status || versionOrStatus);
 
 /**
+ * Checks that the given document or status string is after the given one
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @param {status} status Base status to check if the provided is after.
+ * @returns boolean
+ */
+export const isStatusAfter = (versionOrStatus, status) => {
+  const statusList = DOCUMENT_STATUS.map((s) => s.id);
+  // Status needs to be after the given one.
+  const idx = statusList.findIndex((s) => s === status);
+  const availableStatuses = statusList.slice(idx + 1);
+  return isInStatus(versionOrStatus, availableStatuses);
+};
+
+/**
  * Checks that the given document or status string is in Draft
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean

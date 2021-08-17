@@ -28,8 +28,10 @@ import {
   createBinaryControlsRenderer,
   showConfirmationPrompt
 } from '../common/confirmation-prompt';
+import DocumentTrackerModal from './document-tracker-modal';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
+const MODAL_DOCUMENT_TRACKER = 'modal-document-tracker';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
 const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
@@ -77,6 +79,11 @@ export function DocumentModals(props) {
     <React.Fragment>
       <DocumentInfoModal
         revealed={activeModal === MODAL_DOCUMENT_INFO}
+        atbd={atbd}
+        onClose={hideModal}
+      />
+      <DocumentTrackerModal
+        revealed={activeModal === MODAL_DOCUMENT_TRACKER}
         atbd={atbd}
         onClose={hideModal}
       />
@@ -187,6 +194,9 @@ export const useDocumentModals = ({
           break;
         case 'view-info':
           setActiveModal(MODAL_DOCUMENT_INFO);
+          break;
+        case 'view-tracker':
+          setActiveModal(MODAL_DOCUMENT_TRACKER);
           break;
         case 'manage-collaborators':
           setActiveModal(MODAL_DOCUMENT_COLLABORATOR);
@@ -319,7 +329,11 @@ export const useDocumentModals = ({
     if (atbd && menuAction) {
       const r = menuHandler(menuAction);
       // Using undefined keeps the same path.
-      r && history.replace(undefined, rest);
+      r &&
+        history.replace({
+          ...location,
+          state: rest
+        });
     }
   }, [menuHandler, atbd, history, location]);
 

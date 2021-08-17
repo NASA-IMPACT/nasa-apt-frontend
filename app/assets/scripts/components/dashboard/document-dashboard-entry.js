@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 
-import { DocumentStatusPill } from '../common/status-pill';
+import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
 import { DateButton } from '../common/date';
@@ -55,6 +55,14 @@ function DocumentDashboardEntry(props) {
     [onAction]
   );
 
+  const onDocumentStatusClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      onAction('view-tracker');
+    },
+    [onAction]
+  );
+
   return (
     <DocumentEntry>
       <DocumentEntryHeader>
@@ -82,7 +90,13 @@ function DocumentDashboardEntry(props) {
           </DocumentEntryHgroup>
           <DocumentEntryMeta>
             <li>
-              <DocumentStatusPill atbdVersion={lastVersion} />
+              <DocumentStatusLink
+                to={documentView(atbd)}
+                title='View document progress tracker'
+                onClick={onDocumentStatusClick}
+              >
+                <DocumentStatusPill atbdVersion={lastVersion} />
+              </DocumentStatusLink>
             </li>
             <li>
               <DateButton

@@ -2277,6 +2277,15 @@
     "@citation-js/name" "^0.4.2"
     wikidata-sdk "7"
 
+"@devseed-ui/accordion@^3.0.3":
+  version "3.0.3"
+  resolved "http://ec2-3-82-125-171.compute-1.amazonaws.com:4873/@devseed-ui%2faccordion/-/accordion-3.0.3.tgz#8e6d401c04b73d404e51ea3c96502e4afa201766"
+  integrity sha512-/Dy1CEUKORgNJIO1pXltqJFSIKztjx7JoWq7xguxDEhQZh4g/xDzb55voNQOl1sqKqNj44PbJcAw2E9ZTimQDw==
+  dependencies:
+    "@devseed-ui/button" "3.0.3"
+    "@devseed-ui/collecticons" "3.1.0"
+    "@devseed-ui/theme-provider" "3.0.0"
+
 "@devseed-ui/animation@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/animation/-/animation-3.0.0.tgz#b4e846072c61dc8b4e46d0f4ca65534c64ba9446"
@@ -2354,7 +2363,7 @@
     "@devseed-ui/theme-provider" "^3.0.0"
     react-custom-scrollbars "^4.2.1"
 
-"@devseed-ui/theme-provider@^3.0.0":
+"@devseed-ui/theme-provider@3.0.0", "@devseed-ui/theme-provider@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@devseed-ui/theme-provider/-/theme-provider-3.0.0.tgz#13b22818f5ab3dc11d99b82d21e11afbde3ff487"
   integrity sha512-/l5hVfWSGJe91m0NjO0tUNgoqCsCpr32VwCPhugc37qgvi/1tF54vwSl2hEz4CA4VPpbtCpxKrmb8234vhd7lw==

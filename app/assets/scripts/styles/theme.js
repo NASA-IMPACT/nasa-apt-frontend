@@ -18,10 +18,10 @@ export function themeOverridesAPT(uiTheme) {
         baseAlphaD: rgba(baseColor, 0.16),
         baseAlphaE: rgba(baseColor, 0.32),
         baseAlphaF: rgba(baseColor, 0.64),
-        statusDraft: '#FCAB10',
-        statusReview: '#F4442E',
-        statusPublication: '#643A71',
-        statusPublished: '#2CA58D'
+        statusDraft: '#fcab10',
+        statusReview: '#f4442e',
+        statusPublication: '#b62b6e',
+        statusPublished: '#2ca58d'
       },
       type: {
         base: {

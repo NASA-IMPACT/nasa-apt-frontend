@@ -21,7 +21,13 @@ export function useDocumentCreate() {
       processToast.error(`An error occurred: ${result.error.message}`);
     } else {
       processToast.success('Document successfully created');
-      history.push(documentEdit(result.data));
+      // To trigger the modals to open from other pages, we use the history
+      // state as the user is sent from one page to another. See explanation
+      // on
+      // app/assets/scripts/components/documents/use-document-modals.js
+      history.push(`${documentEdit(result.data)}?welcome=true`, {
+        menuAction: 'view-tracker'
+      });
     }
   }, [createAtbd, history]);
 }

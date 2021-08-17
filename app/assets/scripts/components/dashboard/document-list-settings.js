@@ -109,7 +109,7 @@ function DropMenuStatusItemCmp(props) {
   const { menuItem, onSelect } = props;
   return (
     <DropMenuStatusItem
-      pillColor={statusMapping[menuItem.id]}
+      swatchColor={statusMapping[menuItem.id]}
       title={menuItem.title}
       onClick={getMenuClickHandler(onSelect, menuItem)}
       {...props}

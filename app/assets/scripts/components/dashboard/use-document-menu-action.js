@@ -97,6 +97,7 @@ export function useDocumentHubMenuAction() {
         case 'draft-major':
         case 'publish':
         case 'view-info':
+        case 'view-tracker':
         case 'manage-collaborators':
         case 'change-leading':
         case 'req-review-allow':

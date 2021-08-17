@@ -5,18 +5,22 @@ import { glsp, multiply, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
+import { NavLink } from '../../styles/clean/link';
 
 import { calculateDocumentCompleteness } from '../documents/completeness';
 import {
   getDocumentStatusLabel,
   isClosedReview,
-  isDraft,
-  isReviewRequested,
+  isDraftEquivalent,
   JOURNAL_PUBLISHED,
   JOURNAL_SUBMITTED,
   REVIEW_DONE
 } from '../documents/status';
 import { useStatusColors } from '../../utils/use-status-colors';
+
+export const DocumentStatusLink = styled(NavLink)`
+  display: flex;
+`;
 
 export const statusSwatch = css`
   content: '';
@@ -28,10 +32,10 @@ export const statusSwatch = css`
   box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
     ${themeVal('color.baseLight')};
 
-  ${({ pillColor }) =>
-    pillColor &&
+  ${({ swatchColor }) =>
+    swatchColor &&
     css`
-      background: ${pillColor};
+      background: ${swatchColor};
     `}
 `;
 
@@ -103,11 +107,11 @@ export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
   const { statusMapping } = useStatusColors();
 
-  if (isDraft(atbdVersion) || isReviewRequested(atbdVersion)) {
+  if (isDraftEquivalent(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill
-        pillColor={statusMapping[atbdVersion.status]}
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${percent}%`}
@@ -123,7 +127,7 @@ export function DocumentStatusPill(props) {
 
     return (
       <StatusPill
-        pillColor={statusMapping[atbdVersion.status]}
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${revCompleted}/${revTotal}`}
@@ -134,7 +138,7 @@ export function DocumentStatusPill(props) {
     const { journal_status } = atbdVersion;
     return (
       <StatusPill
-        pillColor={statusMapping[atbdVersion.status]}
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         statusIcon={journalStatusIcons[journal_status]}
         {...rest}
