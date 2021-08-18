@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import qs from 'qs';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useLocation } from 'react-router';
 import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Accordion, AccordionFold } from '@devseed-ui/accordion';
+import collecticon from '@devseed-ui/collecticons';
 
 import {
   Tracker,
@@ -40,6 +41,7 @@ import {
 } from './status';
 import { useStatusColors } from '../../utils/use-status-colors';
 import { calculateDocumentCompleteness } from './completeness';
+import { journalStatusIcons } from '../common/status-pill';
 
 const ModalInnerContent = styled.div`
   display: flex;
@@ -47,8 +49,24 @@ const ModalInnerContent = styled.div`
   gap: ${glsp(themeVal('layout.gap.medium'))};
 `;
 
+const TrackerEntryTitleIconified = styled(TrackerEntryTitle)`
+  ${({ useIcon }) =>
+    useIcon &&
+    css`
+      &::after {
+        ${collecticon(useIcon)}
+      }
+    `}
+`;
+
 const TriggeringTitle = (props) => {
-  const { isFoldExpanded, setFoldExpanded, swatchColor, children } = props;
+  const {
+    isFoldExpanded,
+    setFoldExpanded,
+    swatchColor,
+    useIcon,
+    children
+  } = props;
 
   const onClick = useCallback(
     (e) => {
@@ -65,9 +83,9 @@ const TriggeringTitle = (props) => {
       onClick={onClick}
       title={isFoldExpanded ? 'Contract' : 'Expand'}
     >
-      <TrackerEntryTitle swatchColor={swatchColor}>
+      <TrackerEntryTitleIconified swatchColor={swatchColor} useIcon={useIcon}>
         {children}
-      </TrackerEntryTitle>
+      </TrackerEntryTitleIconified>
     </TrackerTrigger>
   );
 };
@@ -76,6 +94,7 @@ TriggeringTitle.propTypes = {
   isFoldExpanded: T.bool,
   setFoldExpanded: T.func,
   swatchColor: T.string,
+  useIcon: T.string,
   children: T.node
 };
 
@@ -85,6 +104,7 @@ const TrackerEntryFold = (props) => {
     checkExpanded,
     setExpanded,
     swatchColor,
+    titleIcon,
     title,
     content
   } = props;
@@ -99,6 +119,7 @@ const TrackerEntryFold = (props) => {
           isFoldExpanded={isFoldExpanded}
           setFoldExpanded={setFoldExpanded}
           swatchColor={swatchColor}
+          useIcon={titleIcon}
         >
           {title}
         </TriggeringTitle>
@@ -113,6 +134,7 @@ TrackerEntryFold.propTypes = {
   checkExpanded: T.func,
   setExpanded: T.func,
   swatchColor: T.string,
+  titleIcon: T.string,
   title: T.string,
   content: T.node
 };
@@ -310,6 +332,11 @@ export default function DocumentTrackerModal(props) {
                     setExpanded={setExpanded}
                     swatchColor={statusMapping[PUBLICATION]}
                     title={getDocumentStatusLabel(PUBLICATION)}
+                    titleIcon={
+                      isPublication(atbd)
+                        ? journalStatusIcons[atbd.journal_status]
+                        : undefined
+                    }
                     content={
                       <p>
                         If the document was scheduled to be published in the
@@ -327,10 +354,17 @@ export default function DocumentTrackerModal(props) {
                     setExpanded={setExpanded}
                     swatchColor={statusMapping[PUBLISHED]}
                     title={getDocumentStatusLabel(PUBLISHED)}
+                    titleIcon={
+                      isPublished(atbd)
+                        ? journalStatusIcons[atbd.journal_status]
+                        : undefined
+                    }
                     content={
                       <p>
                         At this point, the document is published in APT and
-                        publicly available to all users.
+                        publicly available to all users. If the document is also
+                        published to the journal, an icon is displayed to convey
+                        this information.
                       </p>
                     }
                   />

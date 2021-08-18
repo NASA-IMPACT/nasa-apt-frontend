@@ -76,7 +76,7 @@ const StatusSelf = styled(Pill)`
   }
 `;
 
-const journalStatusIcons = {
+export const journalStatusIcons = {
   [JOURNAL_SUBMITTED]: 'page',
   [JOURNAL_PUBLISHED]: 'page-tick'
 };
