@@ -136,7 +136,7 @@ const DOIValue = styled.dd`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
-  const { isLogged } = useUser();
+  const { isAuthReady } = useUser();
   const {
     atbd,
     updateAtbd,
@@ -171,8 +171,8 @@ function DocumentView() {
   );
 
   useEffect(() => {
-    isLogged && fetchSingleAtbd();
-  }, [isLogged, id, version, fetchSingleAtbd]);
+    isAuthReady && fetchSingleAtbd();
+  }, [isAuthReady, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
