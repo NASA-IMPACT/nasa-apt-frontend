@@ -21,21 +21,18 @@ import Tip from '../../common/tooltip';
 import DocumentDownloadMenu from '../../documents/document-download-menu';
 
 import { documentView } from '../../../utils/url-creator';
-import { documentUpdatedDate } from '../../../utils/date';
 import getDocumentIdKey from '../get-document-id-key';
+import { computeAtbdVersion } from '../../../context/atbds-list';
 
 function DocumentHubEntry(props) {
   const { atbd } = props;
-  const lastVersion = atbd.versions[atbd.versions.length - 1];
 
-  // The updated at is the most recent between the version updated at and the
-  // atbd updated at.
-  const updateDate = documentUpdatedDate(atbd, lastVersion);
+  const atbdVersion = computeAtbdVersion(atbd, atbd.versions.last);
 
   return (
     <CardInteractive
       linkProps={{
-        to: documentView(atbd, lastVersion.version),
+        to: documentView(atbd, atbdVersion.version),
         title: 'View document'
       }}
       linkLabel='View'
@@ -54,21 +51,21 @@ function DocumentHubEntry(props) {
           </CardHgroup>
         </CardHeadline>
         <CardDetails>
-          By <Creators creators={lastVersion.citation?.creators} /> on{' '}
-          <Datetime date={updateDate} />
+          By <Creators creators={atbdVersion.citation?.creators} /> on{' '}
+          <Datetime date={new Date(atbdVersion.last_updated_at)} />
         </CardDetails>
       </CardHeader>
-      {lastVersion.document?.abstract &&
-        typeof lastVersion.document.abstract === 'string' && (
+      {atbdVersion.document?.abstract &&
+        typeof atbdVersion.document.abstract === 'string' && (
           <CardBody>
             <CardExcerpt>
-              <p>{nl2br(lastVersion.document.abstract)}</p>
+              <p>{nl2br(atbdVersion.document.abstract)}</p>
             </CardExcerpt>
           </CardBody>
         )}
       <CardActions>
         <DocumentDownloadMenu
-          atbd={lastVersion}
+          atbd={atbdVersion}
           alignment='left'
           direction='up'
           variation='primary-raised-dark'
