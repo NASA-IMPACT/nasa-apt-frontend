@@ -15,8 +15,9 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
       const result = await updateAtbd({
         ...values,
         // If the alias is submitted as empty string (""), the api fails with a
-        // 404 error.
-        alias: values.alias || null
+        // 404 error. When the document is published remove the alias from the
+        // payload since it is not possible to edit. alias:
+        alias: isPublished(atbd.status) ? undefined : values.alias || null
       });
       setSubmitting(false);
 
