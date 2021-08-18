@@ -162,11 +162,21 @@ function ThreadSinglePanelContents() {
         <CommentShadowScrollbar>
           <CommentLoadingProcess
             status={threadCtx.status}
-            renderError={() => (
-              <ErrorComment>
-                <p>Something went wrong loading the comment.</p>
-              </ErrorComment>
-            )}
+            renderError={() => {
+              return threadCtx.error.response?.data?.detail?.includes(
+                'not allowed'
+              ) ? (
+                <ErrorComment>
+                  <p>
+                    You are not allowed to access the comments of this document.
+                  </p>
+                </ErrorComment>
+              ) : (
+                <ErrorComment>
+                  <p>Something went wrong loading the comments.</p>
+                </ErrorComment>
+              );
+            }}
             renderData={() => {
               const threadData = threadCtx.data;
               return (

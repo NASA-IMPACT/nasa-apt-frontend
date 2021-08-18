@@ -152,7 +152,8 @@ export const useCommentCenterHistoryHandler = ({ atbd = null } = {}) => {
   const location = useLocation();
 
   useEffect(() => {
-    // The atbdId must be numeric. The alias does not work.
+    // The atbdId must be numeric. The alias does not work because the /threads
+    // endpoint doesn't do alias lookup.
     const { menuAction, ...rest } = location.state || {};
 
     if (atbd?.data && menuAction === 'toggle-comments') {

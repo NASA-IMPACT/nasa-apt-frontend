@@ -18,7 +18,7 @@ import { DateButton } from '../common/date';
 import { CollaboratorsMenu } from './collaborators-menu';
 import DocumentCommentsButton from './document-comment-button';
 
-import { useContextualAbility } from '../../a11n';
+import { Can, useContextualAbility } from '../../a11n';
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
 import { useCommentCenter } from '../../context/comment-center';
@@ -168,15 +168,17 @@ export default function DocumentHeadline(props) {
                 triggerProps={collaboratorsMenuTriggerProps}
               />
             </li>
-            <li>
-              <DocumentCommentsButton
-                variation='achromic-plain'
-                size='small'
-                onClick={onCommentsClick}
-                active={isPanelOpen}
-                atbd={atbd}
-              />
-            </li>
+            <Can do='access-comments' on={atbd}>
+              <li>
+                <DocumentCommentsButton
+                  variation='achromic-plain'
+                  size='small'
+                  onClick={onCommentsClick}
+                  active={isPanelOpen}
+                  atbd={atbd}
+                />
+              </li>
+            </Can>
           </InpageMeta>
         )}
       </InpageHeadline>

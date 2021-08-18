@@ -52,6 +52,7 @@ export function defineRulesFor(user) {
       allow('publish', 'document-version', {
         status: PUBLICATION
       });
+      allow('access-comments', 'document-version');
     }
     if (is(CONTRIBUTOR_ROLE)) {
       allow('view', 'contacts');
@@ -103,6 +104,15 @@ export function defineRulesFor(user) {
       });
       allow('draft-major', 'document-version', {
         'owner.sub': user.id
+      });
+      allow('access-comments', 'document-version', {
+        'owner.sub': user.id
+      });
+      allow('access-comments', 'document-version', {
+        'authors.sub': user.id
+      });
+      allow('access-comments', 'document-version', {
+        'reviewers.sub': user.id
       });
     }
   }

@@ -14,6 +14,7 @@ import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
 import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import ClosedReviewForbidden from './closed-review-forbidden';
+import Forbidden from '../../../a11n/forbidden';
 
 import { getDocumentEditStep } from './steps';
 import {
@@ -122,6 +123,8 @@ function DocumentEdit() {
 
     if (errCode === 400 || errCode === 404) {
       return <UhOh />;
+    } else if (errCode === 403) {
+      return <Forbidden />;
     } else if (atbd.error) {
       // This is a serious server error. By throwing it will be caught by the
       // error boundary. There's no recovery from this error.

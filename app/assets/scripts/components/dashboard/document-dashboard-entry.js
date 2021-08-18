@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 
+import { Can } from '../../a11n';
 import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
 import { Link } from '../../styles/clean/link';
 import VersionsMenu from '../documents/versions-menu';
@@ -113,13 +114,15 @@ function DocumentDashboardEntry(props) {
                 triggerProps={useMemo(() => ({ size: 'small' }), [])}
               />
             </li>
-            <li>
-              <DocumentCommentsButton
-                onClick={onViewCommentsClick}
-                size='small'
-                atbd={lastVersion}
-              />
-            </li>
+            <Can do='access-comments' on={lastVersion}>
+              <li>
+                <DocumentCommentsButton
+                  onClick={onViewCommentsClick}
+                  size='small'
+                  atbd={lastVersion}
+                />
+              </li>
+            </Can>
           </DocumentEntryMeta>
         </DocumentEntryHeadline>
         <DocumentEntryActions>
