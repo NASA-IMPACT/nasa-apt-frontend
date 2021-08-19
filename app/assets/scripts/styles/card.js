@@ -148,7 +148,9 @@ export const CardExcerpt = styled.div`
 `;
 
 export const CardToolbar = styled(Toolbar)`
-  /* display: flex; */
+  > strong {
+    padding: 0rem 0.75rem;
+  }
 
   > * {
     pointer-events: auto;
