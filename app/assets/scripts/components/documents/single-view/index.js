@@ -43,6 +43,7 @@ import {
 } from '../../../context/comment-center';
 import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
+import { getCitationPublicationDate } from '../citation';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -286,7 +287,9 @@ function DocumentView() {
                     <DocumentMetaDetails>
                       <dt>Version</dt>
                       <dd>{atbd.data.version}</dd>
-                      <ReleaseDate date={atbd.data.citation?.release_date} />
+                      <ReleaseDate
+                        date={getCitationPublicationDate(atbd.data).date}
+                      />
                       <dt>Keywords</dt>
                       <dd>coming soon</dd>
                       <dt>Creators</dt>
@@ -319,29 +322,18 @@ const ReleaseDate = ({ date }) => {
     );
   }
 
-  const dateObj = new Date(date);
-  // Not parsable. Print as provided.
-  if (isNaN(dateObj.getTime())) {
-    return (
-      <React.Fragment>
-        <dt>Release date</dt>
-        <dd>{date}</dd>
-      </React.Fragment>
-    );
-  }
-
   return (
     <React.Fragment>
       <dt>Release date</dt>
       <dd>
-        <Datetime date={dateObj} />
+        <Datetime date={date} />
       </dd>
     </React.Fragment>
   );
 };
 
 ReleaseDate.propTypes = {
-  date: T.string
+  date: T.object
 };
 
 const DOIAddress = ({ value }) => {

@@ -15,7 +15,7 @@ import Datetime from '../common/date';
 import { Can } from '../../a11n';
 
 import { documentEdit } from '../../utils/url-creator';
-import { citationFields, createBibtexCitation } from './citation';
+import { createBibtexCitation, createStringCitation } from './citation';
 import { downloadTextFile } from '../../utils/download-text-file';
 import { getDocumentStatusLabel } from './status';
 
@@ -96,7 +96,7 @@ export default function DocumentInfoModal(props) {
           </TabsNavModal>
 
           <TabGeneral atbd={atbd} />
-          <TabCitation atbd={atbd} />
+          <TabCitation atbd={atbd} closeModal={onClose} />
         </TabsManager>
       }
     />
@@ -140,79 +140,69 @@ TabGeneral.propTypes = {
 };
 
 function TabCitation(props) {
-  const { atbd } = props;
-  const citation = atbd.citation;
+  const { atbd, closeModal } = props;
 
-  const citationText =
-    citation && Object.keys(citation).length
-      ? citationFields
-          .filter((f) => !!citation[f.name].trim())
-          .map((f) => citation[f.name])
-          .join(', ')
-      : '';
+  const citationText = createStringCitation(atbd);
 
   const citationEditLink = (
     <Link
       to={documentEdit(atbd, atbd.version)}
       title='Edit ATBD identifying information'
+      onClick={closeModal}
     >
       identifying information
     </Link>
   );
 
   const onDownloadClick = useCallback(() => {
-    const { id, alias, version, citation } = atbd;
+    const { id, alias, version } = atbd;
     const aliasId = alias || id;
 
-    const bibtexCitation = createBibtexCitation(aliasId, version, citation);
+    const bibtexCitation = createBibtexCitation(atbd);
     downloadTextFile(`atbd--${aliasId}--${version}.bibtex`, bibtexCitation);
   }, [atbd]);
 
   return (
     <TabContent tabId='citation'>
-      {!citationText && (
-        <Prose>
-          <p>There is no citation data available.</p>
-          <Can do='edit' on={atbd}>
-            <p>
-              The citation information can be edited through the{' '}
-              {citationEditLink} form.
-            </p>
-          </Can>
-        </Prose>
-      )}
+      <CopyField value={citationText}>
+        {({ value, ref }) => (
+          <React.Fragment>
+            <FormTextarea readOnly value={value} />
+            <TabActions>
+              <Button
+                useIcon='clipboard'
+                variation='primary-raised-light'
+                title='Copy to clipboard'
+                ref={ref}
+              >
+                Copy to clipboard
+              </Button>
+              <Button
+                useIcon='download-2'
+                variation='primary-raised-dark'
+                title='Download BibTeX file'
+                onClick={onDownloadClick}
+              >
+                Download BibTeX
+              </Button>
+            </TabActions>
+          </React.Fragment>
+        )}
+      </CopyField>
 
-      {citationText && (
-        <CopyField value={citationText}>
-          {({ value, ref }) => (
-            <React.Fragment>
-              <FormTextarea readOnly value={value} />
-              <TabActions>
-                <Button
-                  useIcon='clipboard'
-                  variation='primary-raised-light'
-                  title='Copy to clipboard'
-                  ref={ref}
-                >
-                  Copy to clipboard
-                </Button>
-                <Button
-                  useIcon='download-2'
-                  variation='primary-raised-dark'
-                  title='Download BibTeX file'
-                  onClick={onDownloadClick}
-                >
-                  Download BibTeX
-                </Button>
-              </TabActions>
-            </React.Fragment>
-          )}
-        </CopyField>
-      )}
+      <Prose>
+        <Can do='edit' on={atbd}>
+          <p>
+            The citation information can be edited through the{' '}
+            {citationEditLink} form.
+          </p>
+        </Can>
+      </Prose>
     </TabContent>
   );
 }
 
 TabCitation.propTypes = {
+  closeModal: T.func,
   atbd: T.object
 };

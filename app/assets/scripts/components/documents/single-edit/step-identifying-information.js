@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
+import set from 'lodash.set';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form, FormHelperMessage } from '@devseed-ui/form';
 
@@ -34,6 +35,13 @@ export default function StepIdentifyingInformation(props) {
 
     if (!values.title?.trim()) {
       errors.title = 'Title is required';
+    }
+
+    if (
+      values.citation?.online_resource &&
+      !values.citation.online_resource.startsWith('http')
+    ) {
+      set(errors, 'citation.online_resource', 'Url must start with http');
     }
 
     return errors;
@@ -127,7 +135,11 @@ export default function StepIdentifyingInformation(props) {
                           )
                         : field.description
                     }
-                    helper={field.helper}
+                    helper={
+                      typeof field.helper === 'function'
+                        ? field.helper(atbd)
+                        : field.helper
+                    }
                   />
                 ))}
               </FormikSectionFieldset>
