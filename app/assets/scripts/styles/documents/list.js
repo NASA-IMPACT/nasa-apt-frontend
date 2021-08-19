@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { divide, glsp, themeVal } from '@devseed-ui/theme-provider';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 export const DocumentsList = styled.ol`
   background: transparent;
@@ -107,6 +108,10 @@ export const DocumentEntryActions = styled.div`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
   align-items: end;
+
+  ${VerticalDivider}:first-child {
+    display: none;
+  }
 
   > * {
     grid-row: 1;

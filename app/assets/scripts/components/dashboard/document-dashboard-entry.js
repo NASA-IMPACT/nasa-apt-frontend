@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import { Can } from '../../a11n';
 import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
@@ -133,6 +134,7 @@ function DocumentDashboardEntry(props) {
             origin='hub'
             onAction={onAction}
           />
+          <VerticalDivider />
           <DocumentActionsMenu
             origin='hub'
             size='small'
