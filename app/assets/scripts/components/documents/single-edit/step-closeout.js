@@ -49,18 +49,7 @@ export default function StepCloseout(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <RichTextContex2Formik>
-                <FormikSectionFieldset
-                  label={getDocumentSectionLabel('abstract')}
-                  sectionName='sections_completed.abstract'
-                  commentSection='abstract'
-                >
-                  <FormikInputTextarea
-                    id='abstract'
-                    name='document.abstract'
-                    label='Short ATBD summary'
-                    description={formString('closeout.abstract')}
-                  />
-                </FormikSectionFieldset>
+                <FieldAbstract />
 
                 <JournalDetails atbd={atbd} />
               </RichTextContex2Formik>
@@ -145,7 +134,10 @@ function JournalDetails(props) {
   return (
     <React.Fragment>
       <FormBlockHeading>Journal details</FormBlockHeading>
-      <FormGroupStructure label='Journal publication process'>
+      <FormGroupStructure
+        label='Journal publication process'
+        description={formString('closeout.journal_publication')}
+      >
         <FormCheckableGroup>
           {journalStatuses.map((s) => {
             const isDisabled = !s.enabled(atbd);
