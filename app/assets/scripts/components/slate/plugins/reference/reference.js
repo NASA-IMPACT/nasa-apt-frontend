@@ -55,7 +55,7 @@ const Ref = styled.span`
         `)}
 
   > * {
-    vertical-align: top;
+    align-items: baseline;
   }
 `;
 
