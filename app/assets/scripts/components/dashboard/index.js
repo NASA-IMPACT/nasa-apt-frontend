@@ -1,12 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
-import {
-  glsp,
-  media,
-  themeVal,
-  visuallyHidden
-} from '@devseed-ui/theme-provider';
+import { glsp, media, visuallyHidden } from '@devseed-ui/theme-provider';
 
 import App from '../common/app';
 import {
@@ -103,7 +98,11 @@ const InsightsBlockContent = styled.div`
 const DocumentsBlock = styled.section`
   grid-column: content-start / content-end;
   display: grid;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  gap: ${glsp()};
+
+  ${media.mediumUp`
+    gap: ${glsp(1.5)};
+  `}
 `;
 
 export const DocumentsBlockTitle = styled(Heading).attrs({

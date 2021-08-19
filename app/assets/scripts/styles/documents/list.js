@@ -7,8 +7,11 @@ export const DocumentsList = styled.ol`
 `;
 
 export const DocumentsListItem = styled.li`
-  padding: ${glsp(1, 0)};
-  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  &:not(:last-child) {
+    padding-bottom: ${glsp()};
+    margin-bottom: ${glsp()};
+    box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  }
 `;
 
 export const DocumentEntry = styled.article`
