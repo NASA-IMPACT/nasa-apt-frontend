@@ -1,7 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
-import { Formik, Form as FormikForm, useFormikContext } from 'formik';
-import { Form, FormCheckableGroup } from '@devseed-ui/form';
+import { Formik, Form as FormikForm, useFormikContext, useField } from 'formik';
+import { Form, FormCheckableGroup, FormHelperCounter } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
@@ -82,6 +82,38 @@ StepCloseout.propTypes = {
     document: T.object
   })
 };
+
+const MAX_ABSTRACT_WORDS = 250;
+
+function FieldAbstract() {
+  const [{ value }] = useField('document.abstract');
+  const trimmed = value.trim();
+  const words = trimmed ? trimmed.split(/\s+/).length : 0;
+
+  return (
+    <FormikSectionFieldset
+      label={getDocumentSectionLabel('abstract')}
+      sectionName='sections_completed.abstract'
+      commentSection='abstract'
+    >
+      <FormikInputTextarea
+        id='abstract'
+        name='document.abstract'
+        label='Short ATBD summary'
+        description={formString('closeout.abstract')}
+        helper={
+          <FormHelperCounter
+            value={words}
+            max={MAX_ABSTRACT_WORDS}
+            warnAt={MAX_ABSTRACT_WORDS - 15}
+          >
+            word count: {words} / {MAX_ABSTRACT_WORDS}
+          </FormHelperCounter>
+        }
+      />
+    </FormikSectionFieldset>
+  );
+}
 
 const journalStatuses = [
   {
