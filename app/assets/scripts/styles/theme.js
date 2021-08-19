@@ -2,16 +2,17 @@ import defaultsDeep from 'lodash.defaultsdeep';
 import { rgba } from 'polished';
 
 export function themeOverridesAPT(uiTheme) {
-  const baseColor = '#2C3E50';
+  const baseColor = '#2c3e50';
+  const primaryColor = '#2276ac';
 
   return defaultsDeep(
     {
       color: {
         base: baseColor,
         baseDark: baseColor,
-        primary: '#2276ac',
+        primary: primaryColor,
         secondary: '#17557c',
-        link: '#2276ac',
+        link: primaryColor,
         baseAlphaA: rgba(baseColor, 0.02),
         baseAlphaB: rgba(baseColor, 0.04),
         baseAlphaC: rgba(baseColor, 0.08),
@@ -20,8 +21,8 @@ export function themeOverridesAPT(uiTheme) {
         baseAlphaF: rgba(baseColor, 0.64),
         statusDraft: '#fcab10',
         statusReview: '#f4442e',
-        statusPublication: '#b62b6e',
-        statusPublished: '#2ca58d'
+        statusPublication: '#2ca58d',
+        statusPublished: primaryColor
       },
       type: {
         base: {
