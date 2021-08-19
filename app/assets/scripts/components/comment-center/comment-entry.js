@@ -147,7 +147,7 @@ const CommentReplyButton = styled(Button)`
     line-height: 0.875rem !important;
     position: absolute;
     right: -0.25rem;
-    top: -0.5rem;
+    top: -0.25rem;
     padding: ${glsp(0, 0.25)};
     color: #fff;
     background: ${themeVal('color.primary')};
@@ -309,7 +309,7 @@ export default function CommentEntry(props) {
               <CommentReplyButton
                 hideText
                 size='small'
-                useIcon='arrow-return'
+                useIcon='arrow-reply'
                 title={
                   replyCount ? `Reply comment (${replyCount})` : 'Reply Comment'
                 }
@@ -321,7 +321,7 @@ export default function CommentEntry(props) {
               <Button
                 hideText
                 size='small'
-                useIcon={isResolved ? 'arrow-spin-ccw' : 'tick'}
+                useIcon={isResolved ? 'arrow-revert' : 'tick'}
                 title={
                   isResolved
                     ? 'Unresolve comment thread'

@@ -79,7 +79,7 @@ function SandboxElements() {
                 <StatusPill
                   pillColor={statusMapping[PUBLICATION]}
                   status='In publication'
-                  statusIcon='page'
+                  statusIcon='page-up'
                 />
                 <StatusPill
                   pillColor={statusMapping[PUBLICATION]}
