@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
-import collecticon from '@devseed-ui/collecticons';
+import { Toolbar } from '@devseed-ui/toolbar';
 
 import SmartLink from '../components/common/smart-link';
 
@@ -35,28 +35,17 @@ export const Card = styled.article`
     pointer-events: none;
   }
 
-  ${({ isExternal }) =>
-    isExternal &&
-    css`
-      &::after {
-        ${collecticon('expand-top-right')}
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 4;
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-start;
-        width: 3.5rem;
-        height: 3.5rem;
-        color: ${themeVal('color.surface')};
-        line-height: 1;
-        background: ${themeVal('color.link')};
-        padding: ${glsp(0.5)};
-        clip-path: polygon(100% 0, 0 0, 100% 100%);
-        pointer-events: none;
-      }
-    `}
+  &::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 4;
+    width: 0.25rem;
+    background: ${themeVal('color.link')};
+    pointer-events: none;
+  }
 `;
 
 export const CardHeader = styled.header`
@@ -158,8 +147,8 @@ export const CardExcerpt = styled.div`
   }
 `;
 
-export const CardToolbar = styled.div`
-  display: flex;
+export const CardToolbar = styled(Toolbar)`
+  /* display: flex; */
 
   > * {
     pointer-events: auto;

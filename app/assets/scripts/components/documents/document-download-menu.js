@@ -1,20 +1,44 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
+import ReactGA from 'react-ga';
 
-import DropdownMenu from '../common/dropdown-menu';
+import DropdownMenu, { DropMenuItemEnhanced } from '../common/dropdown-menu';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
 
+function DropMenuItemOutboundLink(props) {
+  const { eventLabel, menuItem, active, ...rest } = props;
+  return (
+    <DropMenuItemEnhanced
+      as={ReactGA.OutboundLink}
+      {...rest}
+      active={active || undefined}
+      eventLabel={eventLabel}
+      to={menuItem.href}
+      title={menuItem.title}
+    >
+      {menuItem.label}
+    </DropMenuItemEnhanced>
+  );
+}
+
+DropMenuItemOutboundLink.propTypes = {
+  active: T.bool,
+  eventLabel: T.string,
+  menuItem: T.object
+};
+
 export default function DocumentDownloadMenu(props) {
-  const { atbd, variation, alignment, direction } = props;
+  const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
   const dropProps = useMemo(() => {
     const triggerProps = {
       triggerProps: {
         useIcon: 'download-2',
-        variation
+        variation,
+        hideText
       },
       triggerLabel: 'Download'
     };
@@ -32,13 +56,27 @@ export default function DocumentDownloadMenu(props) {
           id: `${version}-document`,
           label: `${version} Document PDF`,
           title: `Download document for version ${version}`,
-          href: `${pdfUrl}${token ? `?token=${token}` : ''}`
+          href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
+          /* eslint-disable-next-line react/display-name */
+          render: (props) => (
+            <DropMenuItemOutboundLink
+              {...props}
+              eventLabel={`PDF ${atbd.id}/${version}`}
+            />
+          )
         },
         {
           id: `${version}-journal`,
           label: `${version} Journal PDF`,
           title: `Download journal for version ${version}`,
-          href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`
+          href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`,
+          /* eslint-disable-next-line react/display-name */
+          render: (props) => (
+            <DropMenuItemOutboundLink
+              {...props}
+              eventLabel={`Journal PDF ${atbd.id}/${version}`}
+            />
+          )
         }
       );
     }
@@ -50,11 +88,12 @@ export default function DocumentDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [variation, token, atbd]);
+  }, [hideText, variation, token, atbd]);
 
   return (
     <DropdownMenu
       {...dropProps}
+      onChange={onChange}
       alignment={alignment || 'right'}
       direction={direction || 'down'}
       dropTitle='Download'
@@ -63,7 +102,9 @@ export default function DocumentDownloadMenu(props) {
 }
 
 DocumentDownloadMenu.propTypes = {
+  onChange: T.func,
   atbd: T.object,
+  hideText: T.bool,
   alignment: T.string,
   direction: T.string,
   variation: T.string

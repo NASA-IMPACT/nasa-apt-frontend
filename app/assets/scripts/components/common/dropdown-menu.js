@@ -132,7 +132,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
     triggerLabel,
     onSelect,
     alignment,
-    direction
+    direction,
+    ...restDropProps
   } = props;
 
   // Normalize menu, adding the menu Id to each item. This is useful for referencing.
@@ -195,6 +196,7 @@ const DropdownMenu = React.forwardRef((props, ref) => {
           {getLabel()}
         </Button>
       )}
+      {...restDropProps}
     >
       <ShadowScrollbar scrollbarsProps={shadowScrollbarProps}>
         <DropTitle>{dropTitle}</DropTitle>
@@ -238,8 +240,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
                       useIcon={icon}
                       title={title}
                       {...itemProps}
-                      {...rest}
                       onClick={getMenuClickHandler(onSelect, menuItem)}
+                      {...rest}
                     >
                       {label}
                     </DropMenuItemEnhanced>

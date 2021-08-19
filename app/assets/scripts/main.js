@@ -3,10 +3,12 @@ import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import T from 'prop-types';
 import { Router, Route, Switch } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
 import GlobalLoadingProvider from '@devseed-ui/global-loading';
 
+import config from './config';
 import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
 import GlobalStyle from './styles/global';
@@ -59,6 +61,17 @@ const composingComponents = [
   JsonPagesProvider,
   SearchProvider
 ];
+
+const { gaTrackingCode } = config;
+
+// Google analytics
+if (gaTrackingCode) {
+  ReactGA.initialize(gaTrackingCode);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+  history.listen((location) =>
+    ReactGA.pageview(location.pathname + location.search)
+  );
+}
 
 // Root component.
 function Root() {

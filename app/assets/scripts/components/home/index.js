@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import ReactGA from 'react-ga';
 import { glsp, media, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { Button } from '@devseed-ui/button';
@@ -244,6 +245,13 @@ function Home() {
                   <IntroActions>
                     <Button
                       forwardedAs={Link}
+                      onClick={() => {
+                        return ReactGA.event({
+                          category: 'Navigation',
+                          action: 'CTA click',
+                          label: 'Home - Learn more'
+                        });
+                      }}
                       to='/about'
                       size='large'
                       variation='primary-raised-light'
@@ -252,6 +260,13 @@ function Home() {
                     </Button>
                     <Button
                       forwardedAs={Link}
+                      onClick={() => {
+                        return ReactGA.event({
+                          category: 'Navigation',
+                          action: 'CTA click',
+                          label: 'Home - Explore Documents'
+                        });
+                      }}
                       to='/documents'
                       size='large'
                       variation='primary-raised-dark'

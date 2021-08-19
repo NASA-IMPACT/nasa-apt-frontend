@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
+import ReactGA from 'react-ga';
 import { FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
@@ -77,6 +78,13 @@ const DocInfoList = styled(DetailsList)`
 
 export default function DocumentInfoModal(props) {
   const { atbd, revealed, onClose } = props;
+
+  useEffect(() => {
+    if (revealed) {
+      ReactGA.modalview('document-info');
+    }
+  }, [revealed]);
+
   return (
     <Modal
       id='modal'

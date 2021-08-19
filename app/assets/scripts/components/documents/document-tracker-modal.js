@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import qs from 'qs';
+import ReactGA from 'react-ga';
 import styled, { css } from 'styled-components';
 import { useLocation } from 'react-router';
 import { Modal, ModalFooter } from '@devseed-ui/modal';
@@ -143,6 +144,12 @@ export default function DocumentTrackerModal(props) {
   const { atbd, revealed, onClose } = props;
   const { statusMapping } = useStatusColors();
   const location = useLocation();
+
+  useEffect(() => {
+    if (revealed) {
+      ReactGA.modalview('document-progress-tracker');
+    }
+  }, [revealed]);
 
   const isWelcome = useMemo(
     () =>
