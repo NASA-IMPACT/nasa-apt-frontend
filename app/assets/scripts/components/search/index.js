@@ -14,13 +14,13 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageBody,
-  InpageMeta,
-  InpageSubtitle
+  InpageSubtitle,
+  InpageHeadHgroup
 } from '../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../styles/form-block';
 import { FormikInputText } from '../common/forms/input-text';
 import { FormikInputSelect } from '../common/forms/input-select';
-import SearchResults from './search-results';
+import SearchResults, { NoResultsMessage } from './search-results';
 import { Link } from '../../styles/clean/link';
 
 import { useSearch } from '../../context/search';
@@ -158,16 +158,16 @@ function Search() {
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Search</InpageTitle>
-          </InpageHeadline>
-          <InpageMeta>
-            <dt>Under</dt>
-            <InpageSubtitle as='dd'>
+            <InpageHeadHgroup>
+              <InpageTitle>Search</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
+              <span>Under</span>
               <Link to='/documents' title='View all Documents'>
                 Documents
               </Link>
             </InpageSubtitle>
-          </InpageMeta>
+          </InpageHeadline>
         </InpageHeaderSticky>
         <InpageBody>
           <FormBlock>
@@ -211,6 +211,12 @@ function Search() {
             {results.status === 'succeeded' && (
               <SearchResults results={results.data} searchValue={searchValue} />
             )}
+            {results.status === 'failed' &&
+              results.error?.response?.status === 404 && (
+                <NoResultsMessage>
+                  <p>There are no document to search.</p>
+                </NoResultsMessage>
+              )}
           </FormBlock>
         </InpageBody>
       </Inpage>

@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
@@ -16,7 +16,8 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import Prose from '../../../styles/typography/prose';
+import Forbidden from '../../../a11n/forbidden';
+import Prose, { proseSpacing } from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
@@ -35,7 +36,14 @@ import {
 } from '../../../context/atbds-list';
 import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
 import { useDocumentModals, DocumentModals } from '../use-document-modals';
-import { documentUpdatedDate } from '../../../utils/date';
+import { useUser } from '../../../context/user';
+import {
+  useCommentCenter,
+  useCommentCenterHistoryHandler
+} from '../../../context/comment-center';
+import { useThreadStats } from '../../../context/threads-list';
+import { useEffectPrevious } from '../../../utils/use-effect-previous';
+import { getCitationPublicationDate } from '../citation';
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -57,8 +65,8 @@ const InpageViewActions = styled(InpageActions)`
 const DocumentProse = styled(Prose)`
   > * {
     position: relative;
-    padding-bottom: ${glsp(3)};
-    margin-bottom: ${glsp(3)};
+    padding-bottom: ${multiply(proseSpacing, 2)};
+    margin-bottom: ${multiply(proseSpacing, 2)};
 
     &::after {
       position: absolute;
@@ -129,6 +137,7 @@ const DOIValue = styled.dd`
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
+  const { isAuthReady } = useUser();
   const {
     atbd,
     updateAtbd,
@@ -138,10 +147,33 @@ function DocumentView() {
   } = useSingleAtbd({ id, version });
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
+  // Thread stats - function for initial fetching which stores the document for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
+
+  const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
+  // Se function definition for explanation.
+  useCommentCenterHistoryHandler({ atbd });
+
+  // Fetch the thread stats list to show in the button when the document loads.
+  useEffectPrevious(
+    (prev) => {
+      const prevStatus = prev?.[0]?.status;
+      // This hook is called when the "atbd" changes, which happens also when
+      // there's a mutation, but we don't want to fetch stats on mutations, only
+      // when the atbd is fetched (tracked by a .status change.)
+      if (prevStatus !== atbd.status && atbd.status === 'succeeded') {
+        fetchThreadsStatsForAtbds(atbd.data);
+      }
+    },
+    [atbd, fetchThreadsStatsForAtbds]
+  );
 
   useEffect(() => {
-    fetchSingleAtbd();
-  }, [id, version, fetchSingleAtbd]);
+    isAuthReady && fetchSingleAtbd();
+  }, [isAuthReady, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
@@ -163,9 +195,27 @@ function DocumentView() {
             history
           });
           break;
+        case 'toggle-comments':
+          if (isPanelOpen) {
+            setPanelOpen(false);
+          } else {
+            openPanelOn({
+              // The atbdId must be numeric. The alias does not work.
+              atbdId: atbd.data.id,
+              atbdVersion: atbd.data.version
+            });
+          }
       }
     },
-    [atbd.data, deleteAtbdVersion, history, menuHandler]
+    [
+      atbd.data,
+      deleteAtbdVersion,
+      history,
+      menuHandler,
+      isPanelOpen,
+      setPanelOpen,
+      openPanelOn
+    ]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -176,6 +226,8 @@ function DocumentView() {
 
     if (errCode === 400 || errCode === 404) {
       return <UhOh />;
+    } else if (errCode === 403) {
+      return <Forbidden />;
     } else if (atbd.error) {
       // This is a serious server error. By throwing it will be caught by the
       // error boundary. There's no recovery from this error.
@@ -187,12 +239,6 @@ function DocumentView() {
     ? `Viewing ${atbd.data.title}`
     : 'Document view';
 
-  // The updated at is the most recent between the version updated at and the
-  // atbd updated at. In the case of a single ATBD the selected version data is
-  // merged with the ATBD meta and that's why both variables are
-  // the same.
-  const updatedDate = atbd.data && documentUpdatedDate(atbd.data, atbd.data);
-
   return (
     <App pageTitle={pageTitle}>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -201,11 +247,7 @@ function DocumentView() {
           <DocumentModals {...documentModalProps} />
           <InpageHeaderSticky data-element='inpage-header'>
             <DocumentHeadline
-              atbdId={id}
-              title={atbd.data.title}
-              version={version}
-              versions={atbd.data.versions}
-              updatedDate={updatedDate}
+              atbd={atbd.data}
               onAction={onDocumentMenuAction}
               mode='view'
             />
@@ -245,7 +287,9 @@ function DocumentView() {
                     <DocumentMetaDetails>
                       <dt>Version</dt>
                       <dd>{atbd.data.version}</dd>
-                      <ReleaseDate date={atbd.data.citation?.release_date} />
+                      <ReleaseDate
+                        date={getCitationPublicationDate(atbd.data).date}
+                      />
                       <dt>Keywords</dt>
                       <dd>coming soon</dd>
                       <dt>Creators</dt>
@@ -278,29 +322,18 @@ const ReleaseDate = ({ date }) => {
     );
   }
 
-  const dateObj = new Date(date);
-  // Not parsable. Print as provided.
-  if (isNaN(dateObj.getTime())) {
-    return (
-      <React.Fragment>
-        <dt>Release date</dt>
-        <dd>{date}</dd>
-      </React.Fragment>
-    );
-  }
-
   return (
     <React.Fragment>
       <dt>Release date</dt>
       <dd>
-        <Datetime date={dateObj} />
+        <Datetime date={date} />
       </dd>
     </React.Fragment>
   );
 };
 
 ReleaseDate.propTypes = {
-  date: T.string
+  date: T.object
 };
 
 const DOIAddress = ({ value }) => {

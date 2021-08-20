@@ -46,7 +46,7 @@ export const InpageHeader = styled.header.attrs({
 export const InpageHeaderSticky = styled(InpageHeader)`
   position: sticky;
   top: 0;
-  z-index: 9000;
+  z-index: 7000;
 `;
 
 export const InpageHeadline = styled.div`

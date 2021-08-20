@@ -572,19 +572,25 @@ declare module '@devseed-ui/form' {
   /**
    * Element to hold the helper message
    */
-  export class FormHelperMessage extends React.Component<{ invalid: boolean}, any> {}
+  export class FormHelperMessage extends React.Component<
+    { invalid: boolean },
+    any
+  > {}
   /**
    * Counter component that changes color according to the passed values.
    */
-  export class FormHelperCounter extends React.Component<{
-    /* Current counter value */
-    value: number;
-    /* Max allowed values */
-    max: number;
-    /* At what point to warn the user the max is being reached. 90% of max by
+  export class FormHelperCounter extends React.Component<
+    {
+      /* Current counter value */
+      value: number;
+      /* Max allowed values */
+      max: number;
+      /* At what point to warn the user the max is being reached. 90% of max by
     default. */
-    warnAt: number
-  }, any> {}
+      warnAt: number;
+    },
+    any
+  > {}
 
   /**
    * Component to create the label for the form field
@@ -612,4 +618,66 @@ declare module '@devseed-ui/form' {
   export class FormSelect extends React.Component<any, any> {}
   export class FormTextarea extends React.Component<any, any> {}
   export class FormSwitch extends React.Component<any, any> {}
+}
+
+declare module '@devseed-ui/accordion' {
+  export class AccordionFoldContainer extends React.Component<any, any> {}
+  export class AccordionFoldHeader extends React.Component<any, any> {}
+  export class AccordionFoldHeadline extends React.Component<any, any> {}
+  export class AccordionFoldToolbar extends React.Component<any, any> {}
+  export class AccordionFoldBody extends React.Component<any, any> {}
+  export class AccordionFoldBodyInner extends React.Component<any, any> {}
+  export class ToggleButton extends React.Component<any, any> {}
+
+  export class Accordion extends React.Component<
+    {
+      /* Number of folds to be controlled */
+      foldCount: number;
+      /* Whether or not to allow multiple open folds at the same time */
+      allowMultiple: boolean;
+      /* Initial state for the folds */
+      initialState: [boolean];
+    },
+    any
+  > {}
+
+  type renderFunction = (bag: {
+    /* Whether or not this fold is expanded. */
+    isFoldExpanded: boolean;
+    /* Method to change the fold state by passing a boolean with the new state. */
+    setFoldExpanded: (value: boolean) => void;
+  }) => any;
+
+  // According fold without overrides:
+  // <AccordionFoldSelf>
+  //   <AccordionFoldHeader>
+  //     <AccordionFoldTrigger>
+  //       <h1 />
+  //     </AccordionFoldTrigger>
+  //   </AccordionFoldHeader>
+  //   <AccordionFoldBody>
+  //     <AccordionFoldBodyInner />
+  //   </AccordionFoldBody>
+  // </AccordionFoldSelf>
+  export class AccordionFold extends React.Component<
+    {
+      /* An id for the fold. */
+      id: string;
+      /* Classname for the fold. */
+      className: string;
+      /* Title to use on the fold header. Required unless renderHeader is being used. */
+      title: string;
+      /* Content for the fold. Required unless renderBody is being used. */
+      content: any;
+      /* Whether or not this fold is expanded. */
+      isFoldExpanded: boolean;
+      /* Callback for the fold header. Will be called with the a boolean indicating the new fold state. */
+      setFoldExpanded: (value: boolean) => void;
+      /* Overrides the fold header element. Anything returned by this function is rendered instead of `AccordionFoldHeader`. */
+      renderHeader: renderFunction;
+      /* Overrides the fold body element. Anything returned by this function is rendered instead of `AccordionFoldBodyInner`. */
+      renderBody: renderFunction;
+    },
+    any
+  > {}
 }

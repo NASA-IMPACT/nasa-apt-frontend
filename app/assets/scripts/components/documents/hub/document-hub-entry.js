@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import T from 'prop-types';
+import nl2br from 'react-nl2br';
+import ReactGA from 'react-ga';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 import {
   CardInteractive,
@@ -10,8 +13,7 @@ import {
   CardTitle,
   CardDetails,
   CardBody,
-  CardExcerpt,
-  CardActions
+  CardExcerpt
 } from '../../../styles/card';
 
 import VersionsMenu from '../versions-menu';
@@ -20,21 +22,42 @@ import Tip from '../../common/tooltip';
 import DocumentDownloadMenu from '../../documents/document-download-menu';
 
 import { documentView } from '../../../utils/url-creator';
-import { documentUpdatedDate } from '../../../utils/date';
 import getDocumentIdKey from '../get-document-id-key';
+import { computeAtbdVersion } from '../../../context/atbds-list';
+
+const getDropChange = (label) => (isOpen) =>
+  isOpen &&
+  ReactGA.event({
+    category: 'Documents Hub',
+    action: 'Interaction',
+    label
+  });
 
 function DocumentHubEntry(props) {
   const { atbd } = props;
-  const lastVersion = atbd.versions[atbd.versions.length - 1];
 
-  // The updated at is the most recent between the version updated at and the
-  // atbd updated at.
-  const updateDate = documentUpdatedDate(atbd, lastVersion);
+  const atbdVersion = computeAtbdVersion(atbd, atbd.versions.last);
+
+  const atbdAbstract = useMemo(() => {
+    const abstract = atbdVersion.document?.abstract?.trim();
+    const abstractChars = 240;
+
+    if (!abstract) return 'No summary available';
+    if (abstract.length <= abstractChars) return abstract;
+
+    // Limit the abstract ensuring that no words are split.
+    const abstractSlice = abstract.slice(0, abstractChars);
+    const abstractTruncated = abstractSlice.slice(
+      0,
+      abstractSlice.lastIndexOf(' ')
+    );
+    return `${abstractTruncated}...`;
+  }, [atbdVersion]);
 
   return (
     <CardInteractive
       linkProps={{
-        to: documentView(atbd, lastVersion.version),
+        to: documentView(atbd, atbdVersion.version),
         title: 'View document'
       }}
       linkLabel='View'
@@ -45,37 +68,33 @@ function DocumentHubEntry(props) {
             <CardTitle>{atbd.title}</CardTitle>
             <CardToolbar>
               <VersionsMenu
+                onChange={useMemo(() => getDropChange('Version dropdown'), [])}
                 atbdId={getDocumentIdKey(atbd).id}
                 versions={atbd.versions}
                 alignment='right'
+              />
+              <VerticalDivider />
+              <DocumentDownloadMenu
+                onChange={useMemo(() => getDropChange('PDF dropdown'), [])}
+                atbd={atbdVersion}
+                alignment='right'
+                direction='down'
+                hideText
+                variation='base-plain'
               />
             </CardToolbar>
           </CardHgroup>
         </CardHeadline>
         <CardDetails>
-          By <Creators creators={lastVersion.citation?.creators} /> on{' '}
-          <Datetime date={updateDate} />
+          By <Creators creators={atbdVersion.citation?.creators} /> on{' '}
+          <Datetime date={new Date(atbdVersion.last_updated_at)} />
         </CardDetails>
       </CardHeader>
       <CardBody>
         <CardExcerpt>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec
-            scelerisque mauris. Vestibulum auctor tempor quam eu pharetra. Nunc
-            gravida lacus ipsum, sit amet dictum tellus sodales eget. Praesent
-            elementum volutpat imperdiet. Nunc cursus lorem vulputate, faucibus
-            nunc a, viverra leo...
-          </p>
+          <p>{nl2br(atbdAbstract)}</p>
         </CardExcerpt>
       </CardBody>
-      <CardActions>
-        <DocumentDownloadMenu
-          atbd={lastVersion}
-          alignment='left'
-          direction='up'
-          variation='primary-raised-dark'
-        />
-      </CardActions>
     </CardInteractive>
   );
 }
@@ -93,7 +112,7 @@ const Creators = ({ creators }) => {
 
   if (creatorsList.length > 1) {
     return (
-      <Tip title={creators} style={{ pointerEvents: 'auto' }}>
+      <Tip title={creators} style={{ pointerEvents: 'auto' }} tag='span'>
         {creatorsList[0]} et al.
       </Tip>
     );

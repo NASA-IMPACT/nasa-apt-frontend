@@ -30,7 +30,7 @@ const Pill = styled(PillSelf)`
   font-weight: ${themeVal('type.base.bold')};
   text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
-  background-color: ${rgba(themeVal('color.base'), 0.48)};
+  background-color: ${rgba(themeVal('color.base'), 0.56)};
   border-radius: ${themeVal('shape.ellipsoid')};
   padding: 0.5em 1em;
   font-size: 0.75em;

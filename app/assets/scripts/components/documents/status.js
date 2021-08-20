@@ -58,6 +58,20 @@ const isInStatus = (versionOrStatus, statuses) =>
   statuses.includes(versionOrStatus?.status || versionOrStatus);
 
 /**
+ * Checks that the given document or status string is after the given one
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @param {status} status Base status to check if the provided is after.
+ * @returns boolean
+ */
+export const isStatusAfter = (versionOrStatus, status) => {
+  const statusList = DOCUMENT_STATUS.map((s) => s.id);
+  // Status needs to be after the given one.
+  const idx = statusList.findIndex((s) => s === status);
+  const availableStatuses = statusList.slice(idx + 1);
+  return isInStatus(versionOrStatus, availableStatuses);
+};
+
+/**
  * Checks that the given document or status string is in Draft
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
@@ -136,6 +150,15 @@ export const isPublication = (versionOrStatus) => {
 };
 
 /**
+ * Checks that the given document or status string is in Publication or after
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isPublicationOrAfter = (versionOrStatus) => {
+  return isInStatus(versionOrStatus, [PUBLICATION, PUBLISHED]);
+};
+
+/**
  * Checks that the given document or status string is Published
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
@@ -155,4 +178,19 @@ export const REVIEW_DONE = 'DONE';
  */
 export const isReviewDone = (reviewerOrStatus) => {
   return (reviewerOrStatus?.review_status || reviewerOrStatus) === REVIEW_DONE;
+};
+
+export const JOURNAL_NO_PUBLICATION = 'NO_PUBLICATION';
+export const JOURNAL_PUB_INTENDED = 'PUBLICATION_INTENDED';
+export const JOURNAL_SUBMITTED = 'PUBLICATION_REQUESTED';
+export const JOURNAL_PUBLISHED = 'PUBLISHED';
+
+/**
+ * Checks that the given document or status is intended for journal publication
+ * @param {object|string} versionOrStatus The doc version or the status string
+ * @returns boolean
+ */
+export const isJournalPublicationIntended = (versionOrStatus) => {
+  const status = versionOrStatus?.journal_status || versionOrStatus;
+  return !!status && status !== JOURNAL_NO_PUBLICATION;
 };

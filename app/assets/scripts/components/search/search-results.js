@@ -13,11 +13,9 @@ import {
   HubEntryHeadline,
   HubEntryTitle,
   HubEntryHeadNav,
-  HubEntryBreadcrumbMenu,
-  HubEntryMeta
+  HubEntryBreadcrumbMenu
 } from '../../styles/hub';
 import { Link } from '../../styles/clean/link';
-import Pill from '../common/pill';
 import TextHighlight from '../common/text-highlight';
 
 import { documentView } from '../../utils/url-creator';
@@ -30,7 +28,7 @@ const ResultsHeading = styled(Heading)`
   margin-bottom: ${glsp(2)};
 `;
 
-const NoResultsMessage = styled.div`
+export const NoResultsMessage = styled.div`
   padding: 3rem;
   text-align: center;
 
@@ -135,12 +133,6 @@ function ResultsList(props) {
                       </HubEntryBreadcrumbMenu>
                     </HubEntryHeadNav>
                   </HubEntryHeadline>
-                  <HubEntryMeta>
-                    <dt>Status</dt>
-                    <dd>
-                      <Pill>{result.version.status}</Pill>
-                    </dd>
-                  </HubEntryMeta>
                 </HubEntryHeader>
                 <ResultHighlights highlight={highlight} />
               </ResultLink>

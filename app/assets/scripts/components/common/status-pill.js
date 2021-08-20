@@ -1,19 +1,43 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-
-import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, multiply, rgba, themeVal } from '@devseed-ui/theme-provider';
 import collecticon from '@devseed-ui/collecticons';
 
 import Pill from './pill';
+import { NavLink } from '../../styles/clean/link';
+
 import { calculateDocumentCompleteness } from '../documents/completeness';
 import {
   getDocumentStatusLabel,
   isClosedReview,
-  isDraft,
-  isReviewRequested,
+  isDraftEquivalent,
+  JOURNAL_PUBLISHED,
+  JOURNAL_SUBMITTED,
   REVIEW_DONE
 } from '../documents/status';
+import { useStatusColors } from '../../utils/use-status-colors';
+
+export const DocumentStatusLink = styled(NavLink)`
+  display: flex;
+`;
+
+export const statusSwatch = css`
+  content: '';
+  display: inline-flex;
+  height: 0.75em;
+  aspect-ratio: 1 / 1; /* stylelint-disable-line */
+  border-radius: ${themeVal('shape.ellipsoid')};
+  background: ${themeVal('color.baseLight')};
+  box-shadow: 0 0 0 ${multiply(themeVal('layout.border'), 2)}
+    ${themeVal('color.baseLight')};
+
+  ${({ swatchColor }) =>
+    swatchColor &&
+    css`
+      background: ${swatchColor};
+    `}
+`;
 
 const StatusSelf = styled(Pill)`
   min-width: 6rem;
@@ -27,7 +51,7 @@ const StatusSelf = styled(Pill)`
     width: ${({ value }) => `${value}%`};
     content: '';
     pointer-events: none;
-    background-color: ${rgba(themeVal('color.base'), 0.32)};
+    background-color: ${rgba(themeVal('color.base'), 0.64)};
   }
 
   ${({ useIcon }) =>
@@ -39,11 +63,22 @@ const StatusSelf = styled(Pill)`
         margin-left: ${glsp(0.25)};
       }
     `}
+
+  span {
+    position: relative;
+    display: inline-flex;
+    gap: 0.75em;
+    align-items: center;
+
+    &::before {
+      ${statusSwatch}
+    }
+  }
 `;
 
-const journalStatusIcons = {
-  submitted: 'page',
-  published: 'page-tick'
+export const journalStatusIcons = {
+  [JOURNAL_SUBMITTED]: 'page-up',
+  [JOURNAL_PUBLISHED]: 'page-tick'
 };
 
 function StatusPill(props) {
@@ -70,11 +105,13 @@ export default StatusPill;
 
 export function DocumentStatusPill(props) {
   const { atbdVersion, ...rest } = props;
+  const { statusMapping } = useStatusColors();
 
-  if (isDraft(atbdVersion) || isReviewRequested(atbdVersion)) {
+  if (isDraftEquivalent(atbdVersion)) {
     const { percent } = calculateDocumentCompleteness(atbdVersion);
     return (
       <StatusPill
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${percent}%`}
@@ -90,21 +127,20 @@ export function DocumentStatusPill(props) {
 
     return (
       <StatusPill
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
         fillPercent={percent}
         completeness={`${revCompleted}/${revTotal}`}
         {...rest}
       />
     );
-  }
-
-  // TODO: Other statuses
-  else {
-    const journalStatus = null; // TODO: compute
+  } else {
+    const { journal_status } = atbdVersion;
     return (
       <StatusPill
+        swatchColor={statusMapping[atbdVersion.status]}
         status={getDocumentStatusLabel(atbdVersion)}
-        statusIcon={journalStatusIcons[journalStatus]}
+        statusIcon={journalStatusIcons[journal_status]}
         {...rest}
       />
     );

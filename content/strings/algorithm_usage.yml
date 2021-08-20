@@ -1,4 +1,4 @@
-constraints: Based on the algorithm and various assumptions made in producing the data product, what are the constraints or limitations on use of the output data.
-validation_methods: Description of details of the scientific methods utilized for algorithm validation. Details provided should match the current algorithm maturity.
-validation_uncertainties: Description of uncertainties applicable to the validation methods and data used. This may include uncertainty in scientific or mathematical methods and/or errors associated with observation retrievals used for comparison.
-validation_errors: Estimated errors of output data product variables.
+constraints: What are the constraints or limitations on the use of the output data based on the algorithm and various assumptions made in producing the data product?
+validation_methods: Describe the details of the scientific methods utilized for algorithm validation. Details provided should match the current algorithm maturity.
+validation_uncertainties: Describe the uncertainties applicable to the validation methods and data used. This may include uncertainty in scientific or mathematical methods and/or errors associated with observation retrievals used for comparison.
+validation_errors: Provide estimated errors of the output data product variables

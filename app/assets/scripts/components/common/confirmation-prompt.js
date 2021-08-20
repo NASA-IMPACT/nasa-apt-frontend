@@ -233,7 +233,7 @@ export function showConfirmationPrompt(opts = {}) {
   });
 }
 
-const deleteControls = createBinaryControlsRenderer({
+export const confirmationDeleteControls = createBinaryControlsRenderer({
   confirmVariation: 'danger-raised-dark',
   confirmIcon: 'trash-bin',
   confirmTitle: 'Confirm deletion',
@@ -262,7 +262,7 @@ export const confirmDeleteDocumentVersion = async (name, version) => {
         <strong>{name}</strong> will be deleted.
       </p>
     ),
-    renderControls: deleteControls
+    renderControls: confirmationDeleteControls
   });
 };
 
@@ -295,6 +295,6 @@ export const confirmDeleteContact = async (name, docsCount) => {
         <p>This action is irreversible.</p>
       </ConfirmationModalProse>
     ),
-    renderControls: deleteControls
+    renderControls: confirmationDeleteControls
   });
 };

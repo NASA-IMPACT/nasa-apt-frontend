@@ -1,0 +1,5 @@
+abstract: Short plain language summary or abstract desribing the ATBD. Must be less than 250 words.
+journal_publication: Select whether or not you desire to submit this ATBD to the AGU Earth System Science journal. Once the ATBD enters the Publication stage you can come back and update the journal prublication status.
+discussion: Describe the significance of the work or the implications for or contributions to the science.
+data_availability: "Provide a data availability statement for each dataset that supports your research. An example demonstrates this: The [type of data] data used for [brief context, description] in the study are available at [repository, source name] via [DOI, persistent identifier link] with  [license, access conditions] [optional in-text citation in References]. Also include a citation for the data in the references."
+acknowledgements: List all needed acknowledgements which may include people, organizations, funding programs, etc.

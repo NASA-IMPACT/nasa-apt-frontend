@@ -17,12 +17,12 @@ interface ATBDVersion {
   minor: Number;
   version: String;
   document: ATBDDocument;
-  changelog: String;
   doi: String;
 }
 
 interface ATBDDocument {
   introduction: SlateDocument;
+  version_description: SlateDocument;
   historical_perspective: SlateDocument;
   mathematical_theory: SlateDocument;
   mathematical_theory_assumptions: SlateDocument;
@@ -41,6 +41,11 @@ interface ATBDDocument {
   journal_discussion: SlateDocument;
   journal_acknowledgements: SlateDocument;
   publication_references: [Reference];
+  additional_information: SlateDocument;
+  abstract: SlateDocument;
+  data_availability: SlateDocument;
+  algorithm_input_variables_caption: String;
+  algorithm_output_variables_caption: String;
 }
 
 interface DocVariable {

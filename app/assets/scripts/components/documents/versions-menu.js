@@ -14,7 +14,8 @@ export default function VersionsMenu(props) {
     size,
     version,
     alignment,
-    direction
+    direction,
+    onChange
   } = props;
 
   const dropProps = useMemo(() => {
@@ -51,6 +52,7 @@ export default function VersionsMenu(props) {
   ) : (
     <DropdownMenu
       {...dropProps}
+      onChange={onChange}
       alignment={alignment || 'left'}
       direction={direction || 'down'}
       withChevron
@@ -60,6 +62,7 @@ export default function VersionsMenu(props) {
 }
 
 VersionsMenu.propTypes = {
+  onChange: T.func,
   atbdId: T.oneOfType([T.string, T.number]),
   versions: T.array,
   variation: T.string,

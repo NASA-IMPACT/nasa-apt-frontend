@@ -24,6 +24,7 @@ import Insight from '../common/insight';
 import { useUser } from '../../context/user';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useAtbds } from '../../context/atbds-list';
+import { useStatusColors } from '../../utils/use-status-colors';
 import {
   DRAFT,
   getDocumentStatusLabel,
@@ -96,6 +97,20 @@ const InsightsBlockContent = styled.div`
 
 const DocumentsBlock = styled.section`
   grid-column: content-start / content-end;
+  display: grid;
+  gap: ${glsp()};
+
+  ${media.mediumUp`
+    gap: ${glsp(1.5)};
+  `}
+`;
+
+export const DocumentsBlockTitle = styled(Heading).attrs({
+  as: 'h2'
+})`
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  margin: 0;
 `;
 
 function UserDashboard() {
@@ -221,6 +236,7 @@ const inisghtsA11y = {
 
 function CuratorInsights() {
   const { atbds } = useAtbds();
+  const { statusMapping } = useStatusColors();
 
   const statCount = useMemo(() => {
     if (!atbds.data) return;
@@ -257,6 +273,7 @@ function CuratorInsights() {
             id={status.toLowerCase()}
             total={statCount.total}
             value={statCount[status]}
+            segmentColor={statusMapping[status]}
             description={getDocumentStatusLabel(status)}
             a11y={inisghtsA11y[status]}
           />

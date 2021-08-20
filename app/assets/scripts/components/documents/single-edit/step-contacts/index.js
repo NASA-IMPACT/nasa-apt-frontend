@@ -1,20 +1,26 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
-import { Formik, Form as FormikForm } from 'formik';
 import set from 'lodash.set';
+import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import { Inpage, InpageBody } from '../../../../styles/inpage';
-import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
+import {
+  FormBlock,
+  FormBlockHeading,
+  FormSectionNotes
+} from '../../../../styles/form-block';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import ContactsList from './contacts-list';
+import { Link } from '../../../../styles/clean/link';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForAtbdContacts } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
 import { validateContact } from '../../../contacts/contact-utils';
 import { getDocumentSectionLabel } from '../sections';
+import { documentEdit } from '../../../../utils/url-creator';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -83,13 +89,26 @@ export default function StepContacts(props) {
                 <FormikSectionFieldset
                   label={getDocumentSectionLabel('contacts')}
                   sectionName='sections_completed.contacts'
+                  commentSection='contacts'
                 >
-                  <p>
-                    <em>
-                      Please list all contacts and select the appropriate role.
-                      This is not the author list for the ATBD citation.
-                    </em>
-                  </p>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        Please select all participants and the appropriate role
+                        with respect to this ATBD.
+                        <br />
+                        This is not the final author list for the ATBD citation
+                        which is manually inserted in the{' '}
+                        <Link
+                          to={documentEdit(atbd, version)}
+                          title='Edit ATBD identifying information'
+                        >
+                          Identifying information
+                        </Link>{' '}
+                        step.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
               </Form>

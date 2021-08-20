@@ -20,13 +20,20 @@ const RolesGroup = styled.div`
 `;
 
 const roleTypes = [
-  'Data center contact',
-  'Technical contact',
-  'Science contact',
-  'Investigator',
-  'Metadata author',
-  'User services',
-  'Science software development'
+  'Writing – original draft',
+  'Writing – review & editing',
+  'Validation',
+  'Data curation',
+  'Conceptualization',
+  'Methodology',
+  'Visualization',
+  'Formal analysis',
+  'Software',
+  'Resources',
+  'Project administration',
+  'Supervision',
+  'Investigation',
+  'Funding acquisition'
 ];
 
 export default function ContactsFieldset(props) {

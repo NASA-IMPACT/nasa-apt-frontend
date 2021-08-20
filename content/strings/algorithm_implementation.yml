@@ -1,19 +1,19 @@
 algorithm_implementations:
-  fieldset: ""
-  url: The web address for the algorithm source code (GitHub URL or other).
-  description: Relevant information needed to execute the algorithm source code.  For example, this may include execution instructions, memory requirements, programming languages and dependencies. If this information is already provided at a permanent location, then provide link.
+  fieldset: "In this box, provide information about where the algorithm is located and what information is needed to use the code."
+  url: Provide the web address for the algorithm source code (GitHub URL or other).
+  description: Provide the relevant information needed to execute the algorithm source code. For example, this may include execution instructions, memory requirements, programming languages and dependencies. If this information is already provided at a permanent location, then provide link.
 
 data_access_input_data:
   fieldset: ""
-  url: Algorithm input data access URL.
+  url: Provide the URL or location of input data product used as input to the algorithm
   description: Provide any details needed to access the data, including name of point of contact or special instructions.
 
 data_access_output_data:
   fieldset: ""
-  url: Algorithm output data access URL.
+  url: Provide the algorithm output data persistent identifier, such as DOI. If none is available leave blank.
   description: Provide any details needed to access the output data, including name of point of contact or any special instructions.
 
 data_access_related_urls:
   fieldset: ""
-  url: Alternative URLs that may be needed, including links to machine services, ordering services and DAAC websites.
-  description: Provide any details needed to access input or output data through alternative methods.
+  url: This refers to alternative URLs that may be needed, including links to machine services, ordering services and DAAC websites.
+  description: Provide any details needed to access input or output data through alternative methods, if needed.

@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 import { divide, glsp, themeVal } from '@devseed-ui/theme-provider';
+import { VerticalDivider } from '@devseed-ui/toolbar';
 
 export const DocumentsList = styled.ol`
   background: transparent;
 `;
 
 export const DocumentsListItem = styled.li`
-  padding: ${glsp(1, 0)};
-  box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  &:not(:last-child) {
+    padding-bottom: ${glsp()};
+    margin-bottom: ${glsp()};
+    box-shadow: 0 1px 0 0 ${themeVal('color.baseAlphaC')};
+  }
 `;
 
 export const DocumentEntry = styled.article`
@@ -107,6 +111,10 @@ export const DocumentEntryActions = styled.div`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
   align-items: end;
+
+  ${VerticalDivider}:first-child {
+    display: none;
+  }
 
   > * {
     grid-row: 1;

@@ -3,10 +3,12 @@ import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import T from 'prop-types';
 import { Router, Route, Switch } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
 import GlobalLoadingProvider from '@devseed-ui/global-loading';
 
+import config from './config';
 import history from './utils/history.js';
 import { themeOverridesAPT } from './styles/theme.js';
 import GlobalStyle from './styles/global';
@@ -14,7 +16,7 @@ import ErrorBoundary from './components/uhoh/fatal-error';
 import { ToastsContainer } from './components/common/toasts';
 import AccessRoute from './a11n/access-route';
 import ConfirmationPrompt from './components/common/confirmation-prompt';
-// import CommentCenter from './components/comment-center';
+import CommentCenter from './components/comment-center';
 import AptDevtools from './components/apt-devtools';
 
 // Views
@@ -44,7 +46,8 @@ import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
-import { CollaboratorsProvider } from './context/collaborators-list.js';
+import { CollaboratorsProvider } from './context/collaborators-list';
+import { ThreadsProvider } from './context/threads-list';
 
 const composingComponents = [
   ErrorBoundary,
@@ -54,9 +57,21 @@ const composingComponents = [
   AtbdsProvider,
   ContactsProvider,
   CollaboratorsProvider,
+  ThreadsProvider,
   JsonPagesProvider,
   SearchProvider
 ];
+
+const { gaTrackingCode } = config;
+
+// Google analytics
+if (gaTrackingCode) {
+  ReactGA.initialize(gaTrackingCode);
+  ReactGA.pageview(window.location.pathname + window.location.search);
+  history.listen((location) =>
+    ReactGA.pageview(location.pathname + location.search)
+  );
+}
 
 // Root component.
 function Root() {
@@ -103,7 +118,7 @@ function Root() {
               component={Contacts}
             />
             <AccessRoute
-              permission={['edit', 'contacts']}
+              permission={['edit', 'contact']}
               exact
               path='/contacts/:id/edit'
               component={ContactsEdit}
@@ -142,7 +157,9 @@ function Root() {
             )}
             <Route path='*' component={UhOh} />
           </Switch>
-          {/* <CommentCenter /> */}
+          <Route path='/documents/:id/:version'>
+            <CommentCenter />
+          </Route>
           {process.env.NODE_ENV === 'development' && <AptDevtools />}
         </Composer>
         <ToastsContainer />

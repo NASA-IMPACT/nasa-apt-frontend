@@ -30,6 +30,9 @@ export function makeReducer({ name: actionName, initialState, baseState }) {
         return {
           ...baseState,
           ...state,
+          // Reset the mutation state every time there's a fetch request. When
+          // working with a mutation the next line will set the correct state.
+          mutationStatus: 'idle',
           [statusKey]: 'loading'
         };
       }

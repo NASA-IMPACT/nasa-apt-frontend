@@ -27,6 +27,7 @@ import { getValuesFromObj } from '../../../utils/get-values-object';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
 import { getContactName, validateContact } from '../contact-utils';
+import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 
 export default function ContactView() {
   const { id } = useParams();
@@ -140,6 +141,11 @@ export default function ContactView() {
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
   const { dirty, isSubmitting, submitForm } = useFormikContext();
+
+  const tipMessage = 'There are unsaved changes';
+
+  // See hook definition file for explanation
+  useSaveTooltipPlacement({ showing: dirty, tipMessage });
 
   return (
     <Tip position='top-end' title='There are unsaved changes' open={dirty}>

@@ -46,6 +46,9 @@ export const UserContext = createContext(null);
 // Context provider
 export const UserProvider = (props) => {
   const { children } = props;
+  // isAuthReady tracks whether or not the authentication was initialized,
+  // regardless of the user being logged in or not.
+  const [isAuthReady, setAuthReady] = useState(false);
   const [userData, setUserData] = useState(emptyUserData);
   const ability = useContextualAbility();
 
@@ -58,6 +61,7 @@ export const UserProvider = (props) => {
       console.log('Error getting authenticated user', error);
       setUserData(emptyUserData);
     }
+    setAuthReady(true);
   }, []);
 
   useEffect(() => {
@@ -99,6 +103,7 @@ export const UserProvider = (props) => {
   }, [userData, ability]);
 
   const contextValue = {
+    isAuthReady,
     userData,
     setUserData
   };
@@ -133,10 +138,11 @@ export const useAuthToken = () => {
 };
 
 export const useUser = () => {
-  const { userData, setUserData } = useSafeContextFn('useUser');
+  const { isAuthReady, userData, setUserData } = useSafeContextFn('useUser');
 
   return useMemo(
     () => ({
+      isAuthReady,
       user: userData,
       isLogged: !!userData.id,
       isCurator: userData.groups?.some?.(
@@ -147,6 +153,6 @@ export const useUser = () => {
       ),
       loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
     }),
-    [userData, setUserData]
+    [userData, isAuthReady, setUserData]
   );
 };

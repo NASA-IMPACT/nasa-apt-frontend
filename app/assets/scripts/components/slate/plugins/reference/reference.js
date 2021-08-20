@@ -53,6 +53,10 @@ const Ref = styled.span`
             box-shadow: inset 0 0 0 1px ${rgba(themeVal('color.link'), 0.48)};
           }
         `)}
+
+  > * {
+    align-items: baseline;
+  }
 `;
 
 const RefReadOnly = styled.sup`

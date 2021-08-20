@@ -4,10 +4,6 @@ import { useHistory, useLocation } from 'react-router';
 
 import DocumentInfoModal from './document-info-modal';
 import {
-  MinorVersionModal,
-  PublishingModal
-} from './document-publishing-modals';
-import {
   DocumentCollaboratorModal,
   DocumentLeadAuthorModal
 } from './document-collaborator-modal';
@@ -15,14 +11,16 @@ import {
   ReqReviewApproveModal,
   ReqDenyModal
 } from './document-governance-modals';
+import DocumentTrackerModal from './document-tracker-modal';
 
 import useSafeState from '../../utils/use-safe-state';
-import { documentDraftMajorConfirmAndToast } from './document-draft-major-process';
+import {
+  documentDraftMajorConfirmAndToast,
+  documentUpdateMinorConfirmAndToast
+} from './document-versioning-process';
 import {
   useSubmitForCollaborators,
-  useSubmitForDocumentInfo,
-  useSubmitForGovernance,
-  useSubmitForMinorVersion
+  useSubmitForGovernance
 } from './single-edit/use-submit';
 import { createProcessToast } from '../common/toasts';
 import { REVIEW_DONE } from './status';
@@ -31,10 +29,10 @@ import {
   createBinaryControlsRenderer,
   showConfirmationPrompt
 } from '../common/confirmation-prompt';
+import { useThreadStats } from '../../context/threads-list';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
-const MODAL_MINOR_VERSION = 'modal-minor-version';
-const MODAL_PUBLISHING = 'modal-publishing';
+const MODAL_DOCUMENT_TRACKER = 'modal-document-tracker';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
 const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
@@ -72,9 +70,6 @@ export function DocumentModals(props) {
     atbd,
     activeModal,
     hideModal,
-    onDocumentInfoSubmit,
-    onMinorVersionSubmit,
-    onPublishVersionSubmit,
     onCollaboratorsSubmit,
     onReviewReqDenySubmit,
     onReviewReqApproveSubmit,
@@ -86,13 +81,11 @@ export function DocumentModals(props) {
       <DocumentInfoModal
         revealed={activeModal === MODAL_DOCUMENT_INFO}
         atbd={atbd}
-        onSubmit={onDocumentInfoSubmit}
         onClose={hideModal}
       />
-      <MinorVersionModal
-        revealed={activeModal === MODAL_MINOR_VERSION}
+      <DocumentTrackerModal
+        revealed={activeModal === MODAL_DOCUMENT_TRACKER}
         atbd={atbd}
-        onSubmit={onMinorVersionSubmit}
         onClose={hideModal}
       />
       <DocumentCollaboratorModal
@@ -141,12 +134,6 @@ export function DocumentModals(props) {
         onSubmit={onPublicationReqDenySubmit}
         onClose={hideModal}
       />
-      <PublishingModal
-        revealed={activeModal === MODAL_PUBLISHING}
-        atbd={atbd}
-        onSubmit={onPublishVersionSubmit}
-        onClose={hideModal}
-      />
     </React.Fragment>
   );
 }
@@ -155,13 +142,18 @@ DocumentModals.propTypes = {
   atbd: T.object,
   activeModal: T.string,
   hideModal: T.func,
-  onDocumentInfoSubmit: T.func,
-  onMinorVersionSubmit: T.func,
-  onPublishVersionSubmit: T.func,
   onCollaboratorsSubmit: T.func,
   onReviewReqDenySubmit: T.func,
   onReviewReqApproveSubmit: T.func,
   onPublicationReqDenySubmit: T.func
+};
+
+const composeOnSubmitSuccess = (fn, cb) => async (...args) => {
+  const result = await fn(...args);
+  if (result) {
+    await cb();
+  }
+  return result;
 };
 
 export const useDocumentModals = ({
@@ -190,7 +182,11 @@ export const useDocumentModals = ({
     async (menuId) => {
       switch (menuId) {
         case 'update-minor':
-          setActiveModal(MODAL_MINOR_VERSION);
+          await documentUpdateMinorConfirmAndToast({
+            atbd,
+            eventFn: fevMinorVersion,
+            history
+          });
           break;
         case 'draft-major':
           await documentDraftMajorConfirmAndToast({
@@ -200,10 +196,16 @@ export const useDocumentModals = ({
           });
           break;
         case 'publish':
-          setActiveModal(MODAL_PUBLISHING);
+          await handlePublishing({
+            atbd,
+            fn: fevPublish
+          });
           break;
         case 'view-info':
           setActiveModal(MODAL_DOCUMENT_INFO);
+          break;
+        case 'view-tracker':
+          setActiveModal(MODAL_DOCUMENT_TRACKER);
           break;
         case 'manage-collaborators':
           setActiveModal(MODAL_DOCUMENT_COLLABORATOR);
@@ -263,13 +265,20 @@ export const useDocumentModals = ({
         case 'req-publication-deny':
           setActiveModal(MODAL_REQ_PUBLICATION_DENY);
           break;
+        default:
+          // Was not handled
+          return false;
       }
+      // Was handled.
+      return true;
     },
     [
       atbd,
       createAtbdVersion,
       history,
       setActiveModal,
+      fevMinorVersion,
+      fevPublish,
       fevReqReview,
       fevCancelReviewReq,
       fevSetOwnReviewStatus,
@@ -281,32 +290,21 @@ export const useDocumentModals = ({
   );
 
   const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
-
-  const onMinorVersionSubmit = useSubmitForMinorVersion(
-    fevMinorVersion,
-    hideModal
-  );
-
-  const onDocumentInfoSubmit = useSubmitForDocumentInfo(updateAtbd);
+  const { refreshThreadStats } = useThreadStats();
 
   const onCollaboratorsSubmit = useSubmitForCollaborators(
     updateAtbd,
     hideModal
   );
 
-  const onReviewReqDenySubmit = useSubmitForGovernance(
-    fevDenyReviewReq,
-    hideModal,
-    {
-      start: 'Denying request for review',
-      success: 'Review request denied successfully',
-      error: 'Error denying review request'
-    }
-  );
+  const onReviewReqDenySubmitFn = useSubmitForGovernance(fevDenyReviewReq, {
+    start: 'Denying request for review',
+    success: 'Review request denied successfully',
+    error: 'Error denying review request'
+  });
 
-  const onReviewReqApproveSubmit = useSubmitForGovernance(
+  const onReviewReqApproveSubmitFn = useSubmitForGovernance(
     fevApproveReviewReq,
-    hideModal,
     {
       start: 'Approving request for review',
       success: 'Review request approved successfully',
@@ -314,9 +312,8 @@ export const useDocumentModals = ({
     }
   );
 
-  const onPublicationReqDenySubmit = useSubmitForGovernance(
+  const onPublicationReqDenySubmitFn = useSubmitForGovernance(
     fevDenyPublicationReq,
-    hideModal,
     {
       start: 'Denying request for publication',
       success: 'Publication request denied successfully',
@@ -324,11 +321,29 @@ export const useDocumentModals = ({
     }
   );
 
-  const onPublishVersionSubmit = useSubmitForGovernance(fevPublish, hideModal, {
-    start: 'Publishing document version',
-    success: `Version ${atbd?.version} was published`,
-    error: 'Error publishing version'
-  });
+  // Update submit function adding actions when the process is successful.
+  const onReviewReqDenySubmit = composeOnSubmitSuccess(
+    onReviewReqDenySubmitFn,
+    () => {
+      hideModal();
+      refreshThreadStats();
+    }
+  );
+
+  const onReviewReqApproveSubmit = composeOnSubmitSuccess(
+    onReviewReqApproveSubmitFn,
+    () => {
+      hideModal();
+    }
+  );
+
+  const onPublicationReqDenySubmit = composeOnSubmitSuccess(
+    onPublicationReqDenySubmitFn,
+    () => {
+      hideModal();
+      refreshThreadStats();
+    }
+  );
 
   // To trigger the modals to open from other pages, we use the history state as
   // the user is sent from one page to another. This is happening with the
@@ -340,9 +355,13 @@ export const useDocumentModals = ({
   useEffect(() => {
     const { menuAction, ...rest } = location.state || {};
     if (atbd && menuAction) {
-      menuHandler(menuAction);
+      const r = menuHandler(menuAction);
       // Using undefined keeps the same path.
-      history.replace(undefined, rest);
+      r &&
+        history.replace({
+          ...location,
+          state: rest
+        });
     }
   }, [menuHandler, atbd, history, location]);
 
@@ -352,9 +371,6 @@ export const useDocumentModals = ({
       atbd,
       activeModal,
       hideModal,
-      onDocumentInfoSubmit,
-      onMinorVersionSubmit,
-      onPublishVersionSubmit,
       onCollaboratorsSubmit,
       onReviewReqDenySubmit,
       onReviewReqApproveSubmit,
@@ -506,6 +522,41 @@ export async function handleRequestPublicationAllow({ atbd, fn, args = [] }) {
       start: 'Transitioning document to publication',
       success: 'Document is now in publication',
       error: 'Error while moving to publication'
+    });
+  }
+}
+
+export async function handlePublishing({ atbd, fn, args = [] }) {
+  const { result } = await showConfirmationPrompt({
+    title: 'Publish document',
+    subtitle: `Current version is ${atbd.version}`,
+    content: (
+      <ConfirmationModalProse>
+        <p>Are you ready to publish this document?</p>
+        <p>
+          Once published, a document will be publicly available.
+          <br />
+          <strong>Please note that this action is irreversible.</strong>
+        </p>
+      </ConfirmationModalProse>
+    ),
+    renderControls: createBinaryControlsRenderer({
+      confirmVariation: 'primary-raised-dark',
+      confirmIcon: 'tick--small',
+      confirmTitle: 'Publish document',
+      confirmLabel: 'Publish',
+      cancelVariation: 'base-raised-light',
+      cancelTitle: 'Cancel publication',
+      cancelIcon: 'xmark--small'
+    })
+  });
+
+  if (result) {
+    return eventProcessToasts({
+      promise: fn(...args),
+      start: 'Publishing document version',
+      success: `Version ${atbd?.version} was published`,
+      error: 'Error while publishing document'
     });
   }
 }
