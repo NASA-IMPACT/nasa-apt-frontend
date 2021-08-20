@@ -293,6 +293,12 @@ const renderElements = (elements, props) =>
 //    same structure.
 export const atbdContentSections = [
   {
+    label: 'Document header',
+    id: 'doc-header',
+    // Render nothing. It's just to show up in the outline.
+    render: () => null
+  },
+  {
     label: 'Abstract',
     id: 'abstract',
     render: ({ element, document }) => (

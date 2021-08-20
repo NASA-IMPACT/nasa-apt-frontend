@@ -283,7 +283,9 @@ function DocumentView() {
               <DocumentContent>
                 <DocumentProse>
                   <DocumentHeader>
-                    <DocumentTitle>{atbd.data.title}</DocumentTitle>
+                    <DocumentTitle id='doc-header' data-scroll='target'>
+                      {atbd.data.title}
+                    </DocumentTitle>
                     <DocumentMetaDetails>
                       <dt>Version</dt>
                       <dd>{atbd.data.version}</dd>
