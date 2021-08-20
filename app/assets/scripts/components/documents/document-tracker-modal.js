@@ -235,8 +235,8 @@ export default function DocumentTrackerModal(props) {
                 all the fields needed to create a document. You can freely move
                 between steps and add content in any order you like. Invite
                 other users to help with the writing process using the
-                collaborator options. Only you and invited users will have
-                access to this document.
+                collaborator options. Only you, the APT Curators, and invited
+                users will have access to this document.
               </p>
               <p>
                 A document goes through different stages, each one with
