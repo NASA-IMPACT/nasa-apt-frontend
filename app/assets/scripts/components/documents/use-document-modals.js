@@ -11,6 +11,7 @@ import {
   ReqReviewApproveModal,
   ReqDenyModal
 } from './document-governance-modals';
+import DocumentTrackerModal from './document-tracker-modal';
 
 import useSafeState from '../../utils/use-safe-state';
 import {
@@ -28,7 +29,7 @@ import {
   createBinaryControlsRenderer,
   showConfirmationPrompt
 } from '../common/confirmation-prompt';
-import DocumentTrackerModal from './document-tracker-modal';
+import { useThreadStats } from '../../context/threads-list';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
 const MODAL_DOCUMENT_TRACKER = 'modal-document-tracker';
@@ -145,6 +146,14 @@ DocumentModals.propTypes = {
   onReviewReqDenySubmit: T.func,
   onReviewReqApproveSubmit: T.func,
   onPublicationReqDenySubmit: T.func
+};
+
+const composeOnSubmitSuccess = (fn, cb) => async (...args) => {
+  const result = await fn(...args);
+  if (result) {
+    await cb();
+  }
+  return result;
 };
 
 export const useDocumentModals = ({
@@ -281,25 +290,21 @@ export const useDocumentModals = ({
   );
 
   const hideModal = useCallback(() => setActiveModal(null), [setActiveModal]);
+  const { refreshThreadStats } = useThreadStats();
 
   const onCollaboratorsSubmit = useSubmitForCollaborators(
     updateAtbd,
     hideModal
   );
 
-  const onReviewReqDenySubmit = useSubmitForGovernance(
-    fevDenyReviewReq,
-    hideModal,
-    {
-      start: 'Denying request for review',
-      success: 'Review request denied successfully',
-      error: 'Error denying review request'
-    }
-  );
+  const onReviewReqDenySubmitFn = useSubmitForGovernance(fevDenyReviewReq, {
+    start: 'Denying request for review',
+    success: 'Review request denied successfully',
+    error: 'Error denying review request'
+  });
 
-  const onReviewReqApproveSubmit = useSubmitForGovernance(
+  const onReviewReqApproveSubmitFn = useSubmitForGovernance(
     fevApproveReviewReq,
-    hideModal,
     {
       start: 'Approving request for review',
       success: 'Review request approved successfully',
@@ -307,13 +312,36 @@ export const useDocumentModals = ({
     }
   );
 
-  const onPublicationReqDenySubmit = useSubmitForGovernance(
+  const onPublicationReqDenySubmitFn = useSubmitForGovernance(
     fevDenyPublicationReq,
-    hideModal,
     {
       start: 'Denying request for publication',
       success: 'Publication request denied successfully',
       error: 'Error denying publication request'
+    }
+  );
+
+  // Update submit function adding actions when the process is successful.
+  const onReviewReqDenySubmit = composeOnSubmitSuccess(
+    onReviewReqDenySubmitFn,
+    () => {
+      hideModal();
+      refreshThreadStats();
+    }
+  );
+
+  const onReviewReqApproveSubmit = composeOnSubmitSuccess(
+    onReviewReqApproveSubmitFn,
+    () => {
+      hideModal();
+    }
+  );
+
+  const onPublicationReqDenySubmit = composeOnSubmitSuccess(
+    onPublicationReqDenySubmitFn,
+    () => {
+      hideModal();
+      refreshThreadStats();
     }
   );
 
