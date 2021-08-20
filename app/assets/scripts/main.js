@@ -2,7 +2,7 @@ import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import T from 'prop-types';
-import { Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch, useLocation } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
@@ -73,6 +73,14 @@ if (gaTrackingCode) {
   );
 }
 
+function ScrollTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [pathname]);
+  return null;
+}
+
 // Root component.
 function Root() {
   useEffect(() => {
@@ -92,6 +100,7 @@ function Root() {
   return (
     <Router history={history}>
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
+        <ScrollTop />
         <CollecticonsGlobalStyle />
         <GlobalStyle />
         <GlobalLoadingProvider />
