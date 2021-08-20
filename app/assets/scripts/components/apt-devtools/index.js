@@ -203,7 +203,7 @@ const DevUsersListCmp = (props) => {
 
   const loginUser = useCallback(
     async (u) => {
-      const processToast = createProcessToast('Singing in. Please wait.');
+      const processToast = createProcessToast('Signing in. Please wait.');
       try {
         const user = await Auth.signIn(u.username, devUserPwd);
         invalidateAtbdListCtx();

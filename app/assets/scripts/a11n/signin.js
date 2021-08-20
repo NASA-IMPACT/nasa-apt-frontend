@@ -60,7 +60,7 @@ function SignIn() {
 
   const onSubmit = useCallback(
     async (values, { setSubmitting }) => {
-      const processToast = createProcessToast('Singing in. Please wait.');
+      const processToast = createProcessToast('Signing in. Please wait.');
 
       try {
         const { email, password } = values;
