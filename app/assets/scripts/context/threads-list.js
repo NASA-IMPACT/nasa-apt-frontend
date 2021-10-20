@@ -178,7 +178,7 @@ export const ThreadsProvider = ({ children }) => {
           }) => ({
             skipStateCheck: true,
             sliceKey: `${atbdId}-${atbdVersion}`,
-            url: `/threads/?${qs.stringify(
+            url: `/threads?${qs.stringify(
               {
                 atbd_id: atbdId,
                 version: atbdVersion,

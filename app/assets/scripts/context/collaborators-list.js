@@ -27,7 +27,7 @@ export const CollaboratorsProvider = ({ children }) => {
           ({ atbdId, atbdVersion, userFilter }) => ({
             skipStateCheck: true,
             sliceKey: `${atbdId}-${atbdVersion}-${userFilter}`,
-            url: `/users/?${qs.stringify({
+            url: `/users?${qs.stringify({
               atbd_id: atbdId,
               version: atbdVersion,
               user_filter: userFilter
