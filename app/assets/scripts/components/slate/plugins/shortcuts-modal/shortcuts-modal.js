@@ -33,20 +33,20 @@ const getPluginShortcuts = (plugins) => {
   );
 };
 
-const CheatSheet = styled.div`
+export const CheatSheet = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: ${glsp(1, 2)};
 `;
 
-const CheatSheetSection = styled.section`
+export const CheatSheetSection = styled.section`
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: min-content;
   grid-gap: ${glsp(0.5)};
 `;
 
-const CheatSheetSectionTitle = styled.h3`
+export const CheatSheetSectionTitle = styled.h3`
   margin: 0;
 `;
 
