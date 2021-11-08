@@ -90,6 +90,7 @@ function SectionAbstract() {
         name='document.abstract'
         label='Short ATBD summary'
         description={formString('closeout.abstract')}
+        growWithContents
         helper={
           <FormHelperCounter
             value={words}
@@ -105,6 +106,7 @@ function SectionAbstract() {
         name='document.plain_summary'
         label='Plain Language Summary'
         description={formString('closeout.plain_summary')}
+        growWithContents
       />
     </FormikSectionFieldset>
   );

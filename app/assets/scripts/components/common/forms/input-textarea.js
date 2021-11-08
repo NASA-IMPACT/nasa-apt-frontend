@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { PropTypes as T } from 'prop-types';
 import { Field } from 'formik';
 import { FormTextarea, FormHelperMessage } from '@devseed-ui/form';
@@ -20,8 +20,29 @@ import FormGroupStructure from './form-group-structure';
  * @prop {string} placeholder Textarea placeholder value.
  * @prop {string} description Field description shown in a tooltip
  * @prop {node} helper Helper message shown below textarea.
+ * @prop {bool} growWithContents Whether or not to grow the textarea as text is
+ * added.
  */
 export function InputTextarea(props) {
+  const txtRef = useRef();
+
+  useEffect(() => {
+    if (!props.growWithContents) return;
+
+    const el = txtRef.current;
+    if (!el) return;
+
+    function onInput() {
+      el.style.height = 'auto';
+      el.style.height = `${Math.min(el.scrollHeight, 480)}px`;
+    }
+    el.addEventListener('input', onInput, false);
+
+    return () => {
+      el.removeEventListener('input', onInput, false);
+    };
+  }, [props.growWithContents]);
+
   const {
     id,
     label,
@@ -48,6 +69,7 @@ export function InputTextarea(props) {
       helper={helper}
     >
       <FormTextarea
+        ref={txtRef}
         variation={inputVariation}
         id={id}
         size={inputSize}
@@ -68,7 +90,8 @@ InputTextarea.propTypes = {
   placeholder: T.oneOfType([T.string, T.number]),
   onChange: T.func,
   description: T.string,
-  helper: T.node
+  helper: T.node,
+  growWithContents: T.bool
 };
 
 /**
