@@ -311,6 +311,18 @@ export const atbdContentSections = [
     )
   },
   {
+    label: 'Plain Language Summary',
+    id: 'plain_summary',
+    render: ({ element, document }) => (
+      <AtbdSection key={element.id} id={element.id} title={element.label}>
+        <MultilineString
+          value={document.plain_summary}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
     label: 'Version description',
     id: 'version_description',
     shouldRender: ({ document }) =>
