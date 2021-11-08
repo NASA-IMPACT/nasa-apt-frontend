@@ -23,7 +23,7 @@ import { formString } from '../../../utils/strings';
 import { editorEmptyValue } from '../../slate';
 import { getDocumentSectionLabel } from './sections';
 
-const DeletableFieldsetTriptic = styled(DeletableFieldset)`
+const DeletableFieldsetTriptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -195,7 +195,7 @@ const VariablesSection = (props) => {
             onAddClick={() => push(variableFieldsEmptyValue)}
           >
             {get(form.values, name).map((field, index) => (
-              <DeletableFieldsetTriptic
+              <DeletableFieldsetTriptych
                 /* eslint-disable-next-line react/no-array-index-key */
                 key={index}
                 id={`${name}.${index}`}
@@ -223,7 +223,7 @@ const VariablesSection = (props) => {
                   label='Unit'
                   description={unitFieldInfo}
                 />
-              </DeletableFieldsetTriptic>
+              </DeletableFieldsetTriptych>
             ))}
           </FieldMultiItem>
         )}

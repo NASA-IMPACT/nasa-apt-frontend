@@ -251,6 +251,7 @@ export const STEPS = [
         document: {
           abstract: '',
           plain_summary: '',
+          key_points: '',
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,
           data_availability: EDITOR_SYM,
@@ -258,10 +259,23 @@ export const STEPS = [
           // case the users wants to insert one.
           publication_references: []
         },
+        publication_checklist: {
+          suggested_reviewers: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   name: ''
+            //   email: ''
+            // }
+          ],
+          review_roles: false,
+          journal_editor: 'Chelle Gentemann',
+          author_affirmations: false
+        },
         sections_completed: {
           abstract: 'incomplete',
           discussion: 'incomplete',
-          acknowledgements: 'incomplete'
+          acknowledgements: 'incomplete',
+          publication_checklist: 'incomplete'
         }
       });
     }

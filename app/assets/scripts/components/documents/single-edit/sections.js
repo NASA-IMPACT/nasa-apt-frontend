@@ -23,7 +23,8 @@ export const DOCUMENT_SECTIONS = [
   { id: 'data_access_related_urls', label: 'Important Related Urls' },
   { id: 'abstract', label: 'Abstract' },
   { id: 'discussion', label: 'Discussion' },
-  { id: 'acknowledgements', label: 'Acknowledgements' }
+  { id: 'acknowledgements', label: 'Acknowledgements' },
+  { id: 'publication_checklist', label: 'Publication Checklist' }
 ];
 
 /**
