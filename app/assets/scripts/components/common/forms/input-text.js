@@ -68,7 +68,7 @@ InputText.propTypes = {
   name: T.string,
   label: T.string,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
-  type: T.oneOf(['text', 'password']),
+  type: T.oneOf(['text', 'password', 'number']),
   className: T.string,
   value: T.oneOfType([T.string, T.number]),
   inputSize: T.string,

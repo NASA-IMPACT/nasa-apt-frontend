@@ -75,7 +75,12 @@ export default function FormGroupStructure(props) {
   const hasToolbar = description || toolbarItems;
 
   const descComp = description && (
-    <Tip title={description} key='description' tag={TooltipTagComponent}>
+    <Tip
+      title={description}
+      key='description'
+      tag={TooltipTagComponent}
+      interactive
+    >
       More information
     </Tip>
   );
