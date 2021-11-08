@@ -49,7 +49,7 @@ export default function StepCloseout(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <RichTextContex2Formik>
-                <FieldAbstract />
+                <SectionAbstract />
 
                 <JournalDetails atbd={atbd} />
               </RichTextContex2Formik>
@@ -74,7 +74,7 @@ StepCloseout.propTypes = {
 
 const MAX_ABSTRACT_WORDS = 250;
 
-function FieldAbstract() {
+function SectionAbstract() {
   const [{ value }] = useField('document.abstract');
   const trimmed = value.trim();
   const words = trimmed ? trimmed.split(/\s+/).length : 0;
@@ -99,6 +99,12 @@ function FieldAbstract() {
             word count: {words} / {MAX_ABSTRACT_WORDS}
           </FormHelperCounter>
         }
+      />
+      <FormikInputTextarea
+        id='plain_summary'
+        name='document.plain_summary'
+        label='Plain Language Summary'
+        description={formString('closeout.plain_summary')}
       />
     </FormikSectionFieldset>
   );
