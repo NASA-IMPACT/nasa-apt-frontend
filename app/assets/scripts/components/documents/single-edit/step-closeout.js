@@ -2,6 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import get from 'lodash.get';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import {
   Formik,
   Form as FormikForm,
@@ -14,10 +15,15 @@ import {
   FormCheckableGroup,
   FormFieldsetBody,
   FormHelperMessage,
-  FormHelperCounter
+  FormHelperCounter,
+  FormFieldset,
+  FormFieldsetHeader,
+  FormLegend
 } from '@devseed-ui/form';
+import { Toolbar } from '@devseed-ui/toolbar';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
+import { DocInfoList } from '../../../styles/documents/doc-info';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import RichTextContex2Formik from './rich-text-ctx-formik';
 import { FormikInputText } from '../../common/forms/input-text';
@@ -29,6 +35,8 @@ import FormGroupStructure from '../../common/forms/form-group-structure';
 import { FieldMultiItem } from '../../common/forms/field-multi-item';
 import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
 import Tip from '../../common/tooltip';
+import Prose from '../../../styles/typography/prose';
+import FormInfoTip from '../../common/forms/form-info-tooltip';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
@@ -42,8 +50,6 @@ import {
   JOURNAL_PUB_INTENDED,
   JOURNAL_SUBMITTED
 } from '../status';
-import { Link } from 'react-router-dom';
-import Prose from '../../../styles/typography/prose';
 
 const DeletableFieldsetDiptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -162,7 +168,11 @@ const journalStatuses = [
 
 function JournalDetails(props) {
   const { atbd } = props;
-  const { values } = useFormikContext();
+  const { values, dirty } = useFormikContext();
+
+  // Publication units is a meta information files. Calculated in the server,
+  // contains the different values needed to calculate the PU.
+  const { publication_units } = atbd.document;
 
   return (
     <React.Fragment>
@@ -245,25 +255,6 @@ function JournalDetails(props) {
 
             <FieldSuggestedReviewers />
 
-            <FormGroupStructure label='Review Author Roles'>
-              <p>
-                Review the list of authors/contributors and the associated roles
-                which can be found in the{' '}
-                <Link to='contacts' title='View ATBD contacts' target='_blank'>
-                  contacts
-                </Link>{' '}
-                step.
-              </p>
-              <FormikInputCheckable
-                id='publication_checklist-review_roles'
-                name='publication_checklist.review_roles'
-                type='checkbox'
-                value={undefined}
-              >
-                I have reviewed the Author Roles
-              </FormikInputCheckable>
-            </FormGroupStructure>
-
             <FormikInputText
               id='publication_checklist-journal_editor'
               name='publication_checklist.journal_editor'
@@ -271,59 +262,124 @@ function JournalDetails(props) {
               description={formString('closeout.journal_editor')}
             />
 
-            <FormGroupStructure
-              label='Primary Author Affirmations'
-              description={formString('closeout.author_affirmations')}
-            >
-              <Prose>
-                <ul>
-                  <li>
-                    All authors have read and approved the paper and will be
-                    informed about all reviews and revisions. It is expected
-                    that authors will have: (1) made substantial contributions
-                    to the conception or design of the work; or the acquisition,
-                    analysis, or interpretation of data, or creation of new
-                    software used in the work; or have drafted the work or
-                    substantively revised it; (2) approved the submitted version
-                    (and any substantially modified version that involves the
-                    author’s contribution to the study); and (3) agreed to be
-                    personally accountable for their own contributions and for
-                    ensuring that questions related to the accuracy or integrity
-                    of any part of the work, even ones in which the author was
-                    not personally involved, are appropriately investigated,
-                    resolved, and documented in the literature. AGU will notify
-                    each co-author about a submission and all revisions.
-                  </li>
-                  <li>
-                    All author affiliations related to the work are indicated.
-                  </li>
-                  <li>
-                    Any real or perceived conflicts of interest related to this
-                    work are declared to the editors in the cover letter
-                  </li>
-                  <li>
-                    Data and data products related to the paper will be
-                    available upon publication in a repository practicing the
-                    FAIR principles. AGU journals follow the guidelines for
-                    Enabling FAIR data.
-                  </li>
-                  <li>
-                    The paper is an original submission and not under active
-                    consideration elsewhere. All papers are checked for
-                    plagiarism. Papers with significant overlap will be rejected
-                    or returned for correction.
-                  </li>
-                </ul>
-              </Prose>
-              <FormikInputCheckable
-                id='publication_checklist-author_affirmations'
-                name='publication_checklist.author_affirmations'
-                type='checkbox'
-                value={undefined}
-              >
-                Confirm the items above were agreed upon
-              </FormikInputCheckable>
-            </FormGroupStructure>
+            <FormFieldset>
+              <FormFieldsetHeader>
+                <FormLegend>Review Author Roles</FormLegend>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                <p>
+                  Review the list of authors/contributors and the associated
+                  roles which can be found in the{' '}
+                  <Link
+                    to='contacts'
+                    title='View ATBD contacts'
+                    target='_blank'
+                  >
+                    contacts
+                  </Link>{' '}
+                  step.
+                </p>
+                <FormikInputCheckable
+                  id='publication_checklist-review_roles'
+                  name='publication_checklist.review_roles'
+                  type='checkbox'
+                  value={undefined}
+                >
+                  I have reviewed the Author Roles
+                </FormikInputCheckable>
+              </FormFieldsetBody>
+            </FormFieldset>
+
+            <FormFieldset>
+              <FormFieldsetHeader>
+                <FormLegend>Paper Length Details</FormLegend>
+                <Toolbar size='small'>
+                  <FormInfoTip
+                    title="The paper length details are shown here for convenience, but
+                they're always accessible through the Document Info modal."
+                  />
+                </Toolbar>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                {dirty && (
+                  <p>
+                    These values are calculated when the document is saved.
+                    <br />
+                    Save the document to see updated values.
+                  </p>
+                )}
+                <DocInfoList>
+                  <dt>Words</dt>
+                  <dd>{publication_units?.words || 0}</dd>
+                  <dt>Images</dt>
+                  <dd>{publication_units?.images || 0}</dd>
+                  <dt>Tables</dt>
+                  <dd>{publication_units?.tables || 0}</dd>
+                </DocInfoList>
+              </FormFieldsetBody>
+            </FormFieldset>
+
+            <FormFieldset>
+              <FormFieldsetHeader>
+                <FormLegend>Primary Author Affirmations</FormLegend>
+                <Toolbar size='small'>
+                  <FormInfoTip
+                    title={formString('closeout.author_affirmations')}
+                  />
+                </Toolbar>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                <Prose>
+                  <ul>
+                    <li>
+                      All authors have read and approved the paper and will be
+                      informed about all reviews and revisions. It is expected
+                      that authors will have: (1) made substantial contributions
+                      to the conception or design of the work; or the
+                      acquisition, analysis, or interpretation of data, or
+                      creation of new software used in the work; or have drafted
+                      the work or substantively revised it; (2) approved the
+                      submitted version (and any substantially modified version
+                      that involves the author’s contribution to the study); and
+                      (3) agreed to be personally accountable for their own
+                      contributions and for ensuring that questions related to
+                      the accuracy or integrity of any part of the work, even
+                      ones in which the author was not personally involved, are
+                      appropriately investigated, resolved, and documented in
+                      the literature. AGU will notify each co-author about a
+                      submission and all revisions.
+                    </li>
+                    <li>
+                      All author affiliations related to the work are indicated.
+                    </li>
+                    <li>
+                      Any real or perceived conflicts of interest related to
+                      this work are declared to the editors in the cover letter
+                    </li>
+                    <li>
+                      Data and data products related to the paper will be
+                      available upon publication in a repository practicing the
+                      FAIR principles. AGU journals follow the guidelines for
+                      Enabling FAIR data.
+                    </li>
+                    <li>
+                      The paper is an original submission and not under active
+                      consideration elsewhere. All papers are checked for
+                      plagiarism. Papers with significant overlap will be
+                      rejected or returned for correction.
+                    </li>
+                  </ul>
+                </Prose>
+                <FormikInputCheckable
+                  id='publication_checklist-author_affirmations'
+                  name='publication_checklist.author_affirmations'
+                  type='checkbox'
+                  value={undefined}
+                >
+                  Confirm the items above were agreed upon
+                </FormikInputCheckable>
+              </FormFieldsetBody>
+            </FormFieldset>
           </FormikSectionFieldset>
         </React.Fragment>
       )}
@@ -333,7 +389,8 @@ function JournalDetails(props) {
 
 JournalDetails.propTypes = {
   atbd: T.shape({
-    status: T.string
+    status: T.string,
+    document: T.object
   })
 };
 
@@ -347,12 +404,15 @@ function FieldKeyPoints() {
     <FormikInputTextarea
       id='key_points'
       name='document.key_points'
-      label='3 key points for title page'
+      label='Key Points'
       description={formString('closeout.key_points')}
       growWithContents
       helper={
         <React.Fragment>
-          <FormHelperMessage>List one point per line</FormHelperMessage>
+          <FormHelperMessage>
+            List 3 key points, one per line. Key points will be shown on the
+            title page.
+          </FormHelperMessage>
           <FormHelperCounter
             value={trimmed.length}
             max={MAX_KEY_POINTS_CHARS}

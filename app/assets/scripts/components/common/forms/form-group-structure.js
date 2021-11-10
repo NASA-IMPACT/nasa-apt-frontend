@@ -8,12 +8,9 @@ import {
   FormLabel as FormLabel$,
   FormHelper
 } from '@devseed-ui/form';
-import {
-  Toolbar,
-  ToolbarIconButton as ToolbarIconButton$
-} from '@devseed-ui/toolbar';
+import { Toolbar } from '@devseed-ui/toolbar';
 
-import Tip from '../tooltip';
+import FormInfoTip from './form-info-tooltip';
 
 const FormGroupFooter = styled.div`
   /* styled-component */
@@ -26,23 +23,6 @@ const FormGroupHeader = styled(FormGroupHeader$)`
 const FormLabel = styled(FormLabel$)`
   min-width: 0;
 `;
-
-const ToolbarIconButton = styled(ToolbarIconButton$)`
-  justify-content: center;
-`;
-
-// This is needed so that the tooltip doesn't have a div wrapper and the focus
-// works.
-const TooltipTagComponent = React.forwardRef((props, ref) => (
-  <ToolbarIconButton
-    ref={ref}
-    useIcon='circle-information'
-    size='small'
-    {...props}
-  />
-));
-
-TooltipTagComponent.displayName = 'TooltipTagComponent';
 
 /**
  * From group structure.
@@ -75,14 +55,7 @@ export default function FormGroupStructure(props) {
   const hasToolbar = description || toolbarItems;
 
   const descComp = description && (
-    <Tip
-      title={description}
-      key='description'
-      tag={TooltipTagComponent}
-      interactive
-    >
-      More information
-    </Tip>
+    <FormInfoTip title={description} key='description' />
   );
 
   // Because of a @devseed-ui/toolbar bug, there can't be null/undefined
