@@ -50,6 +50,7 @@ import {
   JOURNAL_PUB_INTENDED,
   JOURNAL_SUBMITTED
 } from '../status';
+import { getContactName } from '../../contacts/contact-utils';
 
 const DeletableFieldsetDiptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -264,6 +265,36 @@ function JournalDetails(props) {
 
             <FormFieldset>
               <FormFieldsetHeader>
+                <FormLegend>Paper Length Details</FormLegend>
+                <Toolbar size='small'>
+                  <FormInfoTip
+                    title="The paper length details are shown here for convenience, but
+                they're always accessible through the Document Info modal."
+                  />
+                </Toolbar>
+              </FormFieldsetHeader>
+              <FormFieldsetBody>
+                {dirty && (
+                  <p>
+                    The paper length is calculated when the document is saved.
+                    Save the document to see updated values.
+                  </p>
+                )}
+                <DocInfoList>
+                  <dt>Words</dt>
+                  <dd>{publication_units?.words || 0}</dd>
+                  <dt>Images</dt>
+                  <dd>{publication_units?.images || 0}</dd>
+                  <dt>Tables</dt>
+                  <dd>{publication_units?.tables || 0}</dd>
+                </DocInfoList>
+              </FormFieldsetBody>
+            </FormFieldset>
+
+            <FieldCorrespondingAuthor contacts={atbd.contacts_link} />
+
+            <FormFieldset>
+              <FormFieldsetHeader>
                 <FormLegend>Review Author Roles</FormLegend>
               </FormFieldsetHeader>
               <FormFieldsetBody>
@@ -287,35 +318,6 @@ function JournalDetails(props) {
                 >
                   I have reviewed the Author Roles
                 </FormikInputCheckable>
-              </FormFieldsetBody>
-            </FormFieldset>
-
-            <FormFieldset>
-              <FormFieldsetHeader>
-                <FormLegend>Paper Length Details</FormLegend>
-                <Toolbar size='small'>
-                  <FormInfoTip
-                    title="The paper length details are shown here for convenience, but
-                they're always accessible through the Document Info modal."
-                  />
-                </Toolbar>
-              </FormFieldsetHeader>
-              <FormFieldsetBody>
-                {dirty && (
-                  <p>
-                    These values are calculated when the document is saved.
-                    <br />
-                    Save the document to see updated values.
-                  </p>
-                )}
-                <DocInfoList>
-                  <dt>Words</dt>
-                  <dd>{publication_units?.words || 0}</dd>
-                  <dt>Images</dt>
-                  <dd>{publication_units?.images || 0}</dd>
-                  <dt>Tables</dt>
-                  <dd>{publication_units?.tables || 0}</dd>
-                </DocInfoList>
               </FormFieldsetBody>
             </FormFieldset>
 
@@ -390,7 +392,8 @@ function JournalDetails(props) {
 JournalDetails.propTypes = {
   atbd: T.shape({
     status: T.string,
-    publication_units: T.object
+    publication_units: T.object,
+    contacts_link: T.array
   })
 };
 
@@ -466,3 +469,57 @@ function FieldSuggestedReviewers() {
     />
   );
 }
+
+function FieldCorrespondingAuthor(props) {
+  const { contacts } = props;
+
+  const correspondingAuthors = contacts
+    .filter((c) =>
+      c.roles.find((r) => r.toLowerCase() === 'corresponding author')
+    )
+    .map((c) => c.contact);
+
+  return (
+    <FormFieldset>
+      <FormFieldsetHeader>
+        <FormLegend>Corresponding author</FormLegend>
+        <Toolbar size='small'>
+          <FormInfoTip title='Identify the author who will be the primary contact to interact with the journal staff throughout the publication process.' />
+        </Toolbar>
+      </FormFieldsetHeader>
+      <FormFieldsetBody>
+        {correspondingAuthors.length ? (
+          correspondingAuthors.length === 1 ? (
+            <p>
+              The <em>Corresponding Author</em> for this document is{' '}
+              <strong>{getContactName(correspondingAuthors[0])}</strong>.
+            </p>
+          ) : (
+            <p>
+              There are {correspondingAuthors.length}{' '}
+              <em>Corresponding Authors</em> for this document:{' '}
+              <strong>
+                {correspondingAuthors.map(getContactName).join(', ')}
+              </strong>
+            </p>
+          )
+        ) : (
+          <p>
+            There is no contact with the <em>Corresponding Author</em> role.
+          </p>
+        )}
+        <p>
+          If needed, the roles can be updated through the{' '}
+          <Link to='contacts' title='View ATBD contacts' target='_blank'>
+            contacts
+          </Link>{' '}
+          step.
+        </p>
+      </FormFieldsetBody>
+    </FormFieldset>
+  );
+}
+
+FieldCorrespondingAuthor.propTypes = {
+  contacts: T.array
+};
