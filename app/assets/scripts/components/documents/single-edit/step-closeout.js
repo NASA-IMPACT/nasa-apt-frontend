@@ -172,7 +172,7 @@ function JournalDetails(props) {
 
   // Publication units is a meta information files. Calculated in the server,
   // contains the different values needed to calculate the PU.
-  const { publication_units } = atbd.document;
+  const { publication_units } = atbd;
 
   return (
     <React.Fragment>
@@ -390,7 +390,7 @@ function JournalDetails(props) {
 JournalDetails.propTypes = {
   atbd: T.shape({
     status: T.string,
-    document: T.object
+    publication_units: T.object
   })
 };
 
