@@ -183,6 +183,7 @@ function vendorScripts() {
   const extra = [
     // Any file directly accessed on a module folder:
     // my-module/folder/file
+    'react-select/async'
   ];
   var vb = browserify({
     debug: true,
