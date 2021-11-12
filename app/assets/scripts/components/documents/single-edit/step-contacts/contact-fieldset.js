@@ -33,7 +33,8 @@ const roleTypes = [
   'Project administration',
   'Supervision',
   'Investigation',
-  'Funding acquisition'
+  'Funding acquisition',
+  'Corresponding Author'
 ];
 
 export default function ContactsFieldset(props) {
