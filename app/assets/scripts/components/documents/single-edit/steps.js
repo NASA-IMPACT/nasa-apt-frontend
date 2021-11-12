@@ -259,6 +259,15 @@ export const STEPS = [
           // case the users wants to insert one.
           publication_references: []
         },
+        keywords: [
+          // Default is empty and set when selecting keywords in the form.
+          // {
+          //   label: ''
+          //   value: ''
+          //   id: ''
+          //   path: ''
+          // }
+        ],
         publication_checklist: {
           suggested_reviewers: [
             // Default is empty and set when adding an array field in the form.

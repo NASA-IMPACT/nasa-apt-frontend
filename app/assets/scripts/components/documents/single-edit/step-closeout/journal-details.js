@@ -3,15 +3,8 @@ import T from 'prop-types';
 import get from 'lodash.get';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FieldArray, useFormikContext, useField } from 'formik';
 import {
-  Formik,
-  Form as FormikForm,
-  FieldArray,
-  useFormikContext,
-  useField
-} from 'formik';
-import {
-  Form,
   FormCheckableGroup,
   FormFieldsetBody,
   FormHelperMessage,
@@ -22,26 +15,22 @@ import {
 } from '@devseed-ui/form';
 import { Toolbar } from '@devseed-ui/toolbar';
 
-import { Inpage, InpageBody } from '../../../styles/inpage';
-import { DocInfoList } from '../../../styles/documents/doc-info';
-import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
-import RichTextContex2Formik from './rich-text-ctx-formik';
-import { FormikInputText } from '../../common/forms/input-text';
-import { FormikInputEditor } from '../../common/forms/input-editor';
-import { FormikInputTextarea } from '../../common/forms/input-textarea';
-import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
-import { FormikInputCheckable } from '../../common/forms/input-checkable';
-import FormGroupStructure from '../../common/forms/form-group-structure';
-import { FieldMultiItem } from '../../common/forms/field-multi-item';
-import { DeletableFieldset } from '../../common/forms/deletable-fieldset';
-import Tip from '../../common/tooltip';
-import Prose from '../../../styles/typography/prose';
-import FormInfoTip from '../../common/forms/form-info-tooltip';
+import { DocInfoList } from '../../../../styles/documents/doc-info';
+import { FormBlockHeading } from '../../../../styles/form-block';
+import { FormikInputText } from '../../../common/forms/input-text';
+import { FormikInputEditor } from '../../../common/forms/input-editor';
+import { FormikInputTextarea } from '../../../common/forms/input-textarea';
+import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
+import { FormikInputCheckable } from '../../../common/forms/input-checkable';
+import FormGroupStructure from '../../../common/forms/form-group-structure';
+import { FieldMultiItem } from '../../../common/forms/field-multi-item';
+import { DeletableFieldset } from '../../../common/forms/deletable-fieldset';
+import Tip from '../../../common/tooltip';
+import Prose from '../../../../styles/typography/prose';
+import FormInfoTip from '../../../common/forms/form-info-tooltip';
 
-import { useSingleAtbd } from '../../../context/atbds-list';
-import { useSubmitForVersionData } from './use-submit';
-import { formString } from '../../../utils/strings';
-import { getDocumentSectionLabel } from './sections';
+import { formString } from '../../../../utils/strings';
+import { getDocumentSectionLabel } from '../sections';
 import {
   isJournalPublicationIntended,
   isPublicationOrAfter,
@@ -49,100 +38,14 @@ import {
   JOURNAL_PUBLISHED,
   JOURNAL_PUB_INTENDED,
   JOURNAL_SUBMITTED
-} from '../status';
-import { getContactName } from '../../contacts/contact-utils';
+} from '../../status';
+import { getContactName } from '../../../contacts/contact-utils';
 
 const DeletableFieldsetDiptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
     grid-template-columns: repeat(2, 1fr);
   }
 `;
-
-export default function StepCloseout(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
-
-  const { updateAtbd } = useSingleAtbd({ id, version });
-
-  const initialValues = step.getInitialValues(atbd);
-  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      // There's no need to validate this page since the editor already ensures
-      // a valid structure
-      //validate={validate}
-      onSubmit={onSubmit}
-    >
-      <Inpage>
-        {renderInpageHeader()}
-        <InpageBody>
-          <FormBlock>
-            <FormBlockHeading>{step.label}</FormBlockHeading>
-            <Form as={FormikForm}>
-              <RichTextContex2Formik>
-                <FormikSectionFieldset
-                  label={getDocumentSectionLabel('abstract')}
-                  sectionName='sections_completed.abstract'
-                  commentSection='abstract'
-                >
-                  <FieldAbstract />
-                  <FormikInputTextarea
-                    id='plain_summary'
-                    name='document.plain_summary'
-                    label='Plain Language Summary'
-                    description={formString('closeout.plain_summary')}
-                    growWithContents
-                  />
-                </FormikSectionFieldset>
-
-                <JournalDetails atbd={atbd} />
-              </RichTextContex2Formik>
-            </Form>
-          </FormBlock>
-        </InpageBody>
-      </Inpage>
-    </Formik>
-  );
-}
-
-StepCloseout.propTypes = {
-  renderInpageHeader: T.func,
-  step: T.object,
-  id: T.oneOfType([T.string, T.number]),
-  version: T.string,
-  atbd: T.shape({
-    id: T.number,
-    document: T.object
-  })
-};
-
-const MAX_ABSTRACT_WORDS = 250;
-
-function FieldAbstract() {
-  const [{ value }] = useField('document.abstract');
-  const trimmed = value.trim();
-  const words = trimmed ? trimmed.split(/\s+/).length : 0;
-
-  return (
-    <FormikInputTextarea
-      id='abstract'
-      name='document.abstract'
-      label='Short ATBD summary'
-      description={formString('closeout.abstract')}
-      growWithContents
-      helper={
-        <FormHelperCounter
-          value={words}
-          max={MAX_ABSTRACT_WORDS}
-          warnAt={MAX_ABSTRACT_WORDS - 15}
-        >
-          word count: {words} / {MAX_ABSTRACT_WORDS}
-        </FormHelperCounter>
-      }
-    />
-  );
-}
 
 const journalStatuses = [
   {
@@ -167,7 +70,7 @@ const journalStatuses = [
   }
 ];
 
-function JournalDetails(props) {
+export default function JournalDetails(props) {
   const { atbd } = props;
   const { values, dirty } = useFormikContext();
 
