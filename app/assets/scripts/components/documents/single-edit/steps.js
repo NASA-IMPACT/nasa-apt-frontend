@@ -53,6 +53,7 @@ export const STEPS = [
           // {
           //   contact: {}
           //   roles: []
+          //   affiliations: []
           // }
         ],
         sections_completed: {
