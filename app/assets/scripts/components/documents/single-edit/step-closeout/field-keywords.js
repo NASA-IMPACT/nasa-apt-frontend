@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { useField } from 'formik';
+import { components } from 'react-select';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { FormHelperMessage } from '@devseed-ui/form';
 
 import MultiSelect from '../../../common/forms/multi-select';
@@ -9,9 +12,15 @@ import Tip from '../../../common/tooltip';
 import { axiosAPI } from '../../../../utils/axios';
 import { selectComponents } from '../../../common/forms/select-combo';
 import useSafeState from '../../../../utils/use-safe-state';
-import { components } from 'react-select';
 
 const KEYWORDS_FIELD_NAME = 'keywords';
+
+const KeywordPath = styled.small`
+  margin-left: auto;
+  padding-left: ${glsp(4)};
+  font-weight: ${themeVal('type.base.weight')};
+  color: ${themeVal('color.base')};
+`;
 
 const fetchKeywordPath = async (uuid) => {
   try {
@@ -86,8 +95,9 @@ const Option = (props) => {
       await new Promise((r) => setTimeout(r, 250));
       if (!focusRef.current) return;
 
+      setKeywordPathValue('Loading...');
       const path = await fetchKeywordPath(data.value);
-      setKeywordPathValue(path);
+      setKeywordPathValue(path?.split('|').slice(0, -1).join(' > '));
     };
 
     run();
@@ -101,16 +111,8 @@ const Option = (props) => {
 
   return (
     <selectComponents.Option {...props}>
-      <Tip
-        title={
-          keywordPathValue
-            ? keywordPathValue.replace(/\|/g, ' > ')
-            : 'Loading...'
-        }
-        open={isFocused}
-      >
-        {children}
-      </Tip>
+      {children}
+      {keywordPathValue && <KeywordPath>{keywordPathValue}</KeywordPath>}
     </selectComponents.Option>
   );
 };
