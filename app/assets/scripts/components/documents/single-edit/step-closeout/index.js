@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import T from 'prop-types';
 import { Formik, Form as FormikForm, useField } from 'formik';
 import { Form, FormHelperCounter } from '@devseed-ui/form';
@@ -15,6 +15,7 @@ import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
 import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
+
 export default function StepCloseout(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
 
@@ -22,14 +23,11 @@ export default function StepCloseout(props) {
 
   const initialValues = step.getInitialValues(atbd);
   // Compose the submit handler.
-  const onSubmitBase = useSubmitForVersionData(updateAtbd, atbd);
-  const onSubmit = useCallback(
-    async (inValues, formBag) => {
-      // Get data for the selected keywords from the GCMD api.
-      const values = await updateKeywordValues(inValues);
-      return onSubmitBase(values, formBag);
-    },
-    [onSubmitBase]
+  // When submitting, get data for the selected keywords from the GCMD api.
+  const onSubmit = useSubmitForVersionData(
+    updateAtbd,
+    atbd,
+    updateKeywordValues
   );
 
   return (
