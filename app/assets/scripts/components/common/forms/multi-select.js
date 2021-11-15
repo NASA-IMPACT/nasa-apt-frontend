@@ -32,7 +32,12 @@ const noOptionsMessage = ({ inputValue }) =>
   inputValue ? 'No options found.' : 'Start typing to search.';
 
 export default function MultiSelect(props) {
-  const { loadOptions, ...rest } = props;
+  const { loadOptions, components, ...rest } = props;
+
+  const cmp = useMemo(
+    () => ({ ...asyncSelectComponents, ...(components || {}) }),
+    [components]
+  );
 
   // Wraps the return of the option's loader in a option's group. This is needed
   // for the styles to be correctly applied, otherwise no wrapper would be
@@ -57,12 +62,13 @@ export default function MultiSelect(props) {
       isMulti
       noOptionsMessage={noOptionsMessage}
       loadOptions={optionsLoader}
-      components={asyncSelectComponents}
+      components={cmp}
       {...rest}
     />
   );
 }
 
 MultiSelect.propTypes = {
-  loadOptions: T.func
+  loadOptions: T.func,
+  components: T.object
 };
