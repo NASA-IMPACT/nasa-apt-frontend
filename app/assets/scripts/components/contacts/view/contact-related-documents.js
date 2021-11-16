@@ -17,7 +17,7 @@ import {
 } from '../../../styles/hub';
 
 import { documentView } from '../../../utils/url-creator';
-import { renderMultipleRoles } from '../contact-utils';
+import { renderMultipleStringValues } from '../contact-utils';
 
 const ContactRelated = styled.section`
   grid-column: content-start / content-end;
@@ -73,7 +73,7 @@ const RelatedAtbdEntry = (props) => {
         {!!roles.length && (
           <HubEntryDetails>
             <dt>Roles</dt>
-            <dd>As {renderMultipleRoles(roles)}</dd>
+            <dd>As {renderMultipleStringValues(roles)}</dd>
           </HubEntryDetails>
         )}
       </HubEntryHeader>
