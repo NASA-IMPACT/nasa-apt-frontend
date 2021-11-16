@@ -232,6 +232,7 @@ export function useSubmitForAtbdContacts({
                 error: false,
                 link: {
                   roles: link.roles,
+                  affiliations: link.affiliations,
                   contact: result.data
                 }
               };
@@ -277,7 +278,8 @@ export function useSubmitForAtbdContacts({
           // structure.
           contacts: newContactsLink.map((link) => ({
             id: link.contact.id,
-            roles: link.roles
+            roles: link.roles,
+            affiliations: link.affiliations
           }))
         });
 

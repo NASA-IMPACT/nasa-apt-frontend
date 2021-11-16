@@ -57,10 +57,10 @@ export default function StepContacts(props) {
         // If affiliations were added, the name is required.
         if (affiliations?.length) {
           affiliations.forEach((aff, affIdx) => {
-            if (!aff.name?.trim()) {
+            if (!aff?.trim()) {
               set(
                 errors,
-                `contacts_link[${idx}].affiliations[${affIdx}].name`,
+                `contacts_link[${idx}].affiliations[${affIdx}]`,
                 'Name is required.'
               );
             }

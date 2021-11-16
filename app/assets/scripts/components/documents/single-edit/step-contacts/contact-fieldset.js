@@ -41,9 +41,7 @@ const roleTypes = [
   'Corresponding Author'
 ];
 
-const emptyAffiliation = {
-  name: ''
-};
+const emptyAffiliation = '';
 
 export default function ContactsFieldset(props) {
   const {
@@ -121,8 +119,8 @@ export default function ContactsFieldset(props) {
                       onDeleteClick={() => remove(index)}
                     >
                       <FormikInputText
-                        id={`${affFieldName}-${index}-name`}
-                        name={`${affFieldName}.${index}.name`}
+                        id={`${affFieldName}-${index}`}
+                        name={`${affFieldName}.${index}`}
                         label='Name'
                         labelHint='(required)'
                         description={formString(
