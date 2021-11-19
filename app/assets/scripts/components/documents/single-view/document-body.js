@@ -881,6 +881,18 @@ export const atbdContentSections = [
     ),
     children: [
       {
+        label: 'Key Points',
+        id: 'key_points',
+        render: ({ element, document }) => (
+          <AtbdSection key={element.id} id={element.id} title={element.label}>
+            <MultilineString
+              value={document.key_points}
+              whenEmpty={<EmptySection />}
+            />
+          </AtbdSection>
+        )
+      },
+      {
         label: 'Significance Discussion',
         id: 'discussion',
         editorSubsections: (document, { id }) =>
