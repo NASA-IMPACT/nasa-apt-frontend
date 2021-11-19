@@ -2,6 +2,26 @@ import { round } from '../../utils/format';
 import { STEPS } from './single-edit/steps';
 import { isJournalPublicationIntended } from './status';
 
+// The closeout step is special. There are sections which should only be
+// considered if the document is intended for journal publication.
+const CLOSEOUT_JOURNAL_SECTIONS = [
+  'discussion',
+  'acknowledgements',
+  'publication_checklist'
+];
+
+/**
+ * Removes the given keys from the sections.
+ * @param {object} sections Dictionary of sections
+ * @param {array} sectionsToRemove List of keys of the sections to remove
+ * @returns Object
+ */
+const filterSections = (sections, sectionsToRemove) =>
+  Object.entries(sections).reduce(
+    (acc, [k, v]) => (sectionsToRemove.includes(k) ? acc : { ...acc, [k]: v }),
+    {}
+  );
+
 /**
  * From a an object with section_name: status calculate the percentage of
  * completeness.
@@ -45,11 +65,9 @@ export const calculateDocumentCompleteness = (atbd) => {
       step.id === 'closeout' &&
       !isJournalPublicationIntended(journal_status)
     ) {
-      /* eslint-disable-next-line no-unused-vars */
-      const { discussion, acknowledgements, ...rest } = sections_completed;
       return {
         ...acc,
-        ...rest
+        ...filterSections(sections_completed, CLOSEOUT_JOURNAL_SECTIONS)
       };
     }
 
@@ -77,9 +95,9 @@ export const calculateDocumentStepCompleteness = (atbd, step) => {
   // The closeout step is special. There are sections which should only be
   // considered if the document is intended for journal publication.
   if (step.id === 'closeout' && !isJournalPublicationIntended(journal_status)) {
-    /* eslint-disable-next-line no-unused-vars */
-    const { discussion, acknowledgements, ...rest } = sections_completed;
-    return calculateCompleteness(rest);
+    return calculateCompleteness(
+      filterSections(sections_completed, CLOSEOUT_JOURNAL_SECTIONS)
+    );
   }
 
   return calculateCompleteness(sections_completed);

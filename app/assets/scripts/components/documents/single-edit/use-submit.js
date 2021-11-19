@@ -47,18 +47,35 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
   );
 }
 
-export function useSubmitForVersionData(updateAtbd, atbd) {
+/**
+ * Submit hook to save an atbd version.
+ *
+ * @param {func} updateAtbd Action to update the ATBD
+ * @param {object} atbd The document to save
+ * @param {func} hook Hook to modify the values being saved. Allows for the
+ * function's functionality to be extended.
+ */
+export function useSubmitForVersionData(updateAtbd, atbd, hook) {
   const history = useHistory();
 
   return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
+    async (values, formBag) => {
       const processToast = createProcessToast('Saving changes');
-      const result = await updateAtbd(values);
-      setSubmitting(false);
+
+      let result;
+      try {
+        const newValues =
+          typeof hook === 'function' ? await hook(values, formBag) : values;
+        result = await updateAtbd(newValues);
+      } catch (error) {
+        result = { error };
+      }
+
+      formBag.setSubmitting(false);
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
-        resetForm({ values });
+        formBag.resetForm({ values });
         processToast.success('Changes saved');
 
         if (isPublished(atbd.status)) {
@@ -73,7 +90,7 @@ export function useSubmitForVersionData(updateAtbd, atbd) {
         }
       }
     },
-    [updateAtbd, history, atbd.version, atbd.status]
+    [updateAtbd, history, atbd.version, atbd.status, hook]
   );
 }
 
@@ -215,6 +232,7 @@ export function useSubmitForAtbdContacts({
                 error: false,
                 link: {
                   roles: link.roles,
+                  affiliations: link.affiliations,
                   contact: result.data
                 }
               };
@@ -260,7 +278,8 @@ export function useSubmitForAtbdContacts({
           // structure.
           contacts: newContactsLink.map((link) => ({
             id: link.contact.id,
-            roles: link.roles
+            roles: link.roles,
+            affiliations: link.affiliations
           }))
         });
 

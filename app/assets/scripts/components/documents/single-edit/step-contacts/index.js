@@ -45,15 +45,29 @@ export default function StepContacts(props) {
   const validate = useCallback((values) => {
     let errors = {};
 
-    values.contacts_link.forEach(({ isSelecting, contact }, idx) => {
-      // Contacts that are in the isSelecting phase can be skipped since will be
-      // removed from the submission.
-      if (isSelecting) return;
-      const contactErrors = validateContact(contact);
-      if (Object.keys(contactErrors).length) {
-        set(errors, `contacts_link[${idx}].contact`, contactErrors);
+    values.contacts_link.forEach(
+      ({ isSelecting, contact, affiliations }, idx) => {
+        // Contacts that are in the isSelecting phase can be skipped since will be
+        // removed from the submission.
+        if (isSelecting) return;
+        const contactErrors = validateContact(contact);
+        if (Object.keys(contactErrors).length) {
+          set(errors, `contacts_link[${idx}].contact`, contactErrors);
+        }
+        // If affiliations were added, the name is required.
+        if (affiliations?.length) {
+          affiliations.forEach((aff, affIdx) => {
+            if (!aff?.trim()) {
+              set(
+                errors,
+                `contacts_link[${idx}].affiliations[${affIdx}]`,
+                'Name is required.'
+              );
+            }
+          });
+        }
       }
-    });
+    );
 
     return errors;
   }, []);

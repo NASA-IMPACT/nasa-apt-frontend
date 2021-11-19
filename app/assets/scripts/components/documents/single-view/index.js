@@ -3,7 +3,13 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
+import {
+  glsp,
+  media,
+  multiply,
+  themeVal,
+  listReset
+} from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { Button } from '@devseed-ui/button';
@@ -132,6 +138,11 @@ const DOIValue = styled.dd`
   ${Button} {
     margin-left: ${glsp(0.25)};
   }
+`;
+
+const KeywordUnder = styled.small`
+  display: block;
+  opacity: 0.48;
 `;
 
 function DocumentView() {
@@ -292,8 +303,7 @@ function DocumentView() {
                       <ReleaseDate
                         date={getCitationPublicationDate(atbd.data).date}
                       />
-                      <dt>Keywords</dt>
-                      <dd>coming soon</dd>
+                      <DocumentKeywords keywords={atbd.data.keywords} />
                       <dt>Creators</dt>
                       <dd>{atbd.data.citation?.creators || 'None provided'}</dd>
                       <dt>Editors</dt>
@@ -384,4 +394,50 @@ const DOIAddress = ({ value }) => {
 
 DOIAddress.propTypes = {
   value: T.string
+};
+
+const KeywordsList = styled.ul`
+  && {
+    ${listReset()}
+  }
+`;
+
+const DocumentKeywords = ({ keywords }) => {
+  if (!keywords.length) {
+    return (
+      <React.Fragment>
+        <dt>Keywords</dt>
+        <dd>No keywords</dd>
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <React.Fragment>
+      <dt>Keywords</dt>
+      <dd>
+        <KeywordsList>
+          {keywords.map((k) => {
+            const under = k.path.split('|').slice(0, -1).join(' > ');
+            return (
+              <li key={k.value}>
+                {k.label} <KeywordUnder>Under: {under}</KeywordUnder>
+              </li>
+            );
+          })}
+        </KeywordsList>
+      </dd>
+    </React.Fragment>
+  );
+};
+
+DocumentKeywords.propTypes = {
+  keywords: T.arrayOf(
+    T.shape({
+      label: T.string,
+      value: T.string,
+      id: T.int,
+      path: T.string
+    })
+  )
 };

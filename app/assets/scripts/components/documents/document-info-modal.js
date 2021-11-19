@@ -6,9 +6,10 @@ import { FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { glsp } from '@devseed-ui/theme-provider';
+import { Heading } from '@devseed-ui/typography';
 
 import { TabContent, TabItem, TabsManager, TabsNav } from '../common/tabs';
-import DetailsList from '../../styles/typography/details-list';
+import { DocInfoList } from '../../styles/documents/doc-info';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 import { CopyField } from '../common/copy-field';
@@ -32,47 +33,6 @@ const TabActions = styled.div`
 
   > * {
     grid-row: 1;
-  }
-`;
-
-const DocInfoList = styled(DetailsList)`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: ${glsp(0, 1)};
-
-  margin-bottom: ${glsp(-1)};
-
-  dt {
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-
-  dd {
-    margin-bottom: ${glsp()};
-  }
-
-  dt:nth-of-type(1),
-  dt:nth-of-type(2),
-  dt:nth-of-type(3) {
-    grid-row: 1;
-  }
-
-  dt:nth-of-type(4),
-  dt:nth-of-type(5),
-  dt:nth-of-type(6) {
-    grid-row: 3;
-  }
-
-  dd:nth-of-type(1),
-  dd:nth-of-type(2),
-  dd:nth-of-type(3) {
-    grid-row: 2;
-  }
-
-  dd:nth-of-type(4),
-  dd:nth-of-type(5),
-  dd:nth-of-type(6) {
-    grid-row: 5;
   }
 `;
 
@@ -125,6 +85,10 @@ function TabGeneral(props) {
     ? new Date(atbd.last_updated_at)
     : null;
 
+  // Publication units is a meta information files. Calculated in the server,
+  // contains the different values needed to calculate the PU.
+  const { publication_units } = atbd;
+
   return (
     <TabContent tabId='general'>
       <DocInfoList>
@@ -138,6 +102,17 @@ function TabGeneral(props) {
         <dd>{getDocumentStatusLabel(atbd)}</dd>
         <dt>Last update</dt>
         <dd>{updatedAt ? <Datetime date={updatedAt} /> : 'n/a'}</dd>
+      </DocInfoList>
+      <Heading as='h3' size='xsmall'>
+        Paper length details
+      </Heading>
+      <DocInfoList>
+        <dt>Words</dt>
+        <dd>{publication_units?.words || 0}</dd>
+        <dt>Images</dt>
+        <dd>{publication_units?.images || 0}</dd>
+        <dt>Tables</dt>
+        <dd>{publication_units?.tables || 0}</dd>
       </DocInfoList>
     </TabContent>
   );

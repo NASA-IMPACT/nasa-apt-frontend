@@ -17,7 +17,7 @@ import {
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
 import {
-  renderMultipleRoles,
+  renderMultipleStringValues,
   getContactName
 } from '../../contacts/contact-utils';
 import { DOCUMENT_SECTIONS } from '../single-edit/sections';
@@ -201,7 +201,7 @@ const VariableItem = ({ element, variable }) => (
   </React.Fragment>
 );
 
-const ContactItem = ({ id, label, contact, roles }) => (
+const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   <AtbdSubSection itemScope itemType='https://schema.org/ContactPoint'>
     <h3 id={id} data-scroll='target' itemProp='name'>
       {label}
@@ -209,11 +209,16 @@ const ContactItem = ({ id, label, contact, roles }) => (
     <DetailsList type='horizontal'>
       <dt>Roles</dt>
       {roles.length ? (
-        <dd itemProp='contactType'>{renderMultipleRoles(roles)}</dd>
+        <dd itemProp='contactType'>{renderMultipleStringValues(roles)}</dd>
       ) : (
         <dd itemProp='contactType'>No roles in this document</dd>
       )}
-
+      <dt>Affiliations</dt>
+      {affiliations.length ? (
+        <dd>{renderMultipleStringValues(affiliations)}</dd>
+      ) : (
+        <dd>No affiliations in this document</dd>
+      )}
       {contact.mechanisms?.map?.((mechanism, i) => (
         // Nothing will cause the order to change on this
         // page. Array keys are safe.
@@ -305,6 +310,18 @@ export const atbdContentSections = [
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <MultilineString
           value={document.abstract}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
+    label: 'Plain Language Summary',
+    id: 'plain_summary',
+    render: ({ element, document }) => (
+      <AtbdSection key={element.id} id={element.id} title={element.label}>
+        <MultilineString
+          value={document.plain_summary}
           whenEmpty={<EmptySection />}
         />
       </AtbdSection>
@@ -803,7 +820,7 @@ export const atbdContentSections = [
     ),
     children: ({ atbd }) => {
       const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles }, idx) => ({
+      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
         label: getContactName(contact),
         id: `contacts_${idx + 1}`,
         render: ({ element }) => (
@@ -813,6 +830,7 @@ export const atbdContentSections = [
             label={element.label}
             contact={contact}
             roles={roles}
+            affiliations={affiliations}
           />
         )
       }));

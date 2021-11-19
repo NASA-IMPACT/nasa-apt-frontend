@@ -1,16 +1,11 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-import Select, { createFilter } from 'react-select';
+import Select, { createFilter, components } from 'react-select';
 import { DropMenu } from '@devseed-ui/dropdown';
-import {
-  glsp,
-  visuallyHidden,
-  themeVal,
-  rgba
-} from '@devseed-ui/theme-provider';
+import { glsp, themeVal, rgba } from '@devseed-ui/theme-provider';
 import { controlSkin } from '@devseed-ui/form';
-import collecticon from '@devseed-ui/collecticons';
+import { Button } from '@devseed-ui/button';
 
 import { DropMenuItemEnhanced } from '../dropdown-menu';
 
@@ -69,24 +64,19 @@ const SelectInput = styled.div`
         border-color: ${rgba(themeVal('color.base'), 0.64)};
       }
     `}
-  
+
   .react-select__value-container {
     cursor: text;
     padding: ${glsp(0, 0.5)};
   }
 `;
 
-const DropdownChevron = styled.div`
-  padding: ${glsp(0, 0.5)};
-  cursor: pointer;
-
-  &::before {
-    ${collecticon('chevron-down--small')}
-  }
-
-  span {
-    ${visuallyHidden()}
-  }
+export const SelectIconButton = styled(Button).attrs({
+  variation: 'base-plain',
+  hideText: true,
+  size: 'small'
+})`
+  /* styled-component */
 `;
 
 // Components to override the react-select
@@ -161,23 +151,37 @@ const Control = (props) => {
   );
 };
 
+const IndicatorsContainerStyled = styled(components.IndicatorsContainer)`
+  margin-right: ${glsp(0.5)};
+  gap: ${glsp(0.25)};
+`;
+
+const IndicatorsContainer = (props) => {
+  // Remove the react-select theme from props so it doesn't conflict with the
+  // theme from styled-components.
+  /* eslint-disable-next-line no-unused-vars */
+  const { theme, ...rest } = props;
+  return <IndicatorsContainerStyled {...rest} />;
+};
+
 const IndicatorSeparator = () => null;
 
 const DropdownIndicator = (props) => {
   const { className } = props;
   return (
-    <DropdownChevron className={className}>
+    <SelectIconButton className={className} useIcon='chevron-down--small'>
       <span>Open</span>
-    </DropdownChevron>
+    </SelectIconButton>
   );
 };
 
-const selectComponents = {
+export const selectComponents = {
   Menu,
   MenuList,
   Group,
   Option,
   Control,
+  IndicatorsContainer,
   IndicatorSeparator,
   DropdownIndicator
 };

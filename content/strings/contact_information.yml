@@ -9,3 +9,7 @@ mechanisms:
   fieldset: ""
   mechanism_type: What type of contact is provided? (i.e. email, web page, etc).
   mechanism_value: The number, email, or URL matching the method chosen in the previous question.
+
+affiliations:
+  fieldset: "List of affiliations in the context of this document"
+  name: "Name of the organization"

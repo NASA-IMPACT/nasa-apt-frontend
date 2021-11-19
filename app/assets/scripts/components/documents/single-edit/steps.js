@@ -53,6 +53,7 @@ export const STEPS = [
           // {
           //   contact: {}
           //   roles: []
+          //   affiliations: []
           // }
         ],
         sections_completed: {
@@ -250,6 +251,8 @@ export const STEPS = [
         journal_status: JOURNAL_NO_PUBLICATION,
         document: {
           abstract: '',
+          plain_summary: '',
+          key_points: '',
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,
           data_availability: EDITOR_SYM,
@@ -257,10 +260,32 @@ export const STEPS = [
           // case the users wants to insert one.
           publication_references: []
         },
+        keywords: [
+          // Default is empty and set when selecting keywords in the form.
+          // {
+          //   label: ''
+          //   value: ''
+          //   id: ''
+          //   path: ''
+          // }
+        ],
+        publication_checklist: {
+          suggested_reviewers: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   name: ''
+            //   email: ''
+            // }
+          ],
+          review_roles: false,
+          journal_editor: 'Chelle Gentemann',
+          author_affirmations: false
+        },
         sections_completed: {
           abstract: 'incomplete',
           discussion: 'incomplete',
-          acknowledgements: 'incomplete'
+          acknowledgements: 'incomplete',
+          publication_checklist: 'incomplete'
         }
       });
     }
