@@ -140,6 +140,11 @@ const DOIValue = styled.dd`
   }
 `;
 
+const KeywordUnder = styled.small`
+  display: block;
+  opacity: 0.48;
+`;
+
 function DocumentView() {
   const { id, version } = useParams();
   const history = useHistory();
@@ -412,11 +417,14 @@ const DocumentKeywords = ({ keywords }) => {
       <dt>Keywords</dt>
       <dd>
         <KeywordsList>
-          {keywords.map((k) => (
-            <li key={k.value}>
-              <Tip title={k.path.replace(/\|/g, ' > ')}>{k.label}</Tip>
-            </li>
-          ))}
+          {keywords.map((k) => {
+            const under = k.path.split('|').slice(0, -1).join(' > ');
+            return (
+              <li key={k.value}>
+                {k.label} <KeywordUnder>Under: {under}</KeywordUnder>
+              </li>
+            );
+          })}
         </KeywordsList>
       </dd>
     </React.Fragment>
