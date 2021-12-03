@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import T from 'prop-types';
 import { useFormikContext } from 'formik';
 import axios from 'axios';
-import deburr from 'lodash.deburr';
+import kebabcase from 'lodash.kebabcase';
 import debounce from 'lodash.debounce';
 import { FormHelperCounter, FormHelperMessage } from '@devseed-ui/form';
 
@@ -15,11 +15,7 @@ import { formString } from '../../../utils/strings';
 
 const MAX_ALIAS_CHARS = 32;
 
-const toAliasFormat = (v) =>
-  deburr(v)
-    .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '-')
-    .slice(0, MAX_ALIAS_CHARS);
+const toAliasFormat = (v) => kebabcase(v).slice(0, MAX_ALIAS_CHARS);
 
 const isValidAtbdAlias = async (alias, cancelToken, userToken) => {
   const headers = userToken

@@ -122,6 +122,26 @@ const PageTitleLink = styled(Link)`
   }
 `;
 
+const BetaBadge = styled.small`
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  color: ${themeVal('color.link')};
+  background: ${themeVal('color.surface')};
+  padding: 0 ${glsp(0.25)};
+  border-radius: ${themeVal('shape.rounded')};
+  bottom: inherit;
+  vertical-align: inherit;
+  grid-row: 2;
+
+  ${media.largeUp`
+    margin: ${glsp(0, 0.5)};
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0 ${glsp(0.5)};
+  `}
+`;
+
 const PageNav = styled.nav`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
@@ -181,6 +201,7 @@ function PageHeader() {
               <span>NASA</span> Earthdata<span>: </span>
             </sup>
             <strong>{appTitle}</strong>
+            <BetaBadge>Beta</BetaBadge>
           </PageTitleLink>
         </PageTitle>
       </PageHeadline>

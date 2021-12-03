@@ -201,9 +201,14 @@ export default function JournalDetails(props) {
                 <FormLegend>Review Author Roles</FormLegend>
               </FormFieldsetHeader>
               <FormFieldsetBody>
-                <p>
-                  Review the list of authors/contributors and the associated
-                  roles which can be found in the{' '}
+                <FormikInputCheckable
+                  id='publication_checklist-review_roles'
+                  name='publication_checklist.review_roles'
+                  type='checkbox'
+                  value={undefined}
+                >
+                  I have reviewed and agree with the Author list and associated
+                  roles as stated in the{' '}
                   <Link
                     to='contacts'
                     title='View ATBD contacts'
@@ -212,14 +217,6 @@ export default function JournalDetails(props) {
                     contacts
                   </Link>{' '}
                   step.
-                </p>
-                <FormikInputCheckable
-                  id='publication_checklist-review_roles'
-                  name='publication_checklist.review_roles'
-                  type='checkbox'
-                  value={undefined}
-                >
-                  I have reviewed the Author Roles
                 </FormikInputCheckable>
               </FormFieldsetBody>
             </FormFieldset>
@@ -281,7 +278,7 @@ export default function JournalDetails(props) {
                   type='checkbox'
                   value={undefined}
                 >
-                  Confirm the items above were agreed upon
+                  I affirm that the above statements are correct and accurate.
                 </FormikInputCheckable>
               </FormFieldsetBody>
             </FormFieldset>
@@ -316,8 +313,10 @@ function FieldKeyPoints() {
       helper={
         <React.Fragment>
           <FormHelperMessage>
-            List 3 key points, one per line. Key points will be shown on the
-            title page.
+            Provide the 3 key points of your research as presented in this ATBD.
+            Each point is a short statement.
+            <br />
+            Key points will be shown on the submission PDF title page.
           </FormHelperMessage>
           <FormHelperCounter
             value={trimmed.length}
