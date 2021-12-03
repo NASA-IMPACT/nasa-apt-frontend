@@ -17,9 +17,9 @@ While most LaTeX interactions are hidden in the APT, inline and separate equatio
 ### 2.2 Inserting Equations Inline
 Providing the “$” character enters into LaTeX’s mathematical mode, which is possible to do within text. Equations are inserted inline in the text by enclosing the expression with “$.” However, we strongly encourage that only simple mathematical expressions and equations be provided inline within the text, such as “y=mx+b” or “x2.” Figure 1 shows how to insert a simple equation inline within the paragraph while figure 2 displays how this equation will render in an ATBD PDF file. 
 
-![Figure 1](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig1_inlineEquation.png' "Figure 1. Enclosing an equation in “$” inserts an expression or equation inline within the paragraph.")
+![Figure 1](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig1_inlineEquation.png "Figure 1. Enclosing an equation in “$” inserts an expression or equation inline within the paragraph.")
 
-![Figure 2](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig2_InlineExample.png' "Figure 2. Example of inline equation in ATBD PDF file. ")
+![Figure 2](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig2_InlineExample.png "Figure 2. Example of inline equation in ATBD PDF file.")
 
 ### 2.3 Inserting Equations Using the Equation Editor
 Authors will most often insert equations using the APT’s equation editor. The equation editor opens as a new, free-text field for inserting equations using LaTeX commands. This feature renders equations sectioned away from the text which increases the readability of complex equations within a document. Each inserted equation is sequentially numbered in the ATBD.
@@ -28,50 +28,50 @@ Equations can also be displayed sectioned away from the text by clicking the “
 
 ![Figure 3](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig3_EquationEditor.png "Figure 3. The APT’s equation editor.")
 
-![Figure 4](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig4_Equation.png' "Figure 4. Writing expressions using the equation editor displays the equation sectioned away from the text.")
+![Figure 4](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig4_Equation.png "Figure 4. Writing expressions using the equation editor displays the equation sectioned away from the text.")
 
-![Figure 5](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig5_EquationEditorPDF.png' "Figure 5. Example of a rendered equation inserted using the APT’s equation editor.")
+![Figure 5](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig5_EquationEditorPDF.png "Figure 5. Example of a rendered equation inserted using the APT’s equation editor.")
 
 The following examples demonstrate how to insert or use common elements found in equations. The LaTeX Help References section provides additional resources for using LaTeX to write mathematical equations.
 
 #### 2.3.1 Superscripts and Subscripts
 Superscripts and subscripts are easily inserted into equations by using the underscore “_” and hat “^” symbols, respectively. For example, “\ x^2” and “\ 2_a” renders “x2” and “2a” in the equation. Figure 6 indicates how to add a superscript and subscript to an equation.
 
-![Figure 6](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig6_superscriptsSubscripts.png' "Figure 6. Examples for inserting superscripts and subscripts into a document using the APT.")
+![Figure 6](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig6_superscriptsSubscripts.png "Figure 6. Examples for inserting superscripts and subscripts into a document using the APT.")
 
 #### 2.3.2 Brackets and Parentheses
 LaTeX includes several types of brackets and parentheses that can be inserted in an equation. Figure 7 shows the commands for adding brackets and parentheses, and how these are rendered in the ATBD. Users control the size of brackets and parentheses (Figure 8; see LaTeX Help References in the next section for more sizing options). 
 
-![Figure 7](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig7_bracketsParenthesis.png' "Figure 7. Example commands for inserting several types of parentheses and brackets into an equation.")
+![Figure 7](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig7_bracketsParenthesis.png "Figure 7. Example commands for inserting several types of parentheses and brackets into an equation.")
 
-![Figure 8](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig8_bracketsBig.png' "Figure 8. The “\Big \Big” command increases the size of the brackets. LaTeX supports several commands for controlling the size of parentheses and brackets.")
+![Figure 8](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig8_bracketsBig.png "Figure 8. The “\Big \Big” command increases the size of the brackets. LaTeX supports several commands for controlling the size of parentheses and brackets.")
 
 #### 2.3.3 Fractions and Bionomial Coefficients
 A fraction represents the number of parts of a whole and includes a numerator on top and a denominator on bottom. Fractions are inserted using the “\frac { }{ }” command and enclosing the numerator and denominator each in a pair of brackets. A binomial coefficient is the number of ways to choose a subset from a larger set and is inserted using “\binom { }{ }.” Figure 9 shows examples of inserting fractions and binomial coefficients, and how these are rendered in an ATBD. 
 
-![Figure 9](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig9_fractionsBinomials.png' "Figure 9. Commands for inserting fractions and binomial coefficients into an equation.")
+![Figure 9](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig9_fractionsBinomials.png "Figure 9. Commands for inserting fractions and binomial coefficients into an equation.")
 
 #### 2.3.4 Operators
 Mathematical operators are symbols that represent processes used to solve mathematical problems. Mathematical terms are typically rendered in italics, but using the operator commands renders operators in Roman characters. An operator command includes a backslash followed by the operator abbreviation, such as “\sin” for the sine operator. Figure 10 shows a few examples of inserting operators (see LaTeX Help References in the next section for more operators).
 
-![Figure 10](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig10_Operators.png' "Figure 10. Commands for inserting sine, cosine, and logarithmic operators in an equation. LaTeX supports many more mathematical operators.")
+![Figure 10](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig10_Operators.png "Figure 10. Commands for inserting sine, cosine, and logarithmic operators in an equation. LaTeX supports many more mathematical operators.")
 
 #### 2.3.5 Integrals, Sum and Product
 Integrals determine areas and volumes, and are denoted by the integral symbol. The “\int_{lower}^{upper}” command inserts integrals into an equation. The sum and product symbols indicate to sum or multiply the terms in an equation, respectively. Similar to integrals, the command for inserting sum and product expressions is “\sum{upper}^{lower}” and “\prod_{upper}^{lower}.” Figure 11 provides examples for integral, sum, and product commands, and how these symbols are rendered in the ATBD.
 
-![Figure 11](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig11_Integrals_sums.png' "Figure 11. Examples of inserting integral, sum, and product symbols in the APT.")
+![Figure 11](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig11_Integrals_sums.png "Figure 11. Examples of inserting integral, sum, and product symbols in the APT.")
 
 #### 2.3.6 Greek Letter and Math Symbols
 Greek letters and math symbols are used to denote various constants and values. The commands to insert these symbols includes a backslash “\” and the abbreviation of the letter or symbol name. Figure 12 provides a few example commands to insert Greek letters and math symbols (see LaTeX Help References in the next section for a full list of Greek letters and math symbols).
 
-![Figure 12](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig12_GreekMathSymbols.png' "Figure 12. LaTeX provides many Greek and mathematical symbols that can be inserted in an equation. A few example commands and renderings are shown in this figure.")
+![Figure 12](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig12_GreekMathSymbols.png "Figure 12. LaTeX provides many Greek and mathematical symbols that can be inserted in an equation. A few example commands and renderings are shown in this figure.")
 
 #### 2.3.7 Insert Complex Equations
 Thus far, this guide has shown how to insert simple mathematical expressions and symbols into an ATBD. However, the main advantage of utilizing LaTeX to build equations within ATBDs is the ease of inserting complex equations. Examples of equations with varying complexity are shown in Figure 13. Note that the command “\textrm{}” renders the term without italicization. Figure 14 provides a step-by-step guide to inserting the Clausius-Clapeyron equation. 
 
-![Figure 13](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig13_ComplexEquations.png' "Figure 13. Examples of inserting more complex equations.")
+![Figure 13](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig13_ComplexEquations.png "Figure 13. Examples of inserting more complex equations.")
 
-![Figure 14](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig14_ClausisuClapeyron.png' "Figure 14. APT supports insertion of complex equations using LaTeX commands. Shown here is a term-by-term breakdown for inserting the Clausius-Clapeyron equation into an ATBD using the APT.")
+![Figure 14](https://raw.githubusercontent.com/bwbaker1/APT_Images/master/Latex_Fig14_ClausisuClapeyron.png "Figure 14. APT supports insertion of complex equations using LaTeX commands. Shown here is a term-by-term breakdown for inserting the Clausius-Clapeyron equation into an ATBD using the APT.")
 
 ## 3. LaTeX Help References
 LaTeX Math and Equations. (2017, October 7). LaTeX-tutorial.com. https://www.latex-tutorial.com/tutorials/amsmath/

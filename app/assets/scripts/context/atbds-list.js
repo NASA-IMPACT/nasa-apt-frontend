@@ -1,10 +1,12 @@
-import React, { createContext, useCallback } from 'react';
+import React, { createContext, useCallback, useMemo } from 'react';
 import T from 'prop-types';
+import qs from 'qs';
 
 import { useAuthToken } from './user';
 import withRequestToken from '../utils/with-request-token';
 import { createContextChecker } from '../utils/create-context-checker';
 import { useContexeedApi } from '../utils/contexeed-v2';
+import getDocumentIdKey from '../components/documents/get-document-id-key';
 
 // Context
 export const AtbdsContext = createContext(null);
@@ -72,29 +74,33 @@ const getUpdatedVersions = (versions, currentVersion, newVersionData) => {
   });
 };
 
+const RESET_STATE_ACTION_TYPE = 'reset-state';
+
 // Context provider
 export const AtbdsProvider = (props) => {
   const { children } = props;
   const { token } = useAuthToken();
 
-  const { getState: getAtbds, fetchAtbds, deleteFullAtbd } = useContexeedApi(
+  const {
+    getState: getAtbds,
+    fetchAtbds,
+    dispatch: dispatchAtbdList
+  } = useContexeedApi(
     {
       name: 'atbdList',
-      requests: {
-        fetchAtbds: withRequestToken(token, () => ({
-          url: '/atbds'
-        }))
-      },
-      mutations: {
-        deleteFullAtbd: withRequestToken(token, ({ id }) => ({
-          url: `/atbds/${id}`,
-          requestOptions: {
-            method: 'delete'
-          },
-          transformData: (data, { state }) => {
-            // If delete worked, remove the item from the atbd list.
-            return state.data.filter((atbd) => atbd.id !== id);
+      slicedState: true,
+      interceptor: (state, action) => {
+        switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
           }
+        }
+        return { state, action };
+      },
+      requests: {
+        fetchAtbds: withRequestToken(token, (filters = {}) => ({
+          sliceKey: `${filters.role || 'all'}-${filters.status || 'all'}`,
+          url: `/atbds?${qs.stringify(filters, { skipNulls: true })}`
         }))
       }
     },
@@ -138,7 +144,8 @@ export const AtbdsProvider = (props) => {
     updateAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    fireAtbdEvent,
+    dispatch: dispatchAtbdSingle
   } = useContexeedApi(
     {
       name: 'atbdSingle',
@@ -148,6 +155,9 @@ export const AtbdsProvider = (props) => {
         // when the alias changes the key must updated as well. This code captures
         // the action and does that.
         switch (action.type) {
+          case RESET_STATE_ACTION_TYPE: {
+            return { action, state: {} };
+          }
           case 'atbdSingle/move-key': {
             const { [action.from]: prevKey, ...rest } = state;
             return {
@@ -232,45 +242,13 @@ export const AtbdsProvider = (props) => {
             method: 'delete'
           },
           onDone: (finish, { error, invalidate }) => {
+            // Because a deleted version may be in the atbd list state,
+            // invalidate it all.
+            dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
+
             return !error ? invalidate(`${id}/${version}`) : finish();
           }
         })),
-        publishAtbdVersion: withRequestToken(token, ({ id, version, data }) => {
-          /* eslint-disable-next-line no-unused-vars */
-          const { id: _, ...rest } = data;
-
-          return {
-            sliceKey: `${id}/${version}`,
-            url: `/atbds/${id}/publish`,
-            requestOptions: {
-              method: 'post',
-              data: {
-                ...rest
-              }
-            },
-            transformData: (data, { state, dispatch }) => {
-              const updatedVersion = data.versions[0];
-
-              const updatedData = {
-                ...computeAtbdVersion(state.data, updatedVersion),
-                // When the content gets updated we also have to update the
-                // corresponding version in the versions array. This is needed
-                // to ensure consistency with the returned structure from
-                // fetchSingleAtbd.
-                versions: getUpdatedVersions(
-                  state.data.versions,
-                  version,
-                  updatedVersion
-                )
-              };
-
-              // See explanation before contexeed declaration.
-              dispatch(invalidateOtherAtbdVersions(id, version));
-
-              return updatedData;
-            }
-          };
-        }),
         // Updating an ATBD is simple most of the times. The vast majority of the
         // fields belong to an ATBD version and we'd use the versions endpoint.
         // However when updating global fields like the tile or alias, we need to
@@ -424,26 +402,123 @@ export const AtbdsProvider = (props) => {
               }
 
               // Return the data receiving action.
-              return { ...actionResult };
+              return actionResult;
             }
           };
-        })
+        }),
+
+        // Even though the events work on a separate endpoint, these events are
+        // specifically tied to the ATBDs since their returned response is an
+        // updated document.
+        fireAtbdEvent: withRequestToken(
+          token,
+          ({ id, version, action, payload }) => ({
+            sliceKey: `${id}/${version}`,
+            url: `/events`,
+            requestOptions: {
+              method: 'post',
+              data: {
+                atbd_id: id,
+                version,
+                action,
+                payload
+              }
+            },
+            transformData: (data, { state }) => {
+              // If the request is fired from the dashboard the state will not
+              // have been initialized because no single fetch request was made.
+              // If that's the case we don't have data to work with and just
+              // throw an error which will be captured in the onDone.
+              if (!state?.data) {
+                throw new Error('state not initialized');
+              }
+              // Ensure that the structure is always the same. See rationale on
+              // fetchSingleAtbd
+              const updatedVersion = data.versions[0];
+
+              return {
+                ...computeAtbdVersion(state.data, updatedVersion),
+                // When the content gets updated we also have to update the
+                // corresponding version in the versions array. This is needed
+                // to ensure consistency with the returned structure from
+                // fetchSingleAtbd.
+                versions: getUpdatedVersions(
+                  state.data.versions,
+                  version,
+                  updatedVersion
+                )
+              };
+            },
+            onDone: (finish, { data, error, dispatch, invalidate }) => {
+              // Because a document for which an event was fired may be in the
+              // atbd list state, invalidate it all.
+              dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE });
+
+              // If the state is not initialized set the data as null and
+              // invalidate. This will ensure that when the single page is
+              // opened, data will load.
+              if (error?.message === 'state not initialized') {
+                const result = finish(null, null);
+                invalidate(`${id}/${version}`);
+                return result;
+              } else if (error) {
+                return finish();
+              }
+
+              // In case the version changes due to the minor version bump we
+              // have to move the state to the correct new key, which is made up
+              // of id and version.
+              const currentKey = `${id}/${version}`;
+              const docKeyObj = getDocumentIdKey(data);
+              const newKey = `${docKeyObj.id}/${docKeyObj.version}`;
+
+              // Dispatch the action to have the action result.
+              const actionResult = finish();
+              if (currentKey !== newKey) {
+                // Direct access to the dispatch function.
+                dispatch({
+                  type: 'atbdSingle/move-key',
+                  from: currentKey,
+                  to: newKey
+                });
+
+                // See explanation before contexeed declaration.
+                dispatch(
+                  invalidateOtherAtbdVersions(docKeyObj.id, docKeyObj.version)
+                );
+
+                // Ensure everything is correct, even the new key.
+                return { ...actionResult, key: newKey };
+              }
+
+              // Return the data receiving action.
+              return actionResult;
+            }
+          })
+        )
       }
     },
     [token]
   );
 
   const contextValue = {
+    invalidateAtbdListCtx: useCallback(
+      () => dispatchAtbdList({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdList]
+    ),
+    invalidateAtbdSingleCtx: useCallback(
+      () => dispatchAtbdSingle({ type: RESET_STATE_ACTION_TYPE }),
+      [dispatchAtbdSingle]
+    ),
     getAtbds,
     fetchAtbds,
     getSingleAtbd,
     fetchSingleAtbd,
     createAtbd,
     updateAtbd,
-    deleteFullAtbd,
     deleteAtbdVersion,
     createAtbdVersion,
-    publishAtbdVersion
+    fireAtbdEvent
   };
 
   return (
@@ -467,8 +542,7 @@ export const useSingleAtbd = ({ id, version }) => {
     fetchSingleAtbd,
     updateAtbd,
     deleteAtbdVersion,
-    createAtbdVersion,
-    publishAtbdVersion
+    createAtbdVersion
   } = useSafeContextFn('useSingleAtbd');
 
   return {
@@ -483,14 +557,17 @@ export const useSingleAtbd = ({ id, version }) => {
       version,
       updateAtbd
     ]),
-    deleteAtbdVersion: useCallback(() => deleteAtbdVersion({ id, version }), [
-      id,
-      version,
-      deleteAtbdVersion
-    ]),
-    publishAtbdVersion: useCallback(
-      (data) => publishAtbdVersion({ id, version, data }),
-      [id, version, publishAtbdVersion]
+    // This action is special as it allows an id and a version to be passed as
+    // parameters and override the ones passed to the context function
+    // (useSingleAtbd). To use `deleteAtbdVersion` normally we'd need to
+    // initialize `useSingleAtbd` with { id, version } but if we don't have them
+    // available (like in the hub) this is not possible.
+    // In this was we can initialize useSingleAtbd({}) without params and then
+    // pass them to the deleteAtbdVersion({ id, version }) when it is used.
+    deleteAtbdVersion: useCallback(
+      ({ id: inId = id, version: inVersion = version } = {}) =>
+        deleteAtbdVersion({ id: inId, version: inVersion }),
+      [id, version, deleteAtbdVersion]
     ),
     createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
       id,
@@ -499,9 +576,87 @@ export const useSingleAtbd = ({ id, version }) => {
   };
 };
 
-export const useAtbds = () => {
-  const { getAtbds, fetchAtbds, createAtbd, deleteFullAtbd } = useSafeContextFn(
-    'useAtbds'
+export const useSingleAtbdEvents = ({ id, version }) => {
+  const { fireAtbdEvent } = useSafeContextFn('useSingleAtbdEvents');
+
+  // Function to create fire event callbacks. By default single atbd context
+  // actions are bound to the provided id and version. The events can also be
+  // fired from the dashboard where there is an atbd list instead of single
+  // ones. In these cases we cannot initialize the useSingleAtbdEvents with an
+  // id and version, therefore these actions allow for those values to be passed
+  // as arguments.
+  const createFireEvent = useCallback(
+    (action) => ({
+      id: inId = id,
+      version: inVersion = version,
+      payload = {}
+    } = {}) => {
+      return fireAtbdEvent({ action, payload, id: inId, version: inVersion });
+    },
+    [id, version, fireAtbdEvent]
   );
-  return { atbds: getAtbds(), fetchAtbds, createAtbd, deleteFullAtbd };
+
+  return {
+    // Events:
+    // fev -> Fire EVent
+    fevReqReview: useMemo(() => createFireEvent('request_closed_review'), [
+      createFireEvent
+    ]),
+    fevCancelReviewReq: useMemo(
+      () => createFireEvent('cancel_closed_review_request'),
+      [createFireEvent]
+    ),
+    fevApproveReviewReq: useMemo(
+      () => createFireEvent('accept_closed_review_request'),
+      [createFireEvent]
+    ),
+    fevDenyReviewReq: useMemo(
+      () => createFireEvent('deny_closed_review_request'),
+      [createFireEvent]
+    ),
+    fevSetOwnReviewStatus: useMemo(
+      () => createFireEvent('update_review_status'),
+      [createFireEvent]
+    ),
+    fevOpenReview: useMemo(() => createFireEvent('open_review'), [
+      createFireEvent
+    ]),
+    fevReqPublication: useMemo(() => createFireEvent('request_publication'), [
+      createFireEvent
+    ]),
+    fevCancelPublicationReq: useMemo(
+      () => createFireEvent('cancel_publication_request'),
+      [createFireEvent]
+    ),
+    fevApprovePublicationReq: useMemo(
+      () => createFireEvent('accept_publication_request'),
+      [createFireEvent]
+    ),
+    fevDenyPublicationReq: useMemo(
+      () => createFireEvent('deny_publication_request'),
+      [createFireEvent]
+    ),
+    fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent]),
+    fevMinorVersion: useMemo(() => createFireEvent('bump_minor_version'), [
+      createFireEvent
+    ])
+  };
+};
+
+export const useAtbds = (filters = {}) => {
+  const {
+    getAtbds,
+    fetchAtbds,
+    createAtbd,
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx
+  } = useSafeContextFn('useAtbds');
+
+  return {
+    invalidateAtbdListCtx,
+    invalidateAtbdSingleCtx,
+    atbds: getAtbds(`${filters.role || 'all'}-${filters.status || 'all'}`),
+    fetchAtbds,
+    createAtbd
+  };
 };

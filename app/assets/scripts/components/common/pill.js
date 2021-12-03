@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 
-import { rgba, themeVal, glsp } from '@devseed-ui/theme-provider';
+import { rgba, themeVal } from '@devseed-ui/theme-provider';
 
 const StyledStrong = styled.strong`
   /* styled-component */
@@ -27,15 +27,15 @@ const Pill = styled(PillSelf)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 1.25rem;
-  min-width: 2rem;
-  font-size: 0.75rem;
   font-weight: ${themeVal('type.base.bold')};
   text-transform: uppercase;
   color: ${themeVal('color.baseLight')};
-  background-color: ${rgba(themeVal('color.base'), 0.48)};
+  background-color: ${rgba(themeVal('color.base'), 0.56)};
   border-radius: ${themeVal('shape.ellipsoid')};
-  padding: ${glsp(0, 0.5)};
+  padding: 0.5em 1em;
+  font-size: 0.75em;
+  line-height: 1;
+  white-space: nowrap;
   overflow: hidden;
 
   > * {

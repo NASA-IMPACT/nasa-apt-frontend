@@ -1,15 +1,16 @@
+import getDocumentIdKey from '../components/documents/get-document-id-key';
 import { apiUrl } from '../config';
 
 /**
- * Creates the url to view a given ATBD document.
+ * Creates the url to view a given document.
  *
- * @param {object|string|number} atbd The ATBD document or an id to use
+ * @param {object|string|number} atbd The document or an id to use
  * @param {string|number} version The version for which to generate the url.
  *    If "last", the last version in the version array is used
  *    If number, it is considered the version index to check in the versions array
  *    Otherwise is used as provided.
  */
-export const atbdView = (atbd, version = 'last') => {
+export const documentView = (atbd, version = 'last') => {
   if (typeof atbd !== 'object') {
     if (typeof version === 'number' || version === 'last') {
       throw new Error(
@@ -19,7 +20,7 @@ export const atbdView = (atbd, version = 'last') => {
     return `/documents/${atbd}/${version}`;
   }
 
-  const atbdId = atbd.alias || atbd.id;
+  const atbdId = getDocumentIdKey(atbd).id;
 
   let v = '';
   if (version === 'last') {
@@ -34,18 +35,18 @@ export const atbdView = (atbd, version = 'last') => {
 };
 
 /**
- * Creates the url to view a given ATBD document.
+ * Creates the url to view a given document.
  *
- * @param {object|string|number} atbd The ATBD document or an id to use
+ * @param {object|string|number} atbd The document or an id to use
  * @param {string|number} version The version for which to generate the url.
  *    If "last", the last version in the version array is used
  *    If number, it is considered the version index to check in the versions array
  *    Otherwise is used as provided.
  */
-export const atbdEdit = (atbd, version = 'last', step = null) => {
+export const documentEdit = (atbd, version = 'last', step = null) => {
   const stepVal = step ? `/${step}` : '';
 
-  return `${atbdView(atbd, version)}/edit${stepVal}`;
+  return `${documentView(atbd, version)}/edit${stepVal}`;
 };
 
 /**

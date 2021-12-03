@@ -114,6 +114,9 @@ const withPlugins = [
   withTable
 ];
 
+// TODO: Calculate dynamically.
+const HEADER_HEIGHT = 92;
+
 export function RichTextEditor(props) {
   const { id, onChange: inputOnChange, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
@@ -130,8 +133,8 @@ export function RichTextEditor(props) {
     <EditorWrapper data-sticky='boundary'>
       <Slate editor={editor} value={value} onChange={onChange}>
         <StickyElement
-          bottomOffset={84}
-          topOffset={-84}
+          bottomOffset={HEADER_HEIGHT}
+          topOffset={-HEADER_HEIGHT}
           boundaryElement='[data-sticky="boundary"]'
           hideOnBoundaryHit={false}
         >

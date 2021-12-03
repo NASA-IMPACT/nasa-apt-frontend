@@ -12,6 +12,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 export default function StepIntroduction(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -37,8 +38,9 @@ export default function StepIntroduction(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <FormikSectionFieldset
-                  label='Introduction'
+                  label={getDocumentSectionLabel('introduction')}
                   sectionName='sections_completed.introduction'
+                  commentSection='introduction'
                 >
                   <FormikInputEditor
                     id='introduction'
@@ -49,15 +51,24 @@ export default function StepIntroduction(props) {
                 </FormikSectionFieldset>
 
                 <FormikSectionFieldset
-                  label='Historical Perspective'
-                  sectionName='sections_completed.historical_perspective'
+                  label={getDocumentSectionLabel('context_background')}
+                  sectionName='sections_completed.context_background'
+                  commentSection='context_background'
                 >
                   <FormikInputEditor
                     id='historical_perspective'
                     name='document.historical_perspective'
-                    label='Describe the historical perspective'
+                    label='Historical perspective'
                     description={formString(
                       'introduction.historical_perspective'
+                    )}
+                  />
+                  <FormikInputEditor
+                    id='additional_information'
+                    name='document.additional_information'
+                    label='Additional information'
+                    description={formString(
+                      'introduction.additional_information'
                     )}
                   />
                 </FormikSectionFieldset>

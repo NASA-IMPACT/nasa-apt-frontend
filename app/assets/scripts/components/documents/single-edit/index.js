@@ -8,41 +8,76 @@ import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
 import ButtonSecondary from '../../../styles/button-secondary';
 import UhOh from '../../uhoh';
-import DocumentNavHeader from '../document-nav-header';
-import AtbdActionsMenu from '../atbd-actions-menu';
+import DocumentHeadline from '../document-headline';
+import DocumentActionsMenu from '../document-actions-menu';
 import StepsMenu from './steps-menu';
 import Tip from '../../common/tooltip';
+import { DocumentModals, useDocumentModals } from '../use-document-modals';
+import ClosedReviewForbidden from './closed-review-forbidden';
+import Forbidden from '../../../a11n/forbidden';
 
-import { getATBDEditStep } from './steps';
-import { useSingleAtbd } from '../../../context/atbds-list';
-import { calculateAtbdCompleteness } from '../completeness';
+import { getDocumentEditStep } from './steps';
 import {
-  DocumentModals,
-  useDocumentModals
-} from '../document-publishing-actions';
-import { atbdDeleteVersionConfirmAndToast } from '../atbd-delete-process';
+  useSingleAtbd,
+  useSingleAtbdEvents
+} from '../../../context/atbds-list';
+import { documentDeleteVersionConfirmAndToast } from '../document-delete-process';
+import { isClosedReview } from '../status';
+import { useUser } from '../../../context/user';
+import {
+  useCommentCenter,
+  useCommentCenterHistoryHandler
+} from '../../../context/comment-center';
+import { useThreadStats } from '../../../context/threads-list';
+import { useEffectPrevious } from '../../../utils/use-effect-previous';
+import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
   const history = useHistory();
+  const { isLogged } = useUser();
   const {
     atbd,
     fetchSingleAtbd,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion,
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
+  // Get all fire event actions.
+  const atbdFevActions = useSingleAtbdEvents({ id, version });
+  // Thread stats - function for initial fetching which stores the document for
+  // which stats are being fetched. Calls to the the refresh (exported by
+  // useThreadStats) function will use the same stored document.
+  const { fetchThreadsStatsForAtbds } = useThreadStats();
+
+  const { isPanelOpen, setPanelOpen, openPanelOn } = useCommentCenter({ atbd });
+
+  // Se function definition for explanation.
+  useCommentCenterHistoryHandler({ atbd });
+
+  // Fetch the thread stats list to show in the button when the document loads.
+  useEffectPrevious(
+    (prev) => {
+      const prevStatus = prev?.[0]?.status;
+      // This hook is called when the "atbd" changes, which happens also when
+      // there's a mutation, but we don't want to fetch stats on mutations, only
+      // when the atbd is fetched (tracked by a .status change.)
+      if (prevStatus !== atbd.status && atbd.status === 'succeeded') {
+        fetchThreadsStatsForAtbds(atbd.data);
+      }
+    },
+    [atbd, fetchThreadsStatsForAtbds]
+  );
 
   useEffect(() => {
-    fetchSingleAtbd();
-  }, [id, version, fetchSingleAtbd]);
+    isLogged && fetchSingleAtbd();
+  }, [isLogged, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
     atbd: atbd.data,
     createAtbdVersion,
     updateAtbd,
-    publishAtbdVersion
+    ...atbdFevActions
   });
 
   const onDocumentMenuAction = useCallback(
@@ -52,15 +87,32 @@ function DocumentEdit() {
 
       switch (menuId) {
         case 'delete':
-          await atbdDeleteVersionConfirmAndToast({
+          await documentDeleteVersionConfirmAndToast({
             atbd: atbd.data,
             deleteAtbdVersion,
             history
           });
           break;
+        case 'toggle-comments':
+          if (isPanelOpen) {
+            setPanelOpen(false);
+          } else {
+            openPanelOn({
+              atbdId: atbd.data.id,
+              atbdVersion: atbd.data.version
+            });
+          }
       }
     },
-    [atbd.data, deleteAtbdVersion, history, menuHandler]
+    [
+      atbd.data,
+      deleteAtbdVersion,
+      history,
+      menuHandler,
+      isPanelOpen,
+      setPanelOpen,
+      openPanelOn
+    ]
   );
 
   // We only want to handle errors when the atbd request fails. Mutation errors,
@@ -71,6 +123,8 @@ function DocumentEdit() {
 
     if (errCode === 400 || errCode === 404) {
       return <UhOh />;
+    } else if (errCode === 403) {
+      return <Forbidden />;
     } else if (atbd.error) {
       // This is a serious server error. By throwing it will be caught by the
       // error boundary. There's no recovery from this error.
@@ -78,8 +132,13 @@ function DocumentEdit() {
     }
   }
 
-  const stepDefinition = getATBDEditStep(step);
-  const { StepComponent } = stepDefinition;
+  const stepDefinition = getDocumentEditStep(step);
+
+  // During the closed review process the document can't be edited.
+  // Show a message instead of a step.
+  const StepComponent = isClosedReview(atbd.data)
+    ? ClosedReviewForbidden
+    : stepDefinition.StepComponent;
 
   if (!StepComponent) {
     return <UhOh />;
@@ -103,10 +162,6 @@ function DocumentEdit() {
   // component and include it on every component, it gets passed as a render
   // prop.
 
-  const completeness = atbd.data
-    ? calculateAtbdCompleteness(atbd.data).percent
-    : 0;
-
   const pageTitle = atbd.data?.title
     ? `Editing ${atbd.data.title}`
     : 'Document view';
@@ -125,20 +180,16 @@ function DocumentEdit() {
           atbd={atbd.data}
           renderInpageHeader={() => (
             <InpageHeaderSticky>
-              <DocumentNavHeader
-                atbdId={id}
-                title={atbd.data.title}
-                status={atbd.data.status}
-                version={version}
-                versions={atbd.data.versions}
-                completeness={completeness}
+              <DocumentHeadline
+                atbd={atbd.data}
+                onAction={onDocumentMenuAction}
                 mode='edit'
               />
               <InpageActions>
                 <StepsMenu atbdId={id} atbd={atbd.data} activeStep={step} />
-                <SaveButton />
+                {!isClosedReview(atbd.data) && <SaveButton />}
                 <VerticalDivider variation='light' />
-                <AtbdActionsMenu
+                <DocumentActionsMenu
                   // In the case of a single ATBD the selected version data is
                   // merged with the ATBD meta and that's why both variables are
                   // the same.
@@ -181,6 +232,9 @@ const SaveButton = () => {
     !isValid && touched.id
       ? 'There are errors in the form'
       : 'There are unsaved changes';
+
+  // See hook definition file for explanation
+  useSaveTooltipPlacement({ showing: dirty, tipMessage });
 
   return (
     <Tip position='top-end' title={tipMessage} open={dirty}>

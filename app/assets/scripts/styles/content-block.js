@@ -35,6 +35,18 @@ const renderContentBlockLayout = ({ layout }) => {
             grid-column: content-3 / span 8;
           `}
         }
+
+        > ${Wrapper} {
+          grid-column: content-start / content-end;
+
+          ${media.largeUp`
+            grid-column: content-2 / span 8;
+          `}
+
+          ${media.xlargeUp`
+            grid-column: content-3 / span 8;
+          `}
+        }
       `;
   }
 };
@@ -78,4 +90,8 @@ export const Aside = styled.aside`
   ${media.xlargeUp`
     grid-column: content-9 / span 4;
   `}
+`;
+
+export const Wrapper = styled.div`
+  background: transparent;
 `;

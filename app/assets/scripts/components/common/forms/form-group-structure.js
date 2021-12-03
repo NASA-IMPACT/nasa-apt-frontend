@@ -3,31 +3,26 @@ import styled from 'styled-components';
 import { PropTypes as T } from 'prop-types';
 import {
   FormGroup,
-  FormGroupHeader,
+  FormGroupHeader as FormGroupHeader$,
   FormGroupBody,
-  FormLabel,
+  FormLabel as FormLabel$,
   FormHelper
 } from '@devseed-ui/form';
-import { Toolbar, ToolbarIconButton } from '@devseed-ui/toolbar';
+import { Toolbar } from '@devseed-ui/toolbar';
 
-import Tip from '../tooltip';
+import FormInfoTip from './form-info-tooltip';
 
 const FormGroupFooter = styled.div`
   /* styled-component */
 `;
 
-// This is needed so that the tooltip doesn't have a div wrapper and the focus
-// works.
-const TooltipTagComponent = React.forwardRef((props, ref) => (
-  <ToolbarIconButton
-    ref={ref}
-    useIcon='circle-information'
-    size='small'
-    {...props}
-  />
-));
+const FormGroupHeader = styled(FormGroupHeader$)`
+  min-width: 0;
+`;
 
-TooltipTagComponent.displayName = 'TooltipTagComponent';
+const FormLabel = styled(FormLabel$)`
+  min-width: 0;
+`;
 
 /**
  * From group structure.
@@ -60,9 +55,7 @@ export default function FormGroupStructure(props) {
   const hasToolbar = description || toolbarItems;
 
   const descComp = description && (
-    <Tip title={description} key='description' tag={TooltipTagComponent}>
-      More information
-    </Tip>
+    <FormInfoTip title={description} key='description' />
   );
 
   // Because of a @devseed-ui/toolbar bug, there can't be null/undefined
@@ -90,7 +83,7 @@ export default function FormGroupStructure(props) {
 
 FormGroupStructure.propTypes = {
   id: T.string,
-  label: T.string,
+  label: T.node,
   labelHint: T.oneOfType([T.bool, T.func, T.string]),
   className: T.string,
   description: T.string,

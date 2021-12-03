@@ -19,6 +19,7 @@ import { MultiItemEmpty } from '../../../common/forms/field-multi-item';
 import ReferencesFieldset from './reference-fieldset';
 import ReferencesCreationActions from './reference-creation-actions';
 import ReferencesManagerMenu from './references-manager-menu';
+import { FormSectionNotes } from '../../../../styles/form-block';
 
 import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
@@ -144,6 +145,18 @@ export default function ReferencesManager(props) {
               </Toolbar>
             </FormFieldsetHeader>
             <FormFieldsetBody>
+              <FormSectionNotes>
+                <p>
+                  <em>
+                    This section shows all the references used in this document
+                    and can be used to manage them. You can skip this section
+                    for now if you have no references to enter.
+                    <br />
+                    References can also be inserted when adding content to the
+                    document.
+                  </em>
+                </p>
+              </FormSectionNotes>
               {values?.length ? (
                 <React.Fragment>
                   {values.map((field, index) => (

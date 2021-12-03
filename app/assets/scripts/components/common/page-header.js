@@ -22,6 +22,7 @@ import { Can } from '../../a11n';
 import NasaLogo from './nasa-logo';
 import { Link, NavLink } from '../../styles/clean/link';
 import { useAuthToken, useUser } from '../../context/user';
+import { useAtbds } from '../../context/atbds-list';
 
 import UserImage from './user-image';
 
@@ -121,6 +122,26 @@ const PageTitleLink = styled(Link)`
   }
 `;
 
+const BetaBadge = styled.small`
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: uppercase;
+  color: ${themeVal('color.link')};
+  background: ${themeVal('color.surface')};
+  padding: 0 ${glsp(0.25)};
+  border-radius: ${themeVal('shape.rounded')};
+  bottom: inherit;
+  vertical-align: inherit;
+  grid-row: 2;
+
+  ${media.largeUp`
+    margin: ${glsp(0, 0.5)};
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding: 0 ${glsp(0.5)};
+  `}
+`;
+
 const PageNav = styled.nav`
   display: inline-grid;
   grid-gap: ${glsp(0.5)};
@@ -146,10 +167,7 @@ const UserProfileTrigger = styled(Button)`
   > span {
     display: inline-flex;
     align-items: center;
-  }
-
-  figure {
-    margin-right: ${glsp(0.5)};
+    gap: ${glsp(0.5)};
   }
 `;
 
@@ -157,6 +175,7 @@ function PageHeader() {
   const { expireToken } = useAuthToken();
   const { isLogged, user } = useUser();
   const history = useHistory();
+  const { invalidateAtbdListCtx, invalidateAtbdSingleCtx } = useAtbds();
 
   const onLogoutClick = useCallback(async () => {
     try {
@@ -166,9 +185,11 @@ function PageHeader() {
       /* eslint-disable-next-line no-console */
       console.log('error signing out: ', error);
     }
+    invalidateAtbdListCtx();
+    invalidateAtbdSingleCtx();
     expireToken();
     history.push('/');
-  }, [history, expireToken]);
+  }, [history, expireToken, invalidateAtbdListCtx, invalidateAtbdSingleCtx]);
 
   return (
     <PageHeaderSelf role='banner'>
@@ -180,6 +201,7 @@ function PageHeader() {
               <span>NASA</span> Earthdata<span>: </span>
             </sup>
             <strong>{appTitle}</strong>
+            <BetaBadge>Beta</BetaBadge>
           </PageTitleLink>
         </PageTitle>
       </PageHeadline>
@@ -189,21 +211,13 @@ function PageHeader() {
             <li>
               <Button
                 forwardedAs={NavLink}
-                to='/documents'
-                variation='achromic-plain'
-                title='View the documents'
-              >
-                Documents
-              </Button>
-              {/* <Button
-                forwardedAs={NavLink}
                 exact
                 to='/dashboard'
                 variation='achromic-plain'
                 title='Visit the welcome page'
               >
                 Dashboard
-              </Button> */}
+              </Button>
             </li>
           ) : (
             <React.Fragment>
@@ -301,7 +315,12 @@ function PageHeader() {
                     useIcon={['chevron-down--small', 'after']}
                     {...props}
                   >
-                    <UserImage user={user} /> {user.name}
+                    <UserImage
+                      name={user.name}
+                      email={user.attributes?.email}
+                      size='small'
+                    />{' '}
+                    {user.name}
                   </UserProfileTrigger>
                 )}
               >

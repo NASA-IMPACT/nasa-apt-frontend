@@ -11,6 +11,7 @@ import Amplify, { Auth } from 'aws-amplify';
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 import config from '../config';
 import { createContextChecker } from '../utils/create-context-checker';
+import { CONTRIBUTOR_ROLE, CURATOR_ROLE } from '../a11n/rules';
 
 Amplify.configure(config.auth);
 
@@ -26,16 +27,15 @@ const emptyUserData = {
 
 const extractUserDataFromCognito = (user) => {
   const { sub, preferred_username } = user.attributes;
-  const idTokenData = user.getSignInUserSession().getIdToken().payload;
-  const accessToken = user.getSignInUserSession().getAccessToken();
+  const idToken = user.getSignInUserSession().getIdToken();
 
   return {
     id: sub,
     name: preferred_username,
-    accessToken: accessToken.jwtToken,
-    accessTokenExpire: accessToken.payload.exp * 1000,
+    accessToken: idToken.jwtToken,
+    accessTokenExpire: idToken.payload.exp * 1000,
     attributes: user.attributes,
-    groups: idTokenData['cognito:groups'] || [],
+    groups: idToken.payload['cognito:groups'] || [],
     rawCognitoUser: user
   };
 };
@@ -46,6 +46,9 @@ export const UserContext = createContext(null);
 // Context provider
 export const UserProvider = (props) => {
   const { children } = props;
+  // isAuthReady tracks whether or not the authentication was initialized,
+  // regardless of the user being logged in or not.
+  const [isAuthReady, setAuthReady] = useState(false);
   const [userData, setUserData] = useState(emptyUserData);
   const ability = useContextualAbility();
 
@@ -58,6 +61,7 @@ export const UserProvider = (props) => {
       console.log('Error getting authenticated user', error);
       setUserData(emptyUserData);
     }
+    setAuthReady(true);
   }, []);
 
   useEffect(() => {
@@ -99,6 +103,7 @@ export const UserProvider = (props) => {
   }, [userData, ability]);
 
   const contextValue = {
+    isAuthReady,
     userData,
     setUserData
   };
@@ -133,14 +138,21 @@ export const useAuthToken = () => {
 };
 
 export const useUser = () => {
-  const { userData, setUserData } = useSafeContextFn('useUser');
+  const { isAuthReady, userData, setUserData } = useSafeContextFn('useUser');
 
   return useMemo(
     () => ({
+      isAuthReady,
       user: userData,
       isLogged: !!userData.id,
+      isCurator: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CURATOR_ROLE
+      ),
+      isContributor: userData.groups?.some?.(
+        (g) => g.toLowerCase() === CONTRIBUTOR_ROLE
+      ),
       loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
     }),
-    [userData, setUserData]
+    [userData, isAuthReady, setUserData]
   );
 };

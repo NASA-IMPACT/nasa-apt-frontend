@@ -16,6 +16,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 // The initial value is the same for
 // Algorithm Implementations
@@ -51,35 +52,47 @@ export default function StepAlgoImplementation(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <UrlDescriptionSection
-                  sectionLabel='Algorithm Implementation'
-                  sectionName='sections_completed.algorithm_implementations'
-                  fieldLabel='Algorithm Implementations'
+                  sectionLabel={getDocumentSectionLabel(
+                    'algorithm_availability'
+                  )}
+                  sectionName='sections_completed.algorithm_availability'
+                  commentSection='algorithm_availability'
+                  fieldLabel='Location of Implemented Algorithm'
                   fieldName='document.algorithm_implementations'
                   fieldEmptyMessage='There are no Algorithm Implementations. You can start by adding one.'
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Input'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_input_data'
+                  )}
                   sectionName='sections_completed.data_access_input_data'
-                  fieldLabel='Data Access Inputs'
+                  commentSection='data_access_input_data'
+                  fieldLabel='Input Data Access'
                   fieldName='document.data_access_input_data'
-                  fieldEmptyMessage='There are no Data Access Inputs. You can start by adding one.'
+                  fieldEmptyMessage='There are no entries for Input Data Access. You can start by adding one.'
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Output'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_output_data'
+                  )}
                   sectionName='sections_completed.data_access_output_data'
-                  fieldLabel='Data Access Outputs'
+                  commentSection='data_access_output_data'
+                  fieldLabel='Output Data Access'
                   fieldName='document.data_access_output_data'
-                  fieldEmptyMessage='There are no Data Access Outputs. You can start by adding one.'
+                  fieldEmptyMessage='There are no entries for Output Data Access. You can start by adding one.'
                 />
 
                 <UrlDescriptionSection
-                  sectionLabel='Data Access Related Urls'
+                  sectionLabel={getDocumentSectionLabel(
+                    'data_access_related_urls'
+                  )}
                   sectionName='sections_completed.data_access_related_urls'
-                  fieldLabel='Data Access Related Urls'
+                  commentSection='data_access_related_urls'
+                  fieldLabel='Important Related Urls'
                   fieldName='document.data_access_related_urls'
-                  fieldEmptyMessage='There are no Data Access Related Urls. You can start by adding one.'
+                  fieldEmptyMessage='There are no Important Related Urls. You can start by adding one.'
                 />
               </RichTextContex2Formik>
             </Form>
@@ -107,6 +120,7 @@ const UrlDescriptionSection = (props) => {
   const {
     sectionLabel,
     sectionName,
+    commentSection,
     fieldLabel,
     fieldName,
     fieldEmptyMessage
@@ -123,7 +137,11 @@ const UrlDescriptionSection = (props) => {
   );
 
   return (
-    <FormikSectionFieldset label={sectionLabel} sectionName={sectionName}>
+    <FormikSectionFieldset
+      label={sectionLabel}
+      sectionName={sectionName}
+      commentSection={commentSection}
+    >
       <FieldArray
         name={fieldName}
         render={({ remove, push, form, name }) => (
@@ -134,12 +152,16 @@ const UrlDescriptionSection = (props) => {
             emptyMessage={fieldEmptyMessage}
             onAddClick={() => push(emptyFieldValue)}
           >
-            {get(form.values, name).map((field, index) => (
+            {get(form.values, name).map((field, index, all) => (
               <DeletableFieldset
                 /* eslint-disable-next-line react/no-array-index-key */
                 key={index}
                 id={`${name}.${index}`}
                 label={`Entry #${index + 1}`}
+                disableDelete={all.length === 1}
+                deleteDescription={
+                  all.length === 1 ? 'At least 1 entry is required.' : null
+                }
                 onDeleteClick={() => remove(index)}
               >
                 <FormikInputText
@@ -166,6 +188,7 @@ const UrlDescriptionSection = (props) => {
 UrlDescriptionSection.propTypes = {
   sectionLabel: T.string,
   sectionName: T.string,
+  commentSection: T.string,
   fieldLabel: T.string,
   fieldName: T.string,
   fieldEmptyMessage: T.node

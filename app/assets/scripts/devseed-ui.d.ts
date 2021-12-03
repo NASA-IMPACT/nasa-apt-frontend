@@ -127,10 +127,15 @@ declare module '@devseed-ui/theme-provider' {
     | 'color.warning'
     | 'color.success'
     | 'color.info'
+    /** Opacity: 0.02 */
     | 'color.baseAlphaA'
+    /** Opacity: 0.04 */
     | 'color.baseAlphaB'
+    /** Opacity: 0.08 */
     | 'color.baseAlphaC'
+    /** Opacity: 0.16 */
     | 'color.baseAlphaD'
+    /** Opacity: 0.32 */
     | 'color.baseAlphaE'
     | 'color.silkLight'
     | 'color.silkDark'
@@ -301,12 +306,24 @@ declare module '@devseed-ui/button' {
      */
     useIcon: string | [iconName: string, position: 'before' | 'after'];
   }
+
+  /**
+   * Renders a wrapper for buttons to create a group
+   */
+  class ButtonGroup extends React.Component<ButtonGroupProps, any> {}
+
+  interface ButtonGroupProps {
+    /**
+     * Orientation of the button group.
+     */
+    orientation: 'horizontal' | 'vertical';
+  }
 }
 
 declare module '@devseed-ui/dropdown' {
-  class DropContent extends React.Component<any> {}
-  class DropTitle extends React.Component<any> {}
-  class DropInset extends React.Component<any> {}
+  class DropContent extends React.Component<any, any> {}
+  class DropTitle extends React.Component<any, any> {}
+  class DropInset extends React.Component<any, any> {}
 
   interface DropMenuProps {
     selectable?: Boolean;
@@ -323,13 +340,13 @@ declare module '@devseed-ui/dropdown' {
 
   interface DropdownProps {
     /*
-     * An id for the dropdown"
+     * An id for the dropdown
      */
     id: string;
 
     /*
      * A function that returns a trigger element. The passed props must be
-     * attached to the trigger element, which can be anything."
+     * attached to the trigger element, which can be anything.
      */
     triggerElement: (triggerProps: {
       ref: object;
@@ -341,14 +358,14 @@ declare module '@devseed-ui/dropdown' {
     }) => any;
 
     /*
-     * Sets opening direction of the dropdown"
+     * Sets opening direction of the dropdown
      */
     direction: 'up' | 'down' | 'left' | 'right';
 
     /*
      * Sets the alignment of the dropdown box. ['left' | 'center' | 'right'] can
      * only be used with ['up' | 'down'] directions. ['top' | 'middle' |
-     * 'bottom'] can only be used with ['left' | 'right'] directions."
+     * 'bottom'] can only be used with ['left' | 'right'] directions.
      */
     alignment: 'left' | 'center' | 'right' | 'top' | 'middle' | 'bottom';
   }
@@ -358,11 +375,309 @@ declare module '@devseed-ui/dropdown' {
 declare module '@devseed-ui/collecticons' {
   function collecticonsFont(): any;
 
-  class CollecticonsGlobalStyle extends React.Component<any> {}
+  class CollecticonsGlobalStyle extends React.Component<any, any> {}
 
   /**
    * Function to get the collecticon for use in a styled component
    * @param name Name of the collecticon to show
    */
   export default function collecticon(name: string): any;
+}
+
+declare module '@devseed-ui/shadow-scrollbar' {
+  interface ShadowScrollbarProps {
+    /**
+     * Variation for the top shadow.
+     * @default light
+     */
+    topShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the bottom shadow.
+     * @default light
+     */
+    bottomShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the left shadow.
+     * @default light
+     */
+    leftShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Variation for the right shadow.
+     * @default light
+     */
+    rightShadowVariation: 'light' | 'dark' | 'none';
+
+    /**
+     * Props for `react-custom-scrollbars`.
+     * See https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+     */
+    scrollbarsProps: any;
+  }
+
+  /**
+   * Component to add custom scrollbars to ensure that they're consistent in all
+   * browsers. It also includes shadows on the sides of the container to
+   * indicate there's more content to scroll through. These shadows gradually
+   * disappear when the user reaches the end of the content.
+   */
+  export default class ShadowScrollbar extends React.Component<
+    ShadowScrollbarProps,
+    any
+  > {}
+}
+
+declare module '@devseed-ui/global-loading' {
+  /**
+   * Base component for the global loading
+   * @param {object} props Component props
+   */
+  export default class GlobalLoadingProvider extends React.Component<
+    any,
+    any
+  > {}
+
+  interface GlobalLoadingHideProps {
+    /**
+     * Define how many loadings to show. This will not show multiple loadings
+     * on the page but will increment a counter. This is helpful when there are
+     * many actions that require a loading. The global loading will only be
+     * dismissed once all counters shown are hidden. Each function call will
+     * increment the counter. Default 1.
+     */
+    count: number;
+
+    /**
+     * Sets the count to the given value without incrementing. Default false.
+     */
+    force: boolean;
+  }
+
+  interface GlobalLoadingShowProps extends GlobalLoadingHideProps {
+    /**
+     * Sets an optional message to display. Default to empty.
+     */
+    message: string;
+  }
+
+  /**
+   * Programmatic api to show a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * The loading has a minimum visible time defined by the MIN_TIME constant.
+   * This will prevent flickers in the interface when the action is very fast.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function showGlobalLoading(options: GlobalLoadingShowProps): void;
+
+  /**
+   * Programmatic api to hide a global loading.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   *
+   * @example
+   * showGlobalLoading()
+   * // Counter set to 1
+   * showGlobalLoading({ count: 3 })
+   * // Counter set to 4
+   * hideGlobalLoading()
+   * // Counter is now 3
+   * hideGlobalLoading({ count: 3 })
+   * // Counter is now 0 and the loading is dismissed.
+   */
+  function hideGlobalLoading(options: GlobalLoadingHideProps): void;
+
+  /**
+   * Programmatic api to show a global loading with a message.
+   *
+   * The <GlobalLoadingProvider> must be mounted.
+   * Each call to showGlobalLoadingMessage will update the global loading message
+   * but not increment the internal counter, show a single call to
+   * hideGlobalLoading will dismiss it
+   *
+   * @param {string} message Message to display
+   */
+  function showGlobalLoadingMessage(message: string): void;
+
+  /**
+   * React component to show/hide a Global loading via mounting and unmounting.
+   * If children are passed, they are used as a message, so it is recommended to
+   * use a string.
+   *
+   * @param {*} props Component props
+   */
+  export class GlobalLoading extends React.Component<any, any> {}
+}
+
+declare module '@devseed-ui/form' {
+  /**
+   * Styled component function to apply the form control skin. Components
+   * implementing this function will support `size`, `invalid` and
+   * `stressed`props.
+   */
+  function controlSkin(): any;
+  /**
+   * Base <form>
+   */
+  export class Form extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form group structure
+   */
+  export class FormGroup extends React.Component<any, any> {}
+  /**
+   * Element to create the form group structure header
+   */
+  export class FormGroupHeader extends React.Component<
+    { isHidden: boolean },
+    any
+  > {}
+  /**
+   * Element to create the form group structure body
+   */
+  export class FormGroupBody extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form fieldset structure
+   */
+  export class FormFieldset extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure header
+   */
+  export class FormFieldsetHeader extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure body
+   */
+  export class FormFieldsetBody extends React.Component<any, any> {}
+  /**
+   * Element to create the form fieldset structure legend
+   */
+  export class FormLegend extends React.Component<any, any> {}
+
+  /**
+   * Element to create the form helper structure
+   */
+  export class FormHelper extends React.Component<any, any> {}
+  /**
+   * Element to hold the helper message
+   */
+  export class FormHelperMessage extends React.Component<
+    { invalid: boolean },
+    any
+  > {}
+  /**
+   * Counter component that changes color according to the passed values.
+   */
+  export class FormHelperCounter extends React.Component<
+    {
+      /* Current counter value */
+      value: number;
+      /* Max allowed values */
+      max: number;
+      /* At what point to warn the user the max is being reached. 90% of max by
+    default. */
+      warnAt: number;
+    },
+    any
+  > {}
+
+  /**
+   * Component to create the label for the form field
+   */
+  export class FormLabel extends React.Component<any, any> {}
+
+  // Form structure example
+  // <FormGroup>
+  //   <FormGroupHeader>
+  //     <FormLabel htmlFor='field id'>
+  //       Label here
+  //     </FormLabel>
+  //   </FormGroupHeader>
+  //   <FormGroupBody>
+  //     Field here
+  //     <FormHelper>
+  //       <FormHelperMessage>message here</FormHelperMessage>
+  //     </FormHelper>
+  //   </FormGroupBody>
+  // </FormGroup>
+
+  export class FormCheckable extends React.Component<any, any> {}
+  export class FormCheckableGroup extends React.Component<any, any> {}
+  export class FormInput extends React.Component<any, any> {}
+  export class FormSelect extends React.Component<any, any> {}
+  export class FormTextarea extends React.Component<any, any> {}
+  export class FormSwitch extends React.Component<any, any> {}
+}
+
+declare module '@devseed-ui/accordion' {
+  export class AccordionFoldContainer extends React.Component<any, any> {}
+  export class AccordionFoldHeader extends React.Component<any, any> {}
+  export class AccordionFoldHeadline extends React.Component<any, any> {}
+  export class AccordionFoldToolbar extends React.Component<any, any> {}
+  export class AccordionFoldBody extends React.Component<any, any> {}
+  export class AccordionFoldBodyInner extends React.Component<any, any> {}
+  export class ToggleButton extends React.Component<any, any> {}
+
+  export class Accordion extends React.Component<
+    {
+      /* Number of folds to be controlled */
+      foldCount: number;
+      /* Whether or not to allow multiple open folds at the same time */
+      allowMultiple: boolean;
+      /* Initial state for the folds */
+      initialState: [boolean];
+    },
+    any
+  > {}
+
+  type renderFunction = (bag: {
+    /* Whether or not this fold is expanded. */
+    isFoldExpanded: boolean;
+    /* Method to change the fold state by passing a boolean with the new state. */
+    setFoldExpanded: (value: boolean) => void;
+  }) => any;
+
+  // According fold without overrides:
+  // <AccordionFoldSelf>
+  //   <AccordionFoldHeader>
+  //     <AccordionFoldTrigger>
+  //       <h1 />
+  //     </AccordionFoldTrigger>
+  //   </AccordionFoldHeader>
+  //   <AccordionFoldBody>
+  //     <AccordionFoldBodyInner />
+  //   </AccordionFoldBody>
+  // </AccordionFoldSelf>
+  export class AccordionFold extends React.Component<
+    {
+      /* An id for the fold. */
+      id: string;
+      /* Classname for the fold. */
+      className: string;
+      /* Title to use on the fold header. Required unless renderHeader is being used. */
+      title: string;
+      /* Content for the fold. Required unless renderBody is being used. */
+      content: any;
+      /* Whether or not this fold is expanded. */
+      isFoldExpanded: boolean;
+      /* Callback for the fold header. Will be called with the a boolean indicating the new fold state. */
+      setFoldExpanded: (value: boolean) => void;
+      /* Overrides the fold header element. Anything returned by this function is rendered instead of `AccordionFoldHeader`. */
+      renderHeader: renderFunction;
+      /* Overrides the fold body element. Anything returned by this function is rendered instead of `AccordionFoldBodyInner`. */
+      renderBody: renderFunction;
+    },
+    any
+  > {}
 }

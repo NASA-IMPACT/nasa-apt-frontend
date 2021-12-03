@@ -1,13 +1,14 @@
 import { getValuesFromObj, EDITOR_SYM } from '../../../utils/get-values-object';
+import { JOURNAL_NO_PUBLICATION } from '../status';
 
 import StepIdentifyingInformation from './step-identifying-information';
 import StepIntroduction from './step-introduction';
 import StepAlgoDescription from './step-algo-description';
 import StepAlgoUsage from './step-algo-usage';
-import StepJournalDetails from './step-journal-details';
 import StepAlgoImplementation from './step-algo-implementation';
 import StepReferences from './step-references';
 import StepContacts from './step-contacts';
+import StepCloseout from './step-closeout';
 
 export const STEPS = [
   {
@@ -32,7 +33,11 @@ export const STEPS = [
           online_resource: ''
         },
         doi: '',
+        document: {
+          version_description: EDITOR_SYM
+        },
         sections_completed: {
+          version_description: 'incomplete',
           citation: 'incomplete'
         }
       });
@@ -48,6 +53,7 @@ export const STEPS = [
           // {
           //   contact: {}
           //   roles: []
+          //   affiliations: []
           // }
         ],
         sections_completed: {
@@ -112,13 +118,14 @@ export const STEPS = [
         document: {
           introduction: EDITOR_SYM,
           historical_perspective: EDITOR_SYM,
+          additional_information: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
         },
         sections_completed: {
           introduction: 'incomplete',
-          historical_perspective: 'incomplete'
+          context_background: 'incomplete'
         }
       });
     }
@@ -134,6 +141,7 @@ export const STEPS = [
           scientific_theory_assumptions: EDITOR_SYM,
           mathematical_theory: EDITOR_SYM,
           mathematical_theory_assumptions: EDITOR_SYM,
+          algorithm_input_variables_caption: '',
           algorithm_input_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
@@ -142,6 +150,7 @@ export const STEPS = [
             //   unit: EDITOR_SYM
             // }
           ],
+          algorithm_output_variables_caption: '',
           algorithm_output_variables: [
             // Default is empty and set when adding an array field in the form.
             // {
@@ -193,39 +202,39 @@ export const STEPS = [
       return getValuesFromObj(atbd, {
         document: {
           algorithm_implementations: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_input_data: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_output_data: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           data_access_related_urls: [
-            // Default is empty and set when adding an array field in the form.
-            // {
-            //   url: '',
-            //   description: EDITOR_SYM
-            // }
+            // At least 1 item is required.
+            {
+              url: '',
+              description: ''
+            }
           ],
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
         },
         sections_completed: {
-          algorithm_implementations: 'incomplete',
+          algorithm_availability: 'incomplete',
           data_access_input_data: 'incomplete',
           data_access_output_data: 'incomplete',
           data_access_related_urls: 'incomplete'
@@ -234,28 +243,56 @@ export const STEPS = [
     }
   },
   {
-    id: 'journal_details',
-    label: 'Journal details',
-    StepComponent: StepJournalDetails,
+    id: 'closeout',
+    label: 'Closeout',
+    StepComponent: StepCloseout,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
+        journal_status: JOURNAL_NO_PUBLICATION,
         document: {
+          abstract: '',
+          plain_summary: '',
+          key_points: '',
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,
+          data_availability: EDITOR_SYM,
           // Publication references are needed in steps with <editor> fields in
           // case the users wants to insert one.
           publication_references: []
         },
+        keywords: [
+          // Default is empty and set when selecting keywords in the form.
+          // {
+          //   label: ''
+          //   value: ''
+          //   id: ''
+          //   path: ''
+          // }
+        ],
+        publication_checklist: {
+          suggested_reviewers: [
+            // Default is empty and set when adding an array field in the form.
+            // {
+            //   name: ''
+            //   email: ''
+            // }
+          ],
+          review_roles: false,
+          journal_editor: 'Chelle Gentemann',
+          author_affirmations: false
+        },
         sections_completed: {
+          abstract: 'incomplete',
           discussion: 'incomplete',
-          acknowledgements: 'incomplete'
+          acknowledgements: 'incomplete',
+          publication_checklist: 'incomplete'
         }
       });
     }
   }
 ];
 
-export const getATBDEditStep = (id) => {
+export const getDocumentEditStep = (id) => {
   // If no id is set, use the first step.
   const idx = id ? STEPS.findIndex((step) => step.id === id) : 0;
 

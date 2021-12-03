@@ -1,6 +1,7 @@
 title: The descriptive title of your ATBD.
-alias: A short name for referring to the ATBD (less 8 characters).
+alias: A short name for referring to the ATBD (less  than 32 characters).  Once the ATBD is completed, the short name will not be editable.
 doi: The DOI of the ATBD as assigned by the curator.
+version_description: Provide a brief and meaningful description of how this APT ATBD version differs from any previous one. Providing a lineage of algorithm versions is equally important.
 
 citation:
   creators: The list of authors for this ATBD in the order preferred for the citation.

@@ -1,19 +1,26 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
-import { Formik, Form as FormikForm } from 'formik';
 import set from 'lodash.set';
+import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
 import { Inpage, InpageBody } from '../../../../styles/inpage';
-import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
+import {
+  FormBlock,
+  FormBlockHeading,
+  FormSectionNotes
+} from '../../../../styles/form-block';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import ContactsList from './contacts-list';
+import { Link } from '../../../../styles/clean/link';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForAtbdContacts } from '../use-submit';
 import { useContacts } from '../../../../context/contacts-list';
 import { validateContact } from '../../../contacts/contact-utils';
+import { getDocumentSectionLabel } from '../sections';
+import { documentEdit } from '../../../../utils/url-creator';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -38,15 +45,29 @@ export default function StepContacts(props) {
   const validate = useCallback((values) => {
     let errors = {};
 
-    values.contacts_link.forEach(({ isSelecting, contact }, idx) => {
-      // Contacts that are in the isSelecting phase can be skipped since will be
-      // removed from the submission.
-      if (isSelecting) return;
-      const contactErrors = validateContact(contact);
-      if (Object.keys(contactErrors).length) {
-        set(errors, `contacts_link[${idx}].contact`, contactErrors);
+    values.contacts_link.forEach(
+      ({ isSelecting, contact, affiliations }, idx) => {
+        // Contacts that are in the isSelecting phase can be skipped since will be
+        // removed from the submission.
+        if (isSelecting) return;
+        const contactErrors = validateContact(contact);
+        if (Object.keys(contactErrors).length) {
+          set(errors, `contacts_link[${idx}].contact`, contactErrors);
+        }
+        // If affiliations were added, the name is required.
+        if (affiliations?.length) {
+          affiliations.forEach((aff, affIdx) => {
+            if (!aff?.trim()) {
+              set(
+                errors,
+                `contacts_link[${idx}].affiliations[${affIdx}]`,
+                'Name is required.'
+              );
+            }
+          });
+        }
       }
-    });
+    );
 
     return errors;
   }, []);
@@ -80,15 +101,28 @@ export default function StepContacts(props) {
               <FormBlockHeading>{step.label}</FormBlockHeading>
               <Form as={FormikForm}>
                 <FormikSectionFieldset
-                  label='Contacts'
+                  label={getDocumentSectionLabel('contacts')}
                   sectionName='sections_completed.contacts'
+                  commentSection='contacts'
                 >
-                  <p>
-                    <em>
-                      Please list all contacts and select the appropriate role.
-                      This is not the author list for the ATBD citation.
-                    </em>
-                  </p>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        Please select all participants and the appropriate role
+                        with respect to this ATBD.
+                        <br />
+                        This is not the final author list for the ATBD citation
+                        which is manually inserted in the{' '}
+                        <Link
+                          to={documentEdit(atbd, version)}
+                          title='Edit ATBD identifying information'
+                        >
+                          Identifying information
+                        </Link>{' '}
+                        step.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
               </Form>

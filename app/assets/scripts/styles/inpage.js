@@ -25,7 +25,8 @@ export const InpageHeader = styled.header.attrs({
   position: relative;
   z-index: 20;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  /* grid-template-columns: max-content 1fr; */
+  grid-template-columns: 1fr minmax(min-content, max-content);
   grid-gap: ${glsp(0, themeVal('layout.gap.xsmall'))};
   align-items: end;
   background-color: ${themeVal('color.primary')};
@@ -45,16 +46,43 @@ export const InpageHeader = styled.header.attrs({
 export const InpageHeaderSticky = styled(InpageHeader)`
   position: sticky;
   top: 0;
-  z-index: 9000;
+  z-index: 7000;
 `;
 
 export const InpageHeadline = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: ${glsp(0.25)};
+`;
+
+export const InpageHeadHgroup = styled.div`
   display: inline-grid;
+  grid-auto-columns: minmax(min-content, max-content);
   grid-gap: ${glsp(1.25)};
   align-items: center;
+  min-width: 0px;
 
   > * {
     grid-row: 1;
+  }
+`;
+
+export const InpageMeta = styled.ul`
+  display: grid;
+  grid-gap: ${glsp(1)};
+  align-items: center;
+  grid-auto-columns: minmax(min-content, max-content);
+  font-size: 1rem;
+  line-height: 1.5rem;
+
+  > * {
+    grid-row: 1;
+    display: flex;
+    align-content: center;
+  }
+
+  a {
+    color: inherit;
   }
 `;
 
@@ -89,29 +117,6 @@ export const BreadcrumbMenu = styled.ul`
   }
 `;
 
-export const InpageMeta = styled.dl`
-  grid-row: 1;
-  grid-column: 1 / -1;
-  display: grid;
-  grid-gap: ${glsp(0.5)};
-  align-items: center;
-  grid-auto-columns: minmax(min-content, max-content);
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-
-  > * {
-    grid-row: 1;
-  }
-
-  dt {
-    ${visuallyHidden}
-  }
-
-  a {
-    color: inherit;
-  }
-`;
-
 export const InpageTitle = styled.h1`
   font-size: 1.25rem;
   line-height: 2rem;
@@ -143,11 +148,18 @@ export const InpageSubtitle = styled.p`
   ${headingAlt()}
   font-size: 0.75rem;
   line-height: 1.25rem;
-  margin: 0;
+  grid-row: 1;
+  margin: 0 0 ${glsp(-0.5)} 0;
+  display: flex;
+  align-content: center;
 
   a {
     display: block;
     color: inherit;
+  }
+
+  span {
+    ${visuallyHidden()}
   }
 `;
 

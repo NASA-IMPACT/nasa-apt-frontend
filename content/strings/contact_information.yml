@@ -1,11 +1,15 @@
-first_name: First name of the contact person.
-middle_name: Middle name of the contact person.
-last_name: Last name of the contact person.
-uuid: Universally unique identifier of the contact person, such as the ORCID.
+first_name: Enter person's first name, do not use nicknames.
+middle_name: Enter person's middle name, if relevant.
+last_name: Enter person's last (family) name.
+uuid: Provide a universally unique identifier, such as the ORCID. An ORCID is required for journal submission
 roles: The role of this contact person (see https://casrai.org/credit/ for definitions).
-url: URL relevant to contacting the contact person.
+url: Provide any relevant URL related to contacting you. Leave blank if unknown.
 
 mechanisms:
   fieldset: ""
-  mechanism_type: The method for contacting this person.
-  mechanism_value: The contact value associated with the contact method.
+  mechanism_type: What type of contact is provided? (i.e. email, web page, etc).
+  mechanism_value: The number, email, or URL matching the method chosen in the previous question.
+
+affiliations:
+  fieldset: "List of affiliations in the context of this document"
+  name: "Name of the organization"

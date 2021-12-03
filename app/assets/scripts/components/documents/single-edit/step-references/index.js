@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
+import set from 'lodash.set';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
 
@@ -24,12 +25,26 @@ export default function StepReferences(props) {
     [atbd]
   );
 
+  // Semicolons cannot be used to separate authors otherwise the PDF generation
+  // fails, because it needs it for the references style.
+  const validate = useCallback((values) => {
+    const errors = {};
+    values.document.publication_references.forEach((ref, index) => {
+      if (ref.authors?.includes(';')) {
+        set(
+          errors,
+          ['document', 'publication_references', index, 'authors'],
+          'Semicolons (;) are not allowed. Use "and" to separate authors.'
+        );
+      }
+    });
+    return errors;
+  }, []);
+
   return (
     <Formik
       initialValues={initialValues}
-      // There's no need to validate this page since the editor already ensures
-      // a valid structure
-      //validate={validate}
+      validate={validate}
       onSubmit={onSubmit}
     >
       <Inpage>

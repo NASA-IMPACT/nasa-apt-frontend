@@ -14,7 +14,7 @@ import { ContentBlock } from '../../../styles/content-block';
 import DetailsList from '../../../styles/typography/details-list';
 import Prose from '../../../styles/typography/prose';
 import UserActionsMenu from '../user-actions-menu';
-import UserNavHeader from '../user-nav-header';
+import UserHeadline from '../user-headline';
 import UserImage from '../../common/user-image';
 
 import { useUser } from '../../../context/user';
@@ -54,7 +54,7 @@ export default function UserView() {
     <App pageTitle='Profile'>
       <Inpage>
         <InpageHeaderSticky data-element='inpage-header'>
-          <UserNavHeader name={user.name} mode='view' />
+          <UserHeadline name={user.name} mode='view' />
           <InpageActions>
             <UserActionsMenu variation='achromic-plain' />
           </InpageActions>
@@ -64,7 +64,11 @@ export default function UserView() {
             <UserContent>
               <Prose>
                 <UserHeader>
-                  <UserImage size='profile' user={user} />
+                  <UserImage
+                    size='profile'
+                    name={user.name}
+                    email={user.attributes?.email}
+                  />
                   <UserName>{user.name}</UserName>
                 </UserHeader>
                 <DetailsList>

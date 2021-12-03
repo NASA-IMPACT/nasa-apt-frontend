@@ -16,8 +16,8 @@ import {
   HubEntryDetails
 } from '../../../styles/hub';
 
-import { atbdView } from '../../../utils/url-creator';
-import { renderMultipleRoles } from '../contact-utils';
+import { documentView } from '../../../utils/url-creator';
+import { renderMultipleStringValues } from '../contact-utils';
 
 const ContactRelated = styled.section`
   grid-column: content-start / content-end;
@@ -56,7 +56,7 @@ const RelatedAtbdEntry = (props) => {
         <HubEntryHeadline>
           <HubEntryTitle>
             <Link
-              to={atbdView(atbdVersion.atbd, atbdVersion.version)}
+              to={documentView(atbdVersion.atbd, atbdVersion.version)}
               title='View document'
             >
               {title}
@@ -73,7 +73,7 @@ const RelatedAtbdEntry = (props) => {
         {!!roles.length && (
           <HubEntryDetails>
             <dt>Roles</dt>
-            <dd>As {renderMultipleRoles(roles)}</dd>
+            <dd>As {renderMultipleStringValues(roles)}</dd>
           </HubEntryDetails>
         )}
       </HubEntryHeader>

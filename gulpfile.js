@@ -53,12 +53,12 @@ function clean() {
 function serve() {
   bs.init({
     port: 9000,
+    ghostMode: false,
     server: {
       baseDir: ['.tmp', 'app', 'dist'],
       routes: {
         '/node_modules': './node_modules'
       },
-      ghostMode: false,
       middleware: [
         historyApiFallback({
           // Having the version in the url was being treated as a static file.
@@ -133,6 +133,11 @@ function javascript() {
     brs = brs.ignore(['./app/assets/scripts/components/sandbox/index.js']);
   }
 
+  // Ignore the devtools when not in dev.
+  if (!isDev()) {
+    brs = brs.ignore(['./app/assets/scripts/components/apt-devtools/index.js']);
+  }
+
   if (isDev()) {
     brs.plugin(watchify).plugin(errorify).on('update', bundler);
   }
@@ -178,6 +183,7 @@ function vendorScripts() {
   const extra = [
     // Any file directly accessed on a module folder:
     // my-module/folder/file
+    'react-select/async'
   ];
   var vb = browserify({
     debug: true,

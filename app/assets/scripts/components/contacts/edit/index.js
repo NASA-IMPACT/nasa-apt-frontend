@@ -13,7 +13,7 @@ import {
   InpageActions
 } from '../../../styles/inpage';
 import UhOh from '../../uhoh';
-import ContactNavHeader from '../contact-nav-header';
+import ContactHeadline from '../contact-headline';
 import ContactActionsMenu from '../contact-actions-menu';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { SectionFieldset } from '../../common/forms/section-fieldset';
@@ -27,6 +27,7 @@ import { getValuesFromObj } from '../../../utils/get-values-object';
 import { createProcessToast } from '../../common/toasts';
 import { contactView } from '../../../utils/url-creator';
 import { getContactName, validateContact } from '../contact-utils';
+import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 
 export default function ContactView() {
   const { id } = useParams();
@@ -105,7 +106,7 @@ export default function ContactView() {
         >
           <Inpage>
             <InpageHeaderSticky data-element='inpage-header'>
-              <ContactNavHeader
+              <ContactHeadline
                 contactId={data.id}
                 name={`${data.first_name} ${data.last_name}`}
                 mode='edit'
@@ -140,6 +141,11 @@ export default function ContactView() {
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
   const { dirty, isSubmitting, submitForm } = useFormikContext();
+
+  const tipMessage = 'There are unsaved changes';
+
+  // See hook definition file for explanation
+  useSaveTooltipPlacement({ showing: dirty, tipMessage });
 
   return (
     <Tip position='top-end' title='There are unsaved changes' open={dirty}>

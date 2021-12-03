@@ -8,6 +8,7 @@ import {
   Inpage,
   InpageHeader,
   InpageHeadline,
+  InpageHeadHgroup,
   InpageTitle,
   InpageBody
 } from '../../styles/inpage';
@@ -17,6 +18,8 @@ import SandboxForms from './forms';
 import SandboxInteractive from './interactive';
 import SandboxStructure from './structure';
 import SandboxStickyStructure from './structure/sticky';
+import SandboxElements from './elements';
+import { ContentBlock } from '../../styles/content-block';
 
 const InpageBodyScroll = styled(InpageBody)`
   padding: 0;
@@ -48,16 +51,19 @@ function Sandbox() {
         path={`${path}/structure/sticky`}
         component={SandboxStickyStructure}
       />
+      <Route exact path={`${path}/elements`} component={SandboxElements} />
       <Route>
         <App pageTitle='Sandbox'>
           <Inpage>
             <InpageHeader>
               <InpageHeadline>
-                <InpageTitle>Sandbox</InpageTitle>
+                <InpageHeadHgroup>
+                  <InpageTitle>Sandbox</InpageTitle>
+                </InpageHeadHgroup>
               </InpageHeadline>
             </InpageHeader>
             <InpageBodyScroll>
-              <Constrainer>
+              <ContentBlock>
                 <Prose>
                   <h6>Contents</h6>
                   <ol>
@@ -89,9 +95,14 @@ function Sandbox() {
                         Interactive
                       </Link>
                     </li>
+                    <li>
+                      <Link to={`${url}/elements`} title='View sandbox page'>
+                        Elements
+                      </Link>
+                    </li>
                   </ol>
                 </Prose>
-              </Constrainer>
+              </ContentBlock>
             </InpageBodyScroll>
           </Inpage>
         </App>

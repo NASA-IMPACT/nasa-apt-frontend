@@ -8,6 +8,7 @@ import {
   Inpage,
   InpageHeaderSticky,
   InpageHeadline,
+  InpageHeadHgroup,
   InpageTitle,
   InpageBody,
   InpageHeadNav,
@@ -68,17 +69,19 @@ function Help() {
         <Inpage>
           <InpageHeaderSticky>
             <InpageHeadline>
-              <InpageTitle>Help</InpageTitle>
-              <InpageHeadNav role='navigation'>
-                <BreadcrumbMenu>
-                  <li>
-                    <PageSelectMenu
-                      pagesIndex={pagesIndex.data}
-                      selectedPage={selectedPage}
-                    />
-                  </li>
-                </BreadcrumbMenu>
-              </InpageHeadNav>
+              <InpageHeadHgroup>
+                <InpageTitle>Help</InpageTitle>
+                <InpageHeadNav role='navigation'>
+                  <BreadcrumbMenu>
+                    <li>
+                      <PageSelectMenu
+                        pagesIndex={pagesIndex.data}
+                        selectedPage={selectedPage}
+                      />
+                    </li>
+                  </BreadcrumbMenu>
+                </InpageHeadNav>
+              </InpageHeadHgroup>
             </InpageHeadline>
           </InpageHeaderSticky>
           <InpageBody>

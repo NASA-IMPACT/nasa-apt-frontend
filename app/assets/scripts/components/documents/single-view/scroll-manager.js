@@ -56,6 +56,12 @@ const TARGET_SELECTOR = '[data-scroll="target"]';
 // Offset from top at which an item is considered active. This is the header
 // height plus a buffer. This is the starting value and can be overwritten.
 const BASE_OFFSET_TOP = 100;
+// The document header section is not part of the document body (holds the
+// title and other meta information) but we want it to be the default active
+// when the scroll position is at the top.
+// TODO: This is very tailored to the document view page, and should be
+// abstracted.
+const TOP_SCROLL_ITEM = { id: 'doc-header' };
 
 /**
  * Searches the DOM for items with the TARGET_SELECTOR and gets their id and
@@ -67,7 +73,7 @@ const BASE_OFFSET_TOP = 100;
  * @returns Array<Object>
  */
 function gatherTargetItems() {
-  // Because the offset is relative to the offsetParent (any element ith
+  // Because the offset is relative to the offsetParent (any element with
   // position defined) we have to traverse the dom until we reach the top.
   const getTotalOffset = (node) => {
     let n = node;
@@ -130,7 +136,7 @@ const ScrollContext = createContext(null);
  */
 export function ScrollAnchorProvider({ children }) {
   const [targetItems, setTargetItems] = useState([]);
-  const [activeItem, setActiveItem] = useState(null);
+  const [activeItem, setActiveItem] = useState(TOP_SCROLL_ITEM);
   const [scrollInitiator, setScrollInitiator] = useState(null);
   const [globalTopOffset, setGlobalTopOffset] = useState(BASE_OFFSET_TOP);
 
@@ -140,7 +146,14 @@ export function ScrollAnchorProvider({ children }) {
   const debouncedGather = useMemo(
     () =>
       debounce(() => {
-        setTargetItems(gatherTargetItems());
+        const items = gatherTargetItems()
+          // The item's top position is set based on their position, but we want
+          // the first item's position to be 0, because it's the meta
+          // information.
+          .map((item) =>
+            item.id === TOP_SCROLL_ITEM.id ? { ...item, top: 0 } : item
+          );
+        setTargetItems(items);
       }, 100),
     []
   );

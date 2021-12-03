@@ -2,6 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp } from '@devseed-ui/theme-provider';
+import { FormHelperMessage } from '@devseed-ui/form';
 
 import { formString } from '../../../../utils/strings';
 import { FormikInputText } from '../../../common/forms/input-text';
@@ -10,6 +11,7 @@ const ReferenceFieldsStructure = styled.div`
   display: grid;
   grid-gap: ${glsp()};
   grid-template-columns: repeat(3, 1fr);
+  align-items: flex-start;
 `;
 
 const ReferenceTitle = styled(FormikInputText)`
@@ -19,7 +21,12 @@ const ReferenceTitle = styled(FormikInputText)`
 const fields = [
   {
     id: 'authors',
-    label: 'Authors'
+    label: 'Authors',
+    helper: (
+      <FormHelperMessage>
+        Separate values with <em>and</em>.
+      </FormHelperMessage>
+    )
   },
   {
     id: 'series',
@@ -89,13 +96,14 @@ export default function ReferenceFormFields(props) {
         label='Title'
         description={formString('reference.title')}
       />
-      {fields.map(({ id, label }) => (
+      {fields.map(({ id, label, helper }) => (
         <FormikInputText
           key={id}
           id={`${baseId}${id}`}
           name={`${baseName}${id}`}
           label={label}
           description={formString(`reference.${id}`)}
+          helper={helper}
         />
       ))}
     </ReferenceFieldsStructure>

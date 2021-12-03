@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import T from 'prop-types';
+import get from 'lodash.get';
 import { glsp } from '@devseed-ui/theme-provider';
 
 import FormGroupStructure from '../../../common/forms/form-group-structure';
@@ -12,6 +13,9 @@ import SelectCombo, {
 } from '../../../common/forms/select-combo';
 
 import { formString } from '../../../../utils/strings';
+import { FieldArray } from 'formik';
+import { FieldMultiItem } from '../../../common/forms/field-multi-item';
+import { FormikInputText } from '../../../common/forms/input-text';
 
 const RolesGroup = styled.div`
   display: grid;
@@ -20,14 +24,24 @@ const RolesGroup = styled.div`
 `;
 
 const roleTypes = [
-  'Data center contact',
-  'Technical contact',
-  'Science contact',
-  'Investigator',
-  'Metadata author',
-  'User services',
-  'Science software development'
+  'Writing – original draft',
+  'Writing – review & editing',
+  'Validation',
+  'Data curation',
+  'Conceptualization',
+  'Methodology',
+  'Visualization',
+  'Formal analysis',
+  'Software',
+  'Resources',
+  'Project administration',
+  'Supervision',
+  'Investigation',
+  'Funding acquisition',
+  'Corresponding Author'
 ];
+
+const emptyAffiliation = '';
 
 export default function ContactsFieldset(props) {
   const {
@@ -82,6 +96,43 @@ export default function ContactsFieldset(props) {
               ))}
             </RolesGroup>
           </FormGroupStructure>
+          <FieldArray
+            name={`${name}.${index}.affiliations`} // will be affFieldName
+            render={({ remove, push, form, name: affFieldName }) => {
+              const fieldValues = get(form.values, affFieldName) || [];
+              return (
+                <FieldMultiItem
+                  id={affFieldName}
+                  label='Affiliations relevant to this document'
+                  description={formString(
+                    `contact_information.affiliations.fieldset`
+                  )}
+                  emptyMessage='There are no affiliations. You can start by adding one.'
+                  onAddClick={() => push(emptyAffiliation)}
+                >
+                  {fieldValues.map((field, index) => (
+                    <DeletableFieldset
+                      /* eslint-disable-next-line react/no-array-index-key */
+                      key={index}
+                      id={`${affFieldName}-${index}`}
+                      label={`Entry #${index + 1}`}
+                      onDeleteClick={() => remove(index)}
+                    >
+                      <FormikInputText
+                        id={`${affFieldName}-${index}`}
+                        name={`${affFieldName}.${index}`}
+                        label='Name'
+                        labelHint='(required)'
+                        description={formString(
+                          `contact_information.affiliations.name`
+                        )}
+                      />
+                    </DeletableFieldset>
+                  ))}
+                </FieldMultiItem>
+              );
+            }}
+          />
         </React.Fragment>
       )}
     </DeletableFieldset>

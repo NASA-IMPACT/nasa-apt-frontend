@@ -12,6 +12,7 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
+import { getDocumentSectionLabel } from './sections';
 
 export default function StepAlgoUsage(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -37,8 +38,9 @@ export default function StepAlgoUsage(props) {
             <Form as={FormikForm}>
               <RichTextContex2Formik>
                 <FormikSectionFieldset
-                  label='Constraints'
+                  label={getDocumentSectionLabel('constraints')}
                   sectionName='sections_completed.constraints'
+                  commentSection='constraints'
                 >
                   <FormikInputEditor
                     id='algorithm_usage_constraints'
@@ -51,8 +53,9 @@ export default function StepAlgoUsage(props) {
                 <FormBlockHeading>Performance Assessment</FormBlockHeading>
 
                 <FormikSectionFieldset
-                  label='Validation'
+                  label={getDocumentSectionLabel('validation')}
                   sectionName='sections_completed.validation'
+                  commentSection='validation'
                 >
                   <FormikInputEditor
                     id='performance_assessment_validation_methods'

@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
 
-import { atbdEdit, atbdView } from '../../../utils/url-creator';
+import { documentEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
+import { isPublished } from '../status';
 import { remindMinorVersionUpdate } from './document-minor-version-reminder';
 
 export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
@@ -14,8 +15,9 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
       const result = await updateAtbd({
         ...values,
         // If the alias is submitted as empty string (""), the api fails with a
-        // 404 error.
-        alias: values.alias || null
+        // 404 error. When the document is published remove the alias from the
+        // payload since it is not possible to edit. alias:
+        alias: isPublished(atbd.status) ? undefined : values.alias || null
       });
       setSubmitting(false);
 
@@ -26,16 +28,16 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
         processToast.success('Changes saved');
         // Update the path in case the alias changed.
         if (values.alias) {
-          history.replace(atbdEdit(values.alias, atbd.version, step.id));
+          history.replace(documentEdit(values.alias, atbd.version, step.id));
         }
 
-        if (atbd.status.toLowerCase() === 'published') {
+        if (isPublished(atbd.status)) {
           const { result } = await remindMinorVersionUpdate(atbd.version);
           if (result) {
             // To trigger the modals to open from other pages, we use the
             // history state as the user is sent from one page to another. See
             // explanation on
-            // app/assets/scripts/components/documents/document-publishing-actions.js
+            // app/assets/scripts/components/documents/use-document-modals.js
             history.replace(undefined, { menuAction: 'update-minor' });
           }
         }
@@ -45,97 +47,117 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
   );
 }
 
-export function useSubmitForVersionData(updateAtbd, atbd) {
+/**
+ * Submit hook to save an atbd version.
+ *
+ * @param {func} updateAtbd Action to update the ATBD
+ * @param {object} atbd The document to save
+ * @param {func} hook Hook to modify the values being saved. Allows for the
+ * function's functionality to be extended.
+ */
+export function useSubmitForVersionData(updateAtbd, atbd, hook) {
   const history = useHistory();
 
   return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
+    async (values, formBag) => {
       const processToast = createProcessToast('Saving changes');
-      const result = await updateAtbd(values);
-      setSubmitting(false);
+
+      let result;
+      try {
+        const newValues =
+          typeof hook === 'function' ? await hook(values, formBag) : values;
+        result = await updateAtbd(newValues);
+      } catch (error) {
+        result = { error };
+      }
+
+      formBag.setSubmitting(false);
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
-        resetForm({ values });
+        formBag.resetForm({ values });
         processToast.success('Changes saved');
 
-        if (atbd.status.toLowerCase() === 'published') {
+        if (isPublished(atbd.status)) {
           const { result } = await remindMinorVersionUpdate(atbd.version);
           if (result) {
             // To trigger the modals to open from other pages, we use the
             // history state as the user is sent from one page to another. See
             // explanation on
-            // app/assets/scripts/components/documents/document-publishing-actions.js
+            // app/assets/scripts/components/documents/use-document-modals.js
             history.push(undefined, { menuAction: 'update-minor' });
           }
         }
       }
     },
-    [updateAtbd, history, atbd.version, atbd.status]
+    [updateAtbd, history, atbd.version, atbd.status, hook]
   );
 }
 
-export function useSubmitForMinorVersion(
-  updateAtbd,
-  setUpdatingMinorVersion,
-  history
-) {
+/**
+ * Hook to create the submit callback for the collaborators modal. The owner of
+ * the document is also considered a collaborator and this same submit callback
+ * is used when transferring the ownership of the document. The message
+ * displayed on the toast notification changed depending on whether the `owner`
+ * key is present on the payload.
+ *
+ * @param {func} updateAtbd The action to update the document.
+ * @param {func} hideModal  The state setter to close the collaborators modal.
+ * This is only used for the collaborators and not the leading author since that
+ * modal is hidden before showing the confirmation prompt.
+ */
+export function useSubmitForCollaborators(updateAtbd, hideModal) {
   return useCallback(
     async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Updating minor version');
+      const msgIn = values.owner
+        ? 'Changing document lead author'
+        : 'Updating document collaborators';
+      const msgOut = values.owner
+        ? 'Document lead author changed successfully'
+        : 'Document collaborators changed';
+      const processToast = createProcessToast(msgIn);
       const result = await updateAtbd(values);
       setSubmitting(false);
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
-        resetForm();
-        setUpdatingMinorVersion(false);
-        processToast.success(
-          `Minor version updated to: ${result.data.version}`
+        !values.owner && hideModal();
+        resetForm({ values });
+        processToast.success(msgOut);
+      }
+    },
+    [hideModal, updateAtbd]
+  );
+}
+
+/**
+ * Hook to create the submit callback for governance events. All the modals
+ * using this hook will have some sort of payload to submit.
+ *
+ * @param {func} eventAction The action to fire the event.
+ * @param {object} messages The messages to display on the toasts.
+ * @param {object} messages.start The messages to display while processing.
+ * @param {string} messages.success  The messages to display on success.
+ * @param {string} messages.error  The messages to display on error.
+ */
+export function useSubmitForGovernance(eventAction, messages) {
+  return useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const processToast = createProcessToast(messages.start);
+      const result = await eventAction({ payload: values });
+      setSubmitting(false);
+      if (result.error) {
+        processToast.error(
+          `${messages.error || 'An error occurred'}: ${result.error.message}`
         );
-        history.replace(atbdView(result.data, result.data.version));
-      }
-    },
-    [updateAtbd, setUpdatingMinorVersion, history]
-  );
-}
-
-export function useSubmitForPublishingVersion(
-  atbdVersion,
-  publishAtbdVersion,
-  setPublishingDocument
-) {
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Publishing version.');
-      const result = await publishAtbdVersion(values);
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
+        return false;
       } else {
         resetForm({ values });
-        setPublishingDocument(false);
-        processToast.success(`Version ${atbdVersion} was published.`);
+        processToast.success(messages.success);
+        return true;
       }
     },
-    [atbdVersion, publishAtbdVersion, setPublishingDocument]
-  );
-}
-
-export function useSubmitForDocumentInfo(updateAtbd) {
-  return useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const processToast = createProcessToast('Updating changelog');
-      const result = await updateAtbd(values);
-      setSubmitting(false);
-      if (result.error) {
-        processToast.error(`An error occurred: ${result.error.message}`);
-      } else {
-        resetForm({ values });
-        processToast.success('Changelog updated');
-      }
-    },
-    [updateAtbd]
+    [eventAction, messages.start, messages.success, messages.error]
   );
 }
 
@@ -210,6 +232,7 @@ export function useSubmitForAtbdContacts({
                 error: false,
                 link: {
                   roles: link.roles,
+                  affiliations: link.affiliations,
                   contact: result.data
                 }
               };
@@ -255,7 +278,8 @@ export function useSubmitForAtbdContacts({
           // structure.
           contacts: newContactsLink.map((link) => ({
             id: link.contact.id,
-            roles: link.roles
+            roles: link.roles,
+            affiliations: link.affiliations
           }))
         });
 

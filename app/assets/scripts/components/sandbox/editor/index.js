@@ -10,8 +10,8 @@ import {
   InpageHeadline,
   InpageTitle,
   InpageSubtitle,
-  InpageMeta,
-  InpageBody
+  InpageBody,
+  InpageHeadHgroup
 } from '../../../styles/inpage';
 import Constrainer from '../../../styles/constrainer';
 import { hugeDoc, references } from './dummy';
@@ -65,16 +65,15 @@ function SandboxEditor() {
       <Inpage>
         <StickyInpageHeader data-element='inpage-header'>
           <InpageHeadline>
-            <InpageTitle>Editor</InpageTitle>
-          </InpageHeadline>
-          <InpageMeta>
-            <dt>Under</dt>
-            <InpageSubtitle as='dd'>
+            <InpageHeadHgroup>
+              <InpageTitle>Editor</InpageTitle>
+            </InpageHeadHgroup>
+            <InpageSubtitle>
               <Link to='/sandbox' title='Visit Sandbox hub'>
                 Sandbox
               </Link>
             </InpageSubtitle>
-          </InpageMeta>
+          </InpageHeadline>
         </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>

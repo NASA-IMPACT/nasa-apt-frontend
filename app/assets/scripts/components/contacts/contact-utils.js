@@ -1,14 +1,15 @@
 import set from 'lodash.set';
 
 /**
- * Renders multiple contact roles in the form of (a, b & c)
+ * Renders multiple contact values (like roles and affiliations) in the form of
+ * (a, b & c)
  *
- * @param {array} roles List of roles
+ * @param {array} list List of values
  * @returns string
  */
-export const renderMultipleRoles = (roles) => {
-  if (roles.length === 1) return roles[0];
-  return `${roles.slice(0, -1).join(', ')} & ${roles[roles.length - 1]}`;
+export const renderMultipleStringValues = (list) => {
+  if (list.length === 1) return list[0];
+  return `${list.slice(0, -1).join(', ')} & ${list[list.length - 1]}`;
 };
 
 /**

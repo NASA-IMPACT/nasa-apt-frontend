@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
+import set from 'lodash.set';
 import { Formik, Form as FormikForm } from 'formik';
 import { Form, FormHelperMessage } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
+import { FormikInputEditor } from '../../common/forms/input-editor';
 import {
   FormikSectionFieldset,
   SectionFieldset
@@ -16,6 +18,8 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { formString } from '../../../utils/strings';
 import { formStringSymbol, citationFields } from '../citation';
 import { useSubmitForMetaAndVersionData } from './use-submit';
+import { getDocumentSectionLabel } from './sections';
+import { isPublished } from '../status';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -33,8 +37,19 @@ export default function StepIdentifyingInformation(props) {
       errors.title = 'Title is required';
     }
 
+    if (
+      values.citation?.online_resource &&
+      !values.citation.online_resource.startsWith('http')
+    ) {
+      set(errors, 'citation.online_resource', 'Url must start with http');
+    }
+
     return errors;
   }, []);
+
+  // If the current major is greater than 1 means that other versions exist, and
+  // they have to be published.
+  const hasAnyVersionPublished = isPublished(atbd) || atbd.major > 1;
 
   return (
     <Formik
@@ -48,7 +63,10 @@ export default function StepIdentifyingInformation(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <SectionFieldset label='General'>
+              <SectionFieldset
+                label={getDocumentSectionLabel('general')}
+                commentSection='general'
+              >
                 <p>
                   <em>
                     Updates to the general information will affect all versions.
@@ -57,10 +75,10 @@ export default function StepIdentifyingInformation(props) {
                 <FormikInputText
                   id='title'
                   name='title'
-                  label='Title'
+                  label='ATBD Title'
                   description={formString('identifying_information.title')}
                 />
-                <FieldAtbdAlias />
+                <FieldAtbdAlias disabled={hasAnyVersionPublished} />
               </SectionFieldset>
 
               <SectionFieldset label='DOI'>
@@ -79,8 +97,30 @@ export default function StepIdentifyingInformation(props) {
               </SectionFieldset>
 
               <FormikSectionFieldset
-                label='Citation'
+                label={getDocumentSectionLabel('version_description')}
+                sectionName='sections_completed.version_description'
+                commentSection='version_description'
+              >
+                <FormikInputEditor
+                  id='version_description'
+                  name='document.version_description'
+                  label='Version description'
+                  description={formString(
+                    'identifying_information.version_description'
+                  )}
+                  helper={
+                    <FormHelperMessage>
+                      This field is only important when document version is
+                      greater than 1.
+                    </FormHelperMessage>
+                  }
+                />
+              </FormikSectionFieldset>
+
+              <FormikSectionFieldset
+                label={getDocumentSectionLabel('citation')}
                 sectionName='sections_completed.citation'
+                commentSection='citation'
               >
                 {citationFields.map((field) => (
                   <FormikInputText
@@ -95,7 +135,11 @@ export default function StepIdentifyingInformation(props) {
                           )
                         : field.description
                     }
-                    helper={field.helper}
+                    helper={
+                      typeof field.helper === 'function'
+                        ? field.helper(atbd)
+                        : field.helper
+                    }
                   />
                 ))}
               </FormikSectionFieldset>
@@ -116,6 +160,7 @@ StepIdentifyingInformation.propTypes = {
     id: T.number,
     title: T.string,
     alias: T.string,
-    document: T.object
+    document: T.object,
+    major: T.number
   })
 };

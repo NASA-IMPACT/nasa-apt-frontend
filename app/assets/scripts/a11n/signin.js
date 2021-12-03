@@ -60,7 +60,7 @@ function SignIn() {
 
   const onSubmit = useCallback(
     async (values, { setSubmitting }) => {
-      const processToast = createProcessToast('Singing in. Please wait.');
+      const processToast = createProcessToast('Signing in. Please wait.');
 
       try {
         const { email, password } = values;
@@ -69,7 +69,7 @@ function SignIn() {
         processToast.success(
           `Welcome back ${user.attributes.preferred_username}!`
         );
-        history.push('/');
+        history.push('/dashboard');
       } catch (error) {
         if (error.code === 'UserNotConfirmedException') {
           processToast.error(

@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -12,22 +13,45 @@ import {
   InpageActions,
   InpageBody
 } from '../../../styles/inpage';
-import { HubList, HubListItem } from '../../../styles/hub';
 import { ContentBlock } from '../../../styles/content-block';
 import ButtonSecondary from '../../../styles/button-secondary';
-import AtbdHubEntry from './atbd-hub-entry';
+import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
-
-import { useAtbds } from '../../../context/atbds-list';
-import { atbdEdit, atbdView } from '../../../utils/url-creator';
-import { createProcessToast } from '../../common/toasts';
-import { atbdDeleteFullConfirmAndToast } from '../atbd-delete-process';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
 
+import { useAtbds } from '../../../context/atbds-list';
+import { useDocumentCreate } from '../single-edit/use-document-create';
+
+export const DocList = styled.ol`
+  grid-column: content-start / content-end;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+
+  ${media.smallUp`
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: ${glsp(themeVal('layout.gap.small'))};
+  `}
+
+  ${media.mediumUp`
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
+  `}
+
+  ${media.largeUp`
+    grid-gap: ${glsp(themeVal('layout.gap.large'))};
+  `}
+`;
+
+export const DocListItem = styled.li`
+  > * {
+    height: 100%;
+  }
+`;
+
 function Documents() {
-  const { fetchAtbds, createAtbd, deleteFullAtbd, atbds } = useAtbds();
-  const history = useHistory();
+  const { fetchAtbds, atbds } = useAtbds();
 
   useEffect(() => {
     fetchAtbds();
@@ -42,41 +66,7 @@ function Documents() {
     throw atbds.error;
   }
 
-  const onCreateClick = async () => {
-    const processToast = createProcessToast('Creating new ATBD');
-    const result = await createAtbd();
-
-    if (result.error) {
-      processToast.error(`An error occurred: ${result.error.message}`);
-    } else {
-      processToast.success('ATBD successfully created');
-      history.push(atbdEdit(result.data));
-    }
-  };
-
-  const onDocumentAction = useCallback(
-    async (atbd, menuId) => {
-      switch (menuId) {
-        case 'delete':
-          await atbdDeleteFullConfirmAndToast({
-            atbd,
-            deleteFullAtbd
-          });
-          break;
-        case 'update-minor':
-        case 'draft-major':
-        case 'publish':
-        case 'view-info':
-          // To trigger the modals to open from other pages, we use the history
-          // state as the user is sent from one page to another. See explanation
-          // on
-          // app/assets/scripts/components/documents/document-publishing-actions.js
-          history.push(atbdView(atbd), { menuAction: menuId });
-          break;
-      }
-    },
-    [deleteFullAtbd, history]
-  );
+  const onCreateClick = useDocumentCreate();
 
   return (
     <App pageTitle='Documents'>
@@ -142,16 +132,13 @@ function Documents() {
           )}
           {atbds.status === 'succeeded' && atbds.data?.length && (
             <ContentBlock>
-              <HubList>
+              <DocList>
                 {atbds.data.map((atbd) => (
-                  <HubListItem key={atbd.id}>
-                    <AtbdHubEntry
-                      atbd={atbd}
-                      onDocumentAction={onDocumentAction}
-                    />
-                  </HubListItem>
+                  <DocListItem key={atbd.id}>
+                    <DocumentHubEntry atbd={atbd} />
+                  </DocListItem>
                 ))}
-              </HubList>
+              </DocList>
             </ContentBlock>
           )}
         </InpageBody>
