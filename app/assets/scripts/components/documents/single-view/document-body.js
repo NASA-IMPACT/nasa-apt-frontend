@@ -910,7 +910,7 @@ export const atbdContentSections = [
         )
       },
       {
-        label: 'Data availability statements',
+        label: 'Open Research',
         id: 'data_availability',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(document.data_availability, id),

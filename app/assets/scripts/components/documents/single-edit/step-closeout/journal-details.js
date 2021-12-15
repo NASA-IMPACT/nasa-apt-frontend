@@ -132,7 +132,7 @@ export default function JournalDetails(props) {
             <FormikInputEditor
               id='data_availability'
               name='document.data_availability'
-              label='Data availability statements'
+              label='Open Research'
               description={formString('closeout.data_availability')}
             />
           </FormikSectionFieldset>
