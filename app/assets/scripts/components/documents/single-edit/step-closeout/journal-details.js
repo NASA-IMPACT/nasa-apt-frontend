@@ -297,7 +297,7 @@ JournalDetails.propTypes = {
   })
 };
 
-const MAX_KEY_POINTS_CHARS = 140;
+const MAX_KEY_POINTS_CHARS = 420;
 
 function FieldKeyPoints() {
   const [{ value }] = useField('document.key_points');
