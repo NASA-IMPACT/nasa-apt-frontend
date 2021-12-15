@@ -910,23 +910,6 @@ export const atbdContentSections = [
         )
       },
       {
-        label: 'Open Research',
-        id: 'data_availability',
-        editorSubsections: (document, { id }) =>
-          subsectionsFromSlateDocument(document.data_availability, id),
-        render: (props) => (
-          <FragmentWithOptionalEditor
-            {...props}
-            key={props.element.id}
-            element={props.element}
-            value={props.document.data_availability}
-            HLevel='h3'
-            subsectionLevel='h4'
-            withEditor
-          />
-        )
-      },
-      {
         label: 'Acknowledgements',
         id: 'acknowledgements',
         editorSubsections: (document, { id }) =>
@@ -937,6 +920,23 @@ export const atbdContentSections = [
             key={props.element.id}
             element={props.element}
             value={props.document.journal_acknowledgements}
+            HLevel='h3'
+            subsectionLevel='h4'
+            withEditor
+          />
+        )
+      },
+      {
+        label: 'Open Research',
+        id: 'data_availability',
+        editorSubsections: (document, { id }) =>
+          subsectionsFromSlateDocument(document.data_availability, id),
+        render: (props) => (
+          <FragmentWithOptionalEditor
+            {...props}
+            key={props.element.id}
+            element={props.element}
+            value={props.document.data_availability}
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
