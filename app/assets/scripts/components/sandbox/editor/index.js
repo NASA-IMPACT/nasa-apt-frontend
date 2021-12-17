@@ -51,8 +51,14 @@ function SandboxEditor() {
   });
 
   const [valueInline, setValueInline] = useState({
-    type: 'p',
-    children: [{ text: '' }]
+    // Root level has no type and is the first and only child of the Editor.
+    // This is needed for the block breaks to work.
+    children: [
+      {
+        type: 'p',
+        children: [{ text: '' }]
+      }
+    ]
   });
 
   const onReferenceUpsert = useCallback((val) => {
