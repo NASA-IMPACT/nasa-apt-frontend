@@ -2,11 +2,13 @@ import { Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 import {
   ELEMENT_LINK,
+  DEFAULTS_LINK,
   getRenderElement,
   LinkPlugin as LinkPlugin$,
   unwrapNodes,
   upsertLinkAtSelection,
-  withLink as withLink$
+  someNode,
+  isUrl
 } from '@udecode/slate-plugins';
 import isHotkey from 'is-hotkey';
 import castArray from 'lodash.castarray';
@@ -22,7 +24,40 @@ export const LINK = ELEMENT_LINK;
 
 // Function for link handling composition.
 // Re-export. See README.md for rationale.
-export const withLink = withLink$();
+// export const withLink = withLink$();
+
+// Override Link's module withLink function to prevent errors when pasting links.
+export const withLink = (editor) => {
+  const { insertData, insertText } = editor;
+
+  const link = {
+    ...DEFAULTS_LINK.link,
+    isUrl: isUrl,
+    component: LinkElement
+  };
+
+  // Editor hook for pasted data.
+  editor.insertData = (data) => {
+    const text = data.getData('text/plain');
+
+    if (text) {
+      // If we're already over a node just add text to the link.
+      if (someNode(editor, { match: { type: link.type } })) {
+        return insertText(text);
+      }
+
+      if (isUrl(text)) {
+        return upsertLinkAtSelection(editor, text, {
+          link
+        });
+      }
+    }
+
+    insertData(data);
+  };
+
+  return editor;
+};
 
 /**
  * Return the Bounding Rect of the current DOM selection.
