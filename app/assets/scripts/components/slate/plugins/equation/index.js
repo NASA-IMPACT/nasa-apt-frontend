@@ -42,7 +42,7 @@ const deleteEquation = (editor) => {
 export const insertEquation = (editor) => {
   const node = {
     type: EQUATION,
-    children: [{ text: '\\LaTeX~equation' }]
+    children: [{ text: 'latex~example: e=mc^2' }]
   };
 
   Transforms.insertNodes(editor, node, {
