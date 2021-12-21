@@ -80,6 +80,11 @@ jobs:
           path: dist
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.sha }}
 
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE }}
+
       - name: Deploy Staging to Surge
         if: github.event.ref == 'refs/heads/develop'
         run: |

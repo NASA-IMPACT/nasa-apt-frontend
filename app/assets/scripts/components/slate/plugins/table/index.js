@@ -4,8 +4,7 @@ import {
   addRow,
   deleteRow,
   addColumn,
-  deleteColumn,
-  withTable as withTable$
+  deleteColumn
 } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
@@ -20,6 +19,7 @@ import {
 import { isFocusedAnd } from '../common/is-focused-compose';
 
 export * from './helpers';
+export * from './with-table';
 
 /**
  * Callback on plugin use through shortcut or button
@@ -119,6 +119,3 @@ export const TableBlockPlugin = {
   ],
   onUse: onTableUse
 };
-
-// Re-export. See README.md for rationale.
-export const withTable = withTable$();

@@ -7,8 +7,8 @@ export function withSingleLine(editor) {
   const { normalizeNode } = editor;
 
   editor.normalizeNode = ([node, path]) => {
-    if (path.length === 0) {
-      if (editor.children.length > 1) {
+    if (path.length === 0 || path.length === 1) {
+      if (node.children.length > 1) {
         Transforms.mergeNodes(editor);
       }
     }

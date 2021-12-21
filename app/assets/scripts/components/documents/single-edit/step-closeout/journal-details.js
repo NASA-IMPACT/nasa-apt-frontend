@@ -132,7 +132,7 @@ export default function JournalDetails(props) {
             <FormikInputEditor
               id='data_availability'
               name='document.data_availability'
-              label='Data availability statements'
+              label='Open Research'
               description={formString('closeout.data_availability')}
             />
           </FormikSectionFieldset>
@@ -297,7 +297,7 @@ JournalDetails.propTypes = {
   })
 };
 
-const MAX_KEY_POINTS_CHARS = 140;
+const MAX_KEY_POINTS_CHARS = 420;
 
 function FieldKeyPoints() {
   const [{ value }] = useField('document.key_points');
