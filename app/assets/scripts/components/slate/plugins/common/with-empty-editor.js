@@ -25,9 +25,9 @@ export const withEmptyEditor = (editor) => {
     return normalizeNode(entry);
   };
 
-  // Ensure that a P node can be removed when it's the first element, but not
-  // only, and backspace is pressed. This is needed so that block elements like
-  // Tables, Equations, etc can move up.
+  // Ensure that a P node can be removed when it's the first but not only
+  // element, and backspace is pressed. This is needed so that block elements
+  // like Tables, Equations, etc can move up.
   editor.deleteBackward = (unit) => {
     if (unit === 'character' && editor.children[0].children.length !== 1) {
       Transforms.removeNodes(editor, {
