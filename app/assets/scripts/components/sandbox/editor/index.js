@@ -36,7 +36,7 @@ function SandboxEditor() {
     // Root level has no type and is the first child of the Editor.
     // This is needed for the block breaks to work.
     children: [
-      // ...hugeDoc,
+      ...hugeDoc,
       {
         type: 'p',
         children: [{ text: 'A line of text in a paragraph.' }]
@@ -83,14 +83,14 @@ function SandboxEditor() {
         </StickyInpageHeader>
         <InpageBodyScroll>
           <Constrainer>
-            {/* <h2>Inline editor</h2>
+            <h2>Inline editor</h2>
             <InlineRichTextEditor
               formattingOptions={inlineFormattingOptions}
               value={valueInline}
               onChange={(v) => {
                 setValueInline(v);
               }}
-            /> */}
+            />
 
             <h2>Rich text editor</h2>
             <RichContextProvider
@@ -104,13 +104,13 @@ function SandboxEditor() {
               />
             </RichContextProvider>
 
-            {/* <h2>Rich text editor - error value</h2>
+            <h2>Rich text editor - error value</h2>
             <RichTextEditor
               value={value2}
               onChange={(v) => {
                 setValue2(v);
               }}
-            /> */}
+            />
           </Constrainer>
         </InpageBodyScroll>
       </Inpage>
