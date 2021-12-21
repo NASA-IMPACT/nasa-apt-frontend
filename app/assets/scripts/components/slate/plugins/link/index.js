@@ -8,7 +8,8 @@ import {
   unwrapNodes,
   upsertLinkAtSelection,
   someNode,
-  isUrl
+  isUrl,
+  withRemoveEmptyNodes
 } from '@udecode/slate-plugins';
 import isHotkey from 'is-hotkey';
 import castArray from 'lodash.castarray';
@@ -23,9 +24,6 @@ export * from './link-editor-toolbar';
 export const LINK = ELEMENT_LINK;
 
 // Function for link handling composition.
-// Re-export. See README.md for rationale.
-// export const withLink = withLink$();
-
 // Override Link's module withLink function to prevent errors when pasting links.
 export const withLink = (editor) => {
   const { insertData, insertText } = editor;
@@ -55,6 +53,8 @@ export const withLink = (editor) => {
 
     insertData(data);
   };
+
+  editor = withRemoveEmptyNodes({ type: link.type })(editor);
 
   return editor;
 };
