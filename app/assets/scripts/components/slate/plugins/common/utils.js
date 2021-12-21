@@ -1,5 +1,5 @@
 import React from 'react';
-import { Path } from 'slate';
+import { Path, Node } from 'slate';
 import { ELEMENT_PARAGRAPH, getNode } from '@udecode/slate-plugins';
 
 import { Kbd } from '../../../../styles/typography/code';
@@ -76,7 +76,7 @@ export const getPathForRootBlockInsert = (editor) => {
   if (
     nodeAtCurrentRootPath.type === ELEMENT_PARAGRAPH &&
     nodeAtCurrentRootPath.children.length === 1 &&
-    getNode(nodeAtCurrentRootPath, [0]).text === ''
+    Node.string(nodeAtCurrentRootPath) === ''
   ) {
     return currentRootPath;
   }
