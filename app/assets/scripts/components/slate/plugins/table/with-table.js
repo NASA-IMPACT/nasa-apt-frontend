@@ -31,15 +31,16 @@ export const withTable = (inputEditor) => {
     ) {
       for (const [child, childPath] of Node.children(editor, path)) {
         if (Text.isText(child)) {
-          Transforms.wrapNodes(
+          return Transforms.wrapNodes(
             editor,
             {
               type: ELEMENT_PARAGRAPH
             },
             { at: childPath }
           );
+        } else if (child.type !== ELEMENT_PARAGRAPH) {
+          return Transforms.removeNodes(editor, { at: childPath });
         }
-        return;
       }
     }
     return normalizeNode(entry);
