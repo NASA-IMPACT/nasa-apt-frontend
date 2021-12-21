@@ -26,7 +26,6 @@ export const InlineEditableWithPlugins = styled(EditablePlugins$)`
   font-size: 1rem !important;
   line-height: 1.5rem !important;
   overflow: hidden !important;
-  white-space: nowrap !important;
 `;
 
 export const ReadableWithPlugins = styled(EditablePlugins$)`

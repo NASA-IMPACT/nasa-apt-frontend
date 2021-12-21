@@ -3,7 +3,7 @@ import { Transforms } from 'slate';
 import castArray from 'lodash.castarray';
 import { getAbove, getRenderElement } from '@udecode/slate-plugins';
 
-import { modKey } from '../common/utils';
+import { getPathForRootBlockInsert, modKey } from '../common/utils';
 import EquationEditor from './equation-editor';
 import { isFocusedAnd } from '../common/is-focused-compose';
 import { isInNodeType } from '../common/is-node-type';
@@ -42,17 +42,12 @@ const deleteEquation = (editor) => {
 export const insertEquation = (editor) => {
   const node = {
     type: EQUATION,
-    children: [{ text: '\\LaTeX~equation' }]
+    children: [{ text: 'latex~example: e=mc^2' }]
   };
 
-  Transforms.insertNodes(editor, node, {
-    // By using the mode highest and a match for !!type we ensure that we insert
-    // this at the root level, after an element with a type, which will be
-    // anyone except the Editor's first child.
-    // This is needed to ensure an equation doesn't end up inside a list.
-    match: (n) => !!n.type,
-    mode: 'highest'
-  });
+  const path = getPathForRootBlockInsert(editor);
+  Transforms.insertNodes(editor, node, { at: path });
+  Transforms.select(editor, path);
 };
 
 /**

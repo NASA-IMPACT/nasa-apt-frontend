@@ -1,4 +1,6 @@
 import React from 'react';
+import { Path, Node } from 'slate';
+import { ELEMENT_PARAGRAPH, getNode } from '@udecode/slate-plugins';
 
 import { Kbd } from '../../../../styles/typography/code';
 
@@ -57,3 +59,27 @@ export const isModKey = (event) => {
 
 export const UNDO_HOTKEY = 'mod+Z';
 export const REDO_HOTKEY = IS_APPLE ? 'mod+Shift+Z' : 'mod+Y';
+
+/**
+ * Returns the correct path where to insert a root level block (like table,
+ * equation, etc). If the caret is in an empty place that one is used, otherwise
+ * the next.
+ *
+ * @param {Editor} editor The slate editor
+ *
+ * @returns {Array}
+ */
+export const getPathForRootBlockInsert = (editor) => {
+  const currentRootPath = editor.selection.anchor.path.slice(0, 2);
+  const nodeAtCurrentRootPath = getNode(editor, currentRootPath);
+
+  if (
+    nodeAtCurrentRootPath.type === ELEMENT_PARAGRAPH &&
+    nodeAtCurrentRootPath.children.length === 1 &&
+    Node.string(nodeAtCurrentRootPath) === ''
+  ) {
+    return currentRootPath;
+  }
+
+  return Path.next(currentRootPath);
+};

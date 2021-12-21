@@ -112,7 +112,15 @@ export const withLinkEditor = (editor) => {
     const caretOnLink = !!linkUnderCaret && isCollapsed(editor.selection);
 
     if (caretOnLink) {
-      const node = ReactEditor.toDOMNode(editor, linkUnderCaret[0]);
+      let node;
+      try {
+        node = ReactEditor.toDOMNode(editor, linkUnderCaret[0]);
+      } catch (error) {
+        // When pasting a link the element will be in Slate's doc tree, but not
+        // in the DOM, so we need to skip this.
+        // The resulting error is: "Cannot resolve a DOM node from Slate node"
+        return onChange();
+      }
       const rect = node.getBoundingClientRect();
       editor.linkEditor.show({
         selection: editor.selection,

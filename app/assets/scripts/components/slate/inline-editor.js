@@ -16,6 +16,7 @@ import {
   withInlineVoid,
   pipe
 } from './plugins/common';
+import { withEmptyEditor } from './plugins/common/with-empty-editor';
 import { useScrollToCaret, withSingleLine } from './plugins/single-line';
 import { ParagraphPlugin } from './plugins/paragraph';
 import {
@@ -47,6 +48,7 @@ export function InlineRichTextEditor(props) {
       withReact,
       withHistory,
       withSingleLine,
+      withEmptyEditor,
       withInlineVoid({ plugins })
     ];
 

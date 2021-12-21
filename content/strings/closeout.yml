@@ -4,7 +4,7 @@ journal_publication: Select whether or not you desire to submit this ATBD to the
 discussion: Describe the significance of the work or the implications for or contributions to the science.
 data_availability: "Provide a data availability statement for each dataset that supports your research. An example demonstrates this: The [type of data] data used for [brief context, description] in the study are available at [repository, source name] via [DOI, persistent identifier link] with  [license, access conditions] [optional in-text citation in References]. Also include a citation for the data in the references."
 acknowledgements: List all needed acknowledgements which may include people, organizations, funding programs, etc.
-key_points: List the 3 key points of your research presented in this ATBD. Limited to 140 characters total.
+key_points: List the 3 key points of your research presented in this ATBD. Limited to 140 characters each.
 suggested_reviewers: Provide the names and emails of 3 potential reviewers for the ATBD journal submission. The provided reviewer names can not be from the same institution and not be financially conflicted with your work. 
 journal_editor: The editor listed is the current editor of ESS. Do not change this unless you need to submit this manuscript to another journal. The APT curator will approve this change.
 author_affirmations: Review list of affirmations to assure you have met the requirements.  For more information please visit <a href="https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Text-requirements" target="_blank" rel="nofollow noreferrer">this reference</a>

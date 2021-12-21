@@ -88,9 +88,7 @@ export default function EquationEditor(props) {
   const [isTooLong, setTooLong] = useState(false);
 
   const latexEquation = Node.string(element);
-  const equation = (
-    <BlockMath math={latexEquation || '\\LaTeX~empty~equation'} />
-  );
+  const equation = <BlockMath math={latexEquation || 'latex~empty~equation'} />;
 
   useEffect(() => {
     const node = equationBlockRef.current;

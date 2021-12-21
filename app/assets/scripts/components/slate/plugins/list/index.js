@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import { glsp } from '@devseed-ui/theme-provider';
 import isHotkey from 'is-hotkey';
 import castArray from 'lodash.castarray';
+import { Range } from 'slate';
 import {
   DEFAULTS_LIST,
   deserializeList,
+  getBlockAbove,
   onKeyDownList,
   renderElementList,
   toggleList,
@@ -12,6 +14,7 @@ import {
 } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
+import { TABLE_BLOCK } from '../table';
 
 const Ul = styled.ul`
   list-style: initial;
@@ -72,12 +75,36 @@ export const toggleUnorderedList = (editor) =>
  * @param {String} btnId The button that triggered the use.
  */
 export const onListPluginUse = (editor, btnId) => {
-  if (btnId === 'unordered-list') {
-    toggleUnorderedList(editor);
+  if (isValidListLocation(editor)) {
+    if (btnId === 'unordered-list') {
+      toggleUnorderedList(editor);
+    }
+    if (btnId === 'ordered-list') {
+      toggleOrderedList(editor);
+    }
   }
-  if (btnId === 'ordered-list') {
-    toggleOrderedList(editor);
-  }
+};
+
+/**
+ * Check if the current selection allows for list insertion.
+ *
+ * @param {Editor} editor The Slate editor instance
+ */
+const isValidListLocation = (editor) => {
+  if (!editor.selection) return false;
+
+  const [start, end] = Range.edges(editor.selection);
+  // Prevent lists inside tables.
+  const tableAtStart = getBlockAbove(editor, {
+    at: start,
+    match: { type: TABLE_BLOCK }
+  });
+  const tableAtEnd = getBlockAbove(editor, {
+    at: end,
+    match: { type: TABLE_BLOCK }
+  });
+
+  return !tableAtStart && !tableAtEnd;
 };
 
 // Plugin definition for slate-plugins framework.
@@ -103,7 +130,8 @@ export const ListPlugin = {
       icon: 'list',
       hotkey: 'mod+Shift+8',
       label: 'Unordered list',
-      tip: (key) => `List (${modKey(key)})`
+      tip: (key) => `List (${modKey(key)})`,
+      isDisabled: (editor) => !isValidListLocation(editor)
     },
 
     // Definition for the toolbar and keyboard shortcut.
@@ -112,7 +140,8 @@ export const ListPlugin = {
       icon: 'list-numbered',
       hotkey: 'mod+Shift+9',
       label: 'Ordered list',
-      tip: (key) => `Numbered list (${modKey(key)})`
+      tip: (key) => `Numbered list (${modKey(key)})`,
+      isDisabled: (editor) => !isValidListLocation(editor)
     }
   ],
   onUse: onListPluginUse

@@ -3,7 +3,7 @@ import { Editor, Transforms, Node } from 'slate';
 import castArray from 'lodash.castarray';
 import { getAbove, getNodes, getRenderElement } from '@udecode/slate-plugins';
 
-import { modKey } from '../common/utils';
+import { getPathForRootBlockInsert, modKey } from '../common/utils';
 import { isFocusedAnd } from '../common/is-focused-compose';
 import { isInNodeType } from '../common/is-node-type';
 
@@ -46,14 +46,9 @@ export const insertSubSection = (editor) => {
     children: [{ text: '' }]
   };
 
-  Transforms.insertNodes(editor, node, {
-    // By using the mode highest and a match for !!type we ensure that we insert
-    // this at the root level, after an element with a type, which will be
-    // anyone except the Editor's first child.
-    // This is needed to ensure a subsection doesn't end up inside a list.
-    match: (n) => !!n.type,
-    mode: 'highest'
-  });
+  const path = getPathForRootBlockInsert(editor);
+  Transforms.insertNodes(editor, node, { at: path });
+  Transforms.select(editor, path);
 };
 
 /**

@@ -10,6 +10,7 @@ import ImageBlock from './image-block';
 import Image from './image';
 
 import { isInNodeType } from '../common/is-node-type';
+import { getPathForRootBlockInsert } from '../common/utils';
 
 // Plugin type.
 export const IMAGE = ELEMENT_IMAGE;
@@ -45,14 +46,10 @@ export const deleteImageBlock = (editor) => {
  */
 export const insertImageBlock = (editor) => {
   const imageBlockNode = getEmptyImageBlockNode();
-  Transforms.insertNodes(editor, imageBlockNode, {
-    // By using the mode highest and a match for !!type we ensure that we insert
-    // this at the root level, after an element with a type, which will be
-    // anyone except the Editor's first child.
-    // This is needed to ensure an image doesn't end up inside a list.
-    match: (n) => !!n.type,
-    mode: 'highest'
-  });
+
+  const path = getPathForRootBlockInsert(editor);
+  Transforms.insertNodes(editor, imageBlockNode, { at: path });
+  Transforms.select(editor, path);
 
   // Select the image so the caption is not automatically focused and the
   // placeholder is shown.

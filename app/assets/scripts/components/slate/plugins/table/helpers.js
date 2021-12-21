@@ -10,6 +10,7 @@ import {
 import { DEFAULTS_CAPTION, getEmptyCaptionNode } from '../caption';
 import TableBlock from './table-block';
 import { isInNodeType } from '../common/is-node-type';
+import { getPathForRootBlockInsert } from '../common/utils';
 
 // Plugin type.
 export const TABLE = ELEMENT_TABLE;
@@ -54,12 +55,7 @@ export const deleteTableBlock = (editor) => {
 export const insertTableBlock = (editor) => {
   if (!isInTableBlock(editor)) {
     Transforms.insertNodes(editor, getEmptyTableBlockNode(), {
-      // By using the mode highest and a match for !!type we ensure that we insert
-      // this at the root level, after an element with a type, which will be
-      // anyone except the Editor's first child.
-      // This is needed to ensure a table doesn't end up inside a list.
-      match: (n) => !!n.type,
-      mode: 'highest'
+      at: getPathForRootBlockInsert(editor)
     });
 
     // Select the first cell of the Table the selection is in.
