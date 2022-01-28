@@ -5,13 +5,12 @@ name: Deploy S3
 on:
   push:
     branches:
-    - 'develop'
-    - 'main'
+    - 'gcc'
 
 env:
   NODE: 14
-  PROD_DOMAIN: https://impact.earthdata.nasa.gov/apt
-  DEPLOY_BUCKET_PROD: algorithm-publication-tool-staging
+  PROD_DOMAIN: http://algorithm-publication-tool.s3-website.us-west-2.amazonaws.com/apt
+  DEPLOY_BUCKET_PROD: algorithm-publication-tool
   DEPLOY_BUCKET_PROD_REGION: us-west-2
   SURGE_STAGING_DOMAIN: https://nasa-apt.surge.sh
 
@@ -55,7 +54,7 @@ jobs:
         run: yarn stage
 
       - name: Build production
-        if: github.event.ref == 'refs/heads/main'
+        if: github.event.ref == 'refs/heads/gcc'
         run: PUBLIC_URL="${{ env.PROD_DOMAIN }}" yarn build
 
   deploy:
@@ -92,14 +91,14 @@ jobs:
           yarn run surge ./dist ${{ env.SURGE_STAGING_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
 
       - name: Serve site from subpath
-        if: github.event.ref == 'refs/heads/main'
+        if: github.event.ref == 'refs/heads/gcc'
         run: |
           mkdir deploy/
           mv dist deploy/apt
           cp deploy/apt/index.html deploy/index.html
 
       - name: Deploy to S3 Production
-        if: github.event.ref == 'refs/heads/main'
+        if: github.event.ref == 'refs/heads/gcc'
         uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
