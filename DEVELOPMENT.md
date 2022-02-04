@@ -51,6 +51,8 @@ module.exports = {
 };
 ```
 
+**If you're running the [nasa-apt backend](https://github.com/NASA-IMPACT/nasa-apt#local-development) locally you'll need to configure localstack.**
+
 To set up the front-end with LocalStack, you should also set:
 
 - `apiUrl` - The host and API version of the backend, set this to `http://localhost:8000/v2`
