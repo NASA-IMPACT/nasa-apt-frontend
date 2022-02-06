@@ -57,7 +57,7 @@ function About() {
               <p>
                 The APT is an authoring tool that streamlines the writing,
                 publishing and maintenance process of Algorithm Theoretical
-                Description Documents (ATBDs) for NASA’s Earth Science Division.
+                Basis Documents (ATBDs) for NASA’s Earth Science Division.
                 The APT is also a centralized repository of submitted ATBDs for
                 Earth Science users. Researchers and scientists are required to
                 use the tool to standardize the ATBD content and make it
