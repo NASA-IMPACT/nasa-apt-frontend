@@ -51,6 +51,50 @@ module.exports = {
 };
 ```
 
+**If you're running the [nasa-apt backend](https://github.com/NASA-IMPACT/nasa-apt#local-development) locally you'll need to configure localstack.**
+
+To set up the front-end with LocalStack, you should also set:
+
+- `apiUrl` - The host and API version of the backend, set this to `http://localhost:8000/v2`
+- `auth` - The configuration for LocalStack's Cognito, with
+  - `region` - The AWS region, set this to `us-east-1`
+  - `userPoolId` - The Cognito user pool ID
+  - `userPoolWebClientId` - The Cognito client ID
+  - `authenticationFlowType` - The authenitcation flow type, set this to `USER_PASSWORD_AUTH`
+  - `endpoint` - The host for the local Cognito instance, set this to `http://localhost:4566`
+
+The Cognito user pool and client IDs will be printed in the output of the locally running API or can be obtained with the following commands:
+
+```sh
+# Grabs user pool id - won't produce any output
+pool_id=$(AWS_REGION=us-east-1 aws --endpoint-url http://localhost:4566 cognito-idp list-user-pools --no-sign-request --max-results 100 | jq -rc '.UserPools[0].Id')
+
+# Grab app client id and formats the output
+AWS_REGION=us-east-1 aws --endpoint-url http://localhost:4566 cognito-idp list-user-pool-clients --user-pool-id $pool_id  --no-sign-request --max-results 10 | jq -rc '.UserPoolClients[0] | {ClientId: .ClientId, UserPoolId: .UserPoolId}'
+```
+
+Example:
+```js
+module.exports = {
+  appTitle: 'Report Generator Tool',
+  appDescription: 'Report Generator Tool - Create reports on satellite needs.',
+  apiUrl: 'http://localhost:8000/v2',
+  auth: {
+    // DOCS: https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource
+    // Amazon Cognito Region
+    region: 'us-east-1',
+    // Amazon Cognito User Pool ID
+    userPoolId: 'us-east-1_f7ada9e3ccb943d5a0816daa2e3b88f5',
+    // Amazon Cognito Web Client ID (26-char alphanumeric string)
+    userPoolWebClientId: 't33ew3hyhi0y3lj5nh63sdrx84',
+    // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
+    authenticationFlowType: 'USER_PASSWORD_AUTH',
+    endpoint: 'http://localhost:4566'
+  },
+  hostedAuthUi: 'http://localhost:4566'
+};
+```
+
 #### Starting the app
 
 ```
