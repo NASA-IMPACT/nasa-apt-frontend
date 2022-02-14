@@ -10,4 +10,4 @@ The APT is an authoring tool that streamlines the writing, publishing and mainte
 
 # License
 
-This project is licensed under **The MIT License (MIT)**, see the [LICENSE](LICENSE) file for more details.
+This project is licensed under **Apache 2.0**, see the [LICENSE](LICENSE) file for more details.
