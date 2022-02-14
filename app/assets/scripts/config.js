@@ -1,5 +1,6 @@
 // require is required to be able to load from gulpfile.
 const defaultsDeep = require('lodash.defaultsdeep');
+const set = require('lodash.set');
 
 /*
  * App configuration.
@@ -32,6 +33,16 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // ENV variables overrides.
-config.baseUrl = process.env.PUBLIC_URL || config.baseUrl || '';
+// Set <VAR> on <config path> with <optional default>
+[
+  [process.env.PUBLIC_URL, 'baseUrl', ''],
+  [process.env.AUTH_REGION, 'auth.region'],
+  [process.env.AUTH_POOL_ID, 'auth.userPoolId'],
+  [process.env.AUTH_CLIENT_ID, 'auth.userPoolWebClientId'],
+  [process.env.AUTH_UI, 'hostedAuthUi']
+].forEach(([envVar, path, def]) => {
+  const v = envVar || def;
+  if (typeof v !== 'undefined') set(config, path, v);
+});
 
 module.exports = config;

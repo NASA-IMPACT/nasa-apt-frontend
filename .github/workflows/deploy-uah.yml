@@ -12,6 +12,11 @@ env:
   DOMAIN_UAH: https://impact.earthdata.nasa.gov/apt
   DEPLOY_BUCKET_UAH: algorithm-publication-tool-staging
   DEPLOY_BUCKET_UAH_REGION: us-west-2
+  # Variables needed to override the production config specific to UAH
+  AUTH_REGION: us-east-2
+  AUTH_POOL_ID: us-east-2_dsHdmbBUK
+  AUTH_CLIENT_ID: 66kd4hhbm7cb5suifelj34btki
+  AUTH_UI: https://nasa-apt-api-lambda-prod.auth.us-east-2.amazoncognito.com
 
 jobs:
   build:
