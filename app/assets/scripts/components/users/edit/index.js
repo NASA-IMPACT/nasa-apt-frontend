@@ -15,7 +15,7 @@ import ButtonSecondary from '../../../styles/button-secondary';
 import { useUser } from '../../../context/user';
 import { getUserEditSection } from './sections';
 
-export default function UserView() {
+export default function UserEdit() {
   const { user } = useUser();
   const { section } = useParams();
 

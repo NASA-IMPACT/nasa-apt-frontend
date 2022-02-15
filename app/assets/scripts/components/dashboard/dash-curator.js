@@ -72,6 +72,11 @@ function DashboardCurator() {
           </p>
         </Empty>
       )}
+      {atbds.status === 'failed' && (
+        <Empty>
+          <p>Something went wrong loading the documents. Please try again.</p>
+        </Empty>
+      )}
 
       {atbds.status === 'succeeded' && !!atbds.data?.length && (
         <React.Fragment>

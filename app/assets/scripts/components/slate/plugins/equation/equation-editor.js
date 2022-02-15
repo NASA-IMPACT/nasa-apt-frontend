@@ -77,6 +77,7 @@ const EquationPreviewBody = styled.div`
   .katex-display {
     margin: 0;
     color: ${themeVal('type.base.color')};
+    user-select: text;
   }
 `;
 
@@ -100,10 +101,27 @@ export default function EquationEditor(props) {
   }, [latexEquation]);
 
   // Focus equation input when user clicks the preview.
-  const onEquationPreviewClick = useCallback(() => {
-    const path = ReactEditor.findPath(editor, element);
-    Transforms.select(editor, Editor.end(editor, path));
-  }, [editor, element]);
+  const onEquationPreviewClick = useCallback(
+    (e) => {
+      // When the equation preview box gets clicked we want to focus the
+      // equation field except if the user is selecting the equation characters.
+      const node = equationBlockRef.current;
+      if (node) {
+        const display = node.querySelector('.katex-display');
+        if (display.contains(e.target)) return;
+      }
+
+      // When trying to select something in the editor with a selection
+      // elsewhere (for example the equation characters) the slate editor
+      // crashed. To fix this before doing anything we use the Selection api to
+      // clear the existing selection (which is not managed by slate) and then
+      // let slate handle this from a clean slate. Pun intended.
+      window.getSelection().removeAllRanges();
+      const path = ReactEditor.findPath(editor, element);
+      Transforms.select(editor, Editor.end(editor, path));
+    },
+    [editor, element]
+  );
 
   return readOnly ? (
     <EquationPreviewBody {...attributes}>{equation}</EquationPreviewBody>

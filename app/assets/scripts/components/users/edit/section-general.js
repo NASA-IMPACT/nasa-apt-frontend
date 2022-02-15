@@ -10,11 +10,13 @@ import { FormikInputText } from '../../common/forms/input-text';
 import { SectionFieldset } from '../../common/forms/section-fieldset';
 
 import { createProcessToast } from '../../common/toasts';
+import { useUser } from '../../../context/user';
 
 export default function SectionGeneral(props) {
   const { renderInpageHeader, user, section } = props;
 
   const initialValues = section.getInitialValues(user);
+  const { loginCognitoUser } = useUser();
 
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
     const processToast = createProcessToast('Saving changes.');
@@ -22,6 +24,9 @@ export default function SectionGeneral(props) {
       await Auth.updateUserAttributes(user.rawCognitoUser, {
         preferred_username: values.name
       });
+      // Get updated values to store them.
+      const updatedUser = await Auth.currentAuthenticatedUser();
+      loginCognitoUser(updatedUser);
       processToast.success('Changes saved');
       resetForm({ values });
     } catch (error) {
