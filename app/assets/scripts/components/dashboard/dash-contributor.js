@@ -180,6 +180,14 @@ const TabDocuments = (props) => {
     return <GlobalLoading />;
   }
 
+  if (atbds.status === 'failed') {
+    return (
+      <EmptyTab>
+        <p>Something went wrong loading the documents. Please try again.</p>
+      </EmptyTab>
+    );
+  }
+
   // Different empty states according o the selected tab.
   if (atbds.status === 'succeeded' && !atbds.data?.length) {
     switch (activeTab) {
