@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/developmentseed/nasa-apt-frontend.git"
+    "url": "https://github.com/NASA-IMPACT/nasa-apt-frontend.git"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/developmentseed/nasa-apt-frontend/issues"
+    "url": "https://github.com/NASA-IMPACT/nasa-apt-frontend/issues"
   },
-  "homepage": "https://github.com/developmentseed/nasa-apt-frontend",
+  "homepage": "https://github.com/NASA-IMPACT/nasa-apt-frontend",
   "scripts": {
     "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"module.exports = {};\" > app/assets/scripts/config/local.js",
     "serve": "NODE_ENV=development gulp serve",

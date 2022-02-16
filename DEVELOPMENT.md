@@ -4,7 +4,7 @@ _version 2_
 Front end application for APT.
 
 **Backend**  
-The [backend repository](https://github.com/developmentseed/nasa-apt) contains the necessary instructions to setup the API server. Version X.X.X is required.
+The [backend repository](https://github.com/NASA-IMPACT/nasa-apt) contains the necessary instructions to setup the API server. Version 2.2.3-beta is required.
 
 ## Install Project Dependencies
 To set up the development environment for this website, you'll need to install the following on your system:
@@ -146,7 +146,7 @@ Releases are tied to a version number and created manually using GH's releases p
 The version in the `package.json` should be increased according to [semver](https://semver.org/) and the release tag should follow the format `v<major>.<minor>.<patch>`, ex: `v2.0.1`.  
 The release description should have a changelog with "Features", "Improvements" and "Fixes".
 
-**The release description should also include the require version of the [backend](https://github.com/developmentseed/nasa-apt).**
+**The release description should also include the require version of the [backend](https://github.com/NASA-IMPACT/nasa-apt).**
 
 Example:
 ```
