@@ -5,11 +5,11 @@ name: Deploy Production - GCC (S3)
 on:
   push:
     branches:
-    - 'main'
+    - 'feature/gcc'
 
 env:
   NODE: 14
-  DOMAIN_PROD: http://algorithm-publication-tool.s3-website.us-west-2.amazonaws.com/apt
+  DOMAIN_PROD: https://d7qd3iuafxwad.cloudfront.net
   DEPLOY_BUCKET_PROD: algorithm-publication-tool
   DEPLOY_BUCKET_PROD_REGION: us-west-2
 
@@ -78,11 +78,11 @@ jobs:
         with:
           node-version: ${{ env.NODE }}
 
-      - name: Serve site from subpath
-        run: |
-          mkdir deploy/
-          mv dist deploy/apt
-          cp deploy/apt/index.html deploy/index.html
+      # - name: Serve site from subpath
+      #   run: |
+      #     mkdir deploy/
+      #     mv dist deploy/apt
+      #     cp deploy/apt/index.html deploy/index.html
 
       - name: Deploy to S3 Production
         uses: jakejarvis/s3-sync-action@master
@@ -93,4 +93,5 @@ jobs:
           AWS_REGION: ${{ env.DEPLOY_BUCKET_PROD_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SOURCE_DIR: ./deploy
+          # SOURCE_DIR: ./deploy
+          SOURCE_DIR: ./dist
