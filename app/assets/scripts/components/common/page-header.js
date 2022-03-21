@@ -271,11 +271,11 @@ function PageHeader() {
             <Button
               forwardedAs={NavLink}
               exact
-              to='/help'
+              to='/user-guide'
               variation='achromic-plain'
-              title='Visit the help section'
+              title='Visit the user guide'
             >
-              Help
+              User Guide
             </Button>
           </li>
         </GlobalMenu>

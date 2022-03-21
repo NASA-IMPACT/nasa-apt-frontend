@@ -16,7 +16,7 @@ export default function PageSelectMenu(props) {
         label: page.title,
         title: `View page ${page.title}`,
         as: Link,
-        to: `/help/${page.id}`
+        to: `/user-guide/${page.id}`
       }))
     };
   }, [pagesIndex]);

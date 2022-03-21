@@ -32,7 +32,7 @@ import UserEdit from './components/users/edit';
 import UserDashboard from './components/dashboard';
 import About from './components/about';
 import Search from './components/search';
-import Help from './components/help';
+import UserGuide from './components/user-guide';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
@@ -158,7 +158,7 @@ function Root() {
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/documents/search' component={Search} />
-            <Route exact path='/help/:pageId?' component={Help} />
+            <Route exact path='/user-guide/:pageId?' component={UserGuide} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
             {process.env.NODE_ENV !== 'production' && (
