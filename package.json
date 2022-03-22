@@ -92,6 +92,8 @@
     "gulp-useref": "^5.0.0",
     "gulp-yaml": "^2.0.4",
     "markdown-it": "^12.0.6",
+    "markdown-it-anchor": "^8.4.1",
+    "markdown-it-table-of-contents": "^0.6.0",
     "prettier": "^2.2.1",
     "require-globify": "^1.4.1",
     "stylelint": "^13.10.0",

@@ -3,13 +3,19 @@ title: User Guide
 ---
 # Algorithm Publication Tool (APT)
 
+[[toc]]
+
 ## 1. Introduction
 
 The Algorithm Publication Tool (APT) is a cloud-based publication tool developed within NASA’s Earth Science Data Systems (ESDS) program that standardizes Algorithm Theoretical Basis Documents (ATBDs) content, streamlines the authoring process of ATBDs, and allows the science community to search and retrieve ATBDs from a centralized repository. This document provides a detailed overview of the APT, it’s functionality, and a guide for using the APT to write, publish, and search for ATBDs.
 
+[[Back to top](#)]
+
 ### 1.1 ATBDs in NASA
 
 ATBDs provide data users with the physical theory, mathematical procedures, and applied assumptions used to develop algorithms that convert radiances received by remote sensing instruments into geophysical quantities. NASA requires ATBDs for all Earth Observing System (EOS) instrument products. The goal of the APT is to provide a comprehensive authoring, review, and publication service for NASA, which includes a centralized repository for published documents. The APT provides a standardized content template to remove confusion and uncertainty around ATBD content requirements. This standardization further ensures each NASA data product corresponds to a single ATBD. Furthermore, modernization of ATBDs through the APT, in which the content is reconceptualized as metadata, supports easy and rapid updates of content, centralizes ATBDs in a single location improving end user search and discover, and promotes both human and machine content parsing to streamline data understanding. 
+
+[[Back to top](#)]
 
 ### 1.2 Components of the Algorithm Publication Tool
 
@@ -23,9 +29,13 @@ The second component of the APT is the database and front-end tool. ATBD authors
 
 Currently, end users often find searching for and discovering existing ATBDs challenging. Thus, the final component of the APT is the establishment of a centralized repository and discovery portal. Searching for ATBDs through the repository utilizes both identifying metadata (e.g., reference information and science keywords) and document content (e.g., equations and scientific concepts). The repository and search capabilities increase the discoverability of ATBDs. Last, a goal of this component is to integrate existing NASA ATBDs into the centralized repository. Integration of all ATBDs will increase the search and discoverability of not only new ATBDs but existing ones as well.
 
+[[Back to top](#)]
+
 ## 2. The Algorithm Publication Tool
 
 This section provides explanations of the features of the APT and describes the process of authoring, searching, and discovering documents and content through the centralized ATBD repository. 
+
+[[Back to top](#)]
 
 ### 2.1 Main Landing Page and User Login
 
@@ -70,6 +80,8 @@ Any users can navigate to the APT and can search for and view published ATBDs. H
 4. **Sign In** – Click this button to log into the APT.
 5. **Sign up** – This link prompts users to create an account.
 
+[[Back to top](#)]
+
 ### 2.2 Approved User Dashboard
 
 A user will be redirected to their user dashboard once successfully logged into the APT (Figure 6). This dashboard is where the user will be able to create, edit, and view their ATBDs. A user has two possible roles on an ATBD inclusing (1) lead author or (2) contributing author. A user can navigate through the following documents tabs within the user dashboard including leading, contributions, reviews, and public. This section describes the tabs, pages, and features of the user dashboard. 
@@ -108,6 +120,8 @@ A user will be redirected to their user dashboard once successfully logged into 
 
 1. **Documents** – This displays all documents within the current documents tab (i.e., leading, contribution, review, and public). In this example, the public tab is selected.
 
+[[Back to top](#)]
+
 #### *2.2.1 Contacts Page*
 
 The contacts page lists all of the contacts stored within the APT’s database.  All authors have access to this stored contact information so that contacts can easily be added to documents. This saves authors time and promotes consistently among ATBDs.  If a contact does not exist, users can create one from this page (Figure 11 and 12). Users also have the option to edit existing contacts. This section describes adding contacts from the contact page, where section 2.3.2 describes adding contacts to an ATBD. 
@@ -130,6 +144,8 @@ The contacts page lists all of the contacts stored within the APT’s database. 
 8. **Contact mechanism value** – Enter the contact value associated with the contact mechanism (required). 
 9. **Add a new contact mechanism** – The button creates an additional contact mechanism type and value.
 
+[[Back to top](#)]
+
 #### *2.2.2 Help Center*
 
 User documentation is found in the APT’s Help Center. The documentation provides help on using the APT and LaTeX (Figure 13).
@@ -137,6 +153,8 @@ User documentation is found in the APT’s Help Center. The documentation provid
 ![Figure 13](https://github.com/bwbaker1/APT_Images/blob/master/figure13_annotation.png?raw=true "Figure 13 Help center for APT user documentation. Outlined and labelled pages and features correspond to the numbered descriptions in text below.")
 
 1. **Sections** – Dropdown list feature that allows users to select between help documentation. Options include ATBD creation and Latex.
+
+[[Back to top](#)]
 
 ### 2.3 Creating, Editing, and Writing ATBDs Using the APT
 
@@ -170,6 +188,8 @@ Each step of the APT includes a global save button that must be clicked on in or
 
 1. **Global save** – Persistent button saves all newly added content for the current step. Users are prompted if there is unsaved content. 
 
+[[Back to top](#)]
+
 #### *2.3.1 Identifying Information (Step 1)*
 
 The first step prompts users to input unique information that identifies the new ATBD (Figure 19a). The content provided in this section will be utilized to generate structured citations for the ATBD (Figure 20), and, ultimately, will be how end users come to identify the document.
@@ -199,6 +219,8 @@ The first step prompts users to input unique information that identifies the new
 5. **Version** – Enter the ATBD version number (optional field).
 6. **Online Resource** – Include a URL that directs ATBD users to the landing page of the ATBD (optional field).
 
+[[Back to top](#)]
+
 #### *2.3.2 Contact Information (Step 2)*
 
 The second step requests contact information for the individual, or group, responsible for fielding user questions regarding the ATBD (Figure 21). The APT stores information from all published documents, which authors can retrieve and use in other documents. Therefore, authors have the option to search for existing contact information stored in the APT and should use this information whenever possible instead of entering information manually. This ensures that information is consistent across all documents which is an advantage of the APT.
@@ -226,6 +248,8 @@ Middle Name – Enter the middle name of the contact person.
 8. **Add a new contact mechanism** – The button creates an additional contact mechanism type and value.
 9. **Contact roles** – Select the contact’s role related to the ATBD.
 10. **Add new** – This button adds another contact to the ATBD.
+
+[[Back to top](#)]
 
 #### *2.3.3 References (Step 3)* 
 
@@ -259,6 +283,8 @@ There are two options for adding references to the ATBD (Figure 24), (1) import 
 18. **Add a Reference** – Authors have an option to manually add another reference.
 19. **Import BibTeX file** – Authors have an option to add another reference by uploading a BibTeX file.
 
+[[Back to top](#)]
+
 #### *2.3.4 Introduction (Step 4)*
 
 This step provides a brief introduction and background to the ATBD (Figure 26 and 27). The introduction should provide users with a concise overview of the algorithm, including its derived quantities, scientific importance, and intended applications. Authors should explain the history and foundation regarding the development of the algorithm and a brief summary of the algorithm’s output data products. End users will use this content to understand the value and applicability of this data product.
@@ -273,6 +299,8 @@ These free-text fields utilize a rich content editor that automatically formats 
 
 1. **Historical perspective** – Provide a brief summary regarding the history of the algorithm’s development and its output data.
 2. **Additional information** – Provide any additional information that is relevant to the background of the ATBD.
+
+[[Back to top](#)]
 
 #### *2.3.5 Algorithm Description (Step 5)*
 
@@ -309,6 +337,8 @@ This step first describes the scientific and mathematical theories and assumptio
 4. **Unit** – Report the unit used to report the output variable.  
 5. **Add algorithm variable** – This button adds the output variable to the ATBD.
 
+[[Back to top](#)]
+
 #### *2.3.6 Algorithm Usage (Step 6)*
 
 This step describes the intended use of the algorithm’s output data and the validation process to assess the quality of the algorithm(s). ATBD authors should discuss any constraints or limitations for using the output data (Figure 33). Also, provide the validation methods used to determine uncertainties and errors associated with the algorithm’s output data and report the results, including any errors and uncertainties associated with the output data (Figure 34). If known, state the source of the uncertainties. This content shows end users the reliability of the algorithm and its output data. Also, refer to Figure 23 for descriptions of the rich content editor.
@@ -322,6 +352,8 @@ This step describes the intended use of the algorithm’s output data and the va
 1. **Validation methods** – Describe the scientific methods utilized to validate the algorithm. The details provided should match the current algorithm’s maturity. 
 2. **Uncertainties** – Specify any errors applicable to the validation method. This may include uncertainty in scientific and mathematical methods and/or errors associated with observation retrievals.
 3. **Errors** – Report the results of the algorithm validation, including statistical relationships between the algorithm output and the implemented validation.
+
+[[Back to top](#)]
 
 #### *2.3.7 Algorithm Implementation (Step 7)*
 
@@ -351,6 +383,8 @@ This step discusses the process of implementing the algorithm(s) and accessing r
 2. **Description** – Enter a brief description of the provided alternative data access URL.
 3. **Add** – This button allows any additional related URLs to be entered into the ATBD.
 
+[[Back to top](#)]
+
 #### *2.3.8 Closeout (Step 8)*
 
 This step describes the closeout section of the ATBD (Figure 39 and 40). A summary (i.e., abstract) is required for all ATBDs. Discussion and acknowledgments is only required for authors that intend to publish their ATBD with the American Geophysical Union (AGU) Wiley’s Earth and Space Science journal. In this section, authors will signify if they plan to submit the ATBD for a journal publication. The discussion section provides the value and implications of the algorithm along with any conclusions. Potential use cases can also be described in this section. All funding sources related to this work should be listed in the acknowledgements section. This section can also be used to thank any colleagues and other contributors.  The AGU’s journal style guide documents can be found here: [Grammar and Style Guide](https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Grammar-Style-Guide#referenceformat) and [Text Requirements](https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Text-requirements). Note: refer to Figure 23 for descriptions of the rich content editor.
@@ -366,6 +400,8 @@ This step describes the closeout section of the ATBD (Figure 39 and 40). A summa
 2. **Significance discussion** – Provide a data availability statement for each dataset that supports your research. 
 3. **Data availability statements** – This button removes a row from the table.
 4. **Acknowledgments list** – Provide a list of all funding sources related to this work for all authors into this field. This field can also be used to mention colleagues that helped support this work and other contributors. The format should be first name and last name or first name initial and last name.
+
+[[Back to top](#)]
 
 ### 2.4 Rich Text Editor, Inserting Tables, and Uploading Figures
 
@@ -400,6 +436,8 @@ A LaTeX backend enables entry of rich content (e.g., tables, figures, references
 1. **Upload an Image** – Use this button to select the desired image(s) to upload. Note that the image must be in an image format.
 2. **Image Caption** – Enter the desired figure caption in this box.
 
+[[Back to top](#)]
+
 ### 2.5 Searching for ATBDs Using the APT’s Centralized Repository
 
 The APT provides ATBDs in a centralized location in an effort to simplify discoverability of these documents. From the APT’s main landing page, navigating to the Documents tab (see Figure 2) shows a list of all published ATBDs, which can be accessed and downloaded. Users can also utilize the APT's search interface to search, access and download ATBDs (Figure 44). Any user can search and view published ATBDs. This section provides an overview of the centralized ATBD repository.
@@ -409,3 +447,5 @@ The APT provides ATBDs in a centralized location in an effort to simplify discov
 1. **Term** – Enter a search term into the search bar.
 2. **Year** – Dropdown list that allows for filtering the search by year.
 3. **Search** – This button performs the search.
+
+[[Back to top](#)]

@@ -1,10 +1,14 @@
 const path = require('path');
 const through2 = require('through2');
 const MarkdownIt = require('markdown-it');
+const MarkdownTOC = require('markdown-it-table-of-contents');
+const MarkdownAnchors = require('markdown-it-anchor');
 const yamlFront = require('yaml-front-matter');
 const Vinyl = require('vinyl');
 
 const mdRenderer = new MarkdownIt({ html: true }).use(markdownFigure);
+mdRenderer.use(MarkdownTOC, { includeLevel: [2, 3] });
+mdRenderer.use(MarkdownAnchors);
 
 function processHelpPages(basePath) {
   let pageIndex = [];
