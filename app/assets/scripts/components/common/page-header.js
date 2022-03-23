@@ -29,7 +29,8 @@ import UserImage from './user-image';
 const { appTitle } = config;
 
 const PageHeaderSelf = styled.header`
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 10;
   display: grid;
   grid-template-columns: max-content 1fr;
