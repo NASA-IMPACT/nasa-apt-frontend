@@ -5,7 +5,7 @@ name: Deploy Production - GCC (S3)
 on:
   push:
     branches:
-    - 'feature/gcc'
+    - 'main'
 
 env:
   NODE: 14
