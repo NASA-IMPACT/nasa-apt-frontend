@@ -6,6 +6,7 @@ import DropdownMenu, { DropMenuItemEnhanced } from '../common/dropdown-menu';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
+import { useContextualAbility } from '../../a11n';
 
 function DropMenuItemOutboundLink(props) {
   const { eventLabel, menuItem, active, ...rest } = props;
@@ -33,6 +34,9 @@ export default function DocumentDownloadMenu(props) {
   const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
+  const ability = useContextualAbility();
+  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+
   const dropProps = useMemo(() => {
     const triggerProps = {
       triggerProps: {
@@ -51,21 +55,8 @@ export default function DocumentDownloadMenu(props) {
       const version = `v${atbd.major}.${v}`;
       const pdfUrl = `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`;
 
-      pdfLinks.push(
-        {
-          id: `${version}-document`,
-          label: `${version} Document PDF`,
-          title: `Download document for version ${version}`,
-          href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
-          /* eslint-disable-next-line react/display-name */
-          render: (props) => (
-            <DropMenuItemOutboundLink
-              {...props}
-              eventLabel={`PDF ${atbd.id}/${version}`}
-            />
-          )
-        },
-        {
+      if (canDownloadJournalPdf) {
+        pdfLinks.push({
           id: `${version}-journal`,
           label: `${version} Journal PDF`,
           title: `Download journal for version ${version}`,
@@ -77,8 +68,22 @@ export default function DocumentDownloadMenu(props) {
               eventLabel={`Journal PDF ${atbd.id}/${version}`}
             />
           )
-        }
-      );
+        });
+      }
+
+      pdfLinks.push({
+        id: `${version}-document`,
+        label: `${version} Document PDF`,
+        title: `Download document for version ${version}`,
+        href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
+        /* eslint-disable-next-line react/display-name */
+        render: (props) => (
+          <DropMenuItemOutboundLink
+            {...props}
+            eventLabel={`PDF ${atbd.id}/${version}`}
+          />
+        )
+      });
     }
 
     return {
@@ -88,7 +93,7 @@ export default function DocumentDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [hideText, variation, token, atbd]);
+  }, [hideText, variation, token, atbd, canDownloadJournalPdf]);
 
   return (
     <DropdownMenu

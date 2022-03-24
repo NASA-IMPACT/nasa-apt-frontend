@@ -53,6 +53,7 @@ export function defineRulesFor(user) {
         status: PUBLICATION
       });
       allow('access-comments', 'document-version');
+      allow('download-journal-pdf', 'document-version');
     }
     if (is(CONTRIBUTOR_ROLE)) {
       allow('view', 'contacts');
@@ -113,6 +114,15 @@ export function defineRulesFor(user) {
       });
       allow('access-comments', 'document-version', {
         'reviewers.sub': user.id
+      });
+      allow('download-journal-pdf', 'document-version', {
+        'authors.sub': user.id
+      });
+      allow('download-journal-pdf', 'document-version', {
+        'reviewers.sub': user.id
+      });
+      allow('download-journal-pdf', 'document-version', {
+        'owner.sub': user.id
       });
     }
   }
