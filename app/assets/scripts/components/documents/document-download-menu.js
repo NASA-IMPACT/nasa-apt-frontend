@@ -35,10 +35,7 @@ export default function DocumentDownloadMenu(props) {
   const { token } = useAuthToken();
 
   const ability = useContextualAbility();
-  const canDownloadJournalPdf = ability.can(
-    'download-journal-pdf',
-    'document-version'
-  );
+  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
 
   const dropProps = useMemo(() => {
     const triggerProps = {
@@ -96,7 +93,7 @@ export default function DocumentDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [hideText, variation, token, atbd]);
+  }, [hideText, variation, token, atbd, canDownloadJournalPdf]);
 
   return (
     <DropdownMenu
