@@ -1,5 +1,5 @@
 ---
-title: User Guide
+title: APT
 ---
 # Algorithm Publication Tool (APT)
 
