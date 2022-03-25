@@ -10,6 +10,7 @@ import {
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
+import { Link } from '../../styles/clean/link';
 
 function About() {
   return (
@@ -23,12 +24,13 @@ function About() {
         <InpageBody>
           <ContentBlock>
             <Prose>
-              <h1>APT</h1>
+              <h1>The Algorithm Publication Tool (APT)</h1>
               <p>
-                This is the <strong>Algorithm Publication Tool</strong>{' '}
-                prototype for use in writing, submitting, and discovering ATBDs.
-                We have endeavored to make it as easy as possible to create and
-                edit new ATBDs, and welcome your feedback.
+                APT is a prototype environment for use in writing, submitting,
+                and discovering Algorithm Theoretical Basis Documents (ATBDs).
+                The tool has been designed to make it easier to create and edit
+                new ATBDs for which all content is searchable. We welcome your
+                feedback.
               </p>
 
               <p>
@@ -55,41 +57,49 @@ function About() {
               <h2>FAQs</h2>
               <h3>What is the APT?</h3>
               <p>
-                The APT is an authoring tool that streamlines the writing,
-                publishing and maintenance process of Algorithm Theoretical
-                Basis Documents (ATBDs) for NASA’s Earth Science Division. The
-                APT is also a centralized repository of submitted ATBDs for
-                Earth Science users. Researchers and scientists are required to
-                use the tool to standardize the ATBD content and make it
-                searchable for all interested data users.
+                APT is an authoring tool that streamlines the writing,
+                publishing and maintenance process of ATBDs for NASA’s Earth
+                Science Division. APT is also a centralized repository of
+                submitted ATBDs for Earth Science users. Researchers and
+                scientists are required to use the tool to standardize ATBD
+                content and make it searchable for all interested data users.
               </p>
               <h3>Why should I use the APT?</h3>
               <p>
-                If you are a user, this is where you will find an ATBD you are
-                looking for. Historical ATBDs are not available at this time. If
-                you are a scientist, this tool provides you a means to write and
-                submit your algorithm description so that it can be located by
-                others and even aids in journal submission.
+                If you are looking for an algorithm description, this is where
+                you will find publicly available ATBDs. The general public can
+                view all completed ATBDs without a user account and download
+                PDFs of the ATBDs. Historical ATBDs are not available at this
+                time.
+              </p>
+              <p>
+                If you are a researcher responsible for producing an ATBD, this
+                tool is used to write and submit your algorithm description so
+                that it can be located by others. APT has been designed to aid
+                with submitting your ATBD to a journal.
               </p>
               <h3>Can the public use the APT?</h3>
               <p>
-                The public can not use the APT to write an ATBD, only to access
-                submitted NASA Earth Science ATBDs. Users can view a selected
-                ATBD as either a PDF or an HTML page.
+                The public can freely view and download any completed ATBD as
+                HTML or PDF. No user account is needed. Only users required to
+                author or review an ATBD can obtain an authorized user account.
               </p>
               <h3>How does the APT work?</h3>
               <p>
-                The APT uses a standardized ATBD template that improves
-                communication and sets content expectations for ATBDs. A review
-                process is used to ensure content quality. ATBD content is
+                APT uses a standardized ATBD template that sets content
+                expectations for ATBDs and improves communication. A review
+                process is used to ensure all content quality. ATBD content is
                 stored as metadata making it completely machine readable,
                 searchable, and useful in other tools and services.
               </p>
 
               <p>
-                For more detailed information about APT, please visit the User
-                Guide for Authoring ATBDs using the Algorithm Publication Tool
-                (APT).
+                For more detailed information about APT, please visit the{' '}
+                <Link to='/user-guide'>
+                  User Guide for Authoring ATBDs using the Algorithm Publication
+                  Tool (APT)
+                </Link>
+                .
               </p>
 
               <p>
