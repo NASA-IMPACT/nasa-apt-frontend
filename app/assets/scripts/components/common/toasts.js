@@ -59,7 +59,6 @@ export const createProcessToast = (msg) => {
         render: errorMsg,
         closeOnClick: true,
         closeButton: true,
-        autoClose: 5000,
         draggable: true
       })
   };
