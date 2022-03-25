@@ -28,9 +28,9 @@ const Prose = styled(BaseProse)`
   }
 `;
 
-function Help() {
+function UserGuide() {
   const { pageId } = useParams();
-  const { pagesIndex, fetchPagesIndex } = useJsonPagesIndex('help');
+  const { pagesIndex, fetchPagesIndex } = useJsonPagesIndex('user-guide');
 
   // Fetch index for the help pages.
   useEffect(() => {
@@ -41,7 +41,7 @@ function Help() {
   const selectedPage = pageId || pagesIndex.data?.[0]?.id;
 
   const { page, fetchSingleJsonPage } = useSingleJsonPage(
-    `help-${selectedPage}`
+    `user-guide-${selectedPage}`
   );
 
   // Fetch a single help page when the id changes.
@@ -66,7 +66,9 @@ function Help() {
     }
   }
 
-  const pageTitle = page.data?.content ? `${page.data.title} help` : 'Help';
+  const pageTitle = page.data?.content
+    ? `${page.data.title} help`
+    : 'User Guide';
 
   return (
     <App pageTitle={pageTitle}>
@@ -78,7 +80,7 @@ function Help() {
           <InpageHeaderSticky>
             <InpageHeadline>
               <InpageHeadHgroup>
-                <InpageTitle>Help</InpageTitle>
+                <InpageTitle>User Guide</InpageTitle>
                 <InpageHeadNav role='navigation'>
                   <BreadcrumbMenu>
                     <li>
@@ -107,4 +109,4 @@ function Help() {
   );
 }
 
-export default Help;
+export default UserGuide;
