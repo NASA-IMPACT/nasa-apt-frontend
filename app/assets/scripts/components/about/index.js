@@ -95,7 +95,7 @@ function About() {
 
               <p>
                 For more detailed information about APT, please visit the{' '}
-                <Link to='/help'>
+                <Link to='/user-guide'>
                   User Guide for Authoring ATBDs using the Algorithm Publication
                   Tool (APT)
                 </Link>
