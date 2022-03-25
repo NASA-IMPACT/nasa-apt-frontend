@@ -74,7 +74,11 @@ function DashboardCurator() {
       )}
       {atbds.status === 'failed' && (
         <Empty>
-          <p>Something went wrong loading the documents. Please try again.</p>
+          <p>
+            Something went wrong loading the documents. Please try again.
+            <br />
+            Refresh the page if the error persists.
+          </p>
         </Empty>
       )}
 
