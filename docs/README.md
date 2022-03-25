@@ -19,6 +19,32 @@ After the Front Matter comes the post content.
 ```
 Each help page must have a `title` attribute. This is the value that will be rendered inside the dropdown navigation.
 
+## Table of content
+
+Each user-guide document should include a table of contents allowing users to jump to specific sections of a document.
+
+![](./media/toc.png)
+
+A table of contents can be added by including the `[[toc]]` token below the document's headline.
+
+```md
+---
+title: User Guide
+---
+# Algorithm Publication Tool (APT)
+
+[[toc]]
+
+## 1 Introduction
+...
+```
+
+To allow users to jump back to the table of contents, include a back-to-top link after each section.
+
+```md
+[[Back to top](#)]
+```
+
 ## Form strings
 Each form field on APT can have a quick one sentence description that is shown on a tooltip.
 

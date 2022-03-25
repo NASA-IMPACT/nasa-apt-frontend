@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -15,10 +16,17 @@ import {
   BreadcrumbMenu
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
-import Prose from '../../styles/typography/prose';
+import BaseProse from '../../styles/typography/prose';
 
 import { useSingleJsonPage, useJsonPagesIndex } from '../../context/json-pages';
 import PageSelectMenu from './page-select-menu';
+
+const Prose = styled(BaseProse)`
+  h2,
+  h3 {
+    scroll-margin-top: 5rem;
+  }
+`;
 
 function UserGuide() {
   const { pageId } = useParams();
