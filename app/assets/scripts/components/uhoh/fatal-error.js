@@ -1,6 +1,7 @@
 import React from 'react';
 import T from 'prop-types';
 import styled, { keyframes } from 'styled-components';
+import * as Sentry from "@sentry/react";
 import { antialiased, glsp } from '@devseed-ui/theme-provider';
 
 import { baseUrl } from '../../config';
@@ -149,6 +150,10 @@ export default class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { error: null };
+  }
+
+  componentDidCatch(error, { componentStack }) {
+    Sentry.captureException(error, { contexts: { react: { componentStack } } });
   }
 
   render() {

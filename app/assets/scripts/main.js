@@ -1,6 +1,8 @@
 import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 import T from 'prop-types';
 import { Router, Route, Switch, useLocation } from 'react-router-dom';
 import ReactGA from 'react-ga';
@@ -62,7 +64,19 @@ const composingComponents = [
   SearchProvider
 ];
 
-const { gaTrackingCode } = config;
+const { gaTrackingCode, sentryDSN } = config;
+
+Sentry.init({
+  dsn: sentryDSN,
+  integrations: [new BrowserTracing()],
+  release: `apt@v${process.env.APP_VERSION}`,
+  environment: process.env.NODE_ENV,
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0
+});
 
 // Google analytics
 if (gaTrackingCode) {

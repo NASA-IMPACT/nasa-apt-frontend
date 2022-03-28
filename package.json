@@ -122,6 +122,8 @@
     "@devseed-ui/theme-provider": "^3.0.0",
     "@devseed-ui/toolbar": "2.1.2",
     "@devseed-ui/typography": "^1.0.0",
+    "@sentry/react": "^6.19.2",
+    "@sentry/tracing": "^6.19.2",
     "@udecode/slate-plugins": "0.75.2",
     "aws-amplify": "^4.1.1",
     "axios": "^0.21.1",

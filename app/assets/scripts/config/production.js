@@ -1,5 +1,7 @@
 // module exports is required to be able to load from gulpfile.
 module.exports = {
+  sentryDSN:
+    'https://ccb5ad14ce344c209ee7cd69a9dcda7c@o1180400.ingest.sentry.io/6293167',
   appTitle: 'Algorithm Publication Tool',
   appDescription: 'Algorithm Publication Tool - ATBD management.',
   apiUrl: 'https://xryfsg9blc.execute-api.us-west-2.amazonaws.com/v2',
