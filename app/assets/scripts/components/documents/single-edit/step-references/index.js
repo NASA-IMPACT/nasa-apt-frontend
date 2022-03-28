@@ -11,6 +11,7 @@ import ReferencesManager from './references-manager';
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
 import { createDocumentReferenceIndex } from '../../../../utils/references';
+import { LocalStore } from '../local-store';
 
 export default function StepReferences(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -48,6 +49,7 @@ export default function StepReferences(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

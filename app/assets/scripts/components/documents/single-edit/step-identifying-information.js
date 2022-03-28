@@ -20,6 +20,7 @@ import { formStringSymbol, citationFields } from '../citation';
 import { useSubmitForMetaAndVersionData } from './use-submit';
 import { getDocumentSectionLabel } from './sections';
 import { isPublished } from '../status';
+import { LocalStore } from './local-store';
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -58,6 +59,7 @@ export default function StepIdentifyingInformation(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

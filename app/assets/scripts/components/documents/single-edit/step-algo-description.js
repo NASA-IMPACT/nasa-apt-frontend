@@ -22,6 +22,7 @@ import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { editorEmptyValue } from '../../slate';
 import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
 
 const DeletableFieldsetTriptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -54,6 +55,7 @@ export default function StepAlgoDescription(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
