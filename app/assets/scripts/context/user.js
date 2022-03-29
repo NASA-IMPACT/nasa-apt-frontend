@@ -26,7 +26,7 @@ import { CONTRIBUTOR_ROLE, CURATOR_ROLE } from '../a11n/rules';
 // https://example.com/#id_token=123&access_token=abc&expires_in=3600&token_type=Bearer
 // localstack does:
 // https://example.com/?id_token=123#id_token=123
-export function hackyAmplifyTokenInit() {
+export function initAuthFromUrlParams() {
   const decodePayload = (jwtToken) => {
     const payload = jwtToken.split('.')[1];
     return JSON.parse(atob(payload));

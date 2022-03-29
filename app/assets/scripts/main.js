@@ -41,7 +41,7 @@ import Authorize from './a11n/authorize';
 // Contexts
 import { AtbdsProvider } from './context/atbds-list';
 import { ContactsProvider } from './context/contacts-list';
-import { hackyAmplifyTokenInit, UserProvider } from './context/user';
+import { initAuthFromUrlParams, UserProvider } from './context/user';
 import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
@@ -50,7 +50,7 @@ import { CollaboratorsProvider } from './context/collaborators-list';
 import { ThreadsProvider } from './context/threads-list';
 
 // See note on context/user.js
-hackyAmplifyTokenInit();
+initAuthFromUrlParams();
 
 const composingComponents = [
   ErrorBoundary,
