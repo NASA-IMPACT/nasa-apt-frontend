@@ -5,6 +5,10 @@ const gulp = require('gulp');
 const del = require('del');
 const portscanner = require('portscanner');
 const log = require('fancy-log');
+const jsonConcat = require('gulp-json-concat');
+const yaml = require('gulp-yaml');
+
+const processHelpPages = require('./gulp-help-pages');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -25,11 +29,28 @@ const parcelConfig = path.join(__dirname, '.parcelrc');
 // /////////////////////////////////////////////////////////////////////////////
 // ----------------------- Watcher and custom tasks --------------------------//
 // ---------------------------------------------------------------------------//
+function ymlStrings() {
+  return gulp
+    .src('content/strings/*.yml')
+    .pipe(yaml({ safe: true }))
+    .pipe(
+      jsonConcat('strings.json', (data) => Buffer.from(JSON.stringify(data)))
+    )
+    .pipe(gulp.dest('app/assets/scripts/'));
+}
+
+function helpPages() {
+  return gulp
+    .src('content/help-documentation/*.md')
+    .pipe(processHelpPages('docs'))
+    .pipe(gulp.dest('dist/docs'));
+}
 
 // Function to register file watching
 function watcher() {
   // Add custom watcher processes, below this line
-  // gulp.watch('glob', callbackFn);
+  gulp.watch(['content/strings/*'], ymlStrings);
+  gulp.watch(['content/help-documentation/*'], gulp.series(helpPages));
 
   // ---
   // Watch static files. DO NOT REMOVE.
@@ -104,6 +125,7 @@ module.exports.clean = clean;
 
 // Task orchestration used during the development process.
 module.exports.serve = gulp.series(
+  gulp.parallel(ymlStrings, helpPages),
   gulp.parallel(
     // Task to copy the files. DO NOT REMOVE
     copyFiles
@@ -114,6 +136,7 @@ module.exports.serve = gulp.series(
 // Task orchestration used during the production process.
 module.exports.default = gulp.series(
   clean,
+  gulp.parallel(ymlStrings, helpPages),
   gulp.parallel(
     // Task to copy the files. DO NOT REMOVE
     copyFiles
