@@ -5,6 +5,8 @@ import { Helmet } from 'react-helmet';
 import config from '../../config';
 const { baseUrl, appTitle } = config;
 
+import defaultMeta from '../../../graphics/meta/default-meta-image.png';
+
 function MetaTags({ title, description, children }) {
   return (
     <Helmet>
@@ -19,20 +21,14 @@ function MetaTags({ title, description, children }) {
       {description ? (
         <meta name='twitter:description' content={description} />
       ) : null}
-      <meta
-        name='twitter:image'
-        content={`${baseUrl}/assets/graphics/meta/default-meta-image.png`}
-      />
+      <meta name='twitter:image' content={defaultMeta} />
 
       {/* Open Graph */}
       <meta property='og:type' content='website' />
       <meta property='og:url' content={baseUrl} />
       <meta property='og:site_name' content={appTitle} />
       <meta property='og:title' content={title} />
-      <meta
-        property='og:image'
-        content={`${baseUrl}/assets/graphics/meta/default-meta-image.png`}
-      />
+      <meta property='og:image' content={defaultMeta} />
       {description ? (
         <meta property='og:description' content={description} />
       ) : null}
