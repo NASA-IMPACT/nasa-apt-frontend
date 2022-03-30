@@ -102,6 +102,7 @@
     "formik": "^2.2.6",
     "history": "^4.10.0",
     "is-hotkey": "^0.2.0",
+    "katex": "^0.15.3",
     "lodash.castarray": "^4.4.0",
     "lodash.debounce": "^4.0.8",
     "lodash.defaultsdeep": "^4.6.1",
