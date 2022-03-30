@@ -24,6 +24,14 @@
     "lint:css": "stylelint 'app/assets/styles/**/**' 'app/assets/scripts/**/*.js'",
     "test": "echo \"No tests\" && exit 0"
   },
+  "source": "./app/index.html",
+  "global": "dist/index.html",
+  "targets": {
+    "global": {
+      "context": "browser",
+      "outputFormat": "global"
+    }
+  },
   "engines": {
     "node": "14.x"
   },
