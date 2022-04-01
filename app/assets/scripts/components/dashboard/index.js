@@ -159,10 +159,18 @@ function UserDashboard() {
               <WelcomeBlockProse>
                 <p>Here&apos;s what is happening in your APT account today.</p>
                 {!conAccessContributorDash && !conAccessCuratorDash && (
-                  <p>
-                    Your account has not yet been approved. You can only access{' '}
-                    <strong>published</strong> documents.
-                  </p>
+                  <>
+                    <p>
+                      Your account is not yet approved by an APT Administrator,
+                      this action can take up to 1 business day. If you have not
+                      been approved after this time, please send a message via
+                      the feedback button with your name, email and the day/time
+                      you signed up.
+                    </p>
+                    <p>
+                      You can still access <strong>published</strong> documents.
+                    </p>
+                  </>
                 )}
               </WelcomeBlockProse>
             </WelcomeBlock>
