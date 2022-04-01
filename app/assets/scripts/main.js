@@ -1,3 +1,7 @@
+import 'katex/dist/katex.min.css';
+import 'react-tippy/dist/tippy.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
