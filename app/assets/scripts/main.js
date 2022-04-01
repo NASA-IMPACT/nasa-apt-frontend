@@ -2,8 +2,15 @@ import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import T from 'prop-types';
-import { Router, Route, Switch, useLocation } from 'react-router-dom';
+import {
+  Router,
+  Route,
+  Switch,
+  useLocation,
+  useHistory
+} from 'react-router-dom';
 import ReactGA from 'react-ga';
+import qs from 'qs';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
 import GlobalLoadingProvider from '@devseed-ui/global-loading';
@@ -81,6 +88,21 @@ function ScrollTop() {
   return null;
 }
 
+function FeedbackPopupOpener() {
+  const { replace } = useHistory();
+  const { search } = useLocation();
+
+  useEffect(() => {
+    const { feedback } = qs.parse(search, { ignoreQueryPrefix: true });
+    if (feedback !== undefined) {
+      window.feedback?.showForm();
+      replace({ search: '' });
+    }
+  }, [search, replace]);
+
+  return null;
+}
+
 // Root component.
 function Root() {
   useEffect(() => {
@@ -101,6 +123,7 @@ function Root() {
     <Router history={history}>
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <ScrollTop />
+        <FeedbackPopupOpener />
         <CollecticonsGlobalStyle />
         <GlobalStyle />
         <GlobalLoadingProvider />
