@@ -8,13 +8,13 @@ export class LocalAtbdStorage {
     this.expiry = 15 * 60000; // 15 minutes
   }
 
-  getStorageKey(atbd) {
+  getStorageKey(atbd, step) {
     const { id, version } = atbd;
-    return `atbd/${id}/${version}`;
+    return `atbd/${id}/${version}/${step}`;
   }
 
-  getAtbd(atbd) {
-    const key = this.getStorageKey(atbd);
+  getAtbd(atbd, step) {
+    const key = this.getStorageKey(atbd, step);
     const values = JSON.parse(localStorage.getItem(key));
 
     if (values && values.created + this.expiry > Date.now()) {
@@ -24,12 +24,12 @@ export class LocalAtbdStorage {
 
     // The store either doesn't exist or is expired,
     // trying to remove the store
-    this.removeAtbd(atbd);
+    this.removeAtbd(atbd, step);
     return undefined;
   }
 
-  setAtbd(atbd, values) {
-    const key = this.getStorageKey(atbd);
+  setAtbd(atbd, step, values) {
+    const key = this.getStorageKey(atbd, step);
     localStorage.setItem(
       key,
       JSON.stringify({
@@ -39,8 +39,8 @@ export class LocalAtbdStorage {
     );
   }
 
-  removeAtbd(atbd) {
-    const key = this.getStorageKey(atbd);
+  removeAtbd(atbd, step) {
+    const key = this.getStorageKey(atbd, step);
     localStorage.removeItem(key);
   }
 }
@@ -50,27 +50,26 @@ export function LocalStore({ atbd }) {
   const { values, setValues, dirty } = useFormikContext();
   const { step } = useParams();
 
+  const stepId = step || 'identifying_information';
+
   useEffect(() => {
     const localAtbdStorage = new LocalAtbdStorage();
     if (isInitialized.current) {
       if (dirty) {
-        const storeValue = { step, values };
-        localAtbdStorage.setAtbd(atbd, storeValue);
+        localAtbdStorage.setAtbd(atbd, stepId, values);
       } else {
-        localAtbdStorage.removeAtbd(atbd);
+        localAtbdStorage.removeAtbd(atbd, stepId);
       }
     } else {
       if (atbd) {
-        const localValues = localAtbdStorage.getAtbd(atbd);
-        if (localValues && localValues.step === step) {
-          setValues(defaultsDeep(localValues.values, values));
-        } else {
-          localAtbdStorage.removeAtbd(atbd);
+        const localValues = localAtbdStorage.getAtbd(atbd, stepId);
+        if (localValues) {
+          setValues(defaultsDeep(localValues, values));
         }
         isInitialized.current = true;
       }
     }
-  }, [atbd, step, values, setValues, dirty]);
+  }, [atbd, stepId, values, setValues, dirty]);
 
   return null;
 }
