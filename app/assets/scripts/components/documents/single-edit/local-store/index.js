@@ -16,6 +16,7 @@ export function LocalStore({ atbd }) {
 
   const stepId = step || 'identifying_information';
   const [displayRecoverToast, setDisplayRecoverToast] = useState(false);
+  const [isOutDated, setIsOutDated] = useState(false);
 
   const recoverData = useCallback(() => {
     const localAtbdStorage = new LocalAtbdStorage();
@@ -42,7 +43,9 @@ export function LocalStore({ atbd }) {
       if (atbd) {
         const localValues = localAtbdStorage.getAtbd(atbd, stepId);
         if (localValues) {
+          const atdbUpdated = new Date(atbd.last_updated_at).getTime();
           setDisplayRecoverToast(true);
+          setIsOutDated(localValues.created < atdbUpdated);
         }
         isInitialized.current = true;
       }
@@ -57,6 +60,7 @@ export function LocalStore({ atbd }) {
             recoverData={recoverData}
             clearData={clearData}
             closeToast={closeToast}
+            dataIsOutdated={isOutDated}
           />
         ),
         {
@@ -64,7 +68,7 @@ export function LocalStore({ atbd }) {
         }
       );
     }
-  }, [displayRecoverToast, clearData, recoverData]);
+  }, [displayRecoverToast, isOutDated, clearData, recoverData]);
 
   return null;
 }

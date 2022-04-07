@@ -9,7 +9,8 @@ const Button = styled(BaseButton)`
   margin-right: 0.5rem;
 `;
 
-export default function RecoverToast({ recoverData, clearData, closeToast }) {
+export default function RecoverToast(props) {
+  const { recoverData, clearData, closeToast, dataIsOutdated } = props;
   const handleRecover = () => {
     recoverData();
     closeToast();
@@ -21,11 +22,16 @@ export default function RecoverToast({ recoverData, clearData, closeToast }) {
   };
 
   return (
-    <div>
+    <>
       <p>
         We have recovered data that you had inserted. Do you want to restore the
         data?
       </p>
+      {dataIsOutdated && (
+        <p>
+          Restoring the data will overwrite a more recent update to the ATBD.
+        </p>
+      )}
       <Button
         variation='primary-raised-light'
         size='small'
@@ -42,12 +48,13 @@ export default function RecoverToast({ recoverData, clearData, closeToast }) {
       >
         Discard
       </Button>
-    </div>
+    </>
   );
 }
 
 RecoverToast.propTypes = {
   recoverData: T.func.isRequired,
   clearData: T.func.isRequired,
-  closeToast: T.func.isRequired
+  closeToast: T.func.isRequired,
+  dataIsOutdated: T.bool
 };
