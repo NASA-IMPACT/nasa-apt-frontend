@@ -64,7 +64,8 @@ export function LocalStore({ atbd }) {
           />
         ),
         {
-          autoClose: false
+          autoClose: false,
+          closeButton: false
         }
       );
     }
