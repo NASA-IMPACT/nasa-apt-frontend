@@ -21,6 +21,7 @@ import { useContacts } from '../../../../context/contacts-list';
 import { validateContact } from '../../../contacts/contact-utils';
 import { getDocumentSectionLabel } from '../sections';
 import { documentEdit } from '../../../../utils/url-creator';
+import { LocalStore } from '../local-store';
 
 export default function StepContacts(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -93,6 +94,7 @@ export default function StepContacts(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         {contacts.status === 'loading' && <GlobalLoading />}
         {contacts.status === 'succeeded' && (

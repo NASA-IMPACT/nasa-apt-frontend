@@ -17,6 +17,7 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
 
 // The initial value is the same for
 // Algorithm Implementations
@@ -45,6 +46,7 @@ export default function StepAlgoImplementation(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

@@ -15,6 +15,7 @@ import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
 import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
+import { LocalStore } from '../local-store';
 
 export default function StepCloseout(props) {
   const { renderInpageHeader, atbd, id, version, step } = props;
@@ -39,6 +40,7 @@ export default function StepCloseout(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
