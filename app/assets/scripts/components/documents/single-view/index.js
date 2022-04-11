@@ -248,7 +248,7 @@ function DocumentView() {
 
   const pageTitle = atbd.data?.title
     ? `Viewing ${atbd.data.title}`
-    : 'Document view';
+    : 'ATBD view';
 
   return (
     <App pageTitle={pageTitle}>

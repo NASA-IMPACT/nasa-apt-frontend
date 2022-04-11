@@ -137,7 +137,7 @@ export default function DocumentHeadline(props) {
           <InpageSubtitle>
             <span>Under</span>
             <Link to='/documents' title='View all Documents'>
-              Documents
+              ATBDs
             </Link>
           </InpageSubtitle>
         )}
