@@ -79,6 +79,10 @@ const EquationPreviewBody = styled.div`
     color: ${themeVal('type.base.color')};
     user-select: text;
   }
+
+  .katex {
+    display: inline-block;
+  }
 `;
 
 export default function EquationEditor(props) {

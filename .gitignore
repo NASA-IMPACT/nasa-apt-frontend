@@ -65,6 +65,8 @@ node_modules
 bower_components
 .sass-cache
 test/bower_components
+.parcel-cache
+parcel-bundle-reports
 
 
 ################################################

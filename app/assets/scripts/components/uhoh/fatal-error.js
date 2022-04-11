@@ -1,9 +1,11 @@
 import React from 'react';
+import T from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { antialiased, glsp } from '@devseed-ui/theme-provider';
 
 import { baseUrl } from '../../config';
 import { starsImage, earthImage, satelliteImage } from './images';
+import Constrainer from '../../styles/constrainer';
 
 const rotateAnim = keyframes`
   from {
@@ -117,6 +119,28 @@ const EarthAnim = styled.div`
   }
 `;
 
+const ErrorDetails = styled.details`
+  text-align: left;
+
+  summary {
+    text-align: center;
+  }
+
+  > strong {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: ${glsp()};
+  }
+`;
+
+const ErrorLine = styled.p`
+  margin-bottom: ${glsp()};
+
+  small {
+    display: block;
+  }
+`;
+
 export default class ErrorBoundary extends React.Component {
   static getDerivedStateFromError(error) {
     return { error: error };
@@ -157,6 +181,7 @@ export default class ErrorBoundary extends React.Component {
           <EarthAnim>
             <div />
           </EarthAnim>
+          <PrettyError error={this.state.error} />
         </PageBody>
       </Page>
     ) : (
@@ -165,3 +190,32 @@ export default class ErrorBoundary extends React.Component {
     );
   }
 }
+
+function PrettyError({ error }) {
+  const stack = error.stack.split('\n');
+
+  return (
+    <Constrainer>
+      <ErrorDetails>
+        <summary>Error details</summary>
+        <strong>
+          {error.name}: {error.message}
+        </strong>
+        {stack.map((l, i) => {
+          const [name, path] = l.split(/@(.*)/);
+          return (
+            /* eslint-disable-next-line react/no-array-index-key */
+            <ErrorLine key={i}>
+              {name}
+              <small>{path}</small>
+            </ErrorLine>
+          );
+        })}
+      </ErrorDetails>
+    </Constrainer>
+  );
+}
+
+PrettyError.propTypes = {
+  error: T.object
+};

@@ -4,9 +4,9 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no' />
 
-    <link rel='icon' type='image/png' sizes='96x96' href='{{baseurl}}/assets/graphics/meta/favicon.png' />
-    <link rel='icon' type='image/png' sizes='192x192' href='{{baseurl}}/assets/graphics/meta/android-chrome.png' />
-    <link rel='apple-touch-icon' sizes='180x180' href='{{baseurl}}/assets/graphics/meta/apple-touch-icon.png' />
+    <link rel='icon' type='image/png' sizes='96x96' href='./assets/graphics/meta/favicon.png' />
+    <link rel='icon' type='image/png' sizes='192x192' href='./assets/graphics/meta/android-chrome.png' />
+    <link rel='apple-touch-icon' sizes='180x180' href='./assets/graphics/meta/apple-touch-icon.png' />
 
     <title>{{appTitle}}</title>
     <meta name='description' content='{{appDescription}}' />
@@ -15,22 +15,15 @@
     <meta name='twitter:site' content='' />
     <meta name='twitter:title' content='{{appTitle}}' />
     <meta name='twitter:description' content='{{appDescription}}' />
-    <meta name='twitter:image' content='{{baseurl}}/assets/graphics/meta/default-meta-image.png' />
+    <meta name='twitter:image' content='./assets/graphics/meta/default-meta-image.png' />
 
     <meta property='og:type' content='website' />
     <meta property='og:url' content='{{baseurl}}' />
     <meta property='og:site_name' content='{{appTitle}}' />
     <meta property='og:title' content='{{appTitle}}' />
-    <meta property='og:image' content='{{baseurl}}/assets/graphics/meta/default-meta-image.png' />
+    <meta property='og:image' content='./assets/graphics/meta/default-meta-image.png' />
     <meta property='og:description' content='{{appDescription}}' />
 
-    <!-- build:css /assets/styles/vendor.css -->
-      <link rel="stylesheet" href="/node_modules/katex/dist/katex.min.css">
-      <link rel="stylesheet" href="/node_modules/react-tippy/dist/tippy.css">
-      <link rel="stylesheet" href="/node_modules/react-toastify/dist/ReactToastify.min.css">
-    <!-- endbuild -->
-
-    <link rel='author' type='text/plain' href='humans.txt' />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,700;0,800;1,300;1,400;1,700;1,800&display=swap" rel="stylesheet"> 
 
@@ -99,12 +92,7 @@
       }
     </script>
 
-    <!-- build:js /assets/scripts/vendor.js -->
-    <script src='/assets/scripts/vendor.js'></script>
-    <!-- endbuild -->
-    <!-- build:js /assets/scripts/bundle.js -->
-    <script src='/assets/scripts/bundle.js'></script>
-    <!-- endbuild -->
+    <script type='module' src='./assets/scripts/main.js'></script>
 
     <!-- Feedback module -->
     <script type="text/javascript" src="https://fbm.earthdata.nasa.gov/for/Algorithm%20Publication%20Tool/feedback.js"></script>
