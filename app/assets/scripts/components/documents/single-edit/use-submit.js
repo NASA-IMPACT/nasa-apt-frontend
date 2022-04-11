@@ -42,6 +42,8 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
           }
         }
       }
+
+      return result;
     },
     [updateAtbd, history, atbd.status, atbd.version, step.id]
   );
@@ -89,6 +91,8 @@ export function useSubmitForVersionData(updateAtbd, atbd, hook) {
           }
         }
       }
+
+      return result;
     },
     [updateAtbd, history, atbd.version, atbd.status, hook]
   );
@@ -269,10 +273,14 @@ export function useSubmitForAtbdContacts({
         contacts_link: newContactsLink
       });
 
+      let result = {
+        error: erroredTask
+      };
+
       if (!erroredTask) {
         /* eslint-disable-next-line no-unused-vars */
         const { contacts_link: _, ...otherValues } = values;
-        const result = await updateAtbd({
+        result = await updateAtbd({
           ...otherValues,
           // When posting the atbd data the contacts_link has a different
           // structure.
@@ -299,6 +307,7 @@ export function useSubmitForAtbdContacts({
       }
 
       setSubmitting(false);
+      return result;
     },
     [contactsList, updateAtbd, createContact, updateContactUnbound]
   );

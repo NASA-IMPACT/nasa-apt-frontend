@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
+import T from 'prop-types';
+import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -16,7 +18,7 @@ import { DocumentModals, useDocumentModals } from '../use-document-modals';
 import ClosedReviewForbidden from './closed-review-forbidden';
 import Forbidden from '../../../a11n/forbidden';
 
-import { getDocumentEditStep } from './steps';
+import { getDocumentEditStep, getNextDocumentEditStep } from './steps';
 import {
   useSingleAtbd,
   useSingleAtbdEvents
@@ -31,6 +33,13 @@ import {
 import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
 import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
+import { documentEdit } from '../../../utils/url-creator';
+
+const FormFooter = styled.div`
+  display: flex;
+  align-items: right;
+  justify-content: right;
+`;
 
 function DocumentEdit() {
   const { id, version, step } = useParams();
@@ -133,6 +142,7 @@ function DocumentEdit() {
   }
 
   const stepDefinition = getDocumentEditStep(step);
+  const nextStepDefinition = getNextDocumentEditStep(step);
 
   // During the closed review process the document can't be edited.
   // Show a message instead of a step.
@@ -202,6 +212,15 @@ function DocumentEdit() {
               </InpageActions>
             </InpageHeaderSticky>
           )}
+          renderFormFooter={() => {
+            return (
+              !isClosedReview(atbd.data) && (
+                <FormFooter>
+                  <SaveAndContinueButton nextStep={nextStepDefinition.id} />
+                </FormFooter>
+              )
+            );
+          }}
         />
       )}
     </App>
@@ -248,4 +267,34 @@ const SaveButton = () => {
       </ButtonSecondary>
     </Tip>
   );
+};
+
+const SaveAndContinueButton = ({ nextStep }) => {
+  const history = useHistory();
+  const { dirty, isSubmitting, submitForm, status } = useFormikContext();
+  const submitAndContinue = useCallback(
+    (e) => {
+      submitForm(e).then(({ error, data }) => {
+        if (!error && nextStep) {
+          history.replace(documentEdit(data.alias, data.version, nextStep));
+        }
+      });
+    },
+    [submitForm, history, nextStep]
+  );
+
+  return (
+    <ButtonSecondary
+      title='Save current changes and continue to next step'
+      disabled={isSubmitting || !dirty || status?.working}
+      onClick={submitAndContinue}
+      useIcon='tick--small'
+    >
+      Save {nextStep && ' and continue'}
+    </ButtonSecondary>
+  );
+};
+
+SaveAndContinueButton.propTypes = {
+  nextStep: T.string
 };

@@ -15,7 +15,14 @@ import { formString } from '../../../utils/strings';
 import { getDocumentSectionLabel } from './sections';
 
 export default function StepIntroduction(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -73,6 +80,7 @@ export default function StepIntroduction(props) {
                   />
                 </FormikSectionFieldset>
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -83,6 +91,7 @@ export default function StepIntroduction(props) {
 
 StepIntroduction.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

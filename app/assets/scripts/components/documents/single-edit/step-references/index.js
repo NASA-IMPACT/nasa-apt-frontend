@@ -13,7 +13,14 @@ import { useSubmitForVersionData } from '../use-submit';
 import { createDocumentReferenceIndex } from '../../../../utils/references';
 
 export default function StepReferences(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -54,6 +61,7 @@ export default function StepReferences(props) {
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
               <ReferencesManager referenceIndex={referenceIndex} />
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -64,6 +72,7 @@ export default function StepReferences(props) {
 
 StepReferences.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,
