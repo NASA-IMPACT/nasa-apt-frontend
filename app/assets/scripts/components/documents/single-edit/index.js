@@ -274,16 +274,15 @@ const SaveAndContinueButton = ({ nextStep }) => {
   const history = useHistory();
   const { dirty, isSubmitting, submitForm, status } = useFormikContext();
   const submitAndContinue = useCallback(
-    (e) => {
-      submitForm(e).then(({ error, data }) => {
-        if (!error) {
-          if (nextStep) {
-            history.replace(documentEdit(data.alias, data.version, nextStep));
-          } else {
-            history.replace(documentView(data.alias, data.version));
-          }
+    async (e) => {
+      const { error, data } = await submitForm(e);
+      if (!error) {
+        if (nextStep) {
+          history.replace(documentEdit(data.alias, data.version, nextStep));
+        } else {
+          history.replace(documentView(data.alias, data.version));
         }
-      });
+      }
     },
     [submitForm, history, nextStep]
   );
