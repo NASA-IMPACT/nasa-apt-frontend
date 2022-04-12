@@ -34,7 +34,7 @@ import {
 import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
 import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
-import { documentEdit } from '../../../utils/url-creator';
+import { documentEdit, documentView } from '../../../utils/url-creator';
 
 const FormFooter = styled.div`
   display: flex;
@@ -276,8 +276,12 @@ const SaveAndContinueButton = ({ nextStep }) => {
   const submitAndContinue = useCallback(
     (e) => {
       submitForm(e).then(({ error, data }) => {
-        if (!error && nextStep) {
-          history.replace(documentEdit(data.alias, data.version, nextStep));
+        if (!error) {
+          if (nextStep) {
+            history.replace(documentEdit(data.alias, data.version, nextStep));
+          } else {
+            history.replace(documentView(data.alias, data.version));
+          }
         }
       });
     },
@@ -292,7 +296,7 @@ const SaveAndContinueButton = ({ nextStep }) => {
       onClick={submitAndContinue}
       useIcon='tick--small'
     >
-      Save {nextStep && ' and continue'}
+      Save and {nextStep ? 'continue' : 'view'}
     </Button>
   );
 };
