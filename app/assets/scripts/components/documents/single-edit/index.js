@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router';
 import { useFormikContext } from 'formik';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { Button } from '@devseed-ui/button';
 
 import App from '../../common/app';
 import { InpageHeaderSticky, InpageActions } from '../../../styles/inpage';
@@ -284,14 +285,15 @@ const SaveAndContinueButton = ({ nextStep }) => {
   );
 
   return (
-    <ButtonSecondary
+    <Button
+      variation='primary-raised-dark'
       title='Save current changes and continue to next step'
       disabled={isSubmitting || !dirty || status?.working}
       onClick={submitAndContinue}
       useIcon='tick--small'
     >
       Save {nextStep && ' and continue'}
-    </ButtonSecondary>
+    </Button>
   );
 };
 
