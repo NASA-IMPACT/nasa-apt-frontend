@@ -295,7 +295,7 @@ const SaveAndContinueButton = ({ nextStep }) => {
       onClick={submitAndContinue}
       useIcon='tick--small'
     >
-      Save and {nextStep ? 'continue' : 'view'}
+      Save &amp; {nextStep ? 'continue' : 'view'}
     </Button>
   );
 };
