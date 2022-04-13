@@ -30,7 +30,14 @@ const emptyFieldValue = {
 };
 
 export default function StepAlgoImplementation(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -97,6 +104,7 @@ export default function StepAlgoImplementation(props) {
                   fieldEmptyMessage='There are no Important Related Urls. You can start by adding one.'
                 />
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -107,6 +115,7 @@ export default function StepAlgoImplementation(props) {
 
 StepAlgoImplementation.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

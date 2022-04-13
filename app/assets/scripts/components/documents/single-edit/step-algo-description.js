@@ -39,7 +39,14 @@ const variableFieldsEmptyValue = {
 };
 
 export default function StepAlgoDescription(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -132,6 +139,7 @@ export default function StepAlgoDescription(props) {
                   fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
                 />
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -142,6 +150,7 @@ export default function StepAlgoDescription(props) {
 
 StepAlgoDescription.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

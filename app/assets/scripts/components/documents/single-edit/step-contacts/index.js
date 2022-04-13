@@ -24,7 +24,14 @@ import { documentEdit } from '../../../../utils/url-creator';
 import { LocalStore } from '../local-store';
 
 export default function StepContacts(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const {
@@ -127,6 +134,7 @@ export default function StepContacts(props) {
                   </FormSectionNotes>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
+                {renderFormFooter()}
               </Form>
             </FormBlock>
           </InpageBody>
@@ -138,6 +146,7 @@ export default function StepContacts(props) {
 
 StepContacts.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

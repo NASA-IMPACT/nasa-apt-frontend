@@ -23,7 +23,14 @@ import { isPublished } from '../status';
 import { LocalStore } from './local-store';
 
 export default function StepIdentifyingInformation(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 
@@ -145,6 +152,7 @@ export default function StepIdentifyingInformation(props) {
                   />
                 ))}
               </FormikSectionFieldset>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -155,6 +163,7 @@ export default function StepIdentifyingInformation(props) {
 
 StepIdentifyingInformation.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

@@ -18,7 +18,14 @@ import { getDocumentSectionLabel } from '../sections';
 import { LocalStore } from '../local-store';
 
 export default function StepCloseout(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 
@@ -67,6 +74,7 @@ export default function StepCloseout(props) {
 
                 <JournalDetailsSection atbd={atbd} />
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -77,6 +85,7 @@ export default function StepCloseout(props) {
 
 StepCloseout.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

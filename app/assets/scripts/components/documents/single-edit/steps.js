@@ -305,3 +305,11 @@ export const getDocumentEditStep = (id) => {
     ...STEPS[idx]
   };
 };
+
+export const getNextDocumentEditStep = (id) => {
+  const currentStep = getDocumentEditStep(id);
+  return {
+    stepNum: currentStep.stepNum + 1,
+    ...STEPS[currentStep.stepNum]
+  };
+};
