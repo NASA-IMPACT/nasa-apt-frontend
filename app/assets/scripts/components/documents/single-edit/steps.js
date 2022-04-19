@@ -251,7 +251,7 @@ export const STEPS = [
         journal_status: JOURNAL_NO_PUBLICATION,
         document: {
           abstract: '',
-          plain_summary: '',
+          plain_summary: EDITOR_SYM,
           key_points: '',
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,

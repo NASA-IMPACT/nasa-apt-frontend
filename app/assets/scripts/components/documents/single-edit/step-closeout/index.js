@@ -8,6 +8,7 @@ import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
 import RichTextContex2Formik from '../rich-text-ctx-formik';
 import { FormikInputTextarea } from '../../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
+import { FormikInputEditor } from '../../../common/forms/input-editor';
 import KeywordsField, { updateKeywordValues } from './field-keywords';
 import JournalDetailsSection from './journal-details';
 
@@ -61,7 +62,7 @@ export default function StepCloseout(props) {
                 >
                   <FieldAbstract />
 
-                  <FormikInputTextarea
+                  <FormikInputEditor
                     id='plain_summary'
                     name='document.plain_summary'
                     label='Plain Language Summary'

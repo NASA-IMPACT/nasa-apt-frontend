@@ -318,9 +318,16 @@ export const atbdContentSections = [
   {
     label: 'Plain Language Summary',
     id: 'plain_summary',
-    render: ({ element, document }) => (
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <MultilineString
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
           value={document.plain_summary}
           whenEmpty={<EmptySection />}
         />
