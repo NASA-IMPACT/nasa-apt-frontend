@@ -5,6 +5,7 @@ import { documentEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
 import { isPublished } from '../status';
 import { remindMinorVersionUpdate } from './document-minor-version-reminder';
+import LocalAtbdStorage from './local-store/atbd-storage';
 
 export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
   const history = useHistory();
@@ -28,6 +29,12 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
         processToast.success('Changes saved');
         // Update the path in case the alias changed.
         if (values.alias) {
+          // Force deleting the store because the form will
+          // be reinitalised if the alias has changed and show
+          // the recover-data toast otherwise
+          const localStorage = new LocalAtbdStorage();
+          localStorage.removeAtbd(atbd, step.id);
+
           history.replace(documentEdit(values.alias, atbd.version, step.id));
         }
 
@@ -45,7 +52,7 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
 
       return result;
     },
-    [updateAtbd, history, atbd.status, atbd.version, step.id]
+    [updateAtbd, history, atbd, step.id]
   );
 }
 
