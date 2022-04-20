@@ -306,9 +306,16 @@ export const atbdContentSections = [
   {
     label: 'Abstract',
     id: 'abstract',
-    render: ({ element, document }) => (
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <MultilineString
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
           value={document.abstract}
           whenEmpty={<EmptySection />}
         />

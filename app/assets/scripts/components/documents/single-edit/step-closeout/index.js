@@ -6,7 +6,6 @@ import { Form, FormHelperCounter } from '@devseed-ui/form';
 import { Inpage, InpageBody } from '../../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
 import RichTextContex2Formik from '../rich-text-ctx-formik';
-import { FormikInputTextarea } from '../../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import { FormikInputEditor } from '../../../common/forms/input-editor';
 import KeywordsField, { updateKeywordValues } from './field-keywords';
@@ -98,13 +97,27 @@ StepCloseout.propTypes = {
 
 const MAX_ABSTRACT_WORDS = 250;
 
+function wordCount(value) {
+  const keys = Object.keys(value);
+
+  if (keys.includes('children')) {
+    return value.children.reduce((sum, child) => sum + wordCount(child), 0);
+  }
+
+  if (keys.includes('text')) {
+    const trimmed = value.text.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+  }
+
+  return 0;
+}
+
 function FieldAbstract() {
   const [{ value }] = useField('document.abstract');
-  const trimmed = value.trim();
-  const words = trimmed ? trimmed.split(/\s+/).length : 0;
+  const words = wordCount(value);
 
   return (
-    <FormikInputTextarea
+    <FormikInputEditor
       id='abstract'
       name='document.abstract'
       label='Short ATBD summary'
