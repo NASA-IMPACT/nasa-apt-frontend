@@ -114,49 +114,49 @@ const devUserPwd = 'Password123!';
 const devUsers = [
   {
     name: 'Carlos Curator',
-    username: 'curator@example.com',
+    username: 'curator@apt.com',
     role: 'Curator',
     description: 'Curator user with access to all documents'
   },
   {
     name: 'Owner Olivia',
-    username: 'owner@example.com',
+    username: 'owner@apt.com',
     role: 'Contributor',
     description: 'User who owns atbd "Test ATBD 1"'
   },
   {
     name: 'Andre Author',
-    username: 'author1@example.com',
+    username: 'author1@apt.com',
     role: 'Contributor',
     description: 'Co-author on atbd "Test ATBD 1"'
   },
   {
     name: 'Anita Author',
-    username: 'author2@example.com',
+    username: 'author2@apt.com',
     role: 'Contributor',
     description: 'Co-author on atbd "Test ATBD 1"'
   },
   {
     name: 'Allison Author',
-    username: 'author3@example.com',
+    username: 'author3@apt.com',
     role: 'Contributor',
     description: 'Regular user with no ties to any document'
   },
   {
     name: 'Ricardo Reviewer',
-    username: 'reviewer1@example.com',
+    username: 'reviewer1@apt.com',
     role: 'Contributor',
     description: 'Reviewer on atbd "Test ATBD 1"'
   },
   {
     name: 'Ronald Reviewer',
-    username: 'reviewer2@example.com',
+    username: 'reviewer2@apt.com',
     role: 'Contributor',
     description: 'Reviewer on atbd "Test ATBD 1"'
   },
   {
     name: 'Rita Reviewer',
-    username: 'reviewer3@example.com',
+    username: 'reviewer3@apt.com',
     role: 'Contributor',
     description: 'Regular user with no ties to any document'
   }
