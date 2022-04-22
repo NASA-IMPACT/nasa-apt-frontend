@@ -306,6 +306,8 @@ export const atbdContentSections = [
   {
     label: 'Abstract',
     id: 'abstract',
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.abstract, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
@@ -325,6 +327,8 @@ export const atbdContentSections = [
   {
     label: 'Plain Language Summary',
     id: 'plain_summary',
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.plain_summary, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
         <SafeReadEditor
