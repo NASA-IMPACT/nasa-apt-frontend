@@ -97,11 +97,14 @@ StepCloseout.propTypes = {
 
 const MAX_ABSTRACT_WORDS = 250;
 
-function wordCount(value) {
+function wordCountFromSlateValue(value) {
   const keys = Object.keys(value);
 
   if (keys.includes('children')) {
-    return value.children.reduce((sum, child) => sum + wordCount(child), 0);
+    return value.children.reduce(
+      (sum, child) => sum + wordCountFromSlateValue(child),
+      0
+    );
   }
 
   if (keys.includes('text')) {
@@ -114,7 +117,7 @@ function wordCount(value) {
 
 function FieldAbstract() {
   const [{ value }] = useField('document.abstract');
-  const words = wordCount(value);
+  const words = wordCountFromSlateValue(value);
 
   return (
     <FormikInputEditor
