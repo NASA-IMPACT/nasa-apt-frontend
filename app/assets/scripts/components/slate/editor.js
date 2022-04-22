@@ -28,6 +28,7 @@ import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
 import { EquationPlugin } from './plugins/equation';
+import { InlineEquationPlugin } from './plugins/inline-equation';
 import { SubSectionPlugin, withSubsectionId } from './plugins/subsection';
 import {
   LinkPlugin,
@@ -78,6 +79,7 @@ const plugins = [
   ParagraphPlugin,
   ListPlugin,
   EquationPlugin,
+  InlineEquationPlugin,
   SubSectionPlugin,
   ReferencePlugin,
   TableBlockPlugin,
