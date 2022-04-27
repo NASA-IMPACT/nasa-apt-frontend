@@ -7,11 +7,67 @@ import React, {
 } from 'react';
 import T from 'prop-types';
 import Amplify, { Auth } from 'aws-amplify';
+import qs from 'qs';
 
 import { useContextualAbility, updateAbilityFor } from '../a11n';
 import config from '../config';
 import { createContextChecker } from '../utils/create-context-checker';
 import { CONTRIBUTOR_ROLE, CURATOR_ROLE } from '../a11n/rules';
+
+// If the user logs in through the cognito hosted UI, the user is then
+// redirected to the apt homepage with the token appended in the url.
+// Unfortunately Amplify is not able to pick it up, nor there's a way to
+// initialize Amplify Auth with a preexisting token. The solution is a hacky
+// approach where we set the token directly in the localstorage so that Amplify
+// will pick it up when booting.
+// The following issue explains the problem and the "solution": https://github.com/aws-amplify/amplify-js/issues/825#issuecomment-496977827
+// Note that this doesn't work with localstack because it redirects the user
+// back to the homepage with the wrong values in the url - instead of being:
+// https://example.com/#id_token=123&access_token=abc&expires_in=3600&token_type=Bearer
+// localstack does:
+// https://example.com/?id_token=123#id_token=123
+export function initAuthFromUrlParams() {
+  const decodePayload = (jwtToken) => {
+    const payload = jwtToken.split('.')[1];
+    return JSON.parse(atob(payload));
+  };
+
+  const calculateClockDrift = (iatAccessToken, iatIdToken) => {
+    const now = Math.floor(new Date() / 1000);
+    const iat = Math.min(iatAccessToken, iatIdToken);
+    return now - iat;
+  };
+
+  const locHash = location.hash.substring(1);
+  const { id_token, access_token } = qs.parse(locHash);
+  if (id_token && access_token) {
+    try {
+      const clientId = config.auth.userPoolWebClientId;
+      const idTokenData = decodePayload(id_token);
+      const accessTokenData = decodePayload(access_token);
+      const username = idTokenData['cognito:username'];
+
+      localStorage.setItem(
+        `CognitoIdentityServiceProvider.${clientId}.LastAuthUser`,
+        username
+      );
+      localStorage.setItem(
+        `CognitoIdentityServiceProvider.${clientId}.${username}.idToken`,
+        id_token
+      );
+      localStorage.setItem(
+        `CognitoIdentityServiceProvider.${clientId}.${username}.accessToken`,
+        access_token
+      );
+      localStorage.setItem(
+        `CognitoIdentityServiceProvider.${clientId}.${username}.clockDrift`,
+        calculateClockDrift(accessTokenData.iat, idTokenData.iat).toString()
+      );
+    } catch (error) {
+      // Something went wrong. User will not be authenticated.
+    }
+  }
+}
 
 Amplify.configure(config.auth);
 

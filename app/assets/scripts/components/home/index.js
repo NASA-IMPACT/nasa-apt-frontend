@@ -6,6 +6,9 @@ import { Heading } from '@devseed-ui/typography';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
 
+import welcomeIllustration from '../../../graphics/layout/welcome-illu.svg';
+import welcomeIllustrationPatt from '../../../graphics/layout/welcome-illu--pattern.svg';
+
 import App from '../common/app';
 import {
   Inpage,
@@ -17,10 +20,7 @@ import {
 import UniversalGridder from '../../styles/universal-gridder';
 import { Link } from '../../styles/clean/link';
 
-import { getAppURL } from '../../utils/history';
 import { useUser } from '../../context/user';
-
-const loc = getAppURL().cleanHref;
 
 const HomeInpageHeader = styled(InpageHeader)`
   max-height: 0;
@@ -208,7 +208,7 @@ const IlluInner = styled.div`
     left: 0;
     width: 100%;
     height: 100vh;
-    background-image: url('${loc}/assets/graphics/layout/welcome-illu--pattern.svg');
+    background-image: url('${welcomeIllustrationPatt}');
     background-repeat: repeat-y;
     background-size: 100% auto;
     content: '';
@@ -336,7 +336,7 @@ function Home() {
                 <IlluInner>
                   <img
                     alt='Tree of knowledge illustration'
-                    src={`${loc}/assets/graphics/layout/welcome-illu.svg`}
+                    src={welcomeIllustration}
                     width='640'
                     height='864'
                   />

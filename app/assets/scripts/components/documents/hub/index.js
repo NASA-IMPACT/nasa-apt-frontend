@@ -69,12 +69,12 @@ function Documents() {
   const onCreateClick = useDocumentCreate();
 
   return (
-    <App pageTitle='Documents'>
+    <App pageTitle='ATBDs'>
       {atbds.status === 'loading' && <GlobalLoading />}
       <Inpage>
         <InpageHeaderSticky>
           <InpageHeadline>
-            <InpageTitle>Documents</InpageTitle>
+            <InpageTitle>ATBDs</InpageTitle>
           </InpageHeadline>
           <InpageActions>
             <Button

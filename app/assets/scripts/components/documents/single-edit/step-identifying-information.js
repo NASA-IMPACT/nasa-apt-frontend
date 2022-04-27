@@ -20,9 +20,17 @@ import { formStringSymbol, citationFields } from '../citation';
 import { useSubmitForMetaAndVersionData } from './use-submit';
 import { getDocumentSectionLabel } from './sections';
 import { isPublished } from '../status';
+import { LocalStore } from './local-store';
 
 export default function StepIdentifyingInformation(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 
@@ -58,6 +66,7 @@ export default function StepIdentifyingInformation(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
@@ -143,6 +152,7 @@ export default function StepIdentifyingInformation(props) {
                   />
                 ))}
               </FormikSectionFieldset>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -153,6 +163,7 @@ export default function StepIdentifyingInformation(props) {
 
 StepIdentifyingInformation.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

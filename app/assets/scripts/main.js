@@ -1,9 +1,20 @@
+import 'katex/dist/katex.min.css';
+import 'react-tippy/dist/tippy.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+
 import '@babel/polyfill';
 import React, { useEffect } from 'react';
 import { render } from 'react-dom';
 import T from 'prop-types';
-import { Router, Route, Switch, useLocation } from 'react-router-dom';
+import {
+  Router,
+  Route,
+  Switch,
+  useLocation,
+  useHistory
+} from 'react-router-dom';
 import ReactGA from 'react-ga';
+import qs from 'qs';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
 import GlobalLoadingProvider from '@devseed-ui/global-loading';
@@ -32,7 +43,7 @@ import UserEdit from './components/users/edit';
 import UserDashboard from './components/dashboard';
 import About from './components/about';
 import Search from './components/search';
-import Help from './components/help';
+import UserGuide from './components/user-guide';
 import Sandbox from './components/sandbox';
 import UhOh from './components/uhoh/index';
 import SignIn from './a11n/signin';
@@ -41,13 +52,16 @@ import Authorize from './a11n/authorize';
 // Contexts
 import { AtbdsProvider } from './context/atbds-list';
 import { ContactsProvider } from './context/contacts-list';
-import { UserProvider } from './context/user';
+import { initAuthFromUrlParams, UserProvider } from './context/user';
 import { JsonPagesProvider } from './context/json-pages';
 import { SearchProvider } from './context/search';
 import { AbilityProvider } from './a11n/index';
 import { CommentCenterProvider } from './context/comment-center';
 import { CollaboratorsProvider } from './context/collaborators-list';
 import { ThreadsProvider } from './context/threads-list';
+
+// See note on context/user.js
+initAuthFromUrlParams();
 
 const composingComponents = [
   ErrorBoundary,
@@ -81,6 +95,21 @@ function ScrollTop() {
   return null;
 }
 
+function FeedbackPopupOpener() {
+  const { replace } = useHistory();
+  const { search } = useLocation();
+
+  useEffect(() => {
+    const { feedback } = qs.parse(search, { ignoreQueryPrefix: true });
+    if (feedback !== undefined) {
+      window.feedback?.showForm();
+      replace({ search: '' });
+    }
+  }, [search, replace]);
+
+  return null;
+}
+
 // Root component.
 function Root() {
   useEffect(() => {
@@ -101,6 +130,7 @@ function Root() {
     <Router history={history}>
       <DevseedUiThemeProvider theme={themeOverridesAPT}>
         <ScrollTop />
+        <FeedbackPopupOpener />
         <CollecticonsGlobalStyle />
         <GlobalStyle />
         <GlobalLoadingProvider />
@@ -158,7 +188,7 @@ function Root() {
             />
             <Route exact path='/about' component={About} />
             <Route exact path='/documents/search' component={Search} />
-            <Route exact path='/help/:pageId?' component={Help} />
+            <Route exact path='/user-guide/:pageId?' component={UserGuide} />
             <Route exact path='/signin' component={SignIn} />
             <Route exact path='/authorize' component={Authorize} />
             {process.env.NODE_ENV !== 'production' && (

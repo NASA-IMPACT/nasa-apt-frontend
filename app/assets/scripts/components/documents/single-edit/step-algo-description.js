@@ -22,6 +22,7 @@ import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { editorEmptyValue } from '../../slate';
 import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
 
 const DeletableFieldsetTriptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -38,7 +39,14 @@ const variableFieldsEmptyValue = {
 };
 
 export default function StepAlgoDescription(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -54,6 +62,7 @@ export default function StepAlgoDescription(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
@@ -130,6 +139,7 @@ export default function StepAlgoDescription(props) {
                   fieldEmptyMessage='There are no Output Variables. You can start by adding one.'
                 />
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -140,6 +150,7 @@ export default function StepAlgoDescription(props) {
 
 StepAlgoDescription.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -15,14 +16,21 @@ import {
   BreadcrumbMenu
 } from '../../styles/inpage';
 import { ContentBlock } from '../../styles/content-block';
-import Prose from '../../styles/typography/prose';
+import BaseProse from '../../styles/typography/prose';
 
 import { useSingleJsonPage, useJsonPagesIndex } from '../../context/json-pages';
 import PageSelectMenu from './page-select-menu';
 
-function Help() {
+const Prose = styled(BaseProse)`
+  h2,
+  h3 {
+    scroll-margin-top: 5rem;
+  }
+`;
+
+function UserGuide() {
   const { pageId } = useParams();
-  const { pagesIndex, fetchPagesIndex } = useJsonPagesIndex('help');
+  const { pagesIndex, fetchPagesIndex } = useJsonPagesIndex('user-guide');
 
   // Fetch index for the help pages.
   useEffect(() => {
@@ -33,7 +41,7 @@ function Help() {
   const selectedPage = pageId || pagesIndex.data?.[0]?.id;
 
   const { page, fetchSingleJsonPage } = useSingleJsonPage(
-    `help-${selectedPage}`
+    `user-guide-${selectedPage}`
   );
 
   // Fetch a single help page when the id changes.
@@ -58,7 +66,9 @@ function Help() {
     }
   }
 
-  const pageTitle = page.data?.content ? `${page.data.title} help` : 'Help';
+  const pageTitle = page.data?.content
+    ? `${page.data.title} help`
+    : 'User Guide';
 
   return (
     <App pageTitle={pageTitle}>
@@ -70,7 +80,7 @@ function Help() {
           <InpageHeaderSticky>
             <InpageHeadline>
               <InpageHeadHgroup>
-                <InpageTitle>Help</InpageTitle>
+                <InpageTitle>User Guide</InpageTitle>
                 <InpageHeadNav role='navigation'>
                   <BreadcrumbMenu>
                     <li>
@@ -99,4 +109,4 @@ function Help() {
   );
 }
 
-export default Help;
+export default UserGuide;

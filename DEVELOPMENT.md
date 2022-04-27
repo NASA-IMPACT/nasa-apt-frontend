@@ -104,6 +104,12 @@ Compiles the javascript and launches the server making the site available at `ht
 The system will watch files and execute tasks whenever one of them changes.
 The site will automatically refresh since it is bundled with livereload.
 
+If the app is behaving erratically, it may be related to parcel's cache.
+Resetting it could solve the problem:
+```
+yarn clean
+```
+
 ### ADRs
 > One of the hardest things to track during the life of a project is the motivation behind certain decisions. A new person coming on to a project may be perplexed, baffled, delighted, or infuriated by some past decisions.
 

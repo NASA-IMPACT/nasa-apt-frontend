@@ -13,9 +13,17 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
 
 export default function StepAlgoUsage(props) {
-  const { renderInpageHeader, atbd, id, version, step } = props;
+  const {
+    renderInpageHeader,
+    renderFormFooter,
+    atbd,
+    id,
+    version,
+    step
+  } = props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
@@ -31,6 +39,7 @@ export default function StepAlgoUsage(props) {
       onSubmit={onSubmit}
     >
       <Inpage>
+        <LocalStore atbd={atbd} />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
@@ -85,6 +94,7 @@ export default function StepAlgoUsage(props) {
                   />
                 </FormikSectionFieldset>
               </RichTextContex2Formik>
+              {renderFormFooter()}
             </Form>
           </FormBlock>
         </InpageBody>
@@ -95,6 +105,7 @@ export default function StepAlgoUsage(props) {
 
 StepAlgoUsage.propTypes = {
   renderInpageHeader: T.func,
+  renderFormFooter: T.func,
   step: T.object,
   id: T.oneOfType([T.string, T.number]),
   version: T.string,
