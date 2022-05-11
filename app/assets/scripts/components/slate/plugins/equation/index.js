@@ -4,7 +4,8 @@ import castArray from 'lodash.castarray';
 import { getAbove, getRenderElement } from '@udecode/slate-plugins';
 
 import { getPathForRootBlockInsert, modKey } from '../common/utils';
-import EquationEditor from './equation-editor';
+// import EquationEditor from './equation-editor';
+import EquationElement from './equation-element';
 import { isFocusedAnd } from '../common/is-focused-compose';
 import { isInNodeType } from '../common/is-node-type';
 
@@ -75,7 +76,7 @@ export const EquationPlugin = {
   name: 'LaTeX equation',
   renderElement: getRenderElement({
     type: EQUATION,
-    component: EquationEditor
+    component: EquationElement
   }),
   onKeyDown: (e, editor) => {
     castArray(EquationPlugin.toolbar).forEach((btn) => {
