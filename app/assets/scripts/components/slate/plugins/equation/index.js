@@ -9,6 +9,9 @@ import EquationElement from './equation-element';
 import { isFocusedAnd } from '../common/is-focused-compose';
 import { isInNodeType } from '../common/is-node-type';
 
+export * from './equation-modal';
+export * from './with-equation-modal';
+
 // Plugin type.
 export const EQUATION = 'equation';
 
@@ -58,17 +61,25 @@ export const insertEquation = (editor) => {
  * @param {String} btnId The button that triggered the use.
  */
 export const onEquationUse = (editor, btnId) => {
-  switch (btnId) {
-    case 'equation':
-      insertEquation(editor);
-      break;
-    case 'delete-equation':
-      deleteEquation(editor);
-      break;
-    case 'info-latex':
-      editor.simpleModal.show({ id: 'latex-modal' });
-      break;
-  }
+  const selection = editor.selection;
+  Transforms.deselect(editor);
+  editor.equationModal.show({
+    selection,
+    latexEquation: 'latex~example: e=mc^2'
+  });
+
+  // editor.referenceModal.show({ selection });
+  // switch (btnId) {
+  //   case 'equation':
+  //     insertEquation(editor);
+  //     break;
+  //   case 'delete-equation':
+  //     deleteEquation(editor);
+  //     break;
+  //   case 'info-latex':
+  //     editor.simpleModal.show({ id: 'latex-modal' });
+  //     break;
+  // }
 };
 
 // Plugin definition for slate-plugins framework.

@@ -27,7 +27,11 @@ import { withEmptyEditor } from './plugins/common/with-empty-editor';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
 import { ListPlugin, withList } from './plugins/list';
-import { EquationPlugin } from './plugins/equation';
+import {
+  EquationPlugin,
+  EquationModal,
+  withEquationModal
+} from './plugins/equation';
 import { SubSectionPlugin, withSubsectionId } from './plugins/subsection';
 import {
   LinkPlugin,
@@ -101,6 +105,7 @@ const withPlugins = [
   withLink,
   withLinkEditor,
   withReferenceModal,
+  withEquationModal,
   withSubsectionId,
   withCaption,
   withCaptionLayout([
@@ -145,6 +150,7 @@ export function RichTextEditor(props) {
         <EditorFloatingToolbar plugins={plugins} />
         <EditorLinkToolbar />
         <ReferencesModal />
+        <EquationModal />
         <ShortcutsModal plugins={plugins} />
         <LatexModal />
 

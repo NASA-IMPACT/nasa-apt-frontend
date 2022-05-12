@@ -2,14 +2,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Editor, Node, Transforms } from 'slate';
-import { ReactEditor, useEditor, useReadOnly } from 'slate-react';
+import { ReactEditor, useEditor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-
-import DeletableBlock from '../common/deletable-block';
+import { FormInput } from '@devseed-ui/form';
 
 const EQUATION_PDF_THRESHOLD = 600;
 
@@ -86,14 +85,12 @@ const EquationPreviewBody = styled.div`
 `;
 
 export default function EquationEditor(props) {
-  const { attributes, children, element } = props;
-  const readOnly = useReadOnly();
+  const { attributes, element, equation } = props;
   const editor = useEditor();
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
-
-  const latexEquation = Node.string(element);
-  const equation = <BlockMath math={latexEquation || 'latex~empty~equation'} />;
+  const [latexEquation, setLatexEquation] = useState(equation);
+  console.log(equation);
 
   useEffect(() => {
     const node = equationBlockRef.current;
@@ -127,12 +124,17 @@ export default function EquationEditor(props) {
     [editor, element]
   );
 
-  return readOnly ? (
-    <EquationPreviewBody {...attributes}>{equation}</EquationPreviewBody>
-  ) : (
-    <DeletableBlock deleteAction='delete-equation' {...attributes}>
+  const handleInputChange = (e) => setLatexEquation(e.target.value);
+
+  return (
+    <>
       <EquationInput spellCheck={false}>
-        <code>{children}</code>
+        <FormInput
+          id='equation'
+          name='equation'
+          value={latexEquation}
+          onChange={handleInputChange}
+        />
       </EquationInput>
       <EquationPreview
         // Both contentEditable style and are needed for the click to work. See
@@ -153,15 +155,16 @@ export default function EquationEditor(props) {
           )}
         </EquationPreviewHeader>
         <EquationPreviewBody ref={equationBlockRef}>
-          {equation}
+          <BlockMath math={latexEquation} />;
         </EquationPreviewBody>
       </EquationPreview>
-    </DeletableBlock>
+    </>
   );
 }
 
 EquationEditor.propTypes = {
   attributes: T.object,
   children: T.node,
-  element: T.object
+  element: T.object,
+  equation: T.string
 };
