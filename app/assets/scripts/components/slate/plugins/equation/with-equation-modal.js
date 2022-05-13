@@ -8,7 +8,7 @@ const equationModalInitialState = {
   // insertion is confirmed we need to know what the user had selected to know
   // where to insert the equation.
   selection: null,
-  equation: 'latex~empty~equation'
+  element: null
 };
 
 /**
@@ -34,7 +34,7 @@ export const withEquationModal = (editor) => {
       // Create an operation, storing some data to be used later.
       editor.equationModal.operation = createOp('show', {
         selection: data.selection,
-        equation: data.latexEquation
+        element: data.element
       });
       // Trigger a change event.
       editor.onChange();
@@ -59,11 +59,11 @@ export const withEquationModal = (editor) => {
       case 'show': {
         // Use the data from the operation's args to do things. In this case to
         // make the equation modal visible.
-        const { selection, equation } = args[0];
+        const { selection, element } = args[0];
         equationModalDataRef.current = {
           visible: true,
           selection,
-          equation
+          element
         };
         break;
       }

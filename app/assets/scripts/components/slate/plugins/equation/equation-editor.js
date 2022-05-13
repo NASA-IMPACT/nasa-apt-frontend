@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Editor, Node, Transforms } from 'slate';
+import { Node } from 'slate';
 import { ReactEditor, useEditor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -9,6 +9,7 @@ import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
 import { FormInput } from '@devseed-ui/form';
+import { upsertEquation } from '.';
 
 const EQUATION_PDF_THRESHOLD = 600;
 
@@ -85,12 +86,12 @@ const EquationPreviewBody = styled.div`
 `;
 
 export default function EquationEditor(props) {
-  const { attributes, element, equation } = props;
+  const { element } = props;
+  const equation = element ? Node.string(element) : 'latex~empty~equation';
   const editor = useEditor();
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
   const [latexEquation, setLatexEquation] = useState(equation);
-  console.log(equation);
 
   useEffect(() => {
     const node = equationBlockRef.current;
@@ -101,30 +102,11 @@ export default function EquationEditor(props) {
     }
   }, [latexEquation]);
 
-  // Focus equation input when user clicks the preview.
-  const onEquationPreviewClick = useCallback(
-    (e) => {
-      // When the equation preview box gets clicked we want to focus the
-      // equation field except if the user is selecting the equation characters.
-      const node = equationBlockRef.current;
-      if (node) {
-        const display = node.querySelector('.katex-display');
-        if (display.contains(e.target)) return;
-      }
-
-      // When trying to select something in the editor with a selection
-      // elsewhere (for example the equation characters) the slate editor
-      // crashed. To fix this before doing anything we use the Selection api to
-      // clear the existing selection (which is not managed by slate) and then
-      // let slate handle this from a clean slate. Pun intended.
-      window.getSelection().removeAllRanges();
-      const path = ReactEditor.findPath(editor, element);
-      Transforms.select(editor, Editor.end(editor, path));
-    },
-    [editor, element]
-  );
-
   const handleInputChange = (e) => setLatexEquation(e.target.value);
+  const handleSave = () => {
+    const path = element && ReactEditor.findPath(editor, element);
+    upsertEquation(editor, latexEquation, path);
+  };
 
   return (
     <>
@@ -142,7 +124,6 @@ export default function EquationEditor(props) {
         // https://github.com/ianstormtaylor/slate/issues/3421#issuecomment-591259117
         contentEditable={false}
         style={{ userSelect: 'none' }}
-        onClick={onEquationPreviewClick}
       >
         <EquationPreviewHeader>
           <EquationPreviewTitle>
@@ -155,16 +136,16 @@ export default function EquationEditor(props) {
           )}
         </EquationPreviewHeader>
         <EquationPreviewBody ref={equationBlockRef}>
-          <BlockMath math={latexEquation} />;
+          <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
+      <button type='button' onClick={handleSave}>
+        Save equation
+      </button>
     </>
   );
 }
 
 EquationEditor.propTypes = {
-  attributes: T.object,
-  children: T.node,
-  element: T.object,
-  equation: T.string
+  element: T.object
 };

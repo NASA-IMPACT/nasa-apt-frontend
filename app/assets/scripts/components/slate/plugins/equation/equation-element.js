@@ -15,8 +15,8 @@ function EquationElement(props) {
   const latexEquation = Node.string(element);
 
   const handleClick = useCallback(() => {
-    editor.equationModal.show({ latexEquation });
-  }, [editor, latexEquation]);
+    editor.equationModal.show({ element });
+  }, [editor, element]);
 
   return (
     <PreviewBody

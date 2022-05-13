@@ -6,12 +6,7 @@ import EquationEditor from './equation-editor';
 
 export function EquationModal() {
   const editor = useSlate();
-  const { visible, selection, equation } = editor.equationModal.getData();
-
-  const element = {
-    type: 'equation',
-    children: [{ text: 'latex~example: e=mc^2' }]
-  };
+  const { visible, element } = editor.equationModal.getData();
 
   const closeModal = useCallback(() => {
     editor.equationModal.reset();
@@ -24,7 +19,7 @@ export function EquationModal() {
       revealed={visible}
       onCloseClick={closeModal}
       title='Equation'
-      content={<EquationEditor element={element} equation={equation} />}
+      content={<EquationEditor element={element} />}
     />
   );
 }

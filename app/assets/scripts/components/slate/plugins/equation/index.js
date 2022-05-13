@@ -43,15 +43,23 @@ const deleteEquation = (editor) => {
  *
  * @param {Editor} editor Slate editor instance.
  */
-export const insertEquation = (editor) => {
+export const upsertEquation = (editor, equation, nodePath) => {
   const node = {
     type: EQUATION,
-    children: [{ text: 'latex~example: e=mc^2' }]
+    children: [{ text: equation }]
   };
 
-  const path = getPathForRootBlockInsert(editor);
-  Transforms.insertNodes(editor, node, { at: path });
-  Transforms.select(editor, path);
+  if (nodePath) {
+    Transforms.removeNodes(editor, { at: nodePath });
+    Transforms.insertNodes(editor, node, { at: nodePath });
+  } else {
+    const { selection } = editor.equationModal.getData();
+    Transforms.select(editor, selection);
+
+    const path = getPathForRootBlockInsert(editor);
+    Transforms.insertNodes(editor, node, { at: path });
+    Transforms.select(editor, path);
+  }
 };
 
 /**
@@ -62,16 +70,12 @@ export const insertEquation = (editor) => {
  */
 export const onEquationUse = (editor, btnId) => {
   const selection = editor.selection;
-  Transforms.deselect(editor);
-  editor.equationModal.show({
-    selection,
-    latexEquation: 'latex~example: e=mc^2'
-  });
+  editor.equationModal.show({ selection });
 
   // editor.referenceModal.show({ selection });
   // switch (btnId) {
   //   case 'equation':
-  //     insertEquation(editor);
+  //     upsertEquation(editor);
   //     break;
   //   case 'delete-equation':
   //     deleteEquation(editor);
