@@ -5,8 +5,16 @@ import { Node, Transforms } from 'slate';
 import { ReactEditor, useSlate } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
+import { themeVal } from '@devseed-ui/theme-provider';
+
 const PreviewBody = styled.div`
   cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: ${themeVal('shape.rounded')};
+
+  &:hover {
+    border-color: ${themeVal('color.baseAlphaE')};
+  }
 `;
 
 function EquationElement(props) {
@@ -29,7 +37,7 @@ function EquationElement(props) {
       <PreviewBody
         onClick={handleClick}
         contentEditable={false}
-        style={{ userSelect: 'none', cursor: 'pointer' }}
+        style={{ userSelect: 'none' }}
       >
         <BlockMath math={latexEquation || 'latex~empty~equation'} />
       </PreviewBody>

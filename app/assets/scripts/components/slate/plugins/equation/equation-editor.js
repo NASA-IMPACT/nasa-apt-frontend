@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Node } from 'slate';
@@ -8,13 +8,18 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-import { FormInput } from '@devseed-ui/form';
+import { FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
+import { Button } from '@devseed-ui/button';
 import { upsertEquation } from '.';
 
 const EQUATION_PDF_THRESHOLD = 600;
 
-const EquationInput = styled.p`
+const FormTextarea = styled(BaseFormTextarea)`
   font-family: monospace;
+  width: 100%;
+  height: 33px;
+  min-height: 33px;
+  transition: none;
 `;
 
 const EquationPreview = styled.aside`
@@ -24,6 +29,7 @@ const EquationPreview = styled.aside`
   border-radius: ${themeVal('shape.rounded')};
   box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaD')};
   margin-top: ${glsp()};
+  margin-bottom: ${glsp()};
 
   &::before {
     ${collecticon('triangle-up')}
@@ -92,6 +98,7 @@ export default function EquationEditor(props) {
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
   const [latexEquation, setLatexEquation] = useState(equation);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     const node = equationBlockRef.current;
@@ -102,6 +109,12 @@ export default function EquationEditor(props) {
     }
   }, [latexEquation]);
 
+  useLayoutEffect(() => {
+    textareaRef.current.style.height = '1px';
+    const scrollHeight = textareaRef.current.scrollHeight;
+    textareaRef.current.style.height = `${scrollHeight}px`;
+  }, [latexEquation]);
+
   const handleInputChange = (e) => setLatexEquation(e.target.value);
   const handleSave = () => {
     const path = element && ReactEditor.findPath(editor, element);
@@ -110,14 +123,14 @@ export default function EquationEditor(props) {
 
   return (
     <>
-      <EquationInput spellCheck={false}>
-        <FormInput
-          id='equation'
-          name='equation'
-          value={latexEquation}
-          onChange={handleInputChange}
-        />
-      </EquationInput>
+      <FormTextarea
+        ref={textareaRef}
+        id='equation'
+        name='equation'
+        value={latexEquation}
+        onChange={handleInputChange}
+        spellCheck={false}
+      />
       <EquationPreview
         // Both contentEditable style and are needed for the click to work. See
         // more at:
@@ -139,9 +152,13 @@ export default function EquationEditor(props) {
           <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
-      <button type='button' onClick={handleSave}>
+      <Button
+        type='button'
+        variation='primary-raised-dark'
+        onClick={handleSave}
+      >
         Save equation
-      </button>
+      </Button>
     </>
   );
 }
