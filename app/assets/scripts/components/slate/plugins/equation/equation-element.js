@@ -2,14 +2,16 @@ import React, { useCallback } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Node, Transforms } from 'slate';
-import { ReactEditor, useSlate } from 'slate-react';
+import { ReactEditor, useSelected, useSlate } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
 import { themeVal } from '@devseed-ui/theme-provider';
 
 const PreviewBody = styled.div`
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid;
+  border-color: ${({ inFocus }) =>
+    inFocus ? themeVal('color.baseAlphaE') : 'transparent'};
   border-radius: ${themeVal('shape.rounded')};
 
   &:hover {
@@ -19,6 +21,7 @@ const PreviewBody = styled.div`
 
 function EquationElement(props) {
   const editor = useSlate();
+  const isSelected = useSelected();
   const { element, attributes, children } = props;
   const latexEquation = Node.string(element);
 
@@ -38,6 +41,7 @@ function EquationElement(props) {
         onClick={handleClick}
         contentEditable={false}
         style={{ userSelect: 'none' }}
+        inFocus={isSelected}
       >
         <BlockMath math={latexEquation || 'latex~empty~equation'} />
       </PreviewBody>
