@@ -4,7 +4,6 @@ import castArray from 'lodash.castarray';
 import { getAbove, getRenderElement } from '@udecode/slate-plugins';
 
 import { getPathForRootBlockInsert, modKey } from '../common/utils';
-// import EquationEditor from './equation-editor';
 import EquationElement from './equation-element';
 import { isFocusedAnd } from '../common/is-focused-compose';
 import { isInNodeType } from '../common/is-node-type';
@@ -70,24 +69,26 @@ export const upsertEquation = (editor, equation, nodePath) => {
  */
 export const onEquationUse = (editor, btnId) => {
   const selection = editor.selection;
-  editor.equationModal.show({ selection });
 
-  // editor.referenceModal.show({ selection });
-  // switch (btnId) {
-  //   case 'equation':
-  //     upsertEquation(editor);
-  //     break;
-  //   case 'delete-equation':
-  //     deleteEquation(editor);
-  //     break;
-  //   case 'info-latex':
-  //     editor.simpleModal.show({ id: 'latex-modal' });
-  //     break;
-  // }
+  switch (btnId) {
+    case 'equation':
+      editor.equationModal.show({ selection });
+      break;
+    case 'edit-equation':
+      editor.equationModal.show({ selection });
+      break;
+    case 'delete-equation':
+      deleteEquation(editor);
+      break;
+    case 'info-latex':
+      editor.simpleModal.show({ id: 'latex-modal' });
+      break;
+  }
 };
 
 // Plugin definition for slate-plugins framework.
 export const EquationPlugin = {
+  voidTypes: [EQUATION],
   name: 'LaTeX equation',
   renderElement: getRenderElement({
     type: EQUATION,
@@ -122,6 +123,14 @@ export const EquationPlugin = {
       hotkey: 'mod+Shift+I',
       label: 'LaTeX cheatsheet',
       tip: (key) => `LaTeX cheatsheet (${modKey(key)})`,
+      isInContext: isFocusedAnd(isInEquation)
+    },
+    {
+      id: 'edit-equation',
+      icon: 'pencil',
+      hotkey: 'mod+Shift+E',
+      label: 'Edit equation',
+      tip: (key) => `Edit equation (${modKey(key)})`,
       isInContext: isFocusedAnd(isInEquation)
     },
     {

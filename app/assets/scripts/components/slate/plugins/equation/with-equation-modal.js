@@ -59,11 +59,17 @@ export const withEquationModal = (editor) => {
       case 'show': {
         // Use the data from the operation's args to do things. In this case to
         // make the equation modal visible.
-        const { selection, element } = args[0];
+        const { selection } = args[0];
+
+        const path = [...selection.anchor.path];
+        const element = path.slice(0, -1).reduce((path, index) => {
+          return path.children[index];
+        }, editor);
+
         equationModalDataRef.current = {
           visible: true,
           selection,
-          element
+          element: element.type === 'equation' ? element : null
         };
         break;
       }
