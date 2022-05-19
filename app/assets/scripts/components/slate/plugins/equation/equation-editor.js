@@ -119,6 +119,7 @@ export default function EquationEditor(props) {
   const handleSave = () => {
     const path = element && ReactEditor.findPath(editor, element);
     upsertEquation(editor, latexEquation, path);
+    editor.equationModal.reset();
   };
 
   return (
