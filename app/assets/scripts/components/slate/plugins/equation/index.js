@@ -80,9 +80,6 @@ export const onEquationUse = (editor, btnId) => {
     case 'delete-equation':
       deleteEquation(editor);
       break;
-    case 'info-latex':
-      editor.simpleModal.show({ id: 'latex-modal' });
-      break;
   }
 };
 
@@ -117,14 +114,6 @@ export const EquationPlugin = {
     tip: (key) => `Equation (${modKey(key)})`
   },
   contextToolbar: [
-    {
-      id: 'info-latex',
-      icon: 'circle-information',
-      hotkey: 'mod+Shift+I',
-      label: 'LaTeX cheatsheet',
-      tip: (key) => `LaTeX cheatsheet (${modKey(key)})`,
-      isInContext: isFocusedAnd(isInEquation)
-    },
     {
       id: 'edit-equation',
       icon: 'pencil',

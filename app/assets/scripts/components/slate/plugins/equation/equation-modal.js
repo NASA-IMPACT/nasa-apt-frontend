@@ -18,7 +18,7 @@ export function EquationModal() {
       size='large'
       revealed={visible}
       onCloseClick={closeModal}
-      title='Equation'
+      title='Edit Equation'
       content={<EquationEditor element={element} />}
     />
   );

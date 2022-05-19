@@ -8,7 +8,7 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-import { FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
+import { FormLabel, FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 import { upsertEquation } from '.';
 
@@ -122,8 +122,23 @@ export default function EquationEditor(props) {
     editor.equationModal.reset();
   };
 
+  const showInfo = () => {
+    editor.simpleModal.show({ id: 'latex-modal' });
+  };
+
   return (
     <>
+      <FormLabel id='equation'>
+        Enter Latex code
+        <Button
+          type='button'
+          useIcon='circle-information'
+          hideText
+          onClick={showInfo}
+        >
+          Latex cheatsheet
+        </Button>
+      </FormLabel>
       <FormTextarea
         ref={textareaRef}
         id='equation'
