@@ -127,23 +127,23 @@ export default function EquationEditor(props) {
     editor.simpleModal.show({ id: 'latex-modal' });
   };
 
-  const label = (
-    <>
-      Enter Latex code
-      <Button
-        type='button'
-        useIcon='circle-information'
-        hideText
-        onClick={showInfo}
-      >
-        Latex cheatsheet
-      </Button>
-    </>
-  );
-
   return (
     <>
-      <FormGroupStructure id='equation' label={label}>
+      <FormGroupStructure
+        id='equation'
+        label='Enter Latex code'
+        toolbarItems={
+          <Button
+            type='button'
+            useIcon='circle-information'
+            size='small'
+            hideText
+            onClick={showInfo}
+          >
+            Latex cheatsheet
+          </Button>
+        }
+      >
         <FormTextarea
           ref={textareaRef}
           id='equation'
