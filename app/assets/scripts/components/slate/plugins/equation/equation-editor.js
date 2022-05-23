@@ -18,9 +18,9 @@ const EQUATION_PDF_THRESHOLD = 600;
 const FormTextarea = styled(BaseFormTextarea)`
   font-family: monospace;
   width: 100%;
-  height: 33px;
-  min-height: 33px;
-  transition: none;
+  height: 34px;
+  min-height: 34px;
+  transition: border 0.24s ease 0s;
 `;
 
 const EquationPreview = styled.aside`
