@@ -8,7 +8,7 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-import { FormLabel, FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
+import { FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 import { upsertEquation } from '.';
 import FormGroupStructure from '../../../common/forms/form-group-structure';
