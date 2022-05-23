@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Node, Transforms } from 'slate';
 import { ReactEditor, useSelected, useSlate } from 'slate-react';
 import { BlockMath } from 'react-katex';
@@ -10,14 +10,21 @@ import { themeVal, rgba } from '@devseed-ui/theme-provider';
 const PreviewBody = styled.div`
   cursor: pointer;
   border: 1px solid;
-  border-color: ${({ inFocus }) =>
-    inFocus ? themeVal('color.primary') : 'transparent'};
   border-radius: ${themeVal('shape.rounded')};
   transition: border-color 0.24s ease 0s;
 
-  &:hover {
-    border-color: ${rgba(themeVal('color.primary'), 0.75)};
-  }
+  ${({ inFocus }) =>
+    inFocus
+      ? css`
+          border-color: ${rgba(themeVal('color.primary'), 0.48)};
+        `
+      : css`
+          border-color: transparent;
+
+          &:hover {
+            border-color: ${rgba(themeVal('color.primary'), 0.24)};
+          }
+        `}
 `;
 
 function EquationElement(props) {
