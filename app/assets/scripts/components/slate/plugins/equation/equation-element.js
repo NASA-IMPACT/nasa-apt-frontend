@@ -5,17 +5,18 @@ import { Node, Transforms } from 'slate';
 import { ReactEditor, useSelected, useSlate } from 'slate-react';
 import { BlockMath } from 'react-katex';
 
-import { themeVal } from '@devseed-ui/theme-provider';
+import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
 const PreviewBody = styled.div`
   cursor: pointer;
   border: 1px solid;
   border-color: ${({ inFocus }) =>
-    inFocus ? themeVal('color.baseAlphaE') : 'transparent'};
+    inFocus ? themeVal('color.primary') : 'transparent'};
   border-radius: ${themeVal('shape.rounded')};
+  transition: border-color 0.24s ease 0s;
 
   &:hover {
-    border-color: ${themeVal('color.baseAlphaE')};
+    border-color: ${rgba(themeVal('color.primary'), 0.75)};
   }
 `;
 
