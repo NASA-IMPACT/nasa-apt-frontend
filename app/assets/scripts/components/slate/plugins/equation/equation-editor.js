@@ -11,6 +11,7 @@ import collecticon from '@devseed-ui/collecticons';
 import { FormLabel, FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 import { upsertEquation } from '.';
+import FormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
 
@@ -126,27 +127,32 @@ export default function EquationEditor(props) {
     editor.simpleModal.show({ id: 'latex-modal' });
   };
 
+  const label = (
+    <>
+      Enter Latex code
+      <Button
+        type='button'
+        useIcon='circle-information'
+        hideText
+        onClick={showInfo}
+      >
+        Latex cheatsheet
+      </Button>
+    </>
+  );
+
   return (
     <>
-      <FormLabel id='equation'>
-        Enter Latex code
-        <Button
-          type='button'
-          useIcon='circle-information'
-          hideText
-          onClick={showInfo}
-        >
-          Latex cheatsheet
-        </Button>
-      </FormLabel>
-      <FormTextarea
-        ref={textareaRef}
-        id='equation'
-        name='equation'
-        value={latexEquation}
-        onChange={handleInputChange}
-        spellCheck={false}
-      />
+      <FormGroupStructure id='equation' label={label}>
+        <FormTextarea
+          ref={textareaRef}
+          id='equation'
+          name='equation'
+          value={latexEquation}
+          onChange={handleInputChange}
+          spellCheck={false}
+        />
+      </FormGroupStructure>
       <EquationPreview
         // Both contentEditable style and are needed for the click to work. See
         // more at:
