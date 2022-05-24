@@ -3,7 +3,7 @@ import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { Node, Transforms } from 'slate';
 import { ReactEditor, useSelected, useSlate } from 'slate-react';
-import { BlockMath } from 'react-katex';
+import { BlockMath, InlineMath } from 'react-katex';
 
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
@@ -12,6 +12,8 @@ const PreviewBody = styled.div`
   border: 1px solid;
   border-radius: ${themeVal('shape.rounded')};
   transition: border-color 0.24s ease 0s;
+
+  display: ${({ isInline }) => (isInline ? 'inline' : 'block')};
 
   ${({ inFocus }) =>
     inFocus
@@ -43,18 +45,20 @@ function EquationElement(props) {
     });
   }, [editor, element]);
 
+  const MathElement = element.isInline ? InlineMath : BlockMath;
+
   return (
-    <div {...attributes}>
-      <PreviewBody
-        onClick={handleClick}
-        contentEditable={false}
-        style={{ userSelect: 'none' }}
-        inFocus={isSelected}
-      >
-        <BlockMath math={latexEquation || 'latex~empty~equation'} />
-      </PreviewBody>
-      <div>{children}</div>
-    </div>
+    <PreviewBody
+      onClick={handleClick}
+      contentEditable={false}
+      style={{ userSelect: 'none' }}
+      inFocus={isSelected}
+      isInline={element.isInline}
+      {...attributes}
+    >
+      <MathElement math={latexEquation || 'latex~empty~equation'} />
+      {children}
+    </PreviewBody>
   );
 }
 
