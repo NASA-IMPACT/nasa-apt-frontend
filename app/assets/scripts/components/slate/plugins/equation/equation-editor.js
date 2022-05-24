@@ -8,7 +8,10 @@ import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-import { FormTextarea as BaseFormTextarea } from '@devseed-ui/form';
+import {
+  FormTextarea as BaseFormTextarea,
+  FormSwitch as BaseFormSwitch
+} from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 import { upsertEquation } from '.';
 import FormGroupStructure from '../../../common/forms/form-group-structure';
@@ -21,6 +24,11 @@ const FormTextarea = styled(BaseFormTextarea)`
   height: 34px;
   min-height: 34px;
   transition: border 0.24s ease 0s;
+`;
+
+const FormSwitch = styled(BaseFormSwitch)`
+  display: grid;
+  margin-bottom: ${glsp()};
 `;
 
 const EquationPreview = styled.aside`
@@ -99,6 +107,7 @@ export default function EquationEditor(props) {
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
   const [latexEquation, setLatexEquation] = useState(equation);
+  const [isInline, setIsInline] = useState(element ? element.isInline : false);
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -119,7 +128,7 @@ export default function EquationEditor(props) {
   const handleInputChange = (e) => setLatexEquation(e.target.value);
   const handleSave = () => {
     const path = element && ReactEditor.findPath(editor, element);
-    upsertEquation(editor, latexEquation, path);
+    upsertEquation(editor, latexEquation, isInline, path);
     editor.equationModal.reset();
   };
 
@@ -174,6 +183,15 @@ export default function EquationEditor(props) {
           <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
+
+      <FormSwitch
+        type='checkbox'
+        checked={isInline}
+        onChange={() => setIsInline(!isInline)}
+      >
+        Inline
+      </FormSwitch>
+
       <Button
         type='button'
         variation='primary-raised-dark'

@@ -42,10 +42,11 @@ const deleteEquation = (editor) => {
  *
  * @param {Editor} editor Slate editor instance.
  */
-export const upsertEquation = (editor, equation, nodePath) => {
+export const upsertEquation = (editor, equation, isInline, nodePath) => {
   const node = {
     type: EQUATION,
-    children: [{ text: equation }]
+    children: [{ text: equation }],
+    isInline
   };
 
   if (nodePath) {
