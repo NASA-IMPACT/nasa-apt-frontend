@@ -143,6 +143,7 @@ export default function EquationEditor(props) {
         label='Enter Latex code'
         toolbarItems={
           <Button
+            key='info-button'
             type='button'
             useIcon='circle-information'
             size='small'
