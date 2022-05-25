@@ -7,7 +7,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
-const PreviewBody = styled.div`
+const PreviewBody = styled.span`
   cursor: pointer;
   border: 1px solid;
   border-radius: ${themeVal('shape.rounded')};
