@@ -69,7 +69,9 @@ export const withEquationModal = (editor) => {
         equationModalDataRef.current = {
           visible: true,
           selection,
-          element: element.type === 'equation' ? element : null
+          element: ['equation', 'equation-inline'].includes(element.type)
+            ? element
+            : null
         };
         break;
       }

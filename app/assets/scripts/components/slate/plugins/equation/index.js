@@ -1,7 +1,7 @@
 import isHotkey from 'is-hotkey';
 import { Transforms } from 'slate';
 import castArray from 'lodash.castarray';
-import { getAbove, getRenderElement } from '@udecode/slate-plugins';
+import { getAbove, getRenderElements } from '@udecode/slate-plugins';
 
 import { getPathForRootBlockInsert, modKey } from '../common/utils';
 import EquationElement from './equation-element';
@@ -13,6 +13,7 @@ export * from './with-equation-modal';
 
 // Plugin type.
 export const EQUATION = 'equation';
+export const EQUATION_INLINE = 'equation-inline';
 
 /**
  * Check if the current selection is inside a EQUATION node
@@ -20,7 +21,8 @@ export const EQUATION = 'equation';
  * @param {Editor} editor The slate editor instance
  * @returns boolean
  */
-const isInEquation = (editor) => isInNodeType(editor, EQUATION);
+const isInEquation = (editor) =>
+  isInNodeType(editor, EQUATION) || isInNodeType(editor, EQUATION_INLINE);
 
 /**
  * Remove the EQUATION at selection
@@ -28,7 +30,9 @@ const isInEquation = (editor) => isInNodeType(editor, EQUATION);
  */
 const deleteEquation = (editor) => {
   if (isInEquation(editor)) {
-    const entry = getAbove(editor, { match: { type: EQUATION } });
+    const entry =
+      getAbove(editor, { match: { type: EQUATION } }) ||
+      getAbove(editor, { match: { type: EQUATION_INLINE } });
     if (entry) {
       Transforms.removeNodes(editor, {
         at: entry[1]
@@ -44,21 +48,34 @@ const deleteEquation = (editor) => {
  */
 export const upsertEquation = (editor, equation, isInline, nodePath) => {
   const node = {
-    type: EQUATION,
+    type: isInline ? EQUATION_INLINE : EQUATION,
     children: [{ text: equation }],
     isInline
   };
 
   if (nodePath) {
-    Transforms.removeNodes(editor, { at: nodePath });
+    // replace existing equation, we first add the updated equation and
+    // then remove the outdated one
     Transforms.insertNodes(editor, node, { at: nodePath });
+
+    // Adding a new inline node adds an empty text node after the equation, we need to
+    // remove the node after that.
+    const nodeOffset = isInline ? 2 : 1;
+    const removeElementIndex = nodePath[nodePath.length - 1] + nodeOffset;
+    const parentPath = nodePath.slice(0, -1);
+    Transforms.removeNodes(editor, { at: [...parentPath, removeElementIndex] });
   } else {
+    // add new equation
     const { selection } = editor.equationModal.getData();
     Transforms.select(editor, selection);
 
-    const path = getPathForRootBlockInsert(editor);
-    Transforms.insertNodes(editor, node, { at: path });
-    Transforms.select(editor, path);
+    if (isInline) {
+      Transforms.insertNodes(editor, node);
+    } else {
+      const path = getPathForRootBlockInsert(editor);
+      Transforms.insertNodes(editor, node, { at: path });
+      Transforms.select(editor, path);
+    }
   }
 };
 
@@ -86,12 +103,13 @@ export const onEquationUse = (editor, btnId) => {
 
 // Plugin definition for slate-plugins framework.
 export const EquationPlugin = {
-  voidTypes: [EQUATION],
+  voidTypes: [EQUATION, EQUATION_INLINE],
+  inlineTypes: [EQUATION_INLINE],
   name: 'LaTeX equation',
-  renderElement: getRenderElement({
-    type: EQUATION,
-    component: EquationElement
-  }),
+  renderElement: getRenderElements([
+    { type: EQUATION_INLINE, component: EquationElement },
+    { type: EQUATION, component: EquationElement }
+  ]),
   onKeyDown: (e, editor) => {
     castArray(EquationPlugin.toolbar).forEach((btn) => {
       if (isHotkey(btn.hotkey, e)) {
