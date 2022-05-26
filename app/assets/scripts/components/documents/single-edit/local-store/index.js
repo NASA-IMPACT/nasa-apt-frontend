@@ -21,7 +21,15 @@ export function LocalStore({ atbd }) {
   const recoverData = useCallback(() => {
     const localAtbdStorage = new LocalAtbdStorage();
     const localValues = localAtbdStorage.getAtbd(atbd, stepId);
-    setValues(defaultsDeep(localValues, values));
+
+    const { document, ...meta } = values;
+    const { document: localDocument, ...localMeta } = localValues;
+
+    setValues({
+      ...defaultsDeep(localMeta, meta),
+      document: Object.assign({}, document, localDocument)
+    });
+
     setDisplayRecoverToast(false);
   }, [atbd, values, setValues, stepId]);
 
