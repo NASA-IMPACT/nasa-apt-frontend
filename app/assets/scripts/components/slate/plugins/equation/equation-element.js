@@ -7,6 +7,8 @@ import { BlockMath, InlineMath } from 'react-katex';
 
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
+import { isInlineEquation } from '.';
+
 const PreviewBody = styled.span`
   cursor: pointer;
   border: 1px solid;
@@ -45,7 +47,8 @@ function EquationElement(props) {
     });
   }, [editor, element]);
 
-  const MathElement = element.isInline ? InlineMath : BlockMath;
+  const isInline = isInlineEquation(element);
+  const MathElement = isInline ? InlineMath : BlockMath;
 
   return (
     <PreviewBody
@@ -53,7 +56,7 @@ function EquationElement(props) {
       contentEditable={false}
       style={{ userSelect: 'none' }}
       inFocus={isSelected}
-      isInline={element.isInline}
+      isInline={isInline}
       {...attributes}
     >
       <MathElement math={latexEquation || 'latex~empty~equation'} />

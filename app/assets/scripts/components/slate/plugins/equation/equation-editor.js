@@ -13,7 +13,7 @@ import {
   FormSwitch as BaseFormSwitch
 } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import { upsertEquation } from '.';
+import { upsertEquation, isInlineEquation } from '.';
 import FormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
@@ -107,7 +107,9 @@ export default function EquationEditor(props) {
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
   const [latexEquation, setLatexEquation] = useState(equation);
-  const [isInline, setIsInline] = useState(element ? element.isInline : false);
+  const [isInline, setIsInline] = useState(
+    element ? isInlineEquation(element) : false
+  );
   const textareaRef = useRef(null);
 
   useEffect(() => {

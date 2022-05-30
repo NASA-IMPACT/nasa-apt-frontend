@@ -25,6 +25,14 @@ const isInEquation = (editor) =>
   isInNodeType(editor, EQUATION) || isInNodeType(editor, EQUATION_INLINE);
 
 /**
+ * Returns true if the node is an inline equation
+ *
+ * @param {Node} node The slate editor instance
+ * @returns boolean
+ */
+export const isInlineEquation = (node) => node.type === 'equation-inline';
+
+/**
  * Remove the EQUATION at selection
  * @param {Editor} editor The slate editor instance
  */
@@ -49,8 +57,7 @@ const deleteEquation = (editor) => {
 export const upsertEquation = (editor, equation, isInline, nodePath) => {
   const node = {
     type: isInline ? EQUATION_INLINE : EQUATION,
-    children: [{ text: equation }],
-    isInline
+    children: [{ text: equation }]
   };
 
   if (nodePath) {
