@@ -17,6 +17,11 @@ import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
 import { LocalStore } from '../local-store';
 
+import { ImageBlockPlugin } from '../../../slate/plugins/image';
+import { TableBlockPlugin } from '../../../slate/plugins/table';
+
+const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin];
+
 export default function StepCloseout(props) {
   const {
     renderInpageHeader,
@@ -126,6 +131,7 @@ function FieldAbstract() {
       label='Short ATBD summary'
       description={formString('closeout.abstract')}
       growWithContents
+      excludePlugins={exlcudePlugins}
       helper={
         <FormHelperCounter
           value={words}
