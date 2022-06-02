@@ -14,7 +14,12 @@ import {
   FormCheckableGroup
 } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import { insertEquation, updateEquation, isInlineEquation } from '.';
+import {
+  insertEquation,
+  updateEquation,
+  deleteEquation,
+  isInlineEquation
+} from '.';
 import BaseFormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
@@ -100,6 +105,15 @@ const EquationPreviewBody = styled.div`
   }
 `;
 
+const FormFooter = styled.div`
+  margin-top: ${glsp(1)};
+  text-align: right;
+
+  & > button {
+    margin-left: ${glsp(0.5)};
+  }
+`;
+
 export default function EquationEditor(props) {
   const { element } = props;
   const equation = element ? Node.string(element) : 'latex~empty~equation';
@@ -139,6 +153,15 @@ export default function EquationEditor(props) {
 
   const showInfo = () => {
     editor.simpleModal.show({ id: 'latex-modal' });
+  };
+
+  const closeModal = () => {
+    editor.equationModal.reset();
+  };
+
+  const handleDelete = () => {
+    deleteEquation(editor);
+    closeModal();
   };
 
   return (
@@ -214,13 +237,24 @@ export default function EquationEditor(props) {
         </EquationPreviewBody>
       </EquationPreview>
 
-      <Button
-        type='button'
-        variation='primary-raised-dark'
-        onClick={handleSave}
-      >
-        Save equation
-      </Button>
+      <FormFooter>
+        <Button type='button' useIcon='xmark--small' onClick={closeModal}>
+          Cancel
+        </Button>
+        {element && (
+          <Button type='button' useIcon='trash-bin' onClick={handleDelete}>
+            Delete
+          </Button>
+        )}
+        <Button
+          type='button'
+          variation='primary-raised-dark'
+          useIcon='tick--small'
+          onClick={handleSave}
+        >
+          {element ? 'Update' : 'Insert'}
+        </Button>
+      </FormFooter>
     </>
   );
 }

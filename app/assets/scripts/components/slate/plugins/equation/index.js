@@ -37,7 +37,7 @@ export const isInlineEquation = (node) => node.type === 'equation-inline';
  * Remove the EQUATION at selection
  * @param {Editor} editor The slate editor instance
  */
-const deleteEquation = (editor) => {
+export const deleteEquation = (editor) => {
   if (isInEquation(editor)) {
     const entry =
       getAbove(editor, { match: { type: EQUATION } }) ||
