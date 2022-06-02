@@ -120,8 +120,17 @@ const withPlugins = [
 const HEADER_HEIGHT = 92;
 
 export function RichTextEditor(props) {
-  const { id, onChange: inputOnChange, value: inputVal } = props;
+  const {
+    id,
+    onChange: inputOnChange,
+    value: inputVal,
+    excludePlugins
+  } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
+
+  const usePlugins = useMemo(() => {
+    return plugins.filter((plugin) => !excludePlugins.includes(plugin));
+  }, [excludePlugins]);
 
   // The editor needs to work with an array, but we store the value as an object
   // which is the first and only child.
@@ -140,17 +149,17 @@ export function RichTextEditor(props) {
           boundaryElement='[data-sticky="boundary"]'
           hideOnBoundaryHit={false}
         >
-          <EditorToolbar plugins={plugins} />
+          <EditorToolbar plugins={usePlugins} />
         </StickyElement>
-        <EditorFloatingToolbar plugins={plugins} />
+        <EditorFloatingToolbar plugins={usePlugins} />
         <EditorLinkToolbar />
         <ReferencesModal />
-        <ShortcutsModal plugins={plugins} />
+        <ShortcutsModal plugins={usePlugins} />
         <LatexModal />
 
         <EditableDebug
           id={id}
-          plugins={plugins}
+          plugins={usePlugins}
           value={value}
           onDebugChange={onChange}
         />
@@ -162,7 +171,12 @@ export function RichTextEditor(props) {
 RichTextEditor.propTypes = {
   id: T.string,
   onChange: T.func,
-  value: T.object
+  value: T.object,
+  excludePlugins: T.array
+};
+
+RichTextEditor.defaultProps = {
+  excludePlugins: []
 };
 
 export function ReadEditor(props) {
