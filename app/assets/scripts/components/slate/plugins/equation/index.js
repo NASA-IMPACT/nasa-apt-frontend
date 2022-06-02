@@ -1,5 +1,5 @@
 import isHotkey from 'is-hotkey';
-import { Transforms } from 'slate';
+import { Editor, Transforms } from 'slate';
 import { ReactEditor } from 'slate-react';
 import castArray from 'lodash.castarray';
 import { getAbove, getRenderElements } from '@udecode/slate-plugins';
@@ -73,23 +73,61 @@ export const insertEquation = (editor, equation, isInline) => {
   }
 };
 
-export const updateEquation = (editor, equation, isInline, element) => {
-  const node = {
+export const updateEquation = (editor, equation, isInline, oldNode) => {
+  const newNode = {
     type: isInline ? EQUATION_INLINE : EQUATION,
     children: [{ text: equation }]
   };
 
-  const nodePath = ReactEditor.findPath(editor, element);
-  // replace existing equation, we first add the updated equation and
-  // then remove the outdated one
-  Transforms.insertNodes(editor, node, { at: nodePath });
+  Editor.withoutNormalizing(editor, () => {
+    const nodePath = ReactEditor.findPath(editor, oldNode);
 
-  // Adding a new inline node adds an empty text node after the equation, we need to
-  // remove the node after that.
-  const nodeOffset = isInline ? 2 : 1;
-  const removeElementIndex = nodePath[nodePath.length - 1] + nodeOffset;
-  const parentPath = nodePath.slice(0, -1);
-  Transforms.removeNodes(editor, { at: [...parentPath, removeElementIndex] });
+    Transforms.removeNodes(editor, { at: nodePath });
+
+    if (oldNode.type === newNode.type) {
+      // if the equation type has not changed, just insert the updated node
+      // at the same position
+      Transforms.insertNodes(editor, newNode, { at: nodePath });
+      return;
+    }
+
+    if (newNode.type === 'equation-inline') {
+      // convert block to inline
+
+      Transforms.insertNodes(editor, newNode, { at: nodePath });
+
+      // wraps the new inline element in a paragraph as inline
+      // equations cannot be direct children of editor
+      Transforms.wrapNodes(
+        editor,
+        { type: 'paragraph', children: [] },
+        { at: nodePath }
+      );
+
+      return;
+    }
+
+    if (newNode.type === 'equation') {
+      // Convert inline to block
+      // To convert a inline into a block equation, we are:
+      // 1. Splitting the inline equation's parent node at the equation's
+      //    position resulting in two block elements, and
+      // 2. Adding the block equation after the first block element, unless the
+      //    equation was the first child of the block element, the it will be
+      //    inserted before the first block.
+
+      const equationPositionInBlock = nodePath[nodePath.length - 1];
+      const blockPosition = nodePath[nodePath.length - 2];
+      const basePath = nodePath.slice(0, -2);
+
+      const insertPath = [
+        ...basePath,
+        blockPosition + (equationPositionInBlock > 0)
+      ];
+      Transforms.splitNodes(editor, { at: nodePath });
+      Transforms.insertNodes(editor, newNode, { at: insertPath });
+    }
+  });
 };
 
 /**
