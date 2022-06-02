@@ -54,7 +54,7 @@ export const withEquationModal = (editor) => {
 
     switch (type) {
       case 'reset':
-        equationModalDataRef.current = equationModalDataRef;
+        equationModalDataRef.current = equationModalInitialState;
         break;
       case 'show': {
         // Use the data from the operation's args to do things. In this case to
