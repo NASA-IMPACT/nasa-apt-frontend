@@ -10,13 +10,18 @@ import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
 import {
   FormTextarea as BaseFormTextarea,
-  FormSwitch as BaseFormSwitch
+  FormCheckable,
+  FormCheckableGroup
 } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 import { insertEquation, updateEquation, isInlineEquation } from '.';
-import FormGroupStructure from '../../../common/forms/form-group-structure';
+import BaseFormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
+
+const FormGroupStructure = styled(BaseFormGroupStructure)`
+  margin-bottom: ${glsp(1)};
+`;
 
 const FormTextarea = styled(BaseFormTextarea)`
   font-family: monospace;
@@ -24,11 +29,6 @@ const FormTextarea = styled(BaseFormTextarea)`
   height: 34px;
   min-height: 34px;
   transition: border 0.24s ease 0s;
-`;
-
-const FormSwitch = styled(BaseFormSwitch)`
-  display: grid;
-  margin-bottom: ${glsp()};
 `;
 
 const EquationPreview = styled.aside`
@@ -143,9 +143,33 @@ export default function EquationEditor(props) {
 
   return (
     <>
+      <FormGroupStructure id='euqation-type' label='Display'>
+        <FormCheckableGroup>
+          <FormCheckable
+            textPlacement='right'
+            checked={isInline}
+            type='radio'
+            name='euqation-type'
+            id='euqation-type-inline'
+            onChange={() => setIsInline(true)}
+          >
+            Inline
+          </FormCheckable>
+          <FormCheckable
+            textPlacement='right'
+            checked={!isInline}
+            type='radio'
+            name='euqation-type'
+            id='euqation-type-inline'
+            onChange={() => setIsInline(false)}
+          >
+            Block
+          </FormCheckable>
+        </FormCheckableGroup>
+      </FormGroupStructure>
       <FormGroupStructure
         id='equation'
-        label='Enter Latex code'
+        label='Equation'
         toolbarItems={
           <Button
             key='info-button'
@@ -189,14 +213,6 @@ export default function EquationEditor(props) {
           <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
-
-      <FormSwitch
-        type='checkbox'
-        checked={isInline}
-        onChange={() => setIsInline(!isInline)}
-      >
-        Inline
-      </FormSwitch>
 
       <Button
         type='button'
