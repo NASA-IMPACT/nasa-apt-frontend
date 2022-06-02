@@ -19,8 +19,9 @@ import { LocalStore } from '../local-store';
 
 import { ImageBlockPlugin } from '../../../slate/plugins/image';
 import { TableBlockPlugin } from '../../../slate/plugins/table';
+import { SubSectionPlugin } from '../../../slate/plugins/subsection';
 
-const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin];
+const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
 export default function StepCloseout(props) {
   const {
