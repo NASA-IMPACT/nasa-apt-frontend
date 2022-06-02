@@ -12,13 +12,15 @@ export function EquationModal() {
     editor.equationModal.reset();
   }, [editor]);
 
+  const title = `${element ? 'Edit' : 'Insert'} equation`;
+
   return (
     <Modal
       id='modal'
       size='large'
       revealed={visible}
       onCloseClick={closeModal}
-      title='Edit Equation'
+      title={title}
       content={<EquationEditor element={element} />}
     />
   );
