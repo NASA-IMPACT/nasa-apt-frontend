@@ -78,7 +78,7 @@ export const withEquationModal = (editor) => {
     }
 
     // Since the operation was handled, clean it up.
-    editor.referenceModal.operation = createOp();
+    editor.equationModal.operation = createOp();
     return true;
   };
 
