@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 import { Node } from 'slate';
-import { ReactEditor, useEditor } from 'slate-react';
+import { useEditor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
@@ -13,7 +13,7 @@ import {
   FormSwitch as BaseFormSwitch
 } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import { upsertEquation, isInlineEquation } from '.';
+import { insertEquation, updateEquation, isInlineEquation } from '.';
 import FormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
@@ -129,8 +129,11 @@ export default function EquationEditor(props) {
 
   const handleInputChange = (e) => setLatexEquation(e.target.value);
   const handleSave = () => {
-    const path = element && ReactEditor.findPath(editor, element);
-    upsertEquation(editor, latexEquation, isInline, path);
+    if (element) {
+      updateEquation(editor, latexEquation, isInline, element);
+    } else {
+      insertEquation(editor, latexEquation, isInline);
+    }
     editor.equationModal.reset();
   };
 

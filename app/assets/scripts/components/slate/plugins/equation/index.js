@@ -1,5 +1,6 @@
 import isHotkey from 'is-hotkey';
 import { Transforms } from 'slate';
+import { ReactEditor } from 'slate-react';
 import castArray from 'lodash.castarray';
 import { getAbove, getRenderElements } from '@udecode/slate-plugins';
 
@@ -54,36 +55,41 @@ const deleteEquation = (editor) => {
  *
  * @param {Editor} editor Slate editor instance.
  */
-export const upsertEquation = (editor, equation, isInline, nodePath) => {
+export const insertEquation = (editor, equation, isInline) => {
   const node = {
     type: isInline ? EQUATION_INLINE : EQUATION,
     children: [{ text: equation }]
   };
 
-  if (nodePath) {
-    // replace existing equation, we first add the updated equation and
-    // then remove the outdated one
-    Transforms.insertNodes(editor, node, { at: nodePath });
+  const { selection } = editor.equationModal.getData();
+  Transforms.select(editor, selection);
 
-    // Adding a new inline node adds an empty text node after the equation, we need to
-    // remove the node after that.
-    const nodeOffset = isInline ? 2 : 1;
-    const removeElementIndex = nodePath[nodePath.length - 1] + nodeOffset;
-    const parentPath = nodePath.slice(0, -1);
-    Transforms.removeNodes(editor, { at: [...parentPath, removeElementIndex] });
+  if (isInline) {
+    Transforms.insertNodes(editor, node);
   } else {
-    // add new equation
-    const { selection } = editor.equationModal.getData();
-    Transforms.select(editor, selection);
-
-    if (isInline) {
-      Transforms.insertNodes(editor, node);
-    } else {
-      const path = getPathForRootBlockInsert(editor);
-      Transforms.insertNodes(editor, node, { at: path });
-      Transforms.select(editor, path);
-    }
+    const path = getPathForRootBlockInsert(editor);
+    Transforms.insertNodes(editor, node, { at: path });
+    Transforms.select(editor, path);
   }
+};
+
+export const updateEquation = (editor, equation, isInline, element) => {
+  const node = {
+    type: isInline ? EQUATION_INLINE : EQUATION,
+    children: [{ text: equation }]
+  };
+
+  const nodePath = ReactEditor.findPath(editor, element);
+  // replace existing equation, we first add the updated equation and
+  // then remove the outdated one
+  Transforms.insertNodes(editor, node, { at: nodePath });
+
+  // Adding a new inline node adds an empty text node after the equation, we need to
+  // remove the node after that.
+  const nodeOffset = isInline ? 2 : 1;
+  const removeElementIndex = nodePath[nodePath.length - 1] + nodeOffset;
+  const parentPath = nodePath.slice(0, -1);
+  Transforms.removeNodes(editor, { at: [...parentPath, removeElementIndex] });
 };
 
 /**
