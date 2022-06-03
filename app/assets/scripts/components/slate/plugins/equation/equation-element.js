@@ -2,14 +2,18 @@ import React, { useCallback } from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { Node, Transforms } from 'slate';
-import { ReactEditor, useSelected, useSlate } from 'slate-react';
+import { ReactEditor, useSelected, useSlate, useReadOnly } from 'slate-react';
 import { BlockMath, InlineMath } from 'react-katex';
 
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
 import { isInlineEquation } from '.';
 
-const PreviewBody = styled.span`
+const EquationReadOnly = styled.span`
+  display: ${({ isInline }) => (isInline ? 'inline' : 'block')};
+`;
+
+const Equation = styled.span`
   cursor: pointer;
   border: 1px solid;
   border-radius: ${themeVal('shape.rounded')};
@@ -36,6 +40,7 @@ function EquationElement(props) {
   const isSelected = useSelected();
   const { element, attributes, children } = props;
   const latexEquation = Node.string(element);
+  const readOnly = useReadOnly();
 
   const handleClick = useCallback(() => {
     const path = element && ReactEditor.findPath(editor, element);
@@ -50,8 +55,12 @@ function EquationElement(props) {
   const isInline = isInlineEquation(element);
   const MathElement = isInline ? InlineMath : BlockMath;
 
-  return (
-    <PreviewBody
+  return readOnly ? (
+    <EquationReadOnly isInline={isInline}>
+      <MathElement math={latexEquation || 'latex~empty~equation'} />
+    </EquationReadOnly>
+  ) : (
+    <Equation
       onClick={handleClick}
       contentEditable={false}
       style={{ userSelect: 'none' }}
@@ -61,7 +70,7 @@ function EquationElement(props) {
     >
       <MathElement math={latexEquation || 'latex~empty~equation'} />
       {children}
-    </PreviewBody>
+    </Equation>
   );
 }
 
