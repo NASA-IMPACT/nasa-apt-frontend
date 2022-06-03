@@ -166,14 +166,14 @@ export default function EquationEditor(props) {
 
   return (
     <>
-      <FormGroupStructure id='euqation-type' label='Display'>
+      <FormGroupStructure id='equation-type' label='Display'>
         <FormCheckableGroup>
           <FormCheckable
             textPlacement='right'
             checked={isInline}
             type='radio'
-            name='euqation-type'
-            id='euqation-type-inline'
+            name='equation-type'
+            id='equation-type-inline'
             onChange={() => setIsInline(true)}
           >
             Inline
@@ -182,8 +182,8 @@ export default function EquationEditor(props) {
             textPlacement='right'
             checked={!isInline}
             type='radio'
-            name='euqation-type'
-            id='euqation-type-inline'
+            name='equation-type'
+            id='equation-type-block'
             onChange={() => setIsInline(false)}
           >
             Block
