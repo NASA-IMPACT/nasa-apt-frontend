@@ -16,6 +16,7 @@ import { useSubmitForVersionData } from '../use-submit';
 import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
 import { LocalStore } from '../local-store';
+import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 export default function StepCloseout(props) {
   const {
@@ -48,6 +49,7 @@ export default function StepCloseout(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

@@ -23,6 +23,7 @@ import { formString } from '../../../utils/strings';
 import { editorEmptyValue } from '../../slate';
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
 
 const DeletableFieldsetTriptych = styled(DeletableFieldset)`
   ${FormFieldsetBody} {
@@ -63,6 +64,7 @@ export default function StepAlgoDescription(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
