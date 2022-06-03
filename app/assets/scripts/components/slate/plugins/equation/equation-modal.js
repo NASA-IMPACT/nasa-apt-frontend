@@ -71,14 +71,19 @@ export function EquationModal() {
       }
       footerContent={
         <React.Fragment>
-          <Button type='button' useIcon='xmark--small' onClick={closeModal}>
-            Cancel
-          </Button>
           {element && (
             <Button type='button' useIcon='trash-bin' onClick={handleDelete}>
               Delete
             </Button>
           )}
+          <Button
+            type='button'
+            variation='base-raised-light'
+            useIcon='xmark--small'
+            onClick={closeModal}
+          >
+            Cancel
+          </Button>
           <Button
             type='button'
             variation='primary-raised-dark'
