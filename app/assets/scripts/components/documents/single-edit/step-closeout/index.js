@@ -16,6 +16,7 @@ import { useSubmitForVersionData } from '../use-submit';
 import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
 import { LocalStore } from '../local-store';
+import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 import { ImageBlockPlugin } from '../../../slate/plugins/image';
 import { TableBlockPlugin } from '../../../slate/plugins/table';
@@ -54,6 +55,7 @@ export default function StepCloseout(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

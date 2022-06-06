@@ -14,6 +14,7 @@ import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
 
 export default function StepIntroduction(props) {
   const {
@@ -40,6 +41,7 @@ export default function StepIntroduction(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

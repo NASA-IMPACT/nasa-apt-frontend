@@ -21,6 +21,7 @@ import { useSubmitForMetaAndVersionData } from './use-submit';
 import { getDocumentSectionLabel } from './sections';
 import { isPublished } from '../status';
 import { LocalStore } from './local-store';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
 
 export default function StepIdentifyingInformation(props) {
   const {
@@ -67,6 +68,7 @@ export default function StepIdentifyingInformation(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
