@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Node } from 'slate';
 import { useEditor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
@@ -14,12 +13,6 @@ import {
   FormCheckableGroup
 } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import {
-  insertEquation,
-  updateEquation,
-  deleteEquation,
-  isInlineEquation
-} from '.';
 import BaseFormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
@@ -105,25 +98,12 @@ const EquationPreviewBody = styled.div`
   }
 `;
 
-const FormFooter = styled.div`
-  margin-top: ${glsp(1)};
-  text-align: right;
-
-  & > button {
-    margin-left: ${glsp(0.5)};
-  }
-`;
-
 export default function EquationEditor(props) {
-  const { element } = props;
-  const equation = element ? Node.string(element) : 'latex~empty~equation';
+  const { isInline, latexEquation, onChange } = props;
+
   const editor = useEditor();
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
-  const [latexEquation, setLatexEquation] = useState(equation);
-  const [isInline, setIsInline] = useState(
-    element ? isInlineEquation(element) : false
-  );
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -141,27 +121,11 @@ export default function EquationEditor(props) {
     textareaRef.current.style.height = `${scrollHeight}px`;
   }, [latexEquation]);
 
-  const handleInputChange = (e) => setLatexEquation(e.target.value);
-  const handleSave = () => {
-    if (element) {
-      updateEquation(editor, latexEquation, isInline, element);
-    } else {
-      insertEquation(editor, latexEquation, isInline);
-    }
-    editor.equationModal.reset();
-  };
+  const handleInputChange = (e) =>
+    onChange({ equation: e.target.value, isInline });
 
   const showInfo = () => {
     editor.simpleModal.show({ id: 'latex-modal' });
-  };
-
-  const closeModal = () => {
-    editor.equationModal.reset();
-  };
-
-  const handleDelete = () => {
-    deleteEquation(editor);
-    closeModal();
   };
 
   return (
@@ -174,7 +138,9 @@ export default function EquationEditor(props) {
             type='radio'
             name='equation-type'
             id='equation-type-inline'
-            onChange={() => setIsInline(true)}
+            onChange={() => {
+              onChange({ equation: latexEquation, isInline: true });
+            }}
           >
             Inline
           </FormCheckable>
@@ -184,7 +150,9 @@ export default function EquationEditor(props) {
             type='radio'
             name='equation-type'
             id='equation-type-block'
-            onChange={() => setIsInline(false)}
+            onChange={() => {
+              onChange({ equation: latexEquation, isInline: false });
+            }}
           >
             Block
           </FormCheckable>
@@ -236,29 +204,12 @@ export default function EquationEditor(props) {
           <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
-
-      <FormFooter>
-        <Button type='button' useIcon='xmark--small' onClick={closeModal}>
-          Cancel
-        </Button>
-        {element && (
-          <Button type='button' useIcon='trash-bin' onClick={handleDelete}>
-            Delete
-          </Button>
-        )}
-        <Button
-          type='button'
-          variation='primary-raised-dark'
-          useIcon='tick--small'
-          onClick={handleSave}
-        >
-          {element ? 'Update' : 'Insert'}
-        </Button>
-      </FormFooter>
     </>
   );
 }
 
 EquationEditor.propTypes = {
-  element: T.object
+  isInline: T.bool,
+  latexEquation: T.string,
+  onChange: T.func
 };
