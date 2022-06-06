@@ -17,7 +17,7 @@ import { RichTextEditor, InlineRichTextEditor } from '../../slate';
  * @prop {string} description Field description shown in a tooltip
  * @prop {node} helper Helper message shown below input.
  */
-export function FormikInputEditor({ helper, id, ...props }) {
+export function FormikInputEditor({ helper, id, excludePlugins, ...props }) {
   return (
     <FastField {...props}>
       {({ field, meta, form }) => {
@@ -40,6 +40,7 @@ export function FormikInputEditor({ helper, id, ...props }) {
                 form.setFieldValue(field.name, value);
                 form.setFieldTouched(field.name);
               }}
+              excludePlugins={excludePlugins}
             />
           </FormGroupStructure>
         );
@@ -50,7 +51,12 @@ export function FormikInputEditor({ helper, id, ...props }) {
 
 FormikInputEditor.propTypes = {
   id: T.string,
-  helper: T.node
+  helper: T.node,
+  excludePlugins: T.array
+};
+
+FormikInputEditor.defaultProps = {
+  excludePlugins: []
 };
 
 /**

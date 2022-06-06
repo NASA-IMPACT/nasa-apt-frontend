@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
-import nl2br from 'react-nl2br';
 import ReactGA from 'react-ga';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 
@@ -24,6 +23,8 @@ import DocumentDownloadMenu from '../../documents/document-download-menu';
 import { documentView } from '../../../utils/url-creator';
 import getDocumentIdKey from '../get-document-id-key';
 import { computeAtbdVersion } from '../../../context/atbds-list';
+import { SafeReadEditor } from '../../slate';
+import { truncateSlateObject } from '../../slate/plugins/common/text-utils';
 
 const getDropChange = (label) => (isOpen) =>
   isOpen &&
@@ -39,19 +40,15 @@ function DocumentHubEntry(props) {
   const atbdVersion = computeAtbdVersion(atbd, atbd.versions.last);
 
   const atbdAbstract = useMemo(() => {
-    const abstract = atbdVersion.document?.abstract?.trim();
     const abstractChars = 240;
+    const abstract = atbdVersion.document?.abstract;
 
-    if (!abstract) return 'No summary available';
-    if (abstract.length <= abstractChars) return abstract;
+    if (!abstract) return 'No summary availabe';
 
-    // Limit the abstract ensuring that no words are split.
-    const abstractSlice = abstract.slice(0, abstractChars);
-    const abstractTruncated = abstractSlice.slice(
-      0,
-      abstractSlice.lastIndexOf(' ')
+    const truncated = truncateSlateObject(abstract, abstractChars);
+    return (
+      <SafeReadEditor value={truncated} whenEmpty='No summary available' />
     );
-    return `${abstractTruncated}...`;
   }, [atbdVersion]);
 
   return (
@@ -91,9 +88,7 @@ function DocumentHubEntry(props) {
         </CardDetails>
       </CardHeader>
       <CardBody>
-        <CardExcerpt>
-          <p>{nl2br(atbdAbstract)}</p>
-        </CardExcerpt>
+        <CardExcerpt>{atbdAbstract}</CardExcerpt>
       </CardBody>
     </CardInteractive>
   );
