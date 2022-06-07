@@ -54,7 +54,7 @@ export const withEquationModal = (editor) => {
 
     switch (type) {
       case 'reset':
-        equationModalDataRef.current = equationModalDataRef;
+        equationModalDataRef.current = equationModalInitialState;
         break;
       case 'show': {
         // Use the data from the operation's args to do things. In this case to
@@ -69,14 +69,16 @@ export const withEquationModal = (editor) => {
         equationModalDataRef.current = {
           visible: true,
           selection,
-          element: element.type === 'equation' ? element : null
+          element: ['equation', 'equation-inline'].includes(element.type)
+            ? element
+            : null
         };
         break;
       }
     }
 
     // Since the operation was handled, clean it up.
-    editor.referenceModal.operation = createOp();
+    editor.equationModal.operation = createOp();
     return true;
   };
 
