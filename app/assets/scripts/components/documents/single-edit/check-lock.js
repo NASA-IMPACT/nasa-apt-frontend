@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 
 import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
+import { toast } from 'react-toastify';
 
 import { axiosAPI } from '../../../utils/axios';
 import { documentView } from '../../../utils/url-creator';
@@ -31,10 +32,16 @@ function CheckLock({ id, version, user }) {
 
   useEffect(() => {
     setLock(id, version, user.accessToken).catch((error) => {
-      setMessage(error.response.data.detail);
-      setShowModal(true);
+      const { status, data } = error.response;
+      if (status === 409) {
+        setMessage(data.detail);
+        setShowModal(true);
+      } else {
+        history.push(documentView(id, version));
+        toast.error('Unable to lock the ATBD version.');
+      }
     });
-  }, [id, version, user.accessToken]);
+  }, [id, version, user.accessToken, history]);
 
   const cancel = () => {
     setShowModal(false);
@@ -42,9 +49,15 @@ function CheckLock({ id, version, user }) {
   };
 
   const unlock = () => {
-    setLock(id, version, user.accessToken, 'unlock').then(() => {
-      setShowModal(false);
-    });
+    setLock(id, version, user.accessToken, 'unlock')
+      .then(() => {
+        setShowModal(false);
+      })
+      .catch(() => {
+        setShowModal(false);
+        history.push(documentView(id, version));
+        toast.error('Unable to unlock the ATBD version.');
+      });
   };
 
   return (
