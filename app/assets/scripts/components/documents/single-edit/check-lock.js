@@ -66,14 +66,14 @@ function CheckLock({ id, version, user }) {
       size='small'
       revealed={showModal}
       onCloseClick={cancel}
-      title='ATDB is locked'
+      title='Overwrite Other Changes?'
       content={
         <>
           <p>
-            {message} You can unlock this ATBD version and start editing but the
-            current editing user will loose their changes.
+            {message} If you continue, you will overwrite any changes they have
+            made.
           </p>
-          <p>Do you want to unlock the ATDB version?</p>
+          <p>We suggest verifying with them before continuing.</p>
         </>
       }
       renderFooter={() => (
@@ -84,7 +84,7 @@ function CheckLock({ id, version, user }) {
             useIcon='tick--small'
             onClick={unlock}
           >
-            Unlock
+            Continue &amp; Overwrite
           </Button>
           <Button
             type='button'
