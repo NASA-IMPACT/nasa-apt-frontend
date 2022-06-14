@@ -8,7 +8,7 @@ import { Button } from '@devseed-ui/button';
 import { axiosAPI } from '../../../utils/axios';
 import { documentView } from '../../../utils/url-creator';
 
-const checkLock = (alias, version, userToken) => {
+const setLock = (alias, version, userToken, action = 'lock') => {
   const headers = userToken
     ? {
         headers: {
@@ -18,7 +18,7 @@ const checkLock = (alias, version, userToken) => {
     : {};
 
   return axiosAPI({
-    url: `/atbds/${alias}/versions/${version}/lock`,
+    url: `/atbds/${alias}/versions/${version}/${action}`,
     method: 'post',
     ...headers
   });
@@ -30,7 +30,7 @@ function CheckLock({ id, version, user }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    checkLock(id, version, user.accessToken).catch((error) => {
+    setLock(id, version, user.accessToken).catch((error) => {
       setMessage(error.response.data.detail);
       setShowModal(true);
     });
@@ -39,6 +39,12 @@ function CheckLock({ id, version, user }) {
   const cancel = () => {
     setShowModal(false);
     history.push(documentView(id, version));
+  };
+
+  const unlock = () => {
+    setLock(id, version, user.accessToken, 'unlock').then(() => {
+      setShowModal(false);
+    });
   };
 
   return (
@@ -63,7 +69,7 @@ function CheckLock({ id, version, user }) {
             type='button'
             variation='primary-raised-dark'
             useIcon='tick--small'
-            onClick={() => {}}
+            onClick={unlock}
           >
             Unlock
           </Button>
