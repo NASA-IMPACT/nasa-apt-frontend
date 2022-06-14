@@ -41,6 +41,11 @@ function CheckLock({ id, version, user }) {
         toast.error('Unable to lock the ATBD version.');
       }
     });
+
+    return () =>
+      setLock(id, version, user.accessToken, 'clearlock').catch(() => {
+        toast.error('Unable to clear lock of ATBD version. Please try again.');
+      });
   }, [id, version, user.accessToken, history]);
 
   const cancel = () => {
