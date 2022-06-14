@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import T from 'prop-types';
+import { useHistory } from 'react-router';
 
 import { Modal, ModalFooter } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 
 import { axiosAPI } from '../../../utils/axios';
+import { documentView } from '../../../utils/url-creator';
 
 const checkLock = (alias, version, userToken) => {
   const headers = userToken
@@ -23,6 +25,7 @@ const checkLock = (alias, version, userToken) => {
 };
 
 function CheckLock({ id, version, user }) {
+  const history = useHistory();
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -33,12 +36,17 @@ function CheckLock({ id, version, user }) {
     });
   }, [id, version, user.accessToken]);
 
+  const cancel = () => {
+    setShowModal(false);
+    history.push(documentView(id, version));
+  };
+
   return (
     <Modal
       id='modal'
       size='small'
       revealed={showModal}
-      // onCloseClick={onClose}
+      onCloseClick={cancel}
       title='ATDB is locked'
       content={
         <>
@@ -63,7 +71,7 @@ function CheckLock({ id, version, user }) {
             type='button'
             variation='base-raised-light'
             useIcon='xmark--small'
-            onClick={() => {}}
+            onClick={cancel}
           >
             Cancel
           </Button>
