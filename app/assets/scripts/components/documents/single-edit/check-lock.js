@@ -9,7 +9,12 @@ import { toast } from 'react-toastify';
 import { axiosAPI } from '../../../utils/axios';
 import { documentView } from '../../../utils/url-creator';
 
-const setLock = (alias, version, userToken, action = 'lock') => {
+const setLock = (alias, version, userToken, actionConfig = {}) => {
+  const methods = {
+    lock: 'put',
+    clearlock: 'delete'
+  };
+
   const headers = userToken
     ? {
         headers: {
@@ -18,9 +23,17 @@ const setLock = (alias, version, userToken, action = 'lock') => {
       }
     : {};
 
+  const requestActionConfig = {
+    ...{
+      action: 'lock',
+      override: false
+    },
+    ...actionConfig
+  };
+
   return axiosAPI({
-    url: `/atbds/${alias}/versions/${version}/${action}`,
-    method: 'post',
+    url: `/atbds/${alias}/versions/${version}/lock?override=${requestActionConfig.override}`,
+    method: methods[requestActionConfig.action],
     ...headers
   });
 };
@@ -28,13 +41,24 @@ const setLock = (alias, version, userToken, action = 'lock') => {
 function CheckLock({ id, version, user }) {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     setLock(id, version, user.accessToken).catch((error) => {
       const { status, data } = error.response;
-      if (status === 409) {
-        setMessage(data.detail);
+      if (status === 423) {
+        const { preferred_username } = data.detail.lock_owner;
+        setMessage(
+          <>
+            <p>
+              {preferred_username} is currently editing this document. If you
+              continue, you will overwrite any changes they have made.
+            </p>
+            <p>
+              We suggest verifying with {preferred_username} before continuing.
+            </p>
+          </>
+        );
         setShowModal(true);
       } else {
         history.push(documentView(id, version));
@@ -43,9 +67,15 @@ function CheckLock({ id, version, user }) {
     });
 
     return () =>
-      setLock(id, version, user.accessToken, 'clearlock').catch(() => {
-        toast.error('Unable to clear lock of ATBD version. Please try again.');
-      });
+      setLock(id, version, user.accessToken, { action: 'clearlock' }).catch(
+        (error) => {
+          if (error.response.status !== 423) {
+            toast.error(
+              'Unable to clear lock of ATBD version. Please try again.'
+            );
+          }
+        }
+      );
   }, [id, version, user.accessToken, history]);
 
   const cancel = () => {
@@ -54,7 +84,7 @@ function CheckLock({ id, version, user }) {
   };
 
   const unlock = () => {
-    setLock(id, version, user.accessToken, 'unlock')
+    setLock(id, version, user.accessToken, { action: 'lock', override: true })
       .then(() => {
         setShowModal(false);
       })
@@ -72,15 +102,7 @@ function CheckLock({ id, version, user }) {
       revealed={showModal}
       onCloseClick={cancel}
       title='Overwrite Other Changes?'
-      content={
-        <>
-          <p>
-            {message} If you continue, you will overwrite any changes they have
-            made.
-          </p>
-          <p>We suggest verifying with them before continuing.</p>
-        </>
-      }
+      content={message}
       renderFooter={() => (
         <ModalFooter>
           <Button
