@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react';
 import T from 'prop-types';
 import { useHistory } from 'react-router';
 
-import { Modal, ModalFooter } from '@devseed-ui/modal';
+import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { toast } from 'react-toastify';
 
 import { axiosAPI } from '../../../utils/axios';
 import { documentView } from '../../../utils/url-creator';
+import {
+  ConfirmationModalProse,
+  ConfirmationModalFooter
+} from '../../common/confirmation-prompt';
 
 const setLock = (alias, version, userToken, actionConfig = {}) => {
   const methods = {
@@ -49,15 +53,17 @@ function CheckLock({ id, version, user }) {
       if (status === 423) {
         const { preferred_username } = data.detail.lock_owner;
         setMessage(
-          <>
+          <ConfirmationModalProse>
             <p>
-              {preferred_username} is currently editing this document. If you
-              continue, you will overwrite any changes they have made.
+              <strong>{preferred_username}</strong> is currently editing this
+              document. If you continue, you will overwrite any changes they
+              have made.
             </p>
             <p>
-              We suggest verifying with {preferred_username} before continuing.
+              We suggest verifying with <strong>{preferred_username}</strong>{' '}
+              before continuing.
             </p>
-          </>
+          </ConfirmationModalProse>
         );
         setShowModal(true);
       } else {
@@ -101,10 +107,11 @@ function CheckLock({ id, version, user }) {
       size='small'
       revealed={showModal}
       onCloseClick={cancel}
-      title='Overwrite Other Changes?'
+      closeButton={false}
+      title='Overwrite other changes?'
       content={message}
       renderFooter={() => (
-        <ModalFooter>
+        <ConfirmationModalFooter>
           <Button
             type='button'
             variation='primary-raised-dark'
@@ -121,7 +128,7 @@ function CheckLock({ id, version, user }) {
           >
             Cancel
           </Button>
-        </ModalFooter>
+        </ConfirmationModalFooter>
       )}
     />
   );

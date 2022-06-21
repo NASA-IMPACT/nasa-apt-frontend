@@ -6,7 +6,7 @@ import { Button } from '@devseed-ui/button';
 import { headingAlt } from '@devseed-ui/typography';
 import { glsp } from '@devseed-ui/theme-provider';
 
-const ConfirmationModalFooter = styled(ModalFooter)`
+export const ConfirmationModalFooter = styled(ModalFooter)`
   justify-content: center;
 `;
 
