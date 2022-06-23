@@ -35,6 +35,7 @@ import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
 import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 import { documentEdit, documentView } from '../../../utils/url-creator';
+import CheckLock from './check-lock';
 
 const FormFooter = styled.div`
   display: flex;
@@ -45,7 +46,7 @@ const FormFooter = styled.div`
 function DocumentEdit() {
   const { id, version, step } = useParams();
   const history = useHistory();
-  const { isLogged } = useUser();
+  const { isLogged, user } = useUser();
   const {
     atbd,
     fetchSingleAtbd,
@@ -80,7 +81,9 @@ function DocumentEdit() {
   );
 
   useEffect(() => {
-    isLogged && fetchSingleAtbd();
+    if (isLogged) {
+      fetchSingleAtbd();
+    }
   }, [isLogged, id, version, fetchSingleAtbd]);
 
   const { menuHandler, documentModalProps } = useDocumentModals({
@@ -179,6 +182,7 @@ function DocumentEdit() {
 
   return (
     <App pageTitle={pageTitle}>
+      <CheckLock id={id} version={version} user={user} />
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
         <DocumentModals {...documentModalProps} />
