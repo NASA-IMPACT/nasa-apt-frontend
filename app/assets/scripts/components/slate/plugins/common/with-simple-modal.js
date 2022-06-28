@@ -48,7 +48,7 @@ export const withSimpleModal = (editor) => {
 
     switch (type) {
       case 'reset':
-        simpleModalDataRef.current = simpleModalDataRef;
+        simpleModalDataRef.current = modalInitialState;
         break;
       case 'show': {
         // Use the data from the operation's args to do things. In this case to

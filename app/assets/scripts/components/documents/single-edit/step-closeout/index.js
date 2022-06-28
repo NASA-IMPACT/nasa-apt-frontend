@@ -6,8 +6,8 @@ import { Form, FormHelperCounter } from '@devseed-ui/form';
 import { Inpage, InpageBody } from '../../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
 import RichTextContex2Formik from '../rich-text-ctx-formik';
-import { FormikInputTextarea } from '../../../common/forms/input-textarea';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
+import { FormikInputEditor } from '../../../common/forms/input-editor';
 import KeywordsField, { updateKeywordValues } from './field-keywords';
 import JournalDetailsSection from './journal-details';
 
@@ -16,6 +16,13 @@ import { useSubmitForVersionData } from '../use-submit';
 import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
 import { LocalStore } from '../local-store';
+import { FormikUnloadPrompt } from '../../../common/unload-prompt';
+
+import { ImageBlockPlugin } from '../../../slate/plugins/image';
+import { TableBlockPlugin } from '../../../slate/plugins/table';
+import { SubSectionPlugin } from '../../../slate/plugins/subsection';
+
+const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
 export default function StepCloseout(props) {
   const {
@@ -48,6 +55,7 @@ export default function StepCloseout(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>
@@ -61,7 +69,7 @@ export default function StepCloseout(props) {
                 >
                   <FieldAbstract />
 
-                  <FormikInputTextarea
+                  <FormikInputEditor
                     id='plain_summary'
                     name='document.plain_summary'
                     label='Plain Language Summary'
@@ -97,18 +105,36 @@ StepCloseout.propTypes = {
 
 const MAX_ABSTRACT_WORDS = 250;
 
+function wordCountFromSlateValue(value) {
+  const keys = Object.keys(value);
+
+  if (keys.includes('children')) {
+    return value.children.reduce(
+      (sum, child) => sum + wordCountFromSlateValue(child),
+      0
+    );
+  }
+
+  if (keys.includes('text')) {
+    const trimmed = value.text.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+  }
+
+  return 0;
+}
+
 function FieldAbstract() {
   const [{ value }] = useField('document.abstract');
-  const trimmed = value.trim();
-  const words = trimmed ? trimmed.split(/\s+/).length : 0;
+  const words = wordCountFromSlateValue(value);
 
   return (
-    <FormikInputTextarea
+    <FormikInputEditor
       id='abstract'
       name='document.abstract'
       label='Short ATBD summary'
       description={formString('closeout.abstract')}
       growWithContents
+      excludePlugins={exlcudePlugins}
       helper={
         <FormHelperCounter
           value={words}

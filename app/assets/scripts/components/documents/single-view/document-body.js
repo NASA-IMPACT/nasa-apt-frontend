@@ -306,9 +306,18 @@ export const atbdContentSections = [
   {
     label: 'Abstract',
     id: 'abstract',
-    render: ({ element, document }) => (
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.abstract, id),
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <MultilineString
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
           value={document.abstract}
           whenEmpty={<EmptySection />}
         />
@@ -318,9 +327,18 @@ export const atbdContentSections = [
   {
     label: 'Plain Language Summary',
     id: 'plain_summary',
-    render: ({ element, document }) => (
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.plain_summary, id),
+    render: ({ element, document, referencesUseIndex, atbd }) => (
       <AtbdSection key={element.id} id={element.id} title={element.label}>
-        <MultilineString
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
           value={document.plain_summary}
           whenEmpty={<EmptySection />}
         />

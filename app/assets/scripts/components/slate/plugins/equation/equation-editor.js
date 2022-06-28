@@ -1,20 +1,32 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Editor, Node, Transforms } from 'slate';
-import { ReactEditor, useEditor, useReadOnly } from 'slate-react';
+import { useEditor } from 'slate-react';
 import { BlockMath } from 'react-katex';
 import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 import collecticon from '@devseed-ui/collecticons';
-
-import DeletableBlock from '../common/deletable-block';
+import {
+  FormTextarea as BaseFormTextarea,
+  FormCheckable,
+  FormCheckableGroup
+} from '@devseed-ui/form';
+import { Button } from '@devseed-ui/button';
+import BaseFormGroupStructure from '../../../common/forms/form-group-structure';
 
 const EQUATION_PDF_THRESHOLD = 600;
 
-const EquationInput = styled.p`
+const FormGroupStructure = styled(BaseFormGroupStructure)`
+  margin-bottom: ${glsp(1)};
+`;
+
+const FormTextarea = styled(BaseFormTextarea)`
   font-family: monospace;
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  transition: border 0.24s ease 0s;
 `;
 
 const EquationPreview = styled.aside`
@@ -24,6 +36,7 @@ const EquationPreview = styled.aside`
   border-radius: ${themeVal('shape.rounded')};
   box-shadow: inset 0 0 0 1px ${themeVal('color.baseAlphaD')};
   margin-top: ${glsp()};
+  margin-bottom: ${glsp()};
 
   &::before {
     ${collecticon('triangle-up')}
@@ -86,14 +99,12 @@ const EquationPreviewBody = styled.div`
 `;
 
 export default function EquationEditor(props) {
-  const { attributes, children, element } = props;
-  const readOnly = useReadOnly();
+  const { isInline, latexEquation, onChange } = props;
+
   const editor = useEditor();
   const equationBlockRef = useRef();
   const [isTooLong, setTooLong] = useState(false);
-
-  const latexEquation = Node.string(element);
-  const equation = <BlockMath math={latexEquation || 'latex~empty~equation'} />;
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     const node = equationBlockRef.current;
@@ -104,43 +115,80 @@ export default function EquationEditor(props) {
     }
   }, [latexEquation]);
 
-  // Focus equation input when user clicks the preview.
-  const onEquationPreviewClick = useCallback(
-    (e) => {
-      // When the equation preview box gets clicked we want to focus the
-      // equation field except if the user is selecting the equation characters.
-      const node = equationBlockRef.current;
-      if (node) {
-        const display = node.querySelector('.katex-display');
-        if (display.contains(e.target)) return;
-      }
+  useLayoutEffect(() => {
+    textareaRef.current.style.height = '1px';
+    const scrollHeight = textareaRef.current.scrollHeight;
+    textareaRef.current.style.height = `${scrollHeight}px`;
+  }, [latexEquation]);
 
-      // When trying to select something in the editor with a selection
-      // elsewhere (for example the equation characters) the slate editor
-      // crashed. To fix this before doing anything we use the Selection api to
-      // clear the existing selection (which is not managed by slate) and then
-      // let slate handle this from a clean slate. Pun intended.
-      window.getSelection().removeAllRanges();
-      const path = ReactEditor.findPath(editor, element);
-      Transforms.select(editor, Editor.end(editor, path));
-    },
-    [editor, element]
-  );
+  const handleInputChange = (e) =>
+    onChange({ equation: e.target.value, isInline });
 
-  return readOnly ? (
-    <EquationPreviewBody {...attributes}>{equation}</EquationPreviewBody>
-  ) : (
-    <DeletableBlock deleteAction='delete-equation' {...attributes}>
-      <EquationInput spellCheck={false}>
-        <code>{children}</code>
-      </EquationInput>
+  const showInfo = () => {
+    editor.simpleModal.show({ id: 'latex-modal' });
+  };
+
+  return (
+    <>
+      <FormGroupStructure id='equation-type' label='Display'>
+        <FormCheckableGroup>
+          <FormCheckable
+            textPlacement='right'
+            checked={isInline}
+            type='radio'
+            name='equation-type'
+            id='equation-type-inline'
+            onChange={() => {
+              onChange({ equation: latexEquation, isInline: true });
+            }}
+          >
+            Inline
+          </FormCheckable>
+          <FormCheckable
+            textPlacement='right'
+            checked={!isInline}
+            type='radio'
+            name='equation-type'
+            id='equation-type-block'
+            onChange={() => {
+              onChange({ equation: latexEquation, isInline: false });
+            }}
+          >
+            Block
+          </FormCheckable>
+        </FormCheckableGroup>
+      </FormGroupStructure>
+      <FormGroupStructure
+        id='equation'
+        label='Equation'
+        toolbarItems={
+          <Button
+            key='info-button'
+            type='button'
+            useIcon='circle-information'
+            size='small'
+            hideText
+            onClick={showInfo}
+          >
+            Latex cheatsheet
+          </Button>
+        }
+      >
+        <FormTextarea
+          ref={textareaRef}
+          id='equation'
+          name='equation'
+          value={latexEquation}
+          onChange={handleInputChange}
+          spellCheck={false}
+        />
+      </FormGroupStructure>
       <EquationPreview
         // Both contentEditable style and are needed for the click to work. See
         // more at:
         // https://github.com/ianstormtaylor/slate/issues/3421#issuecomment-591259117
         contentEditable={false}
         style={{ userSelect: 'none' }}
-        onClick={onEquationPreviewClick}
       >
         <EquationPreviewHeader>
           <EquationPreviewTitle>
@@ -153,15 +201,15 @@ export default function EquationEditor(props) {
           )}
         </EquationPreviewHeader>
         <EquationPreviewBody ref={equationBlockRef}>
-          {equation}
+          <BlockMath math={latexEquation} />
         </EquationPreviewBody>
       </EquationPreview>
-    </DeletableBlock>
+    </>
   );
 }
 
 EquationEditor.propTypes = {
-  attributes: T.object,
-  children: T.node,
-  element: T.object
+  isInline: T.bool,
+  latexEquation: T.string,
+  onChange: T.func
 };

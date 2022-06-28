@@ -22,6 +22,7 @@ import { validateContact } from '../../../contacts/contact-utils';
 import { getDocumentSectionLabel } from '../sections';
 import { documentEdit } from '../../../../utils/url-creator';
 import { LocalStore } from '../local-store';
+import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 export default function StepContacts(props) {
   const {
@@ -102,6 +103,7 @@ export default function StepContacts(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         {contacts.status === 'loading' && <GlobalLoading />}
         {contacts.status === 'succeeded' && (

@@ -12,6 +12,7 @@ import { axiosAPI } from '../../../utils/axios';
 import useSafeState from '../../../utils/use-safe-state';
 import { useAuthToken } from '../../../context/user';
 import { formString } from '../../../utils/strings';
+import { useEffectPrevious } from '../../../utils/use-effect-previous';
 
 const MAX_ALIAS_CHARS = 32;
 
@@ -47,7 +48,6 @@ export default function FieldAtbdAlias(props) {
   const {
     values: { title, alias },
     initialValues,
-    touched,
     errors,
     setFieldValue,
     setFieldError,
@@ -176,32 +176,38 @@ export default function FieldAtbdAlias(props) {
   }, [checkAliasExist]);
 
   // Update the value from the title field.
-  useEffect(() => {
-    // Only create alias from title if:
-    if (
-      // there's no alias;
-      !initialValues.alias &&
-      // there was a change in the title. Avoids modifying the field when
-      // mounting;
-      initialValues.title !== title &&
-      // the user didn't input anything yet;
-      !touched.alias &&
-      // there is an actual title.
-      title.trim()
-    ) {
-      const aliasValue = toAliasFormat(title);
-      checkAliasExist(aliasValue);
-      setFieldValue('alias', aliasValue);
-    }
-  }, [
-    title,
-    initialValues.title,
-    initialValues.alias,
-    touched.alias,
-    checkAliasExist,
-    setFieldValue,
-    setFormikStatus
-  ]);
+  useEffectPrevious(
+    (prev) => {
+      const expectedAlias = toAliasFormat(prev ? prev[0] : title);
+      // Only create alias from title if:
+      if (
+        // there's no alias;
+        !initialValues.alias &&
+        // there was a change in the title. Avoids modifying the field when
+        // mounting;
+        initialValues.title !== title &&
+        // the user didn't input anything yet;
+        (!alias || expectedAlias === alias) &&
+        // there is an actual title.
+        title.trim()
+      ) {
+        const aliasValue = toAliasFormat(title);
+        checkAliasExist(aliasValue);
+        setFieldValue('alias', aliasValue);
+      }
+    },
+    // excluding alias from deps because we don't want to run this effect
+    // when the alias was changed via the form field
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    [
+      title,
+      initialValues.title,
+      initialValues.alias,
+      checkAliasExist,
+      setFieldValue,
+      setFormikStatus
+    ]
+  );
 
   return (
     <InputText

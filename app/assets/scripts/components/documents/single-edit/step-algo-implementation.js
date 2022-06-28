@@ -18,6 +18,7 @@ import { useSubmitForVersionData } from './use-submit';
 import { formString } from '../../../utils/strings';
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
 
 // The initial value is the same for
 // Algorithm Implementations
@@ -54,6 +55,7 @@ export default function StepAlgoImplementation(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

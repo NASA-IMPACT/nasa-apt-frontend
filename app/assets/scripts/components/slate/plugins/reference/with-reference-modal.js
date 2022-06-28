@@ -56,7 +56,7 @@ export const withReferenceModal = (editor) => {
 
     switch (type) {
       case 'reset':
-        referenceModalDataRef.current = referenceModalDataRef;
+        referenceModalDataRef.current = referenceModalInitialState;
         break;
       case 'show': {
         // Use the data from the operation's args to do things. In this case to

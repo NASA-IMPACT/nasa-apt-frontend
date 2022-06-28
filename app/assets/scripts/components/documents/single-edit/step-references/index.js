@@ -12,6 +12,7 @@ import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
 import { createDocumentReferenceIndex } from '../../../../utils/references';
 import { LocalStore } from '../local-store';
+import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 export default function StepReferences(props) {
   const {
@@ -57,6 +58,7 @@ export default function StepReferences(props) {
     >
       <Inpage>
         <LocalStore atbd={atbd} />
+        <FormikUnloadPrompt />
         {renderInpageHeader()}
         <InpageBody>
           <FormBlock>

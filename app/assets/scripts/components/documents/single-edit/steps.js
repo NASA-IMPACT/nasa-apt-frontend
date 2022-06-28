@@ -250,8 +250,8 @@ export const STEPS = [
       return getValuesFromObj(atbd, {
         journal_status: JOURNAL_NO_PUBLICATION,
         document: {
-          abstract: '',
-          plain_summary: '',
+          abstract: EDITOR_SYM,
+          plain_summary: EDITOR_SYM,
           key_points: '',
           journal_discussion: EDITOR_SYM,
           journal_acknowledgements: EDITOR_SYM,
