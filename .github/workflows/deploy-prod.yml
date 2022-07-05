@@ -1,6 +1,6 @@
 # Deploy the site to AWS S3 on a push to specific branches
 
-name: Deploy Production - GCC (S3)
+name: Deploy Production - MCP (S3)
 
 on:
   push:
@@ -9,7 +9,8 @@ on:
 
 env:
   NODE: 14
-  DOMAIN_PROD: https://d7qd3iuafxwad.cloudfront.net
+  # DOMAIN_PROD: https://www.earthdata.nasa.gov/apt
+  DOMAIN_PROD: /apt
   DEPLOY_BUCKET_PROD: algorithm-publication-tool
   DEPLOY_BUCKET_PROD_REGION: us-west-2
 
@@ -78,20 +79,25 @@ jobs:
         with:
           node-version: ${{ env.NODE }}
 
-      # - name: Serve site from subpath
-      #   run: |
-      #     mkdir deploy/
-      #     mv dist deploy/apt
-      #     cp deploy/apt/index.html deploy/index.html
+      - name: Serve site from subpath
+        run: |
+          mkdir deploy/
+          mv dist deploy/apt
+          cp deploy/apt/index.html deploy/index.html
 
       - name: Deploy to S3 Production
         uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --follow-symlinks --delete
+          # acl is not permitted with current credentials
+          # args: --acl public-read --follow-symlinks --delete
+          args: --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: ${{ env.DEPLOY_BUCKET_PROD }}
           AWS_REGION: ${{ env.DEPLOY_BUCKET_PROD_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # When serving from a subpath:
           # SOURCE_DIR: ./deploy
-          SOURCE_DIR: ./dist
+          # Otherwise use the build directory directly:
+          # SOURCE_DIR: ./dist
+          SOURCE_DIR: ./deploy
