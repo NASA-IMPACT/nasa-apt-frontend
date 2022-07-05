@@ -9,8 +9,7 @@ on:
 
 env:
   NODE: 14
-  # DOMAIN_PROD: https://www.earthdata.nasa.gov/apt
-  DOMAIN_PROD: /apt
+  DOMAIN_PROD: https://www.earthdata.nasa.gov/apt
   DEPLOY_BUCKET_PROD: algorithm-publication-tool
   DEPLOY_BUCKET_PROD_REGION: us-west-2
 
