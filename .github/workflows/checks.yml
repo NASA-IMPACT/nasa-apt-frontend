@@ -129,8 +129,9 @@ jobs:
         run: yarn install
 
       - name: Test End-to-end
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
+          browser: chrome
           start: yarn serve:test
           wait-on: 'http://localhost:9000'
           config: video=false,defaultCommandTimeout=2000
