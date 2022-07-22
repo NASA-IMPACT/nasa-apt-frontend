@@ -18,12 +18,15 @@
   "scripts": {
     "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"module.exports = {};\" > app/assets/scripts/config/local.js",
     "serve": "NODE_ENV=development gulp serve",
+    "serve:test": "NODE_ENV=test gulp serve",
     "build": "NODE_ENV=production gulp",
     "clean": "gulp clean",
     "stage": "NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
     "lint:css": "stylelint 'app/assets/styles/**/**' 'app/assets/scripts/**/*.js'",
-    "test": "echo \"No tests\" && exit 0"
+    "test": "echo \"No tests\" && exit 0",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "source": "./app/index.html",
   "global": "dist/index.html",
@@ -45,6 +48,7 @@
     "@parcel/reporter-bundle-buddy": "^2.0.0",
     "babel-eslint": "^10.1.0",
     "crypto-browserify": "^3.12.0",
+    "cypress": "^10.3.1",
     "del": "^6.0.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
@@ -58,6 +62,7 @@
     "gulp": "^4.0.2",
     "gulp-json-concat": "^0.2.0",
     "gulp-yaml": "^2.0.4",
+    "jsonwebtoken": "^8.5.1",
     "markdown-it": "^12.0.6",
     "markdown-it-anchor": "^8.4.1",
     "markdown-it-table-of-contents": "^0.6.0",
