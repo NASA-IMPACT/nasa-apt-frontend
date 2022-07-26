@@ -10,6 +10,7 @@ import { Form } from '@devseed-ui/form';
 
 import DropdownMenu from '../common/dropdown-menu';
 import { FormikInputTextarea } from '../common/forms/input-textarea';
+import FormGroupStructure from '../common/forms/form-group-structure';
 import Tip from '../common/tooltip';
 
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
@@ -204,12 +205,19 @@ const CommentForm = (props) => {
               onKeyDown={onKeyDown}
             />
             {contributors.length > 0 && (
-              <Select
-                isMulti
-                options={contributorsSelectOptions}
-                value={notifyValue}
-                onChange={handleNotifyChange}
-              />
+              <FormGroupStructure
+                id='notify'
+                label='Notify users'
+                helper='If left blank, all contributors to this ATBD will be notified.'
+              >
+                <Select
+                  isMulti
+                  inputId='notify'
+                  options={contributorsSelectOptions}
+                  value={notifyValue}
+                  onChange={handleNotifyChange}
+                />
+              </FormGroupStructure>
             )}
             <FormActions>
               <Tip title={modKey('mod+↵')}>
