@@ -15,6 +15,7 @@ import Tip from '../common/tooltip';
 import { DOCUMENT_SECTIONS } from '../documents/single-edit/sections';
 import { modKey } from '../slate/plugins/common/utils';
 import { THREAD_SECTION_ALL } from './common';
+import { useUser } from '../../context/user';
 
 const SectionsDropdownMenu = styled(DropdownMenu)`
   max-width: 18rem;
@@ -142,8 +143,6 @@ const CommentForm = (props) => {
     onCancel
   } = props;
 
-  const contributorsSelectOptions = contributors.map(contributorToSelectOption);
-
   const formRef = useRef(null);
 
   const onSubmitWithBlur = useCallback(
@@ -165,6 +164,11 @@ const CommentForm = (props) => {
       }),
     [type, comment, threadId, commentId, initialSection]
   );
+
+  const { user } = useUser();
+  const contributorsSelectOptions = contributors
+    .filter(({ sub }) => sub !== user.id) // Removes active user from select options
+    .map(contributorToSelectOption);
 
   return (
     <Formik
