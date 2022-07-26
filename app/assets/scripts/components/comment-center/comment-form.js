@@ -3,6 +3,7 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { Formik } from 'formik';
 import isHotkey from 'is-hotkey';
+import Select from 'react-select';
 import { glsp, themeVal, truncated } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import { Form } from '@devseed-ui/form';
@@ -72,6 +73,11 @@ const sectionMenuLabel = (selectedItems) => {
   return `Comment under ${selectedItems[0]?.label}`;
 };
 
+const contributorToSelectOption = ({ preferred_username, sub }) => ({
+  label: preferred_username,
+  value: sub
+});
+
 const getTextareaLabel = ({ type, values, setFieldValue }) => {
   switch (type) {
     case 'new':
@@ -102,18 +108,21 @@ const getInitialValues = ({ type, section, comment, threadId, commentId }) => {
       return {
         section:
           !section || section === THREAD_SECTION_ALL ? 'general' : section,
-        comment: ''
+        comment: '',
+        notify: []
       };
     case 'reply':
       return {
         threadId,
-        comment: ''
+        comment: '',
+        notify: []
       };
     case 'edit':
       return {
         threadId,
         commentId,
-        comment
+        comment,
+        notify: []
       };
 
     default:
@@ -127,10 +136,13 @@ const CommentForm = (props) => {
     comment,
     initialSection,
     threadId,
+    contributors,
     commentId,
     onSubmit,
     onCancel
   } = props;
+
+  const contributorsSelectOptions = contributors.map(contributorToSelectOption);
 
   const formRef = useRef(null);
 
@@ -169,6 +181,16 @@ const CommentForm = (props) => {
             handleSubmit();
           }
         };
+
+        const notifyValue = contributorsSelectOptions.filter(({ value }) =>
+          values.notify.includes(value)
+        );
+
+        const handleNotifyChange = (values) => {
+          const notifyIds = values.map(({ value }) => value);
+          setFieldValue('notify', notifyIds);
+        };
+
         return (
           <Form onSubmit={handleSubmit} ref={formRef}>
             <FormikInputTextarea
@@ -177,6 +199,14 @@ const CommentForm = (props) => {
               label={getTextareaLabel({ type, values, setFieldValue })}
               onKeyDown={onKeyDown}
             />
+            {contributors.length > 0 && (
+              <Select
+                isMulti
+                options={contributorsSelectOptions}
+                value={notifyValue}
+                onChange={handleNotifyChange}
+              />
+            )}
             <FormActions>
               <Tip title={modKey('mod+↵')}>
                 <Button
@@ -211,11 +241,16 @@ const CommentForm = (props) => {
 CommentForm.propTypes = {
   type: T.oneOf(['new', 'reply', 'edit']),
   threadId: T.number,
+  contributors: T.array,
   commentId: T.number,
   comment: T.string,
   initialSection: T.string,
   onSubmit: T.func,
   onCancel: T.func
+};
+
+CommentForm.defaultProps = {
+  contributors: []
 };
 
 export default CommentForm;

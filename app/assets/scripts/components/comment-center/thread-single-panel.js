@@ -46,7 +46,8 @@ function ThreadSinglePanelContents() {
     openThreadId: threadId,
     setOpenThreadId,
     setEditingCommentKey,
-    editingCommentKey
+    editingCommentKey,
+    contributors
   } = useCommentCenter();
 
   const {
@@ -249,6 +250,7 @@ function ThreadSinglePanelContents() {
         <CommentFormWrapper>
           <CommentForm
             threadId={threadId}
+            contributors={contributors}
             type='reply'
             onSubmit={onSubmitThreadComment}
           />

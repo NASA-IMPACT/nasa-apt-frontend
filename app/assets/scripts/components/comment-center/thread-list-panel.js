@@ -48,6 +48,7 @@ function ThreadListPanelContents() {
   const {
     atbdId,
     atbdVersion,
+    contributors,
     setPanelOpen,
     selectedSection,
     setSelectedSection,
@@ -286,6 +287,7 @@ function ThreadListPanelContents() {
         <CommentFormWrapper>
           <CommentForm
             threadId={openThreadId}
+            contributors={contributors}
             initialSection={selectedSection}
             type='new'
             onSubmit={onSubmitThread}
