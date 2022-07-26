@@ -216,6 +216,7 @@ const CommentForm = (props) => {
                   options={contributorsSelectOptions}
                   value={notifyValue}
                   onChange={handleNotifyChange}
+                  menuPlacement='top'
                 />
               </FormGroupStructure>
             )}
