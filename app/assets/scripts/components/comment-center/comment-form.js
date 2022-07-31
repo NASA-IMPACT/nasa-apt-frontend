@@ -104,27 +104,34 @@ const getTextareaLabel = ({ type, values, setFieldValue }) => {
   }
 };
 
-const getInitialValues = ({ type, section, comment, threadId, commentId }) => {
+const getInitialValues = ({
+  type,
+  section,
+  comment,
+  threadId,
+  commentId,
+  notify = []
+}) => {
   switch (type) {
     case 'new':
       return {
         section:
           !section || section === THREAD_SECTION_ALL ? 'general' : section,
         comment: '',
-        notify: []
+        notify
       };
     case 'reply':
       return {
         threadId,
         comment: '',
-        notify: []
+        notify
       };
     case 'edit':
       return {
         threadId,
         commentId,
         comment,
-        notify: []
+        notify
       };
 
     default:
@@ -139,6 +146,7 @@ const CommentForm = (props) => {
     initialSection,
     threadId,
     contributors,
+    defaultNotify,
     commentId,
     onSubmit,
     onCancel
@@ -161,9 +169,10 @@ const CommentForm = (props) => {
         comment,
         threadId,
         commentId,
-        section: initialSection
+        section: initialSection,
+        notify: defaultNotify
       }),
-    [type, comment, threadId, commentId, initialSection]
+    [type, comment, threadId, commentId, initialSection, defaultNotify]
   );
 
   const { user } = useUser();
@@ -255,6 +264,7 @@ CommentForm.propTypes = {
   type: T.oneOf(['new', 'reply', 'edit']),
   threadId: T.number,
   contributors: T.array,
+  defaultNotify: T.arrayOf(T.string),
   commentId: T.number,
   comment: T.string,
   initialSection: T.string,

@@ -251,6 +251,7 @@ function ThreadSinglePanelContents() {
           <CommentForm
             threadId={threadId}
             contributors={contributors}
+            defaultNotify={threadCtx.data?.notify}
             type='reply'
             onSubmit={onSubmitThreadComment}
           />

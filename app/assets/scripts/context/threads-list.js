@@ -202,9 +202,9 @@ export const ThreadsProvider = ({ children }) => {
               method: 'POST',
               data: {
                 comment: {
-                  body: comment,
-                  notify
+                  body: comment
                 },
+                notify,
                 atbd_id: atbdId,
                 version: atbdVersion,
                 section
