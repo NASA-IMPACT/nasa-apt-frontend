@@ -196,8 +196,9 @@ const CommentForm = (props) => {
           }
         };
 
+        const notify = values.notify || [];
         const notifyValue = contributorsSelectOptions.filter(({ value }) =>
-          values.notify.includes(value)
+          notify.includes(value)
         );
 
         const handleNotifyChange = (values) => {
