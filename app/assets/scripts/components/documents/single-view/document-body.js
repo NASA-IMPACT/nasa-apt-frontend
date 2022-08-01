@@ -24,8 +24,9 @@ import { DOCUMENT_SECTIONS } from '../single-edit/sections';
 import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
+import { useContextualAbility } from '../../../a11n';
 
-const HeadingContextualActions = ({ id }) => {
+const HeadingContextualActions = ({ id, atbd }) => {
   const { openPanelOn } = useCommentCenter();
 
   const openCommentsOnSection = useCallback(
@@ -36,9 +37,10 @@ const HeadingContextualActions = ({ id }) => {
     [openPanelOn, id]
   );
 
-  const hasCommentButton = DOCUMENT_SECTIONS.find(
-    (section) => section.id === id
-  );
+  const ability = useContextualAbility();
+  const hasCommentButton =
+    ability.can('access-comments', atbd) &&
+    DOCUMENT_SECTIONS.find((section) => section.id === id);
 
   if (!hasCommentButton) return null;
   return (
@@ -59,11 +61,11 @@ const HeadingContextualActions = ({ id }) => {
 };
 
 // Wrapper for each of the main sections.
-const AtbdSectionBase = ({ id, title, children, ...props }) => (
+const AtbdSectionBase = ({ id, title, children, atbd, ...props }) => (
   <section {...props}>
     <HeadingWActions as='h2' id={id} data-scroll='target'>
       <span>{title}</span>
-      <HeadingContextualActions id={id} />
+      <HeadingContextualActions id={id} atbd={atbd} />
     </HeadingWActions>
     {children}
   </section>
@@ -93,9 +95,14 @@ const ReferencesList = styled.ol`
 // When the section that's being rendered is a list of items we only need
 // to print the title and then the data from the children.
 // This method is a utility to just render the children.
-const AtbdSectionPassThrough = ({ element, children }) => {
+const AtbdSectionPassThrough = ({ element, children, atbd }) => {
   return (
-    <AtbdSection key={element.id} id={element.id} title={element.label}>
+    <AtbdSection
+      key={element.id}
+      id={element.id}
+      title={element.label}
+      atbd={atbd}
+    >
       {React.Children.count(children) ? children : <EmptySection />}
     </AtbdSection>
   );
@@ -124,7 +131,7 @@ const FragmentWithOptionalEditor = ({
     <React.Fragment>
       <HeadingWActions as={HLevel} id={element.id} data-scroll='target'>
         <span>{element.label}</span>
-        <HeadingContextualActions id={element.id} />
+        <HeadingContextualActions id={element.id} atbd={atbd} />
       </HeadingWActions>
       {withEditor && (
         <SafeReadEditor
@@ -309,7 +316,12 @@ export const atbdContentSections = [
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.abstract, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
@@ -330,7 +342,12 @@ export const atbdContentSections = [
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.plain_summary, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
@@ -353,7 +370,12 @@ export const atbdContentSections = [
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.version_description, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
@@ -374,7 +396,12 @@ export const atbdContentSections = [
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.introduction, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <SafeReadEditor
           context={{
             subsectionLevel: 'h3',
@@ -528,11 +555,11 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'input_variables',
-        render: ({ element, children }) => (
+        render: ({ element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} />
+              <HeadingContextualActions id={element.id} atbd={atbd} />
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -551,11 +578,11 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Output Variables',
         id: 'output_variables',
-        render: ({ element, children }) => (
+        render: ({ element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} />
+              <HeadingContextualActions id={element.id} atbd={atbd} />
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -628,7 +655,12 @@ export const atbdContentSections = [
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.algorithm_usage_constraints, id),
     render: ({ element, document, referencesUseIndex, atbd }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
           context={{
@@ -827,8 +859,13 @@ export const atbdContentSections = [
   {
     label: 'Contacts',
     id: 'contacts',
-    render: ({ element, children }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+    render: ({ element, children, atbd }) => (
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         {React.Children.count(children) ? (
           children
         ) : (
@@ -857,10 +894,15 @@ export const atbdContentSections = [
   {
     label: 'References',
     id: 'references',
-    render: ({ element, document, referencesUseIndex }) => {
+    render: ({ element, document, referencesUseIndex, atbd }) => {
       const referencesInUse = Object.values(referencesUseIndex);
       return (
-        <AtbdSection key={element.id} id={element.id} title={element.label}>
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+        >
           {referencesInUse.length ? (
             <ReferencesList>
               {referencesInUse.map(({ docIndex, refId }) => {
@@ -886,8 +928,13 @@ export const atbdContentSections = [
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
-    render: ({ element, children }) => (
-      <AtbdSection key={element.id} id={element.id} title={element.label}>
+    render: ({ element, children, atbd }) => (
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+      >
         <p>
           <em>
             If provided, the journal details are included only in the Journal
@@ -901,8 +948,13 @@ export const atbdContentSections = [
       {
         label: 'Key Points',
         id: 'key_points',
-        render: ({ element, document }) => (
-          <AtbdSection key={element.id} id={element.id} title={element.label}>
+        render: ({ element, document, atbd }) => (
+          <AtbdSection
+            key={element.id}
+            id={element.id}
+            title={element.label}
+            atbd={atbd}
+          >
             <MultilineString
               value={document.key_points}
               whenEmpty={<EmptySection />}
