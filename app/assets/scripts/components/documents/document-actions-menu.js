@@ -21,6 +21,11 @@ export default function DocumentActionsMenu(props) {
       label: 'View info...',
       title: 'View document info'
     };
+    const viewChangelog = {
+      id: 'view-changelog',
+      label: 'View changelog...',
+      title: 'View document changelog'
+    };
     const itemChangeLeading = {
       id: 'change-leading',
       label: 'Change lead author...',
@@ -102,7 +107,7 @@ export default function DocumentActionsMenu(props) {
         ...triggerProps,
         menu: {
           id: 'actions',
-          items: [itemViewInfo]
+          items: [itemViewInfo, viewChangelog]
         }
       };
     }
@@ -112,6 +117,7 @@ export default function DocumentActionsMenu(props) {
         id: 'actions',
         items: [
           itemViewInfo,
+          viewChangelog,
           // When we are in the single edit, we don't need the edit button
           // redundancy.
           origin !== 'single-edit' &&
