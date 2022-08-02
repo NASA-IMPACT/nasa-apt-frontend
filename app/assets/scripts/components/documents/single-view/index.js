@@ -271,11 +271,6 @@ function DocumentView() {
                 onAction={onDocumentMenuAction}
               />
               <VerticalDivider variation='light' />
-              <DocumentDownloadMenu
-                atbd={atbd.data}
-                variation='achromic-plain'
-              />
-              <VerticalDivider variation='light' />
               <DocumentActionsMenu
                 // In the case of a single ATBD the selected version data is
                 // merged with the ATBD meta and that's why both variables are
