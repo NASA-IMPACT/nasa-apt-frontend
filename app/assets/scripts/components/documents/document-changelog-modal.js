@@ -73,6 +73,7 @@ export default function DocumentChangelogModal(props) {
       onCloseClick={onClose}
       title='Document Changelog'
       content={<>{content}</>}
+      data-cy='changelog-modal'
     />
   );
 }

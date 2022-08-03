@@ -95,7 +95,8 @@ export default function DocumentActionsMenu(props) {
         hideText: true,
         useIcon: 'ellipsis-vertical',
         variation,
-        size
+        size,
+        'data-cy': 'options-trigger'
       },
       triggerLabel: 'Document options'
     };
