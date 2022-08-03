@@ -9,13 +9,14 @@ import { glsp } from '@devseed-ui/theme-provider';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
+import { SafeReadEditor } from '../slate';
 
 const Version = styled.div`
-  margin-bottom: ${glsp(1.5)};
+  margin-bottom: ${glsp(3)};
 `;
 
 const Downloads = styled.div`
-  margin-top: ${glsp()};
+  margin-top: ${glsp(1.5)};
 
   & > a {
     margin-right: ${glsp()};
@@ -32,26 +33,28 @@ export default function DocumentChangelogModal(props) {
     }
   }, [revealed]);
 
-  const content = atbd.versions.map(({ version }) => {
+  const content = atbd.versions.map(({ version, document }) => {
     const pdfUrl = `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`;
 
     return (
       <Version key={version}>
         <h3>{version}</h3>
+        <SafeReadEditor
+          value={document.version_description}
+          whenEmpty='No summary available'
+        />
         <Downloads>
           <Button
-            variation='base-raised-light'
-            size='small'
             as='a'
+            variation='primary-raised-dark'
             useIcon='download-2'
             href={`${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`}
           >
             Download Journal PDF
           </Button>
           <Button
-            variation='base-raised-light'
-            size='small'
             as='a'
+            variation='primary-raised-dark'
             useIcon='download-2'
             href={`${pdfUrl}${token ? `?token=${token}` : ''}`}
           >
