@@ -86,7 +86,7 @@ export async function documentUpdateMinorConfirmAndToast({
   const { version, major, minor } = atbd;
 
   const { result: confirmed } = await showConfirmationPrompt({
-    title: 'Update minor version',
+    title: 'Are you sure?',
     subtitle: `Current version is ${version}`,
     content: (
       <ConfirmationModalProse>
