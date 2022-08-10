@@ -150,15 +150,6 @@ export const isPublication = (versionOrStatus) => {
 };
 
 /**
- * Checks that the given document or status string is in Publication or after
- * @param {object|string} versionOrStatus The doc version or the status string
- * @returns boolean
- */
-export const isPublicationOrAfter = (versionOrStatus) => {
-  return isInStatus(versionOrStatus, [PUBLICATION, PUBLISHED]);
-};
-
-/**
  * Checks that the given document or status string is Published
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean

@@ -25,7 +25,6 @@ import { FormikInputCheckable } from '../../../common/forms/input-checkable';
 import FormGroupStructure from '../../../common/forms/form-group-structure';
 import { FieldMultiItem } from '../../../common/forms/field-multi-item';
 import { DeletableFieldset } from '../../../common/forms/deletable-fieldset';
-import Tip from '../../../common/tooltip';
 import Prose from '../../../../styles/typography/prose';
 import FormInfoTip from '../../../common/forms/form-info-tooltip';
 
@@ -33,7 +32,6 @@ import { formString } from '../../../../utils/strings';
 import { getDocumentSectionLabel } from '../sections';
 import {
   isJournalPublicationIntended,
-  isPublicationOrAfter,
   JOURNAL_NO_PUBLICATION,
   JOURNAL_PUBLISHED,
   JOURNAL_PUB_INTENDED,
@@ -50,23 +48,19 @@ const DeletableFieldsetDiptych = styled(DeletableFieldset)`
 const journalStatuses = [
   {
     value: JOURNAL_NO_PUBLICATION,
-    label: 'Not to be published',
-    enabled: () => true
+    label: 'Not to be published'
   },
   {
     value: JOURNAL_PUB_INTENDED,
-    label: 'To be published',
-    enabled: () => true
+    label: 'To be published'
   },
   {
     value: JOURNAL_SUBMITTED,
-    label: 'Submitted',
-    enabled: isPublicationOrAfter
+    label: 'Submitted'
   },
   {
     value: JOURNAL_PUBLISHED,
-    label: 'Published',
-    enabled: isPublicationOrAfter
+    label: 'Published'
   }
 ];
 
@@ -86,33 +80,17 @@ export default function JournalDetails(props) {
         description={formString('closeout.journal_publication')}
       >
         <FormCheckableGroup>
-          {journalStatuses.map((s) => {
-            const isDisabled = !s.enabled(atbd);
-
-            const radio = (
-              <FormikInputCheckable
-                key={s.value}
-                id={`journal_status-${s.value}`}
-                name='journal_status'
-                type='radio'
-                value={s.value}
-                disabled={isDisabled}
-              >
-                {s.label}
-              </FormikInputCheckable>
-            );
-
-            return isDisabled ? (
-              <Tip
-                title='This option can only be selected after the document enters the Publication stage.'
-                key={s.value}
-              >
-                {radio}
-              </Tip>
-            ) : (
-              radio
-            );
-          })}
+          {journalStatuses.map((s) => (
+            <FormikInputCheckable
+              key={s.value}
+              id={`journal_status-${s.value}`}
+              name='journal_status'
+              type='radio'
+              value={s.value}
+            >
+              {s.label}
+            </FormikInputCheckable>
+          ))}
         </FormCheckableGroup>
       </FormGroupStructure>
 
