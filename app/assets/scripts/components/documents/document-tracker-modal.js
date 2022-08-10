@@ -30,12 +30,10 @@ import {
   isDraft,
   isDraftEquivalent,
   isOpenReview,
-  isPublication,
   isPublicationRequested,
   isPublished,
   isStatusAfter,
   OPEN_REVIEW,
-  PUBLICATION,
   PUBLICATION_REQUESTED,
   PUBLISHED,
   REVIEW_DONE
@@ -211,8 +209,6 @@ export default function DocumentTrackerModal(props) {
       isClosedReview(atbd),
       // Fold index 2:
       isOpenReview(atbd) || isPublicationRequested(atbd),
-      // Fold index 3:
-      isPublication(atbd),
       // Fold index 4:
       isPublished(atbd)
     ],
@@ -331,28 +327,6 @@ export default function DocumentTrackerModal(props) {
                       </TrackerEntry>
                     </TrackerItem>
                   </SubTracker>
-                </TrackerItem>
-                <TrackerItem status={checkStatusProgress(PUBLICATION)}>
-                  <TrackerEntryFold
-                    index={3}
-                    checkExpanded={checkExpanded}
-                    setExpanded={setExpanded}
-                    swatchColor={statusMapping[PUBLICATION]}
-                    title={getDocumentStatusLabel(PUBLICATION)}
-                    titleIcon={
-                      isPublication(atbd)
-                        ? journalStatusIcons[atbd.journal_status]
-                        : undefined
-                    }
-                    content={
-                      <p>
-                        If the document was scheduled to be published in the
-                        Journal, it goes through the journal publication process
-                        outside of APT, otherwise the the last actions are taken
-                        to have the document published on the platform.
-                      </p>
-                    }
-                  />
                 </TrackerItem>
                 <TrackerItem status={checkStatusProgress(PUBLISHED)}>
                   <TrackerEntryFold

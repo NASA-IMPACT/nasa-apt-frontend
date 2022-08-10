@@ -18,7 +18,6 @@ export const CLOSED_REVIEW_REQUESTED = 'CLOSED_REVIEW_REQUESTED';
 export const CLOSED_REVIEW = 'CLOSED_REVIEW';
 export const OPEN_REVIEW = 'OPEN_REVIEW';
 export const PUBLICATION_REQUESTED = 'PUBLICATION_REQUESTED';
-export const PUBLICATION = 'PUBLICATION';
 export const PUBLISHED = 'PUBLISHED';
 
 export const DOCUMENT_STATUS = [
@@ -27,8 +26,7 @@ export const DOCUMENT_STATUS = [
   { id: CLOSED_REVIEW, label: 'In closed review' },
   { id: OPEN_REVIEW, label: 'In review' },
   { id: PUBLICATION_REQUESTED, label: 'In review' },
-  { id: PUBLICATION, label: 'In publication' },
-  { id: PUBLISHED, label: 'Published' }
+  { id: PUBLISHED, label: 'Public' }
 ];
 
 /**
@@ -141,21 +139,12 @@ export const isPublicationRequested = (versionOrStatus) => {
 };
 
 /**
- * Checks that the given document or status string is in Publication
- * @param {object|string} versionOrStatus The doc version or the status string
- * @returns boolean
- */
-export const isPublication = (versionOrStatus) => {
-  return isInStatus(versionOrStatus, [PUBLICATION]);
-};
-
-/**
  * Checks that the given document or status string is in Publication or after
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
  */
 export const isPublicationOrAfter = (versionOrStatus) => {
-  return isInStatus(versionOrStatus, [PUBLICATION, PUBLISHED]);
+  return isInStatus(versionOrStatus, [PUBLISHED]);
 };
 
 /**
