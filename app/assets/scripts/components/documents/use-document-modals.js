@@ -3,6 +3,7 @@ import T from 'prop-types';
 import { useHistory, useLocation } from 'react-router';
 
 import DocumentInfoModal from './document-info-modal';
+import DocumentChangelogModal from './document-changelog-modal';
 import {
   DocumentCollaboratorModal,
   DocumentLeadAuthorModal
@@ -32,6 +33,7 @@ import {
 import { useThreadStats } from '../../context/threads-list';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
+const MODAL_DOCUMENT_CHANGELOG = 'modal-document-changelog';
 const MODAL_DOCUMENT_TRACKER = 'modal-document-tracker';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
@@ -80,6 +82,11 @@ export function DocumentModals(props) {
     <React.Fragment>
       <DocumentInfoModal
         revealed={activeModal === MODAL_DOCUMENT_INFO}
+        atbd={atbd}
+        onClose={hideModal}
+      />
+      <DocumentChangelogModal
+        revealed={activeModal === MODAL_DOCUMENT_CHANGELOG}
         atbd={atbd}
         onClose={hideModal}
       />
@@ -203,6 +210,9 @@ export const useDocumentModals = ({
           break;
         case 'view-info':
           setActiveModal(MODAL_DOCUMENT_INFO);
+          break;
+        case 'view-changelog':
+          setActiveModal(MODAL_DOCUMENT_CHANGELOG);
           break;
         case 'view-tracker':
           setActiveModal(MODAL_DOCUMENT_TRACKER);
