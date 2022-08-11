@@ -2,6 +2,8 @@ module.exports = {
   appTitle: 'Report Generator Tool',
   appDescription: 'Report Generator Tool - Create reports on satellite needs.',
   apiUrl: 'http://localhost:8888/v2',
+  snwgApiUrl: 'https://api.snwg-impact.net/api/v1/',
+  mimsApiUrl: 'https://mims.nasa-impact.net/',
   auth: {
     // DOCS: https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource
     // Amazon Cognito Region
