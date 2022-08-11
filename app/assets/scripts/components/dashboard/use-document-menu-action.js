@@ -102,8 +102,6 @@ export function useDocumentHubMenuAction() {
         case 'change-leading':
         case 'req-review-allow':
         case 'req-review-deny':
-        case 'req-publication-allow':
-        case 'req-publication-deny':
         case 'toggle-comments':
           // To trigger the modals to open from other pages, we use the history
           // state as the user is sent from one page to another. See explanation
