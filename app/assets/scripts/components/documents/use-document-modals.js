@@ -3,6 +3,7 @@ import T from 'prop-types';
 import { useHistory, useLocation } from 'react-router';
 
 import DocumentInfoModal from './document-info-modal';
+import DocumentChangelogModal from './document-changelog-modal';
 import {
   DocumentCollaboratorModal,
   DocumentLeadAuthorModal
@@ -32,12 +33,12 @@ import {
 import { useThreadStats } from '../../context/threads-list';
 
 const MODAL_DOCUMENT_INFO = 'modal-document-info';
+const MODAL_DOCUMENT_CHANGELOG = 'modal-document-changelog';
 const MODAL_DOCUMENT_TRACKER = 'modal-document-tracker';
 const MODAL_DOCUMENT_COLLABORATOR = 'modal-document-collaborator';
 const MODAL_DOCUMENT_LEAD_AUTHOR = 'modal-document-lead-author';
 const MODAL_REQ_REVIEW_DENY = 'modal-req-review-deny';
 const MODAL_REQ_REVIEW_ALLOW = 'modal-req-review-allow';
-const MODAL_REQ_PUBLICATION_DENY = 'modal-req-publication-deny';
 
 /**
  * Waits for a promise showing a message in case of error or success.
@@ -72,14 +73,18 @@ export function DocumentModals(props) {
     hideModal,
     onCollaboratorsSubmit,
     onReviewReqDenySubmit,
-    onReviewReqApproveSubmit,
-    onPublicationReqDenySubmit
+    onReviewReqApproveSubmit
   } = props;
 
   return (
     <React.Fragment>
       <DocumentInfoModal
         revealed={activeModal === MODAL_DOCUMENT_INFO}
+        atbd={atbd}
+        onClose={hideModal}
+      />
+      <DocumentChangelogModal
+        revealed={activeModal === MODAL_DOCUMENT_CHANGELOG}
         atbd={atbd}
         onClose={hideModal}
       />
@@ -121,19 +126,6 @@ export function DocumentModals(props) {
         onSubmit={onReviewReqApproveSubmit}
         onClose={hideModal}
       />
-      <ReqDenyModal
-        revealed={activeModal === MODAL_REQ_PUBLICATION_DENY}
-        title='Deny publication request'
-        content={
-          <p>
-            You are about to deny the publication request for version{' '}
-            <strong>{atbd.version}</strong> of document{' '}
-            <strong>{atbd.title}</strong>
-          </p>
-        }
-        onSubmit={onPublicationReqDenySubmit}
-        onClose={hideModal}
-      />
     </React.Fragment>
   );
 }
@@ -144,8 +136,7 @@ DocumentModals.propTypes = {
   hideModal: T.func,
   onCollaboratorsSubmit: T.func,
   onReviewReqDenySubmit: T.func,
-  onReviewReqApproveSubmit: T.func,
-  onPublicationReqDenySubmit: T.func
+  onReviewReqApproveSubmit: T.func
 };
 
 const composeOnSubmitSuccess = (fn, cb) => async (...args) => {
@@ -168,8 +159,6 @@ export const useDocumentModals = ({
   fevOpenReview,
   fevReqPublication,
   fevCancelPublicationReq,
-  fevApprovePublicationReq,
-  fevDenyPublicationReq,
   fevPublish,
   fevMinorVersion
 }) => {
@@ -203,6 +192,9 @@ export const useDocumentModals = ({
           break;
         case 'view-info':
           setActiveModal(MODAL_DOCUMENT_INFO);
+          break;
+        case 'view-changelog':
+          setActiveModal(MODAL_DOCUMENT_CHANGELOG);
           break;
         case 'view-tracker':
           setActiveModal(MODAL_DOCUMENT_TRACKER);
@@ -256,15 +248,6 @@ export const useDocumentModals = ({
             fn: fevCancelPublicationReq
           });
           break;
-        case 'req-publication-allow':
-          await handleRequestPublicationAllow({
-            atbd,
-            fn: fevApprovePublicationReq
-          });
-          break;
-        case 'req-publication-deny':
-          setActiveModal(MODAL_REQ_PUBLICATION_DENY);
-          break;
         default:
           // Was not handled
           return false;
@@ -284,7 +267,6 @@ export const useDocumentModals = ({
       fevSetOwnReviewStatus,
       fevOpenReview,
       fevReqPublication,
-      fevApprovePublicationReq,
       fevCancelPublicationReq
     ]
   );
@@ -312,15 +294,6 @@ export const useDocumentModals = ({
     }
   );
 
-  const onPublicationReqDenySubmitFn = useSubmitForGovernance(
-    fevDenyPublicationReq,
-    {
-      start: 'Denying request for publication',
-      success: 'Publication request denied successfully',
-      error: 'Error denying publication request'
-    }
-  );
-
   // Update submit function adding actions when the process is successful.
   const onReviewReqDenySubmit = composeOnSubmitSuccess(
     onReviewReqDenySubmitFn,
@@ -334,14 +307,6 @@ export const useDocumentModals = ({
     onReviewReqApproveSubmitFn,
     () => {
       hideModal();
-    }
-  );
-
-  const onPublicationReqDenySubmit = composeOnSubmitSuccess(
-    onPublicationReqDenySubmitFn,
-    () => {
-      hideModal();
-      refreshThreadStats();
     }
   );
 
@@ -373,8 +338,7 @@ export const useDocumentModals = ({
       hideModal,
       onCollaboratorsSubmit,
       onReviewReqDenySubmit,
-      onReviewReqApproveSubmit,
-      onPublicationReqDenySubmit
+      onReviewReqApproveSubmit
     }
   };
 };
@@ -492,38 +456,6 @@ export async function handleCancelRequestPublication({ fn, args = [] }) {
     success: 'Publication request cancelled successfully',
     error: 'Error while cancelling requested publication'
   });
-}
-
-export async function handleRequestPublicationAllow({ atbd, fn, args = [] }) {
-  const { result } = await showConfirmationPrompt({
-    title: 'Are you sure?',
-    content: (
-      <ConfirmationModalProse>
-        <p>
-          You&apos;re about to transition the version{' '}
-          <strong>{atbd.version}</strong> of document{' '}
-          <strong>{atbd.title}</strong> to the publication stage.
-        </p>
-      </ConfirmationModalProse>
-    ),
-    /* eslint-disable-next-line react/display-name, react/prop-types */
-    renderControls: createBinaryControlsRenderer({
-      confirmVariation: 'primary-raised-dark',
-      confirmIcon: 'tick--small',
-      confirmTitle: 'Transition document to publication',
-      cancelVariation: 'base-raised-light',
-      cancelIcon: 'xmark--small'
-    })
-  });
-
-  if (result) {
-    return eventProcessToasts({
-      promise: fn(...args),
-      start: 'Transitioning document to publication',
-      success: 'Document is now in publication',
-      error: 'Error while moving to publication'
-    });
-  }
 }
 
 export async function handlePublishing({ atbd, fn, args = [] }) {

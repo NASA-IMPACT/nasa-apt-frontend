@@ -20,7 +20,7 @@ const ContentWrapper = styled.div`
  */
 export const remindMinorVersionUpdate = async (currentVersion) => {
   return showConfirmationPrompt({
-    title: 'Are you done editing?',
+    title: 'Update minor version?',
     subtitle: `Current version is ${currentVersion}`,
     content: (
       <ContentWrapper>
@@ -42,7 +42,7 @@ export const remindMinorVersionUpdate = async (currentVersion) => {
           useIcon='xmark--small'
           onClick={cancel}
         >
-          Continue editing
+          No, don&apos;t update yet
         </Button>
         <Button
           variation='primary-raised-dark'
@@ -50,7 +50,7 @@ export const remindMinorVersionUpdate = async (currentVersion) => {
           useIcon='tick--small'
           onClick={confirm}
         >
-          Go to update
+          Yes, update version
         </Button>
       </React.Fragment>
     )

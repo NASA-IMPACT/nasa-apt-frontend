@@ -222,6 +222,7 @@ export default function DocumentTrackerModal(props) {
       revealed={revealed}
       onCloseClick={onClose}
       title={isWelcome ? 'Welcome to your new document' : 'Document status'}
+      data-cy='document-tracker-modal'
       content={
         <ModalInnerContent>
           {isWelcome && (

@@ -1,0 +1,1062 @@
+{
+  "id": 1,
+  "created_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "created_at": "2022-08-01T06:27:51.624274+00:00",
+  "last_updated_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "last_updated_at": "2022-08-01T06:27:51.624274+00:00",
+  "title": "Test ATBD 1",
+  "alias": "test-atbd-1",
+  "versions": [
+    {
+      "major": 1,
+      "minor": 1,
+      "version": "v1.1",
+      "status": "PUBLISHED",
+      "published_by": {
+        "preferred_username": "Carlos Curator",
+        "sub": "dcb84824-b65e-481a-a7af-d657c9906d63",
+        "email": "curator@apt.com",
+        "cognito_groups": [
+          "curator"
+        ]
+      },
+      "sections_completed": {},
+      "created_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "created_at": "2022-08-01T06:27:51.626928+00:00",
+      "last_updated_by": {
+        "preferred_username": "Andre Author",
+        "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+        "email": "author1@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "last_updated_at": "2022-08-01T06:27:51.626928+00:00",
+      "citation": {
+        "issue": "alpha2",
+        "title": "A full atbd for testing",
+        "editors": "Olaf Veerman",
+        "version": "2",
+        "creators": "Leo Thomas and Daniel da Silva and Ricardo Mestre",
+        "publisher": "Development Seed",
+        "series_name": "Tests of content",
+        "release_date": "2021-01-01",
+        "release_place": "World Wide Web",
+        "online_resource": "http://nasa-apt2-staging.s3-website-us-east-1.amazonaws.com/",
+        "additional_details": ""
+      },
+      "document": {
+        "abstract": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "A brief and interesting overview of the themes presented in this document are as follows: At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga."
+                }
+              ]
+            }
+          ]
+        },
+        "version_description": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "The important aspects of this document version include updated handling of the flux capcitor and addition of a description of the impulse response of an inhomogeneous linear differential operator defined on a domain with specified initial conditions or boundary conditions, also known as Green's function:"
+                }
+              ]
+            },
+            {
+              "type": "equation",
+              "children": [
+                {
+                  "text": "\\int_C P\\,du + Q\\, dv = \\int\\!\\!\\!\\int_A \\left({\\partial Q\\over \\partial u} - {\\partial P\\over \\partial v}\\right) {1\\over \\sqrt{EG-F^2}}\\,dA"
+                }
+              ]
+            }
+          ]
+        },
+        "plain_summary": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "A brief and interesting overview of the themse presented in this document, but this time, without jargon. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                }
+              ]
+            }
+          ]
+        },
+        "key_points": "Agricultural land usage is tied to food production\nSatellite imagery uses different spectral bands\nEven though tomatoes are fruit, they shouldn't go in fruit salad",
+        "introduction": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                }
+              ]
+            }
+          ]
+        },
+        "historical_perspective": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "Lorem "
+                },
+                {
+                  "text": "ipsum dolor sit amet, ",
+                  "bold": true
+                },
+                {
+                  "text": "consectetur "
+                },
+                {
+                  "text": "adipiscing elit, sed do ",
+                  "italic": true
+                },
+                {
+                  "text": "eiusmod tempor "
+                },
+                {
+                  "text": "incididunt ut labore",
+                  "underline": true
+                },
+                {
+                  "text": " et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+                },
+                {
+                  "text": "Duis aute irure dolor in reprehenderi",
+                  "underline": true,
+                  "italic": true,
+                  "bold": true
+                },
+                {
+                  "text": "t in voluptate "
+                },
+                {
+                  "text": "velit",
+                  "subscript": true
+                },
+                {
+                  "text": " esse "
+                },
+                {
+                  "text": "cillum",
+                  "superscript": true
+                },
+                {
+                  "text": " dolore eu "
+                },
+                {
+                  "text": ""
+                },
+                {
+                  "text": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                }
+              ]
+            }
+          ]
+        },
+        "additional_information": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": ""
+                },
+                {
+                  "type": "ref",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "refId": "e1cdd64d"
+                },
+                {
+                  "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                }
+              ]
+            }
+          ]
+        },
+        "data_availability": {
+          "children": [
+            {
+              "type": "ul",
+              "children": [
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "Statement 1"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "Statement 2"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "scientific_theory": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "The "
+                },
+                {
+                  "text": "algorithm",
+                  "bold": true
+                },
+                {
+                  "text": " specified in this "
+                },
+                {
+                  "text": "document",
+                  "italic": true,
+                  "bold": true
+                },
+                {
+                  "type": "ref",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "refId": "1"
+                },
+                {
+                  "text": " is designed to derive footprint level canopy cover and vertical "
+                },
+                {
+                  "type": "a",
+                  "children": [
+                    {
+                      "text": "profile over vegetated areas"
+                    }
+                  ],
+                  "url": "https://en.wikipedia.org"
+                },
+                {
+                  "text": " between ~52°N and ~52°S.\nThe data product includes estimates of total canopy cover and PAI."
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "The central "
+                },
+                {
+                  "text": "issues",
+                  "superscript": true
+                },
+                {
+                  "text": " in the definition are:"
+                }
+              ]
+            },
+            {
+              "type": "ol",
+              "children": [
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "whether the measurement is acquired at a specific viewing angle (mostly near-nadir) or over the entire hemisphere;"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "whether a tree crown is treated as an opaque object including all small within-canopy gaps."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "sub-section",
+              "id": "equation-example",
+              "children": [
+                {
+                  "text": "Equation Example"
+                }
+              ]
+            },
+            {
+              "type": "equation",
+              "children": [
+                {
+                  "text": "F_{app}(x) = \\sum_{n=1}^{\\infty} \\sqrt {2^{-n} \\cdot x}"
+                }
+              ]
+            },
+            {
+              "type": "sub-section",
+              "id": "image-example",
+              "children": [
+                {
+                  "text": "Image Example"
+                }
+              ]
+            },
+            {
+              "type": "image-block",
+              "children": [
+                {
+                  "type": "img",
+                  "children": [
+                    {
+                      "text": ""
+                    }
+                  ],
+                  "objectKey": "fullmoon.jpg"
+                },
+                {
+                  "type": "caption",
+                  "children": [
+                    {
+                      "text": "This is an image caption"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "sub-section",
+              "id": "table-example",
+              "children": [
+                {
+                  "text": "Table Example"
+                }
+              ]
+            },
+            {
+              "type": "table-block",
+              "children": [
+                {
+                  "type": "table",
+                  "children": [
+                    {
+                      "type": "tr",
+                      "children": [
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Name",
+                                  "bold": true
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Result",
+                                  "bold": true
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Date",
+                                  "bold": true
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "tr",
+                      "children": [
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Lincoln"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Inconclusive"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "2020-01-01T00:00:00"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "tr",
+                      "children": [
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Bridge-water"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Pass"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "td",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "2020-01-01T00:00:00"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "caption",
+                  "children": [
+                    {
+                      "text": "Test results by "
+                    },
+                    {
+                      "type": "a",
+                      "children": [
+                        {
+                          "text": "different"
+                        }
+                      ],
+                      "url": "http://google.com"
+                    },
+                    {
+                      "text": " entities"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "sub-section",
+              "id": "canopy-cover-types",
+              "children": [
+                {
+                  "text": "Canopy cover types"
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "It is different from two other widely used cover types: "
+                }
+              ]
+            },
+            {
+              "type": "ul",
+              "children": [
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "canopy closure defined as the proportion of the vegetation over a segment of the sky hemisphere at one point on the ground"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "crown cover as the percentage of the ground covered by a vertical projection of the outermost perimeter of the natural spread of the foliage of plants."
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "scientific_theory_assumptions": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "There are no assumptions being made"
+                },
+                {
+                  "text": "at the moment",
+                  "italic": true
+                }
+              ]
+            }
+          ]
+        },
+        "mathematical_theory": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "The algorithm specified in this document is designed to derive footprint level canopy cover and vertical "
+                },
+                {
+                  "type": "a",
+                  "children": [
+                    {
+                      "text": "profile over vegetated areas"
+                    }
+                  ],
+                  "url": "https://en.wikipedia.org/"
+                },
+                {
+                  "text": " between ~52°N and ~52°S.\nThe data product includes estimates of total canopy cover and PAI, vertical profiles of canopy cover and PAI, the vertical profile of Plant Area Volume Density and foliage height diversity. The GEDI Level 2A and 2B products will provide unprecedented dense spatial samplings of forest structure globally."
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "Canopy cover is a biophysical parameter widely used in terrestrial remote sensing to describe the spatially aggregated geometric properties of vegetation. Multiple definitions of canopy cover exist, depending on the applied measuring techniques."
+                }
+              ]
+            },
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "The central issues in the definition are:"
+                }
+              ]
+            },
+            {
+              "type": "ol",
+              "children": [
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "whether the measurement is acquired at a specific viewing angle (mostly near-nadir) or over the entire hemisphere;"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "whether a tree crown is treated as an opaque object including all small within-canopy gaps."
+                        },
+                        {
+                          "text": "This text demonstrates "
+                        },
+                        {
+                          "text": "subscripted",
+                          "subscript": true
+                        },
+                        {
+                          "text": "text, as well as "
+                        },
+                        {
+                          "text": "underlined",
+                          "underline": true
+                        },
+                        {
+                          "text": "text"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "ul",
+                      "children": [
+                        {
+                          "type": "li",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "This is an example"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "li",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Of a list within a list!"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "li",
+                          "children": [
+                            {
+                              "type": "p",
+                              "children": [
+                                {
+                                  "text": "Pretty neat, no?!"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "mathematical_theory_assumptions": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "There are no assumptions being made "
+                },
+                {
+                  "text": "at the moment",
+                  "italic": true
+                },
+                {
+                  "text": "."
+                }
+              ]
+            }
+          ]
+        },
+        "algorithm_input_variables": [
+          {
+            "name": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Length"
+                    }
+                  ]
+                }
+              ]
+            },
+            "long_name": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "HorizontalDisplacement       "
+                    }
+                  ]
+                }
+              ]
+            },
+            "unit": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "m"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "algorithm_input_variables_caption": "Algorithm input  variables table :)",
+        "algorithm_output_variables": [
+          {
+            "name": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Acc"
+                    }
+                  ]
+                }
+              ]
+            },
+            "long_name": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "Acceleration"
+                    }
+                  ]
+                }
+              ]
+            },
+            "unit": {
+              "children": [
+                {
+                  "type": "p",
+                  "children": [
+                    {
+                      "text": "m/s"
+                    },
+                    {
+                      "text": "2",
+                      "superscript": true
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "algorithm_output_variables_caption": "Algorithm Ouput variables table caption :)",
+        "algorithm_implementations": [
+          {
+            "url": "https://developmentseed.org/this-is-a-verylongwebsiteurl?with=parameters&that=aresuperlong-and-have-hyphens&123=4567891011121314151617181920",
+            "description": "This is our website"
+          }
+        ],
+        "performance_assessment_validation_methods": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "Some methods were taken to test this:"
+                }
+              ]
+            },
+            {
+              "type": "ol",
+              "children": [
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "Creating lists"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "li",
+                  "children": [
+                    {
+                      "type": "p",
+                      "children": [
+                        {
+                          "text": "and that is all folks"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "data_access_input_data": [],
+        "data_access_output_data": [
+          {
+            "url": "https://youtube.com",
+            "description": "This is basically a link to youtube"
+          }
+        ],
+        "data_access_related_urls": [
+          {
+            "url": "http://wikipedia.org",
+            "description": "This is just a link that points towards wikipedia"
+          }
+        ],
+        "journal_discussion": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "This is why this research is significant: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                }
+              ]
+            }
+          ]
+        },
+        "journal_acknowledgements": {
+          "children": [
+            {
+              "type": "p",
+              "children": [
+                {
+                  "text": "Thank you to all that are testing this tool! "
+                },
+                {
+                  "text": "You are the best!",
+                  "bold": true
+                }
+              ]
+            }
+          ]
+        },
+        "publication_references": [
+          {
+            "id": "1",
+            "authors": "Dickens, Charles and Steinbeck, John",
+            "title": "Example Reference",
+            "series": "A",
+            "edition": "3rd",
+            "volume": "42ml",
+            "issue": "ticket",
+            "publication_place": "Boston",
+            "publisher": "PenguinBooks",
+            "pages": "189-198",
+            "isbn": "123456789",
+            "year": "1995"
+          },
+          {
+            "id": "e1cdd64d",
+            "authors": "Einstein, A. and Rutherford, E",
+            "title": "A very important research article",
+            "series": "",
+            "edition": "1st",
+            "volume": "ABC",
+            "issue": "",
+            "publication_place": "Boston",
+            "publisher": "Penguin Books",
+            "pages": "149-185",
+            "isbn": "123456789",
+            "year": "1845"
+          }
+        ]
+      },
+      "keywords": [
+        {
+          "label": "AGRICULTURE PRODUCTION",
+          "path": "EARTH SCIENCE|HUMAN DIMENSIONS|ECONOMIC RESOURCES|AGRICULTURE PRODUCTION",
+          "value": "83741fb9-6f86-4670-abbb-c1f3b14a939d",
+          "id": 819255
+        },
+        {
+          "label": "LAND SURFACE/AGRICULTURE INDICATORS",
+          "path": "EARTH SCIENCE|CLIMATE INDICATORS|LAND SURFACE/AGRICULTURE INDICATORS",
+          "value": "112e71ec-c0a1-49a8-82d7-bcb317b45860",
+          "id": 819776
+        }
+      ],
+      "owner": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "authors": [
+        {
+          "preferred_username": "Andre Author",
+          "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+          "email": "author1@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        },
+        {
+          "preferred_username": "Anita Author",
+          "sub": "e0bc4add-85ac-4b06-8d76-5cdb19e3eb70",
+          "email": "author2@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        }
+      ],
+      "reviewers": [
+        {
+          "preferred_username": "Reviewer 1",
+          "review_status": "IN_PROGRESS"
+        },
+        {
+          "preferred_username": "Reviewer 2",
+          "review_status": "IN_PROGRESS"
+        }
+      ],
+      "journal_status": "NO_PUBLICATION",
+      "publication_checklist": {
+        "suggested_reviewers": [],
+        "review_roles": false,
+        "journal_editor": "Chelle Gentemann",
+        "author_affirmations": false
+      },
+      "contacts_link": [
+        {
+          "contact": {
+            "first_name": "Gregor",
+            "last_name": "Mendel",
+            "id": 2,
+            "mechanisms": [
+              {
+                "mechanism_type": "Mobile",
+                "mechanism_value": "1(234)567-8910"
+              }
+            ]
+          },
+          "roles": [
+            "Project administration"
+          ],
+          "affiliations": [
+            "CERN"
+          ]
+        }
+      ],
+      "publication_units": {
+        "words": 829,
+        "images": 1,
+        "tables": 1
+      }
+    }
+  ]
+}

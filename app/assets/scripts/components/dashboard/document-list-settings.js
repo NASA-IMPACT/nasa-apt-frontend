@@ -375,7 +375,6 @@ function getDocAbilitySortRating(doc, ability) {
     ability.can('open-review', doc) ||
     ability.can('req-publication', doc) ||
     ability.can('cancel-req-publication', doc) ||
-    ability.can('manage-req-publication', doc) ||
     ability.can('publish', doc)
     ? -1
     : 1;

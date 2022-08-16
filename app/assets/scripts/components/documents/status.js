@@ -139,6 +139,7 @@ export const isPublicationRequested = (versionOrStatus) => {
 };
 
 /**
+
  * Checks that the given document or status string is in Publication or after
  * @param {object|string} versionOrStatus The doc version or the status string
  * @returns boolean
