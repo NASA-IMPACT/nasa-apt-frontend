@@ -176,9 +176,12 @@ const CommentForm = (props) => {
   );
 
   const { user } = useUser();
-  const contributorsSelectOptions = contributors
-    .filter(({ sub }) => sub !== user.id) // Removes active user from select options
-    .map(contributorToSelectOption);
+  const contributorsSelectOptions = [
+    { label: 'Curators', value: 'curators' },
+    ...contributors
+      .filter(({ sub }) => sub !== user.id) // Removes active user from select options
+      .map(contributorToSelectOption)
+  ];
 
   return (
     <Formik
