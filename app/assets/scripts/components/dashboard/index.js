@@ -29,11 +29,9 @@ import {
   DRAFT,
   getDocumentStatusLabel,
   isDraftEquivalent,
-  isPublication,
   isPublished,
   isReviewEquivalent,
   OPEN_REVIEW,
-  PUBLICATION,
   PUBLISHED
 } from '../documents/status';
 import { round } from '../../utils/format';
@@ -262,7 +260,6 @@ function CuratorInsights() {
           total: docAcc.total + 1,
           DRAFT: docAcc.DRAFT + Number(isDraftEquivalent(ver)),
           OPEN_REVIEW: docAcc.OPEN_REVIEW + Number(isReviewEquivalent(ver)),
-          PUBLICATION: docAcc.PUBLICATION + Number(isPublication(ver)),
           PUBLISHED: docAcc.PUBLISHED + Number(isPublished(ver))
         };
       }, acc);
@@ -275,7 +272,7 @@ function CuratorInsights() {
     <InsightsBlock>
       <InsightsBlockTitle>Insights</InsightsBlockTitle>
       <InsightsBlockContent>
-        {[DRAFT, OPEN_REVIEW, PUBLICATION, PUBLISHED].map((status) => (
+        {[DRAFT, OPEN_REVIEW, PUBLISHED].map((status) => (
           <Insight
             key={status}
             id={status.toLowerCase()}
