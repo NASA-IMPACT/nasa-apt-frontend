@@ -628,14 +628,6 @@ export const useSingleAtbdEvents = ({ id, version }) => {
       () => createFireEvent('cancel_publication_request'),
       [createFireEvent]
     ),
-    fevApprovePublicationReq: useMemo(
-      () => createFireEvent('accept_publication_request'),
-      [createFireEvent]
-    ),
-    fevDenyPublicationReq: useMemo(
-      () => createFireEvent('deny_publication_request'),
-      [createFireEvent]
-    ),
     fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent]),
     fevMinorVersion: useMemo(() => createFireEvent('bump_minor_version'), [
       createFireEvent
