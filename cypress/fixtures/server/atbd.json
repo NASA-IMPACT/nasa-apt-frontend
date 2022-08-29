@@ -1,0 +1,304 @@
+{
+  "id": 1,
+  "created_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "created_at": "2022-08-01T06:27:51.624274+00:00",
+  "last_updated_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "last_updated_at": "2022-08-01T06:27:51.624274+00:00",
+  "title": "Test ATBD 1",
+  "alias": "test-atbd-1",
+  "versions": [
+    {
+      "major": 1,
+      "minor": 1,
+      "version": "v1.1",
+      "status": "PUBLISHED",
+      "published_by": {
+        "preferred_username": "Carlos Curator",
+        "sub": "dcb84824-b65e-481a-a7af-d657c9906d63",
+        "email": "curator@apt.com",
+        "cognito_groups": [
+          "curator"
+        ]
+      },
+      "published_at": null,
+      "sections_completed": {},
+      "created_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "created_at": "2022-08-01T06:27:51.626928+00:00",
+      "last_updated_by": {
+        "preferred_username": "Andre Author",
+        "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+        "email": "author1@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "last_updated_at": "2022-08-01T06:27:51.626928+00:00",
+      "citation": {
+        "issue": "alpha2",
+        "title": "A full atbd for testing",
+        "editors": "Olaf Veerman",
+        "version": "2",
+        "creators": "Leo Thomas and Daniel da Silva and Ricardo Mestre",
+        "publisher": "Development Seed",
+        "series_name": "Tests of content",
+        "release_date": "2021-01-01",
+        "release_place": "World Wide Web",
+        "online_resource": "http://nasa-apt2-staging.s3-website-us-east-1.amazonaws.com/",
+        "additional_details": ""
+      },
+      "document": {
+        "abstract": {
+          "children": [
+            {
+              "type": "p",
+              "id": null,
+              "children": [
+                {
+                  "text": "A brief and interesting overview of the themes presented in this document are as follows: At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            }
+          ]
+        },
+        "version_description": {
+          "children": [
+            {
+              "type": "p",
+              "id": null,
+              "children": [
+                {
+                  "text": "The important aspects of this document version include updated handling of the flux capcitor and addition of a description of the impulse response of an inhomogeneous linear differential operator defined on a domain with specified initial conditions or boundary conditions, also known as Green's function:",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            },
+            {
+              "type": "equation",
+              "id": null,
+              "children": [
+                {
+                  "text": "\\int_C P\\,du + Q\\, dv = \\int\\!\\!\\!\\int_A \\left({\\partial Q\\over \\partial u} - {\\partial P\\over \\partial v}\\right) {1\\over \\sqrt{EG-F^2}}\\,dA",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "keywords": [
+        {
+          "label": "AGRICULTURE PRODUCTION",
+          "path": "EARTH SCIENCE|HUMAN DIMENSIONS|ECONOMIC RESOURCES|AGRICULTURE PRODUCTION",
+          "value": "83741fb9-6f86-4670-abbb-c1f3b14a939d",
+          "id": 819255
+        },
+        {
+          "label": "LAND SURFACE/AGRICULTURE INDICATORS",
+          "path": "EARTH SCIENCE|CLIMATE INDICATORS|LAND SURFACE/AGRICULTURE INDICATORS",
+          "value": "112e71ec-c0a1-49a8-82d7-bcb317b45860",
+          "id": 819776
+        }
+      ],
+      "owner": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "authors": [
+        {
+          "preferred_username": "Andre Author",
+          "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+          "email": "author1@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        },
+        {
+          "preferred_username": "Anita Author",
+          "sub": "e0bc4add-85ac-4b06-8d76-5cdb19e3eb70",
+          "email": "author2@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        }
+      ],
+      "reviewers": [
+        {
+          "preferred_username": "Reviewer 1",
+          "review_status": "IN_PROGRESS"
+        },
+        {
+          "preferred_username": "Reviewer 2",
+          "review_status": "IN_PROGRESS"
+        }
+      ],
+      "journal_status": "NO_PUBLICATION"
+    },
+    {
+      "major": 2,
+      "minor": 0,
+      "version": "v2.0",
+      "status": "OPEN_REVIEW",
+      "published_by": null,
+      "published_at": null,
+      "sections_completed": {},
+      "created_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "created_at": "2022-08-01T06:27:51.629709+00:00",
+      "last_updated_by": {
+        "preferred_username": "Andre Author",
+        "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+        "email": "author1@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "last_updated_at": "2022-08-01T06:27:51.629709+00:00",
+      "citation": {
+        "issue": "alpha2",
+        "title": "A full atbd for testing",
+        "editors": "Olaf Veerman",
+        "version": "2",
+        "creators": "Leo Thomas and Daniel da Silva and Ricardo Mestre",
+        "publisher": "Development Seed",
+        "series_name": "Tests of content",
+        "release_date": "2021-01-01",
+        "release_place": "World Wide Web",
+        "online_resource": "http://nasa-apt2-staging.s3-website-us-east-1.amazonaws.com/",
+        "additional_details": ""
+      },
+      "document": {
+        "abstract": {
+          "children": [
+            {
+              "type": "p",
+              "id": null,
+              "children": [
+                {
+                  "text": "A brief and interesting overview of the themes presented in this document are as follows: At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            }
+          ]
+        },
+        "version_description": {
+          "children": [
+            {
+              "type": "p",
+              "id": null,
+              "children": [
+                {
+                  "text": "The important aspects of this document version include updated handling of the flux capcitor and addition of a description of the impulse response of an inhomogeneous linear differential operator defined on a domain with specified initial conditions or boundary conditions, also known as Green's function:",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            },
+            {
+              "type": "equation",
+              "id": null,
+              "children": [
+                {
+                  "text": "\\int_C P\\,du + Q\\, dv = \\int\\!\\!\\!\\int_A \\left({\\partial Q\\over \\partial u} - {\\partial P\\over \\partial v}\\right) {1\\over \\sqrt{EG-F^2}}\\,dA",
+                  "underline": null,
+                  "italic": null,
+                  "bold": null,
+                  "subscript": null,
+                  "superscript": null
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "keywords": [
+        {
+          "label": "AGRICULTURE PRODUCTION",
+          "path": "EARTH SCIENCE|HUMAN DIMENSIONS|ECONOMIC RESOURCES|AGRICULTURE PRODUCTION",
+          "value": "83741fb9-6f86-4670-abbb-c1f3b14a939d",
+          "id": 819255
+        },
+        {
+          "label": "LAND SURFACE/AGRICULTURE INDICATORS",
+          "path": "EARTH SCIENCE|CLIMATE INDICATORS|LAND SURFACE/AGRICULTURE INDICATORS",
+          "value": "112e71ec-c0a1-49a8-82d7-bcb317b45860",
+          "id": 819776
+        }
+      ],
+      "owner": {
+        "preferred_username": "Owner Olivia",
+        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "authors": [
+        {
+          "preferred_username": "Andre Author",
+          "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+          "email": "author1@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        },
+        {
+          "preferred_username": "Anita Author",
+          "sub": "e0bc4add-85ac-4b06-8d76-5cdb19e3eb70",
+          "email": "author2@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        }
+      ],
+      "reviewers": [
+        {
+          "preferred_username": "Reviewer 1",
+          "review_status": "IN_PROGRESS"
+        },
+        {
+          "preferred_username": "Reviewer 2",
+          "review_status": "IN_PROGRESS"
+        }
+      ],
+      "journal_status": "NO_PUBLICATION"
+    }
+  ]
+}

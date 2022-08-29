@@ -5,7 +5,6 @@ import {
   CLOSED_REVIEW_REQUESTED,
   DRAFT,
   OPEN_REVIEW,
-  PUBLICATION,
   PUBLICATION_REQUESTED,
   REVIEW_PROGRESS
 } from '../components/documents/status';
@@ -46,11 +45,8 @@ export function defineRulesFor(user) {
       allow('open-review', 'document-version', {
         status: CLOSED_REVIEW
       });
-      allow('manage-req-publication', 'document-version', {
-        status: PUBLICATION_REQUESTED
-      });
       allow('publish', 'document-version', {
-        status: PUBLICATION
+        status: PUBLICATION_REQUESTED
       });
       allow('access-comments', 'document-version');
       allow('download-journal-pdf', 'document-version');

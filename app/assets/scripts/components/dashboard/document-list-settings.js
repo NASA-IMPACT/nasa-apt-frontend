@@ -13,11 +13,9 @@ import {
   getDocumentStatusLabel,
   isDraftEquivalent,
   isReviewEquivalent,
-  isPublication,
   isPublished,
   DRAFT,
   OPEN_REVIEW,
-  PUBLICATION,
   PUBLISHED
 } from '../documents/status';
 import { computeAtbdVersion } from '../../context/atbds-list';
@@ -66,10 +64,6 @@ const statusOptions = [
   {
     id: OPEN_REVIEW,
     filterFn: isReviewEquivalent
-  },
-  {
-    id: PUBLICATION,
-    filterFn: isPublication
   },
   {
     id: PUBLISHED,
@@ -381,7 +375,6 @@ function getDocAbilitySortRating(doc, ability) {
     ability.can('open-review', doc) ||
     ability.can('req-publication', doc) ||
     ability.can('cancel-req-publication', doc) ||
-    ability.can('manage-req-publication', doc) ||
     ability.can('publish', doc)
     ? -1
     : 1;

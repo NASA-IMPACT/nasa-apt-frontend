@@ -27,7 +27,6 @@ import Prose, { proseSpacing } from '../../../styles/typography/prose';
 import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
-import DocumentDownloadMenu from '../document-download-menu';
 import DocumentOutline from './document-outline';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
@@ -269,11 +268,6 @@ function DocumentView() {
                 atbd={atbd.data}
                 origin='single-view'
                 onAction={onDocumentMenuAction}
-              />
-              <VerticalDivider variation='light' />
-              <DocumentDownloadMenu
-                atbd={atbd.data}
-                variation='achromic-plain'
               />
               <VerticalDivider variation='light' />
               <DocumentActionsMenu

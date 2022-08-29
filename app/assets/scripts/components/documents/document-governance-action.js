@@ -100,7 +100,7 @@ export default function DocumentGovernanceAction(props) {
       <Can do='req-publication' on={atbd}>
         <control.El
           {...control.props}
-          title='Submit document for publication'
+          title='Make-public request'
           useIcon='arrow-up-right'
           disabled={isMutating}
           onClick={() => onAction('req-publication', { atbd })}
@@ -111,7 +111,7 @@ export default function DocumentGovernanceAction(props) {
       <Can do='cancel-req-publication' on={atbd}>
         <control.El
           {...control.props}
-          title='Cancel publication request'
+          title='Cancel make-public request'
           useIcon='xmark--small'
           disabled={isMutating}
           onClick={() => onAction('cancel-req-publication', { atbd })}
@@ -119,19 +119,10 @@ export default function DocumentGovernanceAction(props) {
           Cancel request
         </control.El>
       </Can>
-      <Can do='manage-req-publication' on={atbd}>
-        <AllowDeny
-          id='req-publication'
-          triggerLabel='Approve request'
-          triggerProps={control.triggerProps}
-          dropTitle='Request for publication'
-          onSelect={onAction}
-        />
-      </Can>
       <Can do='publish' on={atbd}>
         <control.El
           {...control.props}
-          title='Publish document'
+          title='Make public'
           useIcon='arrow-up'
           disabled={isMutating}
           onClick={() => onAction('publish', { atbd })}

@@ -1,0 +1,24 @@
+[
+  {
+    "atbd_id": 1,
+    "status": {
+      "open": 1,
+      "closed": 0
+    },
+    "total": 1,
+    "major": 2,
+    "minor": 0,
+    "version": "v2.0"
+  },
+  {
+    "atbd_id": 2,
+    "status": {
+      "open": 0,
+      "closed": 0
+    },
+    "total": 0,
+    "major": 1,
+    "minor": 0,
+    "version": "v1.0"
+  }
+]
