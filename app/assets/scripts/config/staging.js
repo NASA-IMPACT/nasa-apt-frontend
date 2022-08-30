@@ -13,6 +13,5 @@ module.exports = {
     // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   },
-  hostedAuthUi:
-    'https://nasa-apt-api-lambda-staging.auth.us-east-1.amazoncognito.com'
+  hostedAuthUi: 'https://nasa-apt-api-staging.auth.us-east-1.amazoncognito.com'
 };
