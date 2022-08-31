@@ -28,6 +28,7 @@ import DetailsList from '../../../styles/typography/details-list';
 import DocumentHeadline from '../document-headline';
 import DocumentActionsMenu from '../document-actions-menu';
 import DocumentOutline from './document-outline';
+import DocumentDownloadMenu from '../document-download-menu';
 import DocumentBody from './document-body';
 import { ScrollAnchorProvider } from './scroll-manager';
 import Datetime from '../../common/date';
@@ -268,6 +269,11 @@ function DocumentView() {
                 atbd={atbd.data}
                 origin='single-view'
                 onAction={onDocumentMenuAction}
+              />
+              <VerticalDivider variation='light' />
+              <DocumentDownloadMenu
+                atbd={atbd.data}
+                variation='achromic-plain'
               />
               <VerticalDivider variation='light' />
               <DocumentActionsMenu
