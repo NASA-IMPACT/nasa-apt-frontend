@@ -16,7 +16,7 @@ const CommentCenterPanel = styled(Panel)`
   right: 0;
   height: 100%;
   z-index: 100;
-  width: 22rem;
+  width: 26rem;
   background: ${themeVal('color.surface')};
   box-shadow: ${themeVal('boxShadow.elevationC')};
 
