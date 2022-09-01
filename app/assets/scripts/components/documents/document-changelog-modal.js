@@ -36,11 +36,15 @@ export default function DocumentChangelogModal(props) {
   const content = atbd.versions.map(({ version, document }) => {
     const pdfUrl = `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`;
 
+    const version_description = document
+      ? document.version_description
+      : atbd.document.version_description;
+
     return (
       <Version key={version}>
         <h3>{version}</h3>
         <SafeReadEditor
-          value={document.version_description}
+          value={version_description}
           whenEmpty='No summary available'
         />
         <Downloads>
