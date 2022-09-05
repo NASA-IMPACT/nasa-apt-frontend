@@ -16,7 +16,7 @@ describe('Changelog', () => {
     cy.contains('View changelog...').click();
 
     cy.get('[data-cy="changelog-modal"]')
-      .should('contain', 'v1.1')
-      .should('contain', 'v2.0');
+      .should('contain', 'Major version 1')
+      .should('contain', 'Major version 2');
   });
 });
