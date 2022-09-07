@@ -5,7 +5,6 @@ describe('Changelog', () => {
   beforeEach(() => {
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept('GET', '/v2/atbds/test-atbd-1/versions/v1.1', atbdVersions);
-    // TODO: Login
   });
 
   it('renders', () => {
