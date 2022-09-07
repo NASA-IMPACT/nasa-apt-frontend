@@ -1,0 +1,98 @@
+[
+  {
+    "first_name": "Leonardo",
+    "middle_name": null,
+    "last_name": "Davinci",
+    "uuid": null,
+    "url": null,
+    "id": 1,
+    "mechanisms": [
+      {
+        "mechanism_type": "Email",
+        "mechanism_value": "test@email.com"
+      },
+      {
+        "mechanism_type": "Twitter",
+        "mechanism_value": "@test_handle"
+      }
+    ],
+    "atbd_versions_link": [
+      {
+        "roles": [
+          "Methodology",
+          "Corresponding Author"
+        ],
+        "affiliations": [
+          "Oakridge National Lab"
+        ],
+        "atbd_version": {
+          "major": 2,
+          "minor": 0,
+          "version": "v2.0",
+          "status": "OPEN_REVIEW",
+          "atbd": {
+            "id": 1,
+            "title": "Test ATBD 1",
+            "alias": "test-atbd-1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "first_name": "Gregor",
+    "middle_name": null,
+    "last_name": "Mendel",
+    "uuid": null,
+    "url": null,
+    "id": 2,
+    "mechanisms": [
+      {
+        "mechanism_type": "Mobile",
+        "mechanism_value": "1(234)567-8910"
+      }
+    ],
+    "atbd_versions_link": [
+      {
+        "roles": [
+          "Writing – original draft",
+          "Data curation"
+        ],
+        "affiliations": [
+          "Bell Laboratories",
+          "Los Alamos"
+        ],
+        "atbd_version": {
+          "major": 2,
+          "minor": 0,
+          "version": "v2.0",
+          "status": "OPEN_REVIEW",
+          "atbd": {
+            "id": 1,
+            "title": "Test ATBD 1",
+            "alias": "test-atbd-1"
+          }
+        }
+      },
+      {
+        "roles": [
+          "Project administration"
+        ],
+        "affiliations": [
+          "CERN"
+        ],
+        "atbd_version": {
+          "major": 1,
+          "minor": 1,
+          "version": "v1.1",
+          "status": "PUBLISHED",
+          "atbd": {
+            "id": 1,
+            "title": "Test ATBD 1",
+            "alias": "test-atbd-1"
+          }
+        }
+      }
+    ]
+  }
+]
