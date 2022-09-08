@@ -1,5 +1,5 @@
 const contactsList = require('../../fixtures/server/contacts/list.json');
-const contactsCrete = require('../../fixtures/server/contacts/create.json');
+const contactsCreate = require('../../fixtures/server/contacts/create.json');
 
 describe('Create contacts', () => {
   beforeEach(() => {
@@ -7,8 +7,8 @@ describe('Create contacts', () => {
   });
 
   it('creates a contact', () => {
-    cy.intercept('POST', '/v2/contacts', contactsCrete);
-    cy.intercept('GET', '/v2/contacts/3', contactsCrete);
+    cy.intercept('POST', '/v2/contacts', contactsCreate);
+    cy.intercept('GET', '/v2/contacts/3', contactsCreate);
 
     cy.login();
     cy.visit('/contacts');
