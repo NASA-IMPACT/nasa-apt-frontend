@@ -1,0 +1,80 @@
+name: Deploy Dev Only - Surge.sh
+
+on:
+  push:
+    branches:
+    - 'nasa-apt-frontend-dev'
+
+env:
+  NODE: 14
+  SURGE_DEV_DOMAIN: https://nasa-apt-frontend-dev.surge.sh/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+
+      - name: Cache dist
+        uses: actions/cache@v2
+        id: cache-dist
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.workflow }}-${{ github.sha }}
+
+      - name: Install
+        run: yarn install
+
+      - name: Build dev surge
+        run: yarn dev-surge
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Restore node_modules
+        uses: actions/cache@v2
+        id: cache-node-modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+
+      - name: Restore dist cache
+        uses: actions/cache@v2
+        id: cache-dist
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ github.workflow }}-${{ github.sha }}
+
+      - name: Use Node.js ${{ env.NODE }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE }}
+
+      - name: Deploy App to Dev Surge
+        run: |
+          cp ./dist/index.html ./dist/200.html
+          yarn run surge ./dist ${{ env.SURGE_DEV_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}

@@ -36,6 +36,10 @@ if (process.env.NODE_ENV === 'development') {
   config = defaultsDeep(require('./config/local'), config);
 }
 
+if (process.env.NODE_ENV === 'dev-surge') {
+  config = defaultsDeep(require('./config/dev-surge'), config);
+}
+
 // ENV variables overrides.
 // Set <VAR> on <config path> with <optional default>
 [
