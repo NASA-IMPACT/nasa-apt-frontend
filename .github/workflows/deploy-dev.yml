@@ -1,4 +1,4 @@
-name: Deploy Dev Only - Surge.sh
+name: Deploy Dev Strict - Surge.sh
 
 on:
   push:
