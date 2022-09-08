@@ -1,6 +1,5 @@
 // module exports is required to be able to load from gulpfile.
 module.exports = {
-    gaTrackingCode: 'UA-163103126-1',
     appTitle: 'Algorithm Publishing Tool',
     appDescription: 'Algorithm Publishing Tool - Publish algorithms.',
     apiUrl: '',
