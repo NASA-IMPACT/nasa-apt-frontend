@@ -194,7 +194,7 @@ export const ThreadsProvider = ({ children }) => {
       mutations: {
         createThread: withRequestToken(
           token,
-          ({ atbdId, atbdVersion, section, comment }) => ({
+          ({ atbdId, atbdVersion, section, comment, notify }) => ({
             skipStateCheck: true,
             sliceKey: `${atbdId}-${atbdVersion}`,
             url: `/threads`,
@@ -204,6 +204,7 @@ export const ThreadsProvider = ({ children }) => {
                 comment: {
                   body: comment
                 },
+                notify,
                 atbd_id: atbdId,
                 version: atbdVersion,
                 section
@@ -322,14 +323,15 @@ export const ThreadsProvider = ({ children }) => {
         ),
         createThreadsComment: withRequestToken(
           token,
-          ({ threadId, comment }) => ({
+          ({ threadId, comment, notify }) => ({
             skipStateCheck: true,
             sliceKey: `${threadId}`,
             url: `/threads/${threadId}/comments`,
             requestOptions: {
               method: 'POST',
               data: {
-                body: comment
+                body: comment,
+                notify
               }
             },
             transformData: (data, { state }) => {
@@ -520,8 +522,8 @@ export const useThreads = ({ atbdId, atbdVersion }) => {
       [atbdId, atbdVersion, fetchThreadsList]
     ),
     createThread: useCallback(
-      ({ comment, section }) =>
-        createThread({ atbdId, atbdVersion, comment, section }),
+      ({ comment, section, notify }) =>
+        createThread({ atbdId, atbdVersion, comment, section, notify }),
       [atbdId, atbdVersion, createThread]
     )
   };
@@ -565,7 +567,8 @@ export const useSingleThread = ({ threadId } = {}) => {
       [threadId, deleteThreadsSingle]
     ),
     createThreadComment: useCallback(
-      ({ comment }) => createThreadsComment({ comment, threadId }),
+      ({ comment, notify }) =>
+        createThreadsComment({ comment, notify, threadId }),
       [threadId, createThreadsComment]
     ),
     deleteThreadComment: useCallback(

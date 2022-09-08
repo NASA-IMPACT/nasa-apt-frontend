@@ -214,6 +214,7 @@ export default function CommentEntry(props) {
   const isThread = type === THREAD_SINGLE;
 
   const isEntryAuthor = author.sub === user.id;
+  const authorIsCurator = author['cognito:groups'].includes('curator');
 
   const commentMenuProps = useMemo(
     () => ({
@@ -294,7 +295,11 @@ export default function CommentEntry(props) {
     <CommentEntrySelf isResolved={isResolved} isReply={isReply}>
       <CommentEntryHeader>
         <CommentEntryHeadline>
-          <UserIdentity name={author.preferred_username} email={author.email} />
+          <UserIdentity
+            name={author.preferred_username}
+            email={author.email}
+            role={authorIsCurator && 'Curator'}
+          />
           <AuthoringInfo
             date={date}
             isEdited={isEdited}

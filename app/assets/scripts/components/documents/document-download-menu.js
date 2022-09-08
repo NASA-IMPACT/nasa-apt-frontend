@@ -51,40 +51,38 @@ export default function DocumentDownloadMenu(props) {
     // Therefore if the minor version is a 4, we know that there are also pdf
     // for minor 3, 2, 1 and 0. The urls are constructed dynamically.
     let pdfLinks = [];
-    for (let v = atbd.minor; v >= 0; v--) {
-      const version = `v${atbd.major}.${v}`;
-      const pdfUrl = `${apiUrl}/atbds/${atbd.id}/versions/${version}/pdf`;
+    const { id, version } = atbd;
+    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
 
-      if (canDownloadJournalPdf) {
-        pdfLinks.push({
-          id: `${version}-journal`,
-          label: `${version} Journal PDF`,
-          title: `Download journal for version ${version}`,
-          href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`,
-          /* eslint-disable-next-line react/display-name */
-          render: (props) => (
-            <DropMenuItemOutboundLink
-              {...props}
-              eventLabel={`Journal PDF ${atbd.id}/${version}`}
-            />
-          )
-        });
-      }
-
+    if (canDownloadJournalPdf) {
       pdfLinks.push({
-        id: `${version}-document`,
-        label: `${version} Document PDF`,
-        title: `Download document for version ${version}`,
-        href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
+        id: `${version}-journal`,
+        label: `${version} Journal PDF`,
+        title: `Download journal for version ${version}`,
+        href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`,
         /* eslint-disable-next-line react/display-name */
         render: (props) => (
           <DropMenuItemOutboundLink
             {...props}
-            eventLabel={`PDF ${atbd.id}/${version}`}
+            eventLabel={`Journal PDF ${id}/${version}`}
           />
         )
       });
     }
+
+    pdfLinks.push({
+      id: `${version}-document`,
+      label: `${version} Document PDF`,
+      title: `Download document for version ${version}`,
+      href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
+      /* eslint-disable-next-line react/display-name */
+      render: (props) => (
+        <DropMenuItemOutboundLink
+          {...props}
+          eventLabel={`PDF ${atbd.id}/${version}`}
+        />
+      )
+    });
 
     return {
       ...triggerProps,
