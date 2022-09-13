@@ -1,3 +1,37 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@naomatheus 
+NASA-IMPACT
+/
+nasa-apt-frontend
+Public
+Code
+Issues
+16
+Pull requests
+1
+Discussions
+Actions
+Projects
+1
+Wiki
+Security
+Insights
+Settings
+nasa-apt-frontend/app/index.html
+@danielfdsilva
+danielfdsilva Replace build system with project-seed parcel
+Latest commit 15500ab on 30 Mar
+ History
+ 2 contributors
+@danielfdsilva@ricardoduplos
+103 lines (89 sloc)  3.44 KB
+
 <!doctype html>
 <html lang='en'>
   <head>
@@ -70,9 +104,9 @@
           transitioned out. Replace the contents with something appropriate
           for the project.
         -->
-        <h1>APT <span>—</span> The Algorithm Publication Tool</h1>
+        <h1>APT <span>—</span> The Algorithm Publication Tool has moved to a new URL: <a href="https://earthdata.nasa.gov/apt">earthdata.nasa.gov/apt</a>. You will be redirected in three seconds. </h1>
         <p>Enabling open science by making it easier to write and find key scientific documents.</p>
-        <p class="loading">Loading...</p>
+        <p class="loading">Redirecting...</p>
       </div>
     </div>
 
@@ -82,16 +116,22 @@
 
     <script>
       // https://stackoverflow.com/a/9851769/728583
-
       // internet explorer 6-11
       var isIE = /*@cc_on!@*/ false || !!document.documentMode;
 
       if (isIE) {
         document.body.innerHTML =
           'Unfortunately, your browser is not currently supported.<br />Recommended browsers: Edge, Firefox, Safari, Chrome';
+      } else {
+        const redirect = () => {
+            location.replace(
+                "https://earthdata.nasa.gov/apt"
+            )
+        }
+        // pause for three seconds, then redirect
+        setTimeout( redirect, 3000)
       }
     </script>
-
     <script type='module' src='./assets/scripts/main.js'></script>
 
     <!-- Feedback module -->
@@ -101,3 +141,17 @@
     </script>
   </body>
 </html>
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
