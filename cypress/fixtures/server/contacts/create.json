@@ -1,0 +1,15 @@
+{
+  "first_name": "New",
+  "middle_name": null,
+  "last_name": "Contact",
+  "uuid": null,
+  "url": null,
+  "id": 3,
+  "mechanisms": [
+    {
+      "mechanism_type": "Direct line",
+      "mechanism_value": ""
+    }
+  ],
+  "atbd_versions_link": []
+}

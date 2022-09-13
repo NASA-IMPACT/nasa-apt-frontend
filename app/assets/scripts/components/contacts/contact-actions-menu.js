@@ -33,7 +33,8 @@ export default function ContactActionsMenu({ contactId, onSelect, variation }) {
       triggerProps: {
         hideText: true,
         useIcon: 'ellipsis-vertical',
-        variation
+        variation,
+        'data-cy': `contact-trigger-${contactId}`
       },
       triggerLabel: 'Contact options'
     };
