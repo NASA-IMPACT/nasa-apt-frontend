@@ -24,16 +24,21 @@ describe('Publish workflow', () => {
   it('owner requests review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('owner');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
 
     cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
     cy.contains(/Request review/).click();
@@ -48,44 +53,61 @@ describe('Publish workflow', () => {
   });
 
   it('owner cannot request review if not draft', () => {
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1/versions/v1.1', atbdVersions);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept('GET', '/v2/atbds/test-atbd-1/versions/v1.1', atbdVersions).as(
+      'versionRequest'
+    );
 
     cy.login('owner');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Request review/).should('not.exist');
   });
 
   it('curator cannot request review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('curator');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Request review/).should('not.exist');
   });
 
   it('contributor cannot request review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('contributor');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Request review/).should('not.exist');
   });
 
@@ -95,16 +117,21 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('owner');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
 
     cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
     cy.contains(/Cancel request/).click();
@@ -121,16 +148,21 @@ describe('Publish workflow', () => {
   it('owner cannot cancel review request if not review is not requested', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('owner');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Cancel request/).should('not.exist');
   });
 
@@ -140,16 +172,21 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('curator');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Cancel request/).should('not.exist');
   });
 
@@ -159,16 +196,21 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
 
     cy.login('contributor');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Cancel request/).should('not.exist');
   });
 
@@ -178,13 +220,15 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
     cy.intercept(
       'GET',
       '/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
@@ -195,6 +239,9 @@ describe('Publish workflow', () => {
 
     cy.login('curator');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Approve request/).click();
     cy.contains(/Allow.../).click();
     cy.contains(/Approve review request/).should('exist');
@@ -221,13 +268,15 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
     cy.intercept(
       'GET',
       '/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
@@ -238,6 +287,9 @@ describe('Publish workflow', () => {
 
     cy.login('curator');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Approve request/).click();
     cy.contains(/Deny.../).click();
     cy.contains(/Deny review request/).should('exist');
@@ -264,13 +316,15 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
     cy.intercept(
       'GET',
       '/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
@@ -281,6 +335,9 @@ describe('Publish workflow', () => {
 
     cy.login('owner');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Approve request/).should('not.exist');
   });
 
@@ -290,13 +347,15 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
     cy.intercept(
       'GET',
       '/v2/atbds/test-atbd-1/versions/v1.1',
       draftAtbdVersions
-    );
+    ).as('versionRequest');
     cy.intercept(
       'GET',
       '/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
@@ -307,6 +366,9 @@ describe('Publish workflow', () => {
 
     cy.login('contributor');
     cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
     cy.contains(/Approve request/).should('not.exist');
   });
 });
