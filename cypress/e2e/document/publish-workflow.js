@@ -21,13 +21,10 @@ function versionWithStatus(version, status) {
 }
 
 describe('Publish workflow', () => {
-  beforeEach(() => {
-    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
-  });
-
   it('owner requests review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -51,6 +48,7 @@ describe('Publish workflow', () => {
   });
 
   it('owner cannot request review if not draft', () => {
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept('GET', '/v2/atbds/test-atbd-1/versions/v1.1', atbdVersions);
 
@@ -62,6 +60,7 @@ describe('Publish workflow', () => {
   it('curator cannot request review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -77,6 +76,7 @@ describe('Publish workflow', () => {
   it('contributor cannot request review', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -95,6 +95,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -120,6 +121,7 @@ describe('Publish workflow', () => {
   it('owner cannot cancel review request if not review is not requested', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'DRAFT');
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -138,6 +140,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -156,6 +159,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -174,6 +178,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -216,6 +221,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -258,6 +264,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
@@ -283,6 +290,7 @@ describe('Publish workflow', () => {
       'CLOSED_REVIEW_REQUESTED'
     );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
     cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd);
     cy.intercept(
       'GET',
