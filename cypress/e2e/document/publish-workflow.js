@@ -1,4 +1,3 @@
-const atbds = require('../../fixtures/server/atbds.json');
 const stats = require('../../fixtures/server/stats.json');
 const atbd = require('../../fixtures/server/atbd.json');
 const atbdVersions = require('../../fixtures/server/atbd-versions.json');
@@ -23,7 +22,6 @@ function versionWithStatus(version, status) {
 
 describe('Publish workflow', () => {
   beforeEach(() => {
-    cy.intercept('GET', '/v2/atbds?role=owner', atbds);
     cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats);
   });
 
