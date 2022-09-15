@@ -1,37 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@naomatheus 
-NASA-IMPACT
-/
-nasa-apt-frontend
-Public
-Code
-Issues
-16
-Pull requests
-1
-Discussions
-Actions
-Projects
-1
-Wiki
-Security
-Insights
-Settings
-nasa-apt-frontend/app/index.html
-@danielfdsilva
-danielfdsilva Replace build system with project-seed parcel
-Latest commit 15500ab on 30 Mar
- History
- 2 contributors
-@danielfdsilva@ricardoduplos
-103 lines (89 sloc)  3.44 KB
-
 <!doctype html>
 <html lang='en'>
   <head>
@@ -110,48 +76,12 @@ Latest commit 15500ab on 30 Mar
       </div>
     </div>
 
-    <div id='app-container'>
-      <!-- Content rendered here via React -->
-    </div>
-
     <script>
-      // https://stackoverflow.com/a/9851769/728583
-      // internet explorer 6-11
-      var isIE = /*@cc_on!@*/ false || !!document.documentMode;
-
-      if (isIE) {
-        document.body.innerHTML =
-          'Unfortunately, your browser is not currently supported.<br />Recommended browsers: Edge, Firefox, Safari, Chrome';
-      } else {
-        const redirect = () => {
-            location.replace(
-                "https://earthdata.nasa.gov/apt"
-            )
-        }
-        // pause for three seconds, then redirect
-        setTimeout( redirect, 3000)
-      }
-    </script>
-    <script type='module' src='./assets/scripts/main.js'></script>
-
-    <!-- Feedback module -->
-    <script type="text/javascript" src="https://fbm.earthdata.nasa.gov/for/Algorithm%20Publication%20Tool/feedback.js"></script>
-    <script type="text/javascript">
-      typeof feedback !== 'undefined' && feedback.init({showIcon: false});
+      const redirect = () => {
+        location.replace("https://earthdata.nasa.gov/apt");
+      };
+      // pause for three seconds, then redirect
+      setTimeout(redirect, 3000);
     </script>
   </body>
 </html>
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
