@@ -20,7 +20,7 @@
     "serve": "NODE_ENV=development gulp serve",
     "serve:test": "NODE_ENV=test gulp serve",
     "dev-surge": "NODE_ENV=dev-surge gulp",
-    "build": "NODE_ENV=production gulp",
+    "build": "PUBLIC_URL='https://impact.earthdata.nasa.gov/apt' NODE_ENV=production gulp",
     "clean": "gulp clean",
     "stage": "NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
