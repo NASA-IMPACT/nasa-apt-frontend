@@ -472,7 +472,41 @@ describe('Publish workflow', () => {
     });
   });
 
-  it.only('curator can not request publication', () => {
+  it('owner can cancel publication request', () => {
+    const draftAtbdVersions = versionWithStatus(
+      atbdVersions,
+      'PUBLICATION_REQUESTED'
+    );
+
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept(
+      'GET',
+      '/v2/atbds/test-atbd-1/versions/v1.1',
+      draftAtbdVersions
+    ).as('versionRequest');
+
+    cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
+    cy.login('owner');
+    cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
+    cy.contains(/Cancel request/).click();
+
+    cy.get('#the-toast').contains('Publication request cancelled successfully');
+
+    cy.get('@reviewRequest').its('request.body').should('deep.equal', {
+      atbd_id: 'test-atbd-1',
+      version: 'v1.1',
+      action: 'cancel_publication_request',
+      payload: {}
+    });
+  });
+
+  it('curator can not request publication', () => {
     const draftAtbdVersions = versionWithStatus(atbdVersions, 'OPEN_REVIEW');
 
     cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
@@ -516,27 +550,120 @@ describe('Publish workflow', () => {
     cy.contains(/Request publication/).should('not.exist');
   });
 
-  it('curator can approve publication', () => {
-    
-  });
-  
-  it('contributor can not request publication', () => {
-    
-  });
-
-  it('owner can not approve publication', () => {
-
-  });
-
   it('curator can publish document', () => {
-    
+    const draftAtbdVersions = versionWithStatus(
+      atbdVersions,
+      'PUBLICATION_REQUESTED'
+    );
+
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept(
+      'GET',
+      '/v2/atbds/test-atbd-1/versions/v1.1',
+      draftAtbdVersions
+    ).as('versionRequest');
+
+    cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
+    cy.login('curator');
+    cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
+
+    cy.contains(/Publish/).click();
+    cy.contains(/Publish document/).should('exist');
+    cy.get('[title="Publish document"]').click();
+
+    cy.get('#the-toast').contains('Version v1.1 was published');
+
+    cy.get('@reviewRequest').its('request.body').should('deep.equal', {
+      atbd_id: 'test-atbd-1',
+      version: 'v1.1',
+      action: 'publish',
+      payload: {}
+    });
   });
-  
+
+  it('curator can deny publication', () => {
+    const draftAtbdVersions = versionWithStatus(
+      atbdVersions,
+      'PUBLICATION_REQUESTED'
+    );
+
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept(
+      'GET',
+      '/v2/atbds/test-atbd-1/versions/v1.1',
+      draftAtbdVersions
+    ).as('versionRequest');
+
+    cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
+    cy.login('curator');
+    cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
+
+    cy.contains(/Publish/).click();
+    cy.contains(/Publish document/).should('exist');
+    cy.get('[title="Cancel publication"]').click();
+  });
+
   it('contributor can not publish document', () => {
-    
+    const draftAtbdVersions = versionWithStatus(
+      atbdVersions,
+      'PUBLICATION_REQUESTED'
+    );
+
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept(
+      'GET',
+      '/v2/atbds/test-atbd-1/versions/v1.1',
+      draftAtbdVersions
+    ).as('versionRequest');
+
+    cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
+    cy.login('contributor');
+    cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
+
+    cy.contains(/Publish/).should('not.exist');
   });
 
   it('owner can not publish document', () => {
+    const draftAtbdVersions = versionWithStatus(
+      atbdVersions,
+      'PUBLICATION_REQUESTED'
+    );
 
+    cy.intercept('GET', '/v2/threads/stats?atbds=1_v1.1', stats).as(
+      'statsRequest'
+    );
+    cy.intercept('GET', '/v2/atbds/test-atbd-1', atbd).as('atbdRequest');
+    cy.intercept(
+      'GET',
+      '/v2/atbds/test-atbd-1/versions/v1.1',
+      draftAtbdVersions
+    ).as('versionRequest');
+
+    cy.intercept('POST', '/v2/events', atbdEvent).as('reviewRequest');
+    cy.login('contributor');
+    cy.visit('/documents/test-atbd-1/v1.1');
+    cy.wait('@statsRequest');
+    cy.wait('@atbdRequest');
+    cy.wait('@versionRequest');
+
+    cy.contains(/Publish/).should('not.exist');
   });
 });
