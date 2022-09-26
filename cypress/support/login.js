@@ -47,13 +47,32 @@ function signAccessToken(userId, username, access) {
   return sign(payload, 'sshhhh');
 }
 
-Cypress.Commands.add('login', (access = 'contributor') => {
-  const userId = '8c05f074-5c79-49cb-8a38-36a89023b787';
-  const username = 'user@example.com';
-  const userData = `{"Username":"${userId}","UserAttributes":[{"Name":"email_verified","Value":"true"},{"Name":"preferred_username","Value":"Carlos Curator"},{"Name":"email","Value":"${username}"},{"Name":"sub","Value":"${userId}"}],"UserCreateDate":"2022-03-07T11:43:13.000Z","UserLastModifiedDate":"2022-03-07T11:43:13.000Z","Enabled":true,"UserStatus":"CONFIRMED","MFAOptions":[],"UserMFASettingList":[],"ResponseMetadata":{"HTTPStatusCode":200,"HTTPHeaders":{"content-type":"text/html; charset=utf-8","content-length":"748","access-control-allow-origin":"*","access-control-allow-methods":"HEAD,GET,PUT,POST,DELETE,OPTIONS,PATCH","access-control-allow-headers":"authorization,content-type,content-length,content-md5,cache-control,x-amz-content-sha256,x-amz-date,x-amz-security-token,x-amz-user-agent,x-amz-target,x-amz-acl,x-amz-version-id,x-localstack-target,x-amz-tagging","access-control-expose-headers":"x-amz-version-id","connection":"close","date":"Mon, 07 Mar 2022 12:15:28 GMT","server":"hypercorn-h11"},"RetryAttempts":0}}`;
+const userConfig = {
+  contributor: {
+    userId: '1fd0998a-4168-4844-8475-de624f9be2cf',
+    username: 'author1@apt.com',
+    access: 'contributor',
+    name: 'Andre Author'
+  },
+  owner: {
+    userId: '33b94622-80c5-4443-8bb2-2e124219afea',
+    username: 'owner@apt.com',
+    access: 'contributor',
+    name: 'Olivia Owner'
+  },
+  curator: {
+    userId: '57a4c1c0-3802-4edc-a141-baeb5b18d50f',
+    username: 'curator@apt.com',
+    access: 'curator',
+    name: 'Carlos Curator'
+  }
+};
+
+Cypress.Commands.add('login', (role = 'contributor') => {
+  const { userId, username, access, name } = userConfig[role];
+  const userData = `{"Username":"${userId}","UserAttributes":[{"Name":"email_verified","Value":"true"},{"Name":"preferred_username","Value":"${name}"},{"Name":"email","Value":"${username}"},{"Name":"sub","Value":"${userId}"}],"UserCreateDate":"2022-03-07T11:43:13.000Z","UserLastModifiedDate":"2022-03-07T11:43:13.000Z","Enabled":true,"UserStatus":"CONFIRMED","MFAOptions":[],"UserMFASettingList":[],"ResponseMetadata":{"HTTPStatusCode":200,"HTTPHeaders":{"content-type":"text/html; charset=utf-8","content-length":"748","access-control-allow-origin":"*","access-control-allow-methods":"HEAD,GET,PUT,POST,DELETE,OPTIONS,PATCH","access-control-allow-headers":"authorization,content-type,content-length,content-md5,cache-control,x-amz-content-sha256,x-amz-date,x-amz-security-token,x-amz-user-agent,x-amz-target,x-amz-acl,x-amz-version-id,x-localstack-target,x-amz-tagging","access-control-expose-headers":"x-amz-version-id","connection":"close","date":"Mon, 07 Mar 2022 12:15:28 GMT","server":"hypercorn-h11"},"RetryAttempts":0}}`;
   const refreshToken = '3ff73baa';
 
-  // const user = userConfig[access];
   cy.intercept('POST', '/', userData);
   const keyPrefix = 'CognitoIdentityServiceProvider.abc123';
   const keyPrefixWithUsername = `${keyPrefix}.${username}`;

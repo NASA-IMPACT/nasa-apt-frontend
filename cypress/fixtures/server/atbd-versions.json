@@ -1,8 +1,8 @@
 {
   "id": 1,
-  "created_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "created_by": "33b94622-80c5-4443-8bb2-2e124219afea",
   "created_at": "2022-08-01T06:27:51.624274+00:00",
-  "last_updated_by": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+  "last_updated_by": "33b94622-80c5-4443-8bb2-2e124219afea",
   "last_updated_at": "2022-08-01T06:27:51.624274+00:00",
   "title": "Test ATBD 1",
   "alias": "test-atbd-1",
@@ -14,7 +14,7 @@
       "status": "PUBLISHED",
       "published_by": {
         "preferred_username": "Carlos Curator",
-        "sub": "dcb84824-b65e-481a-a7af-d657c9906d63",
+        "sub": "57a4c1c0-3802-4edc-a141-baeb5b18d50f",
         "email": "curator@apt.com",
         "cognito_groups": [
           "curator"
@@ -23,7 +23,7 @@
       "sections_completed": {},
       "created_by": {
         "preferred_username": "Owner Olivia",
-        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
         "email": "owner@apt.com",
         "cognito_groups": [
           "contributor"
@@ -32,7 +32,7 @@
       "created_at": "2022-08-01T06:27:51.626928+00:00",
       "last_updated_by": {
         "preferred_username": "Andre Author",
-        "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+        "sub": "1fd0998a-4168-4844-8475-de624f9be2cf",
         "email": "author1@apt.com",
         "cognito_groups": [
           "contributor"
@@ -990,7 +990,7 @@
       ],
       "owner": {
         "preferred_username": "Owner Olivia",
-        "sub": "4df968e7-692d-4c75-bc18-b447f2b2b6fa",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
         "email": "owner@apt.com",
         "cognito_groups": [
           "contributor"
@@ -999,7 +999,7 @@
       "authors": [
         {
           "preferred_username": "Andre Author",
-          "sub": "6f406492-27e5-465c-a1e7-a9e7dd2bd09c",
+          "sub": "1fd0998a-4168-4844-8475-de624f9be2cf",
           "email": "author1@apt.com",
           "cognito_groups": [
             "contributor"
