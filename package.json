@@ -19,7 +19,11 @@
     "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo \"module.exports = {};\" > app/assets/scripts/config/local.js",
     "serve": "NODE_ENV=development gulp serve",
     "serve:test": "NODE_ENV=test gulp serve",
+<<<<<<< Updated upstream
     "dev-surge": "NODE_ENV=dev-surge gulp",
+=======
+    "dev-surge":"NODE_ENV=dev-surge gulp",
+>>>>>>> Stashed changes
     "build": "NODE_ENV=production gulp",
     "clean": "gulp clean",
     "stage": "NODE_ENV=staging gulp",

@@ -1,20 +1,29 @@
 module.exports = {
-  appTitle: 'Report Generator Tool',
-  appDescription: 'Report Generator Tool - Create reports on satellite needs.',
-  apiUrl: 'http://localhost:8888/v2',
-  snwgApiUrl: 'https://api.snwg-impact.net/api/v1/',
-  mimsApiUrl: 'https://mims.nasa-impact.net/',
+  appTitle: 'Algorithm Publication Tool',
+  appDescription: 'Algorithm Publication Tool - ATBD management.',
+  apiUrl: 'https://dvahc78aid.execute-api.us-west-2.amazonaws.com',
+  // snwgApiUrl: 'https://api.snwg-impact.net/api/v1/',
+  // mimsApiUrl: 'https://mims.nasa-impact.net/',
   auth: {
     // DOCS: https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource
     // Amazon Cognito Region
-    region: 'us-east-1',
+    region: 'us-west-2',
     // Amazon Cognito User Pool ID
-    userPoolId: 'us-east-1_4b2d7474925540b7a7026890b7713183',
+    userPoolId: 'us-west-2_j8tQvg3R7',
     // Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: 'abc123',
+    userPoolWebClientId: '4noo2ri9gqjbmpm5qqp3r8qjuj',
     // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH',
-    endpoint: 'http://localhost:4566'
+    // endpoint: 'https://dvahc78aid.execute-api.us-west-2.amazonaws.com'
   },
-  hostedAuthUi: 'http://localhost:4566'
+  hostedAuthUi: 'https://nasa-apt-api-test-v1.auth.us-west-2.amazoncognito.com'
 };
+
+
+// most recent deployment
+
+// nasa-apt-api-test-v1.nasaaptapitestv1appclientid = 4noo2ri9gqjbmpm5qqp3r8qjuj
+// nasa-apt-api-test-v1.nasaaptapitestv1databasesecretarn = arn:aws:secretsmanager:us-west-2:237694371684:secret:nasa-apt-api-test-v1-database-secrets-FWoiuk
+// nasa-apt-api-test-v1.nasaaptapitestv1domain = nasa-apt-api-test-v1
+// nasa-apt-api-test-v1.nasaaptapitestv1endpointurl = https://dvahc78aid.execute-api.us-west-2.amazonaws.com
+// nasa-apt-api-test-v1.nasaaptapitestv1userpoolid = us-west-2_j8tQvg3R7
