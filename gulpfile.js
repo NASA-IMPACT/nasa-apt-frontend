@@ -29,6 +29,7 @@ const parcelConfig = path.join(__dirname, '.parcelrc');
 // /////////////////////////////////////////////////////////////////////////////
 // ----------------------- Watcher and custom tasks --------------------------//
 // ---------------------------------------------------------------------------//
+
 function ymlStrings() {
   return gulp
     .src('content/strings/*.yml')

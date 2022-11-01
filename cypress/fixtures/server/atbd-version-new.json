@@ -1,0 +1,63 @@
+{
+  "id": 3,
+  "created_by": "33b94622-80c5-4443-8bb2-2e124219afea",
+  "created_at": "2022-08-08T08:05:47.487430+00:00",
+  "last_updated_by": "33b94622-80c5-4443-8bb2-2e124219afea",
+  "last_updated_at": "2022-08-08T08:05:47.487430+00:00",
+  "title": "Untitled Document",
+  "versions": [
+    {
+      "major": 1,
+      "minor": 0,
+      "version": "v1.0",
+      "status": "DRAFT",
+      "sections_completed": {},
+      "created_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "created_at": "2022-08-08T08:05:47.564421+00:00",
+      "last_updated_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "last_updated_at": "2022-08-08T08:05:47.564421+00:00",
+      "citation": {},
+      "document": {
+        "key_points": "",
+        "publication_references": []
+      },
+      "keywords": [],
+      "owner": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "authors": [],
+      "reviewers": [],
+      "publication_checklist": {
+        "suggested_reviewers": [],
+        "review_roles": false,
+        "journal_editor": "Chelle Gentemann",
+        "author_affirmations": false
+      },
+      "contacts_link": [],
+      "publication_units": {
+        "words": 58,
+        "images": 0,
+        "tables": 0
+      }
+    }
+  ]
+}

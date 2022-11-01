@@ -32,6 +32,7 @@ export const CommentCenterProvider = ({ children }) => {
   const [selectedStatus, setSelectedStatus] = useState(THREAD_STATUS_ALL);
   const [atbdId, setAtbdId] = useState(null);
   const [atbdVersion, setAtbdVersion] = useState(null);
+  const [contributors, setContributors] = useState(null);
   // The key of the editing comment will be `threadId-commentId`
   const [editingCommentKey, setEditingCommentKey] = useState(null);
 
@@ -79,6 +80,8 @@ export const CommentCenterProvider = ({ children }) => {
     setAtbdId,
     atbdVersion,
     setAtbdVersion,
+    contributors,
+    setContributors,
     openPanelOn
   };
 
@@ -110,13 +113,19 @@ const useSafeContextFn = createContextChecker(
 export const useCommentCenter = ({ atbd = null } = {}) => {
   const ctx = useSafeContextFn('useCommentCenter');
 
-  const { id, version } = atbd?.data || {};
+  const { id, version, owner, authors = [], reviewers = [] } = atbd?.data || {};
+  const contributors = useMemo(() => [owner, ...authors, ...reviewers], [
+    owner,
+    authors,
+    reviewers
+  ]);
 
   useEffectPrevious(
     (prev) => {
       if (!id || !version) return;
       ctx.setAtbdId(id);
       ctx.setAtbdVersion(version);
+      ctx.setContributors(contributors);
 
       // If the panel is open and the atbd changes update the values.
       // This happens when switching versions.
@@ -129,7 +138,7 @@ export const useCommentCenter = ({ atbd = null } = {}) => {
         });
       }
     },
-    [id, version, ctx.isPanelOpen, ctx.openPanelOn]
+    [id, version, contributors, ctx.isPanelOpen, ctx.openPanelOn]
   );
 
   return ctx;

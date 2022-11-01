@@ -1,0 +1,34 @@
+[
+  {
+    "preferred_username": "Allison Author",
+    "sub": "c5da7223-7123-4d60-b48c-dd191a14ec0d",
+    "email": "author3@apt.com",
+    "cognito:groups": [
+      "contributor"
+    ]
+  },
+  {
+    "preferred_username": "Ricardo Reviewer",
+    "sub": "6844a7fe-2bbd-4648-a9b4-5b1a6884038e",
+    "email": "reviewer1@apt.com",
+    "cognito:groups": [
+      "contributor"
+    ]
+  },
+  {
+    "preferred_username": "Rita Reviewer",
+    "sub": "dedd64a4-96b5-4c36-82e7-d2f26df64cc4",
+    "email": "reviewer3@apt.com",
+    "cognito:groups": [
+      "contributor"
+    ]
+  },
+  {
+    "preferred_username": "Ronald Reviewer",
+    "sub": "1aad9bd2-ce5f-4d0d-9500-cfb3cf3c40b6",
+    "email": "reviewer2@apt.com",
+    "cognito:groups": [
+      "contributor"
+    ]
+  }
+]

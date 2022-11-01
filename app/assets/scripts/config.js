@@ -24,6 +24,10 @@ const set = require('lodash.set');
 // The production config works as base.
 let config = require('./config/production');
 
+if (process.env.NODE_ENV === 'test') {
+  config = defaultsDeep(require('./config/test'), config);
+}
+
 if (process.env.NODE_ENV === 'staging') {
   config = defaultsDeep(require('./config/staging'), config);
 }

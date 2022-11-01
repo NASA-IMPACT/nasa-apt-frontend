@@ -1,0 +1,40 @@
+{
+  "first_name": "Leonardo",
+  "middle_name": null,
+  "last_name": "Davinci",
+  "uuid": null,
+  "url": null,
+  "id": 1,
+  "mechanisms": [
+    {
+      "mechanism_type": "Email",
+      "mechanism_value": "test@email.com"
+    },
+    {
+      "mechanism_type": "Twitter",
+      "mechanism_value": "@test_handle"
+    }
+  ],
+  "atbd_versions_link": [
+    {
+      "roles": [
+        "Methodology",
+        "Corresponding Author"
+      ],
+      "affiliations": [
+        "Oakridge National Lab"
+      ],
+      "atbd_version": {
+        "major": 2,
+        "minor": 0,
+        "version": "v2.0",
+        "status": "OPEN_REVIEW",
+        "atbd": {
+          "id": 1,
+          "title": "Test ATBD 1",
+          "alias": "test-atbd-1"
+        }
+      }
+    }
+  ]
+}

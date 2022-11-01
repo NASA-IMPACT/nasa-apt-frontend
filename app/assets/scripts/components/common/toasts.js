@@ -66,7 +66,8 @@ export const createProcessToast = (msg) => {
 
 export const ToastsContainer = styled(ToastContainer).attrs({
   position: toast.POSITION.BOTTOM_RIGHT,
-  closeButton: CloseButton
+  closeButton: CloseButton,
+  containerId: 'the-toast'
 })`
   padding: 0;
 

@@ -1,0 +1,72 @@
+{
+  "id": 2,
+  "created_by": "33b94622-80c5-4443-8bb2-2e124219afea",
+  "created_at": "2021-03-14T14:30:00+00:00",
+  "last_updated_by": "33b94622-80c5-4443-8bb2-2e124219afea",
+  "last_updated_at": "2021-03-15T16:00:00+00:00",
+  "title": "Project algorithms technically overly simplistic",
+  "alias": "patos",
+  "versions": [
+    {
+      "major": 1,
+      "minor": 1,
+      "version": "v1.1",
+      "status": "CLOSED_REVIEW_REQUESTED",
+      "published_by": null,
+      "published_at": null,
+      "sections_completed": {},
+      "created_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "created_at": "2021-03-14T14:30:00+00:00",
+      "last_updated_by": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "last_updated_at": "2022-09-09T02:12:55.423768+00:00",
+      "citation": {},
+      "document": {
+        "abstract": null,
+        "version_description": null
+      },
+      "keywords": [],
+      "owner": {
+        "preferred_username": "Owner Olivia",
+        "sub": "33b94622-80c5-4443-8bb2-2e124219afea",
+        "email": "owner@apt.com",
+        "cognito_groups": [
+          "contributor"
+        ]
+      },
+      "authors": [
+        {
+          "preferred_username": "Andre Author",
+          "sub": "e09cf808-583c-4aab-b3a3-5a99ef9c9345",
+          "email": "author1@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        },
+        {
+          "preferred_username": "Anita Author",
+          "sub": "576e5036-5e7f-4fda-97c8-f19077491046",
+          "email": "author2@apt.com",
+          "cognito_groups": [
+            "contributor"
+          ]
+        }
+      ],
+      "reviewers": [],
+      "journal_status": "NO_PUBLICATION"
+    }
+  ]
+}
