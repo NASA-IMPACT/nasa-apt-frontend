@@ -25,6 +25,7 @@ import { useAuthToken, useUser } from '../../context/user';
 import { useAtbds } from '../../context/atbds-list';
 
 import UserImage from './user-image';
+import FeedbackForm from './feedback-form';
 
 const { appTitle } = config;
 
@@ -282,16 +283,7 @@ function PageHeader() {
         <VerticalDivider variation='light' />
         <GlobalMenu>
           <li>
-            <Button
-              variation='achromic-plain'
-              title='Leave feedback about the app'
-              onClick={(e) => {
-                e.preventDefault();
-                window.feedback?.showForm();
-              }}
-            >
-              Feedback
-            </Button>
+            <FeedbackForm />
           </li>
           <li>
             {!isLogged ? (

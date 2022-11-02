@@ -122,7 +122,7 @@ const FeedbackLink = (props) => (
     title='Open feedback form modal'
     onClick={(e) => {
       e.preventDefault();
-      window.feedback?.showForm();
+      document.dispatchEvent(new Event('show-feedback-modal'));
     }}
     {...props}
   />
