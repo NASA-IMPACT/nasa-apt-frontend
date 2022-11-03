@@ -15,5 +15,6 @@ module.exports = {
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   },
   hostedAuthUi:
-    'https://nasa-apt-api-lambda-prod-v2.auth.us-west-2.amazoncognito.com'
+    'https://nasa-apt-api-lambda-prod-v2.auth.us-west-2.amazoncognito.com',
+  feedbackForm: 'https://forms.gle/JG6ykqj2mAjzke6S6'
 };
