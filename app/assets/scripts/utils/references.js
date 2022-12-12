@@ -249,11 +249,7 @@ export function parseBibtexFile(inputFile) {
         const input = new Cite(reader.result, { style: 'bibtex' });
 
         // Output as Bibtext JSON (default is CSL)
-        const items = input.get({
-          format: 'real',
-          type: 'json',
-          style: 'bibtex'
-        });
+        const items = input.format('biblatex', { type: 'object' });
 
         // Return properties
         resolve(items);
