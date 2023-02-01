@@ -1018,13 +1018,13 @@ export const atbdContentSections = [
 ];
 
 export default function DocumentBody(props) {
-  const { atbd } = props;
+  const { atbd, disableScrollManagement } = props;
   const document = atbd.document;
 
   // Scroll to an existing hash when the component mounts.
-  useScrollToHashOnMount();
+  useScrollToHashOnMount(disableScrollManagement);
   // Setup the listener to change active links.
-  useScrollListener();
+  useScrollListener(disableScrollManagement);
 
   const referencesUseIndex = useMemo(
     () => createDocumentReferenceIndex(document),
@@ -1039,5 +1039,6 @@ export default function DocumentBody(props) {
 }
 
 DocumentBody.propTypes = {
-  atbd: T.object
+  atbd: T.object,
+  disableScrollManagement: T.bool
 };

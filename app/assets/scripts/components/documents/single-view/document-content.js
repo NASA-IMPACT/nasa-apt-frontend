@@ -216,7 +216,7 @@ DOIAddress.propTypes = {
 };
 
 function DocumentContent(props) {
-  const { atbdData } = props;
+  const { atbdData, disableScrollManagement } = props;
 
   return (
     <DocumentContentWrapper>
@@ -237,7 +237,10 @@ function DocumentContent(props) {
             <DOIAddress value={atbdData.doi} />
           </DocumentMetaDetails>
         </DocumentHeader>
-        <DocumentBody atbd={atbdData} />
+        <DocumentBody
+          disableScrollManagement={disableScrollManagement}
+          atbd={atbdData}
+        />
       </DocumentProse>
     </DocumentContentWrapper>
   );
@@ -253,7 +256,8 @@ DocumentContent.propTypes = {
       editors: T.string
     }),
     doi: T.string
-  })
+  }),
+  disableScrollManagement: T.bool
 };
 
 export default DocumentContent;

@@ -134,7 +134,7 @@ const ScrollContext = createContext(null);
  *
  * @prop {node} props The children to render
  */
-export function ScrollAnchorProvider({ children }) {
+export function ScrollAnchorProvider({ disabled = false, children }) {
   const [targetItems, setTargetItems] = useState([]);
   const [activeItem, setActiveItem] = useState(TOP_SCROLL_ITEM);
   const [scrollInitiator, setScrollInitiator] = useState(null);
@@ -184,16 +184,18 @@ export function ScrollAnchorProvider({ children }) {
     [targetItems, globalTopOffset, setActiveItem]
   );
 
-  const contextValue = {
-    scrollToId,
-    setGlobalTopOffset,
-    targetItems,
-    globalTopOffset,
-    activeItem,
-    setActiveItem,
-    scrollInitiator,
-    setScrollInitiator
-  };
+  const contextValue = !disabled
+    ? {
+        scrollToId,
+        setGlobalTopOffset,
+        targetItems,
+        globalTopOffset,
+        activeItem,
+        setActiveItem,
+        scrollInitiator,
+        setScrollInitiator
+      }
+    : {};
 
   return (
     <ScrollContext.Provider value={contextValue}>
@@ -203,7 +205,8 @@ export function ScrollAnchorProvider({ children }) {
 }
 
 ScrollAnchorProvider.propTypes = {
-  children: T.node
+  children: T.node,
+  disabled: T.bool
 };
 
 /**
@@ -242,30 +245,34 @@ export function useScrollLink() {
  * If there's an id in the hash it will scroll to it on mount, or every time the
  * list of items change.
  */
-export function useScrollToHashOnMount() {
+export function useScrollToHashOnMount(disable = false) {
   const { scrollToId } = useContext(ScrollContext);
 
   useEffect(() => {
+    if (disable) {
+      return;
+    }
+
     const targetId = getIdFromHash();
 
     if (targetId) {
       scrollToId(targetId);
     }
-  }, [scrollToId]);
+  }, [disable, scrollToId]);
 }
 
 /**
  * Hook to setup the scroll listener that will activate links when the user
  * scrolls.
  */
-export function useScrollListener() {
+export function useScrollListener(disable = false) {
   const {
     targetItems,
     setActiveItem,
     scrollInitiator,
     setScrollInitiator,
     globalTopOffset
-  } = useContext(ScrollContext);
+  } = useContext(ScrollContext) ?? {};
 
   useEffect(() => {
     // If we're scrolling to a position because a link was clicked we don't want
@@ -296,11 +303,15 @@ export function useScrollListener() {
       setIdOnHash(activeItem?.id || null);
     }, 250);
 
-    window.addEventListener('scroll', scrollListener);
+    if (!disable) {
+      window.addEventListener('scroll', scrollListener);
+    }
+
     return () => {
       window.removeEventListener('scroll', scrollListener);
     };
   }, [
+    disable,
     targetItems,
     setActiveItem,
     scrollInitiator,

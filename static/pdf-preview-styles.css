@@ -1,0 +1,15 @@
+@page {
+  size: A4;
+  margin-top: 15mm;
+  margin-bottom: 15mm;
+  margin-left: 10mm;
+  margin-right: 10mm;
+
+  @bottom-right {
+    content: counter(page);
+  }
+}
+
+h2 {
+  break-before: page;
+}
