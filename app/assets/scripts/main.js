@@ -35,6 +35,7 @@ import Home from './components/home';
 import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
+import PdfPreview from './components/documents/pdf-preview';
 import Contacts from './components/contacts/hub';
 import ContactsView from './components/contacts/view';
 import ContactsEdit from './components/contacts/edit';
@@ -149,6 +150,11 @@ function Root() {
               exact
               path='/documents/:id/:version/edit/:step?'
               component={DocumentsEdit}
+            />
+            <Route
+              exact
+              path='/documents/:id/:version/pdf-preview'
+              component={PdfPreview}
             />
             <AccessRoute
               permission={['view', 'contacts']}
