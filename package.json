@@ -129,6 +129,7 @@
     "react-helmet": "^6.1.0",
     "react-katex": "^2.0.2",
     "react-nl2br": "^1.0.2",
+    "react-qr-code": "^2.0.11",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^4.3.0",

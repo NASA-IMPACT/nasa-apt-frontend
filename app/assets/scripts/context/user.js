@@ -81,8 +81,8 @@ const emptyUserData = {
   rawCognitoUser: null
 };
 
-const extractUserDataFromCognito = (user) => {
-  const { sub, preferred_username } = user.attributes;
+const extractUserDataFromCognito = (user, userInfo) => {
+  const { sub, preferred_username } = userInfo.attributes;
   const idToken = user.getSignInUserSession().getIdToken();
 
   return {
@@ -111,7 +111,8 @@ export const UserProvider = (props) => {
   const loadCognitoUser = useCallback(async () => {
     try {
       const user = await Auth.currentAuthenticatedUser();
-      setUserData(extractUserDataFromCognito(user));
+      const userInfo = await Auth.currentUserInfo(user);
+      setUserData(extractUserDataFromCognito(user, userInfo));
     } catch (error) {
       /* eslint-disable-next-line no-console */
       console.log('Error getting authenticated user', error);
@@ -207,7 +208,8 @@ export const useUser = () => {
       isContributor: userData.groups?.some?.(
         (g) => g.toLowerCase() === CONTRIBUTOR_ROLE
       ),
-      loginCognitoUser: (data) => setUserData(extractUserDataFromCognito(data))
+      loginCognitoUser: (user, userInfo) =>
+        setUserData(extractUserDataFromCognito(user, userInfo))
     }),
     [userData, isAuthReady, setUserData]
   );

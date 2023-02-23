@@ -44,6 +44,13 @@ export const createProcessToast = (msg) => {
   });
 
   return {
+    update: (newMsg) => {
+      toast.update(toastId, {
+        render: newMsg,
+        type: toast.TYPE.INFO
+      });
+    },
+
     success: (successMsg) =>
       toast.update(toastId, {
         type: toast.TYPE.SUCCESS,
