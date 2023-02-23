@@ -45,7 +45,6 @@ export default function DocumentDownloadMenu(props) {
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
     let retryCount = 0;
-    let timeoutRef;
 
     async function fetchPdf(url) {
       const toast = createProcessToast('Downloading PDF, please wait...');
@@ -70,27 +69,39 @@ export default function DocumentDownloadMenu(props) {
           }
         });
 
-        if (response.headers['content-type'] === 'application/json') {
+        if (
+          response.status === 200 &&
+          response.headers.get('content-type') === 'application/json'
+        ) {
           if (retryCount < 3) {
-            window.clearTimeout(timeoutRef);
+            const result = await response.json();
+
+            if (result?.message) {
+              toast.update(result.message);
+            }
+
             setTimeout(() => {
-              fetchPdf(pdfUrl);
+              fetchPdf(`${pdfUrl}?retry=true`);
             }, 3000);
             ++retryCount;
           } else {
             toast.error('Failed to download PDF!');
           }
-        } else if (response.headers['content-type'] === 'application/pdf') {
-          const pdfBlob = new Blob([response.data], {
-            type: 'application/pdf',
-            encoding: 'UTF-8'
-          });
 
+          return;
+        }
+
+        if (
+          response.status === 201 &&
+          response.headers.get('content-type') === 'application/pdf'
+        ) {
+          const pdfBlob = await response.blob();
           saveAs(pdfBlob, pdfFileName);
           toast.success('PDF downloaded successfully!');
-        } else {
-          toast.error('Failed to download PDF!');
+          return;
         }
+
+        toast.error('Failed to download PDF!');
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
