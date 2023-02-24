@@ -46,10 +46,13 @@ export default function DocumentDownloadMenu(props) {
     const pdfFileName = `${alias}-v${version}.pdf`;
     const maxRetries = 10;
     const waitBetweenTries = 5000;
+    const toast = createProcessToast('Downloading PDF, please wait...');
     let retryCount = 0;
 
     async function fetchPdf(url) {
-      const toast = createProcessToast('Downloading PDF, please wait...');
+      if (retryCount > 0) {
+        toast.update('Generating the PDF. This may take a minute...');
+      }
       const user = await Auth.currentAuthenticatedUser();
       if (!user) {
         toast.error('Failed to download PDF! (Not authenticated)');
@@ -98,7 +101,7 @@ export default function DocumentDownloadMenu(props) {
           const result = await response.json();
 
           if (result?.message) {
-            toast.success(result.message);
+            toast.update(result.message);
           }
 
           setTimeout(() => {
