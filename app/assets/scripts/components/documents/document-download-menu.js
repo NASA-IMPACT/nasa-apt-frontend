@@ -44,6 +44,8 @@ export default function DocumentDownloadMenu(props) {
     const { id, version, alias } = atbd;
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
+    const maxRetries = 10;
+    const waitBetweenTries = 5000;
     let retryCount = 0;
 
     async function fetchPdf(url) {
@@ -69,28 +71,46 @@ export default function DocumentDownloadMenu(props) {
           }
         });
 
+        // If we get a 404 on retry, it means the PDF is not ready yet.
+        // Keep retrying until we reach the max retry count.
         if (
-          response.status === 201 &&
-          response.headers.get('content-type') === 'application/json'
+          response.status === 404 &&
+          response.headers.get('content-type') === 'application/json' &&
+          url.includes('?retry=true')
         ) {
-          if (retryCount < 3) {
-            const result = await response.json();
-
-            if (result?.message) {
-              toast.success(result.message);
-            }
-
+          if (retryCount < maxRetries) {
             setTimeout(() => {
               fetchPdf(`${pdfUrl}?retry=true`);
-            }, 3000);
+            }, waitBetweenTries);
             ++retryCount;
           } else {
             toast.error('Failed to download PDF!');
           }
+          return;
+        }
+
+        // If we get a 201, it means the PDF generation has been triggered.
+        // Retry after some time to check if the PDF is ready for download.
+        if (
+          response.status === 201 &&
+          response.headers.get('content-type') === 'application/json'
+        ) {
+          const result = await response.json();
+
+          if (result?.message) {
+            toast.success(result.message);
+          }
+
+          setTimeout(() => {
+            fetchPdf(`${pdfUrl}?retry=true`);
+          }, 3000);
+          ++retryCount;
 
           return;
         }
 
+        // If we get a 200 and content-type is application/pdf, it means the
+        // PDF is ready for download. Download the PDF blob and save it.
         if (
           response.status === 200 &&
           response.headers.get('content-type') === 'application/pdf'
