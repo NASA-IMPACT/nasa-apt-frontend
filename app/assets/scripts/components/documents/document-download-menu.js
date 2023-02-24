@@ -70,14 +70,14 @@ export default function DocumentDownloadMenu(props) {
         });
 
         if (
-          response.status === 200 &&
+          response.status === 201 &&
           response.headers.get('content-type') === 'application/json'
         ) {
           if (retryCount < 3) {
             const result = await response.json();
 
             if (result?.message) {
-              toast.update(result.message);
+              toast.success(result.message);
             }
 
             setTimeout(() => {
@@ -92,7 +92,7 @@ export default function DocumentDownloadMenu(props) {
         }
 
         if (
-          response.status === 201 &&
+          response.status === 200 &&
           response.headers.get('content-type') === 'application/pdf'
         ) {
           const pdfBlob = await response.blob();
