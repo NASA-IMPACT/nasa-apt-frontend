@@ -250,6 +250,14 @@ export function parseBibtexFile(inputFile) {
 
         // Output as Bibtext JSON (default is CSL)
         const items = input.format('biblatex', { type: 'object' });
+        // hack: The title includes latex specific rich text formatting
+        // which we don't want. Replace it with the original title.
+        // See this issue for more info:
+        // https://github.com/NASA-IMPACT/nasa-apt/issues/602
+        for (let i = 0; i < items.length; i++) {
+          let item = items[i];
+          item.properties.title = input.data[i].title;
+        }
 
         // Return properties
         resolve(items);
@@ -284,6 +292,8 @@ export function bibtexItemsToRefs(bibtexItems) {
       // Journal and series get mapped to the same APT property. If both exist
       // "series" prevails.
       ['journal', 'series'],
+      ['journaltitle', 'series'],
+      ['booktitle', 'series'],
       ['series', 'series'],
 
       ['report_number', 'report_number'],
@@ -292,7 +302,8 @@ export function bibtexItemsToRefs(bibtexItems) {
       ['title', 'title'],
       ['url', 'online_resource'],
       ['volume', 'volume'],
-      ['year', 'year']
+      ['year', 'year'],
+      ['date', 'year']
     ];
 
     const ref = {};
