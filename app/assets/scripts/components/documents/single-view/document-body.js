@@ -61,11 +61,18 @@ const HeadingContextualActions = ({ id, atbd }) => {
 };
 
 // Wrapper for each of the main sections.
-const AtbdSectionBase = ({ id, title, children, atbd, ...props }) => (
+const AtbdSectionBase = ({
+  printMode,
+  id,
+  title,
+  children,
+  atbd,
+  ...props
+}) => (
   <section {...props}>
     <HeadingWActions as='h2' id={id} data-scroll='target'>
       <span>{title}</span>
-      <HeadingContextualActions id={id} atbd={atbd} />
+      {!printMode && <HeadingContextualActions id={id} atbd={atbd} />}
     </HeadingWActions>
     {children}
   </section>
@@ -125,13 +132,14 @@ const FragmentWithOptionalEditor = ({
   HLevel,
   subsectionLevel,
   referencesUseIndex,
-  atbd
+  atbd,
+  printMode
 }) => {
   return (
     <React.Fragment>
       <HeadingWActions as={HLevel} id={element.id} data-scroll='target'>
         <span>{element.label}</span>
-        <HeadingContextualActions id={element.id} atbd={atbd} />
+        {!printMode && <HeadingContextualActions id={element.id} atbd={atbd} />}
       </HeadingWActions>
       {withEditor && (
         <SafeReadEditor
@@ -555,11 +563,13 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'input_variables',
-        render: ({ element, children, atbd }) => (
+        render: ({ printMode, element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} atbd={atbd} />
+              {!printMode && (
+                <HeadingContextualActions id={element.id} atbd={atbd} />
+              )}
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -578,11 +588,13 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Output Variables',
         id: 'output_variables',
-        render: ({ element, children, atbd }) => (
+        render: ({ printMode, element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} atbd={atbd} />
+              {!printMode && (
+                <HeadingContextualActions id={element.id} atbd={atbd} />
+              )}
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -1034,7 +1046,8 @@ export default function DocumentBody(props) {
   return renderElements(atbdContentSections, {
     document,
     referencesUseIndex,
-    atbd
+    atbd,
+    printMode: disableScrollManagement
   });
 }
 
