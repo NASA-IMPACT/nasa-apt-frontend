@@ -9,3 +9,15 @@
     content: counter(page);
   }
 }
+
+h1 {
+  break-before: page;
+}
+
+.toc-page-number::after {
+  content: target-counter(attr(data-target), page);
+}
+
+.sub-headings-container {
+  padding-left: 1rem;
+}
