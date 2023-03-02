@@ -102,13 +102,14 @@ const ReferencesList = styled.ol`
 // When the section that's being rendered is a list of items we only need
 // to print the title and then the data from the children.
 // This method is a utility to just render the children.
-const AtbdSectionPassThrough = ({ element, children, atbd }) => {
+const AtbdSectionPassThrough = ({ element, children, atbd, printMode }) => {
   return (
     <AtbdSection
       key={element.id}
       id={element.id}
       title={element.label}
       atbd={atbd}
+      printMode={printMode}
     >
       {React.Children.count(children) ? children : <EmptySection />}
     </AtbdSection>
@@ -323,12 +324,13 @@ export const atbdContentSections = [
     id: 'abstract',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.abstract, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -349,12 +351,13 @@ export const atbdContentSections = [
     id: 'plain_summary',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.plain_summary, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -377,12 +380,13 @@ export const atbdContentSections = [
       !!serializeSlateToString(document.version_description),
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.version_description, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -403,12 +407,13 @@ export const atbdContentSections = [
     id: 'introduction',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.introduction, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -666,12 +671,13 @@ export const atbdContentSections = [
     id: 'constraints',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.algorithm_usage_constraints, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
@@ -871,12 +877,13 @@ export const atbdContentSections = [
   {
     label: 'Contacts',
     id: 'contacts',
-    render: ({ element, children, atbd }) => (
+    render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         {React.Children.count(children) ? (
           children
@@ -906,7 +913,7 @@ export const atbdContentSections = [
   {
     label: 'References',
     id: 'references',
-    render: ({ element, document, referencesUseIndex, atbd }) => {
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => {
       const referencesInUse = Object.values(referencesUseIndex);
       return (
         <AtbdSection
@@ -914,6 +921,7 @@ export const atbdContentSections = [
           id={element.id}
           title={element.label}
           atbd={atbd}
+          printMode={printMode}
         >
           {referencesInUse.length ? (
             <ReferencesList>
@@ -940,12 +948,13 @@ export const atbdContentSections = [
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
-    render: ({ element, children, atbd }) => (
+    render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <p>
           <em>
@@ -960,12 +969,13 @@ export const atbdContentSections = [
       {
         label: 'Key Points',
         id: 'key_points',
-        render: ({ element, document, atbd }) => (
+        render: ({ element, document, atbd, printMode }) => (
           <AtbdSection
             key={element.id}
             id={element.id}
             title={element.label}
             atbd={atbd}
+            printMode={printMode}
           >
             <MultilineString
               value={document.key_points}
