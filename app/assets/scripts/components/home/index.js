@@ -97,7 +97,7 @@ const SubAction = styled(Link)`
 
 const FocusBoxList = styled.ul`
   display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: ${glsp(2, themeVal('layout.gap.large'))};
 `;
 
