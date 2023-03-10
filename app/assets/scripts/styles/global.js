@@ -22,10 +22,6 @@ ${reactTippyStyles()}
     display: block;
   }
 
-  .sub-headings-container {
-    padding-left: 1rem;
-  }
-
   .preview-table-of-content {
     display: flex;
     flex-direction: column;

@@ -18,6 +18,6 @@ h1 {
   content: target-counter(attr(data-target), page);
 }
 
-.sub-headings-container {
+.toc-section .toc-section {
   padding-left: 1rem;
 }

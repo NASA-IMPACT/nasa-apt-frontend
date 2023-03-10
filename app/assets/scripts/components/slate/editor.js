@@ -26,7 +26,7 @@ import { withSimpleModal } from './plugins/common/with-simple-modal';
 import { withEmptyEditor } from './plugins/common/with-empty-editor';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
-import { ListPlugin, withList } from './plugins/list';
+import { ListPlugin, ViewListPlugin, withList } from './plugins/list';
 import {
   EquationPlugin,
   EquationModal,
@@ -189,6 +189,11 @@ export function ReadEditor(props) {
   const { id, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
+  // For view mode we use native list elements
+  const viewPlugins = [...plugins];
+  const listPluginIndex = viewPlugins.find((p) => p === ListPlugin);
+  viewPlugins.splice(listPluginIndex, 1, ViewListPlugin);
+
   const value = [inputVal];
 
   // Render the Slate context.
@@ -196,7 +201,7 @@ export function ReadEditor(props) {
     <Slate editor={editor} value={value}>
       <ReadableWithPlugins
         id={id}
-        plugins={plugins}
+        plugins={viewPlugins}
         value={value}
         readOnly
         style={{}}

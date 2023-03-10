@@ -2,34 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { Previewer, Handler, registerHandlers } from 'pagedjs';
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
 import styled from 'styled-components';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
 import DocumentContent from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
-
-const Container = styled.div`
-  max-width: 52rem;
-  padding: 0 ${glsp(themeVal('layout.gap.xsmall'))};
-
-  ${media.smallUp`
-    padding: 0 ${glsp(themeVal('layout.gap.small'))};
-  `}
-
-  ${media.mediumUp`
-    padding: 0 ${glsp(themeVal('layout.gap.medium'))};
-  `}
-
-  ${media.largeUp`
-    padding: 0 ${glsp(themeVal('layout.gap.large'))};
-  `}
-
-  ${media.xlargeUp`
-    padding: 0 ${glsp(themeVal('layout.gap.xlarge'))};
-  `}
-`;
 
 const TocHeader = styled.h1`
   border-bottom: 3px solid #000;
@@ -69,28 +47,76 @@ class AfterRenderHandler extends Handler {
     }
 
     const tocElement = content.querySelector('#table-of-contents');
-    const sectionHeadings = content.querySelectorAll('h2');
 
-    Array.from(sectionHeadings).forEach((h) => {
-      const section = document.createElement('div');
-      section.classList.add('toc-section');
-      tocElement.append(section);
+    function generateSubHeadings(
+      currentHeading,
+      currentLevel,
+      sectionContainer,
+      parentContainer,
+      parentHeadingNumber
+    ) {
+      const currentSubHeadings = [];
+      let currentEl = currentHeading;
 
-      const sectionTitle = getTitleElement(h.id, h.innerText);
-      section.append(sectionTitle);
+      while (
+        currentEl.nextElementSibling !== null &&
+        currentEl.nextElementSibling.tagName !== `H${currentLevel}`
+      ) {
+        if (currentEl.nextElementSibling.tagName === `H${currentLevel + 1}`) {
+          currentSubHeadings.push(currentEl.nextElementSibling);
+        }
 
-      const parent = h.parentNode;
-      const subHeadings = parent.querySelectorAll('h3');
-      if (subHeadings.length > 0) {
-        const subHeadingsContainer = document.createElement('div');
-        subHeadingsContainer.classList.add('sub-headings-container');
-        section.append(subHeadingsContainer);
-        Array.from(subHeadings).forEach((sh) => {
-          const subHeading = getTitleElement(sh.id, sh.innerText);
-          subHeadingsContainer.append(subHeading);
+        currentEl = currentEl.nextElementSibling;
+      }
+
+      if (currentSubHeadings.length > 0) {
+        const subHeadingSections = document.createElement('div');
+        subHeadingSections.classList.add('toc-section');
+        sectionContainer.append(subHeadingSections);
+
+        currentSubHeadings.forEach((subHeading, i) => {
+          const headingNumber = `${parentHeadingNumber}${i + 1}.`;
+          if (subHeading.children[0]) {
+            subHeading.children[0].prepend(`${headingNumber} `);
+          } else {
+            subHeading.prepend(`${headingNumber} `);
+          }
+          const subHeadingTitle = getTitleElement(
+            subHeading.id,
+            subHeading.innerText
+          );
+          subHeadingSections.append(subHeadingTitle);
+
+          generateSubHeadings(
+            subHeading,
+            currentLevel + 1,
+            subHeadingSections,
+            subHeading.parentNode,
+            headingNumber
+          );
         });
       }
-    });
+    }
+
+    function generateHeading() {
+      const sectionHeadings = content.querySelectorAll('h2');
+      Array.from(sectionHeadings).forEach((h, i) => {
+        const section = document.createElement('div');
+        section.classList.add('toc-section');
+        tocElement.append(section);
+
+        const headingNumber = `${i + 1}.`;
+        if (h.children[0]) {
+          h.children[0].prepend(`${headingNumber} `);
+        }
+
+        const sectionTitle = getTitleElement(h.id, h.innerText);
+        section.append(sectionTitle);
+        generateSubHeadings(h, 2, section, h.parentNode, headingNumber);
+      });
+    }
+
+    generateHeading(2, tocElement, content, undefined);
   }
 
   afterPreview() {
@@ -141,13 +167,13 @@ function PdfPreview() {
       {atbd.status === 'succeeded' && (
         <div>
           <div id='content' ref={contentRef}>
-            <Container>
+            <div>
               <TocHeader>Table of Contents</TocHeader>
               <div
                 className='preview-table-of-content'
                 id='table-of-contents'
               />
-            </Container>
+            </div>
             <DocumentContent
               className='preview-page-content'
               atbdData={atbd.data}

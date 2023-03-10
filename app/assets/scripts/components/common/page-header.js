@@ -2,12 +2,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Auth } from 'aws-amplify';
-import {
-  glsp,
-  media,
-  themeVal,
-  visuallyHidden
-} from '@devseed-ui/theme-provider';
+import { glsp, themeVal, visuallyHidden } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 import { Button } from '@devseed-ui/button';
 import { VerticalDivider } from '@devseed-ui/toolbar';
@@ -34,18 +29,13 @@ const PageHeaderSelf = styled.header`
   z-index: 10;
   display: grid;
   grid-template-columns: max-content 1fr;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  grid-gap: ${glsp(themeVal('layout.gap.medium'))};
   align-items: center;
   background-color: ${themeVal('color.primary')};
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
-  padding: ${glsp(0.75, themeVal('layout.gap.xsmall'))};
+  padding: ${glsp(1, themeVal('layout.gap.medium'))};
   box-shadow: ${themeVal('boxShadow.elevationD')};
-
-  ${media.mediumUp`
-    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-    padding: ${glsp(1, themeVal('layout.gap.medium'))};
-  `}
 `;
 
 const PageHeadline = styled.div`
@@ -124,23 +114,17 @@ const PageTitleLink = styled(Link)`
 `;
 
 const BetaBadge = styled.small`
-  font-size: 0.75rem;
-  line-height: 1rem;
   text-transform: uppercase;
   color: ${themeVal('color.link')};
   background: ${themeVal('color.surface')};
-  padding: 0 ${glsp(0.25)};
   border-radius: ${themeVal('shape.rounded')};
   bottom: inherit;
   vertical-align: inherit;
   grid-row: 2;
-
-  ${media.largeUp`
-    margin: ${glsp(0, 0.5)};
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    padding: 0 ${glsp(0.5)};
-  `}
+  margin: ${glsp(0, 0.5)};
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0 ${glsp(0.5)};
 `;
 
 const PageNav = styled.nav`
