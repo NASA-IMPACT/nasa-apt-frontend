@@ -9,6 +9,7 @@ ${reactTippyStyles()}
   z-index:9000;
 }
 
+
 .pagedjs_pages {
   background-color: #f0f0f0;
 }
@@ -17,6 +18,13 @@ ${reactTippyStyles()}
   margin: 1rem;
   border: solid 1px rgba(0, 0, 0, 0.1);
   background-color: white;
+
+  .katex-html {
+    .base {
+      white-space: initial;
+      width: unset;
+    }
+  }
 
   .section-title {
     display: block;
