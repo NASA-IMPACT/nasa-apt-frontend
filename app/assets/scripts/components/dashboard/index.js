@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { Heading } from '@devseed-ui/typography';
-import { glsp, media, visuallyHidden } from '@devseed-ui/theme-provider';
+import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 
 import App from '../common/app';
 import {
@@ -42,14 +42,10 @@ const DashboardCanvas = styled(ContentBlock)`
 `;
 
 const WelcomeBlock = styled.section`
-  grid-column: content-start / content-end;
+  grid-column: content-start / content-7;
   display: flex;
   flex-flow: column nowrap;
   gap: ${glsp()};
-
-  ${media.largeUp`
-    grid-column: content-start / content-7;
-  `}
 `;
 
 const WelcomeBlockProse = styled(Prose)`
@@ -64,22 +60,10 @@ const WelcomeBlockTitle = styled(Heading)`
 `;
 
 const InsightsBlock = styled.section`
-  grid-column: content-start / content-end;
+  grid-column: content-7 / content-end;
   display: flex;
   flex-flow: column nowrap;
   gap: ${glsp()};
-
-  ${media.smallUp`
-    grid-column: content-start / content-3;
-  `}
-
-  ${media.mediumUp`
-    grid-column: content-start / content-6;
-  `}
-
-  ${media.largeUp`
-    grid-column: content-7 / content-end;
-  `}
 `;
 
 const InsightsBlockTitle = styled(Heading)`
@@ -96,11 +80,7 @@ const InsightsBlockContent = styled.div`
 const DocumentsBlock = styled.section`
   grid-column: content-start / content-end;
   display: grid;
-  gap: ${glsp()};
-
-  ${media.mediumUp`
-    gap: ${glsp(1.5)};
-  `}
+  gap: ${glsp(1.5)};
 `;
 
 export const DocumentsBlockTitle = styled(Heading).attrs({

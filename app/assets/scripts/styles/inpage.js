@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import useDimensions from 'react-cool-dimensions';
 import {
   glsp,
-  media,
   rgba,
   themeVal,
   visuallyHidden
@@ -36,11 +35,8 @@ export const InpageHeader = styled.header.attrs({
   box-shadow: inset 0 1px 0 0 ${rgba(themeVal('color.surface'), 0.16)},
     ${themeVal('boxShadow.elevationD')};
   clip-path: polygon(0 0, 100% 0, 100% 200%, 0% 200%);
-
-  ${media.mediumUp`
-    grid-gap: ${glsp(0, themeVal('layout.gap.medium'))};
-    padding: ${glsp(1, themeVal('layout.gap.medium'))};
-  `}
+  grid-gap: ${glsp(0, themeVal('layout.gap.medium'))};
+  padding: ${glsp(1, themeVal('layout.gap.medium'))};
 `;
 
 export const InpageHeaderSticky = styled(InpageHeader)`

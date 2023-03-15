@@ -3,7 +3,6 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import {
   glsp,
-  media,
   multiply,
   themeVal,
   listReset
@@ -19,27 +18,6 @@ import Datetime from '../../common/date';
 import { getCitationPublicationDate } from '../citation';
 
 import DocumentBody from './document-body';
-
-const DocumentContentWrapper = styled.div`
-  max-width: 52rem;
-  padding: ${glsp(themeVal('layout.gap.xsmall'))};
-
-  ${media.smallUp`
-    padding: ${glsp(themeVal('layout.gap.small'))};
-  `}
-
-  ${media.mediumUp`
-    padding: ${glsp(themeVal('layout.gap.medium'))};
-  `}
-
-  ${media.largeUp`
-    padding: ${glsp(themeVal('layout.gap.large'))};
-  `}
-
-  ${media.xlargeUp`
-    padding: ${glsp(themeVal('layout.gap.xlarge'))};
-  `}
-`;
 
 const DocumentProse = styled(Prose)`
   > * {
@@ -219,30 +197,28 @@ function DocumentContent(props) {
   const { atbdData, disableScrollManagement } = props;
 
   return (
-    <DocumentContentWrapper>
-      <DocumentProse>
-        <DocumentHeader>
-          <DocumentTitle id='doc-header' data-scroll='target'>
-            {atbdData.title}
-          </DocumentTitle>
-          <DocumentMetaDetails>
-            <dt>Version</dt>
-            <dd>{atbdData.version}</dd>
-            <ReleaseDate date={getCitationPublicationDate(atbdData).date} />
-            <DocumentKeywords keywords={atbdData.keywords} />
-            <dt>Creators</dt>
-            <dd>{atbdData.citation?.creators || 'None provided'}</dd>
-            <dt>Editors</dt>
-            <dd>{atbdData.citation?.editors || 'None provided'}</dd>
-            <DOIAddress value={atbdData.doi} />
-          </DocumentMetaDetails>
-        </DocumentHeader>
-        <DocumentBody
-          disableScrollManagement={disableScrollManagement}
-          atbd={atbdData}
-        />
-      </DocumentProse>
-    </DocumentContentWrapper>
+    <DocumentProse>
+      <DocumentHeader>
+        <DocumentTitle id='doc-header' data-scroll='target'>
+          {atbdData.title}
+        </DocumentTitle>
+        <DocumentMetaDetails>
+          <dt>Version</dt>
+          <dd>{atbdData.version}</dd>
+          <ReleaseDate date={getCitationPublicationDate(atbdData).date} />
+          <DocumentKeywords keywords={atbdData.keywords} />
+          <dt>Creators</dt>
+          <dd>{atbdData.citation?.creators || 'None provided'}</dd>
+          <dt>Editors</dt>
+          <dd>{atbdData.citation?.editors || 'None provided'}</dd>
+          <DOIAddress value={atbdData.doi} />
+        </DocumentMetaDetails>
+      </DocumentHeader>
+      <DocumentBody
+        disableScrollManagement={disableScrollManagement}
+        atbd={atbdData}
+      />
+    </DocumentProse>
   );
 }
 
