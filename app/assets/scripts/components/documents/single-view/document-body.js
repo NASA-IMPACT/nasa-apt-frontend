@@ -12,7 +12,8 @@ import HeadingWActions from '../../../styles/heading-with-actions';
 
 import {
   createDocumentReferenceIndex,
-  formatReference
+  formatReference,
+  sortReferences
 } from '../../../utils/references';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
@@ -925,17 +926,27 @@ export const atbdContentSections = [
         >
           {referencesInUse.length ? (
             <ReferencesList>
-              {referencesInUse.map(({ docIndex, refId }) => {
-                const ref = (document.publication_references || []).find(
-                  (r) => r.id === refId
-                );
-                return (
-                  <li key={refId}>
-                    [{docIndex}]{' '}
-                    {ref ? formatReference(ref) : 'Reference not found'}
-                  </li>
-                );
-              })}
+              {referencesInUse
+                .sort(function (a, b) {
+                  const refA = (document.publication_references || []).find(
+                    (r) => r.id === a.refId
+                  );
+                  const refB = (document.publication_references || []).find(
+                    (r) => r.id === b.refId
+                  );
+
+                  return sortReferences(refA, refB);
+                })
+                .map(({ refId }) => {
+                  const ref = (document.publication_references || []).find(
+                    (r) => r.id === refId
+                  );
+                  return (
+                    <li key={refId}>
+                      {ref ? formatReference(ref) : 'Reference not found'}
+                    </li>
+                  );
+                })}
             </ReferencesList>
           ) : (
             <p>No references were used in this document.</p>

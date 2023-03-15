@@ -6,7 +6,7 @@ import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 
 import { useRichContext } from '../common/rich-context';
-import { formatReference } from '../../../../utils/references';
+import { formatCitation, formatReference } from '../../../../utils/references';
 
 import Tip from '../../../common/tooltip';
 
@@ -59,7 +59,7 @@ const Ref = styled.span`
   }
 `;
 
-const RefReadOnly = styled.sup`
+const RefReadOnly = styled.span`
   padding: ${glsp(0, 0.25)};
   font-size: 0.75rem;
 `;
@@ -90,10 +90,11 @@ export default function Reference(props) {
   // There's no need to allow selection and the text instead of `ref` shows the
   // index at which the reference appears in the document.
   if (readOnly) {
+    const refId = referencesUseIndex?.[element.refId]?.docIndex || 0;
     return (
       <RefReadOnly>
-        <Tip tag='span' title={referenceTitle}>
-          {referencesUseIndex?.[element.refId]?.docIndex || 0}
+        <Tip tag='span' title={referenceTitle} refId={refId}>
+          {`(${formatCitation(reference)})`}
           {children}
         </Tip>
       </RefReadOnly>
