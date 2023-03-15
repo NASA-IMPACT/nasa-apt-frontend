@@ -54,7 +54,7 @@ const HomeContentInner = styled(UniversalGridder).attrs({
 `;
 
 const Intro = styled.section`
-  grid-column: content-start / content-end;
+  grid-column: content-start / span 8;
   align-self: center;
   display: grid;
   grid-template-columns: 1fr;

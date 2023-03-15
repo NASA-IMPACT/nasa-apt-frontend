@@ -64,10 +64,13 @@ class AfterRenderHandler extends Handler {
 
       // We separately handle the user-defined subheadings, since they
       // don't follow the pattern of other subheadings
-      const userDefinedHeadings = currentHeading.nextElementSibling.querySelectorAll(
+      const userDefinedHeadings = currentHeading.nextElementSibling?.querySelectorAll(
         `H${currentLevel + 1}`
       );
-      currentSubHeadings.push(...Array.from(userDefinedHeadings));
+
+      if (userDefinedHeadings) {
+        currentSubHeadings.push(...Array.from(userDefinedHeadings));
+      }
 
       // The subheadings are in the same hierarcy / nesting
       // So, we find smaller sub-headings between current level of
