@@ -3,7 +3,6 @@ import { tint } from 'polished';
 
 import {
   glsp,
-  media,
   multiply,
   stylizeFunction,
   themeVal
@@ -105,32 +104,14 @@ const Prose = styled.div`
   }
 
   figure > figcaption {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
     text-align: center;
     color: ${_tint(0.32, themeVal('color.base'))};
-    padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
     width: 100%;
     max-width: 52rem;
     margin: 0 auto;
-
-    ${media.smallUp`
-      padding: ${glsp(1, themeVal('layout.gap.small'))};
-    `}
-
-    ${media.mediumUp`
-      font-size: 1rem;
-      line-height: 1.5rem;
-      padding: ${glsp(2, themeVal('layout.gap.medium'))};
-    `}
-
-    ${media.largeUp`
-      padding: ${glsp(2, themeVal('layout.gap.large'))};
-    `}
-
-    ${media.xlargeUp`
-      padding: ${glsp(2, themeVal('layout.gap.xlarge'))};
-    `}
+    padding: ${glsp(2, themeVal('layout.gap.large'))};
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 
   > img {

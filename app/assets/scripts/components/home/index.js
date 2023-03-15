@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ReactGA from 'react-ga';
-import { glsp, media, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { Button } from '@devseed-ui/button';
 import collecticon from '@devseed-ui/collecticons';
@@ -49,39 +49,16 @@ const HomeContentInner = styled(UniversalGridder).attrs({
     largeUp: ['full-start', 'full-end']
   }
 })`
-  padding: ${glsp(themeVal('layout.gap.xsmall'), 0)};
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-
-  ${media.mediumUp`
-    padding: ${glsp(themeVal('layout.gap.medium'), 0)};
-    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-  `}
-
-  ${media.largeUp`
-    padding: ${glsp(themeVal('layout.gap.large'), 0)};
-    grid-gap: ${glsp(themeVal('layout.gap.large'))};
-  `}
-
-  ${media.xlargeUp`
-    padding: ${glsp(themeVal('layout.gap.xlarge'), 0)};
-    grid-gap: ${glsp(themeVal('layout.gap.xlarge'))};
-  `}
+  padding: ${glsp(themeVal('layout.gap.large'), 0)};
+  grid-gap: ${glsp(themeVal('layout.gap.large'))};
 `;
 
 const Intro = styled.section`
-  grid-column: content-start / content-end;
+  grid-column: content-start / span 8;
   align-self: center;
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: ${glsp(2)};
-
-  ${media.mediumUp`
-    grid-column: content-start / span 8;
-  `}
-
-  ${media.largeUp`
-    grid-gap: ${glsp(3)};
-  `}
+  grid-gap: ${glsp(3)};
 `;
 
 const IntroTitle = styled(Heading)`
@@ -120,21 +97,8 @@ const SubAction = styled(Link)`
 
 const FocusBoxList = styled.ul`
   display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: ${glsp(1, themeVal('layout.gap.xsmall'))};
-
-  ${media.mediumUp`
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: ${glsp(2, themeVal('layout.gap.medium'))};
-  `}
-
-  ${media.largeUp`
-    grid-gap: ${glsp(2, themeVal('layout.gap.large'))};
-  `}
-
-  ${media.xlargeUp`
-    grid-gap: ${glsp(2, themeVal('layout.gap.xlarge'))};
-  `}
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: ${glsp(2, themeVal('layout.gap.large'))};
 `;
 
 const FocusBox = styled.div`
@@ -167,13 +131,8 @@ const FocusBoxTitle = styled(Heading).attrs({
 `;
 
 const Illu = styled.figure`
-  grid-column: content-start / content-end;
-  justify-self: center;
-
-  ${media.largeUp`
-    grid-column: content-9 / full-end;
-    justify-self: auto;
-  `}
+  grid-column: content-9 / full-end;
+  justify-self: auto;
 `;
 
 const IlluInner = styled.div`
@@ -182,24 +141,8 @@ const IlluInner = styled.div`
 
   img {
     display: block;
-    max-width: 20rem;
+    max-width: 30rem;
     height: auto;
-
-    ${media.mediumUp`
-      max-width: 24rem;
-    `}
-
-    ${media.largeUp`
-      max-width: 30rem;
-    `}
-
-    ${media.xlargeUp`
-      max-width: 32rem;
-    `}
-
-    @media only screen and (min-width: 1920px) {
-      max-width: 40rem;
-    }
   }
 
   &::after {

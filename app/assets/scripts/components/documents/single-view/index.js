@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 
 import App from '../../common/app';
 import {
@@ -34,6 +35,11 @@ import {
 } from '../../../context/comment-center';
 import { useThreadStats } from '../../../context/threads-list';
 import { useEffectPrevious } from '../../../utils/use-effect-previous';
+
+const DocumentContentWrapper = styled.div`
+  max-width: 52rem;
+  padding: ${glsp(themeVal('layout.gap.large'))};
+`;
 
 const DocumentCanvas = styled(InpageBody)`
   padding: 0;
@@ -198,7 +204,9 @@ function DocumentView() {
           <ScrollAnchorProvider>
             <DocumentCanvas>
               <DocumentOutline atbd={atbd.data} />
-              <DocumentContent atbdData={atbd.data} />
+              <DocumentContentWrapper>
+                <DocumentContent atbdData={atbd.data} />
+              </DocumentContentWrapper>
             </DocumentCanvas>
           </ScrollAnchorProvider>
         </Inpage>

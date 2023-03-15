@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { format } from 'date-fns';
-import { glsp, media, rgba, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { reveal } from '@devseed-ui/animation';
 
 import Tip from './tooltip';
@@ -9,17 +9,12 @@ import Tip from './tooltip';
 const PageFooterSelf = styled.footer`
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
+  grid-gap: ${glsp(themeVal('layout.gap.medium'))};
   align-items: center;
   background-color: ${themeVal('color.primary')};
   color: #fff;
   animation: ${reveal} 0.32s ease 0s 1;
-  padding: ${glsp(1, themeVal('layout.gap.xsmall'))};
-
-  ${media.mediumUp`
-    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-    padding: ${glsp(1, themeVal('layout.gap.medium'))};
-  `}
+  padding: ${glsp(1, themeVal('layout.gap.medium'))};
 
   a,
   a:visited {

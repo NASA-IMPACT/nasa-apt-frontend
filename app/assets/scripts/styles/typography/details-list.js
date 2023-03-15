@@ -1,17 +1,12 @@
 import styled from 'styled-components';
 
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { headingAlt } from '@devseed-ui/typography';
 
 const DetailsList = styled.dl`
   display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: ${glsp(0.25, 1)};
-
-  ${media.smallUp`
-    grid-template-columns: minmax(min-content, max-content) 1fr;
-    grid-gap: ${glsp(0.5, 2)};
-  `}
+  grid-template-columns: minmax(min-content, max-content) 1fr;
+  grid-gap: ${glsp(0.5, 2)};
 
   dt {
     ${headingAlt()}
@@ -20,6 +15,7 @@ const DetailsList = styled.dl`
 
   dd {
     font-weight: ${themeVal('type.base.bold')};
+    word-break: break-word;
   }
 `;
 

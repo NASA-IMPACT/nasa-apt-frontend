@@ -147,6 +147,32 @@ export const ListPlugin = {
   onUse: onListPluginUse
 };
 
+const VUl = styled.ul`
+  list-style: initial;
+  padding-left: ${glsp(2)};
+`;
+
+const VOl = styled.ol`
+  padding-left: ${glsp(1)}!important;
+
+  > li {
+    padding-left: ${glsp(1 / 2)};
+  }
+`;
+
+const viewPluginOptions = {
+  ul: {
+    component: VUl
+  },
+  ol: {
+    component: VOl
+  }
+};
+export const ViewListPlugin = {
+  renderElement: renderElementList(viewPluginOptions),
+  deserialize: deserializeList(viewPluginOptions)
+};
+
 // Function for list handling composition.
 // Re-export. See README.md for rationale.
 export const withList = withList$();
