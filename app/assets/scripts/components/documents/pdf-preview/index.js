@@ -196,10 +196,19 @@ function PdfPreview() {
     <ScrollAnchorProvider disabled>
       {atbd.status === 'loading' && <GlobalLoading />}
       {atbd.status === 'succeeded' && (
-        <>
+        /*
+          Note these empty divs are required for print mode
+          to work properly (No idea why though!)
+        */
+        <div>
           <div id='content' ref={contentRef}>
-            <TocHeader>Table of Contents</TocHeader>
-            <div className='preview-table-of-content' id='table-of-contents' />
+            <div>
+              <TocHeader>Table of Contents</TocHeader>
+              <div
+                className='preview-table-of-content'
+                id='table-of-contents'
+              />
+            </div>
             <DocumentContent
               className='preview-page-content'
               atbdData={atbd.data}
@@ -208,7 +217,7 @@ function PdfPreview() {
           </div>
           <div id='preview' ref={previewRef} />
           {previewReady && <div id='pdf-preview-ready' />}
-        </>
+        </div>
       )}
     </ScrollAnchorProvider>
   );
