@@ -1,5 +1,6 @@
 import Cite from 'citation-js';
 import castArray from 'lodash.castarray';
+import React from 'react';
 
 import {
   nodeFromSlateDocument,
@@ -58,14 +59,130 @@ export const getReferenceEmptyValue = (base = {}) => {
 };
 
 /**
+ * Given a Bibtex format of authors, format the authors in AGU style
+ * https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Grammar-Style-Guide#referenceformat
+ * @param {String} authors - A list of authors separated by 'and'
+ * @returns A string of authors in AGU style
+ */
+function formatAuthors(authors, type = 'reference') {
+  if (!authors || authors.length === 0) return '';
+  const authorsList = authors.split(' and ');
+
+  let authorStr;
+  if (type === 'citation') {
+    // We only use surnames
+    let authorSurnames = authorsList.map((author) => {
+      const [lastName] = author?.split(',');
+      return lastName.trim();
+    });
+
+    switch (authorSurnames.length) {
+      case 0: {
+        authorStr = '';
+        break;
+      }
+
+      case 1: {
+        authorStr = authorSurnames[0];
+        break;
+      }
+
+      case 2: {
+        authorStr = `${authorSurnames[0]} & ${authorSurnames[1]}`;
+        break;
+      }
+
+      // 3 or more authors
+      default: {
+        authorStr = `${authorSurnames[0]} et al.`;
+        break;
+      }
+    }
+  } else {
+    const authorNames = authorsList.map((author) => {
+      const [lastName, firstName] = author?.split(',');
+      if (!firstName) return lastName;
+
+      const firstNameInitialed = firstName
+        .trim()
+        .split(' ')
+        .map((word) => `${word[0]}.`); // first letter
+      return `${lastName}, ${firstNameInitialed}`;
+    });
+
+    if (authorNames.length === 0) return '';
+    if (authorNames.length === 1) return authorNames[0];
+    if (authorNames.length < 8) {
+      const lastAuthor = authorNames[authorNames.length - 1];
+      return `${authorNames
+        .slice(0, authorNames.length - 1)
+        .join(',')} & ${lastAuthor}`;
+    }
+    if (authorNames.length >= 8) {
+      return `${authorNames.slice(0, 7).join(',')} et al.`;
+    }
+  }
+  return authorStr;
+}
+
+export function sortReferences(refA, refB) {
+  const hasAuthorsA = 'authors' in refA && refA.authors.length > 0;
+  const hasAuthorsB = 'authors' in refB && refB.authors.length > 0;
+  const hasYearA = 'year' in refA;
+  const hasYearB = 'year' in refB;
+
+  if (hasAuthorsA && !hasAuthorsB) return -1;
+  if (!hasAuthorsA && hasAuthorsB) return 1;
+  if (hasAuthorsA && hasAuthorsB) {
+    const authorsA = refA.authors.split(' and ');
+    const authorsB = refB.authors.split(' and ');
+
+    // compare first authors
+    if (authorsA[0] < authorsB[0]) return -1;
+    if (authorsA[0] > authorsB[0]) return 1;
+
+    if (authorsA[0] === authorsB[0]) {
+      if (authorsA.length === 1) {
+        // There's only 1 author, let's compare the years
+        return refA.year - refB.year;
+      } else {
+        // if there's more than 1 author, arrange alphabetically
+        // using the surnames of the coauthors
+        const smallerAuthorList =
+          authorsA.length < authorsB.length ? authorsA : authorsB;
+        for (let i = 1; i < smallerAuthorList.length; i++) {
+          // compare first authors
+          if (authorsA[i] < authorsB[i]) return -1;
+          if (authorsA[i] > authorsB[i]) return 1;
+        }
+        if (authorsA.length < authorsB.length) return -1;
+        if (authorsA.length > authorsB.length) return 1;
+      }
+    }
+  }
+
+  // Both don't have authors
+  if (hasYearA && !hasYearB) return 1;
+  if (!hasYearA && hasYearB) return -1;
+
+  if (hasYearA && hasYearB) return refA.year - refB.year;
+
+  // Both don't have authors or years, compare titles
+
+  if (refA.title > refB.title) return 1;
+  if (refB.title < refB.title) return -1;
+
+  return 0;
+}
+
+/**
  * Format a reference is AGU style.
- * Author, A.A., Author, B.B., & Author, C.C. (year). Title of article. Title of periodical, xx(x), pp-pp. https://doi.org/xx.xxxx/xxxxxxx
- * {authors}. ({year}). {title}. {series}, {volume}({issue}), {pages}, {doi}
+ * https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Grammar-Style-Guide#referenceformat
  *
  * @param {Reference} reference The reference object
  * @return String
  */
-export const formatReference = (reference) => {
+export const formatReference = (reference, type = 'jsx') => {
   const { authors, year, title, series, volume, issue, pages, doi } = reference;
 
   // Output:
@@ -73,14 +190,7 @@ export const formatReference = (reference) => {
   // {authors}. ({year}). {title}. {series}, {volume}({issue}), {pages}, {doi}
 
   // Authors
-  const authorsList = authors?.split(' and ');
-  let authorsStr;
-  if (authorsList.length > 1) {
-    const last = authorsList[authorsList.length - 1];
-    authorsStr = `${authorsList.slice(0, -1).join(', ')}, & ${last}`;
-  } else {
-    authorsStr = authorsList[0];
-  }
+  const authorsStr = formatAuthors(authors);
 
   // Year
   const yearStr = year ? `(${year}).` : '';
@@ -106,18 +216,27 @@ export const formatReference = (reference) => {
       : `https://doi.org/${doi}`
     : '';
 
-  return [
-    authorsStr,
-    yearStr,
-    titleStr,
-    seriesStr,
-    volIssueStr,
-    pagesStr,
-    doiStr
-  ]
-    .filter(Boolean)
-    .join(' ');
+  if (type === 'jsx') {
+    return (
+      <span>
+        {authorsStr} {yearStr} <em>{titleStr}</em> <em> {seriesStr} </em>{' '}
+        <em> {volIssueStr}</em> {pagesStr} {doiStr}
+      </span>
+    );
+  } else if (type === 'text') {
+    return `
+        ${authorsStr} ${yearStr} ${titleStr} ${seriesStr}
+        ${volIssueStr} ${pagesStr} ${doiStr}
+        `;
+  }
 };
+
+export function formatCitation(reference) {
+  const { authors, year, title } = reference;
+  const authorsStr = formatAuthors(authors, 'citation') || title;
+  const yearStr = year || 'n.d.';
+  return `${authorsStr}, ${yearStr}`;
+}
 
 // Fields that can have references.
 // The order must be the same as it gets printed in the document view page.

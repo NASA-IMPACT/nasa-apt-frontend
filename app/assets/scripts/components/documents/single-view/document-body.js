@@ -12,7 +12,8 @@ import HeadingWActions from '../../../styles/heading-with-actions';
 
 import {
   createDocumentReferenceIndex,
-  formatReference
+  formatReference,
+  sortReferences
 } from '../../../utils/references';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
@@ -96,6 +97,7 @@ const ReferencesList = styled.ol`
   && {
     list-style: none;
     margin: 0;
+    line-height: 2.5;
   }
 `;
 
@@ -913,8 +915,7 @@ export const atbdContentSections = [
   {
     label: 'References',
     id: 'references',
-    render: ({ element, document, referencesUseIndex, atbd, printMode }) => {
-      const referencesInUse = Object.values(referencesUseIndex);
+    render: ({ element, referenceList, atbd, printMode }) => {
       return (
         <AtbdSection
           key={element.id}
@@ -923,20 +924,8 @@ export const atbdContentSections = [
           atbd={atbd}
           printMode={printMode}
         >
-          {referencesInUse.length ? (
-            <ReferencesList>
-              {referencesInUse.map(({ docIndex, refId }) => {
-                const ref = (document.publication_references || []).find(
-                  (r) => r.id === refId
-                );
-                return (
-                  <li key={refId}>
-                    [{docIndex}]{' '}
-                    {ref ? formatReference(ref) : 'Reference not found'}
-                  </li>
-                );
-              })}
-            </ReferencesList>
+          {referenceList.length ? (
+            <ReferencesList>{referenceList}</ReferencesList>
           ) : (
             <p>No references were used in this document.</p>
           )}
@@ -1053,9 +1042,36 @@ export default function DocumentBody(props) {
     [document]
   );
 
+  const referenceList = useMemo(
+    () =>
+      Object.values(referencesUseIndex)
+        .sort(function (a, b) {
+          const refA = (document.publication_references || []).find(
+            (r) => r.id === a.refId
+          );
+          const refB = (document.publication_references || []).find(
+            (r) => r.id === b.refId
+          );
+
+          return sortReferences(refA, refB);
+        })
+        .map(({ refId }) => {
+          const ref = (document.publication_references || []).find(
+            (r) => r.id === refId
+          );
+          return (
+            <li key={refId}>
+              {ref ? formatReference(ref, 'jsx') : 'Reference not found'}
+            </li>
+          );
+        }),
+    [referencesUseIndex, document.publication_references]
+  );
+
   return renderElements(atbdContentSections, {
     document,
     referencesUseIndex,
+    referenceList,
     atbd,
     printMode: disableScrollManagement
   });
