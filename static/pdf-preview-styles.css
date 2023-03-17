@@ -21,3 +21,7 @@ h1 {
 .toc-section .toc-section {
   padding-left: 1rem;
 }
+
+.slate-p {
+  text-indent: 24pt;
+}
