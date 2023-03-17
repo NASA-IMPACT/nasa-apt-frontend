@@ -182,7 +182,7 @@ export function sortReferences(refA, refB) {
  * @param {Reference} reference The reference object
  * @return String
  */
-export const formatReference = (reference) => {
+export const formatReference = (reference, type = 'jsx') => {
   const { authors, year, title, series, volume, issue, pages, doi } = reference;
 
   // Output:
@@ -216,12 +216,19 @@ export const formatReference = (reference) => {
       : `https://doi.org/${doi}`
     : '';
 
-  return (
-    <span>
-      {authorsStr} {yearStr} <em>{titleStr}</em> <em> {seriesStr} </em>{' '}
-      <em> {volIssueStr}</em> {pagesStr} {doiStr}
-    </span>
-  );
+  if (type === 'jsx') {
+    return (
+      <span>
+        {authorsStr} {yearStr} <em>{titleStr}</em> <em> {seriesStr} </em>{' '}
+        <em> {volIssueStr}</em> {pagesStr} {doiStr}
+      </span>
+    );
+  } else if (type === 'text') {
+    return `
+        ${authorsStr} ${yearStr} ${titleStr} ${seriesStr}
+        ${volIssueStr} ${pagesStr} ${doiStr}
+        `;
+  }
 };
 
 export function formatCitation(reference) {

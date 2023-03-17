@@ -74,7 +74,7 @@ export default function Reference(props) {
   const focused = useFocused();
   const selected = useSelected();
   const readOnly = useReadOnly();
-  const { references, referencesUseIndex } = useRichContext();
+  const { references } = useRichContext();
 
   const [isHoverTipVisible, setHoverTipVisible] = useState(focused && selected);
 
@@ -83,17 +83,16 @@ export default function Reference(props) {
     : null;
 
   const referenceTitle = reference
-    ? formatReference(reference) || 'Empty reference'
+    ? formatReference(reference, 'text') || 'Empty reference'
     : 'Reference not found';
 
   // The read only version of the references is much simpler that the editor.
   // There's no need to allow selection and the text instead of `ref` shows the
   // index at which the reference appears in the document.
   if (readOnly) {
-    const refId = referencesUseIndex?.[element.refId]?.docIndex || 0;
     return (
       <RefReadOnly>
-        <Tip tag='span' title={referenceTitle} refId={refId}>
+        <Tip tag='span' title={referenceTitle}>
           {`(${formatCitation(reference)})`}
           {children}
         </Tip>
