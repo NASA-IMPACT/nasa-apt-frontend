@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build development image
-        run: docker build -t ghcr.io/NASA-IMPACT/nasa-apt-frontend:develop .
+        run: docker build -t ghcr.io/nasa-impact/nasa-apt-frontend:develop .
 
       - name: Push docker image
-        run: docker push ghcr.io/NASA-IMPACT/nasa-apt-frontend:develop
+        run: docker push ghcr.io/nasa-impact/nasa-apt-frontend:develop
