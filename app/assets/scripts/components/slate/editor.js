@@ -65,7 +65,7 @@ const plugins = [
   // version (0.59) that has a bug when it comes to spellcheck.
   // Spellcheck is only supported in browsers with beforeinput dom event, and
   // slate is considering all versions of firefox to not have this feature
-  // (which was fixed in a more recent version). Because of this it sets the
+  // (y equationwhich was fixed in a more recent version). Because of this it sets the
   // spellCheck property as undefined, which means it is reset to the browser's
   // default (in more recent slate versions this is set to false). This is turn
   // shows the spellcheck as enabled but it doesn't work, causing severe errors

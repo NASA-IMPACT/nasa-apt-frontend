@@ -148,6 +148,20 @@ class AfterRenderHandler extends Handler {
 
     // Starting from h2
     generateHeading(2, tocElement, content, undefined);
+
+    const captions = content.querySelectorAll('.slate-image-block figcaption');
+    Array.from(captions).forEach((caption, i) => {
+      const captionPrefix = document.createElement('span');
+      captionPrefix.innerText = `Figure ${i + 1}: `;
+      caption.prepend(captionPrefix);
+    });
+
+    const equationNumbers = content.querySelectorAll(
+      '.slate-equation-element .equation-number'
+    );
+    Array.from(equationNumbers).forEach((equationNumber, i) => {
+      equationNumber.innerText = `(${i + 1})`;
+    });
   }
 
   afterPreview() {

@@ -56,8 +56,11 @@ function EquationElement(props) {
   const MathElement = isInline ? InlineMath : BlockMath;
 
   return readOnly ? (
-    <EquationReadOnly isInline={isInline}>
-      <MathElement math={latexEquation || 'latex~empty~equation'} />
+    <EquationReadOnly isInline={isInline} className='slate-equation-element'>
+      <span className='katex-equation-wrapper'>
+        <MathElement math={latexEquation || 'latex~empty~equation'} />
+      </span>
+      {!isInline && <span className='equation-number' />}
     </EquationReadOnly>
   ) : (
     <Equation
