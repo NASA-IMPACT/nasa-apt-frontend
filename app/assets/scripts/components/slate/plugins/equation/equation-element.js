@@ -55,23 +55,53 @@ function EquationElement(props) {
   const isInline = isInlineEquation(element);
   const MathElement = isInline ? InlineMath : BlockMath;
 
-  return readOnly ? (
-    <EquationReadOnly isInline={isInline}>
-      <MathElement math={latexEquation || 'latex~empty~equation'} />
-    </EquationReadOnly>
-  ) : (
-    <Equation
-      onClick={handleClick}
-      contentEditable={false}
-      style={{ userSelect: 'none' }}
-      inFocus={isSelected}
-      isInline={isInline}
-      {...attributes}
-    >
-      <MathElement math={latexEquation || 'latex~empty~equation'} />
-      {children}
-    </Equation>
-  );
+  const returnElement = React.useMemo(() => {
+    if (readOnly) {
+      if (isInline) {
+        return (
+          <EquationReadOnly isInline={isInline}>
+            <MathElement math={latexEquation || 'latex~empty~equation'} />
+          </EquationReadOnly>
+        );
+      }
+
+      return (
+        <EquationReadOnly
+          isInline={isInline}
+          className='slate-equation-element'
+        >
+          <span className='katex-equation-wrapper'>
+            <MathElement math={latexEquation || 'latex~empty~equation'} />
+          </span>
+          {!isInline && <span className='equation-number' />}
+        </EquationReadOnly>
+      );
+    }
+
+    return (
+      <Equation
+        onClick={handleClick}
+        contentEditable={false}
+        style={{ userSelect: 'none' }}
+        inFocus={isSelected}
+        isInline={isInline}
+        {...attributes}
+      >
+        <MathElement math={latexEquation || 'latex~empty~equation'} />
+        {children}
+      </Equation>
+    );
+  }, [
+    attributes,
+    children,
+    handleClick,
+    isInline,
+    isSelected,
+    latexEquation,
+    readOnly
+  ]);
+
+  return returnElement;
 }
 
 EquationElement.propTypes = {
