@@ -21,3 +21,16 @@ h1 {
 .toc-section .toc-section {
   padding-left: 1rem;
 }
+
+.slate-p {
+  text-indent: 24pt;
+}
+
+.slate-p span {
+  text-indent: initial;
+}
+
+:is(dd, td, li) .slate-p {
+  text-indent: initial!important;
+}
+
