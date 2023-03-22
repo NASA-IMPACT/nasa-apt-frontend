@@ -170,7 +170,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
     <DetailsList>
       <dt>Url</dt>
       <dd>
-        <p
+        <div
           itemProp='distribution'
           itemScope
           itemType='https://schema.org/DataDownload'
@@ -184,7 +184,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
           >
             {url}
           </a>
-        </p>
+        </div>
       </dd>
       <dt>Description</dt>
       <dd>
@@ -221,7 +221,12 @@ const VariableItem = ({ element, variable }) => (
 
 const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   <AtbdSubSection itemScope itemType='https://schema.org/ContactPoint'>
-    <h3 id={id} data-scroll='target' itemProp='name'>
+    <h3
+      id={id}
+      className='pdf-preview-no-toc'
+      data-scroll='target'
+      itemProp='name'
+    >
       {label}
     </h3>
     <DetailsList type='horizontal'>
@@ -939,6 +944,7 @@ export const atbdContentSections = [
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
     render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-hidden'
         key={element.id}
         id={element.id}
         title={element.label}
