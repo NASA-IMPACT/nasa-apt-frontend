@@ -9,6 +9,13 @@ ${reactTippyStyles()}
   z-index:9000;
 }
 
+.katex-html {
+  .base {
+    white-space: initial;
+    width: unset;
+  }
+}
+
 .slate-equation-element {
   .equation-number {
     display: none;
@@ -36,13 +43,6 @@ ${reactTippyStyles()}
       flex-shrink: 0;
       display: initial;
       align-self: center;
-    }
-  }
-
-  .katex-html {
-    .base {
-      white-space: initial;
-      width: unset;
     }
   }
 
