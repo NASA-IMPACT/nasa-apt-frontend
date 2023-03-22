@@ -48,6 +48,11 @@ class AfterRenderHandler extends Handler {
       return title;
     }
 
+    const hiddenContents = content.querySelectorAll('.pdf-preview-hidden');
+    Array.from(hiddenContents).forEach((hiddenContent) => {
+      hiddenContent.remove();
+    });
+
     const tocElement = content.querySelector('#table-of-contents');
 
     // This function iteratively finds the subheadings
@@ -60,7 +65,6 @@ class AfterRenderHandler extends Handler {
       parentHeadingNumber
     ) {
       const currentSubHeadings = [];
-      let currentEl = currentHeading;
 
       // We separately handle the user-defined subheadings, since they
       // don't follow the pattern of other subheadings
@@ -69,9 +73,14 @@ class AfterRenderHandler extends Handler {
       );
 
       if (userDefinedHeadings) {
-        currentSubHeadings.push(...Array.from(userDefinedHeadings));
+        currentSubHeadings.push(
+          ...Array.from(userDefinedHeadings).filter(
+            (subHeading) => !subHeading.classList.contains('pdf-preview-no-toc')
+          )
+        );
       }
 
+      let currentEl = currentHeading;
       // The subheadings are in the same hierarcy / nesting
       // So, we find smaller sub-headings between current level of
       // sub-headings.
@@ -79,11 +88,17 @@ class AfterRenderHandler extends Handler {
         currentEl.nextElementSibling !== null &&
         currentEl.nextElementSibling.tagName !== `H${currentLevel}`
       ) {
-        if (currentEl.nextElementSibling.tagName === `H${currentLevel + 1}`) {
-          currentSubHeadings.push(currentEl.nextElementSibling);
+        const nextSibling = currentEl.nextElementSibling;
+        const nonPreviewable = nextSibling.classList.contains(
+          'pdf-preview-no-toc'
+        );
+        const isSubHeading = nextSibling.tagName === `H${currentLevel + 1}`;
+
+        if (!nonPreviewable && isSubHeading) {
+          currentSubHeadings.push(nextSibling);
         }
 
-        currentEl = currentEl.nextElementSibling;
+        currentEl = nextSibling;
       }
 
       if (currentSubHeadings.length > 0) {
