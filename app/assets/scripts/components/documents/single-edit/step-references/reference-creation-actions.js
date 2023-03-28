@@ -1,8 +1,12 @@
 import React from 'react';
 import T from 'prop-types';
 import { Button } from '@devseed-ui/button';
+import FormInfoTip from '../../../common/forms/form-info-tooltip';
 
 import { FauxFileDialog } from '../../../common/faux-file-dialog';
+
+const TooltipContent =
+  "Watch video <a target='_blank' rel='noreferrer' href='https://example.com'>here</a>";
 
 export default function ReferencesCreationActions(props) {
   const { onAddClick, onFileSelect } = props;
@@ -14,9 +18,12 @@ export default function ReferencesCreationActions(props) {
       </Button>
       <FauxFileDialog name='bibtex-file' onFileSelect={onFileSelect}>
         {(fieProps) => (
-          <Button useIcon='upload-2' {...fieProps}>
-            Import from BibTeX file
-          </Button>
+          <>
+            <Button useIcon='upload-2' {...fieProps}>
+              Import from BibTeX file
+            </Button>
+            <FormInfoTip title={TooltipContent} />
+          </>
         )}
       </FauxFileDialog>
     </React.Fragment>
