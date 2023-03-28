@@ -114,7 +114,7 @@ function SignIn() {
     return errors;
   }, []);
 
-  const qrString = `otpauth://totp/AWSCognito:${user?.username}?secret=${mfaCode}`;
+  const qrString = `otpauth://totp/APT:${user?.username}?secret=${mfaCode}`;
 
   const handleOtpCodeInputChange = React.useCallback((e) => {
     setOtpCode(e.target.value);
