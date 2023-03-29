@@ -6,8 +6,12 @@ export default createGlobalStyle`
 @media print {
   @page {
     size: portrait;
+    margin: 15mm;
   }
 
+  :is(dd, td, li) .slate-p {
+    text-indent: initial!important;
+  }
 }
 
 ${reactTippyStyles()}
