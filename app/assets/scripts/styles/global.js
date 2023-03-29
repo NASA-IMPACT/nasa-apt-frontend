@@ -3,6 +3,13 @@ import { createGlobalStyle } from 'styled-components';
 import reactTippyStyles from './vendor/react-tippy';
 
 export default createGlobalStyle`
+@media print {
+  @page {
+    size: portrait;
+  }
+
+}
+
 ${reactTippyStyles()}
 
 .tether-element {
@@ -22,14 +29,26 @@ ${reactTippyStyles()}
   }
 }
 
-.pagedjs_pages {
-  background-color: #f0f0f0;
-}
+.pdf-preview {
+  img {
+    break-inside: avoid;
+  }
 
-.pagedjs_page {
-  margin: 1rem;
-  border: solid 1px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  .preview-page-content {
+    break-before: page;
+  }
+
+  .slate-p {
+    text-indent: 24pt;
+  }
+
+  .slate-p span {
+    text-indent: initial;
+  }
+
+  :is(dd, td, li) .slate-p {
+    text-indent: initial!important;
+  }
 
   .slate-equation-element {
     display: flex;
@@ -48,6 +67,10 @@ ${reactTippyStyles()}
 
   .section-title {
     display: block;
+  }
+
+  .toc-section .toc-section {
+    padding-left: 1rem;
   }
 
   .preview-table-of-content {
