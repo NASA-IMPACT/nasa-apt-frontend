@@ -191,9 +191,23 @@ function PdfPreview() {
   }, [isAuthReady, id, version, fetchSingleAtbd]);
 
   useEffect(() => {
+    async function waitForImages() {
+      const images = contentRef.current.querySelectorAll('img');
+      const promises = Array.from(images).map((image) => {
+        return new Promise((accept) => {
+          image.addEventListener('load', () => {
+            accept();
+          });
+        });
+      });
+      await Promise.all(promises);
+      setPreviewReady(true);
+    }
+
     if (atbd.status === 'succeeded') {
       generateTocAndHeadingNumbering(contentRef.current);
-      setPreviewReady(true);
+
+      waitForImages();
     }
   }, [atbd.status]);
 
