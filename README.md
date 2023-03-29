@@ -5,8 +5,8 @@ _version 2_
 
 The APT is an authoring tool that streamlines the writing, publishing and maintenance process of Algorithm Theoretical Basis Documents (ATBDs) for NASA’s Earth Science Division.
 
-- interested in configuring APT? Check the [docs](./docs/README.md) section
-- want to run the project locally? Check [DEVELOPMENT](DEVELOPMENT.md)
+- Interested in configuring APT? Check the [docs](./docs/README.md) section
+- Want to run the project locally? Check [DEVELOPMENT](DEVELOPMENT.md)
 
 # License
 
