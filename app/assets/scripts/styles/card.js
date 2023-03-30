@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
-import { glsp, media, multiply, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, multiply, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { Toolbar } from '@devseed-ui/toolbar';
 
@@ -11,23 +11,13 @@ export const Card = styled.article`
   position: relative;
   display: flex;
   flex-flow: column nowrap;
-  gap: ${glsp(themeVal('layout.gap.xsmall'))};
-  padding: ${glsp(themeVal('layout.gap.xsmall'))};
   border-radius: ${multiply(themeVal('shape.rounded'), 2)};
   box-shadow: ${themeVal('boxShadow.elevationD')};
   min-height: 8rem;
   overflow: hidden;
   transition: all 0.24s ease-in-out 0s;
-
-  ${media.mediumUp`
-    padding: ${glsp(themeVal('layout.gap.medium'))};
-    gap: ${glsp(1.5)};
-  `}
-
-  ${media.largeUp`
-    padding: ${glsp(themeVal('layout.gap.large'))};
-    gap: ${glsp(1.5)};
-  `}
+  padding: ${glsp(themeVal('layout.gap.large'))};
+  gap: ${glsp(1.5)};
 
   > *:not(a) {
     position: relative;
@@ -61,14 +51,9 @@ export const CardHeadline = styled.div`
 `;
 
 export const CardTitle = styled(Heading)`
-  font-size: 1rem;
-  line-height: 1.25rem;
   margin: 0;
-
-  ${media.mediumUp`
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-  `}
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 `;
 
 export const CardHgroup = styled.div`
@@ -91,15 +76,9 @@ export const CardDetails = styled.p`
 
 export const CardMedia = styled.figure`
   grid-row: 1;
-  margin-top: ${glsp(-0.5)};
-  margin-left: ${glsp(-0.5)};
-  margin-right: ${glsp(-0.5)};
-
-  ${media.mediumUp`
-    margin-top: ${glsp(-1)};
-    margin-left: ${glsp(-1)};
-    margin-right: ${glsp(-1)};
-  `}
+  margin-top: ${glsp(-1)};
+  margin-left: ${glsp(-1)};
+  margin-right: ${glsp(-1)};
 `;
 
 export const CardMediaThumb = styled.div`

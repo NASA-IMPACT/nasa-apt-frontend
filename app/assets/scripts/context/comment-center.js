@@ -120,25 +120,42 @@ export const useCommentCenter = ({ atbd = null } = {}) => {
     reviewers
   ]);
 
+  const {
+    setAtbdId,
+    setAtbdVersion,
+    setContributors,
+    isPanelOpen,
+    openPanelOn
+  } = ctx;
+
   useEffectPrevious(
     (prev) => {
       if (!id || !version) return;
-      ctx.setAtbdId(id);
-      ctx.setAtbdVersion(version);
-      ctx.setContributors(contributors);
+      setAtbdId(id);
+      setAtbdVersion(version);
+      setContributors(contributors);
 
       // If the panel is open and the atbd changes update the values.
       // This happens when switching versions.
       const [prevId, prevVersion] = prev || [];
-      if ((prevId !== id || prevVersion !== version) && ctx.isPanelOpen) {
-        ctx.openPanelOn({
+      if ((prevId !== id || prevVersion !== version) && isPanelOpen) {
+        openPanelOn({
           // The atbdId must be numeric. The alias does not work.
           atbdId: id,
           atbdVersion: version
         });
       }
     },
-    [id, version, contributors, ctx.isPanelOpen, ctx.openPanelOn]
+    [
+      id,
+      version,
+      contributors,
+      setAtbdId,
+      setAtbdVersion,
+      setContributors,
+      isPanelOpen,
+      openPanelOn
+    ]
   );
 
   return ctx;

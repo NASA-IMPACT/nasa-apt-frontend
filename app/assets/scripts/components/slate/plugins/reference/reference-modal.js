@@ -76,7 +76,7 @@ export function ReferencesModal() {
   const selectOptions = useMemo(
     () =>
       (references || []).map((r) => ({
-        label: formatReference(r) || 'Empty reference',
+        label: formatReference(r, 'text') || 'Empty reference',
         value: r.id
       })),
     [references]

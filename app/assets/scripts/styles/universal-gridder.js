@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import {
   themeVal,
   glsp,
-  media,
   divide,
   subtract,
   val2px
@@ -162,24 +161,8 @@ const getGridProp = (grid, mdQuery) => {
 };
 
 const UniversalGridder = styled.div`
-  ${makeGrid(4, 'xsmall')}
+  ${makeGrid(12, 'large')}
   display: grid;
-
-  ${media.smallUp`
-    ${makeGrid(4, 'small')}
-  `}
-
-  ${media.mediumUp`
-    ${makeGrid(8, 'medium')}
-  `}
-
-  ${media.largeUp`
-    ${makeGrid(12, 'large')}
-  `}
-
-  ${media.xlargeUp`
-    ${makeGrid(12, 'xlarge')}
-  `}
 `;
 
 export default UniversalGridder;

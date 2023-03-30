@@ -24,7 +24,7 @@ import { FormSectionNotes } from '../../../../styles/form-block';
 import { readBibtexFile } from './references-import';
 import SelectionList from '../../../../utils/selection-list';
 import {
-  formatReference,
+  formatCitation,
   getReferenceEmptyValue,
   removeReferencesFromDocument
 } from '../../../../utils/references';
@@ -162,7 +162,7 @@ export default function ReferencesManager(props) {
                   {values.map((field, index) => (
                     <ReferencesFieldset
                       index={index}
-                      label={`Ref #${index + 1}: ${formatReference(field)}`}
+                      label={`Ref #${index + 1}: ${formatCitation(field)}`}
                       id={`${name}-${index}`}
                       name={`${name}.${index}`}
                       key={field.id}

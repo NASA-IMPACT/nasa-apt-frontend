@@ -26,7 +26,7 @@ import { withSimpleModal } from './plugins/common/with-simple-modal';
 import { withEmptyEditor } from './plugins/common/with-empty-editor';
 import { ExitBreakPlugin, SoftBreakPlugin } from './plugins/block-breaks';
 import { ParagraphPlugin } from './plugins/paragraph';
-import { ListPlugin, withList } from './plugins/list';
+import { ListPlugin, ViewListPlugin, withList } from './plugins/list';
 import {
   EquationPlugin,
   EquationModal,
@@ -65,7 +65,7 @@ const plugins = [
   // version (0.59) that has a bug when it comes to spellcheck.
   // Spellcheck is only supported in browsers with beforeinput dom event, and
   // slate is considering all versions of firefox to not have this feature
-  // (which was fixed in a more recent version). Because of this it sets the
+  // (y equationwhich was fixed in a more recent version). Because of this it sets the
   // spellCheck property as undefined, which means it is reset to the browser's
   // default (in more recent slate versions this is set to false). This is turn
   // shows the spellcheck as enabled but it doesn't work, causing severe errors
@@ -189,6 +189,11 @@ export function ReadEditor(props) {
   const { id, value: inputVal } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
+  // For view mode we use native list elements
+  const viewPlugins = [...plugins];
+  const listPluginIndex = viewPlugins.find((p) => p === ListPlugin);
+  viewPlugins.splice(listPluginIndex, 1, ViewListPlugin);
+
   const value = [inputVal];
 
   // Render the Slate context.
@@ -196,7 +201,7 @@ export function ReadEditor(props) {
     <Slate editor={editor} value={value}>
       <ReadableWithPlugins
         id={id}
-        plugins={plugins}
+        plugins={viewPlugins}
         value={value}
         readOnly
         style={{}}

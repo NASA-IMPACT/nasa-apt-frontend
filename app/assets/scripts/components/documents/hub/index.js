@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { glsp, media, themeVal } from '@devseed-ui/theme-provider';
+import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
 import { GlobalLoading } from '@devseed-ui/global-loading';
 
@@ -27,21 +27,7 @@ export const DocList = styled.ol`
   grid-column: content-start / content-end;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: ${glsp(themeVal('layout.gap.xsmall'))};
-
-  ${media.smallUp`
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: ${glsp(themeVal('layout.gap.small'))};
-  `}
-
-  ${media.mediumUp`
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: ${glsp(themeVal('layout.gap.medium'))};
-  `}
-
-  ${media.largeUp`
-    grid-gap: ${glsp(themeVal('layout.gap.large'))};
-  `}
+  grid-gap: ${glsp(themeVal('layout.gap.large'))};
 `;
 
 export const DocListItem = styled.li`

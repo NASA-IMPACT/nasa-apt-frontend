@@ -36,6 +36,7 @@ import { useEffectPrevious } from '../../../utils/use-effect-previous';
 import { useSaveTooltipPlacement } from '../../../utils/use-save-tooltip-placement';
 import { documentEdit, documentView } from '../../../utils/url-creator';
 import CheckLock from './check-lock';
+import getDocumentIdKey from '../get-document-id-key';
 
 const FormFooter = styled.div`
   display: flex;
@@ -280,11 +281,12 @@ const SaveAndContinueButton = ({ nextStep }) => {
   const submitAndContinue = useCallback(
     async (e) => {
       const { error, data } = await submitForm(e);
+      const idKey = getDocumentIdKey(data);
       if (!error) {
         if (nextStep) {
-          history.replace(documentEdit(data.alias, data.version, nextStep));
+          history.replace(documentEdit(idKey, data.version, nextStep));
         } else {
-          history.replace(documentView(data.alias, data.version));
+          history.replace(documentView(idKey, data.version));
         }
       }
     },

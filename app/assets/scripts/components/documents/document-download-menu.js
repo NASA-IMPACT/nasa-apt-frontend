@@ -1,8 +1,11 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import ReactGA from 'react-ga';
+import { Auth } from 'aws-amplify';
+import { saveAs } from 'file-saver';
 
 import DropdownMenu, { DropMenuItemEnhanced } from '../common/dropdown-menu';
+import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
@@ -36,6 +39,101 @@ export default function DocumentDownloadMenu(props) {
 
   const ability = useContextualAbility();
   const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+
+  const handlePdfDownloadClick = React.useCallback(() => {
+    const { id, version, alias } = atbd;
+    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    const pdfFileName = `${alias}-v${version}.pdf`;
+    const maxRetries = 10;
+    const waitBetweenTries = 5000;
+    const toast = createProcessToast('Downloading PDF, please wait...');
+    let retryCount = 0;
+
+    async function fetchPdf(url) {
+      if (retryCount > 0) {
+        toast.update('Generating the PDF. This may take a minute...');
+      }
+      const user = await Auth.currentAuthenticatedUser();
+      if (!user) {
+        toast.error('Failed to download PDF! (Not authenticated)');
+        return;
+      }
+
+      const {
+        signInUserSession: { idToken, accessToken }
+      } = user;
+      const authToken = `Bearer ${idToken.jwtToken}`;
+      const xAccessToken = accessToken.jwtToken;
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            Authorization: authToken,
+            'X-ACCESS-TOKEN': xAccessToken
+          }
+        });
+
+        // If we get a 404 on retry, it means the PDF is not ready yet.
+        // Keep retrying until we reach the max retry count.
+        if (
+          response.status === 404 &&
+          response.headers.get('content-type') === 'application/json' &&
+          url.includes('?retry=true')
+        ) {
+          if (retryCount < maxRetries) {
+            setTimeout(() => {
+              fetchPdf(`${pdfUrl}?retry=true`);
+            }, waitBetweenTries);
+            ++retryCount;
+          } else {
+            toast.error('Failed to download PDF!');
+          }
+          return;
+        }
+
+        // If we get a 201, it means the PDF generation has been triggered.
+        // Retry after some time to check if the PDF is ready for download.
+        if (
+          response.status === 201 &&
+          response.headers.get('content-type') === 'application/json'
+        ) {
+          const result = await response.json();
+
+          if (result?.message) {
+            toast.update(result.message);
+          }
+
+          setTimeout(() => {
+            fetchPdf(`${pdfUrl}?retry=true`);
+          }, 3000);
+          ++retryCount;
+
+          return;
+        }
+
+        // If we get a 200 and content-type is application/pdf, it means the
+        // PDF is ready for download. Download the PDF blob and save it.
+        if (
+          response.status === 200 &&
+          response.headers.get('content-type') === 'application/pdf'
+        ) {
+          const pdfBlob = await response.blob();
+          saveAs(pdfBlob, pdfFileName);
+          toast.success('PDF downloaded successfully!');
+          return;
+        }
+
+        toast.error('Failed to download PDF!');
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e);
+        toast.error('Failed to download PDF!');
+      }
+    }
+
+    fetchPdf(pdfUrl);
+  }, [atbd]);
 
   const dropProps = useMemo(() => {
     const triggerProps = {
@@ -76,12 +174,19 @@ export default function DocumentDownloadMenu(props) {
       title: `Download document for version ${version}`,
       href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
       /* eslint-disable-next-line react/display-name */
-      render: (props) => (
-        <DropMenuItemOutboundLink
-          {...props}
-          eventLabel={`PDF ${atbd.id}/${version}`}
-        />
-      )
+      render: (p) => {
+        return (
+          <DropMenuItemEnhanced
+            data-dropdown='click.close'
+            key={p.id}
+            eventLabel={`PDF ${atbd.id}/${version}`}
+            onClick={handlePdfDownloadClick}
+            title={p.menuItem.title}
+          >
+            {p.menuItem.label}
+          </DropMenuItemEnhanced>
+        );
+      }
     });
 
     return {
@@ -91,7 +196,14 @@ export default function DocumentDownloadMenu(props) {
         items: pdfLinks
       }
     };
-  }, [hideText, variation, token, atbd, canDownloadJournalPdf]);
+  }, [
+    hideText,
+    variation,
+    token,
+    atbd,
+    canDownloadJournalPdf,
+    handlePdfDownloadClick
+  ]);
 
   return (
     <DropdownMenu

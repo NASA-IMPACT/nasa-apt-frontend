@@ -1,0 +1,35 @@
+@page {
+  margin-top: 15mm;
+  margin-bottom: 15mm;
+  margin-left: 10mm;
+  margin-right: 10mm;
+
+  @bottom-right {
+    content: counter(page);
+  }
+}
+
+h1 {
+  break-before: page;
+}
+
+.toc-page-number::after {
+  content: target-counter(attr(data-target), page);
+}
+
+.toc-section .toc-section {
+  padding-left: 1rem;
+}
+
+.slate-p {
+  text-indent: 24pt;
+}
+
+.slate-p span {
+  text-indent: initial;
+}
+
+:is(dd, td, li) .slate-p {
+  text-indent: initial!important;
+}
+

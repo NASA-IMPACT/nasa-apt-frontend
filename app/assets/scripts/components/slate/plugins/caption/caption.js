@@ -27,14 +27,14 @@ export function Caption(props) {
 
   const emptyCaption = !Node.string(element);
 
-  if (readOnly && emptyCaption) return null;
+  // if (readOnly && emptyCaption) return null;
 
   // The current version of Slate has no way to render a placeholder on an
   // element. The best way is to create an element which is absolutely
   // positioned and has no interaction.
   return (
     <CaptionElement {...attributes} {...htmlAttributes} isEmpty={emptyCaption}>
-      {!isSelected && emptyCaption && (
+      {!readOnly && !isSelected && emptyCaption && (
         <Placeholder contentEditable={false}>
           Write a caption (optional)
         </Placeholder>

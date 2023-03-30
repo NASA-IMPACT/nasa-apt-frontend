@@ -12,7 +12,8 @@ import HeadingWActions from '../../../styles/heading-with-actions';
 
 import {
   createDocumentReferenceIndex,
-  formatReference
+  formatReference,
+  sortReferences
 } from '../../../utils/references';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
@@ -61,11 +62,18 @@ const HeadingContextualActions = ({ id, atbd }) => {
 };
 
 // Wrapper for each of the main sections.
-const AtbdSectionBase = ({ id, title, children, atbd, ...props }) => (
+const AtbdSectionBase = ({
+  printMode,
+  id,
+  title,
+  children,
+  atbd,
+  ...props
+}) => (
   <section {...props}>
     <HeadingWActions as='h2' id={id} data-scroll='target'>
       <span>{title}</span>
-      <HeadingContextualActions id={id} atbd={atbd} />
+      {!printMode && <HeadingContextualActions id={id} atbd={atbd} />}
     </HeadingWActions>
     {children}
   </section>
@@ -89,19 +97,21 @@ const ReferencesList = styled.ol`
   && {
     list-style: none;
     margin: 0;
+    line-height: 2.5;
   }
 `;
 
 // When the section that's being rendered is a list of items we only need
 // to print the title and then the data from the children.
 // This method is a utility to just render the children.
-const AtbdSectionPassThrough = ({ element, children, atbd }) => {
+const AtbdSectionPassThrough = ({ element, children, atbd, printMode }) => {
   return (
     <AtbdSection
       key={element.id}
       id={element.id}
       title={element.label}
       atbd={atbd}
+      printMode={printMode}
     >
       {React.Children.count(children) ? children : <EmptySection />}
     </AtbdSection>
@@ -125,13 +135,14 @@ const FragmentWithOptionalEditor = ({
   HLevel,
   subsectionLevel,
   referencesUseIndex,
-  atbd
+  atbd,
+  printMode
 }) => {
   return (
     <React.Fragment>
       <HeadingWActions as={HLevel} id={element.id} data-scroll='target'>
         <span>{element.label}</span>
-        <HeadingContextualActions id={element.id} atbd={atbd} />
+        {!printMode && <HeadingContextualActions id={element.id} atbd={atbd} />}
       </HeadingWActions>
       {withEditor && (
         <SafeReadEditor
@@ -159,7 +170,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
     <DetailsList>
       <dt>Url</dt>
       <dd>
-        <p
+        <div
           itemProp='distribution'
           itemScope
           itemType='https://schema.org/DataDownload'
@@ -173,7 +184,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
           >
             {url}
           </a>
-        </p>
+        </div>
       </dd>
       <dt>Description</dt>
       <dd>
@@ -210,7 +221,12 @@ const VariableItem = ({ element, variable }) => (
 
 const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   <AtbdSubSection itemScope itemType='https://schema.org/ContactPoint'>
-    <h3 id={id} data-scroll='target' itemProp='name'>
+    <h3
+      id={id}
+      className='pdf-preview-no-toc'
+      data-scroll='target'
+      itemProp='name'
+    >
       {label}
     </h3>
     <DetailsList type='horizontal'>
@@ -315,12 +331,13 @@ export const atbdContentSections = [
     id: 'abstract',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.abstract, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -341,12 +358,13 @@ export const atbdContentSections = [
     id: 'plain_summary',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.plain_summary, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -369,12 +387,13 @@ export const atbdContentSections = [
       !!serializeSlateToString(document.version_description),
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.version_description, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -395,12 +414,13 @@ export const atbdContentSections = [
     id: 'introduction',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.introduction, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           context={{
@@ -555,11 +575,13 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'input_variables',
-        render: ({ element, children, atbd }) => (
+        render: ({ printMode, element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} atbd={atbd} />
+              {!printMode && (
+                <HeadingContextualActions id={element.id} atbd={atbd} />
+              )}
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -578,11 +600,13 @@ export const atbdContentSections = [
       {
         label: 'Algorithm Output Variables',
         id: 'output_variables',
-        render: ({ element, children, atbd }) => (
+        render: ({ printMode, element, children, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
-              <HeadingContextualActions id={element.id} atbd={atbd} />
+              {!printMode && (
+                <HeadingContextualActions id={element.id} atbd={atbd} />
+              )}
             </HeadingWActions>
             {React.Children.count(children) ? children : <EmptySection />}
           </React.Fragment>
@@ -654,12 +678,13 @@ export const atbdContentSections = [
     id: 'constraints',
     editorSubsections: (document, { id }) =>
       subsectionsFromSlateDocument(document.algorithm_usage_constraints, id),
-    render: ({ element, document, referencesUseIndex, atbd }) => (
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <SafeReadEditor
           value={document.algorithm_usage_constraints}
@@ -859,12 +884,13 @@ export const atbdContentSections = [
   {
     label: 'Contacts',
     id: 'contacts',
-    render: ({ element, children, atbd }) => (
+    render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         {React.Children.count(children) ? (
           children
@@ -894,29 +920,17 @@ export const atbdContentSections = [
   {
     label: 'References',
     id: 'references',
-    render: ({ element, document, referencesUseIndex, atbd }) => {
-      const referencesInUse = Object.values(referencesUseIndex);
+    render: ({ element, referenceList, atbd, printMode }) => {
       return (
         <AtbdSection
           key={element.id}
           id={element.id}
           title={element.label}
           atbd={atbd}
+          printMode={printMode}
         >
-          {referencesInUse.length ? (
-            <ReferencesList>
-              {referencesInUse.map(({ docIndex, refId }) => {
-                const ref = (document.publication_references || []).find(
-                  (r) => r.id === refId
-                );
-                return (
-                  <li key={refId}>
-                    [{docIndex}]{' '}
-                    {ref ? formatReference(ref) : 'Reference not found'}
-                  </li>
-                );
-              })}
-            </ReferencesList>
+          {referenceList.length ? (
+            <ReferencesList>{referenceList}</ReferencesList>
           ) : (
             <p>No references were used in this document.</p>
           )}
@@ -928,12 +942,14 @@ export const atbdContentSections = [
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
-    render: ({ element, children, atbd }) => (
+    render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-hidden'
         key={element.id}
         id={element.id}
         title={element.label}
         atbd={atbd}
+        printMode={printMode}
       >
         <p>
           <em>
@@ -948,12 +964,13 @@ export const atbdContentSections = [
       {
         label: 'Key Points',
         id: 'key_points',
-        render: ({ element, document, atbd }) => (
+        render: ({ element, document, atbd, printMode }) => (
           <AtbdSection
             key={element.id}
             id={element.id}
             title={element.label}
             atbd={atbd}
+            printMode={printMode}
           >
             <MultilineString
               value={document.key_points}
@@ -1018,26 +1035,55 @@ export const atbdContentSections = [
 ];
 
 export default function DocumentBody(props) {
-  const { atbd } = props;
+  const { atbd, disableScrollManagement } = props;
   const document = atbd.document;
 
   // Scroll to an existing hash when the component mounts.
-  useScrollToHashOnMount();
+  useScrollToHashOnMount(disableScrollManagement);
   // Setup the listener to change active links.
-  useScrollListener();
+  useScrollListener(disableScrollManagement);
 
   const referencesUseIndex = useMemo(
     () => createDocumentReferenceIndex(document),
     [document]
   );
 
+  const referenceList = useMemo(
+    () =>
+      Object.values(referencesUseIndex)
+        .sort(function (a, b) {
+          const refA = (document.publication_references || []).find(
+            (r) => r.id === a.refId
+          );
+          const refB = (document.publication_references || []).find(
+            (r) => r.id === b.refId
+          );
+
+          return sortReferences(refA, refB);
+        })
+        .map(({ refId }) => {
+          const ref = (document.publication_references || []).find(
+            (r) => r.id === refId
+          );
+          return (
+            <li key={refId}>
+              {ref ? formatReference(ref, 'jsx') : 'Reference not found'}
+            </li>
+          );
+        }),
+    [referencesUseIndex, document.publication_references]
+  );
+
   return renderElements(atbdContentSections, {
     document,
     referencesUseIndex,
-    atbd
+    referenceList,
+    atbd,
+    printMode: disableScrollManagement
   });
 }
 
 DocumentBody.propTypes = {
-  atbd: T.object
+  atbd: T.object,
+  disableScrollManagement: T.bool
 };
