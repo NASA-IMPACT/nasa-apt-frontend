@@ -5,7 +5,9 @@ import styled from 'styled-components';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
-import DocumentContent from '../single-view/document-content';
+import DocumentBody from '../single-view/document-body';
+import DocumentTitle from '../single-view/document-title';
+import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
 
 const TocHeader = styled.h1`
@@ -220,20 +222,20 @@ function PdfPreview() {
           to work properly (No idea why though!)
         */
         <PreviewContainer className='pdf-preview'>
-          <div id='content' ref={contentRef}>
-            <div>
+          <div ref={contentRef}>
+            <DocumentProse className='preview-page-title'>
+              <DocumentTitle data={atbd.data} />
+            </DocumentProse>
+            <div className='preview-page-toc'>
               <TocHeader>Table of Contents</TocHeader>
               <div
                 className='preview-table-of-content'
                 id='table-of-contents'
               />
             </div>
-            <div className='preview-page-content'>
-              <DocumentContent
-                atbdData={atbd.data}
-                disableScrollManagement={true}
-              />
-            </div>
+            <DocumentProse className='preview-page-content'>
+              <DocumentBody atbd={atbd.data} disableScrollManagement={true} />
+            </DocumentProse>
           </div>
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
