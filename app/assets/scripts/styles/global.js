@@ -38,6 +38,10 @@ ${reactTippyStyles()}
     break-inside: avoid;
   }
 
+  .preview-page-toc {
+    break-before: page;
+  }
+
   .preview-page-content {
     break-before: page;
   }
