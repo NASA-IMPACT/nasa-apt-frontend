@@ -391,7 +391,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.version_description, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
-        className='pdf-preview-break-before-page'
+        className='pdf-preview-no-toc'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -419,6 +419,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.introduction, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-break-before-page'
         key={element.id}
         id={element.id}
         title={element.label}
