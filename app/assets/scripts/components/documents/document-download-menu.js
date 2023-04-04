@@ -44,7 +44,7 @@ export default function DocumentDownloadMenu(props) {
     const { id, version, alias } = atbd;
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
-    const maxRetries = 10;
+    const maxRetries = 50;
     const waitBetweenTries = 5000;
     const toast = createProcessToast('Downloading PDF, please wait...');
     let retryCount = 0;
@@ -106,7 +106,7 @@ export default function DocumentDownloadMenu(props) {
 
           setTimeout(() => {
             fetchPdf(`${pdfUrl}?retry=true`);
-          }, 3000);
+          }, 30000);
           ++retryCount;
 
           return;
