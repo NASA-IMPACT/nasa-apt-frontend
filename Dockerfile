@@ -6,7 +6,6 @@ RUN mkdir /apt-frontend
 WORKDIR /apt-frontend
 
 COPY .prettierrc /apt-frontend/.prettierrc
-COPY .npmrc /apt-frontend/.npmrc
 COPY package.json /apt-frontend
 COPY yarn.lock /apt-frontend
 COPY gulpfile.js /apt-frontend
