@@ -40,9 +40,13 @@ ${reactTippyStyles()}
 
   .reference-list {
     line-height: 1.5!important;
+    text-indent: -1rem;
+    padding: 1rem;
 
     li {
-      margin-top: 1rem;
+      &:not(:first-child) {
+        margin-top: 1rem;
+      }
     }
   }
 
