@@ -106,7 +106,7 @@ export default function DocumentDownloadMenu(props) {
 
           setTimeout(() => {
             fetchPdf(`${pdfUrl}?retry=true`);
-          }, 30000);
+          }, 10000);
           ++retryCount;
 
           return;
