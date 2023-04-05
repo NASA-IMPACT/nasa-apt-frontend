@@ -44,9 +44,12 @@ export default function DocumentDownloadMenu(props) {
     const { id, version, alias } = atbd;
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
-    const maxRetries = 10;
+    // maxRetries * waitBetweenTries = time before user is given an error toast
+    // 30 * 5000 = 150s
+    const maxRetries = 30;
     const waitBetweenTries = 5000;
     const toast = createProcessToast('Downloading PDF, please wait...');
+    const initialWait = 10000;
     let retryCount = 0;
 
     async function fetchPdf(url) {
@@ -87,7 +90,9 @@ export default function DocumentDownloadMenu(props) {
             }, waitBetweenTries);
             ++retryCount;
           } else {
-            toast.error('Failed to download PDF!');
+            toast.error(
+              'Failed to download PDF. Please retry after several minutes. If this error persists, please contact the APT team.'
+            );
           }
           return;
         }
@@ -106,7 +111,7 @@ export default function DocumentDownloadMenu(props) {
 
           setTimeout(() => {
             fetchPdf(`${pdfUrl}?retry=true`);
-          }, 3000);
+          }, initialWait);
           ++retryCount;
 
           return;
