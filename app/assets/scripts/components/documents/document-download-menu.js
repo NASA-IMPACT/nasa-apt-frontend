@@ -47,6 +47,7 @@ export default function DocumentDownloadMenu(props) {
     const maxRetries = 50;
     const waitBetweenTries = 5000;
     const toast = createProcessToast('Downloading PDF, please wait...');
+    const initialWait = 10000;
     let retryCount = 0;
 
     async function fetchPdf(url) {
@@ -106,7 +107,7 @@ export default function DocumentDownloadMenu(props) {
 
           setTimeout(() => {
             fetchPdf(`${pdfUrl}?retry=true`);
-          }, 10000);
+          }, initialWait);
           ++retryCount;
 
           return;
