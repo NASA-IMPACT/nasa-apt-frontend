@@ -82,8 +82,6 @@ const EquationPreviewSubtitle = styled.p`
 const EquationPreviewBody = styled.div`
   text-align: center;
   color: ${themeVal('color.danger')};
-  overflow-x: auto;
-  overflow-y: hidden;
   padding: ${glsp(0.5, 0, 1, 0)};
   margin-bottom: ${glsp(-1)};
 
