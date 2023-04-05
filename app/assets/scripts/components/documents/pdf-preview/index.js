@@ -120,11 +120,21 @@ function generateTocAndHeadingNumbering(content) {
         // Generating the heading number and injecting it to the content.
         // So, it appears both in the ToC and in the content.
         const headingNumber = `${parentHeadingNumber}${i + 1}.`;
-        if (subHeading.children[0]) {
-          subHeading.children[0].prepend(`${headingNumber} `);
-        } else {
-          subHeading.prepend(`${headingNumber} `);
+
+        const skipNumbering =
+          subHeading.classList.contains('pdf-preview-no-numbering') ||
+          subHeading
+            .closest('section')
+            ?.classList.contains('pdf-preview-no-numbering');
+
+        if (!skipNumbering) {
+          if (subHeading.children[0]) {
+            subHeading.children[0].prepend(`${headingNumber} `);
+          } else {
+            subHeading.prepend(`${headingNumber} `);
+          }
         }
+
         const subHeadingTitle = getTitleElement(
           subHeading.id,
           subHeading.innerText
@@ -147,6 +157,7 @@ function generateTocAndHeadingNumbering(content) {
   function generateHeading() {
     const sectionHeadings = content.querySelectorAll('h2');
     let skippedHeadings = 0;
+    let skippedNumberings = 0;
     Array.from(sectionHeadings).forEach((heading, i) => {
       if (
         heading.closest('section')?.classList.contains('pdf-preview-no-toc') ||
@@ -159,8 +170,17 @@ function generateTocAndHeadingNumbering(content) {
       section.classList.add('toc-section');
       tocElement.append(section);
 
-      const headingNumber = `${i + 1 - skippedHeadings}.`;
-      if (heading.children[0]) {
+      const skipNumbering =
+        heading.classList.contains('pdf-preview-no-numbering') ||
+        heading
+          .closest('section')
+          ?.classList.contains('pdf-preview-no-numbering');
+      const headingNumber = `${i + 1 - skippedHeadings - skippedNumberings}.`;
+      if (skipNumbering) {
+        skippedNumberings += 1;
+      }
+
+      if (heading.children[0] && !skipNumbering) {
         // Inject the heading number to the content itself
         // so that it appears both in the document heading
         // and in the ToC

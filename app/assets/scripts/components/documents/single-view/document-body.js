@@ -333,7 +333,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.abstract, id),
     render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
       <AtbdSection
-        className='pdf-preview-no-toc'
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -361,7 +361,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.plain_summary, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
-        className='pdf-preview-no-toc'
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -391,7 +391,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.version_description, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
-        className='pdf-preview-no-toc'
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
