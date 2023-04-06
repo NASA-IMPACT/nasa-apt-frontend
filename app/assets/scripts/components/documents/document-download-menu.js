@@ -44,9 +44,7 @@ export default function DocumentDownloadMenu(props) {
     const { id, version, alias } = atbd;
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
-    // maxRetries * waitBetweenTries = time before user is given an error toast
-    // 30 * 5000 = 150s
-    const maxRetries = 30;
+    const maxRetries = 50;
     const waitBetweenTries = 5000;
     const toast = createProcessToast('Downloading PDF, please wait...');
     const initialWait = 10000;
