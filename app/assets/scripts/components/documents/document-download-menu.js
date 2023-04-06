@@ -52,7 +52,7 @@ export default function DocumentDownloadMenu(props) {
 
     async function fetchPdf(url) {
       if (retryCount > 0) {
-        toast.update('Generating the PDF. This may take a minute...');
+        toast.update('Generating the PDF. This may take up to 5 minutes.');
       }
       const user = await Auth.currentAuthenticatedUser();
       if (!user) {
