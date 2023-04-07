@@ -44,9 +44,7 @@ export default function DocumentDownloadMenu(props) {
     const { id, version, alias } = atbd;
     const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
-    // maxRetries * waitBetweenTries = time before user is given an error toast
-    // 30 * 5000 = 150s
-    const maxRetries = 30;
+    const maxRetries = 50;
     const waitBetweenTries = 5000;
     const toast = createProcessToast('Downloading PDF, please wait...');
     const initialWait = 10000;
@@ -54,7 +52,7 @@ export default function DocumentDownloadMenu(props) {
 
     async function fetchPdf(url) {
       if (retryCount > 0) {
-        toast.update('Generating the PDF. This may take a minute...');
+        toast.update('Generating the PDF. This may take up to 5 minutes.');
       }
       const user = await Auth.currentAuthenticatedUser();
       if (!user) {
