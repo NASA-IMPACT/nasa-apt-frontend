@@ -52,10 +52,11 @@ export const onTableUse = (editor, btnId) => {
           }
         });
 
-        const tableLength = table[0].children[0].length;
+        const tableEl = Array.isArray(table) ? table[0] : table;
+        const tableColumnLength = tableEl.children?.[0]?.children?.length ?? 0;
 
         const maxColumns = 10;
-        if (tableLength < maxColumns) {
+        if (tableColumnLength < maxColumns) {
           addColumn(editor);
         } else {
           toast.error(`Max number of columns (${maxColumns}) reached!`);
