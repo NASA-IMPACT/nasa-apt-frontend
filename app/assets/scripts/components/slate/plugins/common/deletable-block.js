@@ -53,8 +53,6 @@ ${({ isDeleting }) =>
 `;
 
 const DeletableBlockElementInner = styled.div`
-  overflow-x: auto;
-
   & > * {
     margin-bottom: ${glsp()};
   }
