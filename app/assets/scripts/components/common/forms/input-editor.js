@@ -21,7 +21,7 @@ function validateImageBlock(value) {
     );
 
     if (hasEmptyCaption) {
-      return 'The caption should not be empty!';
+      return 'A figure caption is required.';
     }
   }
 
