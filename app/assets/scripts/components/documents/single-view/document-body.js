@@ -333,6 +333,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.abstract, id),
     render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -360,6 +361,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.plain_summary, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -389,6 +391,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.version_description, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -416,6 +419,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.introduction, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-break-before-page'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -928,9 +932,12 @@ export const atbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
+          className='pdf-preview-break-before-page'
         >
           {referenceList.length ? (
-            <ReferencesList>{referenceList}</ReferencesList>
+            <ReferencesList className='reference-list'>
+              {referenceList}
+            </ReferencesList>
           ) : (
             <p>No references were used in this document.</p>
           )}

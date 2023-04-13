@@ -5,7 +5,9 @@ import styled from 'styled-components';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
-import DocumentContent from '../single-view/document-content';
+import DocumentBody from '../single-view/document-body';
+import DocumentTitle from '../single-view/document-title';
+import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
 
 const TocHeader = styled.h1`
@@ -75,7 +77,11 @@ function generateTocAndHeadingNumbering(content) {
     if (userDefinedHeadings) {
       currentSubHeadings.push(
         ...Array.from(userDefinedHeadings).filter(
-          (subHeading) => !subHeading.classList.contains('pdf-preview-no-toc')
+          (subHeading) =>
+            !subHeading.classList.contains('pdf-preview-no-toc') ||
+            subHeading
+              .closest('section')
+              ?.classList.contains('pdf-preview-no-toc')
         )
       );
     }
@@ -89,13 +95,17 @@ function generateTocAndHeadingNumbering(content) {
       currentEl.nextElementSibling.tagName !== `H${currentLevel}`
     ) {
       const nextSibling = currentEl.nextElementSibling;
-      const nonPreviewable = nextSibling.classList.contains(
-        'pdf-preview-no-toc'
-      );
       const isSubHeading = nextSibling.tagName === `H${currentLevel + 1}`;
 
-      if (!nonPreviewable && isSubHeading) {
-        currentSubHeadings.push(nextSibling);
+      if (isSubHeading) {
+        const nonPreviewable =
+          nextSibling.classList.contains('pdf-preview-no-toc') ||
+          nextSibling
+            .closest('section')
+            ?.classList.contains('pdf-preview-no-toc');
+        if (!nonPreviewable) {
+          currentSubHeadings.push(nextSibling);
+        }
       }
 
       currentEl = nextSibling;
@@ -110,11 +120,21 @@ function generateTocAndHeadingNumbering(content) {
         // Generating the heading number and injecting it to the content.
         // So, it appears both in the ToC and in the content.
         const headingNumber = `${parentHeadingNumber}${i + 1}.`;
-        if (subHeading.children[0]) {
-          subHeading.children[0].prepend(`${headingNumber} `);
-        } else {
-          subHeading.prepend(`${headingNumber} `);
+
+        const skipNumbering =
+          subHeading.classList.contains('pdf-preview-no-numbering') ||
+          subHeading
+            .closest('section')
+            ?.classList.contains('pdf-preview-no-numbering');
+
+        if (!skipNumbering) {
+          if (subHeading.children[0]) {
+            subHeading.children[0].prepend(`${headingNumber} `);
+          } else {
+            subHeading.prepend(`${headingNumber} `);
+          }
         }
+
         const subHeadingTitle = getTitleElement(
           subHeading.id,
           subHeading.innerText
@@ -136,13 +156,31 @@ function generateTocAndHeadingNumbering(content) {
   // and calls generateSubHeadings to find subheadings between 2 consecutive headings
   function generateHeading() {
     const sectionHeadings = content.querySelectorAll('h2');
+    let skippedHeadings = 0;
+    let skippedNumberings = 0;
     Array.from(sectionHeadings).forEach((heading, i) => {
+      if (
+        heading.closest('section')?.classList.contains('pdf-preview-no-toc') ||
+        heading.classList.contains('pdf-preview-no-toc')
+      ) {
+        skippedHeadings += 1;
+        return;
+      }
       const section = document.createElement('div');
       section.classList.add('toc-section');
       tocElement.append(section);
 
-      const headingNumber = `${i + 1}.`;
-      if (heading.children[0]) {
+      const skipNumbering =
+        heading.classList.contains('pdf-preview-no-numbering') ||
+        heading
+          .closest('section')
+          ?.classList.contains('pdf-preview-no-numbering');
+      const headingNumber = `${i + 1 - skippedHeadings - skippedNumberings}.`;
+      if (skipNumbering) {
+        skippedNumberings += 1;
+      }
+
+      if (heading.children[0] && !skipNumbering) {
         // Inject the heading number to the content itself
         // so that it appears both in the document heading
         // and in the ToC
@@ -220,20 +258,20 @@ function PdfPreview() {
           to work properly (No idea why though!)
         */
         <PreviewContainer className='pdf-preview'>
-          <div id='content' ref={contentRef}>
-            <div>
+          <div ref={contentRef}>
+            <DocumentProse className='preview-page-title'>
+              <DocumentTitle data={atbd.data} />
+            </DocumentProse>
+            <div className='preview-page-toc'>
               <TocHeader>Table of Contents</TocHeader>
               <div
                 className='preview-table-of-content'
                 id='table-of-contents'
               />
             </div>
-            <div className='preview-page-content'>
-              <DocumentContent
-                atbdData={atbd.data}
-                disableScrollManagement={true}
-              />
-            </div>
+            <DocumentProse className='preview-page-content'>
+              <DocumentBody atbd={atbd.data} disableScrollManagement={true} />
+            </DocumentProse>
           </div>
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>

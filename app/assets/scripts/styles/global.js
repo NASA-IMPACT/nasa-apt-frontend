@@ -38,6 +38,26 @@ ${reactTippyStyles()}
     break-inside: avoid;
   }
 
+  .reference-list {
+    line-height: 1.5!important;
+    text-indent: -1rem;
+    padding: 1rem;
+
+    li {
+      &:not(:first-child) {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  .pdf-preview-break-before-page {
+    break-before: page;
+  }
+
+  .preview-page-toc {
+    break-before: page;
+  }
+
   .preview-page-content {
     break-before: page;
   }

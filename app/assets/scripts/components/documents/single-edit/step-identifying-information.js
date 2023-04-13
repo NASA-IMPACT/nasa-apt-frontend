@@ -22,6 +22,7 @@ import { getDocumentSectionLabel } from './sections';
 import { isPublished } from '../status';
 import { LocalStore } from './local-store';
 import { FormikUnloadPrompt } from '../../common/unload-prompt';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 export default function StepIdentifyingInformation(props) {
   const {
@@ -74,87 +75,90 @@ export default function StepIdentifyingInformation(props) {
           <FormBlock>
             <FormBlockHeading>{step.label}</FormBlockHeading>
             <Form as={FormikForm}>
-              <SectionFieldset
-                label={getDocumentSectionLabel('general')}
-                commentSection='general'
-              >
-                <p>
-                  <em>
-                    Updates to the general information will affect all versions.
-                  </em>
-                </p>
-                <FormikInputText
-                  id='title'
-                  name='title'
-                  label='ATBD Title'
-                  description={formString('identifying_information.title')}
-                />
-                <FieldAtbdAlias disabled={hasAnyVersionPublished} />
-              </SectionFieldset>
-
-              <SectionFieldset label='DOI'>
-                <FormikInputText
-                  id='doi'
-                  name='doi'
-                  label='DOI'
-                  description={formString('identifying_information.doi')}
-                  helper={
-                    <FormHelperMessage>
-                      Use the DOI name (ex: 10.1000/xyz123) instead of the full
-                      url
-                    </FormHelperMessage>
-                  }
-                />
-              </SectionFieldset>
-
-              <FormikSectionFieldset
-                label={getDocumentSectionLabel('version_description')}
-                sectionName='sections_completed.version_description'
-                commentSection='version_description'
-              >
-                <FormikInputEditor
-                  id='version_description'
-                  name='document.version_description'
-                  label='Version description'
-                  description={formString(
-                    'identifying_information.version_description'
-                  )}
-                  helper={
-                    <FormHelperMessage>
-                      This field is only important when document version is
-                      greater than 1.
-                    </FormHelperMessage>
-                  }
-                />
-              </FormikSectionFieldset>
-
-              <FormikSectionFieldset
-                label={getDocumentSectionLabel('citation')}
-                sectionName='sections_completed.citation'
-                commentSection='citation'
-              >
-                {citationFields.map((field) => (
+              <RichTextContex2Formik>
+                <SectionFieldset
+                  label={getDocumentSectionLabel('general')}
+                  commentSection='general'
+                >
+                  <p>
+                    <em>
+                      Updates to the general information will affect all
+                      versions.
+                    </em>
+                  </p>
                   <FormikInputText
-                    key={field.name}
-                    id={`citation-${field.name}`}
-                    name={`citation.${field.name}`}
-                    label={field.label}
-                    description={
-                      field.description === formStringSymbol
-                        ? formString(
-                            `identifying_information.citation.${field.name}`
-                          )
-                        : field.description
-                    }
+                    id='title'
+                    name='title'
+                    label='ATBD Title'
+                    description={formString('identifying_information.title')}
+                  />
+                  <FieldAtbdAlias disabled={hasAnyVersionPublished} />
+                </SectionFieldset>
+
+                <SectionFieldset label='DOI'>
+                  <FormikInputText
+                    id='doi'
+                    name='doi'
+                    label='DOI'
+                    description={formString('identifying_information.doi')}
                     helper={
-                      typeof field.helper === 'function'
-                        ? field.helper(atbd)
-                        : field.helper
+                      <FormHelperMessage>
+                        Use the DOI name (ex: 10.1000/xyz123) instead of the
+                        full url
+                      </FormHelperMessage>
                     }
                   />
-                ))}
-              </FormikSectionFieldset>
-              {renderFormFooter()}
+                </SectionFieldset>
+
+                <FormikSectionFieldset
+                  label={getDocumentSectionLabel('version_description')}
+                  sectionName='sections_completed.version_description'
+                  commentSection='version_description'
+                >
+                  <FormikInputEditor
+                    id='version_description'
+                    name='document.version_description'
+                    label='Version description'
+                    description={formString(
+                      'identifying_information.version_description'
+                    )}
+                    helper={
+                      <FormHelperMessage>
+                        This field is only important when document version is
+                        greater than 1.
+                      </FormHelperMessage>
+                    }
+                  />
+                </FormikSectionFieldset>
+
+                <FormikSectionFieldset
+                  label={getDocumentSectionLabel('citation')}
+                  sectionName='sections_completed.citation'
+                  commentSection='citation'
+                >
+                  {citationFields.map((field) => (
+                    <FormikInputText
+                      key={field.name}
+                      id={`citation-${field.name}`}
+                      name={`citation.${field.name}`}
+                      label={field.label}
+                      description={
+                        field.description === formStringSymbol
+                          ? formString(
+                              `identifying_information.citation.${field.name}`
+                            )
+                          : field.description
+                      }
+                      helper={
+                        typeof field.helper === 'function'
+                          ? field.helper(atbd)
+                          : field.helper
+                      }
+                    />
+                  ))}
+                </FormikSectionFieldset>
+                {renderFormFooter()}
+              </RichTextContex2Formik>
             </Form>
           </FormBlock>
         </InpageBody>
