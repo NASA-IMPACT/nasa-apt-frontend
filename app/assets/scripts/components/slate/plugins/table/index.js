@@ -4,8 +4,11 @@ import {
   addRow,
   deleteRow,
   addColumn,
-  deleteColumn
+  getAbove,
+  deleteColumn,
+  ELEMENT_TABLE
 } from '@udecode/slate-plugins';
+import { toast } from 'react-toastify';
 
 import { modKey } from '../common/utils';
 import {
@@ -42,7 +45,23 @@ export const onTableUse = (editor, btnId) => {
       deleteRow(editor);
       break;
     case 'add-column':
-      addColumn(editor);
+      {
+        const table = getAbove(editor, {
+          match: {
+            type: ELEMENT_TABLE
+          }
+        });
+
+        const tableEl = Array.isArray(table) ? table[0] : table;
+        const tableColumnLength = tableEl.children?.[0]?.children?.length ?? 0;
+
+        const maxColumns = 10;
+        if (tableColumnLength < maxColumns) {
+          addColumn(editor);
+        } else {
+          toast.error(`Max number of columns (${maxColumns}) reached!`);
+        }
+      }
       break;
     case 'delete-column':
       deleteColumn(editor);

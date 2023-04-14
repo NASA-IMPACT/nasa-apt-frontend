@@ -236,7 +236,7 @@ export default function CommentEntry(props) {
               render: (props) => (
                 <MenuItemReasonDisabled
                   {...props}
-                  isDisabled={!isEntryAuthor && !isCurator}
+                  isDisabled={!isEntryAuthor}
                   tipMessage='You can only edit your own comments'
                 />
               )
