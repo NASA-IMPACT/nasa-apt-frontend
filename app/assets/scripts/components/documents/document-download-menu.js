@@ -115,14 +115,15 @@ export default function DocumentDownloadMenu(props) {
           return;
         }
 
-        // If we get a 200 and content-type is application/pdf, it means the
-        // PDF is ready for download. Download the PDF blob and save it.
+        // If we get a 200, it means the PDF is ready for download.
+        // We get the s3 url and use file saver to download and save the pdf.
         if (
           response.status === 200 &&
-          response.headers.get('content-type') === 'application/pdf'
+          response.headers.get('content-type') === 'application/json'
         ) {
-          const pdfBlob = await response.blob();
-          saveAs(pdfBlob, pdfFileName);
+          const result = await response.json();
+
+          await saveAs(result.pdf_url, pdfFileName);
           toast.success('PDF downloaded successfully!');
           return;
         }
