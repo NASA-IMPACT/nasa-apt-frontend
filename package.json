@@ -46,6 +46,7 @@
     "@babel/preset-react": "^7.16.0",
     "@parcel/reporter-bundle-analyzer": "^2.0.0",
     "@parcel/reporter-bundle-buddy": "^2.0.0",
+    "@playwright/test": "^1.32.1",
     "babel-eslint": "^10.1.0",
     "crypto-browserify": "^3.12.0",
     "cypress": "^10.3.1",
