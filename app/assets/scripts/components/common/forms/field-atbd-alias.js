@@ -253,7 +253,7 @@ export default function FieldAtbdAlias(props) {
                 </FormHelperMessage>
               ) : (
                 <FormHelperMessage>
-                  Only alphanumeric characters and dashes are allowed.
+                  Only alphanumeric characters are allowed.
                 </FormHelperMessage>
               )}
             </div>
