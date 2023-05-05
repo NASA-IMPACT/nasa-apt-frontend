@@ -180,7 +180,7 @@ const UrlDescriptionSection = (props) => {
                 <FormikInputText
                   id={`${name}.${index}.url`}
                   name={`${name}.${index}.url`}
-                  label='Url'
+                  label='URL'
                   description={urlFieldInfo}
                 />
                 <FormikInputTextarea

@@ -82,6 +82,13 @@ export default function StepIdentifyingInformation(props) {
                 >
                   <p>
                     <em>
+                      For newly created ATBDs, only the title and alias must be
+                      completed when starting. Other items are either auto
+                      generated or can be input at a later time.
+                    </em>
+                  </p>
+                  <p>
+                    <em>
                       Updates to the following two elements affect this and
                       future versions of the document.
                     </em>
