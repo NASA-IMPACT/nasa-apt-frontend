@@ -83,11 +83,11 @@ const detailsFields = [
   },
   {
     id: 'uuid',
-    label: 'Uuid'
+    label: 'UUID'
   },
   {
     id: 'url',
-    label: 'Url'
+    label: 'URL'
   }
 ];
 
