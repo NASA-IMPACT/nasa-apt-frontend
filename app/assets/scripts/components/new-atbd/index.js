@@ -161,8 +161,8 @@ function NewAtbd() {
           <Section>
             <h2>APT User Interface</h2>
             <p>
-              Create and publish an ATBD from start to fininsh using the APT
-              user interface.
+              Create and publish an ATBD from start to finish using the APT user
+              interface.
             </p>
             <div>
               See <Link to='/user-guide'>APT user guide</Link>
@@ -183,9 +183,14 @@ function NewAtbd() {
             </p>
             <div>
               See <Link to='/'>ATBD template user guide</Link>
+              <em> (coming soon)</em>
             </div>
             <TemplateContainer>
-              <TemplateLink href='/'>
+              <TemplateLink
+                href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
+                target='_blank'
+                rel='noopener'
+              >
                 <span>
                   <FaFileAlt />
                 </span>
@@ -197,11 +202,14 @@ function NewAtbd() {
                 </span>
                 <div>Microsoft Word</div>
               </TemplateLink>
-              <TemplateLink href='/'>
+              <TemplateLink href=''>
                 <span>
                   <SiLatex />
                 </span>
-                <div>LaTeX</div>
+                <div>
+                  LaTeX <br />
+                  <em>(coming soon)</em>
+                </div>
               </TemplateLink>
             </TemplateContainer>
           </Section>
@@ -233,7 +241,7 @@ function NewAtbd() {
           <MoreInfoModal>
             <ModalHeader>
               <h3>
-                Benifits and drabacks of using the APT User Interface and ATBD
+                Benefits and drawbacks of using the APT User Interface and ATBD
                 Template
               </h3>
               <IconButton
@@ -266,18 +274,18 @@ function NewAtbd() {
                   <tr>
                     <Td>
                       <CheckIcon />
-                      User friendly tools fo rformatting, adding equations,
+                      User friendly tools for formatting, adding equations,
                       tables, etc.
                     </Td>
                     <Td>
-                      <CheckIcon /> Use familiar softawre (e.g., LaTeX) or word
+                      <CheckIcon /> Use familiar software (e.g., LaTeX) or word
                       processor (e.g., Microsoft Word)
                     </Td>
                   </tr>
                   <tr>
                     <Td>
-                      <CheckIcon /> Entire ATBD creation process within APT
-                      unser interface (i.e., creation, review, and publication)
+                      <CheckIcon /> Entire ATBD creation process within APT user
+                      interface (i.e., creation, review, and publication)
                     </Td>
                     <Td>
                       <CheckIcon /> Simultaneous collaboration (e.g., Google
