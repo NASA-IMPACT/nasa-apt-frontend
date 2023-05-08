@@ -168,7 +168,7 @@ function NewAtbd() {
               See <Link to='/user-guide'>APT user guide</Link>
             </div>
             <Video
-              src='https://www.youtube.com/embed/dQw4w9WgXcQ'
+              src=''
               title='APT - creating a document'
               frameborder='0'
               allowfullscreen
@@ -202,7 +202,7 @@ function NewAtbd() {
                 </span>
                 <div>Microsoft Word</div>
               </TemplateLink>
-              <TemplateLink href=''>
+              <TemplateLink href='/'>
                 <span>
                   <SiLatex />
                 </span>
