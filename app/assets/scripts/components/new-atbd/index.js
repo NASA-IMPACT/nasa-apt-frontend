@@ -196,7 +196,11 @@ function NewAtbd() {
                 </span>
                 <div>Google Docs</div>
               </TemplateLink>
-              <TemplateLink href='/'>
+              <TemplateLink
+                href='https://github.com/NASA-IMPACT/nasa-apt/files/11421194/APT.ATBD.Template.docx'
+                target='_blank'
+                rel='noopener'
+              >
                 <span>
                   <FaFileWord />
                 </span>
