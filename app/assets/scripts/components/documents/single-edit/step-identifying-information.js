@@ -5,7 +5,11 @@ import { Formik, Form as FormikForm } from 'formik';
 import { Form, FormHelperMessage } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
-import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
+import {
+  FormBlock,
+  FormBlockHeading,
+  FormSectionNotes
+} from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import {
@@ -80,19 +84,23 @@ export default function StepIdentifyingInformation(props) {
                   label={getDocumentSectionLabel('general')}
                   commentSection='general'
                 >
-                  <p>
-                    <em>
-                      For newly created ATBDs, only the title and alias must be
-                      completed when starting. Other items are either auto
-                      generated or can be input at a later time.
-                    </em>
-                  </p>
-                  <p>
-                    <em>
-                      Updates to the following two elements affect this and
-                      future versions of the document.
-                    </em>
-                  </p>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        For newly created ATBDs, only the title and alias must
+                        be completed when starting. Other items are either auto
+                        generated or can be input at a later time.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        Updates to the following two elements affect this and
+                        future versions of the document.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
                   <FormikInputText
                     id='title'
                     name='title'
