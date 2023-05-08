@@ -12,6 +12,11 @@ import { CollaboratorUserIdentity } from '../common/user-selectable-list';
 import { useContextualAbility } from '../../a11n';
 import { isReviewDone } from './status';
 
+import FormInfoTip from '../common/forms/form-info-tooltip';
+
+const TooltipContent =
+  "For more information on how to add collaborators and how to change the lead author, please watch <a target='_blank' rel='noreferrer' href='https://drive.google.com/drive/folders/1TcvjMS2emfLFmv0q5KirxVu9h-bp9ct1'>this video</a>.";
+
 const shadowScrollbarProps = {
   autoHeight: true,
   autoHeightMax: 320
@@ -67,6 +72,7 @@ const CollaboratorsMenuContent = (props) => {
             >
               Manage
             </Button>
+            <FormInfoTip title={TooltipContent} />
           </DropActions>
         )}
       </DropHeader>
