@@ -16,7 +16,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em>.
+        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
+        Doe).
       </FormHelperMessage>
     )
   },
@@ -26,7 +27,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em>.
+        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
+        Doe).
       </FormHelperMessage>
     )
   },
@@ -41,7 +43,7 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Use YYYY-MM-DD format. If left empty APT will use the date when the
+        Use YYYY-MM-DD format. If left empty, APT will use the date when the
         document is published.
       </FormHelperMessage>
     )
@@ -53,7 +55,8 @@ export const citationFields = [
     helper: function CitationVersionHelper(atbd) {
       return (
         <FormHelperMessage>
-          If left empty APT will the internal version (currently {atbd.version}
+          If left empty, APT will use the internal version (currently{' '}
+          {atbd.version}
           ).
         </FormHelperMessage>
       );
@@ -65,7 +68,7 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        If left empty APT will use the document landing page url.
+        If left empty, APT will use the document landing page url.
       </FormHelperMessage>
     )
   }

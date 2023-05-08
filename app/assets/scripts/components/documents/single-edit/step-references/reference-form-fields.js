@@ -24,7 +24,8 @@ const fields = [
     label: 'Authors',
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em>.
+        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
+        Doe).
       </FormHelperMessage>
     )
   },
