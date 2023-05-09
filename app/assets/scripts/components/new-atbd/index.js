@@ -240,14 +240,15 @@ function NewAtbd() {
                 </span>
                 <div>Microsoft Word</div>
               </TemplateLink>
-              <TemplateLink href='/'>
+              <TemplateLink
+                href='https://drive.google.com/file/d/1AusZOxIpkBiA0QJAB3AtSXSBUU5tWwlJ/view?usp=share_link'
+                target='_blank'
+                rel='noopener'
+              >
                 <span>
                   <SiLatex />
                 </span>
-                <div>
-                  LaTeX <br />
-                  <em>(coming soon)</em>
-                </div>
+                <div>LaTeX</div>
               </TemplateLink>
             </TemplateContainer>
           </Section>
