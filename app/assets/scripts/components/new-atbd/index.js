@@ -231,7 +231,7 @@ function NewAtbd() {
                 <div>Google Docs</div>
               </TemplateLink>
               <TemplateLink
-                href='https://github.com/NASA-IMPACT/nasa-apt/files/11421194/APT.ATBD.Template.docx'
+                href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
                 target='_blank'
                 rel='noopener'
               >
