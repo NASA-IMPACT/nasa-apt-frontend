@@ -13,6 +13,8 @@ import { SiLatex } from 'react-icons/si';
 import { GrClose } from 'react-icons/gr';
 
 import { Link } from '../../styles/clean/link';
+import { useUser } from '../../context/user';
+import { getHostedAuthUiUrl } from '../../utils/common';
 import App from '../common/app';
 import {
   Backdrop,
@@ -76,6 +78,16 @@ const Header = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+  gap: ${glsp(1.5)};
+
+  > h1 {
+    margin: 0;
+  }
+
+  > p {
+    font-size: 1.25rem;
+    font-weight: ${themeVal('type.base.medium')};
+  }
 `;
 
 const SectionContainer = styled.main`
@@ -102,12 +114,12 @@ const Video = styled.iframe`
 const TemplateContainer = styled.div`
   display: flex;
   gap: ${glsp(2)};
-  padding: ${glsp(2)};
+  padding: ${glsp(2)} 0;
 `;
 
 const TemplateLink = styled.a`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
   flex-grow: 1;
   flex-basis: 0;
@@ -130,6 +142,7 @@ const FooterContent = styled.div`
 const LearnMore = styled.div`
   text-align: center;
   font-weight: bold;
+  max-width: 32rem;
 `;
 
 const Feedback = styled.div`
@@ -150,12 +163,33 @@ const FeedbackLink = (props) => (
 
 function NewAtbd() {
   const [showMoreInfo, setShowMoreInfo] = React.useState(false);
+  const { user } = useUser();
 
   return (
     <App pageTitle='New ATBD'>
       <PageContent>
         <Header>
           <h1>ATBD Creation Choices</h1>
+          {!user.isLogged && (
+            <Feedback>
+              <a href={getHostedAuthUiUrl('signup')}>Sign up</a> now to get
+              started!
+            </Feedback>
+          )}
+          <LearnMore>
+            Unsure whether the user interface or template is right for you?
+            Click{' '}
+            <Link
+              as='button'
+              to='#'
+              onClick={() => {
+                setShowMoreInfo(true);
+              }}
+            >
+              here
+            </Link>{' '}
+            to learn more about both.
+          </LearnMore>
         </Header>
         <SectionContainer>
           <Section>
@@ -219,20 +253,6 @@ function NewAtbd() {
           </Section>
         </SectionContainer>
         <FooterContent>
-          <LearnMore>
-            Unsure whether the user interface or template is right for you?
-            Click{' '}
-            <Link
-              as='button'
-              to='#'
-              onClick={() => {
-                setShowMoreInfo(true);
-              }}
-            >
-              here
-            </Link>{' '}
-            to learn more about both.
-          </LearnMore>
           <Feedback>
             Submit bugs and recommend improvements using the{' '}
             <FeedbackLink>feedback form.</FeedbackLink>

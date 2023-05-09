@@ -19,8 +19,7 @@ import {
 import { ContentBlock } from '../styles/content-block';
 import Prose from '../styles/typography/prose';
 
-import config from '../config';
-import { getAppURL } from '../utils/history';
+import { getHostedAuthUiUrl } from '../utils/history';
 import { SectionFieldset } from '../components/common/forms/section-fieldset';
 import { FormikInputText } from '../components/common/forms/input-text';
 import { createProcessToast } from '../components/common/toasts';
@@ -29,12 +28,6 @@ import { useUser } from '../context/user';
 const OTPModal = styled(Modal)`
   max-width: 24rem;
 `;
-
-const getHostedAuthUiUrl = (page) => {
-  const clientId = config.auth.userPoolWebClientId;
-  const returnTo = getAppURL().cleanHref;
-  return `${config.hostedAuthUi}/${page}?client_id=${clientId}&response_type=token&redirect_uri=${returnTo}`;
-};
 
 const altToast = {
   update: (msg) => {
