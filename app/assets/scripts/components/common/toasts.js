@@ -23,6 +23,35 @@ CloseButton.propTypes = {
   closeToast: PropTypes.func
 };
 
+/**
+ * Common options for an error toast
+ */
+const errorToastOptions = {
+  type: toast.TYPE.ERROR,
+  closeOnClick: true,
+  closeButton: true,
+  autoClose: false,
+  draggable: true
+};
+
+/**
+ * Common options for a success toast
+ */
+const successToastOptions = {
+  type: toast.TYPE.SUCCESS,
+  closeOnClick: true,
+  closeButton: true,
+  autoClose: 3000,
+  draggable: true
+};
+
+/**
+ * Common options for an info toast
+ */
+const infoToastOptions = {
+  type: toast.TYPE.INFO
+};
+
 export default toast;
 
 /**
@@ -47,28 +76,30 @@ export const createProcessToast = (msg) => {
     update: (newMsg) => {
       toast.update(toastId, {
         render: newMsg,
-        type: toast.TYPE.INFO
+        ...infoToastOptions
       });
     },
 
     success: (successMsg) =>
       toast.update(toastId, {
-        type: toast.TYPE.SUCCESS,
         render: successMsg,
-        closeOnClick: true,
-        closeButton: true,
-        autoClose: 3000,
-        draggable: true
+        ...successToastOptions
       }),
     error: (errorMsg) =>
       toast.update(toastId, {
-        type: toast.TYPE.ERROR,
         render: errorMsg,
-        closeOnClick: true,
-        closeButton: true,
-        draggable: true
+        ...errorToastOptions
       })
   };
+};
+
+/**
+ * Creates an error toast with some default parameters
+ *
+ * @param {*} msg - Error message
+ */
+export const errorToast = (msg, options = errorToastOptions) => {
+  toast(msg, options);
 };
 
 export const ToastsContainer = styled(ToastContainer).attrs({
