@@ -7,6 +7,7 @@ import {
   parseBibtexFile
 } from '../../../../utils/references';
 import { showConfirmationPrompt } from '../../../common/confirmation-prompt';
+import { errorToast } from '../../../common/toasts';
 
 export const confirmImportReferences = async (referenceCount) => {
   const txt =
@@ -60,9 +61,9 @@ export const readBibtexFile = async (file) => {
         return refs;
       }
     } else {
-      toast.error("The selected file doesn't have any references.");
+      errorToast("The selected file doesn't have any references.");
     }
   } catch (error) {
-    toast.error('The selected file is not a valid BibTex file.');
+    errorToast('The selected file is not a valid BibTex file.');
   }
 };

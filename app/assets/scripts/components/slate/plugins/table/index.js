@@ -8,7 +8,7 @@ import {
   deleteColumn,
   ELEMENT_TABLE
 } from '@udecode/slate-plugins';
-import { toast } from 'react-toastify';
+import { errorToast } from '../../../common/toasts';
 
 import { modKey } from '../common/utils';
 import {
@@ -59,7 +59,7 @@ export const onTableUse = (editor, btnId) => {
         if (tableColumnLength < maxColumns) {
           addColumn(editor);
         } else {
-          toast.error(`Max number of columns (${maxColumns}) reached!`);
+          errorToast(`Max number of columns (${maxColumns}) reached!`);
         }
       }
       break;
