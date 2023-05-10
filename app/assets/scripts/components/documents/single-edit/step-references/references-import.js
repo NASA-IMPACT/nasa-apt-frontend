@@ -1,5 +1,4 @@
 import React from 'react';
-import { toast } from 'react-toastify';
 import { Button } from '@devseed-ui/button';
 
 import {
@@ -7,7 +6,7 @@ import {
   parseBibtexFile
 } from '../../../../utils/references';
 import { showConfirmationPrompt } from '../../../common/confirmation-prompt';
-import { errorToast } from '../../../common/toasts';
+import { errorToast, infoToast } from '../../../common/toasts';
 
 export const confirmImportReferences = async (referenceCount) => {
   const txt =
@@ -55,7 +54,7 @@ export const readBibtexFile = async (file) => {
       const { result } = await confirmImportReferences(refs.total);
       if (result) {
         const refText = refs.total > 1 ? 'references were' : 'reference was';
-        toast.info(
+        infoToast(
           `${refs.total} ${refText} imported. Review and save the form.`
         );
         return refs;

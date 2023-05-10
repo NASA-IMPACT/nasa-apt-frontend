@@ -96,9 +96,30 @@ export const createProcessToast = (msg) => {
 /**
  * Creates an error toast with some default parameters
  *
- * @param {*} msg - Error message
+ * @param {String} msg - Error message
+ * @param {ToastOptions} options
  */
 export const errorToast = (msg, options = errorToastOptions) => {
+  toast(msg, options);
+};
+
+/**
+ * Creates a success toast with some default parameters
+ *
+ * @param {String} msg - Success message
+ * @param {ToastOptions} options
+ */
+export const infoToast = (msg, options = infoToastOptions) => {
+  toast(msg, options);
+};
+
+/**
+ * Creates an info toast with some default parameters
+ *
+ * @param {String} msg - Success message
+ * @param {ToastOptions} options
+ */
+export const successToast = (msg, options = successToastOptions) => {
   toast(msg, options);
 };
 
