@@ -30,7 +30,7 @@ const errorToastOptions = {
   type: toast.TYPE.ERROR,
   closeOnClick: true,
   closeButton: true,
-  autoClose: false,
+  autoClose: true,
   draggable: true
 };
 
