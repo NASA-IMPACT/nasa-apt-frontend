@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
-import { toast } from 'react-toastify';
+import { errorToast } from '../../common/toasts';
 
 import { axiosAPI } from '../../../utils/axios';
 import { documentView } from '../../../utils/url-creator';
@@ -70,7 +70,7 @@ function CheckLock({ id, version, user }) {
           delete clearLockPendingRef.current[docId];
 
           if (error.response.status !== 423) {
-            toast.error(
+            errorToast(
               'Unable to clear lock of ATBD version. Please try again.'
             );
           } else {
@@ -117,7 +117,7 @@ function CheckLock({ id, version, user }) {
             setShowModal(true);
           } else {
             history.push(documentView(docId, docVersion));
-            toast.error('Unable to lock the ATBD version.');
+            errorToast('Unable to lock the ATBD version.');
           }
         });
     },
@@ -150,7 +150,7 @@ function CheckLock({ id, version, user }) {
       .catch(() => {
         setShowModal(false);
         history.push(documentView(id, version));
-        toast.error('Unable to unlock the ATBD version.');
+        errorToast('Unable to unlock the ATBD version.');
       });
   }, [id, version, history, user.accessToken]);
 
