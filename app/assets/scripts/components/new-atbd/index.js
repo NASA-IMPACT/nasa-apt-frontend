@@ -106,10 +106,12 @@ const Section = styled.section`
   gap: ${glsp(1.5)};
 `;
 
+/*
 const Video = styled.iframe`
   width: 100%;
   height: 20rem;
 `;
+*/
 
 const TemplateContainer = styled.div`
   display: flex;
