@@ -201,12 +201,6 @@ function NewAtbd() {
             <div>
               See <Link to='/user-guide'>APT user guide</Link>
             </div>
-            <Video
-              src=''
-              title='APT - creating a document'
-              frameborder='0'
-              allowfullscreen
-            />
           </Section>
           <Section>
             <h2>ATBD Templates</h2>
