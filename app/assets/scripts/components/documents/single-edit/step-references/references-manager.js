@@ -149,11 +149,9 @@ export default function ReferencesManager(props) {
                 <p>
                   <em>
                     This section shows all the references used in this document
-                    and can be used to manage them. You can skip this section
-                    for now if you have no references to enter.
-                    <br />
-                    References can also be inserted when adding content to the
-                    document.
+                    and can be used to manage them. This section can be filled
+                    out whenever you want to add a reference. <br /> References
+                    can also be inserted when adding content to the document.
                   </em>
                 </p>
               </FormSectionNotes>

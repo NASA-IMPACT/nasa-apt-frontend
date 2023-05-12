@@ -32,6 +32,7 @@ import AptDevtools from './components/apt-devtools';
 
 // Views
 import Home from './components/home';
+import NewAtbd from './components/new-atbd';
 import Documents from './components/documents/hub';
 import DocumentsView from './components/documents/single-view';
 import DocumentsEdit from './components/documents/single-edit';
@@ -140,6 +141,7 @@ function Root() {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route exact path='/documents' component={Documents} />
+            <Route exact path='/new-atbd' component={NewAtbd} />
             <Route
               exact
               path='/documents/:id/:version'

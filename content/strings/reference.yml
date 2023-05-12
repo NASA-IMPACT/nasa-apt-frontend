@@ -5,11 +5,11 @@ edition: Provide the edition number of the referenced material, if appropriate.
 volume: Provide the volume of the referenced material, if appropriate.
 issue: Provide the issue number of the referenced material, if appropriate.
 report_number: Provide the report number of the referenced material, if appropriate.
-publication_place: Provide the publication place of the referened material, if appropriate.
+publication_place: Provide the publication place of the referenced material, if appropriate.
 year: Provide the year the referenced material was published.
 publisher: Provide the publisher of the referenced material.
 pages: Provide the page numbers of the references material.
 isbn: Provide the ISBN of the reference material, if appropriate.
 doi: Provide the DOI of the referenced material.
-online_resource: The URL of the landing page for the reference material.
+online_resource: Provide the URL of the landing page for the reference material, if appropriate.
 other_reference_details: Enter an additional free-text citation details of the referenced material that may be needed for a reader to identify the reference correctly.

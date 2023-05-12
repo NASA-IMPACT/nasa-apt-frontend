@@ -2,7 +2,7 @@ import React from 'react';
 import T from 'prop-types';
 import { ReactEditor } from 'slate-react';
 import { Transforms } from 'slate';
-import { toast } from 'react-toastify';
+import { errorToast } from '../../../common/toasts';
 import { ToolbarIconButton } from '@devseed-ui/toolbar';
 
 import Tip from '../../../common/tooltip';
@@ -50,7 +50,7 @@ export default function ToolbarImageButton(props) {
   const onFileSelect = async (file) => {
     const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
     if (!validImageTypes.includes(file.type)) {
-      toast.error(`Invalid image format. Please use GIF, PNG or JPEG`);
+      errorToast(`Invalid image format. Please use GIF, PNG or JPEG`);
       return;
     }
 
@@ -86,7 +86,7 @@ export default function ToolbarImageButton(props) {
       });
     } catch (error) {
       const msg = error.response?.data?.detail || error.message;
-      toast.error(`Image upload failed: ${msg}`);
+      errorToast(`Image upload failed: ${msg}`);
       // Upload failed, remove the image node completely, if it exists.
       removeNodeIfExists(editor, imageBlockNode);
     }

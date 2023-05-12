@@ -13,7 +13,7 @@ import StepCloseout from './step-closeout';
 export const STEPS = [
   {
     id: 'identifying_information',
-    label: 'Identifying information',
+    label: 'Identifying Information',
     StepComponent: StepIdentifyingInformation,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
@@ -45,7 +45,7 @@ export const STEPS = [
   },
   {
     id: 'contacts',
-    label: 'Contact information',
+    label: 'Contact Information',
     StepComponent: StepContacts,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
@@ -111,7 +111,7 @@ export const STEPS = [
   },
   {
     id: 'introduction',
-    label: 'Introduction',
+    label: 'Algorithm Introduction',
     StepComponent: StepIntroduction,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
@@ -132,7 +132,7 @@ export const STEPS = [
   },
   {
     id: 'algorithm_description',
-    label: 'Algorithm description',
+    label: 'Algorithm Description',
     StepComponent: StepAlgoDescription,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
@@ -174,7 +174,7 @@ export const STEPS = [
   },
   {
     id: 'algorithm_usage',
-    label: 'Algorithm usage',
+    label: 'Algorithm Usage',
     StepComponent: StepAlgoUsage,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
@@ -196,7 +196,7 @@ export const STEPS = [
   },
   {
     id: 'algorithm_implementation',
-    label: 'Algorithm implementation',
+    label: 'Algorithm Implementation',
     StepComponent: StepAlgoImplementation,
     getInitialValues: (atbd) => {
       return getValuesFromObj(atbd, {
