@@ -19,7 +19,7 @@ import {
 import { ContentBlock } from '../styles/content-block';
 import Prose from '../styles/typography/prose';
 
-import { getHostedAuthUiUrl } from '../utils/history';
+import { getHostedAuthUiUrl } from '../utils/common';
 import { SectionFieldset } from '../components/common/forms/section-fieldset';
 import { FormikInputText } from '../components/common/forms/input-text';
 import { createProcessToast } from '../components/common/toasts';
