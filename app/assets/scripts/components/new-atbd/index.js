@@ -106,12 +106,10 @@ const Section = styled.section`
   gap: ${glsp(1.5)};
 `;
 
-/*
 const Video = styled.iframe`
   width: 100%;
   height: 20rem;
 `;
-*/
 
 const TemplateContainer = styled.div`
   display: flex;
@@ -203,6 +201,12 @@ function NewAtbd() {
             <div>
               See <Link to='/user-guide'>APT user guide</Link>
             </div>
+            <Video
+              src='https://drive.google.com/file/d/1D9WpNJh3teOCLMbb_gDeJyIWjqarySyk/view'
+              title='APT - creating a document'
+              frameborder='0'
+              allowfullscreen
+            />
           </Section>
           <Section>
             <h2>ATBD Templates</h2>
