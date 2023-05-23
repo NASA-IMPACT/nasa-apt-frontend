@@ -107,7 +107,7 @@ async function login(role, page) {
 
   await page.reload();
 
-  page.route('/', (route) => {
+  page.route('http://localhost:4566', (route) => {
     if (route.request().method() === 'POST') {
       route.fulfill({ body: userData });
     }
@@ -117,8 +117,8 @@ async function login(role, page) {
 const ownerFile = 'playwright/.auth/owner.json';
 
 setup('authenticate as owner', async ({ page }) => {
-  await page.goto('http://localhost:9000');
   await login('owner', page);
+  await page.goto('http://localhost:9000/signin');
 
   await page.context().storageState({ path: ownerFile });
 });
@@ -126,8 +126,8 @@ setup('authenticate as owner', async ({ page }) => {
 const contributorFile = 'playwright/.auth/contributor.json';
 
 setup('authenticate as contributor', async ({ page }) => {
-  await page.goto('http://localhost:9000');
   await login('contributor', page);
+  await page.goto('http://localhost:9000/signin');
 
   await page.context().storageState({ path: contributorFile });
 });
@@ -135,8 +135,8 @@ setup('authenticate as contributor', async ({ page }) => {
 const curatorFile = 'playwright/.auth/curator.json';
 
 setup('authenticate as curator', async ({ page }) => {
-  await page.goto('http://localhost:9000');
   await login('curator', page);
+  await page.goto('http://localhost:9000/signin');
 
   await page.context().storageState({ path: curatorFile });
 });
