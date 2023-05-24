@@ -1,5 +1,6 @@
 // playwright/fixtures.ts
 import { test as base, Page } from '@playwright/test';
+import { login } from './auth-utils';
 
 // Page Object Model for the "owner" page.
 // Here you can add locators and helper methods specific to the admin page.
@@ -7,8 +8,13 @@ class OwnerPage {
   // Page signed in as "admin".
   page: Page;
 
+  async login() {
+    await login('owner', this.page);
+  }
+
   constructor(page: Page) {
     this.page = page;
+    this.login = this.login.bind(this);
   }
 }
 
@@ -18,8 +24,13 @@ class ContributorPage {
   // Page signed in as "user".
   page: Page;
 
+  async login() {
+    await login('contributor', this.page);
+  }
+
   constructor(page: Page) {
     this.page = page;
+    this.login = this.login.bind(this);
   }
 }
 
@@ -29,8 +40,13 @@ class CuratorPage {
   // Page signed in as "user".
   page: Page;
 
+  async login() {
+    await login('curator', this.page);
+  }
+
   constructor(page: Page) {
     this.page = page;
+    this.login = this.login.bind(this);
   }
 }
 
@@ -49,7 +65,6 @@ export const test = base.extend<MyFixtures>({
     });
     const ownerPage = new OwnerPage(await context.newPage());
     await use(ownerPage);
-    await context.close();
   },
   contributorPage: async ({ browser }, use) => {
     const context = await browser.newContext({
@@ -57,7 +72,6 @@ export const test = base.extend<MyFixtures>({
     });
     const contributorPage = new ContributorPage(await context.newPage());
     await use(contributorPage);
-    await context.close();
   },
   curatorPage: async ({ browser }, use) => {
     const context = await browser.newContext({
@@ -65,6 +79,5 @@ export const test = base.extend<MyFixtures>({
     });
     const curatorPage = new CuratorPage(await context.newPage());
     await use(curatorPage);
-    await context.close();
   }
 });
