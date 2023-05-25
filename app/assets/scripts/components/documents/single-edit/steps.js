@@ -10,9 +10,18 @@ import StepReferences from './step-references';
 import StepContacts from './step-contacts';
 import StepCloseout from './step-closeout';
 
-export const STEPS = [
+const STEP_IDENTIFYING_INFORMATION = 'identifying_information';
+const STEP_CONTACTS = 'contacts';
+const STEP_REFERENCES = 'references';
+const STEP_INTRODUCTION = 'introduction';
+const STEP_ALGORITHM_DESCRIPTION = 'algorithm_description';
+const STEP_ALGORITHM_USAGE = 'algorithm_usage';
+const STEP_ALGORITHM_IMPLEMENTATION = 'algorithm_implementation';
+const STEP_CLOSEOUT = 'closeout';
+
+const ATBD_STEPS = [
   {
-    id: 'identifying_information',
+    id: STEP_IDENTIFYING_INFORMATION,
     label: 'Identifying Information',
     StepComponent: StepIdentifyingInformation,
     getInitialValues: (atbd) => {
@@ -44,7 +53,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'contacts',
+    id: STEP_CONTACTS,
     label: 'Contact Information',
     StepComponent: StepContacts,
     getInitialValues: (atbd) => {
@@ -63,7 +72,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'references',
+    id: STEP_REFERENCES,
     label: 'References',
     StepComponent: StepReferences,
     getInitialValues: (atbd) => {
@@ -110,7 +119,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'introduction',
+    id: STEP_INTRODUCTION,
     label: 'Algorithm Introduction',
     StepComponent: StepIntroduction,
     getInitialValues: (atbd) => {
@@ -131,7 +140,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'algorithm_description',
+    id: STEP_ALGORITHM_DESCRIPTION,
     label: 'Algorithm Description',
     StepComponent: StepAlgoDescription,
     getInitialValues: (atbd) => {
@@ -173,7 +182,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'algorithm_usage',
+    id: STEP_ALGORITHM_USAGE,
     label: 'Algorithm Usage',
     StepComponent: StepAlgoUsage,
     getInitialValues: (atbd) => {
@@ -195,7 +204,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'algorithm_implementation',
+    id: STEP_ALGORITHM_IMPLEMENTATION,
     label: 'Algorithm Implementation',
     StepComponent: StepAlgoImplementation,
     getInitialValues: (atbd) => {
@@ -243,7 +252,7 @@ export const STEPS = [
     }
   },
   {
-    id: 'closeout',
+    id: STEP_CLOSEOUT,
     label: 'Closeout',
     StepComponent: StepCloseout,
     getInitialValues: (atbd) => {
@@ -292,9 +301,26 @@ export const STEPS = [
   }
 ];
 
-export const getDocumentEditStep = (id) => {
+export function getSteps(isPdfMode = false) {
+  if (!isPdfMode) {
+    return ATBD_STEPS;
+  }
+
+  const pdfModeStepKeys = {
+    STEP_IDENTIFYING_INFORMATION,
+    STEP_CONTACTS,
+    STEP_REFERENCES,
+    STEP_INTRODUCTION,
+    STEP_CLOSEOUT
+  };
+
+  return ATBD_STEPS.filter((step) => !!pdfModeStepKeys[step.id]);
+}
+
+export const getDocumentEditStep = (id, isPdfMode = false) => {
+  const steps = getSteps(isPdfMode);
   // If no id is set, use the first step.
-  const idx = id ? STEPS.findIndex((step) => step.id === id) : 0;
+  const idx = id ? steps.findIndex((step) => step.id === id) : 0;
 
   // Returning an empty objects allows us to correctly deconstruct the object
   // and perform easier validations.
@@ -302,14 +328,15 @@ export const getDocumentEditStep = (id) => {
 
   return {
     stepNum: idx + 1,
-    ...STEPS[idx]
+    ...steps[idx]
   };
 };
 
-export const getNextDocumentEditStep = (id) => {
+export const getNextDocumentEditStep = (id, isPdfMode = false) => {
+  const steps = getSteps(isPdfMode);
   const currentStep = getDocumentEditStep(id);
   return {
     stepNum: currentStep.stepNum + 1,
-    ...STEPS[currentStep.stepNum]
+    ...steps[currentStep.stepNum]
   };
 };

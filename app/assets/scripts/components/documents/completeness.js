@@ -1,5 +1,5 @@
 import { round } from '../../utils/format';
-import { STEPS } from './single-edit/steps';
+import { getSteps } from './single-edit/steps';
 import { isJournalPublicationIntended } from './status';
 
 // The closeout step is special. There are sections which should only be
@@ -52,6 +52,8 @@ const calculateCompleteness = (sections) => {
  * @param {object} atbd ATBD version data
  */
 export const calculateDocumentCompleteness = (atbd) => {
+  // TODO: add pdf mode
+  const STEPS = getSteps();
   const allSections = STEPS.reduce((acc, step) => {
     // We can use getInitialValues to get the status of the sections
     // while adding any section that is not yet in the database.

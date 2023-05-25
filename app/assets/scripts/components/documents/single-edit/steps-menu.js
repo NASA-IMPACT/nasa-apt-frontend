@@ -8,7 +8,7 @@ import { ToolbarLabel as ToolbarLabel$ } from '@devseed-ui/toolbar';
 
 import { Link } from '../../../styles/clean/link';
 
-import { getDocumentEditStep, STEPS } from './steps';
+import { getDocumentEditStep, getSteps } from './steps';
 import { documentEdit } from '../../../utils/url-creator';
 import { calculateDocumentStepCompleteness } from '../completeness';
 import { DropMenuItemEnhanced } from '../../common/dropdown-menu';
@@ -45,6 +45,9 @@ export default function StepsMenu(props) {
   const activeStepItem = useMemo(() => getDocumentEditStep(activeStep), [
     activeStep
   ]);
+
+  // TODO: add pdf mode
+  const STEPS = useMemo(() => getSteps(), []);
 
   return (
     <>
