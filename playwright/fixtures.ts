@@ -1,5 +1,6 @@
 // playwright/fixtures.ts
 import { test as base, Page } from '@playwright/test';
+import { registerRoutes } from './fixtures/register';
 import { login } from './auth-utils';
 
 // Page Object Model for the "owner" page.
@@ -12,9 +13,19 @@ class OwnerPage {
     await login('owner', this.page);
   }
 
+  async routes() {
+    await registerRoutes(this.page);
+  }
+
+  async init() {
+    await this.login();
+    await this.routes();
+  }
+
   constructor(page: Page) {
     this.page = page;
     this.login = this.login.bind(this);
+    this.routes = this.routes.bind(this);
   }
 }
 
@@ -28,9 +39,19 @@ class ContributorPage {
     await login('contributor', this.page);
   }
 
+  async routes() {
+    await registerRoutes(this.page);
+  }
+
+  async init() {
+    await this.login();
+    await this.routes();
+  }
+
   constructor(page: Page) {
     this.page = page;
     this.login = this.login.bind(this);
+    this.routes = this.routes.bind(this);
   }
 }
 
@@ -44,9 +65,19 @@ class CuratorPage {
     await login('curator', this.page);
   }
 
+  async routes() {
+    await registerRoutes(this.page);
+  }
+
+  async init() {
+    await this.login();
+    await this.routes();
+  }
+
   constructor(page: Page) {
     this.page = page;
     this.login = this.login.bind(this);
+    this.routes = this.routes.bind(this);
   }
 }
 
@@ -64,6 +95,7 @@ export const test = base.extend<MyFixtures>({
       storageState: 'playwright/.auth/owner.json'
     });
     const ownerPage = new OwnerPage(await context.newPage());
+    await ownerPage.init();
     await use(ownerPage);
   },
   contributorPage: async ({ browser }, use) => {
@@ -71,6 +103,7 @@ export const test = base.extend<MyFixtures>({
       storageState: 'playwright/.auth/contributor.json'
     });
     const contributorPage = new ContributorPage(await context.newPage());
+    await contributorPage.init();
     await use(contributorPage);
   },
   curatorPage: async ({ browser }, use) => {
@@ -78,6 +111,7 @@ export const test = base.extend<MyFixtures>({
       storageState: 'playwright/.auth/curator.json'
     });
     const curatorPage = new CuratorPage(await context.newPage());
+    await curatorPage.init();
     await use(curatorPage);
   }
 });
