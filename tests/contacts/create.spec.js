@@ -1,23 +1,15 @@
-const contactsList = require('../fixtures/server/contacts/list.json');
-const contactsCreate = require('../fixtures/server/contacts/create.json');
-
 import { test, expect } from '../../playwright/fixtures';
 
-test('display contacts list', async ({ contributorPage: { page, login } }) => {
-  await login();
-  await page.route('http://localhost:8888/v2/contacts', (route) => {
-    if (route.request().method() === 'POST') {
-      route.fulfill({ json: contactsCreate });
-    } else {
-      route.fulfill({ json: contactsList });
-    }
-  });
-
-  await page.route('http://localhost:8888/v2/contacts/3', (route) => {
-    route.fulfill({ json: contactsCreate });
-  });
-
+test('create a contact', async ({ contributorPage: { page } }) => {
   await page.goto('http://localhost:9000/contacts');
 
-  await expect(page).toHaveTitle('Contacts — Algorithm Publication Tool');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page).toHaveURL('http://localhost:9000/contacts/3/edit');
+
+  await expect(page.getByLabel('First name (required)')).toHaveValue('New');
+  await expect(page.getByLabel('Last name (required)')).toHaveValue('Contact');
+
+  await expect(page).toHaveTitle(
+    'Editing New Contact — Algorithm Publication Tool'
+  );
 });
