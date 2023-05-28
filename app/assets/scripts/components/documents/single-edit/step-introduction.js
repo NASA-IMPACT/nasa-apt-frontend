@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import T from 'prop-types';
 import styled from 'styled-components';
-import { Formik, Form as FormikForm } from 'formik';
+import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { FaFilePdf, FaFileAlt, FaFileWord } from 'react-icons/fa';
 import { SiLatex } from 'react-icons/si';
 import { Form } from '@devseed-ui/form';
@@ -72,12 +72,10 @@ const ModalContent = styled.div`
 `;
 
 function PDFUpload(props) {
-  const {
-    atbd,
-    onSuccess,
-  } = props;
+  const { atbd } = props;
   const fileInputRef = React.useRef();
   const { token } = useAuthToken();
+  const { setFieldValue } = useFormikContext();
 
   const handleChange = React.useCallback(
     (e) => {
@@ -96,8 +94,9 @@ function PDFUpload(props) {
             const { upload_id, upload_url } = s3UrlResponse.data;
 
             const pdfFile = e.target.files[0];
-            const s3Response = await axios.put(upload_url, pdfFile);
-            onSuccess();
+            await axios.put(upload_url, pdfFile);
+            setFieldValue('document_type', 'PDF');
+            setFieldValue('pdf_id', upload_id);
           } catch (error) {
             // TODO: show message to user
             // eslint-disable-next-line no-console
@@ -108,7 +107,7 @@ function PDFUpload(props) {
         uploadToS3();
       }
     },
-    [token, atbd, onSuccess]
+    [token, atbd, setFieldValue]
   );
 
   const handleUploadClick = React.useCallback(() => {
@@ -133,6 +132,13 @@ function PDFUpload(props) {
     </>
   );
 }
+
+PDFUpload.propTypes = {
+  atbd: T.shape({
+    id: T.number,
+    document: T.object
+  })
+};
 
 export default function StepIntroduction(props) {
   const {
@@ -183,6 +189,69 @@ export default function StepIntroduction(props) {
                 </div>
               </FormHeader>
               <Form as={FormikForm}>
+                <Modal
+                  id='pdf-upload-modal'
+                  revealed={showPdfUploadModal}
+                  onCloseClick={setShowPdfUploadModalFalse}
+                  title='Upload PDF'
+                  footerContent={
+                    <>
+                      <PDFUpload atbd={atbd} />
+                    </>
+                  }
+                  content={
+                    <ModalContent>
+                      <PDFIcon />
+                      <ModalDescription>
+                        <p>
+                          Once you upload a PDF, document drafting sections of
+                          the ATBD will be removed.
+                        </p>
+                        <p>
+                          <p>
+                            <strong>Need a Template?</strong>
+                            <div>
+                              Download a template to help you match your
+                              document to APT standards
+                            </div>
+                            <TemplateContainer>
+                              <TemplateLink
+                                href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
+                                target='_blank'
+                                rel='noopener'
+                              >
+                                <span>
+                                  <FaFileAlt />
+                                </span>
+                                <div>Google Docs</div>
+                              </TemplateLink>
+                              <TemplateLink
+                                href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
+                                target='_blank'
+                                rel='noopener'
+                              >
+                                <span>
+                                  <FaFileWord />
+                                </span>
+                                <div>Microsoft Word</div>
+                              </TemplateLink>
+                              <TemplateLink
+                                href='https://drive.google.com/file/d/1AusZOxIpkBiA0QJAB3AtSXSBUU5tWwlJ/view?usp=share_link'
+                                target='_blank'
+                                rel='noopener'
+                              >
+                                <span>
+                                  <SiLatex />
+                                </span>
+                                <div>LaTeX</div>
+                              </TemplateLink>
+                            </TemplateContainer>
+                          </p>
+                        </p>
+                      </ModalDescription>
+                    </ModalContent>
+                  }
+                />
                 <RichTextContex2Formik>
                   <FormikSectionFieldset
                     label={getDocumentSectionLabel('introduction')}
@@ -226,72 +295,6 @@ export default function StepIntroduction(props) {
           </InpageBody>
         </Inpage>
       </Formik>
-      <Modal
-        id='pdf-upload-modal'
-        revealed={showPdfUploadModal}
-        onCloseClick={setShowPdfUploadModalFalse}
-        title='Upload PDF'
-        footerContent={
-          <>
-            <PDFUpload
-              atbd={atbd}
-              onSuccess={() => { console.info('upload successful'); }}
-            />
-          </>
-        }
-        content={
-          <ModalContent>
-            <PDFIcon />
-            <ModalDescription>
-              <p>
-                Once you upload a PDF, document drafting sections of the ATBD
-                will be removed.
-              </p>
-              <p>
-                <p>
-                  <strong>Need a Template?</strong>
-                  <div>
-                    Download a template to help you match your document to APT
-                    standards
-                  </div>
-                  <TemplateContainer>
-                    <TemplateLink
-                      href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
-                      target='_blank'
-                      rel='noopener'
-                    >
-                      <span>
-                        <FaFileAlt />
-                      </span>
-                      <div>Google Docs</div>
-                    </TemplateLink>
-                    <TemplateLink
-                      href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
-                      target='_blank'
-                      rel='noopener'
-                    >
-                      <span>
-                        <FaFileWord />
-                      </span>
-                      <div>Microsoft Word</div>
-                    </TemplateLink>
-                    <TemplateLink
-                      href='https://drive.google.com/file/d/1AusZOxIpkBiA0QJAB3AtSXSBUU5tWwlJ/view?usp=share_link'
-                      target='_blank'
-                      rel='noopener'
-                    >
-                      <span>
-                        <SiLatex />
-                      </span>
-                      <div>LaTeX</div>
-                    </TemplateLink>
-                  </TemplateContainer>
-                </p>
-              </p>
-            </ModalDescription>
-          </ModalContent>
-        }
-      />
     </>
   );
 }

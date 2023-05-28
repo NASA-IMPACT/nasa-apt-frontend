@@ -41,13 +41,15 @@ const StepMenuItem = styled(DropMenuItemEnhanced)`
 
 export default function StepsMenu(props) {
   const { activeStep, atbdId, atbd } = props;
+  const pdfMode = atbd.document_type === 'PDF';
 
-  const activeStepItem = useMemo(() => getDocumentEditStep(activeStep), [
-    activeStep
-  ]);
+  const activeStepItem = useMemo(
+    () => getDocumentEditStep(activeStep, pdfMode),
+    [activeStep, pdfMode]
+  );
 
   // TODO: add pdf mode
-  const STEPS = useMemo(() => getSteps(), []);
+  const STEPS = useMemo(() => getSteps(pdfMode), [pdfMode]);
 
   return (
     <>
