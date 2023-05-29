@@ -6,6 +6,7 @@ export const fixtureURLs = [
   {
     url: 'http://localhost:8888/v2/contacts/1',
     getResponse: contactsSingle,
+    postResponse: { ...contactsSingle, url: 'http://example.com' },
     deleteResponse: {}
   },
   {

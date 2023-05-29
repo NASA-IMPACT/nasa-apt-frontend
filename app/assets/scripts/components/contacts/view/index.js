@@ -126,7 +126,7 @@ export default function ContactView() {
                       {getContactName(data, { full: true })}
                     </ContactTitle>
                   </ContactHeader>
-                  <DetailsList>
+                  <DetailsList title='Contact Details'>
                     <dt>First Name</dt>
                     <dd>{data.first_name}</dd>
                     {data.middle_name && (
