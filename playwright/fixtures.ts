@@ -3,6 +3,25 @@ import { test as base, Page } from '@playwright/test';
 import { registerRoutes } from './fixtures/register';
 import { login } from './auth-utils';
 
+async function gotoTestDocument(page) {
+  const statsRqPromise = page.waitForResponse(
+    'http://localhost:8888/v2/threads/stats?atbds=1_v1.1'
+  );
+  const atbdRqPromise = page.waitForResponse(
+    'http://localhost:8888/v2/atbds/test-atbd-1'
+  );
+  const versionRqPromise = page.waitForResponse(
+    'http://localhost:8888/v2/atbds/test-atbd-1/versions/v1.1'
+  );
+
+  await Promise.all([
+    page.goto('http://localhost:9000/documents/test-atbd-1/v1.1'),
+    statsRqPromise,
+    atbdRqPromise,
+    versionRqPromise
+  ]);
+}
+
 // Page Object Model for the "owner" page.
 // Here you can add locators and helper methods specific to the admin page.
 class OwnerPage {
@@ -17,6 +36,10 @@ class OwnerPage {
     await registerRoutes(this.page);
   }
 
+  async gotoTestDocument() {
+    return gotoTestDocument(this.page);
+  }
+
   async init() {
     await this.login();
     await this.routes();
@@ -26,6 +49,7 @@ class OwnerPage {
     this.page = page;
     this.login = this.login.bind(this);
     this.routes = this.routes.bind(this);
+    this.gotoTestDocument = this.gotoTestDocument.bind(this);
   }
 }
 
@@ -43,6 +67,10 @@ class ContributorPage {
     await registerRoutes(this.page);
   }
 
+  async gotoTestDocument() {
+    return gotoTestDocument(this.page);
+  }
+
   async init() {
     await this.login();
     await this.routes();
@@ -52,6 +80,7 @@ class ContributorPage {
     this.page = page;
     this.login = this.login.bind(this);
     this.routes = this.routes.bind(this);
+    this.gotoTestDocument = this.gotoTestDocument.bind(this);
   }
 }
 
@@ -69,6 +98,10 @@ class CuratorPage {
     await registerRoutes(this.page);
   }
 
+  async gotoTestDocument() {
+    return gotoTestDocument(this.page);
+  }
+
   async init() {
     await this.login();
     await this.routes();
@@ -78,6 +111,7 @@ class CuratorPage {
     this.page = page;
     this.login = this.login.bind(this);
     this.routes = this.routes.bind(this);
+    this.gotoTestDocument = this.gotoTestDocument.bind(this);
   }
 }
 
