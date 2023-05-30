@@ -11,7 +11,8 @@ test('edit contacts', async ({ contributorPage: { page } }) => {
   await page.getByLabel('Url').fill('http://example.com');
   await page.getByRole('button', { name: ' Save' }).click();
   page.once('response', async (response) => {
-    await expect(response.json()).url.toBe('http://example.com');
+    const json = await response.json();
+    await expect(json).url.toBe('http://example.com');
     await expect(page.getByTitle('Contact Details')).toContainText(
       'http://example.com'
     );
