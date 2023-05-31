@@ -20,13 +20,12 @@
     "serve": "NODE_ENV=development gulp serve",
     "serve:test": "NODE_ENV=test gulp serve",
     "build": "NODE_ENV=production gulp",
+    "playwright": "NODE_ENV=test playwright test",
     "clean": "gulp clean",
     "stage": "NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
     "lint:css": "stylelint 'app/assets/styles/**/**' 'app/assets/scripts/**/*.js'",
-    "test": "echo \"No tests\" && exit 0",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "test": "echo \"No local tests, use playwright to test\" && exit 0"
   },
   "source": "./app/index.html",
   "global": "dist/index.html",
@@ -49,7 +48,6 @@
     "@playwright/test": "^1.32.1",
     "babel-eslint": "^10.1.0",
     "crypto-browserify": "^3.12.0",
-    "cypress": "^10.3.1",
     "del": "^6.0.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
