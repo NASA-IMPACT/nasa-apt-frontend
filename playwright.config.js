@@ -78,6 +78,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'yarn serve:test',
     url: 'http://localhost:9000',
-    reuseExistingServer: !process.env.CI
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000
   }
 });
