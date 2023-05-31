@@ -28,7 +28,7 @@ export function versionWithStatus(version, status) {
   };
 }
 
-export const fixtureURLs = [
+export const authenticatedFixtureUrls = [
   {
     url: 'http://localhost:8888/v2/contacts/1',
     getResponse: contactsSingle,
@@ -103,25 +103,44 @@ export const fixtureURLs = [
   }
 ];
 
+export const anonymousFixtureUrls = [
+  {
+    url: 'http://localhost:8888/v2/atbds/test-atbd-1',
+    getResponse: { detail: 'No atbds found' },
+    status: 404
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/test-atbd-1/versions/v1.1',
+    getResponse: { detail: 'View for ATBD Version is not allowed' },
+    status: 403
+  }
+];
+
 async function registerRoute(
   page,
-  { url, getResponse, postResponse, deleteResponse, putResponse }
+  { url, getResponse, postResponse, deleteResponse, putResponse, status = 200 }
 ) {
   await page.route(url, (route) => {
     if (postResponse && route.request().method() === 'POST') {
-      return route.fulfill({ json: postResponse });
+      return route.fulfill({ status, json: postResponse });
     } else if (putResponse && route.request().method() === 'PUT') {
-      return route.fulfill({ json: putResponse });
+      return route.fulfill({ status, json: putResponse });
     } else if (deleteResponse && route.request().method() === 'DELETE') {
-      return route.fulfill({ json: deleteResponse });
+      return route.fulfill({ status, json: deleteResponse });
     } else {
-      return route.fulfill({ json: getResponse });
+      return route.fulfill({ status, json: getResponse });
     }
   });
 }
 
-export async function registerRoutes(page) {
-  for (const fixture of fixtureURLs) {
+export async function registerAuthenticatedRoutes(page) {
+  for (const fixture of authenticatedFixtureUrls) {
+    await registerRoute(page, fixture);
+  }
+}
+
+export async function registerAnonymousRoutes(page) {
+  for (const fixture of anonymousFixtureUrls) {
     await registerRoute(page, fixture);
   }
 }

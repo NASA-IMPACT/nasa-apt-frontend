@@ -1,6 +1,10 @@
 // playwright/fixtures.ts
 import { test as base, Page } from '@playwright/test';
-import { registerRoutes, versionWithStatus } from './fixtures/register';
+import {
+  registerAnonymousRoutes,
+  registerAuthenticatedRoutes,
+  versionWithStatus
+} from './fixtures/register';
 import { login } from './auth-utils';
 import atbdVersions from './fixtures/server/atbd-versions.json';
 
@@ -53,7 +57,7 @@ class LoggedInPage {
   }
 
   async routes() {
-    await registerRoutes(this.page);
+    await registerAuthenticatedRoutes(this.page);
   }
 
   async gotoTestDocument(status) {
@@ -95,7 +99,7 @@ type Fixtures = {
 export * from '@playwright/test';
 export const test = base.extend<Fixtures>({
   page: async ({ page }, use) => {
-    await registerRoutes(page);
+    registerAnonymousRoutes(page);
     await use(page);
   },
   ownerPage: async ({ browser }, use) => {
