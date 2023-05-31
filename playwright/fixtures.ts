@@ -4,6 +4,13 @@ import { registerRoutes, versionWithStatus } from './fixtures/register';
 import { login } from './auth-utils';
 import atbdVersions from './fixtures/server/atbd-versions.json';
 
+/**
+ * Initializes the ATBD page with the given status
+ * and waits for the page to load
+ *
+ * @param page
+ * @param status - ATBD status
+ */
 async function gotoTestDocument(page, status) {
   if (status && status !== 'PUBLISHED') {
     page.route(
@@ -31,14 +38,18 @@ async function gotoTestDocument(page, status) {
   ]);
 }
 
-// Page Object Model for the "owner" page.
-// Here you can add locators and helper methods specific to the admin page.
-class OwnerPage {
-  // Page signed in as "admin".
+/**
+ * Represents a logged in page with a given role
+ *
+ * The init method will login the user with the role and register which routes
+ * will be intercepted and given a mock response
+ * */
+class LoggedInPage {
   page: Page;
+  role: string;
 
   async login() {
-    await login('owner', this.page);
+    await login(this.role, this.page);
   }
 
   async routes() {
@@ -54,90 +65,44 @@ class OwnerPage {
     await this.routes();
   }
 
-  constructor(page: Page) {
+  constructor(page: Page, role: string) {
     this.page = page;
+    this.role = role;
     this.login = this.login.bind(this);
     this.routes = this.routes.bind(this);
     this.gotoTestDocument = this.gotoTestDocument.bind(this);
   }
 }
 
-// Page Object Model for the "contributor" page.
-// Here you can add locators and helper methods specific to the user page.
-class ContributorPage {
-  // Page signed in as "user".
-  page: Page;
-
-  async login() {
-    await login('contributor', this.page);
-  }
-
-  async routes() {
-    await registerRoutes(this.page);
-  }
-
-  async gotoTestDocument(status) {
-    return gotoTestDocument(this.page, status);
-  }
-
-  async init() {
-    await this.login();
-    await this.routes();
-  }
-
-  constructor(page: Page) {
-    this.page = page;
-    this.login = this.login.bind(this);
-    this.routes = this.routes.bind(this);
-    this.gotoTestDocument = this.gotoTestDocument.bind(this);
-  }
-}
-
-// Page Object Model for the "user" page.
-// Here you can add locators and helper methods specific to the user page.
-class CuratorPage {
-  // Page signed in as "user".
-  page: Page;
-
-  async login() {
-    await login('curator', this.page);
-  }
-
-  async routes() {
-    await registerRoutes(this.page);
-  }
-
-  async gotoTestDocument(status) {
-    return gotoTestDocument(this.page, status);
-  }
-
-  async init() {
-    await this.login();
-    await this.routes();
-  }
-
-  constructor(page: Page) {
-    this.page = page;
-    this.login = this.login.bind(this);
-    this.routes = this.routes.bind(this);
-    this.gotoTestDocument = this.gotoTestDocument.bind(this);
-  }
-}
-
-// Declare the types of your fixtures.
-type MyFixtures = {
-  ownerPage: OwnerPage;
-  contributorPage: ContributorPage;
-  curatorPage: CuratorPage;
+type Fixtures = {
+  ownerPage: LoggedInPage;
+  contributorPage: LoggedInPage;
+  curatorPage: LoggedInPage;
 };
 
+/**
+ * Extends the base test fixture with the following:
+ * - page: a page with no role
+ * - ownerPage: a page with the owner role
+ * - contributorPage: a page with the contributor role
+ * - curatorPage: a page with the curator role
+ *
+ * For each fixture, the browser is initialized with local storage
+ * that is read from a "state" file in the playwright/.auth directory
+ *
+ * The state file is created at setup time by "setup" in auth.setup.js
+ */
 export * from '@playwright/test';
-export const test = base.extend<MyFixtures>({
+export const test = base.extend<Fixtures>({
+  page: async ({ page }, use) => {
+    await registerRoutes(page);
+    await use(page);
+  },
   ownerPage: async ({ browser }, use) => {
     const context = await browser.newContext({
       storageState: 'playwright/.auth/owner.json'
     });
-    const ownerPage = new OwnerPage(await context.newPage());
+    const ownerPage = new LoggedInPage(await context.newPage(), 'owner');
     await ownerPage.init();
     await use(ownerPage);
   },
@@ -145,7 +110,10 @@ export const test = base.extend<MyFixtures>({
     const context = await browser.newContext({
       storageState: 'playwright/.auth/contributor.json'
     });
-    const contributorPage = new ContributorPage(await context.newPage());
+    const contributorPage = new LoggedInPage(
+      await context.newPage(),
+      'contributor'
+    );
     await contributorPage.init();
     await use(contributorPage);
   },
@@ -153,7 +121,7 @@ export const test = base.extend<MyFixtures>({
     const context = await browser.newContext({
       storageState: 'playwright/.auth/curator.json'
     });
-    const curatorPage = new CuratorPage(await context.newPage());
+    const curatorPage = new LoggedInPage(await context.newPage(), 'curator');
     await curatorPage.init();
     await use(curatorPage);
   }
