@@ -1,9 +1,18 @@
 // playwright/fixtures.ts
 import { test as base, Page } from '@playwright/test';
-import { registerRoutes } from './fixtures/register';
+import { registerRoutes, versionWithStatus } from './fixtures/register';
 import { login } from './auth-utils';
+import atbdVersions from './fixtures/server/atbd-versions.json';
 
-async function gotoTestDocument(page) {
+async function gotoTestDocument(page, status) {
+  if (status && status !== 'PUBLISHED') {
+    page.route(
+      'http://localhost:8888/v2/atbds/test-atbd-1/versions/v1.1',
+      (route) => {
+        return route.fulfill({ json: versionWithStatus(atbdVersions, status) });
+      }
+    );
+  }
   const statsRqPromise = page.waitForResponse(
     'http://localhost:8888/v2/threads/stats?atbds=1_v1.1'
   );
@@ -36,8 +45,8 @@ class OwnerPage {
     await registerRoutes(this.page);
   }
 
-  async gotoTestDocument() {
-    return gotoTestDocument(this.page);
+  async gotoTestDocument(status) {
+    return gotoTestDocument(this.page, status);
   }
 
   async init() {
@@ -67,8 +76,8 @@ class ContributorPage {
     await registerRoutes(this.page);
   }
 
-  async gotoTestDocument() {
-    return gotoTestDocument(this.page);
+  async gotoTestDocument(status) {
+    return gotoTestDocument(this.page, status);
   }
 
   async init() {
@@ -98,8 +107,8 @@ class CuratorPage {
     await registerRoutes(this.page);
   }
 
-  async gotoTestDocument() {
-    return gotoTestDocument(this.page);
+  async gotoTestDocument(status) {
+    return gotoTestDocument(this.page, status);
   }
 
   async init() {

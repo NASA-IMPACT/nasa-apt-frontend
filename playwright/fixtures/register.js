@@ -12,7 +12,7 @@ const atbdStatsNew = require('./server/atbd-version-new.json');
 const atbdEvent = require('./server/atbd-event.json');
 const atbdReviewerList = require('./server/atbd-reviewer-list.json');
 
-function versionWithStatus(version, status) {
+export function versionWithStatus(version, status) {
   return {
     ...version,
     versions: version.versions.map((v) => {
@@ -90,14 +90,15 @@ export const fixtureURLs = [
   },
   {
     url: 'http://localhost:8888/v2/atbds/test-atbd-1/versions/v1.1',
-    getResponse: versionWithStatus(atbdVersions, 'DRAFT')
+    getResponse: atbdVersions
   },
   {
     url: 'http://localhost:8888/v2/events',
     postResponse: atbdEvent
   },
   {
-    url: '/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
+    url:
+      'http://localhost:8888/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
     getResponse: atbdReviewerList
   }
 ];
