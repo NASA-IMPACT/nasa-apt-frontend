@@ -38,6 +38,7 @@ import React from 'react';
 export function filterComponentProps(Comp, filterProps = []) {
   const isValidProp = (p) => !filterProps.includes(p);
 
+  // eslint-disable-next-line react/display-name
   return React.forwardRef((rawProps, ref) => {
     const props = Object.keys(rawProps).reduce(
       (acc, p) => (isValidProp(p) ? { ...acc, [p]: rawProps[p] } : acc),

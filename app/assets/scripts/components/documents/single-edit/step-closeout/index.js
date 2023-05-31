@@ -25,14 +25,8 @@ import { SubSectionPlugin } from '../../../slate/plugins/subsection';
 const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
 export default function StepCloseout(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 

@@ -25,22 +25,12 @@ import { LocalStore } from '../local-store';
 import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 export default function StepContacts(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
-  const {
-    fetchContacts,
-    createContact,
-    updateContactUnbound,
-    contacts
-  } = useContacts();
+  const { fetchContacts, createContact, updateContactUnbound, contacts } =
+    useContacts();
 
   const initialValues = step.getInitialValues(atbd);
 

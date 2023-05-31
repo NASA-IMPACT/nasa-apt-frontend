@@ -31,14 +31,8 @@ const emptyFieldValue = {
 };
 
 export default function StepAlgoImplementation(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);

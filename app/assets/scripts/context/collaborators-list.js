@@ -14,30 +14,28 @@ export const CollaboratorsContext = createContext(null);
 export const CollaboratorsProvider = ({ children }) => {
   const { token } = useAuthToken();
 
-  const {
-    getState: getCollaborators,
-    fetchCollaboratorsList
-  } = useContexeedApi(
-    {
-      name: 'collaboratorsList',
-      slicedState: true,
-      requests: {
-        fetchCollaboratorsList: withRequestToken(
-          token,
-          ({ atbdId, atbdVersion, userFilter }) => ({
-            skipStateCheck: true,
-            sliceKey: `${atbdId}-${atbdVersion}-${userFilter}`,
-            url: `/users?${qs.stringify({
-              atbd_id: atbdId,
-              version: atbdVersion,
-              user_filter: userFilter
-            })}`
-          })
-        )
-      }
-    },
-    [token]
-  );
+  const { getState: getCollaborators, fetchCollaboratorsList } =
+    useContexeedApi(
+      {
+        name: 'collaboratorsList',
+        slicedState: true,
+        requests: {
+          fetchCollaboratorsList: withRequestToken(
+            token,
+            ({ atbdId, atbdVersion, userFilter }) => ({
+              skipStateCheck: true,
+              sliceKey: `${atbdId}-${atbdVersion}-${userFilter}`,
+              url: `/users?${qs.stringify({
+                atbd_id: atbdId,
+                version: atbdVersion,
+                user_filter: userFilter
+              })}`
+            })
+          )
+        }
+      },
+      [token]
+    );
 
   const contextValue = {
     getCollaborators,
@@ -63,9 +61,8 @@ const useSafeContextFn = createContextChecker(
 );
 
 export const useCollaborators = ({ atbdId, atbdVersion, userFilter }) => {
-  const { getCollaborators, fetchCollaboratorsList } = useSafeContextFn(
-    'useCollaborators'
-  );
+  const { getCollaborators, fetchCollaboratorsList } =
+    useSafeContextFn('useCollaborators');
 
   return {
     collaborators: getCollaborators(`${atbdId}-${atbdVersion}-${userFilter}`),

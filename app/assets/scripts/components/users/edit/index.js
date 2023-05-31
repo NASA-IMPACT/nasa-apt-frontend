@@ -49,13 +49,8 @@ export default function UserEdit() {
 
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
-  const {
-    dirty,
-    isSubmitting,
-    submitForm,
-    touched,
-    isValid
-  } = useFormikContext();
+  const { dirty, isSubmitting, submitForm, touched, isValid } =
+    useFormikContext();
 
   // We only want to show an error message when the global validations have run.
   // Just checking if it is valid results in the message to be too obtrusive. A

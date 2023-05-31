@@ -237,14 +237,8 @@ export default DocumentEdit;
 
 // Moving the save button to a component of its own to use Formik context.
 const SaveButton = () => {
-  const {
-    dirty,
-    isSubmitting,
-    submitForm,
-    status,
-    touched,
-    isValid
-  } = useFormikContext();
+  const { dirty, isSubmitting, submitForm, status, touched, isValid } =
+    useFormikContext();
   // status?.working is used to disable form submission when something is going
   // on. An example is the alias existence checking.
 

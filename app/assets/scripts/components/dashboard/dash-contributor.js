@@ -110,11 +110,8 @@ export default DashboardContributor;
 // Moving the <DocsNav> to a separate component to access the tabs context
 // provided by the TabManager.
 const DocumentNavigation = (props) => {
-  const {
-    listSettingsValues,
-    listSettingsSetter,
-    applyListSettingsFilters
-  } = props;
+  const { listSettingsValues, listSettingsSetter, applyListSettingsFilters } =
+    props;
 
   const { activeTab } = useTabs();
 

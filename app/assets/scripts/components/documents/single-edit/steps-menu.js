@@ -42,9 +42,10 @@ const StepMenuItem = styled(DropMenuItemEnhanced)`
 export default function StepsMenu(props) {
   const { activeStep, atbdId, atbd } = props;
 
-  const activeStepItem = useMemo(() => getDocumentEditStep(activeStep), [
-    activeStep
-  ]);
+  const activeStepItem = useMemo(
+    () => getDocumentEditStep(activeStep),
+    [activeStep]
+  );
 
   return (
     <>
@@ -70,11 +71,8 @@ export default function StepsMenu(props) {
           {STEPS.map((step) => {
             const { id, label } = step;
 
-            const {
-              complete,
-              total,
-              percent
-            } = calculateDocumentStepCompleteness(atbd, step);
+            const { complete, total, percent } =
+              calculateDocumentStepCompleteness(atbd, step);
 
             return (
               <li key={id}>
