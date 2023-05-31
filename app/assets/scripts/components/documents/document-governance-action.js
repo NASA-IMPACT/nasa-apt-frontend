@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
 import { Button } from '@devseed-ui/button';
+import { documentEdit } from '../../utils/url-creator';
+import { Link } from '../../styles/clean/link';
 
 import DropdownMenu from '../common/dropdown-menu';
 import ButtonSecondary from '../../styles/button-secondary';
@@ -45,6 +47,18 @@ export default function DocumentGovernanceAction(props) {
 
   return (
     <React.Fragment>
+      <Can do='edit' on={atbd}>
+        <control.El
+          {...control.props}
+          title='Edit report'
+          disabled={isMutating}
+          useIcon='pencil'
+          to={documentEdit(atbd, version)}
+          forwardedAs={Link}
+        >
+          Edit
+        </control.El>
+      </Can>
       <Can do='req-review' on={atbd}>
         <control.El
           {...control.props}

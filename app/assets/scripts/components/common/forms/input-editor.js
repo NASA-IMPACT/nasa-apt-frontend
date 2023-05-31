@@ -6,6 +6,28 @@ import { FormHelperMessage } from '@devseed-ui/form';
 import FormGroupStructure from './form-group-structure';
 import { RichTextEditor, InlineRichTextEditor } from '../../slate';
 
+function validateImageBlock(value) {
+  const imageBlocks = value?.children?.filter(
+    (slateElement) => slateElement.type === 'image-block'
+  );
+
+  if (imageBlocks.length > 0) {
+    const captions = imageBlocks.map(
+      (imageBlock) => imageBlock.children[1].children[0].text
+    );
+
+    const hasEmptyCaption = captions.some(
+      (caption) => caption.trim().length === 0
+    );
+
+    if (hasEmptyCaption) {
+      return 'A figure caption is required.';
+    }
+  }
+
+  return undefined;
+}
+
 /**
  * InputText component for usage with Formik
  *
@@ -19,7 +41,7 @@ import { RichTextEditor, InlineRichTextEditor } from '../../slate';
  */
 export function FormikInputEditor({ helper, id, excludePlugins, ...props }) {
   return (
-    <FastField {...props}>
+    <FastField {...props} validate={validateImageBlock}>
       {({ field, meta, form }) => {
         return (
           <FormGroupStructure

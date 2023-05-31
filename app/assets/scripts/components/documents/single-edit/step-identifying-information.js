@@ -5,7 +5,11 @@ import { Formik, Form as FormikForm } from 'formik';
 import { Form, FormHelperMessage } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
-import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
+import {
+  FormBlock,
+  FormBlockHeading,
+  FormSectionNotes
+} from '../../../styles/form-block';
 import { FormikInputText } from '../../common/forms/input-text';
 import { FormikInputEditor } from '../../common/forms/input-editor';
 import {
@@ -80,12 +84,23 @@ export default function StepIdentifyingInformation(props) {
                   label={getDocumentSectionLabel('general')}
                   commentSection='general'
                 >
-                  <p>
-                    <em>
-                      Updates to the general information will affect all
-                      versions.
-                    </em>
-                  </p>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        For newly created ATBDs, only the title and alias must
+                        be completed when starting. Other items are either auto
+                        generated or can be input at a later time.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
+                  <FormSectionNotes>
+                    <p>
+                      <em>
+                        Updates to the following two elements affect this and
+                        future versions of the document.
+                      </em>
+                    </p>
+                  </FormSectionNotes>
                   <FormikInputText
                     id='title'
                     name='title'
@@ -103,8 +118,8 @@ export default function StepIdentifyingInformation(props) {
                     description={formString('identifying_information.doi')}
                     helper={
                       <FormHelperMessage>
-                        Use the DOI name (ex: 10.1000/xyz123) instead of the
-                        full url
+                        For an existing document with a DOI, enter the DOI name
+                        (ex: 10.1000/xyz123) instead of the full URL.
                       </FormHelperMessage>
                     }
                   />
@@ -124,8 +139,8 @@ export default function StepIdentifyingInformation(props) {
                     )}
                     helper={
                       <FormHelperMessage>
-                        This field is only important when document version is
-                        greater than 1.
+                        Authors only need to enter information when updating an
+                        existing document (i.e version greater than 1).
                       </FormHelperMessage>
                     }
                   />
