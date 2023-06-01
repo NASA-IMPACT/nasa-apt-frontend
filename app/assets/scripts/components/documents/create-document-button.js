@@ -1,18 +1,16 @@
-import React, { useEffect } from 'react';
-import { Button } from '@devseed-ui/button';
+import React from 'react';
 import ButtonSecondary from '../../styles/button-secondary';
 import { Can } from '../../a11n';
+import { useBooleanState } from '../../utils/common';
 
 import NewATBDModal from './new-atbd-modal';
 
 function CreateDocumentButton() {
-  const [showNewATBDModal, setShowNewATBDModal] = React.useState(false);
-  const onCreateClick = React.useCallback(() => {
-    setShowNewATBDModal(true);
-  }, []);
-  const handleNewATBDCancel = React.useCallback(() => {
-    setShowNewATBDModal(false);
-  }, []);
+  const [
+    showNewATBDModal,
+    setShowNewATBDModalTrue,
+    setShowNewATBDModalFalse
+  ] = useBooleanState(false);
 
   return (
     <Can do='create' on='documents'>
@@ -20,11 +18,11 @@ function CreateDocumentButton() {
         variation='primary-raised-dark'
         title='Create new document'
         useIcon='plus--small'
-        onClick={onCreateClick}
+        onClick={setShowNewATBDModalTrue}
       >
         Create document
       </ButtonSecondary>
-      {showNewATBDModal && <NewATBDModal onCancel={handleNewATBDCancel} />}
+      {showNewATBDModal && <NewATBDModal onCancel={setShowNewATBDModalFalse} />}
     </Can>
   );
 }

@@ -149,7 +149,6 @@ function DocumentEdit() {
   }
 
   const stepDefinition = getDocumentEditStep(step, pdfMode);
-  console.info(stepDefinition, step, pdfMode, atbd);
   const nextStepDefinition = getNextDocumentEditStep(step, pdfMode);
 
   // During the closed review process the document can't be edited.

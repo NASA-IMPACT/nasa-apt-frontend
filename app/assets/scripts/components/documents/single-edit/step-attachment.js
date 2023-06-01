@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
-import { GlobalLoading } from '@devseed-ui/global-loading';
+// import { GlobalLoading } from '@devseed-ui/global-loading';
 import { visuallyHidden } from '@devseed-ui/theme-provider';
 
 import { useSubmitForVersionData } from './use-submit';

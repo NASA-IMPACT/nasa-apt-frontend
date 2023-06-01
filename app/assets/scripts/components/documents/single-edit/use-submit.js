@@ -66,7 +66,6 @@ export function useSubmitForVersionData(updateAtbd, atbd, hook) {
 
   return useCallback(
     async (values, formBag) => {
-      console.info('submission values', values);
       const processToast = createProcessToast('Saving changes');
 
       let result;

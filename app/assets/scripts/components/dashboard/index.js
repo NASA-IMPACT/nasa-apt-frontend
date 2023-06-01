@@ -16,8 +16,7 @@ import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import DashboardContributor from './dash-contributor';
 import DashboardCurator from './dash-curator';
-import { Can, useContextualAbility } from '../../a11n';
-import ButtonSecondary from '../../styles/button-secondary';
+import { useContextualAbility } from '../../a11n';
 import DashboardNoRole from './dash-no-role';
 import Insight from '../common/insight';
 
@@ -93,15 +92,6 @@ export const DocumentsBlockTitle = styled(Heading).attrs({
 
 function UserDashboard() {
   const { user } = useUser();
-  const [showNewATBDModal, setShowNewATBDModal] = React.useState(false);
-  const onCreateClick = React.useCallback(() => {
-    setShowNewATBDModal(true);
-  }, []);
-  const handleNewATBDCancel = React.useCallback(() => {
-    setShowNewATBDModal(false);
-  }, []);
-
-  // const onCreateClick = useDocumentCreate();
   const { invalidateAtbdListCtx } = useAtbds();
   const ability = useContextualAbility();
 

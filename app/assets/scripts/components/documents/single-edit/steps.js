@@ -151,7 +151,8 @@ const STEP_ATTACHMENT = {
 };
 
 const STEP_ALGORITHM_DESCRIPTION = {
-  id: 'algorithm_description', label: 'Algorithm Description',
+  id: 'algorithm_description',
+  label: 'Algorithm Description',
   StepComponent: StepAlgoDescription,
   getInitialValues: (atbd) => {
     return getValuesFromObj(atbd, {
