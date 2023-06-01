@@ -9,7 +9,6 @@ import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
-import { useContextualAbility } from '../../a11n';
 
 function DropMenuItemOutboundLink(props) {
   const { eventLabel, menuItem, active, ...rest } = props;
