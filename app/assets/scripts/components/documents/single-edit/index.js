@@ -56,7 +56,7 @@ function DocumentEdit() {
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
 
-  const pdfMode = atbd.data.document_type === 'PDF';
+  const pdfMode = atbd?.data?.document_type === 'PDF';
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
   // Thread stats - function for initial fetching which stores the document for
