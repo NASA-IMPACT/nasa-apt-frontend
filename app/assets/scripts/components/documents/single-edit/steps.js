@@ -140,9 +140,8 @@ const STEP_ATTACHMENT = {
   StepComponent: StepAttachment,
   getInitialValues: (atbd) => {
     return getValuesFromObj(atbd, {
-      attachement: {
-        // file_id:
-        // upload_id:
+      document: {
+        pdf_id: undefined
       },
       sections_completed: {
         attachment: 'incomplete'

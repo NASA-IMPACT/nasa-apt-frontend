@@ -55,7 +55,8 @@ function DocumentEdit() {
     updateAtbd,
     deleteAtbdVersion
   } = useSingleAtbd({ id, version });
-  const pdfMode = atbd.document_type === 'PDF';
+
+  const pdfMode = atbd.data.document_type === 'PDF';
   // Get all fire event actions.
   const atbdFevActions = useSingleAtbdEvents({ id, version });
   // Thread stats - function for initial fetching which stores the document for
@@ -148,6 +149,7 @@ function DocumentEdit() {
   }
 
   const stepDefinition = getDocumentEditStep(step, pdfMode);
+  console.info(stepDefinition, step, pdfMode, atbd);
   const nextStepDefinition = getNextDocumentEditStep(step, pdfMode);
 
   // During the closed review process the document can't be edited.
