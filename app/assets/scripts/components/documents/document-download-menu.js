@@ -37,8 +37,11 @@ export default function DocumentDownloadMenu(props) {
   const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
-  const ability = useContextualAbility();
-  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  // TODO: Fix Journal PDF downloading
+  // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
+  // const ability = useContextualAbility();
+  //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  const canDownloadJournalPdf = false;
 
   const handlePdfDownloadClick = React.useCallback(() => {
     const { id, version, alias } = atbd;
