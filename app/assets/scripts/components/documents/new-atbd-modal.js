@@ -5,6 +5,7 @@ import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
 import { FormInput, FormLabel, FormGroup, FormSwitch } from '@devseed-ui/form';
 import { glsp } from '@devseed-ui/theme-provider';
+import FormInfoTip from '../common/forms/form-info-tooltip';
 
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 
@@ -17,6 +18,9 @@ const ModalContent = styled.div`
   flex-direction: column;
   gap: ${glsp(2)};
 `;
+
+const TooltipContent =
+  'If your ATBD was created externally, you can add it as a PDF into APT. <br /><br /><strong> Caution</strong>: Importing ATBDs as PDFs restricts editing and searching capabilities. <br /><br />For more information, please click <a href="/new-atbd" target="_blank" rel="no_opener"> here</a>.';
 
 function NewATBDModal(props) {
   const { onCancel } = props;
@@ -46,7 +50,7 @@ function NewATBDModal(props) {
       content={
         <ModalContent>
           <FormGroup>
-            <FormLabel htmlFor='atbd-title'>Enter ATBD Title</FormLabel>
+            <FormLabel htmlFor='atbd-title'>ATBD Title</FormLabel>
             <StyledFormInput
               id='atbd-title'
               type='text'
@@ -61,7 +65,8 @@ function NewATBDModal(props) {
             onChange={handleIsPdfTypeChange}
             autoFocus
           >
-            PDF Type
+            Add an external ATBD
+            <FormInfoTip title={TooltipContent} />
           </FormSwitch>
         </ModalContent>
       }
