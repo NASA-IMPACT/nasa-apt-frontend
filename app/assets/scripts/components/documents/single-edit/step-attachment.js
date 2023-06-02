@@ -6,7 +6,7 @@ import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 // import { GlobalLoading } from '@devseed-ui/global-loading';
-import { visuallyHidden } from '@devseed-ui/theme-provider';
+import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 
 import { useSubmitForVersionData } from './use-submit';
 import { Inpage, InpageBody } from '../../../styles/inpage';
@@ -23,6 +23,13 @@ import { atbdPdfUpload } from '../../../utils/url-creator';
 
 const HiddenFileInput = styled.input`
   ${visuallyHidden()}
+`;
+
+const UploadButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${glsp()};
+  align-items: flex-start;
 `;
 
 function PDFUploadButton(props) {
@@ -46,10 +53,16 @@ function PDFUploadButton(props) {
               headers
             });
 
-            const { upload_id, upload_url } = s3UrlResponse.data;
+            const { upload_id, upload_url, upload_fields } = s3UrlResponse.data;
 
-            const pdfFile = e.target.files[0];
-            await axios.put(upload_url, pdfFile);
+            await axios.post(
+              upload_url,
+              {
+                ...upload_fields,
+                file: e.target.files[0]
+              },
+              { headers: { 'Content-Type': 'multipart/form-data' } }
+            );
             setFieldValue('pdf_id', upload_id);
           } catch (error) {
             // TODO: show message to user
@@ -69,7 +82,12 @@ function PDFUploadButton(props) {
   }, []);
 
   return (
-    <>
+    <UploadButtonContainer>
+      {atbd.pdf && (
+        <a target='_blank' rel='noreferrer noopener' href={atbd.pdf.file_path}>
+          View selected file
+        </a>
+      )}
       <Button
         variation='primary-raised-dark'
         onClick={handleUploadClick}
@@ -83,14 +101,15 @@ function PDFUploadButton(props) {
         onChange={handleChange}
         accept='.pdf'
       />
-    </>
+    </UploadButtonContainer>
   );
 }
 
 PDFUploadButton.propTypes = {
   atbd: T.shape({
     id: T.number,
-    document: T.object
+    document: T.object,
+    pdf: T.object
   })
 };
 
