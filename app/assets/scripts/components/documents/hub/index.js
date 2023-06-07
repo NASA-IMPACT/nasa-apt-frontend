@@ -14,14 +14,13 @@ import {
   InpageBody
 } from '../../../styles/inpage';
 import { ContentBlock } from '../../../styles/content-block';
-import ButtonSecondary from '../../../styles/button-secondary';
 import DocumentHubEntry from './document-hub-entry';
 import { EmptyHub } from '../../common/empty-states';
 import { Can } from '../../../a11n';
 import { Link } from '../../../styles/clean/link';
 
 import { useAtbds } from '../../../context/atbds-list';
-import { useDocumentCreate } from '../single-edit/use-document-create';
+import CreateDocumentButton from '../../documents/create-document-button';
 
 export const DocList = styled.ol`
   grid-column: content-start / content-end;
@@ -52,8 +51,6 @@ function Documents() {
     throw atbds.error;
   }
 
-  const onCreateClick = useDocumentCreate();
-
   return (
     <App pageTitle='ATBDs'>
       {atbds.status === 'loading' && <GlobalLoading />}
@@ -72,15 +69,7 @@ function Documents() {
             >
               Search
             </Button>
-            <Can do='create' on='documents'>
-              <ButtonSecondary
-                title='Create new document'
-                useIcon='plus--small'
-                onClick={onCreateClick}
-              >
-                Create
-              </ButtonSecondary>
-            </Can>
+            <CreateDocumentButton />
           </InpageActions>
         </InpageHeaderSticky>
         <InpageBody>
@@ -92,15 +81,8 @@ function Documents() {
                     APT is a repository for scientific documents, but none
                     exist. Start by creating one.
                   </p>
-                  <Button
-                    variation='primary-raised-dark'
-                    title='Create new document'
-                    useIcon='plus--small'
-                    onClick={onCreateClick}
-                  >
-                    Create document
-                  </Button>
                 </Can>
+                <CreateDocumentButton />
                 <Can not do='create' on='document'>
                   <p>
                     APT is a repository for scientific documents, but none

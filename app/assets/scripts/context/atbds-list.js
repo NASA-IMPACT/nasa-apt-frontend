@@ -204,19 +204,23 @@ export const AtbdsProvider = (props) => {
         }))
       },
       mutations: {
-        createAtbd: withRequestToken(token, () => ({
-          // Holder for the creation of a new ATBD since we don't have id yet.
-          sliceKey: 'new',
-          url: '/atbds',
-          requestOptions: {
-            method: 'post',
-            data: {
-              // New ATBDs are created as Untitled. The user can change the
-              // title at a later stage.
-              title: 'Untitled Document'
+        createAtbd: withRequestToken(
+          token,
+          (title = 'Untitled Document', isPdfType = false) => ({
+            // Holder for the creation of a new ATBD since we don't have id yet.
+            sliceKey: 'new',
+            url: '/atbds',
+            requestOptions: {
+              method: 'post',
+              data: {
+                // New ATBDs are created as Untitled. The user can change the
+                // title at a later stage.
+                title,
+                document_type: isPdfType ? 'PDF' : 'HTML'
+              }
             }
-          }
-        })),
+          })
+        ),
         createAtbdVersion: withRequestToken(token, ({ id }) => ({
           // Holder for the creation of a new ATBD version since we don't have a
           // version number yet.

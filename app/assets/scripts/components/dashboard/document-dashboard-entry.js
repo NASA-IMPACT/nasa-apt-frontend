@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { BsFilePdf } from 'react-icons/bs';
 
 import { Can } from '../../a11n';
 import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
@@ -89,6 +90,9 @@ function DocumentDashboardEntry(props) {
                 </li>
               </DocumentEntryBreadcrumbMenu>
             </DocumentEntryNav>
+            {atbd.document_type === 'PDF' && (
+              <BsFilePdf title='PDF type document' />
+            )}
           </DocumentEntryHgroup>
           <DocumentEntryMeta>
             <li>
