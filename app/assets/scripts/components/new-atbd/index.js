@@ -202,7 +202,7 @@ function NewAtbd() {
               See <Link to='/user-guide'>APT user guide</Link>
             </div>
             <Video
-              src='https://drive.google.com/file/d/1D9WpNJh3teOCLMbb_gDeJyIWjqarySyk/view'
+              src='https://drive.google.com/file/d/1D9WpNJh3teOCLMbb_gDeJyIWjqarySyk/preview'
               title='APT - creating a document'
               frameborder='0'
               allowfullscreen
