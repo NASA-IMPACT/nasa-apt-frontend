@@ -10,6 +10,7 @@ import StepReferences from './step-references';
 import StepContacts from './step-contacts';
 import StepCloseout from './step-closeout';
 import StepAttachment from './step-attachment';
+import StepPdfCloseout from './step-pdf-closeout';
 
 const STEP_IDENTIFYING_INFORMATION = {
   id: 'identifying_information',
@@ -312,6 +313,24 @@ const STEP_CLOSEOUT = {
   }
 };
 
+const STEP_PDF_CLOSEOUT = {
+  id: 'pdf-closeout',
+  label: 'Closeout',
+  StepComponent: StepPdfCloseout,
+  getInitialValues: (atbd) => {
+    return getValuesFromObj(atbd, {
+      journal_status: JOURNAL_NO_PUBLICATION,
+      document: {
+        abstract: EDITOR_SYM,
+        plain_summary: EDITOR_SYM
+      },
+      sections_completed: {
+        abstract: 'incomplete'
+      }
+    });
+  }
+};
+
 const ATBD_STEPS = [
   STEP_IDENTIFYING_INFORMATION,
   STEP_CONTACTS,
@@ -327,7 +346,7 @@ const PDF_STEPS = [
   STEP_IDENTIFYING_INFORMATION,
   STEP_CONTACTS,
   STEP_ATTACHMENT,
-  STEP_CLOSEOUT
+  STEP_PDF_CLOSEOUT
 ];
 
 export function getSteps(isPdfMode = false) {
