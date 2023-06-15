@@ -2,24 +2,28 @@ import React, { useCallback } from 'react';
 import T from 'prop-types';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Formik, Form as FormikForm, useField } from 'formik';
+import { toast } from 'react-toastify';
+import { Formik, Form as FormikForm, useField, useFormikContext } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 // import { GlobalLoading } from '@devseed-ui/global-loading';
 import { glsp, visuallyHidden } from '@devseed-ui/theme-provider';
 
-import { useSubmitForVersionData } from './use-submit';
 import { Inpage, InpageBody } from '../../../styles/inpage';
 import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
-import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
-import { getDocumentSectionLabel } from './sections';
-import { LocalStore } from './local-store';
-import { FormikUnloadPrompt } from '../../common/unload-prompt';
 import { useAuthToken } from '../../../context/user';
 import { axiosAPI } from '../../../utils/axios';
 import { atbdPdfUpload } from '../../../utils/url-creator';
+
+import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import { createProcessToast } from '../../common/toasts';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
+
+import { useSubmitForVersionData } from './use-submit';
+import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
 
 const HiddenFileInput = styled.input`
   ${visuallyHidden()}
@@ -37,13 +41,16 @@ function PDFUploadButton(props) {
   const fileInputRef = React.useRef();
   const { token } = useAuthToken();
   const [, , { setValue }] = useField('pdf_id');
+  const { status, setStatus } = useFormikContext();
 
   const handleChange = React.useCallback(
     (e) => {
       if (e.target.files) {
         // eslint-disable-next-line no-inner-declarations
         async function uploadToS3() {
+          const processToast = createProcessToast('Uploading file...');
           try {
+            setStatus({ working: true });
             const headers = {
               Authorization: `Bearer ${token}`
             };
@@ -64,18 +71,34 @@ function PDFUploadButton(props) {
               { headers: { 'Content-Type': 'multipart/form-data' } }
             );
             setValue(upload_id);
-            // setFieldValue('pdf_id', upload_id);
+            setStatus({ working: false });
+            processToast.success('File uploaded successfully!');
           } catch (error) {
-            // TODO: show message to user
+            processToast.error('Failed to upload the file!');
             // eslint-disable-next-line no-console
             console.error(error);
+            setStatus({ working: false });
           }
+        }
+
+        if (e.target.files[0]?.type !== 'application/pdf') {
+          toast(
+            'Unsupported file! Please select a valid PDF file for upload!',
+            {
+              closeOnClick: false,
+              closeButton: true,
+              autoClose: false,
+              draggable: false,
+              type: toast.TYPE.ERROR
+            }
+          );
+          return;
         }
 
         uploadToS3();
       }
     },
-    [token, atbd, setValue]
+    [token, atbd, setValue, setStatus]
   );
 
   const handleUploadClick = React.useCallback(() => {
@@ -90,6 +113,7 @@ function PDFUploadButton(props) {
         </a>
       )}
       <Button
+        disabled={status?.working}
         variation='primary-raised-dark'
         onClick={handleUploadClick}
         useIcon='upload'
