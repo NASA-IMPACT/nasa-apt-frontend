@@ -30,6 +30,7 @@ import getDocumentIdKey from '../documents/get-document-id-key';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
+  const pdfMode = atbd?.document_type === 'PDF';
 
   const lastVersion = useMemo(
     () => computeAtbdVersion(atbd, atbd.versions.last),
@@ -101,7 +102,10 @@ function DocumentDashboardEntry(props) {
                 title='View document progress tracker'
                 onClick={onDocumentStatusClick}
               >
-                <DocumentStatusPill atbdVersion={lastVersion} />
+                <DocumentStatusPill
+                  atbdVersion={lastVersion}
+                  pdfMode={pdfMode}
+                />
               </DocumentStatusLink>
             </li>
             <li>

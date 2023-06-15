@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import T from 'prop-types';
 import axios from 'axios';
 import styled from 'styled-components';
-import { Formik, Form as FormikForm, useFormikContext } from 'formik';
+import { Formik, Form as FormikForm, useField } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { Button } from '@devseed-ui/button';
 // import { GlobalLoading } from '@devseed-ui/global-loading';
@@ -36,7 +36,7 @@ function PDFUploadButton(props) {
   const { atbd } = props;
   const fileInputRef = React.useRef();
   const { token } = useAuthToken();
-  const { setFieldValue } = useFormikContext();
+  const [, , { setValue }] = useField('pdf_id');
 
   const handleChange = React.useCallback(
     (e) => {
@@ -63,7 +63,8 @@ function PDFUploadButton(props) {
               },
               { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            setFieldValue('pdf_id', upload_id);
+            setValue(upload_id);
+            // setFieldValue('pdf_id', upload_id);
           } catch (error) {
             // TODO: show message to user
             // eslint-disable-next-line no-console
@@ -74,7 +75,7 @@ function PDFUploadButton(props) {
         uploadToS3();
       }
     },
-    [token, atbd, setFieldValue]
+    [token, atbd, setValue]
   );
 
   const handleUploadClick = React.useCallback(() => {
