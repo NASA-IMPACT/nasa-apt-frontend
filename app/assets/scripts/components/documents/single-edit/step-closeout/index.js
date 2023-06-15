@@ -8,6 +8,7 @@ import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
 import RichTextContex2Formik from '../rich-text-ctx-formik';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import { FormikInputEditor } from '../../../common/forms/input-editor';
+import KeywordsField, { updateKeywordValues } from './field-keywords';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
@@ -67,6 +68,7 @@ export default function StepCloseout(props) {
                     description={formString('closeout.plain_summary')}
                     growWithContents
                   />
+                  <KeywordsField />
                 </FormikSectionFieldset>
               </RichTextContex2Formik>
               {renderFormFooter()}
