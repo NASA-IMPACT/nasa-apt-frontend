@@ -82,16 +82,13 @@ function PDFUploadButton(props) {
         }
 
         if (e.target.files[0]?.type !== 'application/pdf') {
-          toast(
-            'Unsupported file! Please select a valid PDF file for upload!',
-            {
-              closeOnClick: false,
-              closeButton: true,
-              autoClose: false,
-              draggable: false,
-              type: toast.TYPE.ERROR
-            }
-          );
+          toast('Unsupported file! Please select a valid PDF file.', {
+            closeOnClick: false,
+            closeButton: true,
+            autoClose: false,
+            draggable: false,
+            type: toast.TYPE.ERROR
+          });
           return;
         }
 
