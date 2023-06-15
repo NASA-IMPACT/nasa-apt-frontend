@@ -4,6 +4,7 @@ interface ATBD {
   created_by: String;
   created_at: Date;
   title: String;
+  document_type: 'HTML' | 'PDF';
   versions: [ATBDVersion];
 }
 
@@ -17,6 +18,10 @@ interface ATBDVersion {
   minor: Number;
   version: String;
   document: ATBDDocument;
+  pdf?: {
+    id: number;
+    file_path: string;
+  };
   doi: String;
 }
 

@@ -210,6 +210,8 @@ export default function DocumentOutline(props) {
     }
   }, [elementRef, activeId]);
 
+  const pdfMode = atbd.document_type === 'PDF';
+
   return (
     <OutlineSelf ref={elementRef}>
       <PanelHeader>
@@ -220,7 +222,7 @@ export default function DocumentOutline(props) {
       <PanelBody>
         <ShadowScrollbar>
           <OutlineMenu
-            items={getAtbdContentSections(atbd.document_type === 'PDF')}
+            items={getAtbdContentSections(pdfMode)}
             atbd={atbd}
             atbdDocument={atbd.document}
           />

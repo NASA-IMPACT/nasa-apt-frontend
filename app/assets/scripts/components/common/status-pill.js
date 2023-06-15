@@ -104,11 +104,11 @@ StatusPill.propTypes = {
 export default StatusPill;
 
 export function DocumentStatusPill(props) {
-  const { atbdVersion, ...rest } = props;
+  const { atbdVersion, pdfMode, ...rest } = props;
   const { statusMapping } = useStatusColors();
 
   if (isDraftEquivalent(atbdVersion)) {
-    const { percent } = calculateDocumentCompleteness(atbdVersion);
+    const { percent } = calculateDocumentCompleteness(atbdVersion, pdfMode);
     return (
       <StatusPill
         swatchColor={statusMapping[atbdVersion.status]}
@@ -148,5 +148,6 @@ export function DocumentStatusPill(props) {
 }
 
 DocumentStatusPill.propTypes = {
+  pdfMode: T.bool,
   atbdVersion: T.object
 };

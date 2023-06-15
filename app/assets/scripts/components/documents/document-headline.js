@@ -31,9 +31,10 @@ export default function DocumentHeadline(props) {
   const ability = useContextualAbility();
   const { isPanelOpen } = useCommentCenter();
 
-  const { title, version, versions, last_updated_at } = atbd;
+  const { title, version, versions, last_updated_at, document_type } = atbd;
   const atbdIdOrAlias = getDocumentIdKey(atbd).id;
   const updatedDate = new Date(last_updated_at);
+  const pdfMode = document_type === 'PDF';
 
   const atbdVersion = versions.find((v) => v.version === version);
 
@@ -149,7 +150,10 @@ export default function DocumentHeadline(props) {
                 title='View document progress tracker'
                 onClick={onDocumentStatusClick}
               >
-                <DocumentStatusPill atbdVersion={atbdVersion} />
+                <DocumentStatusPill
+                  atbdVersion={atbdVersion}
+                  pdfMode={pdfMode}
+                />
               </DocumentStatusLink>
             </li>
             <li>
