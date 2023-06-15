@@ -3,28 +3,26 @@ import T from 'prop-types';
 import { Formik, Form as FormikForm, useField } from 'formik';
 import { Form, FormHelperCounter } from '@devseed-ui/form';
 
-import { Inpage, InpageBody } from '../../../../styles/inpage';
-import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
-import RichTextContex2Formik from '../rich-text-ctx-formik';
-import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
-import { FormikInputEditor } from '../../../common/forms/input-editor';
-import KeywordsField, { updateKeywordValues } from './field-keywords';
-import JournalDetailsSection from './journal-details';
+import { Inpage, InpageBody } from '../../../styles/inpage';
+import { FormBlock, FormBlockHeading } from '../../../styles/form-block';
+import { FormikSectionFieldset } from '../../common/forms/section-fieldset';
+import { FormikInputEditor } from '../../common/forms/input-editor';
 
-import { useSingleAtbd } from '../../../../context/atbds-list';
-import { useSubmitForVersionData } from '../use-submit';
-import { formString } from '../../../../utils/strings';
-import { getDocumentSectionLabel } from '../sections';
-import { LocalStore } from '../local-store';
-import { FormikUnloadPrompt } from '../../../common/unload-prompt';
+import { useSingleAtbd } from '../../../context/atbds-list';
+import { formString } from '../../../utils/strings';
+import { FormikUnloadPrompt } from '../../common/unload-prompt';
 
-import { ImageBlockPlugin } from '../../../slate/plugins/image';
-import { TableBlockPlugin } from '../../../slate/plugins/table';
-import { SubSectionPlugin } from '../../../slate/plugins/subsection';
+import { ImageBlockPlugin } from '../../slate/plugins/image';
+import { TableBlockPlugin } from '../../slate/plugins/table';
+import { SubSectionPlugin } from '../../slate/plugins/subsection';
+import { getDocumentSectionLabel } from './sections';
+import { LocalStore } from './local-store';
+import { useSubmitForVersionData } from './use-submit';
+import RichTextContex2Formik from './rich-text-ctx-formik';
 
 const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
-export default function StepCloseout(props) {
+export default function StepPdfCloseout(props) {
   const {
     renderInpageHeader,
     renderFormFooter,
@@ -39,11 +37,7 @@ export default function StepCloseout(props) {
   const initialValues = step.getInitialValues(atbd);
   // Compose the submit handler.
   // When submitting, get data for the selected keywords from the GCMD api.
-  const onSubmit = useSubmitForVersionData(
-    updateAtbd,
-    atbd,
-    updateKeywordValues
-  );
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik
@@ -68,7 +62,6 @@ export default function StepCloseout(props) {
                   commentSection='abstract'
                 >
                   <FieldAbstract />
-
                   <FormikInputEditor
                     id='plain_summary'
                     name='document.plain_summary'
@@ -76,11 +69,7 @@ export default function StepCloseout(props) {
                     description={formString('closeout.plain_summary')}
                     growWithContents
                   />
-
-                  <KeywordsField />
                 </FormikSectionFieldset>
-
-                <JournalDetailsSection atbd={atbd} />
               </RichTextContex2Formik>
               {renderFormFooter()}
             </Form>
@@ -91,7 +80,7 @@ export default function StepCloseout(props) {
   );
 }
 
-StepCloseout.propTypes = {
+StepPdfCloseout.propTypes = {
   renderInpageHeader: T.func,
   renderFormFooter: T.func,
   step: T.object,
