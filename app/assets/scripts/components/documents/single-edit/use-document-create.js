@@ -9,13 +9,13 @@ import { createProcessToast } from '../../common/toasts';
  * Hook to create a click listener for the document create button
  * @returns function
  */
-export function useDocumentCreate(title, isPdfType) {
+export function useDocumentCreate(title, alias, isPdfType) {
   const { createAtbd } = useAtbds();
   const history = useHistory();
 
   return useCallback(async () => {
     const processToast = createProcessToast('Creating new Document');
-    const result = await createAtbd(title, isPdfType);
+    const result = await createAtbd(title, alias, isPdfType);
 
     if (result.error) {
       processToast.error(`An error occurred: ${result.error.message}`);
@@ -29,5 +29,5 @@ export function useDocumentCreate(title, isPdfType) {
         menuAction: 'view-tracker'
       });
     }
-  }, [createAtbd, history, title, isPdfType]);
+  }, [createAtbd, alias, history, title, isPdfType]);
 }
