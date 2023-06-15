@@ -8,8 +8,6 @@ import { FormBlock, FormBlockHeading } from '../../../../styles/form-block';
 import RichTextContex2Formik from '../rich-text-ctx-formik';
 import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
 import { FormikInputEditor } from '../../../common/forms/input-editor';
-import KeywordsField, { updateKeywordValues } from './field-keywords';
-import JournalDetailsSection from './journal-details';
 
 import { useSingleAtbd } from '../../../../context/atbds-list';
 import { useSubmitForVersionData } from '../use-submit';
@@ -37,13 +35,7 @@ export default function StepCloseout(props) {
   const { updateAtbd } = useSingleAtbd({ id, version });
 
   const initialValues = step.getInitialValues(atbd);
-  // Compose the submit handler.
-  // When submitting, get data for the selected keywords from the GCMD api.
-  const onSubmit = useSubmitForVersionData(
-    updateAtbd,
-    atbd,
-    updateKeywordValues
-  );
+  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
 
   return (
     <Formik
@@ -68,7 +60,6 @@ export default function StepCloseout(props) {
                   commentSection='abstract'
                 >
                   <FieldAbstract />
-
                   <FormikInputEditor
                     id='plain_summary'
                     name='document.plain_summary'
@@ -76,11 +67,7 @@ export default function StepCloseout(props) {
                     description={formString('closeout.plain_summary')}
                     growWithContents
                   />
-
-                  <KeywordsField />
                 </FormikSectionFieldset>
-
-                <JournalDetailsSection atbd={atbd} />
               </RichTextContex2Formik>
               {renderFormFooter()}
             </Form>
