@@ -44,7 +44,10 @@ export default function DocumentDownloadMenu(props) {
 
   const handlePdfDownloadClick = React.useCallback(() => {
     const { id, version, alias } = atbd;
-    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    const pdfUrl =
+      atbd.documentType === 'PDF'
+        ? atbd.pdf.file_path
+        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
     const maxRetries = 50;
     const waitBetweenTries = 5000;
