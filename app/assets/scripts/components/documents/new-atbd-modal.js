@@ -4,7 +4,7 @@ import T from 'prop-types';
 import kebabcase from 'lodash.kebabcase';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
-import { FormInput, FormLabel, FormGroup, FormSwitch } from '@devseed-ui/form';
+import { FormInput, FormLabel, FormGroup } from '@devseed-ui/form';
 import { glsp } from '@devseed-ui/theme-provider';
 
 import FormInfoTip from '../common/forms/form-info-tooltip';
@@ -30,8 +30,9 @@ function NewATBDModal(props) {
   const { onCancel } = props;
   const [title, setTitle] = React.useState('Untitled document');
   const [alias, setAlias] = React.useState(() => toAliasFormat(title));
-  const [isPdfType, setIsPdfType] = React.useState(false);
-  const handleNewATBDClick = useDocumentCreate(title, alias, isPdfType);
+
+  const handleNewAtbdClick = useDocumentCreate(title, alias, false);
+  const handleNewPdfAtbdClick = useDocumentCreate(title, alias, true);
 
   const handleTitleInputChange = React.useCallback((e) => {
     setTitle(e.target.value);
@@ -42,10 +43,6 @@ function NewATBDModal(props) {
     setAlias(toAliasFormat(e.target.value));
   }, []);
 
-  const handleIsPdfTypeChange = React.useCallback((e) => {
-    setIsPdfType(e.target.checked);
-  }, []);
-
   return (
     <Modal
       id='new-atbd-modal'
@@ -53,9 +50,17 @@ function NewATBDModal(props) {
       onCloseClick={onCancel}
       title='Create new ATBD'
       footerContent={
-        <Button variation='primary-raised-dark' onClick={handleNewATBDClick}>
-          Create new ATBD
-        </Button>
+        <>
+          <Button variation='primary-raised-dark' onClick={handleNewAtbdClick}>
+            Create new ATBD in APT
+          </Button>
+          <Button
+            variation='primary-raised-light'
+            onClick={handleNewPdfAtbdClick}
+          >
+            Upload existing ATBD PDF <FormInfoTip title={TooltipContent} />
+          </Button>
+        </>
       }
       content={
         <ModalContent>
@@ -80,14 +85,6 @@ function NewATBDModal(props) {
               onChange={handleAliasInputChange}
             />
           </FormGroup>
-          <FormSwitch
-            checked={isPdfType}
-            onChange={handleIsPdfTypeChange}
-            autoFocus
-          >
-            Add an external ATBD
-            <FormInfoTip title={TooltipContent} />
-          </FormSwitch>
         </ModalContent>
       }
     />
