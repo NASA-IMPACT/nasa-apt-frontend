@@ -44,7 +44,6 @@ export default function StepsMenu(props) {
   const pdfMode = atbd?.document_type === 'PDF';
 
   const activeStepItem = useMemo(
-
     () => getDocumentEditStep(activeStep, pdfMode),
     [activeStep, pdfMode]
   );

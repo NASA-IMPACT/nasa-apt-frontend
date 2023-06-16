@@ -23,14 +23,8 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
 export default function StepPdfCloseout(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 

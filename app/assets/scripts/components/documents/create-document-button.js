@@ -6,11 +6,8 @@ import { useBooleanState } from '../../utils/common';
 import NewATBDModal from './new-atbd-modal';
 
 function CreateDocumentButton() {
-  const [
-    showNewATBDModal,
-    setShowNewATBDModalTrue,
-    setShowNewATBDModalFalse
-  ] = useBooleanState(false);
+  const [showNewATBDModal, setShowNewATBDModalTrue, setShowNewATBDModalFalse] =
+    useBooleanState(false);
 
   return (
     <Can do='create' on='documents'>
