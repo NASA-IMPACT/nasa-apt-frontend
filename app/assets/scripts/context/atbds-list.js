@@ -206,7 +206,11 @@ export const AtbdsProvider = (props) => {
       mutations: {
         createAtbd: withRequestToken(
           token,
-          (title = 'Untitled Document', isPdfType = false) => ({
+          (
+            title = 'Untitled Document',
+            alias = undefined,
+            isPdfType = false
+          ) => ({
             // Holder for the creation of a new ATBD since we don't have id yet.
             sliceKey: 'new',
             url: '/atbds',
@@ -216,6 +220,7 @@ export const AtbdsProvider = (props) => {
                 // New ATBDs are created as Untitled. The user can change the
                 // title at a later stage.
                 title,
+                alias,
                 document_type: isPdfType ? 'PDF' : 'HTML'
               }
             }
