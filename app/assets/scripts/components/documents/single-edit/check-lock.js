@@ -69,15 +69,16 @@ function CheckLock({ id, version, user }) {
           // clear the pending status of request
           delete clearLockPendingRef.current[docId];
 
-          if (error.response.status !== 423) {
-            errorToast(
-              'Unable to clear lock of ATBD version. Please try again.'
-            );
-          } else {
-            // Log any other type of error
-            // eslint-disable-next-line no-console
-            console.error(error);
+          // Log any other type of error
+          // eslint-disable-next-line no-console
+          console.error(error);
+
+          // Ignore 423 or 404 errors
+          if (error.response.status === 423 || error.response.status === 404) {
+            return;
           }
+
+          errorToast('Unable to clear lock of ATBD version. Please try again.');
         });
     }
   }, []);

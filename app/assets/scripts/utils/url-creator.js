@@ -76,3 +76,7 @@ export const contactEdit = (contactId) => {
 export const imageApiUrl = (atbd, objectKey) => {
   return `${apiUrl}/atbds/${atbd.id}/images/${objectKey}`;
 };
+
+export const atbdPdfUpload = (atbd) => {
+  return `${apiUrl}/atbds/${atbd.id}/upload`;
+};

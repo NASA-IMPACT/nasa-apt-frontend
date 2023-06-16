@@ -68,7 +68,7 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        If left empty, APT will use the document landing page url.
+        If left empty, APT will use the document landing page URL.
       </FormHelperMessage>
     )
   }

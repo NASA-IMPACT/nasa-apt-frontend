@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import T from 'prop-types';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { BsFilePdf } from 'react-icons/bs';
 
 import { Can } from '../../a11n';
 import { DocumentStatusLink, DocumentStatusPill } from '../common/status-pill';
@@ -29,6 +30,7 @@ import getDocumentIdKey from '../documents/get-document-id-key';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
+  const pdfMode = atbd?.document_type === 'PDF';
 
   const lastVersion = useMemo(
     () => computeAtbdVersion(atbd, atbd.versions.last),
@@ -89,6 +91,9 @@ function DocumentDashboardEntry(props) {
                 </li>
               </DocumentEntryBreadcrumbMenu>
             </DocumentEntryNav>
+            {atbd.document_type === 'PDF' && (
+              <BsFilePdf title='PDF type document' />
+            )}
           </DocumentEntryHgroup>
           <DocumentEntryMeta>
             <li>
@@ -97,7 +102,10 @@ function DocumentDashboardEntry(props) {
                 title='View document progress tracker'
                 onClick={onDocumentStatusClick}
               >
-                <DocumentStatusPill atbdVersion={lastVersion} />
+                <DocumentStatusPill
+                  atbdVersion={lastVersion}
+                  pdfMode={pdfMode}
+                />
               </DocumentStatusLink>
             </li>
             <li>

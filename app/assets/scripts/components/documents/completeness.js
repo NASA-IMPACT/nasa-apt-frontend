@@ -1,5 +1,5 @@
 import { round } from '../../utils/format';
-import { STEPS } from './single-edit/steps';
+import { getSteps } from './single-edit/steps';
 import { isJournalPublicationIntended } from './status';
 
 // The closeout step is special. There are sections which should only be
@@ -51,7 +51,9 @@ const calculateCompleteness = (sections) => {
  *
  * @param {object} atbd ATBD version data
  */
-export const calculateDocumentCompleteness = (atbd) => {
+export const calculateDocumentCompleteness = (atbd, pdfMode = false) => {
+  const STEPS = getSteps(pdfMode);
+
   const allSections = STEPS.reduce((acc, step) => {
     // We can use getInitialValues to get the status of the sections
     // while adding any section that is not yet in the database.
@@ -61,6 +63,7 @@ export const calculateDocumentCompleteness = (atbd) => {
     // The closeout step is special. There are sections which should only be
     // considered if the document is intended for journal publication.
     if (
+      !pdfMode &&
       step.id === 'closeout' &&
       !isJournalPublicationIntended(journal_status)
     ) {
@@ -86,6 +89,7 @@ export const calculateDocumentCompleteness = (atbd) => {
  * @param {object} step The step for which to calculate completeness
  */
 export const calculateDocumentStepCompleteness = (atbd, step) => {
+  const pdfMode = atbd.document_type === 'PDF';
   const { getInitialValues } = step;
   // We can use getInitialValues to get the status of the sections
   // while adding any section that is not yet in the database.
@@ -93,7 +97,11 @@ export const calculateDocumentStepCompleteness = (atbd, step) => {
 
   // The closeout step is special. There are sections which should only be
   // considered if the document is intended for journal publication.
-  if (step.id === 'closeout' && !isJournalPublicationIntended(journal_status)) {
+  if (
+    !pdfMode &&
+    step.id === 'closeout' &&
+    !isJournalPublicationIntended(journal_status)
+  ) {
     return calculateCompleteness(
       filterSections(sections_completed, CLOSEOUT_JOURNAL_SECTIONS)
     );

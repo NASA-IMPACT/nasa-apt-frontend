@@ -3,7 +3,6 @@ import T from 'prop-types';
 import styled from 'styled-components';
 import { glsp } from '@devseed-ui/theme-provider';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { Button } from '@devseed-ui/button';
 
 import {
   TabContent,
@@ -19,8 +18,8 @@ import DocListSettings, { useDocListSettings } from './document-list-settings';
 import DocCountIndicator from './document-count-indicator';
 
 import { computeAtbdVersion, useAtbds } from '../../context/atbds-list';
-import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useDocumentHubMenuAction } from './use-document-menu-action';
+import CreateDocumentButton from '../documents/create-document-button';
 import { PUBLISHED } from '../documents/status';
 import { useThreadStats } from '../../context/threads-list';
 import { DocumentsBlockTitle } from '.';
@@ -152,7 +151,6 @@ const TabDocuments = (props) => {
     role,
     status
   });
-  const onCreateClick = useDocumentCreate();
   const onDocumentAction = useDocumentHubMenuAction();
 
   useEffect(() => {
@@ -199,14 +197,7 @@ const TabDocuments = (props) => {
               You are not the lead author of any documents, but can always
               create one.
             </p>
-            <Button
-              variation='primary-raised-dark'
-              title='Create new document'
-              useIcon='plus--small'
-              onClick={onCreateClick}
-            >
-              Create document
-            </Button>
+            <CreateDocumentButton />
           </EmptyTab>
         );
       case 'contrib':
@@ -216,14 +207,7 @@ const TabDocuments = (props) => {
               You haven&apos;t been invited as the co-author of any document,
               but can always create your own.
             </p>
-            <Button
-              variation='primary-raised-dark'
-              title='Create new document'
-              useIcon='plus--small'
-              onClick={onCreateClick}
-            >
-              Create document
-            </Button>
+            <CreateDocumentButton />
           </EmptyTab>
         );
       case 'reviews':

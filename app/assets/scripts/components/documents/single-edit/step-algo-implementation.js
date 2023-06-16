@@ -95,7 +95,7 @@ export default function StepAlgoImplementation(props) {
                   )}
                   sectionName='sections_completed.data_access_related_urls'
                   commentSection='data_access_related_urls'
-                  fieldLabel='Important Related Urls'
+                  fieldLabel='Important Related URLs'
                   fieldName='document.data_access_related_urls'
                   fieldEmptyMessage='There are no Important Related Urls. You can start by adding one.'
                 />

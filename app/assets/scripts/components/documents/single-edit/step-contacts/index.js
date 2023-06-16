@@ -121,6 +121,11 @@ export default function StepContacts(props) {
                           Identifying information
                         </Link>{' '}
                         step.
+                        <br />
+                        <br />
+                        The contacts for this ATBD should be listed in the
+                        desired order, preferably list the corresponding author
+                        first.
                       </em>
                     </p>
                   </FormSectionNotes>
