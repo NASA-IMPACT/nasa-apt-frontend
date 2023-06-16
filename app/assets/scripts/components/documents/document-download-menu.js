@@ -9,7 +9,6 @@ import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
-import { useContextualAbility } from '../../a11n';
 
 function DropMenuItemOutboundLink(props) {
   const { eventLabel, menuItem, active, ...rest } = props;
@@ -37,25 +36,34 @@ export default function DocumentDownloadMenu(props) {
   const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
-  const ability = useContextualAbility();
-  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  // TODO: Fix Journal PDF downloading
+  // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
+  // const ability = useContextualAbility();
+  //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  const canDownloadJournalPdf = false;
 
   const handlePdfDownloadClick = React.useCallback(() => {
     const { id, version, alias } = atbd;
-    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    const pdfUrl =
+      atbd.documentType === 'PDF'
+        ? atbd.pdf.file_path
+        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
     const pdfFileName = `${alias}-v${version}.pdf`;
-    const maxRetries = 10;
+    const maxRetries = 50;
     const waitBetweenTries = 5000;
-    const toast = createProcessToast('Downloading PDF, please wait...');
+    const processToast = createProcessToast('Downloading PDF, please wait...');
+    const initialWait = 10000;
     let retryCount = 0;
 
     async function fetchPdf(url) {
       if (retryCount > 0) {
-        toast.update('Generating the PDF. This may take a minute...');
+        processToast.update(
+          'Generating the PDF. This may take up to 5 minutes.'
+        );
       }
       const user = await Auth.currentAuthenticatedUser();
       if (!user) {
-        toast.error('Failed to download PDF! (Not authenticated)');
+        processToast.error('Failed to download PDF! (Not authenticated)');
         return;
       }
 
@@ -87,7 +95,9 @@ export default function DocumentDownloadMenu(props) {
             }, waitBetweenTries);
             ++retryCount;
           } else {
-            toast.error('Failed to download PDF!');
+            processToast.error(
+              'Failed to download PDF. Please retry after several minutes. If this error persists, please contact the APT team.'
+            );
           }
           return;
         }
@@ -101,34 +111,35 @@ export default function DocumentDownloadMenu(props) {
           const result = await response.json();
 
           if (result?.message) {
-            toast.update(result.message);
+            processToast.update(result.message);
           }
 
           setTimeout(() => {
             fetchPdf(`${pdfUrl}?retry=true`);
-          }, 3000);
+          }, initialWait);
           ++retryCount;
 
           return;
         }
 
-        // If we get a 200 and content-type is application/pdf, it means the
-        // PDF is ready for download. Download the PDF blob and save it.
+        // If we get a 200, it means the PDF is ready for download.
+        // We get the s3 url and use file saver to download and save the pdf.
         if (
           response.status === 200 &&
-          response.headers.get('content-type') === 'application/pdf'
+          response.headers.get('content-type') === 'application/json'
         ) {
-          const pdfBlob = await response.blob();
-          saveAs(pdfBlob, pdfFileName);
-          toast.success('PDF downloaded successfully!');
+          const result = await response.json();
+
+          await saveAs(result.pdf_url, pdfFileName);
+          processToast.success('PDF downloaded successfully!');
           return;
         }
 
-        toast.error('Failed to download PDF!');
+        processToast.error('Failed to download PDF!');
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
-        toast.error('Failed to download PDF!');
+        processToast.error('Failed to download PDF!');
       }
     }
 

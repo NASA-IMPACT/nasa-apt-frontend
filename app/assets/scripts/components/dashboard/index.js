@@ -16,13 +16,11 @@ import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import DashboardContributor from './dash-contributor';
 import DashboardCurator from './dash-curator';
-import { Can, useContextualAbility } from '../../a11n';
-import ButtonSecondary from '../../styles/button-secondary';
+import { useContextualAbility } from '../../a11n';
 import DashboardNoRole from './dash-no-role';
 import Insight from '../common/insight';
 
 import { useUser } from '../../context/user';
-import { useDocumentCreate } from '../documents/single-edit/use-document-create';
 import { useAtbds } from '../../context/atbds-list';
 import { useStatusColors } from '../../utils/use-status-colors';
 import {
@@ -35,6 +33,7 @@ import {
   PUBLISHED
 } from '../documents/status';
 import { round } from '../../utils/format';
+import CreateDocumentButton from '../documents/create-document-button';
 
 const DashboardCanvas = styled(ContentBlock)`
   background: transparent;
@@ -93,7 +92,6 @@ export const DocumentsBlockTitle = styled(Heading).attrs({
 
 function UserDashboard() {
   const { user } = useUser();
-  const onCreateClick = useDocumentCreate();
   const { invalidateAtbdListCtx } = useAtbds();
   const ability = useContextualAbility();
 
@@ -112,58 +110,57 @@ function UserDashboard() {
   const conAccessCuratorDash = ability.can('access', 'curator-dashboard');
 
   return (
-    <App pageTitle='Dashboard'>
-      <Inpage>
-        <InpageHeader>
-          <InpageHeadline>
-            <InpageTitle>Dashboard</InpageTitle>
-          </InpageHeadline>
-          <InpageActions>
-            <Can do='create' on='documents'>
-              <ButtonSecondary
-                title='Create new document'
-                useIcon='plus--small'
-                onClick={onCreateClick}
-              >
-                Create
-              </ButtonSecondary>
-            </Can>
-          </InpageActions>
-        </InpageHeader>
-        <InpageBody>
-          <DashboardCanvas>
-            <WelcomeBlock>
-              <WelcomeBlockTitle>Welcome back, {user.name}!</WelcomeBlockTitle>
-              <WelcomeBlockProse>
-                <p>Here&apos;s what is happening in your APT account today.</p>
+    <>
+      <App pageTitle='Dashboard'>
+        <Inpage>
+          <InpageHeader>
+            <InpageHeadline>
+              <InpageTitle>Dashboard</InpageTitle>
+            </InpageHeadline>
+            <InpageActions>
+              <CreateDocumentButton />
+            </InpageActions>
+          </InpageHeader>
+          <InpageBody>
+            <DashboardCanvas>
+              <WelcomeBlock>
+                <WelcomeBlockTitle>
+                  Welcome back, {user.name}!
+                </WelcomeBlockTitle>
+                <WelcomeBlockProse>
+                  <p>
+                    Here&apos;s what is happening in your APT account today.
+                  </p>
+                  {!conAccessContributorDash && !conAccessCuratorDash && (
+                    <>
+                      <p>
+                        Your account is not yet approved by an APT
+                        Administrator, this action can take up to 1 business
+                        day. If you have not been approved after this time,
+                        please send a message via the feedback button with your
+                        name, email and the day/time you signed up.
+                      </p>
+                      <p>
+                        You can still access <strong>published</strong>{' '}
+                        documents.
+                      </p>
+                    </>
+                  )}
+                </WelcomeBlockProse>
+              </WelcomeBlock>
+              {conAccessCuratorDash && <CuratorInsights />}
+              <DocumentsBlock>
+                {conAccessContributorDash && <DashboardContributor />}
+                {conAccessCuratorDash && <DashboardCurator />}
                 {!conAccessContributorDash && !conAccessCuratorDash && (
-                  <>
-                    <p>
-                      Your account is not yet approved by an APT Administrator,
-                      this action can take up to 1 business day. If you have not
-                      been approved after this time, please send a message via
-                      the feedback button with your name, email and the day/time
-                      you signed up.
-                    </p>
-                    <p>
-                      You can still access <strong>published</strong> documents.
-                    </p>
-                  </>
+                  <DashboardNoRole />
                 )}
-              </WelcomeBlockProse>
-            </WelcomeBlock>
-            {conAccessCuratorDash && <CuratorInsights />}
-            <DocumentsBlock>
-              {conAccessContributorDash && <DashboardContributor />}
-              {conAccessCuratorDash && <DashboardCurator />}
-              {!conAccessContributorDash && !conAccessCuratorDash && (
-                <DashboardNoRole />
-              )}
-            </DocumentsBlock>
-          </DashboardCanvas>
-        </InpageBody>
-      </Inpage>
-    </App>
+              </DocumentsBlock>
+            </DashboardCanvas>
+          </InpageBody>
+        </Inpage>
+      </App>
+    </>
   );
 }
 

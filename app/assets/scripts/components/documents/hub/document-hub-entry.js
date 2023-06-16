@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import T from 'prop-types';
 import ReactGA from 'react-ga';
 import { VerticalDivider } from '@devseed-ui/toolbar';
+import { BsFilePdf } from 'react-icons/bs';
 
 import {
   CardInteractive,
@@ -64,6 +65,9 @@ function DocumentHubEntry(props) {
           <CardHgroup>
             <CardTitle>{atbd.title}</CardTitle>
             <CardToolbar>
+              {atbd.document_type === 'PDF' && (
+                <BsFilePdf title='PDF type document' />
+              )}
               <VersionsMenu
                 onChange={useMemo(() => getDropChange('Version dropdown'), [])}
                 atbdId={getDocumentIdKey(atbd).id}

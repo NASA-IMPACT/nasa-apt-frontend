@@ -27,6 +27,13 @@ import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
 
+const PDFPreview = styled.iframe`
+  width: 100%;
+  height: 60vh;
+  border: 0;
+  margin-bottom: ${glsp(3)};
+`;
+
 const HeadingContextualActions = ({ id, atbd }) => {
   const { openPanelOn } = useCommentCenter();
 
@@ -319,7 +326,7 @@ const renderElements = (elements, props) =>
 //    <AtbdSection> wrapper.
 // children: Any children this node should have. They must follow this
 //    same structure.
-export const atbdContentSections = [
+const htmlAtbdContentSections = [
   {
     label: 'Document header',
     id: 'doc-header',
@@ -333,6 +340,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.abstract, id),
     render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -360,6 +368,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.plain_summary, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -389,6 +398,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.version_description, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-no-numbering'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -416,6 +426,7 @@ export const atbdContentSections = [
       subsectionsFromSlateDocument(document.introduction, id),
     render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
       <AtbdSection
+        className='pdf-preview-break-before-page'
         key={element.id}
         id={element.id}
         title={element.label}
@@ -794,7 +805,7 @@ export const atbdContentSections = [
         ),
         children: ({ document }) => {
           const items = document.data_access_input_data || [];
-          return items.map((o, idx) => ({
+          return items.map((_, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data_access_input_data_${idx + 1}`,
             render: ({ element, document }) => (
@@ -829,7 +840,7 @@ export const atbdContentSections = [
         ),
         children: ({ document }) => {
           const items = document.data_access_output_data || [];
-          return items.map((o, idx) => ({
+          return items.map((_, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data_access_output_data_${idx + 1}`,
             render: ({ element, document }) => (
@@ -864,7 +875,7 @@ export const atbdContentSections = [
         ),
         children: ({ document }) => {
           const items = document.data_access_related_urls || [];
-          return items.map((o, idx) => ({
+          return items.map((_, idx) => ({
             label: `Entry #${idx + 1}`,
             id: `data_access_related_urls_${idx + 1}`,
             render: ({ element, document }) => (
@@ -928,9 +939,12 @@ export const atbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
+          className='pdf-preview-break-before-page'
         >
           {referenceList.length ? (
-            <ReferencesList>{referenceList}</ReferencesList>
+            <ReferencesList className='reference-list'>
+              {referenceList}
+            </ReferencesList>
           ) : (
             <p>No references were used in this document.</p>
           )}
@@ -1034,6 +1048,187 @@ export const atbdContentSections = [
   }
 ];
 
+const pdfAtbdContentSections = [
+  {
+    label: 'Document header',
+    id: 'doc-header',
+    // Render nothing. It's just to show up in the outline.
+    render: () => null
+  },
+  {
+    label: 'Abstract',
+    id: 'abstract',
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.abstract, id),
+    render: ({ printMode, element, document, referencesUseIndex, atbd }) => (
+      <AtbdSection
+        className='pdf-preview-no-numbering'
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+        printMode={printMode}
+      >
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
+          value={document.abstract}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
+    label: 'Plain Language Summary',
+    id: 'plain_summary',
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.plain_summary, id),
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
+      <AtbdSection
+        className='pdf-preview-no-numbering'
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+        printMode={printMode}
+      >
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
+          value={document.plain_summary}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
+    label: 'Version description',
+    id: 'version_description',
+    shouldRender: ({ document }) =>
+      !!serializeSlateToString(document.version_description),
+    editorSubsections: (document, { id }) =>
+      subsectionsFromSlateDocument(document.version_description, id),
+    render: ({ element, document, referencesUseIndex, atbd, printMode }) => (
+      <AtbdSection
+        className='pdf-preview-no-numbering'
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+        printMode={printMode}
+      >
+        <SafeReadEditor
+          context={{
+            subsectionLevel: 'h3',
+            sectionId: element.id,
+            references: document.publication_references,
+            referencesUseIndex,
+            atbd
+          }}
+          value={document.version_description}
+          whenEmpty={<EmptySection />}
+        />
+      </AtbdSection>
+    )
+  },
+  {
+    label: 'Contacts',
+    id: 'contacts',
+    render: ({ element, children, atbd, printMode }) => (
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+        printMode={printMode}
+      >
+        {React.Children.count(children) ? (
+          children
+        ) : (
+          <p>There are no contacts associated with this document</p>
+        )}
+      </AtbdSection>
+    ),
+    children: ({ atbd }) => {
+      const contactsLink = atbd?.contacts_link || [];
+      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
+        label: getContactName(contact),
+        id: `contacts_${idx + 1}`,
+        render: ({ element }) => (
+          <ContactItem
+            key={element.id}
+            id={element.id}
+            label={element.label}
+            contact={contact}
+            roles={roles}
+            affiliations={affiliations}
+          />
+        )
+      }));
+    }
+  },
+  {
+    label: 'References',
+    id: 'references',
+    render: ({ element, referenceList, atbd, printMode }) => {
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className='pdf-preview-break-before-page'
+        >
+          {referenceList.length ? (
+            <ReferencesList className='reference-list'>
+              {referenceList}
+            </ReferencesList>
+          ) : (
+            <p>No references were used in this document.</p>
+          )}
+        </AtbdSection>
+      );
+    }
+  },
+  {
+    label: 'Attachment',
+    id: 'attachment',
+    render: ({ element, atbd, printMode }) => {
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className='pdf-preview-hidden'
+        >
+          <PDFPreview src={atbd.pdf?.file_path} />
+        </AtbdSection>
+      );
+    }
+  }
+];
+
+export function getAtbdContentSections(pdfMode = false) {
+  if (pdfMode) {
+    return pdfAtbdContentSections;
+  }
+
+  return htmlAtbdContentSections;
+}
+
 export default function DocumentBody(props) {
   const { atbd, disableScrollManagement } = props;
   const document = atbd.document;
@@ -1074,7 +1269,7 @@ export default function DocumentBody(props) {
     [referencesUseIndex, document.publication_references]
   );
 
-  return renderElements(atbdContentSections, {
+  return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
     document,
     referencesUseIndex,
     referenceList,

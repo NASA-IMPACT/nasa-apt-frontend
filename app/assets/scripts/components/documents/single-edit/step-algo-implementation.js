@@ -101,7 +101,7 @@ export default function StepAlgoImplementation(props) {
                   )}
                   sectionName='sections_completed.data_access_related_urls'
                   commentSection='data_access_related_urls'
-                  fieldLabel='Important Related Urls'
+                  fieldLabel='Important Related URLs'
                   fieldName='document.data_access_related_urls'
                   fieldEmptyMessage='There are no Important Related Urls. You can start by adding one.'
                 />
@@ -180,7 +180,7 @@ const UrlDescriptionSection = (props) => {
                 <FormikInputText
                   id={`${name}.${index}.url`}
                   name={`${name}.${index}.url`}
-                  label='Url'
+                  label='URL'
                   description={urlFieldInfo}
                 />
                 <FormikInputTextarea

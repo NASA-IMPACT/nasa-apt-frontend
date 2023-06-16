@@ -20,8 +20,6 @@ import {
 import UniversalGridder from '../../styles/universal-gridder';
 import { Link } from '../../styles/clean/link';
 
-import { useUser } from '../../context/user';
-
 const HomeInpageHeader = styled(InpageHeader)`
   max-height: 0;
   padding: 0;
@@ -85,14 +83,9 @@ const IntroLead = styled(Heading).attrs({ as: 'div' })`
 
 const IntroActions = styled.p`
   display: grid;
-  grid-template-columns: repeat(2, min-content);
+  grid-template-columns: repeat(3, min-content);
   grid-gap: ${glsp(0.25, 1)};
   text-align: center;
-`;
-
-const SubAction = styled(Link)`
-  grid-column: 2;
-  grid-row: 2;
 `;
 
 const FocusBoxList = styled.ul`
@@ -161,8 +154,6 @@ const IlluInner = styled.div`
 `;
 
 function Home() {
-  const { isLogged } = useUser();
-
   return (
     <App pageTitle='Welcome'>
       <Inpage>
@@ -214,13 +205,23 @@ function Home() {
                       size='large'
                       variation='primary-raised-dark'
                     >
-                      Explore the documents
+                      Explore existing documents
                     </Button>
-                    {!isLogged && (
-                      <SubAction to='/signin' title='Sign in now'>
-                        Or sign in to start creating
-                      </SubAction>
-                    )}
+                    <Button
+                      forwardedAs={Link}
+                      onClick={() => {
+                        return ReactGA.event({
+                          category: 'Navigation',
+                          action: 'CTA click',
+                          label: 'Home - Create a new ATBD'
+                        });
+                      }}
+                      to='/new-atbd'
+                      size='large'
+                      variation='primary-raised-dark'
+                    >
+                      Create a new ATBD
+                    </Button>
                   </IntroActions>
                 </header>
                 <FocusBoxList>

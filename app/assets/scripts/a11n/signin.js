@@ -3,12 +3,12 @@ import { useHistory } from 'react-router';
 import { Auth } from 'aws-amplify';
 import { Formik, Form as FormikForm, useFormikContext } from 'formik';
 import { Button } from '@devseed-ui/button';
-import { glsp, themeVal } from '@devseed-ui/theme-provider';
 import { Form, FormInput, FormLabel, FormGroup } from '@devseed-ui/form';
 import QrCode from 'react-qr-code';
 import styled from 'styled-components';
 
 import App from '../components/common/app';
+import { Backdrop, Modal, ModalContent } from '../components/common/modal';
 import {
   Inpage,
   InpageHeader,
@@ -19,51 +19,15 @@ import {
 import { ContentBlock } from '../styles/content-block';
 import Prose from '../styles/typography/prose';
 
-import config from '../config';
-import { getAppURL } from '../utils/history';
+import { getHostedAuthUiUrl } from '../utils/common';
 import { SectionFieldset } from '../components/common/forms/section-fieldset';
 import { FormikInputText } from '../components/common/forms/input-text';
 import { createProcessToast } from '../components/common/toasts';
 import { useUser } from '../context/user';
 
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1111;
-`;
-
-const Modal = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${glsp(2)};
-  width: 100%;
+const OTPModal = styled(Modal)`
   max-width: 24rem;
-  background-color: #fff;
-  padding: ${glsp(1.5, themeVal('layout.gap.medium'))};
-  border-radius: ${themeVal('shape.rounded')};
-  overflow: auto;
 `;
-
-const ModalContent = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: ${glsp(1.5)};
-  overflow: auto;
-`;
-
-const getHostedAuthUiUrl = (page) => {
-  const clientId = config.auth.userPoolWebClientId;
-  const returnTo = getAppURL().cleanHref;
-  return `${config.hostedAuthUi}/${page}?client_id=${clientId}&response_type=token&redirect_uri=${returnTo}`;
-};
 
 const altToast = {
   update: (msg) => {
@@ -224,7 +188,7 @@ function SignIn() {
       </Inpage>
       {!mfaEnabled && mfaCode && (
         <Backdrop>
-          <Modal>
+          <OTPModal>
             <h2>Set-up OTP</h2>
             <div>
               Please use the following code or QR to generate Time-based OTP
@@ -244,6 +208,7 @@ function SignIn() {
               <div>
                 <FormLabel htmlFor='mfa-otp-code'>Enter OTP</FormLabel>
                 <FormInput
+                  id='mfa-otp-code'
                   type='text'
                   placeholder='Enter code to verify'
                   value={otpCode}
@@ -260,12 +225,12 @@ function SignIn() {
             >
               Verify
             </Button>
-          </Modal>
+          </OTPModal>
         </Backdrop>
       )}
       {mfaEnabled && (
         <Backdrop>
-          <Modal>
+          <OTPModal>
             <h2>Sign-in Confirmation!</h2>
             <ModalContent>
               <FormGroup>
@@ -287,7 +252,7 @@ function SignIn() {
             >
               Confirm
             </Button>
-          </Modal>
+          </OTPModal>
         </Backdrop>
       )}
     </App>

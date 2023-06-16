@@ -3,6 +3,17 @@ import { createGlobalStyle } from 'styled-components';
 import reactTippyStyles from './vendor/react-tippy';
 
 export default createGlobalStyle`
+@media print {
+  @page {
+    size: portrait;
+    margin: 15mm;
+  }
+
+  :is(dd, td, li) .slate-p {
+    text-indent: initial!important;
+  }
+}
+
 ${reactTippyStyles()}
 
 .tether-element {
@@ -22,14 +33,46 @@ ${reactTippyStyles()}
   }
 }
 
-.pagedjs_pages {
-  background-color: #f0f0f0;
-}
+.pdf-preview {
+  img {
+    break-inside: avoid;
+  }
 
-.pagedjs_page {
-  margin: 1rem;
-  border: solid 1px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  .reference-list {
+    line-height: 1.5!important;
+    text-indent: -1rem;
+    padding: 1rem;
+
+    li {
+      &:not(:first-child) {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  .pdf-preview-break-before-page {
+    break-before: page;
+  }
+
+  .preview-page-toc {
+    break-before: page;
+  }
+
+  .preview-page-content {
+    break-before: page;
+  }
+
+  .slate-p {
+    text-indent: 24pt;
+  }
+
+  .slate-p span {
+    text-indent: initial;
+  }
+
+  :is(dd, td, li) .slate-p {
+    text-indent: initial!important;
+  }
 
   .slate-equation-element {
     display: flex;
@@ -48,6 +91,10 @@ ${reactTippyStyles()}
 
   .section-title {
     display: block;
+  }
+
+  .toc-section .toc-section {
+    padding-left: 1rem;
   }
 
   .preview-table-of-content {
