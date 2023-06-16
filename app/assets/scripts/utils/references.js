@@ -116,10 +116,10 @@ function formatAuthors(authors, type = 'reference') {
       const lastAuthor = authorNames[authorNames.length - 1];
       return `${authorNames
         .slice(0, authorNames.length - 1)
-        .join(',')} & ${lastAuthor}`;
+        .join(', ')} & ${lastAuthor}`;
     }
     if (authorNames.length >= 8) {
-      return `${authorNames.slice(0, 7).join(',')} et al.`;
+      return `${authorNames.slice(0, 7).join(', ')} et al.`;
     }
   }
   return authorStr;

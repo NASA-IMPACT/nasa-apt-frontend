@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { GlobalLoading } from '@devseed-ui/global-loading';
-import { Previewer, Handler, registerHandlers } from 'pagedjs';
 import styled from 'styled-components';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
-import DocumentContent from '../single-view/document-content';
+import DocumentBody from '../single-view/document-body';
+import DocumentTitle from '../single-view/document-title';
+import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
 
 const TocHeader = styled.h1`
@@ -14,176 +15,206 @@ const TocHeader = styled.h1`
   margin-top: 0;
 `;
 
-class AfterRenderHandler extends Handler {
-  static renderCallback;
+const PreviewContainer = styled.div`
+  @media print {
+    @page {
+      size: portrait;
+    }
+  }
+`;
 
-  constructor(chunker, polisher, caller) {
-    super(chunker, polisher, caller);
+function generateTocAndHeadingNumbering(content) {
+  // Returns title element to be injected in the ToC
+  // Adds the dashed line and space for title and page number
+  function getTitleElement(sectionId, sectionTitle) {
+    const title = document.createElement('a');
+    const text = document.createElement('span');
+    // const spacer = document.createElement('span');
+    // const pageNumber = document.createElement('span');
+
+    title.append(text);
+    // title.append(spacer);
+    // title.append(pageNumber);
+
+    title.href = `#${sectionId}`;
+    title.classList.add('toc-title');
+
+    text.innerText = sectionTitle;
+    text.classList.add('toc-title-text');
+    // spacer.classList.add('toc-title-spacer');
+    // pageNumber.classList.add('toc-title-page');
+
+    // pageNumber.classList.add('toc-page-number');
+    // pageNumber.setAttribute('data-target', `#${sectionId}`);
+
+    return title;
   }
 
-  beforeParsed(content) {
-    // Returns title element to be injected in the ToC
-    // Adds the dashed line and space for title and page number
-    function getTitleElement(sectionId, sectionTitle) {
-      const title = document.createElement('a');
-      const text = document.createElement('span');
-      const spacer = document.createElement('span');
-      const pageNumber = document.createElement('span');
+  const hiddenContents = content.querySelectorAll('.pdf-preview-hidden');
+  Array.from(hiddenContents).forEach((hiddenContent) => {
+    hiddenContent.remove();
+  });
 
-      title.append(text);
-      title.append(spacer);
-      title.append(pageNumber);
+  const tocElement = content.querySelector('#table-of-contents');
 
-      title.href = `#${sectionId}`;
-      title.classList.add('toc-title');
+  // This function iteratively finds the subheadings
+  // (h3, h4, h5, ...) in the content and creates ToC entry
+  function generateSubHeadings(
+    currentHeading,
+    currentLevel,
+    sectionContainer,
+    parentContainer,
+    parentHeadingNumber
+  ) {
+    const currentSubHeadings = [];
 
-      text.innerText = sectionTitle;
-      text.classList.add('toc-title-text');
-      spacer.classList.add('toc-title-spacer');
-      pageNumber.classList.add('toc-title-page');
+    // We separately handle the user-defined subheadings, since they
+    // don't follow the pattern of other subheadings
+    const userDefinedHeadings = currentHeading.nextElementSibling?.querySelectorAll(
+      `H${currentLevel + 1}`
+    );
 
-      pageNumber.classList.add('toc-page-number');
-      pageNumber.setAttribute('data-target', `#${sectionId}`);
-
-      return title;
+    if (userDefinedHeadings) {
+      currentSubHeadings.push(
+        ...Array.from(userDefinedHeadings).filter(
+          (subHeading) =>
+            !subHeading.classList.contains('pdf-preview-no-toc') ||
+            subHeading
+              .closest('section')
+              ?.classList.contains('pdf-preview-no-toc')
+        )
+      );
     }
 
-    const hiddenContents = content.querySelectorAll('.pdf-preview-hidden');
-    Array.from(hiddenContents).forEach((hiddenContent) => {
-      hiddenContent.remove();
-    });
-
-    const tocElement = content.querySelector('#table-of-contents');
-
-    // This function iteratively finds the subheadings
-    // (h3, h4, h5, ...) in the content and creates ToC entry
-    function generateSubHeadings(
-      currentHeading,
-      currentLevel,
-      sectionContainer,
-      parentContainer,
-      parentHeadingNumber
+    let currentEl = currentHeading;
+    // The subheadings are in the same hierarcy / nesting
+    // So, we find smaller sub-headings between current level of
+    // sub-headings.
+    while (
+      currentEl.nextElementSibling !== null &&
+      currentEl.nextElementSibling.tagName !== `H${currentLevel}`
     ) {
-      const currentSubHeadings = [];
+      const nextSibling = currentEl.nextElementSibling;
+      const isSubHeading = nextSibling.tagName === `H${currentLevel + 1}`;
 
-      // We separately handle the user-defined subheadings, since they
-      // don't follow the pattern of other subheadings
-      const userDefinedHeadings = currentHeading.nextElementSibling?.querySelectorAll(
-        `H${currentLevel + 1}`
-      );
-
-      if (userDefinedHeadings) {
-        currentSubHeadings.push(
-          ...Array.from(userDefinedHeadings).filter(
-            (subHeading) => !subHeading.classList.contains('pdf-preview-no-toc')
-          )
-        );
-      }
-
-      let currentEl = currentHeading;
-      // The subheadings are in the same hierarcy / nesting
-      // So, we find smaller sub-headings between current level of
-      // sub-headings.
-      while (
-        currentEl.nextElementSibling !== null &&
-        currentEl.nextElementSibling.tagName !== `H${currentLevel}`
-      ) {
-        const nextSibling = currentEl.nextElementSibling;
-        const nonPreviewable = nextSibling.classList.contains(
-          'pdf-preview-no-toc'
-        );
-        const isSubHeading = nextSibling.tagName === `H${currentLevel + 1}`;
-
-        if (!nonPreviewable && isSubHeading) {
+      if (isSubHeading) {
+        const nonPreviewable =
+          nextSibling.classList.contains('pdf-preview-no-toc') ||
+          nextSibling
+            .closest('section')
+            ?.classList.contains('pdf-preview-no-toc');
+        if (!nonPreviewable) {
           currentSubHeadings.push(nextSibling);
         }
-
-        currentEl = nextSibling;
       }
 
-      if (currentSubHeadings.length > 0) {
-        const subHeadingSections = document.createElement('div');
-        subHeadingSections.classList.add('toc-section');
-        sectionContainer.append(subHeadingSections);
+      currentEl = nextSibling;
+    }
 
-        currentSubHeadings.forEach((subHeading, i) => {
-          // Generating the heading number and injecting it to the content.
-          // So, it appears both in the ToC and in the content.
-          const headingNumber = `${parentHeadingNumber}${i + 1}.`;
+    if (currentSubHeadings.length > 0) {
+      const subHeadingSections = document.createElement('div');
+      subHeadingSections.classList.add('toc-section');
+      sectionContainer.append(subHeadingSections);
+
+      currentSubHeadings.forEach((subHeading, i) => {
+        // Generating the heading number and injecting it to the content.
+        // So, it appears both in the ToC and in the content.
+        const headingNumber = `${parentHeadingNumber}${i + 1}.`;
+
+        const skipNumbering =
+          subHeading.classList.contains('pdf-preview-no-numbering') ||
+          subHeading
+            .closest('section')
+            ?.classList.contains('pdf-preview-no-numbering');
+
+        if (!skipNumbering) {
           if (subHeading.children[0]) {
             subHeading.children[0].prepend(`${headingNumber} `);
           } else {
             subHeading.prepend(`${headingNumber} `);
           }
-          const subHeadingTitle = getTitleElement(
-            subHeading.id,
-            subHeading.innerText
-          );
-          subHeadingSections.append(subHeadingTitle);
-
-          generateSubHeadings(
-            subHeading,
-            currentLevel + 1,
-            subHeadingSections,
-            subHeading.parentNode,
-            headingNumber
-          );
-        });
-      }
-    }
-
-    // This function generates the main headings from h2 in the content
-    // and calls generateSubHeadings to find subheadings between 2 consecutive headings
-    function generateHeading() {
-      const sectionHeadings = content.querySelectorAll('h2');
-      Array.from(sectionHeadings).forEach((heading, i) => {
-        const section = document.createElement('div');
-        section.classList.add('toc-section');
-        tocElement.append(section);
-
-        const headingNumber = `${i + 1}.`;
-        if (heading.children[0]) {
-          // Inject the heading number to the content itself
-          // so that it appears both in the document heading
-          // and in the ToC
-          heading.children[0].prepend(`${headingNumber} `);
         }
 
-        const sectionTitle = getTitleElement(heading.id, heading.innerText);
-        section.append(sectionTitle);
+        const subHeadingTitle = getTitleElement(
+          subHeading.id,
+          subHeading.innerText
+        );
+        subHeadingSections.append(subHeadingTitle);
+
         generateSubHeadings(
-          heading,
-          2,
-          section,
-          heading.parentNode,
+          subHeading,
+          currentLevel + 1,
+          subHeadingSections,
+          subHeading.parentNode,
           headingNumber
         );
       });
     }
+  }
 
-    // Starting from h2
-    generateHeading(2, tocElement, content, undefined);
+  // This function generates the main headings from h2 in the content
+  // and calls generateSubHeadings to find subheadings between 2 consecutive headings
+  function generateHeading() {
+    const sectionHeadings = content.querySelectorAll('h2');
+    let skippedHeadings = 0;
+    let skippedNumberings = 0;
+    Array.from(sectionHeadings).forEach((heading, i) => {
+      if (
+        heading.closest('section')?.classList.contains('pdf-preview-no-toc') ||
+        heading.classList.contains('pdf-preview-no-toc')
+      ) {
+        skippedHeadings += 1;
+        return;
+      }
+      const section = document.createElement('div');
+      section.classList.add('toc-section');
+      tocElement.append(section);
 
-    const captions = content.querySelectorAll('.slate-image-block figcaption');
-    Array.from(captions).forEach((caption, i) => {
-      const captionPrefix = document.createElement('span');
-      captionPrefix.innerText = `Figure ${i + 1}: `;
-      caption.prepend(captionPrefix);
-    });
+      const skipNumbering =
+        heading.classList.contains('pdf-preview-no-numbering') ||
+        heading
+          .closest('section')
+          ?.classList.contains('pdf-preview-no-numbering');
+      const headingNumber = `${i + 1 - skippedHeadings - skippedNumberings}.`;
+      if (skipNumbering) {
+        skippedNumberings += 1;
+      }
 
-    const equationNumbers = content.querySelectorAll(
-      '.slate-equation-element .equation-number'
-    );
-    Array.from(equationNumbers).forEach((equationNumber, i) => {
-      equationNumber.innerText = `(${i + 1})`;
+      if (heading.children[0] && !skipNumbering) {
+        // Inject the heading number to the content itself
+        // so that it appears both in the document heading
+        // and in the ToC
+        heading.children[0].prepend(`${headingNumber} `);
+      }
+
+      const sectionTitle = getTitleElement(heading.id, heading.innerText);
+      section.append(sectionTitle);
+      generateSubHeadings(
+        heading,
+        2,
+        section,
+        heading.parentNode,
+        headingNumber
+      );
     });
   }
 
-  afterPreview() {
-    if (AfterRenderHandler.renderCallback) {
-      AfterRenderHandler.renderCallback();
-    }
-  }
+  // Starting from h2
+  generateHeading(2, tocElement, content, undefined);
+
+  const captions = content.querySelectorAll('.slate-image-block figcaption');
+  Array.from(captions).forEach((caption, i) => {
+    const captionPrefix = document.createElement('span');
+    captionPrefix.innerText = `Figure ${i + 1}: `;
+    caption.prepend(captionPrefix);
+  });
+
+  const equationNumbers = content.querySelectorAll(
+    '.slate-equation-element .equation-number'
+  );
+  Array.from(equationNumbers).forEach((equationNumber, i) => {
+    equationNumber.innerText = `(${i + 1})`;
+  });
 }
 
 function PdfPreview() {
@@ -191,7 +222,6 @@ function PdfPreview() {
   const { atbd, fetchSingleAtbd } = useSingleAtbd({ id, version });
   const { isAuthReady } = useUser();
   const contentRef = useRef(null);
-  const previewRef = useRef(null);
   const [previewReady, setPreviewReady] = useState(false);
 
   useEffect(() => {
@@ -199,26 +229,24 @@ function PdfPreview() {
   }, [isAuthReady, id, version, fetchSingleAtbd]);
 
   useEffect(() => {
-    async function generatePreview() {
-      if (atbd.status === 'succeeded') {
-        const previewer = new Previewer();
-        AfterRenderHandler.renderCallback = () => {
-          setPreviewReady(true);
-        };
-
-        registerHandlers(AfterRenderHandler);
-        await previewer.preview(
-          contentRef.current,
-          ['/pdf-preview-styles.css'],
-          previewRef.current
-        );
-
-        contentRef.current.remove();
-        // contentRef.current.style.display = 'none';
-      }
+    async function waitForImages() {
+      const images = contentRef.current.querySelectorAll('img');
+      const promises = Array.from(images).map((image) => {
+        return new Promise((accept) => {
+          image.addEventListener('load', () => {
+            accept();
+          });
+        });
+      });
+      await Promise.all(promises);
+      setPreviewReady(true);
     }
 
-    generatePreview();
+    if (atbd.status === 'succeeded') {
+      generateTocAndHeadingNumbering(contentRef.current);
+
+      waitForImages();
+    }
   }, [atbd.status]);
 
   return (
@@ -229,24 +257,24 @@ function PdfPreview() {
           Note these empty divs are required for print mode
           to work properly (No idea why though!)
         */
-        <div>
-          <div id='content' ref={contentRef}>
-            <div>
+        <PreviewContainer className='pdf-preview'>
+          <div ref={contentRef}>
+            <DocumentProse className='preview-page-title'>
+              <DocumentTitle data={atbd.data} />
+            </DocumentProse>
+            <div className='preview-page-toc'>
               <TocHeader>Table of Contents</TocHeader>
               <div
                 className='preview-table-of-content'
                 id='table-of-contents'
               />
             </div>
-            <DocumentContent
-              className='preview-page-content'
-              atbdData={atbd.data}
-              disableScrollManagement={true}
-            />
+            <DocumentProse className='preview-page-content'>
+              <DocumentBody atbd={atbd.data} disableScrollManagement={true} />
+            </DocumentProse>
           </div>
-          <div id='preview' ref={previewRef} />
           {previewReady && <div id='pdf-preview-ready' />}
-        </div>
+        </PreviewContainer>
       )}
     </ScrollAnchorProvider>
   );

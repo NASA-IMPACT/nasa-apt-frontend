@@ -76,7 +76,7 @@ export default function JournalDetails(props) {
     <React.Fragment>
       <FormBlockHeading>Journal details</FormBlockHeading>
       <FormGroupStructure
-        label='Journal publication process'
+        label='The journal details will only be included if this ATBD is being submitted to a journal.'
         description={formString('closeout.journal_publication')}
       >
         <FormCheckableGroup>
@@ -110,7 +110,7 @@ export default function JournalDetails(props) {
             <FormikInputEditor
               id='data_availability'
               name='document.data_availability'
-              label='Open Research'
+              label='Availability Statements'
               description={formString('closeout.data_availability')}
             />
           </FormikSectionFieldset>

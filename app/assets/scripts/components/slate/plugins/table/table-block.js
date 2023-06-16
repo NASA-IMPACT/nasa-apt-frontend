@@ -68,11 +68,13 @@ const TableBlockElement = styled(DeletableBlock).attrs({
 })`
   table {
     margin-top: 0;
+    width: 100%;
   }
 
   tbody td {
     transition: all 0.24s ease-in-out 0s;
     border-color: ${themeVal('color.baseAlphaD')};
+    word-break: break-word;
   }
 
   ${renderHighlightStyles}
