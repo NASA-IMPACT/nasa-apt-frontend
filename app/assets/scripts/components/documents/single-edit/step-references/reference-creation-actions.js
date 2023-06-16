@@ -6,7 +6,7 @@ import FormInfoTip from '../../../common/forms/form-info-tooltip';
 import { FauxFileDialog } from '../../../common/faux-file-dialog';
 
 const TooltipContent =
-  "Watch video <a target='_blank' rel='noreferrer' href='https://example.com'>here</a>";
+  "For more information about BibTeX, and to learn how to import a BibTeX file into APT, please watch <a target='_blank' rel='noreferrer' href='https://drive.google.com/file/d/11SX-BQLdqoZqGPKRim9vKny182sAfoEx/view'>this video</a>.";
 
 export default function ReferencesCreationActions(props) {
   const { onAddClick, onFileSelect } = props;
