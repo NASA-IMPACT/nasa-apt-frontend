@@ -89,7 +89,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE }}
-          cache: npm
+          cache: 'yarn'
       - name: Install dependencies
         run: yarn
       - name: Run Playwright tests
