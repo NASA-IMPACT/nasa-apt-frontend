@@ -76,7 +76,7 @@ jobs:
     name: 'Test on ${{ matrix.project }} (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})'
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.30.0
+      image: mcr.microsoft.com/playwright:v1.34.3
     strategy:
       fail-fast: false
       matrix:
