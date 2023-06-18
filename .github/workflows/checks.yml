@@ -73,28 +73,30 @@ jobs:
 
   test:
     needs: prep
-    timeout-minutes: 60
+    name: 'Test on ${{ matrix.project }} (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})'
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.30.0
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ env.NODE }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE }}
-
+          cache: npm
       - name: Install dependencies
-        run: yarn
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
+        run: npm ci
       - name: Run Playwright tests
-        run: npx playwright test --workers=5
-
+        run: npx playwright test --project=${{ matrix.project }} --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.project }}-${{ matrix.shardIndex }}
           path: playwright-report/
           retention-days: 30
