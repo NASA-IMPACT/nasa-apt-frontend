@@ -97,7 +97,7 @@ function signAccessToken(userId, username, access) {
  */
 export async function login(role, page) {
   const { userId, username, access, name } = userConfig[role];
-  const userData = `{"Username":"${userId}","UserAttributes":[{"Name":"email_verified","Value":"true"},{"Name":"preferred_username","Value":"${name}"},{"Name":"email","Value":"${username}"},{"Name":"sub","Value":"${userId}"}],"UserCreateDate":"2022-03-07T11:43:13.000Z","UserLastModifiedDate":"2022-03-07T11:43:13.000Z","Enabled":true,"UserStatus":"CONFIRMED","MFAOptions":[],"UserMFASettingList":[],"ResponseMetadata":{"HTTPStatusCode":200,"HTTPHeaders":{"content-type":"text/html; charset=utf-8","content-length":"748","access-control-allow-origin":"*","access-control-allow-methods":"HEAD,GET,PUT,POST,DELETE,OPTIONS,PATCH","access-control-allow-headers":"authorization,content-type,content-length,content-md5,cache-control,x-amz-content-sha256,x-amz-date,x-amz-security-token,x-amz-user-agent,x-amz-target,x-amz-acl,x-amz-version-id,x-localstack-target,x-amz-tagging","access-control-expose-headers":"x-amz-version-id","connection":"close","date":"Mon, 07 Mar 2022 12:15:28 GMT","server":"hypercorn-h11"},"RetryAttempts":0}}`;
+  const userData = `{"PreferredMfaSetting":"SOFTWARE_TOKEN_MFA", "UserMFASettingList":["SOFTWARE_TOKEN_MFA"], "Username":"${userId}","UserAttributes":[{"Name":"email_verified","Value":"true"},{"Name":"preferred_username","Value":"${name}"},{"Name":"email","Value":"${username}"},{"Name":"sub","Value":"${userId}"}],"UserCreateDate":"2022-03-07T11:43:13.000Z","UserLastModifiedDate":"2022-03-07T11:43:13.000Z","Enabled":true,"UserStatus":"CONFIRMED","MFAOptions":[],"UserMFASettingList":[],"ResponseMetadata":{"HTTPStatusCode":200,"HTTPHeaders":{"content-type":"text/html; charset=utf-8","content-length":"748","access-control-allow-origin":"*","access-control-allow-methods":"HEAD,GET,PUT,POST,DELETE,OPTIONS,PATCH","access-control-allow-headers":"authorization,content-type,content-length,content-md5,cache-control,x-amz-content-sha256,x-amz-date,x-amz-security-token,x-amz-user-agent,x-amz-target,x-amz-acl,x-amz-version-id,x-localstack-target,x-amz-tagging","access-control-expose-headers":"x-amz-version-id","connection":"close","date":"Mon, 07 Mar 2022 12:15:28 GMT","server":"hypercorn-h11"},"RetryAttempts":0}}`;
 
   const refreshToken = '3ff73baa';
   const keyPrefix = 'CognitoIdentityServiceProvider.abc123';
@@ -115,6 +115,8 @@ export async function login(role, page) {
     userDataValue: userData,
     clockDriftKey: `${keyPrefixWithUsername}.clockDrift`,
     clockDriftValue: '11',
+    amplifySigninWithUIKey: 'amplify-signin-with-hostedUI',
+    amplifySigninWithUIValue: 'false',
     lastAuthUserKey: `${keyPrefix}.LastAuthUser`,
     lastAuthUserValue: username,
     authStateKey: 'amplify-authenticator-authState',
@@ -128,6 +130,10 @@ export async function login(role, page) {
     window.localStorage.setItem(data.userDataKey, data.userDataValue);
     window.localStorage.setItem(data.clockDriftKey, data.clockDriftValue);
     window.localStorage.setItem(data.lastAuthUserKey, data.lastAuthUserValue);
+    window.localStorage.setItem(
+      data.amplifySigninWithUIKey,
+      data.amplifySigninWithUIValue
+    );
     window.localStorage.setItem(data.authStateKey, data.authStateValue);
   }, initScriptData);
 

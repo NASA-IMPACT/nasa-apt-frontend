@@ -97,8 +97,7 @@ export const authenticatedFixtureUrls = [
     postResponse: atbdEvent
   },
   {
-    url:
-      'http://localhost:8888/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
+    url: 'http://localhost:8888/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
     getResponse: atbdReviewerList
   }
 ];
