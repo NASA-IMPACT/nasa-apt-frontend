@@ -15,6 +15,10 @@ import { FormikUnloadPrompt } from '../../common/unload-prompt';
 import { ImageBlockPlugin } from '../../slate/plugins/image';
 import { TableBlockPlugin } from '../../slate/plugins/table';
 import { SubSectionPlugin } from '../../slate/plugins/subsection';
+import KeywordsField, {
+  updateKeywordValues
+} from './step-closeout/field-keywords';
+
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
 import { useSubmitForVersionData } from './use-submit';
@@ -37,7 +41,11 @@ export default function StepPdfCloseout(props) {
   const initialValues = step.getInitialValues(atbd);
   // Compose the submit handler.
   // When submitting, get data for the selected keywords from the GCMD api.
-  const onSubmit = useSubmitForVersionData(updateAtbd, atbd);
+  const onSubmit = useSubmitForVersionData(
+    updateAtbd,
+    atbd,
+    updateKeywordValues
+  );
 
   return (
     <Formik
@@ -69,6 +77,7 @@ export default function StepPdfCloseout(props) {
                     description={formString('closeout.plain_summary')}
                     growWithContents
                   />
+                  <KeywordsField />
                 </FormikSectionFieldset>
               </RichTextContex2Formik>
               {renderFormFooter()}
