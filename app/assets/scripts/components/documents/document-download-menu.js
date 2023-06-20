@@ -43,15 +43,21 @@ export default function DocumentDownloadMenu(props) {
   const canDownloadJournalPdf = false;
 
   const handlePdfDownloadClick = React.useCallback(() => {
+    const processToast = createProcessToast('Downloading PDF, please wait...');
+    if (atbd.documentType === 'PDF' && !atbd.pdf) {
+      processToast.error("This ATBD doesn't have the attachment");
+      return;
+    }
+
     const { id, version, alias } = atbd;
     const pdfUrl =
       atbd.documentType === 'PDF'
         ? atbd.pdf.file_path
         : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+
     const pdfFileName = `${alias}-v${version}.pdf`;
     const maxRetries = 50;
     const waitBetweenTries = 5000;
-    const processToast = createProcessToast('Downloading PDF, please wait...');
     const initialWait = 10000;
     let retryCount = 0;
 
