@@ -331,7 +331,8 @@ function NewAtbd() {
                       <TimesIcon /> Collaboration is not simultaneous
                     </Td>
                     <Td>
-                      <TimesIcon /> Requires external ATBD review
+                      <TimesIcon /> Content formatting is more cumbersome,
+                      including equations, tables, and figures
                     </Td>
                   </tr>
                   <tr>
@@ -339,10 +340,7 @@ function NewAtbd() {
                       <TimesIcon /> User interface updates and improvements may
                       cause intermitted disruptions
                     </Td>
-                    <Td>
-                      <TimesIcon /> Content formatting is more cumbersome,
-                      including equations, tables, and figures
-                    </Td>
+                    <Td />
                   </tr>
                   <tr>
                     <Td>
