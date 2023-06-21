@@ -337,13 +337,6 @@ function NewAtbd() {
                   </tr>
                   <tr>
                     <Td>
-                      <TimesIcon /> User interface updates and improvements may
-                      cause intermitted disruptions
-                    </Td>
-                    <Td />
-                  </tr>
-                  <tr>
-                    <Td>
                       <TimesIcon /> Slight learning curve
                     </Td>
                     <Td />
