@@ -216,17 +216,16 @@ function NewAtbd() {
               upload.
             </p>
             <div>
-              See the{' '}
-              <Link to='/user-guide/quickstart'>Quick Start guide </Link>
-              for more information, or watch{' '}
+              See the <Link to='/user-guide/quickstart'>Quick Start guide</Link>
+              , or watch{' '}
               <a
                 href='https://drive.google.com/file/d/16MuIDDlXtnDFBpfY6pJbHjjJS3KrzBnQ/view?usp=drive_link'
                 target='_blank'
                 rel='noopener'
               >
                 this video
-              </a>
-              .
+              </a>{' '}
+              for more information.
             </div>
             <TemplateContainer>
               <TemplateLink
