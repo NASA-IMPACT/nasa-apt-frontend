@@ -216,8 +216,9 @@ function NewAtbd() {
               upload.
             </p>
             <div>
-              See <Link to='/user-guide/quickstart'>Quick Start guide</Link>
-              <em> (coming soon)</em>
+              See the{' '}
+              <Link to='/user-guide/quickstart'>Quick Start guide </Link>
+              for more information.
             </div>
             <TemplateContainer>
               <TemplateLink
