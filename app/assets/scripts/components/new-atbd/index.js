@@ -216,7 +216,7 @@ function NewAtbd() {
               upload.
             </p>
             <div>
-              See <Link to='/'>ATBD template user guide</Link>
+              See <Link to='/user-guide/quickstart'>Quick Start guide</Link>
               <em> (coming soon)</em>
             </div>
             <TemplateContainer>

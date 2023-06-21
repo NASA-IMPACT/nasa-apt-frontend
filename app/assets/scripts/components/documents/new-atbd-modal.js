@@ -21,7 +21,7 @@ const ModalContent = styled.div`
 `;
 
 const TooltipContent =
-  'If your ATBD was created externally, you can add it as a PDF into APT. <br /><br /><strong> Caution</strong>: Importing ATBDs as PDFs restricts editing and searching capabilities. <br /><br />For more information, please click <a href="/new-atbd" target="_blank" rel="no_opener"> here</a>.';
+  'If your ATBD was created externally, you can add it as a PDF into APT. <br /><br /><strong> Caution</strong>: Importing ATBDs as PDFs restricts editing and searching capabilities. <br /><br />For more information, please see the difference between the two workflows <a href="/new-atbd" target="_blank" rel="no_opener"> here</a>, or watch <a href="https://drive.google.com/file/d/16MuIDDlXtnDFBpfY6pJbHjjJS3KrzBnQ/view?usp=drive_link" target="_blank" rel="no_opener"> this video</a>.';
 
 const MAX_ALIAS_CHARS = 32;
 const toAliasFormat = (v) => kebabcase(v).slice(0, MAX_ALIAS_CHARS);
