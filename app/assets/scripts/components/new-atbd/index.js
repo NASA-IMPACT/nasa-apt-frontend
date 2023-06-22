@@ -216,14 +216,22 @@ function NewAtbd() {
               upload.
             </p>
             <div>
-              See <Link to='/'>ATBD template user guide</Link>
-              <em> (coming soon)</em>
+              See the <Link to='/user-guide/quickstart'>Quick Start guide</Link>
+              , or watch{' '}
+              <a
+                href='https://drive.google.com/file/d/16MuIDDlXtnDFBpfY6pJbHjjJS3KrzBnQ/view?usp=drive_link'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                this video
+              </a>{' '}
+              for more information.
             </div>
             <TemplateContainer>
               <TemplateLink
                 href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
                 target='_blank'
-                rel='noopener'
+                rel='noopener noreferrer'
               >
                 <span>
                   <FaFileAlt />
@@ -233,7 +241,7 @@ function NewAtbd() {
               <TemplateLink
                 href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
                 target='_blank'
-                rel='noopener'
+                rel='noopener noreferrer'
               >
                 <span>
                   <FaFileWord />
