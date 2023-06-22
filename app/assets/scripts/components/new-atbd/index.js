@@ -199,7 +199,7 @@ function NewAtbd() {
               interface.
             </p>
             <div>
-              See <Link to='/user-guide'>APT user guide</Link>
+              See <Link to='/user-guide'>APT user guide</Link>.{' '}
             </div>
             <Video
               src='https://drive.google.com/file/d/1D9WpNJh3teOCLMbb_gDeJyIWjqarySyk/preview'
