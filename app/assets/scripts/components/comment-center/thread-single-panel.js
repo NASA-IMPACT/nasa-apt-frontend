@@ -68,9 +68,10 @@ function ThreadSinglePanelContents() {
 
   const { refreshThreadStats } = useThreadStats();
 
-  const onCommentEditCancel = useCallback(() => setEditingCommentKey(null), [
-    setEditingCommentKey
-  ]);
+  const onCommentEditCancel = useCallback(
+    () => setEditingCommentKey(null),
+    [setEditingCommentKey]
+  );
 
   const onSubmitThreadComment = useSubmitThreadComment(createThreadComment);
 

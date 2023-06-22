@@ -556,16 +556,14 @@ export const useSingleAtbd = ({ id, version }) => {
 
   return {
     atbd: getSingleAtbd(`${id}/${version}`),
-    fetchSingleAtbd: useCallback(() => fetchSingleAtbd({ id, version }), [
-      id,
-      version,
-      fetchSingleAtbd
-    ]),
-    updateAtbd: useCallback((data) => updateAtbd({ id, version, data }), [
-      id,
-      version,
-      updateAtbd
-    ]),
+    fetchSingleAtbd: useCallback(
+      () => fetchSingleAtbd({ id, version }),
+      [id, version, fetchSingleAtbd]
+    ),
+    updateAtbd: useCallback(
+      (data) => updateAtbd({ id, version, data }),
+      [id, version, updateAtbd]
+    ),
     // This action is special as it allows an id and a version to be passed as
     // parameters and override the ones passed to the context function
     // (useSingleAtbd). To use `deleteAtbdVersion` normally we'd need to
@@ -578,10 +576,10 @@ export const useSingleAtbd = ({ id, version }) => {
         deleteAtbdVersion({ id: inId, version: inVersion }),
       [id, version, deleteAtbdVersion]
     ),
-    createAtbdVersion: useCallback(() => createAtbdVersion({ id }), [
-      id,
-      createAtbdVersion
-    ])
+    createAtbdVersion: useCallback(
+      () => createAtbdVersion({ id }),
+      [id, createAtbdVersion]
+    )
   };
 };
 
@@ -595,22 +593,20 @@ export const useSingleAtbdEvents = ({ id, version }) => {
   // id and version, therefore these actions allow for those values to be passed
   // as arguments.
   const createFireEvent = useCallback(
-    (action) => ({
-      id: inId = id,
-      version: inVersion = version,
-      payload = {}
-    } = {}) => {
-      return fireAtbdEvent({ action, payload, id: inId, version: inVersion });
-    },
+    (action) =>
+      ({ id: inId = id, version: inVersion = version, payload = {} } = {}) => {
+        return fireAtbdEvent({ action, payload, id: inId, version: inVersion });
+      },
     [id, version, fireAtbdEvent]
   );
 
   return {
     // Events:
     // fev -> Fire EVent
-    fevReqReview: useMemo(() => createFireEvent('request_closed_review'), [
-      createFireEvent
-    ]),
+    fevReqReview: useMemo(
+      () => createFireEvent('request_closed_review'),
+      [createFireEvent]
+    ),
     fevCancelReviewReq: useMemo(
       () => createFireEvent('cancel_closed_review_request'),
       [createFireEvent]
@@ -627,20 +623,23 @@ export const useSingleAtbdEvents = ({ id, version }) => {
       () => createFireEvent('update_review_status'),
       [createFireEvent]
     ),
-    fevOpenReview: useMemo(() => createFireEvent('open_review'), [
-      createFireEvent
-    ]),
-    fevReqPublication: useMemo(() => createFireEvent('request_publication'), [
-      createFireEvent
-    ]),
+    fevOpenReview: useMemo(
+      () => createFireEvent('open_review'),
+      [createFireEvent]
+    ),
+    fevReqPublication: useMemo(
+      () => createFireEvent('request_publication'),
+      [createFireEvent]
+    ),
     fevCancelPublicationReq: useMemo(
       () => createFireEvent('cancel_publication_request'),
       [createFireEvent]
     ),
     fevPublish: useMemo(() => createFireEvent('publish'), [createFireEvent]),
-    fevMinorVersion: useMemo(() => createFireEvent('bump_minor_version'), [
-      createFireEvent
-    ])
+    fevMinorVersion: useMemo(
+      () => createFireEvent('bump_minor_version'),
+      [createFireEvent]
+    )
   };
 };
 

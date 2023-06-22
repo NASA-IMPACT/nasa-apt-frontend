@@ -26,12 +26,8 @@ import { contactEdit } from '../../../utils/url-creator';
 import { contactDeleteConfirmAndToast } from '../contact-delete-process';
 
 export function Contacts() {
-  const {
-    fetchContacts,
-    createContact,
-    deleteContact,
-    contacts
-  } = useContacts();
+  const { fetchContacts, createContact, deleteContact, contacts } =
+    useContacts();
 
   const { isLogged } = useUser();
   const history = useHistory();

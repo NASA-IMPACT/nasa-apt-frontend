@@ -97,9 +97,10 @@ function ThreadListPanelContents() {
     return () => invalidate();
   }, [invalidate]);
 
-  const onCommentEditCancel = useCallback(() => setEditingCommentKey(null), [
-    setEditingCommentKey
-  ]);
+  const onCommentEditCancel = useCallback(
+    () => setEditingCommentKey(null),
+    [setEditingCommentKey]
+  );
 
   const onSubmitThread = useSubmitThread({
     submitFunction: createThread,
@@ -129,10 +130,10 @@ function ThreadListPanelContents() {
     [setSelectedStatus, setSelectedSection]
   );
 
-  const menuActiveItems = useMemo(() => [selectedSection, selectedStatus], [
-    selectedSection,
-    selectedStatus
-  ]);
+  const menuActiveItems = useMemo(
+    () => [selectedSection, selectedStatus],
+    [selectedSection, selectedStatus]
+  );
 
   const onCommentEntryMenuAction = useCallback(
     async (menuId, { threadId }) => {

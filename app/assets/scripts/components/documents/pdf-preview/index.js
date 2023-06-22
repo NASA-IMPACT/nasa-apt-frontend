@@ -70,9 +70,10 @@ function generateTocAndHeadingNumbering(content) {
 
     // We separately handle the user-defined subheadings, since they
     // don't follow the pattern of other subheadings
-    const userDefinedHeadings = currentHeading.nextElementSibling?.querySelectorAll(
-      `H${currentLevel + 1}`
-    );
+    const userDefinedHeadings =
+      currentHeading.nextElementSibling?.querySelectorAll(
+        `H${currentLevel + 1}`
+      );
 
     if (userDefinedHeadings) {
       currentSubHeadings.push(

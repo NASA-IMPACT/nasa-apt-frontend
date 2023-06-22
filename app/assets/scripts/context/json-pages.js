@@ -78,9 +78,8 @@ const useSafeContextFn = createContextChecker(
 );
 
 export const useSingleJsonPage = (id) => {
-  const { getSingleJsonPage, fetchSingleJsonPage } = useSafeContextFn(
-    'useSingleJsonPage'
-  );
+  const { getSingleJsonPage, fetchSingleJsonPage } =
+    useSafeContextFn('useSingleJsonPage');
 
   return {
     page: getSingleJsonPage(`${id}`),
@@ -92,15 +91,14 @@ export const useSingleJsonPage = (id) => {
 };
 
 export const useJsonPagesIndex = (id) => {
-  const { getPagesIndex, fetchPagesIndex } = useSafeContextFn(
-    'useJsonPagesIndex'
-  );
+  const { getPagesIndex, fetchPagesIndex } =
+    useSafeContextFn('useJsonPagesIndex');
 
   return {
     pagesIndex: getPagesIndex(`${id}`),
-    fetchPagesIndex: useCallback((url) => fetchPagesIndex({ id, url }), [
-      id,
-      fetchPagesIndex
-    ])
+    fetchPagesIndex: useCallback(
+      (url) => fetchPagesIndex({ id, url }),
+      [id, fetchPagesIndex]
+    )
   };
 };

@@ -23,10 +23,10 @@ export function EquationModal() {
   const [isInline, setIsInline] = useState(initInline);
 
   // Reset on model open.
-  useEffect(() => visible && setLatexEquation(initEquation), [
-    visible,
-    initEquation
-  ]);
+  useEffect(
+    () => visible && setLatexEquation(initEquation),
+    [visible, initEquation]
+  );
   useEffect(() => visible && setIsInline(initInline), [visible, initInline]);
 
   const closeModal = useCallback(() => {

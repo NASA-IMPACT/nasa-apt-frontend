@@ -57,9 +57,8 @@ export const calculateDocumentCompleteness = (atbd, pdfMode = false) => {
   const allSections = STEPS.reduce((acc, step) => {
     // We can use getInitialValues to get the status of the sections
     // while adding any section that is not yet in the database.
-    const { sections_completed = {}, journal_status } = step.getInitialValues(
-      atbd
-    );
+    const { sections_completed = {}, journal_status } =
+      step.getInitialValues(atbd);
 
     // The closeout step is special. There are sections which should only be
     // considered if the document is intended for journal publication.

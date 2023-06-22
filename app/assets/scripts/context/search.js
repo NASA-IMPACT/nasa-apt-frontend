@@ -81,15 +81,15 @@ SearchProvider.propTypes = {
 const useSafeContextFn = createContextChecker(SearchContext, 'SearchContext');
 
 export const useSearch = () => {
-  const { getResults, fetchSearchResults, invalidate } = useSafeContextFn(
-    'useSearch'
-  );
+  const { getResults, fetchSearchResults, invalidate } =
+    useSafeContextFn('useSearch');
 
   return {
     results: getResults(),
     invalidate,
-    fetchSearchResults: useCallback((data) => fetchSearchResults({ data }), [
-      fetchSearchResults
-    ])
+    fetchSearchResults: useCallback(
+      (data) => fetchSearchResults({ data }),
+      [fetchSearchResults]
+    )
   };
 };

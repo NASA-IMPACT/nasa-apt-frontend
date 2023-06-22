@@ -498,20 +498,16 @@ ThreadsProvider.propTypes = {
 const useSafeContextFn = createContextChecker(ThreadsContext, 'ThreadsContext');
 
 export const useThreads = ({ atbdId, atbdVersion }) => {
-  const {
-    getThreads,
-    fetchThreadsList,
-    invalidateListThreads,
-    createThread
-  } = useSafeContextFn('useThreads');
+  const { getThreads, fetchThreadsList, invalidateListThreads, createThread } =
+    useSafeContextFn('useThreads');
 
   const sliceKey = `${atbdId}-${atbdVersion}`;
 
   return {
-    invalidate: useCallback(() => invalidateListThreads(sliceKey), [
-      sliceKey,
-      invalidateListThreads
-    ]),
+    invalidate: useCallback(
+      () => invalidateListThreads(sliceKey),
+      [sliceKey, invalidateListThreads]
+    ),
     threads: getThreads(sliceKey),
     fetchThreads: useCallback(
       ({ status, section }) => {
@@ -543,10 +539,10 @@ export const useSingleThread = ({ threadId } = {}) => {
   return {
     getSingleThread,
     thread: getSingleThread(`${threadId}`),
-    fetchSingleThread: useCallback(() => fetchThreadsSingle({ threadId }), [
-      threadId,
-      fetchThreadsSingle
-    ]),
+    fetchSingleThread: useCallback(
+      () => fetchThreadsSingle({ threadId }),
+      [threadId, fetchThreadsSingle]
+    ),
     updateThreadStatus: useCallback(
       ({ atbdId, atbdVersion, threadId: threadIdIn, status }) =>
         updateThreadsSingle({

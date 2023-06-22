@@ -47,7 +47,11 @@ export const useMinimumDurationEvent = ({ time = 512 } = {}) => {
  * @param {string} opts.status Status to use for loading tracking
  */
 export const useMinimumLoadingTime = ({ status }) => {
-  const { isDone: isLoadingDone, start, finish } = useMinimumDurationEvent({
+  const {
+    isDone: isLoadingDone,
+    start,
+    finish
+  } = useMinimumDurationEvent({
     time: 512
   });
 
