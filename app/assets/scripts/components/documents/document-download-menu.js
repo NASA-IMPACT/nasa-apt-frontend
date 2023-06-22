@@ -9,7 +9,6 @@ import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
-import { useContextualAbility } from '../../a11n';
 
 function DropMenuItemOutboundLink(props) {
   const { eventLabel, menuItem, active, ...rest } = props;
@@ -37,16 +36,29 @@ export default function DocumentDownloadMenu(props) {
   const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
-  const ability = useContextualAbility();
-  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  // TODO: Fix Journal PDF downloading
+  // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
+  // const ability = useContextualAbility();
+  //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
+  const canDownloadJournalPdf = false;
 
   const handlePdfDownloadClick = React.useCallback(() => {
+    const processToast = createProcessToast('Downloading PDF, please wait...');
+
+    if (atbd.documentType === 'PDF' && !atbd.pdf) {
+      processToast.error("This ATBD doesn't have the attachment");
+      return;
+    }
+
     const { id, version, alias } = atbd;
-    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    const pdfUrl =
+      atbd.documentType === 'PDF'
+        ? atbd.pdf.file_path
+        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+
     const pdfFileName = `${alias}-v${version}.pdf`;
     const maxRetries = 50;
     const waitBetweenTries = 5000;
-    const processToast = createProcessToast('Downloading PDF, please wait...');
     const initialWait = 10000;
     let retryCount = 0;
 
@@ -56,25 +68,40 @@ export default function DocumentDownloadMenu(props) {
           'Generating the PDF. This may take up to 5 minutes.'
         );
       }
-      const user = await Auth.currentAuthenticatedUser();
-      if (!user) {
-        processToast.error('Failed to download PDF! (Not authenticated)');
-        return;
-      }
-
-      const {
-        signInUserSession: { idToken, accessToken }
-      } = user;
-      const authToken = `Bearer ${idToken.jwtToken}`;
-      const xAccessToken = accessToken.jwtToken;
 
       try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
+        let user;
+        let headers = {};
+
+        if (atbd.status !== 'PUBLISHED') {
+          if (!token) {
+            processToast.error('Failed to download PDF! (Not authenticated)');
+            return;
+          }
+
+          user = await Auth.currentAuthenticatedUser();
+          if (!user) {
+            processToast.error(
+              'Failed to download PDF! (User info not available)'
+            );
+            return;
+          }
+
+          const {
+            signInUserSession: { idToken, accessToken }
+          } = user;
+
+          const authToken = `Bearer ${idToken.jwtToken}`;
+          const xAccessToken = accessToken.jwtToken;
+
+          headers = {
             Authorization: authToken,
             'X-ACCESS-TOKEN': xAccessToken
-          }
+          };
+        }
+        const response = await fetch(url, {
+          method: 'GET',
+          headers
         });
 
         // If we get a 404 on retry, it means the PDF is not ready yet.
@@ -125,7 +152,7 @@ export default function DocumentDownloadMenu(props) {
         ) {
           const result = await response.json();
 
-          await saveAs(result.pdf_url, pdfFileName);
+          saveAs(result.pdf_url, pdfFileName);
           processToast.success('PDF downloaded successfully!');
           return;
         }
@@ -139,7 +166,7 @@ export default function DocumentDownloadMenu(props) {
     }
 
     fetchPdf(pdfUrl);
-  }, [atbd]);
+  }, [token, atbd]);
 
   const dropProps = useMemo(() => {
     const triggerProps = {

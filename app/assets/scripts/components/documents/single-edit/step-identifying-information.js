@@ -110,7 +110,7 @@ export default function StepIdentifyingInformation(props) {
                   <FieldAtbdAlias disabled={hasAnyVersionPublished} />
                 </SectionFieldset>
 
-                <SectionFieldset label='DOI'>
+                <SectionFieldset label='Existing Document DOI'>
                   <FormikInputText
                     id='doi'
                     name='doi'

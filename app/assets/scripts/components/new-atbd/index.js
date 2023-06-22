@@ -106,12 +106,10 @@ const Section = styled.section`
   gap: ${glsp(1.5)};
 `;
 
-/*
 const Video = styled.iframe`
   width: 100%;
   height: 20rem;
 `;
-*/
 
 const TemplateContainer = styled.div`
   display: flex;
@@ -203,6 +201,12 @@ function NewAtbd() {
             <div>
               See <Link to='/user-guide'>APT user guide</Link>
             </div>
+            <Video
+              src='https://drive.google.com/file/d/1D9WpNJh3teOCLMbb_gDeJyIWjqarySyk/preview'
+              title='APT - creating a document'
+              frameborder='0'
+              allowfullscreen
+            />
           </Section>
           <Section>
             <h2>ATBD Templates</h2>
@@ -212,14 +216,22 @@ function NewAtbd() {
               upload.
             </p>
             <div>
-              See <Link to='/'>ATBD template user guide</Link>
-              <em> (coming soon)</em>
+              See the <Link to='/user-guide/quickstart'>Quick Start guide</Link>
+              , or watch{' '}
+              <a
+                href='https://drive.google.com/file/d/16MuIDDlXtnDFBpfY6pJbHjjJS3KrzBnQ/view?usp=drive_link'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                this video
+              </a>{' '}
+              for more information.
             </div>
             <TemplateContainer>
               <TemplateLink
                 href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
                 target='_blank'
-                rel='noopener'
+                rel='noopener noreferrer'
               >
                 <span>
                   <FaFileAlt />
@@ -229,7 +241,7 @@ function NewAtbd() {
               <TemplateLink
                 href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
                 target='_blank'
-                rel='noopener'
+                rel='noopener noreferrer'
               >
                 <span>
                   <FaFileWord />
@@ -325,15 +337,6 @@ function NewAtbd() {
                   <tr>
                     <Td>
                       <TimesIcon /> Collaboration is not simultaneous
-                    </Td>
-                    <Td>
-                      <TimesIcon /> Requires external ATBD review
-                    </Td>
-                  </tr>
-                  <tr>
-                    <Td>
-                      <TimesIcon /> User interface updates and improvements may
-                      cause intermitted disruptions
                     </Td>
                     <Td>
                       <TimesIcon /> Content formatting is more cumbersome,

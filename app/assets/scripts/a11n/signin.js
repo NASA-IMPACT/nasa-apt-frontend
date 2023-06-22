@@ -208,6 +208,7 @@ function SignIn() {
               <div>
                 <FormLabel htmlFor='mfa-otp-code'>Enter OTP</FormLabel>
                 <FormInput
+                  id='mfa-otp-code'
                   type='text'
                   placeholder='Enter code to verify'
                   value={otpCode}
