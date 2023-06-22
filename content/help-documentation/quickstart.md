@@ -1,5 +1,5 @@
 ---
-title: Quickstart
+title: Quick Start Guide
 ---
 
 # Algorithm Publication Tool (APT) Quick Start Guide
@@ -9,7 +9,7 @@ title: Quickstart
 ## 1. Introduction
 
 The Algorithm Publication Tool (APT) is a cloud-based publication tool developed within NASA’s Earth Science Data Systems (ESDS) program that standardizes Algorithm Theoretical Basis Document (ATBD) content, streamlines the authoring process of ATBDs, and allows the science community to search and retrieve ATBDs from a centralized repository.
-Users can create an ATBD within the APT user interface or use one of the provided ATBD templates to create their document (e.g., Google Docs, Microsoft Word, or LaTeX; see [APT User Guide](/user-guide/apt) and APT Template User Guide). Both options require an APT account.
+Users can create an ATBD within the APT user interface or use one of the provided ATBD templates to create their document (e.g., Google Docs, Microsoft Word, or LaTeX; see [APT User Guide](https://www.earthdata.nasa.gov/apt/user-guide/apt) and APT Template User Guide). Both options require an APT account.
 
 ## 2. Getting Started
 
