@@ -906,42 +906,6 @@ const htmlAtbdContentSections = [
     ]
   },
   {
-    label: 'Contacts',
-    id: 'contacts',
-    render: ({ element, children, atbd, printMode }) => (
-      <AtbdSection
-        key={element.id}
-        id={element.id}
-        title={element.label}
-        atbd={atbd}
-        printMode={printMode}
-      >
-        {React.Children.count(children) ? (
-          children
-        ) : (
-          <p>There are no contacts associated with this document</p>
-        )}
-      </AtbdSection>
-    ),
-    children: ({ atbd }) => {
-      const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
-        label: getContactName(contact),
-        id: `contacts_${idx + 1}`,
-        render: ({ element }) => (
-          <ContactItem
-            key={element.id}
-            id={element.id}
-            label={element.label}
-            contact={contact}
-            roles={roles}
-            affiliations={affiliations}
-          />
-        )
-      }));
-    }
-  },
-  {
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
@@ -1040,6 +1004,42 @@ const htmlAtbdContentSections = [
         )
       }
     ]
+  },
+  {
+    label: 'Contacts',
+    id: 'contacts',
+    render: ({ element, children, atbd, printMode }) => (
+      <AtbdSection
+        key={element.id}
+        id={element.id}
+        title={element.label}
+        atbd={atbd}
+        printMode={printMode}
+      >
+        {React.Children.count(children) ? (
+          children
+        ) : (
+          <p>There are no contacts associated with this document</p>
+        )}
+      </AtbdSection>
+    ),
+    children: ({ atbd }) => {
+      const contactsLink = atbd?.contacts_link || [];
+      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
+        label: getContactName(contact),
+        id: `contacts_${idx + 1}`,
+        render: ({ element }) => (
+          <ContactItem
+            key={element.id}
+            id={element.id}
+            label={element.label}
+            contact={contact}
+            roles={roles}
+            affiliations={affiliations}
+          />
+        )
+      }));
+    }
   },
   {
     label: 'References',
