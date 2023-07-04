@@ -143,16 +143,28 @@ const FragmentWithOptionalEditor = ({
   subsectionLevel,
   referencesUseIndex,
   atbd,
+  withoutHeading = false,
+  className,
   printMode
 }) => {
   return (
     <React.Fragment>
-      <HeadingWActions as={HLevel} id={element.id} data-scroll='target'>
-        <span>{element.label}</span>
-        {!printMode && <HeadingContextualActions id={element.id} atbd={atbd} />}
-      </HeadingWActions>
+      {!withoutHeading && (
+        <HeadingWActions
+          className={className}
+          as={HLevel}
+          id={element.id}
+          data-scroll='target'
+        >
+          <span>{element.label}</span>
+          {!printMode && (
+            <HeadingContextualActions id={element.id} atbd={atbd} />
+          )}
+        </HeadingWActions>
+      )}
       {withEditor && (
         <SafeReadEditor
+          className={className}
           context={{
             subsectionLevel,
             sectionId: element.id,
@@ -929,43 +941,18 @@ const htmlAtbdContentSections = [
     }
   },
   {
-    label: 'References',
-    id: 'references',
-    render: ({ element, referenceList, atbd, printMode }) => {
-      return (
-        <AtbdSection
-          key={element.id}
-          id={element.id}
-          title={element.label}
-          atbd={atbd}
-          printMode={printMode}
-          className='pdf-preview-break-before-page'
-        >
-          {referenceList.length ? (
-            <ReferencesList className='reference-list'>
-              {referenceList}
-            </ReferencesList>
-          ) : (
-            <p>No references were used in this document.</p>
-          )}
-        </AtbdSection>
-      );
-    }
-  },
-  {
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
     render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
-        className='pdf-preview-hidden'
         key={element.id}
         id={element.id}
-        title={element.label}
+        title={printMode ? 'Significance Discussion' : element.label}
         atbd={atbd}
         printMode={printMode}
       >
-        <p>
+        <p className='pdf-preview-hidden'>
           <em>
             If provided, the journal details are included only in the Journal
             PDF.
@@ -979,18 +966,21 @@ const htmlAtbdContentSections = [
         label: 'Key Points',
         id: 'key_points',
         render: ({ element, document, atbd, printMode }) => (
-          <AtbdSection
+          <FragmentWithOptionalEditor
             key={element.id}
-            id={element.id}
-            title={element.label}
+            element={element}
             atbd={atbd}
             printMode={printMode}
+            HLevel='h3'
+            subsectionLevel='h4'
+            className='pdf-preview-hidden'
           >
             <MultilineString
+              className='pdf-preview-hidden'
               value={document.key_points}
               whenEmpty={<EmptySection />}
             />
-          </AtbdSection>
+          </FragmentWithOptionalEditor>
         )
       },
       {
@@ -1006,7 +996,9 @@ const htmlAtbdContentSections = [
             value={props.document.journal_discussion}
             HLevel='h3'
             subsectionLevel='h4'
+            className='pdf-preview-no-toc'
             withEditor
+            withoutHeading={props.printMode}
           />
         )
       },
@@ -1024,6 +1016,7 @@ const htmlAtbdContentSections = [
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
+            className='pdf-preview-hidden'
           />
         )
       },
@@ -1041,10 +1034,35 @@ const htmlAtbdContentSections = [
             HLevel='h3'
             subsectionLevel='h4'
             withEditor
+            className='pdf-preview-hidden'
           />
         )
       }
     ]
+  },
+  {
+    label: 'References',
+    id: 'references',
+    render: ({ element, referenceList, atbd, printMode }) => {
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className='pdf-preview-break-before-page pdf-preview-no-numbering'
+        >
+          {referenceList.length ? (
+            <ReferencesList className='reference-list'>
+              {referenceList}
+            </ReferencesList>
+          ) : (
+            <p>No references were used in this document.</p>
+          )}
+        </AtbdSection>
+      );
+    }
   }
 ];
 

@@ -20,7 +20,7 @@ export default class SafeReadEditor extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <p>
+        <p className={this.props.className}>
           There was an error rendering this content. Structure is likely to be
           invalid.
         </p>
@@ -30,6 +30,10 @@ export default class SafeReadEditor extends React.Component {
     return <SafeReadEditorComponent {...this.props} />;
   }
 }
+
+SafeReadEditor.propTypes = {
+  className: T.string
+};
 
 const SafeReadEditorComponent = (props) => {
   const { value, whenEmpty, context, contextDeps, ...rest } = props;
@@ -70,6 +74,7 @@ const SafeReadEditorComponent = (props) => {
 };
 
 SafeReadEditorComponent.propTypes = {
+  className: T.string,
   value: T.object,
   context: T.object,
   contextDeps: T.array,
