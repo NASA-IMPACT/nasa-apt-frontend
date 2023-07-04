@@ -64,6 +64,11 @@ const journalStatuses = [
   }
 ];
 
+export const journalStatusValueToLabel = (value) => {
+  const status = journalStatuses.find((s) => s.value === value);
+  return status ? status.label : '';
+};
+
 export default function JournalDetails(props) {
   const { atbd } = props;
   const { values, dirty } = useFormikContext();

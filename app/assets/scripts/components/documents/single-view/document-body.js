@@ -15,6 +15,7 @@ import {
   formatReference,
   sortReferences
 } from '../../../utils/references';
+import { journalStatusValueToLabel } from '../single-edit/step-closeout/journal-details';
 import { useScrollListener, useScrollToHashOnMount } from './scroll-manager';
 import { proseInnerSpacing } from '../../../styles/typography/prose';
 import {
@@ -1233,6 +1234,24 @@ const pdfAtbdContentSections = [
           className='pdf-preview-hidden'
         >
           <PDFPreview src={atbd.pdf?.file_path} />
+        </AtbdSection>
+      );
+    }
+  },
+  {
+    label: 'Journal Details',
+    id: 'journal_details',
+    shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
+    render: ({ element, atbd, printMode }) => {
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+        >
+          <p>{journalStatusValueToLabel(atbd.journal_status)}</p>
         </AtbdSection>
       );
     }
