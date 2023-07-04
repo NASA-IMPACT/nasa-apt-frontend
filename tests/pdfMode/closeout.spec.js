@@ -12,7 +12,9 @@ test.describe('pdf closeout', () => {
     await expect(page.locator('#plain_summary')).toBeVisible();
 
     await expect(page.getByText('Keywords')).toBeVisible();
-    await expect(page.getByText('Journal details')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'Journal details' })
+    ).toBeVisible();
   });
 
   test('change journal details', async ({ ownerPage: { page } }) => {
