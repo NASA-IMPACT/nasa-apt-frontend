@@ -444,9 +444,18 @@ export const AtbdsProvider = (props) => {
               // Ensure that the structure is always the same. See rationale on
               // fetchSingleAtbd
               const updatedVersion = data.versions[0];
+              // Drop the document from the response because we don't want to
+              // override the full document with the summary response returned
+              // by the events endpoint.
+              /* eslint-disable-next-line no-unused-vars */
+              const { document, ...updatedVersionWithoutDoucument } =
+                updatedVersion;
 
               return {
-                ...computeAtbdVersion(state.data, updatedVersion),
+                ...computeAtbdVersion(
+                  state.data,
+                  updatedVersionWithoutDoucument
+                ),
                 // When the content gets updated we also have to update the
                 // corresponding version in the versions array. This is needed
                 // to ensure consistency with the returned structure from
