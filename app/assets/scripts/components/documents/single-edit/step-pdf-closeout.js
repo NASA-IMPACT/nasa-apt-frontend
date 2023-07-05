@@ -18,6 +18,7 @@ import { SubSectionPlugin } from '../../slate/plugins/subsection';
 import KeywordsField, {
   updateKeywordValues
 } from './step-closeout/field-keywords';
+import JournalDetailsSection from './step-closeout/journal-details';
 
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
@@ -73,6 +74,8 @@ export default function StepPdfCloseout(props) {
                   />
                   <KeywordsField />
                 </FormikSectionFieldset>
+
+                <JournalDetailsSection atbd={atbd} />
               </RichTextContex2Formik>
               {renderFormFooter()}
             </Form>

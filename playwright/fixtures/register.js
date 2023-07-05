@@ -12,6 +12,10 @@ const atbdStatsNew = require('./server/atbd-version-new.json');
 const atbdEvent = require('./server/atbd-event.json');
 const atbdReviewerList = require('./server/atbd-reviewer-list.json');
 
+const atbdPDF = require('./server/pdf/atbd-pdf.json');
+const atbdPDFVersion = require('./server/pdf/atbd-pdf-version.json');
+const atbdPDFStats = require('./server/pdf/atbd-pdf-stats.json');
+
 export function versionWithStatus(version, status) {
   return {
     ...version,
@@ -27,6 +31,43 @@ export function versionWithStatus(version, status) {
     })
   };
 }
+
+export const authenticatedFixturePDFUrls = [
+  {
+    url: 'http://localhost:8888/v2/atbds/pdf-document',
+    getResponse: atbdPDF
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/227',
+    getResponse: atbdPDF
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/pdf-document/versions/v1.0',
+    getResponse: atbdPDFVersion
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/227/versions/v1.0',
+    getResponse: atbdPDFVersion
+  },
+  {
+    url: 'http://localhost:8888/v2/threads/stats?atbds=227_v1.0',
+    getResponse: atbdPDFStats
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/pdf-document/versions/v1.0/lock?override=false',
+    putResponse: {
+      email: 'olivia@example.com',
+      preferred_username: 'Olivia Owner'
+    }
+  },
+  {
+    url: 'http://localhost:8888/v2/atbds/227/versions/v1.0/lock?override=false',
+    putResponse: {
+      email: 'olivia@example.com',
+      preferred_username: 'Olivia Owner'
+    }
+  }
+];
 
 export const authenticatedFixtureUrls = [
   {
@@ -99,7 +140,8 @@ export const authenticatedFixtureUrls = [
   {
     url: 'http://localhost:8888/v2/users?atbd_id=1&version=v1.1&user_filter=invite_reviewers',
     getResponse: atbdReviewerList
-  }
+  },
+  ...authenticatedFixturePDFUrls
 ];
 
 export const anonymousFixtureUrls = [
