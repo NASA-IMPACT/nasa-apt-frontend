@@ -174,7 +174,7 @@ const FragmentWithOptionalEditor = ({
             atbd
           }}
           value={value}
-          whenEmpty={<EmptySection />}
+          whenEmpty={<EmptySection className={className} />}
         />
       )}
       {children}
@@ -299,7 +299,9 @@ const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   </AtbdSubSection>
 );
 
-const EmptySection = () => <p>No content available.</p>;
+const EmptySection = ({ className }) => (
+  <p className={className}>No content available.</p>
+);
 
 /**
  * Renders each element of the given array (by calling their `render` function)
@@ -943,7 +945,7 @@ const htmlAtbdContentSections = [
             <MultilineString
               className='pdf-preview-hidden'
               value={document.key_points}
-              whenEmpty={<EmptySection />}
+              whenEmpty={<EmptySection className='pdf-preview-hidden' />}
             />
           </FragmentWithOptionalEditor>
         )
