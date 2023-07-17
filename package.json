@@ -21,6 +21,7 @@
     "serve:test": "NODE_ENV=test gulp serve",
     "build": "NODE_ENV=production gulp",
     "playwright:test": "NODE_ENV=test playwright test",
+    "playwright:test:ui": "NODE_ENV=test playwright test --ui",
     "clean": "gulp clean",
     "stage": "NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
