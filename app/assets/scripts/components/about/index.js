@@ -27,10 +27,10 @@ function About() {
               <h1>The Algorithm Publication Tool (APT)</h1>
               <p>
                 APT is a prototype environment for use in writing, submitting,
-                and discovering Algorithm Theoretical Basis Documents (ATBDs).
-                The tool has been designed to make it easier to create and edit
-                new ATBDs for which all content is searchable. We welcome your
-                feedback.
+                discovering and accessing Algorithm Theoretical Basis Documents
+                (ATBDs). The tool has been designed to make it easier to create
+                and edit new ATBDs and discover ATBDs from within APT's
+                centralized repository.
               </p>
 
               <p>
@@ -46,65 +46,98 @@ function About() {
                 <a
                   href='https://developmentseed.org/'
                   rel='noopener'
-                  title='Visit Development Seed webpage'
+                  title='Visit the Development Seed webpage'
                 >
                   Development Seed
                 </a>
                 . Please use the <FeedbackLink>feedback form</FeedbackLink> to
-                send us your questions, thoughts, and comments.
+                send us your questions, thoughts, and comments. We welcome
+                feedback from all users!
+              </p>
+
+              <p>
+                The available processes for ATBD creation are described on the{' '}
+                <a
+                  href='/new-atbd'
+                  rel='noopener'
+                  title='Create a new ATBD page'
+                >
+                  Create a new ATBD page
+                </a>
+                . Authors and collaborators have a choice to construct an ATBD
+                either using the APT authoring environment or using Google Docs,
+                Microsoft Word, or LaTeX templates. The process is slightly
+                different for each method.
               </p>
 
               <h2>FAQs</h2>
+
               <h3>What is the APT?</h3>
               <p>
                 APT is an authoring tool that streamlines the writing,
                 publishing and maintenance process of ATBDs for NASA’s Earth
                 Science Division. APT is also a centralized repository of
-                submitted ATBDs for Earth Science users. Researchers and
-                scientists are required to use the tool to standardize ATBD
-                content and make it searchable for all interested data users.
+                completed and submitted ATBDs for Earth Science users.
+                Researchers and scientists are required to use the tool or
+                templates to ensure creation of standardized ATBD content and to
+                provide searchable documents for all interested data and
+                algorithm users.
               </p>
               <h3>Why should I use the APT?</h3>
               <p>
                 If you are looking for an algorithm description, this is where
-                you will find publicly available ATBDs. The general public can
-                view all completed ATBDs without a user account and download
-                PDFs of the ATBDs. Historical ATBDs are not available at this
-                time.
+                you will find publicly available ATBDs for NASA's Earth Science
+                Division. The general public can view and download all completed
+                ATBDs without a user account. Historical ATBDs are not available
+                at this time but will be added over time once the interface is
+                adapted to receive the documents. All APT ATBDs have a DOI that
+                can be used as metadata in data products pertaining to the
+                algorithm.
               </p>
               <p>
                 If you are a researcher responsible for producing an ATBD, this
                 tool is used to write and submit your algorithm description so
-                that it can be located by others. APT has been designed to aid
-                with submitting your ATBD to a journal.
+                that it can be located by others. The APT environment has been
+                designed to aid with creating and submitting your ATBD to a
+                journal, if you choose. Use of the APT templates for document
+                creation ensures content is standardized to improve
+                discoverability and automated document use.
               </p>
               <h3>Can the public use the APT?</h3>
               <p>
-                The public can freely view and download any completed ATBD as
-                HTML or PDF. No user account is needed. Only users required to
-                author or review an ATBD can obtain an authorized user account.
+                The public can freely view and download any completed ATBD as a
+                PDF file. No user account is needed. Only users required to
+                author, submit or review an ATBD can obtain an authorized user
+                account.
               </p>
               <h3>How does the APT work?</h3>
               <p>
                 APT uses a standardized ATBD template that sets content
-                expectations for ATBDs and improves communication. A review
-                process is used to ensure all content quality. ATBD content is
-                stored as metadata making it completely machine readable,
-                searchable, and useful in other tools and services.
+                expectations for ATBDs and improves communication and completed
+                document discoverability. A review process is used to ensure
+                that all content meets quality requirements. Within the APT
+                authoring environment, all ATBD content is stored as metadata
+                making it completely machine readable, searchable, and useful in
+                other tools and services.
               </p>
 
               <p>
-                For more detailed information about APT, please visit the{' '}
-                <Link to='/user-guide'>
-                  User Guide for Authoring ATBDs using the Algorithm Publication
-                  Tool (APT)
-                </Link>
-                .
+                If an author chooses to use APT templates for ATBD creation,
+                only the completed and approved PDF is submitted to APT. From
+                the APT environment, authors will provide needed metadata about
+                the document to ensure discovery of the document.
               </p>
 
               <p>
-                If you have questions, please submit them through the{' '}
-                <FeedbackLink>feedback form</FeedbackLink>.
+                For more detailed information about APT, check out the{' '}
+                <Link to='/user-guide'>User Guide </Link>
+                with the Algorithm Publication Tool (APT) .
+              </p>
+
+              <p>
+                If you have questions, please use the{' '}
+                <FeedbackLink>feedback form </FeedbackLink>
+                to communicate with the APT Curator.
               </p>
             </Prose>
           </ContentBlock>
