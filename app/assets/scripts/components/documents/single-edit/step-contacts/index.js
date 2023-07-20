@@ -131,6 +131,12 @@ export default function StepContacts(props) {
                   </FormSectionNotes>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
+                <FormikSectionFieldset
+                  label={getDocumentSectionLabel('reviewer_info')}
+                  sectionName='sections_completed.reviewer_info'
+                >
+                  Reviewer info here
+                </FormikSectionFieldset>
                 {renderFormFooter()}
               </Form>
             </FormBlock>
