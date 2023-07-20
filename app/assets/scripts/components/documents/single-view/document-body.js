@@ -911,23 +911,45 @@ const htmlAtbdContentSections = [
     label: 'Journal Details',
     id: 'journal_details',
     shouldRender: ({ atbd }) => isJournalPublicationIntended(atbd),
-    render: ({ element, children, atbd, printMode }) => (
-      <AtbdSection
-        key={element.id}
-        id={element.id}
-        title={printMode ? 'Significance Discussion' : element.label}
-        atbd={atbd}
-        printMode={printMode}
-      >
-        <p className='pdf-preview-hidden'>
-          <em>
-            If provided, the journal details are included only in the Journal
-            PDF.
-          </em>
-        </p>
-        {children}
-      </AtbdSection>
-    ),
+    render: ({ element, children, atbd, printMode, document }) => {
+      function isJournalDiscussionEmpty() {
+        if (
+          !document.journal_discussion ||
+          !document.journal_discussion.children
+        ) {
+          return true;
+        }
+
+        return document.journal_discussion.children.every((node) => {
+          if (node.type === 'p' && node.children?.every(({ text }) => !text)) {
+            return true;
+          }
+
+          return false;
+        });
+      }
+
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={printMode ? 'Significance Discussion' : element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className={
+            isJournalDiscussionEmpty() ? 'pdf-preview-hidden' : undefined
+          }
+        >
+          <p className='pdf-preview-hidden'>
+            <em>
+              If provided, the journal details are included only in the Journal
+              PDF.
+            </em>
+          </p>
+          {children}
+        </AtbdSection>
+      );
+    },
     children: [
       {
         label: 'Key Points',
