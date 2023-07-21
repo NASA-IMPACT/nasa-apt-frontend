@@ -71,63 +71,78 @@ function About() {
               </p>
 
               <h2>FAQs</h2>
+              <details>
+                <summary style={{ display: 'inline' }}>
+                  <h3>What is the APT?</h3>
+                </summary>
+                <p>
+                  APT is an authoring tool that streamlines the writing,
+                  publishing and maintenance process of ATBDs for NASA’s Earth
+                  Science Division. APT is also a centralized repository of
+                  completed and submitted ATBDs for Earth Science users.
+                  Researchers and scientists are required to use the tool or
+                  templates to ensure creation of standardized ATBD content and
+                  to provide searchable documents for all interested data and
+                  algorithm users.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  <h3>Why should I use the APT?</h3>
+                </summary>
+                <p>
+                  If you are looking for an algorithm description, this is where
+                  you will find publicly available ATBDs for NASA's Earth
+                  Science Division. The general public can view and download all
+                  completed ATBDs without a user account. Historical ATBDs are
+                  not available at this time but will be added over time once
+                  the interface is adapted to receive the documents. All APT
+                  ATBDs have a DOI that can be used as metadata in data products
+                  pertaining to the algorithm.
+                </p>
+                <p>
+                  If you are a researcher responsible for producing an ATBD,
+                  this tool is used to write and submit your algorithm
+                  description so that it can be located by others. The APT
+                  environment has been designed to aid with creating and
+                  submitting your ATBD to a journal, if you choose. Use of the
+                  APT templates for document creation ensures content is
+                  standardized to improve discoverability and automated document
+                  use.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  <h3>Can the public use the APT?</h3>
+                </summary>
+                <p>
+                  The public can freely view and download any completed ATBD as
+                  a PDF file. No user account is needed. Only users required to
+                  author, submit or review an ATBD can obtain an authorized user
+                  account.
+                </p>
+              </details>
+              <details>
+                <summary>
+                  <h3>How does the APT work?</h3>
+                </summary>
+                <p>
+                  APT uses a standardized ATBD template that sets content
+                  expectations for ATBDs and improves communication and
+                  completed document discoverability. A review process is used
+                  to ensure that all content meets quality requirements. Within
+                  the APT authoring environment, all ATBD content is stored as
+                  metadata making it completely machine readable, searchable,
+                  and useful in other tools and services.
+                </p>
 
-              <h3>What is the APT?</h3>
-              <p>
-                APT is an authoring tool that streamlines the writing,
-                publishing and maintenance process of ATBDs for NASA’s Earth
-                Science Division. APT is also a centralized repository of
-                completed and submitted ATBDs for Earth Science users.
-                Researchers and scientists are required to use the tool or
-                templates to ensure creation of standardized ATBD content and to
-                provide searchable documents for all interested data and
-                algorithm users.
-              </p>
-              <h3>Why should I use the APT?</h3>
-              <p>
-                If you are looking for an algorithm description, this is where
-                you will find publicly available ATBDs for NASA's Earth Science
-                Division. The general public can view and download all completed
-                ATBDs without a user account. Historical ATBDs are not available
-                at this time but will be added over time once the interface is
-                adapted to receive the documents. All APT ATBDs have a DOI that
-                can be used as metadata in data products pertaining to the
-                algorithm.
-              </p>
-              <p>
-                If you are a researcher responsible for producing an ATBD, this
-                tool is used to write and submit your algorithm description so
-                that it can be located by others. The APT environment has been
-                designed to aid with creating and submitting your ATBD to a
-                journal, if you choose. Use of the APT templates for document
-                creation ensures content is standardized to improve
-                discoverability and automated document use.
-              </p>
-              <h3>Can the public use the APT?</h3>
-              <p>
-                The public can freely view and download any completed ATBD as a
-                PDF file. No user account is needed. Only users required to
-                author, submit or review an ATBD can obtain an authorized user
-                account.
-              </p>
-              <h3>How does the APT work?</h3>
-              <p>
-                APT uses a standardized ATBD template that sets content
-                expectations for ATBDs and improves communication and completed
-                document discoverability. A review process is used to ensure
-                that all content meets quality requirements. Within the APT
-                authoring environment, all ATBD content is stored as metadata
-                making it completely machine readable, searchable, and useful in
-                other tools and services.
-              </p>
-
-              <p>
-                If an author chooses to use APT templates for ATBD creation,
-                only the completed and approved PDF is submitted to APT. From
-                the APT environment, authors will provide needed metadata about
-                the document to ensure discovery of the document.
-              </p>
-
+                <p>
+                  If an author chooses to use APT templates for ATBD creation,
+                  only the completed and approved PDF is submitted to APT. From
+                  the APT environment, authors will provide needed metadata
+                  about the document to ensure discovery of the document.
+                </p>
+              </details>
               <p>
                 For more detailed information about APT, check out the{' '}
                 <Link to='/user-guide'>User Guide </Link>
