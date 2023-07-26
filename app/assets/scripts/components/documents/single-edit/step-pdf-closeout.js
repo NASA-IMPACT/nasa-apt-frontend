@@ -18,6 +18,7 @@ import { SubSectionPlugin } from '../../slate/plugins/subsection';
 import KeywordsField, {
   updateKeywordValues
 } from './step-closeout/field-keywords';
+import JournalDetailsSection from './step-closeout/journal-details';
 
 import { getDocumentSectionLabel } from './sections';
 import { LocalStore } from './local-store';
@@ -27,14 +28,8 @@ import RichTextContex2Formik from './rich-text-ctx-formik';
 const exlcudePlugins = [ImageBlockPlugin, TableBlockPlugin, SubSectionPlugin];
 
 export default function StepPdfCloseout(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
 
@@ -79,6 +74,8 @@ export default function StepPdfCloseout(props) {
                   />
                   <KeywordsField />
                 </FormikSectionFieldset>
+
+                <JournalDetailsSection atbd={atbd} />
               </RichTextContex2Formik>
               {renderFormFooter()}
             </Form>

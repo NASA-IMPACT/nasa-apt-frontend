@@ -1,6 +1,6 @@
 module.exports = {
-  appTitle: 'Report Generator Tool',
-  appDescription: 'Report Generator Tool - Create reports on satellite needs.',
+  appTitle: 'Algorithm Publication Tool',
+  appDescription: 'Algorithm Publication Tool - ATBD management.',
   apiUrl: 'http://localhost:8888/v2',
   snwgApiUrl: 'https://api.snwg-impact.net/api/v1/',
   mimsApiUrl: 'https://mims.nasa-impact.net/',

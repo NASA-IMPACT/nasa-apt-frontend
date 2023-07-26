@@ -114,11 +114,10 @@ export const useCommentCenter = ({ atbd = null } = {}) => {
   const ctx = useSafeContextFn('useCommentCenter');
 
   const { id, version, owner, authors = [], reviewers = [] } = atbd?.data || {};
-  const contributors = useMemo(() => [owner, ...authors, ...reviewers], [
-    owner,
-    authors,
-    reviewers
-  ]);
+  const contributors = useMemo(
+    () => [owner, ...authors, ...reviewers],
+    [owner, authors, reviewers]
+  );
 
   const {
     setAtbdId,

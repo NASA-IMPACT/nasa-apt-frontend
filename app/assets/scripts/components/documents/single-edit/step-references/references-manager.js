@@ -184,9 +184,8 @@ export default function ReferencesManager(props) {
                           if (!result) return;
                         }
 
-                        const newSelection = selectedReferencesList.deselect(
-                          field
-                        );
+                        const newSelection =
+                          selectedReferencesList.deselect(field);
 
                         // Remove the deleted references from all the editor
                         // fields.

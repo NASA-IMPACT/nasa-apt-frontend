@@ -221,9 +221,8 @@ ScrollAnchorProvider.propTypes = {
  * @returns Object
  */
 export function useScrollLink() {
-  const { scrollToId, setScrollInitiator, activeItem } = useContext(
-    ScrollContext
-  );
+  const { scrollToId, setScrollInitiator, activeItem } =
+    useContext(ScrollContext);
 
   const getScrollToId = useCallback(
     (id) => (event) => {

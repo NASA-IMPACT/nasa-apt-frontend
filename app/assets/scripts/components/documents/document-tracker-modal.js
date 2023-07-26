@@ -59,13 +59,8 @@ const TrackerEntryTitleIconified = styled(TrackerEntryTitle)`
 `;
 
 const TriggeringTitle = (props) => {
-  const {
-    isFoldExpanded,
-    setFoldExpanded,
-    swatchColor,
-    useIcon,
-    children
-  } = props;
+  const { isFoldExpanded, setFoldExpanded, swatchColor, useIcon, children } =
+    props;
 
   const onClick = useCallback(
     (e) => {

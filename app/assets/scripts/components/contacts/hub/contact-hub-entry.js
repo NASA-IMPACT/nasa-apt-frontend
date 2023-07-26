@@ -15,10 +15,10 @@ import ContactActionsMenu from '../contact-actions-menu';
 import { contactView } from '../../../utils/url-creator';
 
 export default function ContactEntry({ contact, onContactAction }) {
-  const onAction = useCallback((...args) => onContactAction(contact, ...args), [
-    onContactAction,
-    contact
-  ]);
+  const onAction = useCallback(
+    (...args) => onContactAction(contact, ...args),
+    [onContactAction, contact]
+  );
 
   const mechanismCount = contact.mechanisms.length;
   const atbdUseCount = contact.atbd_versions_link.length;

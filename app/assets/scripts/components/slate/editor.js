@@ -186,7 +186,7 @@ RichTextEditor.defaultProps = {
 };
 
 export function ReadEditor(props) {
-  const { id, value: inputVal } = props;
+  const { id, value: inputVal, className } = props;
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
 
   // For view mode we use native list elements
@@ -200,6 +200,7 @@ export function ReadEditor(props) {
   return (
     <Slate editor={editor} value={value}>
       <ReadableWithPlugins
+        className={className}
         id={id}
         plugins={viewPlugins}
         value={value}
@@ -212,5 +213,6 @@ export function ReadEditor(props) {
 
 ReadEditor.propTypes = {
   id: T.string,
+  className: T.string,
   value: T.object
 };

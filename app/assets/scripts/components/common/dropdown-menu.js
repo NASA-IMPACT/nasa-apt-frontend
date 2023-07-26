@@ -256,6 +256,8 @@ const DropdownMenu = React.forwardRef((props, ref) => {
   );
 });
 
+DropdownMenu.displayName = 'DropdownMenu';
+
 DropdownMenu.propTypes = {
   className: T.string,
   menu: T.oneOfType([T.array, T.object]),

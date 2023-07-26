@@ -1,4 +1,5 @@
 import React from 'react';
+import T from 'prop-types';
 
 /**
  * Tries to render the given function falling back to the children if it is not
@@ -18,3 +19,8 @@ export default function Try(props) {
     return children || null;
   }
 }
+
+Try.propTypes = {
+  fn: T.oneOfType([T.func, T.node]),
+  children: T.node
+};

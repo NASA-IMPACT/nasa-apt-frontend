@@ -139,13 +139,15 @@ DocumentModals.propTypes = {
   onReviewReqApproveSubmit: T.func
 };
 
-const composeOnSubmitSuccess = (fn, cb) => async (...args) => {
-  const result = await fn(...args);
-  if (result) {
-    await cb();
-  }
-  return result;
-};
+const composeOnSubmitSuccess =
+  (fn, cb) =>
+  async (...args) => {
+    const result = await fn(...args);
+    if (result) {
+      await cb();
+    }
+    return result;
+  };
 
 export const useDocumentModals = ({
   atbd,

@@ -64,9 +64,15 @@ const journalStatuses = [
   }
 ];
 
+export const journalStatusValueToLabel = (value) => {
+  const status = journalStatuses.find((s) => s.value === value);
+  return status ? status.label : '';
+};
+
 export default function JournalDetails(props) {
   const { atbd } = props;
   const { values, dirty } = useFormikContext();
+  const pdfMode = atbd?.document_type === 'PDF';
 
   // Publication units is a meta information files. Calculated in the server,
   // contains the different values needed to calculate the PU.
@@ -94,7 +100,7 @@ export default function JournalDetails(props) {
         </FormCheckableGroup>
       </FormGroupStructure>
 
-      {isJournalPublicationIntended(values.journal_status) && (
+      {!pdfMode && isJournalPublicationIntended(values.journal_status) && (
         <React.Fragment>
           <FormikSectionFieldset
             label={getDocumentSectionLabel('discussion')}
@@ -270,6 +276,7 @@ export default function JournalDetails(props) {
 JournalDetails.propTypes = {
   atbd: T.shape({
     status: T.string,
+    document_type: T.string,
     publication_units: T.object,
     contacts_link: T.array
   })

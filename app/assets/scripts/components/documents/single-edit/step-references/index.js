@@ -15,14 +15,8 @@ import { LocalStore } from '../local-store';
 import { FormikUnloadPrompt } from '../../../common/unload-prompt';
 
 export default function StepReferences(props) {
-  const {
-    renderInpageHeader,
-    renderFormFooter,
-    atbd,
-    id,
-    version,
-    step
-  } = props;
+  const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
+    props;
 
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);

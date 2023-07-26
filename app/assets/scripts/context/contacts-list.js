@@ -189,22 +189,19 @@ const useSafeContextFn = createContextChecker(
 );
 
 export const useSingleContact = ({ id }) => {
-  const {
-    getSingleContact,
-    fetchSingleContact,
-    updateContact
-  } = useSafeContextFn('useSingleContact');
+  const { getSingleContact, fetchSingleContact, updateContact } =
+    useSafeContextFn('useSingleContact');
 
   return {
     contact: getSingleContact(`${id}`),
-    fetchSingleContact: useCallback(() => fetchSingleContact({ id }), [
-      id,
-      fetchSingleContact
-    ]),
-    updateContact: useCallback((data) => updateContact({ id, data }), [
-      id,
-      updateContact
-    ])
+    fetchSingleContact: useCallback(
+      () => fetchSingleContact({ id }),
+      [id, fetchSingleContact]
+    ),
+    updateContact: useCallback(
+      (data) => updateContact({ id, data }),
+      [id, updateContact]
+    )
   };
 };
 

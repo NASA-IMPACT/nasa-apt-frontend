@@ -324,6 +324,7 @@ const STEP_PDF_CLOSEOUT = {
         abstract: EDITOR_SYM,
         plain_summary: EDITOR_SYM
       },
+      keywords: [],
       sections_completed: {
         abstract: 'incomplete'
       }

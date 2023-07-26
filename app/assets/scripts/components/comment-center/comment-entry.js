@@ -13,10 +13,12 @@ import CommentForm from './comment-form';
 
 import { useUser } from '../../context/user';
 
-const getDefaultPrevented = (fn, ...args) => (e) => {
-  e?.preventDefault?.();
-  fn?.(...args);
-};
+const getDefaultPrevented =
+  (fn, ...args) =>
+  (e) => {
+    e?.preventDefault?.();
+    fn?.(...args);
+  };
 
 const AuthoringInfoCmp = (props) => {
   const { date, isEdited, isThread, ...rest } = props;

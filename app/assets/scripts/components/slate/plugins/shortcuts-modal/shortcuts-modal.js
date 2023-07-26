@@ -73,9 +73,10 @@ export function ShortcutsModal(props) {
     editor.simpleModal.reset();
   }, [editor]);
 
-  const { toolbar, floating } = useMemo(() => getPluginShortcuts(plugins), [
-    plugins
-  ]);
+  const { toolbar, floating } = useMemo(
+    () => getPluginShortcuts(plugins),
+    [plugins]
+  );
 
   return (
     <Modal

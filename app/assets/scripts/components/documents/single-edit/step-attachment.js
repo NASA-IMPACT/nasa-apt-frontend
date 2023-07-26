@@ -136,14 +136,8 @@ PDFUploadButton.propTypes = {
 };
 
 function StepAttachement(props) {
-  const {
-    atbd,
-    id,
-    version,
-    step,
-    renderInpageHeader,
-    renderFormFooter
-  } = props;
+  const { atbd, id, version, step, renderInpageHeader, renderFormFooter } =
+    props;
   const { updateAtbd } = useSingleAtbd({ id, version });
   const initialValues = step.getInitialValues(atbd);
 
