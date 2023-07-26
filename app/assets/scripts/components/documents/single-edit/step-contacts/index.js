@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import set from 'lodash.set';
-import { Formik, Form as FormikForm } from 'formik';
+import get from 'lodash.get';
+import { FieldArray, Formik, Form as FormikForm } from 'formik';
 import { Form } from '@devseed-ui/form';
 import { GlobalLoading } from '@devseed-ui/global-loading';
+import { glsp } from '@devseed-ui/theme-provider';
+import styled from 'styled-components';
 
 import { Inpage, InpageBody } from '../../../../styles/inpage';
 import {
@@ -11,7 +14,10 @@ import {
   FormBlockHeading,
   FormSectionNotes
 } from '../../../../styles/form-block';
-import { FormikSectionFieldset } from '../../../common/forms/section-fieldset';
+import {
+  FormikSectionFieldset,
+  SectionFieldset
+} from '../../../common/forms/section-fieldset';
 import ContactsList from './contacts-list';
 import { Link } from '../../../../styles/clean/link';
 
@@ -23,6 +29,17 @@ import { getDocumentSectionLabel } from '../sections';
 import { documentEdit } from '../../../../utils/url-creator';
 import { LocalStore } from '../local-store';
 import { FormikUnloadPrompt } from '../../../common/unload-prompt';
+import { FormikInputText } from '../../../common/forms/input-text';
+import { DeletableFieldset } from '../../../common/forms/deletable-fieldset';
+import { FieldMultiItem } from '../../../common/forms/field-multi-item';
+
+const emptyAffiliation = '';
+
+const BasicInfoSection = styled.div`
+  display: grid;
+  grid-gap: ${glsp()};
+  grid-template-columns: 1fr 1fr;
+`;
 
 export default function StepContacts(props) {
   const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
@@ -131,12 +148,58 @@ export default function StepContacts(props) {
                   </FormSectionNotes>
                   <ContactsList contactsList={contacts.data} />
                 </FormikSectionFieldset>
-                <FormikSectionFieldset
+                <SectionFieldset
                   label={getDocumentSectionLabel('reviewer_info')}
-                  sectionName='sections_completed.reviewer_info'
                 >
-                  Reviewer info here
-                </FormikSectionFieldset>
+                  <BasicInfoSection>
+                    <FormikInputText
+                      id='reviewer_info.first_name'
+                      name='reviewer_info.first_name'
+                      label='First name'
+                    />
+                    <FormikInputText
+                      id='reviewer_info.last_name'
+                      name='reviewer_info.last_name'
+                      label='Last name'
+                    />
+                    <FormikInputText
+                      id='reviewer_info.email'
+                      name='reviewer_info.email'
+                      label='Email'
+                    />
+                  </BasicInfoSection>
+                  <FieldArray
+                    name='reviewer_info.affiliations'
+                    render={({ remove, push, form, name: affFieldName }) => {
+                      const fieldValues = get(form.values, affFieldName) || [];
+                      return (
+                        <FieldMultiItem
+                          id={affFieldName}
+                          label='Affiliations relevant to this document'
+                          emptyMessage='There are no affiliations. You can start by adding one.'
+                          onAddClick={() => push(emptyAffiliation)}
+                        >
+                          {fieldValues.map((field, index) => (
+                            <DeletableFieldset
+                              /* eslint-disable-next-line react/no-array-index-key */
+                              key={index}
+                              id={`${affFieldName}-${index}`}
+                              label={`Entry #${index + 1}`}
+                              onDeleteClick={() => remove(index)}
+                            >
+                              <FormikInputText
+                                id={`${affFieldName}-${index}`}
+                                name={`${affFieldName}.${index}`}
+                                label='Name'
+                                labelHint='(required)'
+                              />
+                            </DeletableFieldset>
+                          ))}
+                        </FieldMultiItem>
+                      );
+                    }}
+                  />
+                </SectionFieldset>
                 {renderFormFooter()}
               </Form>
             </FormBlock>
