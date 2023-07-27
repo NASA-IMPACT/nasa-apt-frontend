@@ -29,7 +29,7 @@ function About() {
                 APT is a prototype environment for use in writing, submitting,
                 discovering and accessing Algorithm Theoretical Basis Documents
                 (ATBDs). The tool has been designed to make it easier to create
-                and edit new ATBDs and discover ATBDs from within APT's
+                and edit new ATBDs and discover ATBDs from within APT&apos;s
                 centralized repository.
               </p>
 
@@ -77,9 +77,9 @@ function About() {
                 </summary>
                 <p>
                   APT is an authoring tool that streamlines the writing,
-                  publishing and maintenance process of ATBDs for NASA’s Earth
-                  Science Division. APT is also a centralized repository of
-                  completed and submitted ATBDs for Earth Science users.
+                  publishing and maintenance process of ATBDs for NASA&apos;s
+                  Earth Science Division. APT is also a centralized repository
+                  of completed and submitted ATBDs for Earth Science users.
                   Researchers and scientists are required to use the tool or
                   templates to ensure creation of standardized ATBD content and
                   to provide searchable documents for all interested data and
@@ -92,7 +92,7 @@ function About() {
                 </summary>
                 <p>
                   If you are looking for an algorithm description, this is where
-                  you will find publicly available ATBDs for NASA's Earth
+                  you will find publicly available ATBDs for NASA&apos;s Earth
                   Science Division. The general public can view and download all
                   completed ATBDs without a user account. Historical ATBDs are
                   not available at this time but will be added over time once
