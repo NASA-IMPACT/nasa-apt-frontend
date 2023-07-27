@@ -219,7 +219,7 @@ export const formatReference = (reference, type = 'jsx') => {
   if (type === 'jsx') {
     return (
       <span>
-        {authorsStr} {yearStr} <em>{titleStr}</em> <em> {seriesStr} </em>{' '}
+        {authorsStr} {yearStr} {titleStr} <em> {seriesStr} </em>{' '}
         <em> {volIssueStr}</em> {pagesStr} {doiStr}
       </span>
     );
