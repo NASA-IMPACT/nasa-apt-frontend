@@ -17,7 +17,7 @@ const disclosureStyle = {
     display: 'inline'
   },
   paragraph: {
-    padding: '1rem 0rem'
+    padding: '1rem 0rem 0rem 0rem'
   }
 };
 
