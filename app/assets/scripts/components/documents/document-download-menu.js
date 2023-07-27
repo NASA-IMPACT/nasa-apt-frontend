@@ -153,7 +153,9 @@ export default function DocumentDownloadMenu(props) {
           const result = await response.json();
 
           saveAs(result.pdf_url, pdfFileName);
-          processToast.success('PDF downloaded successfully!');
+          processToast.success(
+            'PDF downloaded successfully! If the PDF did not open automatically, your browser may have blocked the download. Please make sure that popups are allowed on this site.'
+          );
           return;
         }
 
