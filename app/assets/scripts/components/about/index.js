@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 import App from '../common/app';
 import {
@@ -12,14 +13,13 @@ import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 
-const disclosureStyle = {
-  heading: {
-    display: 'inline'
-  },
-  paragraph: {
-    padding: '1rem 0rem 0rem 0rem'
-  }
-};
+const DisclosureHeader = styled.h3`
+  display: inline;
+`;
+
+const DisclosureContent = styled.p`
+  padding: 1rem 0rem 0rem 0rem;
+`;
 
 function About() {
   return (
@@ -82,9 +82,9 @@ function About() {
               <h2>FAQs</h2>
               <details open>
                 <summary>
-                  <h3 style={disclosureStyle.heading}>What is the APT?</h3>
+                  <DisclosureHeader>What is the APT?</DisclosureHeader>
                 </summary>
-                <p style={disclosureStyle.paragraph}>
+                <DisclosureContent>
                   APT is an authoring tool that streamlines the writing,
                   publishing and maintenance process of ATBDs for NASA&apos;s
                   Earth Science Division. APT is also a centralized repository
@@ -93,15 +93,13 @@ function About() {
                   templates to ensure creation of standardized ATBD content and
                   to provide searchable documents for all interested data and
                   algorithm users.
-                </p>
+                </DisclosureContent>
               </details>
               <details>
                 <summary>
-                  <h3 style={disclosureStyle.heading}>
-                    Why should I use the APT?
-                  </h3>
+                  <DisclosureHeader>Why should I use the APT?</DisclosureHeader>
                 </summary>
-                <p style={disclosureStyle.paragraph}>
+                <DisclosureContent>
                   If you are looking for an algorithm description, this is where
                   you will find publicly available ATBDs for NASA&apos;s Earth
                   Science Division. The general public can view and download all
@@ -110,8 +108,8 @@ function About() {
                   the interface is adapted to receive the documents. All APT
                   ATBDs have a DOI that can be used as metadata in data products
                   pertaining to the algorithm.
-                </p>
-                <p style={disclosureStyle.paragraph}>
+                </DisclosureContent>
+                <DisclosureContent>
                   If you are a researcher responsible for producing an ATBD,
                   this tool is used to write and submit your algorithm
                   description so that it can be located by others. The APT
@@ -120,28 +118,26 @@ function About() {
                   APT templates for document creation ensures content is
                   standardized to improve discoverability and automated document
                   use.
-                </p>
+                </DisclosureContent>
               </details>
               <details>
                 <summary>
-                  <h3 style={disclosureStyle.heading}>
+                  <DisclosureHeader>
                     Can the public use the APT?
-                  </h3>
+                  </DisclosureHeader>
                 </summary>
-                <p style={disclosureStyle.paragraph}>
+                <DisclosureContent>
                   The public can freely view and download any completed ATBD as
                   a PDF file. No user account is needed. Only users required to
                   author, submit or review an ATBD can obtain an authorized user
                   account.
-                </p>
+                </DisclosureContent>
               </details>
               <details>
                 <summary>
-                  <h3 style={disclosureStyle.heading}>
-                    How does the APT work?
-                  </h3>
+                  <DisclosureHeader>How does the APT work?</DisclosureHeader>
                 </summary>
-                <p style={disclosureStyle.paragraph}>
+                <DisclosureContent>
                   APT uses a standardized ATBD template that sets content
                   expectations for ATBDs and improves communication and
                   completed document discoverability. A review process is used
@@ -149,13 +145,13 @@ function About() {
                   the APT authoring environment, all ATBD content is stored as
                   metadata making it completely machine readable, searchable,
                   and useful in other tools and services.
-                </p>
-                <p style={disclosureStyle.paragraph}>
+                </DisclosureContent>
+                <DisclosureContent>
                   If an author chooses to use APT templates for ATBD creation,
                   only the completed and approved PDF is submitted to APT. From
                   the APT environment, authors will provide needed metadata
                   about the document to ensure discovery of the document.
-                </p>
+                </DisclosureContent>
               </details>
               <p>
                 For more detailed information about APT, check out the{' '}
