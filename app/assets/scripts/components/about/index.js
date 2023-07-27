@@ -12,6 +12,15 @@ import { ContentBlock } from '../../styles/content-block';
 import Prose from '../../styles/typography/prose';
 import { Link } from '../../styles/clean/link';
 
+const disclosureStyle = {
+  heading: {
+    display: 'inline'
+  },
+  paragraph: {
+    padding: '1rem 0rem'
+  }
+};
+
 function About() {
   return (
     <App pageTitle='About'>
@@ -71,11 +80,11 @@ function About() {
               </p>
 
               <h2>FAQs</h2>
-              <details>
-                <summary style={{ display: 'inline' }}>
-                  <h3>What is the APT?</h3>
+              <details open>
+                <summary>
+                  <h3 style={disclosureStyle.heading}>What is the APT?</h3>
                 </summary>
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   APT is an authoring tool that streamlines the writing,
                   publishing and maintenance process of ATBDs for NASA&apos;s
                   Earth Science Division. APT is also a centralized repository
@@ -88,9 +97,11 @@ function About() {
               </details>
               <details>
                 <summary>
-                  <h3>Why should I use the APT?</h3>
+                  <h3 style={disclosureStyle.heading}>
+                    Why should I use the APT?
+                  </h3>
                 </summary>
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   If you are looking for an algorithm description, this is where
                   you will find publicly available ATBDs for NASA&apos;s Earth
                   Science Division. The general public can view and download all
@@ -100,7 +111,7 @@ function About() {
                   ATBDs have a DOI that can be used as metadata in data products
                   pertaining to the algorithm.
                 </p>
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   If you are a researcher responsible for producing an ATBD,
                   this tool is used to write and submit your algorithm
                   description so that it can be located by others. The APT
@@ -113,9 +124,11 @@ function About() {
               </details>
               <details>
                 <summary>
-                  <h3>Can the public use the APT?</h3>
+                  <h3 style={disclosureStyle.heading}>
+                    Can the public use the APT?
+                  </h3>
                 </summary>
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   The public can freely view and download any completed ATBD as
                   a PDF file. No user account is needed. Only users required to
                   author, submit or review an ATBD can obtain an authorized user
@@ -124,9 +137,11 @@ function About() {
               </details>
               <details>
                 <summary>
-                  <h3>How does the APT work?</h3>
+                  <h3 style={disclosureStyle.heading}>
+                    How does the APT work?
+                  </h3>
                 </summary>
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   APT uses a standardized ATBD template that sets content
                   expectations for ATBDs and improves communication and
                   completed document discoverability. A review process is used
@@ -135,8 +150,7 @@ function About() {
                   metadata making it completely machine readable, searchable,
                   and useful in other tools and services.
                 </p>
-
-                <p>
+                <p style={disclosureStyle.paragraph}>
                   If an author chooses to use APT templates for ATBD creation,
                   only the completed and approved PDF is submitted to APT. From
                   the APT environment, authors will provide needed metadata
@@ -148,7 +162,6 @@ function About() {
                 <Link to='/user-guide'>User Guide </Link>
                 with the Algorithm Publication Tool (APT) .
               </p>
-
               <p>
                 If you have questions, please use the{' '}
                 <FeedbackLink>feedback form </FeedbackLink>
