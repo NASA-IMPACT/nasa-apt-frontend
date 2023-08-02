@@ -26,6 +26,7 @@ import getDocumentIdKey from '../get-document-id-key';
 import { computeAtbdVersion } from '../../../context/atbds-list';
 import { SafeReadEditor } from '../../slate';
 import { truncateSlateObject } from '../../slate/plugins/common/text-utils';
+import { resolveTitle } from '../../../utils/common';
 
 const getDropChange = (label) => (isOpen) =>
   isOpen &&
@@ -63,7 +64,7 @@ function DocumentHubEntry(props) {
       <CardHeader>
         <CardHeadline>
           <CardHgroup>
-            <CardTitle>{atbd.title}</CardTitle>
+            <CardTitle>{resolveTitle(atbd.title)}</CardTitle>
             <CardToolbar>
               {atbd.document_type === 'PDF' && (
                 <BsFilePdf title='PDF type document' />

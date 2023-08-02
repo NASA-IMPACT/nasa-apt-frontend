@@ -10,6 +10,7 @@ import { CopyField } from '../../common/copy-field';
 import Datetime from '../../common/date';
 import Tip from '../../common/tooltip';
 import DetailsList from '../../../styles/typography/details-list';
+import { resolveTitle } from '../../../utils/common';
 
 const DocumentHeader = styled.header`
   display: grid;
@@ -163,7 +164,7 @@ function DocumentTitle(props) {
   return (
     <DocumentHeader>
       <DocumentHeading id='doc-header' data-scroll='target'>
-        {atbdData.title}
+        {resolveTitle(atbdData.title)}
       </DocumentHeading>
       <DocumentMetaDetails>
         <dt>Version</dt>

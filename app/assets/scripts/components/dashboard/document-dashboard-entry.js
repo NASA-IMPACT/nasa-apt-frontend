@@ -27,6 +27,7 @@ import DocumentCommentsButton from '../documents/document-comment-button';
 import { documentView } from '../../utils/url-creator';
 import { computeAtbdVersion } from '../../context/atbds-list';
 import getDocumentIdKey from '../documents/get-document-id-key';
+import { resolveTitle } from '../../utils/common';
 
 function DocumentDashboardEntry(props) {
   const { atbd, onDocumentAction } = props;
@@ -77,7 +78,7 @@ function DocumentDashboardEntry(props) {
                 to={documentView(atbd, lastVersion.version)}
                 title={`View ${atbd.title}`}
               >
-                {atbd.title}
+                {resolveTitle(atbd.title)}
               </Link>
             </DocumentEntryTitle>
             <DocumentEntryNav role='navigation'>

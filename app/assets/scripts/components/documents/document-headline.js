@@ -18,6 +18,7 @@ import { DateButton } from '../common/date';
 import { CollaboratorsMenu } from './collaborators-menu';
 import DocumentCommentsButton from './document-comment-button';
 
+import { resolveTitle } from '../../utils/common';
 import { Can, useContextualAbility } from '../../a11n';
 import { useUser } from '../../context/user';
 import { documentEdit, documentView } from '../../utils/url-creator';
@@ -105,7 +106,7 @@ export default function DocumentHeadline(props) {
         <InpageHeadHgroup>
           <TruncatedInpageTitle>
             <Link to={documentView(atbd, version)} title={`View ${title}`}>
-              {title}
+              {resolveTitle(title)}
             </Link>
           </TruncatedInpageTitle>
           <InpageHeadNav role='navigation'>
