@@ -61,7 +61,7 @@ const Ref = styled.span`
 
 const RefReadOnly = styled.span`
   padding: ${glsp(0, 0.25)};
-  font-size: 0.75rem;
+  font-size: 1rem;
 `;
 
 const Spacer = styled.span`
