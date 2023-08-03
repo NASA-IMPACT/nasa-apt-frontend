@@ -224,6 +224,7 @@ function PdfPreview() {
   const { isAuthReady } = useUser();
   const contentRef = useRef(null);
   const [previewReady, setPreviewReady] = useState(false);
+  const [bcr, setBcr] = useState();
 
   useEffect(() => {
     isAuthReady && fetchSingleAtbd();
@@ -240,6 +241,8 @@ function PdfPreview() {
         });
       });
       await Promise.all(promises);
+      const previewBcr = contentRef.current?.getBoundingClientRect();
+      setBcr(previewBcr);
       setPreviewReady(true);
     }
 
@@ -250,6 +253,21 @@ function PdfPreview() {
     }
   }, [atbd.status]);
 
+  const mmToPx = 0.2645833333;
+  const lineHeight = 28;
+
+  // 210, 297
+  const pageSize = (297 - 30) / mmToPx;
+  const numPages = bcr?.height ? bcr.height / pageSize : 0;
+
+  const pageNumPerPage = (297 - 30) / mmToPx / lineHeight;
+
+  const numPageNumbers = Math.ceil((1 + numPages) * pageNumPerPage);
+  // const numPageNumbers = bcr?.height ? Math.round(bcr.height / 24) : 0;
+  const pageList = numPageNumbers
+    ? Array.from(new Array(numPageNumbers).keys())
+    : undefined;
+
   return (
     <ScrollAnchorProvider disabled>
       {atbd.status === 'loading' && <GlobalLoading />}
@@ -259,6 +277,16 @@ function PdfPreview() {
           to work properly (No idea why though!)
         */
         <PreviewContainer className='pdf-preview'>
+          <div
+            className='line-number-container'
+            style={{ height: bcr?.height }}
+          >
+            {pageList?.map((i) => (
+              <span key={i} style={{ height: lineHeight }}>
+                {i}
+              </span>
+            ))}
+          </div>
           <div ref={contentRef}>
             <DocumentProse className='preview-page-title'>
               <DocumentTitle data={atbd.data} />

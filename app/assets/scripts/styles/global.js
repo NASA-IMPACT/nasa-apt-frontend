@@ -34,6 +34,21 @@ ${reactTippyStyles()}
 }
 
 .pdf-preview {
+  width: 250mm;
+  padding-left: 20mm;
+
+  .line-number-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16mm;
+    background-color: rgba(0, 0, 0, .1);
+    text-align: right;
+    padding-right: 2mm;
+  }
+
   img {
     break-inside: avoid;
   }
