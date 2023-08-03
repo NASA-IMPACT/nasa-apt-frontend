@@ -232,9 +232,10 @@ function Home() {
                       </FocusBoxTitle>
                       <div>
                         Easily create compliant and complete ATBDs using a
-                        standardized template. The APT&apos;s centralized
-                        location makes it simple to collaborate with the writing
-                        team.
+                        standardized template. Choose whether to create ATBDs
+                        within the APT user interface or use familiar software
+                        and word processors to create ATBDs using one of
+                        APT&apos;s provided standardized templates.
                       </div>
                     </FocusBox>
                   </li>
@@ -246,8 +247,8 @@ function Home() {
                       </FocusBoxTitle>
                       <div>
                         Easily format text and add equations, tables, figures
-                        and references using the APT&apos;s rich text editor,
-                        LaTex tools and Bibtex citation manager.
+                        and references using APT&apos;s rich text editor, LaTeX
+                        tools and BibTeX citation manager.
                       </div>
                     </FocusBox>
                   </li>
@@ -268,9 +269,9 @@ function Home() {
                         Straightforward journal submission
                       </FocusBoxTitle>
                       <div>
-                        Use a streamlined ATBD journal submission process with
-                        AGU&apos;s Earth and Space Science, a gold open access
-                        journal.
+                        APT has a partnership with AGU&apos;s Earth and Space
+                        Science, a gold open access journal, to simplify the
+                        journal submission process of ATBDs.
                       </div>
                     </FocusBox>
                   </li>

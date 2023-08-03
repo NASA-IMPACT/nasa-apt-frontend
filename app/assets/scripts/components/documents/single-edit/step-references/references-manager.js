@@ -101,7 +101,7 @@ export default function ReferencesManager(props) {
     <FieldArray
       name='document.publication_references'
       render={(arrayHelpers) => {
-        const { remove, push, form, name } = arrayHelpers;
+        const { remove, push, form, name, move } = arrayHelpers;
         const values = get(form.values, name);
 
         // Update the refs list. See note above
@@ -172,6 +172,9 @@ export default function ReferencesManager(props) {
                           { meta: e.metaKey || e.ctrlKey, shift: e.shiftKey }
                         );
                         setRefsEditing(newSelection);
+
+                        // This is a hack to force the field to re-render
+                        move(index, index);
                       }}
                       onDeleteClick={async () => {
                         // If the reference is in use prompt the user for
@@ -205,6 +208,9 @@ export default function ReferencesManager(props) {
                           { meta: true, shift: e.shiftKey }
                         );
                         setRefsSelected(newSelection);
+
+                        // This is a hack to force the field to re-render
+                        move(index, index);
                       }}
                     />
                   ))}
