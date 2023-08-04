@@ -24,8 +24,8 @@ const fields = [
     label: 'Authors',
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
-        Doe).
+        Separate last name and first names with a comma, and authors with{' '}
+        <em>and</em> (e.g., Doe, John <em>and</em> Doe, Jane).
       </FormHelperMessage>
     )
   },
