@@ -204,7 +204,7 @@ export default function DocumentDownloadMenu(props) {
               data-dropdown='click.close'
               key={`${p.id}-journal`}
               eventLabel={`PDF ${atbd.id}/${version}`}
-              onClick={(e) => handlePdfDownloadClick(e, journal=true)}
+              onClick={(e) => handlePdfDownloadClick(e, true)}
               title={p.menuItem.title}
             >
               {p.menuItem.label}
@@ -226,7 +226,7 @@ export default function DocumentDownloadMenu(props) {
             data-dropdown='click.close'
             key={`${p.id}-document`}
             eventLabel={`PDF ${atbd.id}/${version}`}
-            onClick={(e) => handlePdfDownloadClick(e, journal=false)}
+            onClick={(e) => handlePdfDownloadClick(e, false)}
             title={p.menuItem.title}
           >
             {p.menuItem.label}
