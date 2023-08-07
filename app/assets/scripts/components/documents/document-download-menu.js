@@ -40,140 +40,149 @@ export default function DocumentDownloadMenu(props) {
   const ability = useContextualAbility();
   const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
 
-  const handlePdfDownloadClick = React.useCallback((event, journal) => {
-    const processToast = createProcessToast('Downloading PDF, please wait...');
+  const handlePdfDownloadClick = React.useCallback(
+    (event, journal) => {
+      const processToast = createProcessToast(
+        'Downloading PDF, please wait...'
+      );
 
-    if (atbd.documentType === 'PDF' && !atbd.pdf) {
-      processToast.error("This ATBD doesn't have the attachment");
-      return;
-    }
-
-    const { id, version, alias } = atbd;
-    let pdfUrl;
-    if (atbd.documentType === 'PDF') {
-      pdfUrl = atbd.pdf.file_path;
-    } else {
-      pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
-      if (!!journal) {
-        pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf?journal=true`;
-      }
-    }
-
-    const pdfFileName = `${alias}-v${version}.pdf`;
-    const maxRetries = 50;
-    const waitBetweenTries = 5000;
-    const initialWait = 10000;
-    let retryCount = 0;
-
-    async function fetchPdf(url) {
-      if (retryCount > 0) {
-        processToast.update(
-          'Generating the PDF. This may take up to 5 minutes.'
-        );
+      if (atbd.documentType === 'PDF' && !atbd.pdf) {
+        processToast.error("This ATBD doesn't have the attachment");
+        return;
       }
 
-      try {
-        let user;
-        let headers = {};
-
-        if (atbd.status !== 'PUBLISHED') {
-          if (!token) {
-            processToast.error('Failed to download PDF! (Not authenticated)');
-            return;
-          }
-
-          user = await Auth.currentAuthenticatedUser();
-          if (!user) {
-            processToast.error(
-              'Failed to download PDF! (User info not available)'
-            );
-            return;
-          }
-
-          const {
-            signInUserSession: { idToken, accessToken }
-          } = user;
-
-          const authToken = `Bearer ${idToken.jwtToken}`;
-          const xAccessToken = accessToken.jwtToken;
-
-          headers = {
-            Authorization: authToken,
-            'X-ACCESS-TOKEN': xAccessToken
-          };
+      const { id, version, alias } = atbd;
+      let pdfUrl;
+      if (atbd.documentType === 'PDF') {
+        pdfUrl = atbd.pdf.file_path;
+      } else {
+        pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+        if (journal) {
+          pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf?journal=true`;
         }
-        const response = await fetch(url, {
-          method: 'GET',
-          headers
-        });
+      }
 
-        // If we get a 404 on retry, it means the PDF is not ready yet.
-        // Keep retrying until we reach the max retry count.
-        if (
-          response.status === 404 &&
-          response.headers.get('content-type') === 'application/json' &&
-          url.includes('retry=true')
-        ) {
-          if (retryCount < maxRetries) {
-            setTimeout(() => {
-              let retryUrl = pdfUrl.includes('journal=true') ? `${pdfUrl}&retry=true` : `${pdfUrl}?retry=true`;
-              fetchPdf(retryUrl);
-            }, waitBetweenTries);
-            ++retryCount;
-          } else {
-            processToast.error(
-              'Failed to download PDF. Please retry after several minutes. If this error persists, please contact the APT team.'
-            );
-          }
-          return;
-        }
+      const pdfFileName = `${alias}-v${version}.pdf`;
+      const maxRetries = 50;
+      const waitBetweenTries = 5000;
+      const initialWait = 10000;
+      let retryCount = 0;
 
-        // If we get a 201, it means the PDF generation has been triggered.
-        // Retry after some time to check if the PDF is ready for download.
-        if (
-          response.status === 201 &&
-          response.headers.get('content-type') === 'application/json'
-        ) {
-          const result = await response.json();
-
-          if (result?.message) {
-            processToast.update(result.message);
-          }
-
-          setTimeout(() => {
-            let retryUrl = pdfUrl.includes('journal=true') ? `${pdfUrl}&retry=true` : `${pdfUrl}?retry=true`;
-            fetchPdf(retryUrl);
-          }, initialWait);
-          ++retryCount;
-
-          return;
-        }
-
-        // If we get a 200, it means the PDF is ready for download.
-        // We get the s3 url and use file saver to download and save the pdf.
-        if (
-          response.status === 200 &&
-          response.headers.get('content-type') === 'application/json'
-        ) {
-          const result = await response.json();
-
-          saveAs(result.pdf_url, pdfFileName);
-          processToast.success(
-            'PDF downloaded successfully! If the PDF did not open automatically, your browser may have blocked the download. Please make sure that popups are allowed on this site.'
+      async function fetchPdf(url) {
+        if (retryCount > 0) {
+          processToast.update(
+            'Generating the PDF. This may take up to 5 minutes.'
           );
-          return;
         }
 
-        processToast.error('Failed to download PDF!');
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.error(e);
-        processToast.error('Failed to download PDF!');
-      }
-    }
+        try {
+          let user;
+          let headers = {};
 
-    fetchPdf(pdfUrl);
-  }, [token, atbd]);
+          if (atbd.status !== 'PUBLISHED') {
+            if (!token) {
+              processToast.error('Failed to download PDF! (Not authenticated)');
+              return;
+            }
+
+            user = await Auth.currentAuthenticatedUser();
+            if (!user) {
+              processToast.error(
+                'Failed to download PDF! (User info not available)'
+              );
+              return;
+            }
+
+            const {
+              signInUserSession: { idToken, accessToken }
+            } = user;
+
+            const authToken = `Bearer ${idToken.jwtToken}`;
+            const xAccessToken = accessToken.jwtToken;
+
+            headers = {
+              Authorization: authToken,
+              'X-ACCESS-TOKEN': xAccessToken
+            };
+          }
+          const response = await fetch(url, {
+            method: 'GET',
+            headers
+          });
+
+          // If we get a 404 on retry, it means the PDF is not ready yet.
+          // Keep retrying until we reach the max retry count.
+          if (
+            response.status === 404 &&
+            response.headers.get('content-type') === 'application/json' &&
+            url.includes('retry=true')
+          ) {
+            if (retryCount < maxRetries) {
+              setTimeout(() => {
+                let retryUrl = pdfUrl.includes('journal=true')
+                  ? `${pdfUrl}&retry=true`
+                  : `${pdfUrl}?retry=true`;
+                fetchPdf(retryUrl);
+              }, waitBetweenTries);
+              ++retryCount;
+            } else {
+              processToast.error(
+                'Failed to download PDF. Please retry after several minutes. If this error persists, please contact the APT team.'
+              );
+            }
+            return;
+          }
+
+          // If we get a 201, it means the PDF generation has been triggered.
+          // Retry after some time to check if the PDF is ready for download.
+          if (
+            response.status === 201 &&
+            response.headers.get('content-type') === 'application/json'
+          ) {
+            const result = await response.json();
+
+            if (result?.message) {
+              processToast.update(result.message);
+            }
+
+            setTimeout(() => {
+              let retryUrl = pdfUrl.includes('journal=true')
+                ? `${pdfUrl}&retry=true`
+                : `${pdfUrl}?retry=true`;
+              fetchPdf(retryUrl);
+            }, initialWait);
+            ++retryCount;
+
+            return;
+          }
+
+          // If we get a 200, it means the PDF is ready for download.
+          // We get the s3 url and use file saver to download and save the pdf.
+          if (
+            response.status === 200 &&
+            response.headers.get('content-type') === 'application/json'
+          ) {
+            const result = await response.json();
+
+            saveAs(result.pdf_url, pdfFileName);
+            processToast.success(
+              'PDF downloaded successfully! If the PDF did not open automatically, your browser may have blocked the download. Please make sure that popups are allowed on this site.'
+            );
+            return;
+          }
+
+          processToast.error('Failed to download PDF!');
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error(e);
+          processToast.error('Failed to download PDF!');
+        }
+      }
+
+      fetchPdf(pdfUrl);
+    },
+    [token, atbd]
+  );
 
   const dropProps = useMemo(() => {
     const triggerProps = {
