@@ -8,6 +8,7 @@ import DropdownMenu, { DropMenuItemEnhanced } from '../common/dropdown-menu';
 import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
+import { useContextualAbility } from '../../a11n';
 import { useAuthToken } from '../../context/user';
 
 function DropMenuItemOutboundLink(props) {
@@ -36,13 +37,10 @@ export default function DocumentDownloadMenu(props) {
   const { atbd, hideText, variation, alignment, direction, onChange } = props;
   const { token } = useAuthToken();
 
-  // TODO: Fix Journal PDF downloading
-  // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
-  // const ability = useContextualAbility();
-  //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
-  const canDownloadJournalPdf = false;
+  const ability = useContextualAbility();
+  const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
 
-  const handlePdfDownloadClick = React.useCallback(() => {
+  const handlePdfDownloadClick = React.useCallback((event, journal) => {
     const processToast = createProcessToast('Downloading PDF, please wait...');
 
     if (atbd.documentType === 'PDF' && !atbd.pdf) {
@@ -51,10 +49,15 @@ export default function DocumentDownloadMenu(props) {
     }
 
     const { id, version, alias } = atbd;
-    const pdfUrl =
-      atbd.documentType === 'PDF'
-        ? atbd.pdf.file_path
-        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    let pdfUrl;
+    if (atbd.documentType === 'PDF') {
+      pdfUrl = atbd.pdf.file_path;
+    } else {
+      pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+      if (!!journal) {
+        pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf?journal=true`;
+      }
+    }
 
     const pdfFileName = `${alias}-v${version}.pdf`;
     const maxRetries = 50;
@@ -109,11 +112,12 @@ export default function DocumentDownloadMenu(props) {
         if (
           response.status === 404 &&
           response.headers.get('content-type') === 'application/json' &&
-          url.includes('?retry=true')
+          url.includes('retry=true')
         ) {
           if (retryCount < maxRetries) {
             setTimeout(() => {
-              fetchPdf(`${pdfUrl}?retry=true`);
+              let retryUrl = pdfUrl.includes('journal=true') ? `${pdfUrl}&retry=true` : `${pdfUrl}?retry=true`;
+              fetchPdf(retryUrl);
             }, waitBetweenTries);
             ++retryCount;
           } else {
@@ -137,7 +141,8 @@ export default function DocumentDownloadMenu(props) {
           }
 
           setTimeout(() => {
-            fetchPdf(`${pdfUrl}?retry=true`);
+            let retryUrl = pdfUrl.includes('journal=true') ? `${pdfUrl}&retry=true` : `${pdfUrl}?retry=true`;
+            fetchPdf(retryUrl);
           }, initialWait);
           ++retryCount;
 
@@ -193,13 +198,19 @@ export default function DocumentDownloadMenu(props) {
         label: `${version} Journal PDF`,
         title: `Download journal for version ${version}`,
         href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`,
-        /* eslint-disable-next-line react/display-name */
-        render: (props) => (
-          <DropMenuItemOutboundLink
-            {...props}
-            eventLabel={`Journal PDF ${id}/${version}`}
-          />
-        )
+        render: (p) => {
+          return (
+            <DropMenuItemEnhanced
+              data-dropdown='click.close'
+              key={`${p.id}-journal`}
+              eventLabel={`PDF ${atbd.id}/${version}`}
+              onClick={(e) => handlePdfDownloadClick(e, journal=true)}
+              title={p.menuItem.title}
+            >
+              {p.menuItem.label}
+            </DropMenuItemEnhanced>
+          );
+        }
       });
     }
 
@@ -213,9 +224,9 @@ export default function DocumentDownloadMenu(props) {
         return (
           <DropMenuItemEnhanced
             data-dropdown='click.close'
-            key={p.id}
+            key={`${p.id}-document`}
             eventLabel={`PDF ${atbd.id}/${version}`}
-            onClick={handlePdfDownloadClick}
+            onClick={(e) => handlePdfDownloadClick(e, journal=false)}
             title={p.menuItem.title}
           >
             {p.menuItem.label}
