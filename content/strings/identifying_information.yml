@@ -1,4 +1,4 @@
-title: The descriptive title of your ATBD.
+title: "The descriptive title of your ATBD. You can add latex snippet insde double curly braces. Eg: Example title {{x^2}}"
 alias: A short name for referring to the ATBD (less  than 32 characters).  Once the ATBD is completed, the short name will not be editable.
 doi: The DOI is typically assigned by the curator. Only add a DOI for historical documents that have been published and already have a DOI.
 version_description: Provide a brief and meaningful description of how this APT ATBD version differs from any previous one. Providing a lineage of algorithm versions is equally important.

@@ -9,6 +9,8 @@ import { glsp } from '@devseed-ui/theme-provider';
 
 import FormInfoTip from '../common/forms/form-info-tooltip';
 import { useDocumentCreate } from '../documents/single-edit/use-document-create';
+import { resolveTitle } from '../../utils/common';
+import { formString } from '../../utils/strings';
 
 const StyledFormInput = styled(FormInput)`
   width: 100%;
@@ -65,7 +67,12 @@ function NewATBDModal(props) {
       content={
         <ModalContent>
           <FormGroup>
-            <FormLabel htmlFor='atbd-title'>ATBD Title</FormLabel>
+            <FormLabel htmlFor='atbd-title'>
+              ATBD Title{' '}
+              <FormInfoTip
+                title={formString('identifying_information.title')}
+              />
+            </FormLabel>
             <StyledFormInput
               id='atbd-title'
               type='text'
@@ -74,9 +81,15 @@ function NewATBDModal(props) {
               onChange={handleTitleInputChange}
               autoFocus
             />
+            <h4>Preview: {resolveTitle(title)}</h4>
           </FormGroup>
           <FormGroup>
-            <FormLabel htmlFor='atbd-alias'>Alias</FormLabel>
+            <FormLabel htmlFor='atbd-alias'>
+              Alias{' '}
+              <FormInfoTip
+                title={formString('identifying_information.alias')}
+              />
+            </FormLabel>
             <StyledFormInput
               id='atbd-alias'
               type='text'
