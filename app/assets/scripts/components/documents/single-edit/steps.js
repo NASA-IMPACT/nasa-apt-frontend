@@ -58,6 +58,7 @@ const STEP_CONTACTS = {
         //   affiliations: []
         // }
       ],
+      reviewer_info: atbd?.reviewer_info,
       sections_completed: {
         contacts: 'incomplete'
       }

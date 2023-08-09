@@ -27,6 +27,7 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
+import { isDefined, isTruthyString } from '../../../utils/common';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -1063,6 +1064,68 @@ const htmlAtbdContentSections = [
           />
         )
       }));
+    }
+  },
+  {
+    label: 'Reviewer Information',
+    id: 'reviewer_info',
+    shouldRender: ({ atbd }) => {
+      if (!atbd || !atbd.reviewer_info) {
+        return false;
+      }
+
+      const {
+        reviewer_info: { first_name, last_name }
+      } = atbd;
+
+      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
+        return false;
+      }
+
+      return true;
+    },
+    render: ({ element, atbd, printMode }) => {
+      if (!atbd || !atbd.reviewer_info) {
+        return null;
+      }
+
+      const {
+        reviewer_info: { first_name, last_name, email, affiliations }
+      } = atbd;
+
+      let fullName;
+      if (isTruthyString(first_name) || isTruthyString(last_name)) {
+        fullName = [first_name, last_name].filter(isDefined).join(' ');
+      }
+
+      if (!isTruthyString(fullName) && !isTruthyString(email)) {
+        return null;
+      }
+
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className='pdf-preview-hidden'
+        >
+          <AtbdSubSection>
+            <h3>{fullName}</h3>
+            <DetailsList type='horizontal'>
+              <dt>Email</dt>
+              <dd>{email}</dd>
+              <dt>Affiliations</dt>
+              {affiliations.length ? (
+                <dd>{renderMultipleStringValues(affiliations)}</dd>
+              ) : (
+                <dd>No affiliations for the reviewer</dd>
+              )}
+            </DetailsList>
+          </AtbdSubSection>
+        </AtbdSection>
+      );
     }
   },
   {
