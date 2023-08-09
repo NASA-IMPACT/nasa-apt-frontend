@@ -9,6 +9,7 @@ export const DOCUMENT_SECTIONS = [
   { id: 'version_description', label: 'Version Information' },
   { id: 'citation', label: 'Citation' },
   { id: 'contacts', label: 'Contacts' },
+  { id: 'reviewer_info', label: 'Reviewer Information' },
   { id: 'attachment', label: 'Attachment' },
   { id: 'introduction', label: 'Introduction' },
   { id: 'context_background', label: 'Context / Background' },

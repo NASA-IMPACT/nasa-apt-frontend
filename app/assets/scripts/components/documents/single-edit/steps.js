@@ -47,7 +47,7 @@ const STEP_IDENTIFYING_INFORMATION = {
 
 const STEP_CONTACTS = {
   id: 'contacts',
-  label: 'Contact Information',
+  label: 'Contact and Reviewer Information',
   StepComponent: StepContacts,
   getInitialValues: (atbd) => {
     return getValuesFromObj(atbd, {
@@ -58,6 +58,7 @@ const STEP_CONTACTS = {
         //   affiliations: []
         // }
       ],
+      reviewer_info: atbd?.reviewer_info,
       sections_completed: {
         contacts: 'incomplete'
       }

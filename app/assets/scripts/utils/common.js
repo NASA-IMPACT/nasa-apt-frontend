@@ -66,3 +66,11 @@ export function resolveTitle(title) {
     </>
   );
 }
+
+export function isDefined(value) {
+  return value !== null && value !== undefined;
+}
+
+export function isTruthyString(str) {
+  return isDefined(str) && typeof str === 'string' && str.trim().length > 0;
+}

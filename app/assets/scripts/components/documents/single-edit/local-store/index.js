@@ -11,7 +11,7 @@ import RecoverToast from './recover-toast';
 
 export function LocalStore({ atbd }) {
   const isInitialized = useRef();
-  const toastId = useRef();
+  const toastId = useRef(null);
   const { values, setValues, dirty } = useFormikContext();
   const { step } = useParams();
 
@@ -19,8 +19,10 @@ export function LocalStore({ atbd }) {
   const [isOutDated, setIsOutDated] = useState(false);
 
   const removeToast = useCallback(() => {
-    toast.dismiss(toastId.current);
-    toastId.current = null;
+    if (toastId.current !== null) {
+      toast.dismiss(toastId.current);
+      toastId.current = null;
+    }
   }, []);
 
   const recoverData = useCallback(() => {
