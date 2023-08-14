@@ -254,14 +254,24 @@ export const confirmationDeleteControls = createBinaryControlsRenderer({
  *              track of. Useful to know what confirmation we're working with.
  */
 export const confirmDeleteDocumentVersion = async (name, version) => {
+  let content = (
+    <p>
+      The version <strong>{version}</strong> of document <strong>{name}</strong>{' '}
+      will be deleted.
+    </p>
+  );
+  if (version === 'v1.0') {
+    content = (
+      <p>
+        The document <strong>{name}</strong> will be deleted.
+        <br />
+        Are you sure?
+      </p>
+    );
+  }
   return showConfirmationPrompt({
     title: 'Delete this document version?',
-    content: (
-      <p>
-        The version <strong>{version}</strong> of document{' '}
-        <strong>{name}</strong> will be deleted.
-      </p>
-    ),
+    content,
     renderControls: confirmationDeleteControls
   });
 };
