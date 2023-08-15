@@ -8,7 +8,7 @@ const atbd = require('./server/atbd.json');
 const atbdNew = require('./server/atbd-new.json');
 const atbdVersions = require('./server/atbd-versions.json');
 const atbdVersionNew = require('./server/atbd-version-new.json');
-const atbdStatsNew = require('./server/atbd-version-new.json');
+const atbdStatsNew = require('./server/stats-new.json');
 const atbdEvent = require('./server/atbd-event.json');
 const atbdReviewerList = require('./server/atbd-reviewer-list.json');
 
@@ -107,11 +107,11 @@ export const authenticatedFixtureUrls = [
     postResponse: atbdCreated
   },
   {
-    url: 'http://localhost:8888/v2/atbds/3',
+    url: 'http://localhost:8888/v2/atbds/new-document',
     getResponse: atbdNew
   },
   {
-    url: 'http://localhost:8888/v2/atbds/3/versions/v1.0',
+    url: 'http://localhost:8888/v2/atbds/new-document/versions/v1.0',
     getResponse: atbdVersionNew
   },
   {
@@ -119,7 +119,7 @@ export const authenticatedFixtureUrls = [
     getResponse: atbdStatsNew
   },
   {
-    url: 'http://localhost:8888/v2/atbds/3/versions/v1.0/lock?override=false',
+    url: 'http://localhost:8888/v2/atbds/new-document/versions/v1.0/lock?override=false',
     putResponse: {
       email: 'curator@example.com',
       preferred_username: 'Carlos Curator'

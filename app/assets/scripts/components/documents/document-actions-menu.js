@@ -79,12 +79,11 @@ export default function DocumentActionsMenu(props) {
         <MenuItemReasonDisabled
           {...props}
           // A document can only be deleted:
-          // - By a curator
-          // - By the owner when in draft
+          // - By the owner or curator when in draft
           //   Whether or not it is the owner is checked by the rules. Here we check the
           //   status to be able to show a message because disabling it in the rules
           //   would remove the button.
-          isDisabled={!isCurator && !isDraftEquivalent(atbdVersion)}
+          isDisabled={!isDraftEquivalent(atbdVersion)}
           tipMessage='It is not possible to delete document that is not in Draft'
         />
       )
