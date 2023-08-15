@@ -47,7 +47,7 @@ async function gotoTestDocument(page, status) {
  * @param page
  */
 async function gotoNewDocument(page) {
-  return page.goto('http://localhost:9000/documents/new-document/v1.0');
+  return page.goto('http://localhost:9000/documents/3/v1.0');
 }
 /**
  * Represents a logged in page with a given role

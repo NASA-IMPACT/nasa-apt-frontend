@@ -36,7 +36,7 @@ test('different text for new document', async ({ ownerPage }) => {
   await page.getByText('Delete').click();
   await expect(
     page.getByText(
-      'The document New Document will be permanently deleted. Do you want to proceed?'
+      'The document Untitled Document will be permanently deleted. Do you want to proceed?'
     )
   ).toBeVisible();
 });
