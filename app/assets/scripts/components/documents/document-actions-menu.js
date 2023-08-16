@@ -84,7 +84,7 @@ export default function DocumentActionsMenu(props) {
           //   status to be able to show a message because disabling it in the rules
           //   would remove the button.
           isDisabled={!isDraftEquivalent(atbdVersion)}
-          tipMessage='It is not possible to delete document that is not in Draft'
+          tipMessage='It is not possible to delete documents that are not in Draft.'
         />
       )
     };
