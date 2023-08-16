@@ -4,13 +4,15 @@ import reactTippyStyles from './vendor/react-tippy';
 
 export default createGlobalStyle`
 @media print {
-  @page {
-    size: portrait;
-    margin: 15mm;
-  }
-
   :is(dd, td, li) .slate-p {
     text-indent: initial!important;
+  }
+
+  .print-page-header {
+    position: fixed;
+    top: 10mm;
+    right: 10mm;
+    border: 1px solid red;
   }
 }
 
