@@ -8,7 +8,7 @@ const atbd = require('./server/atbd.json');
 const atbdNew = require('./server/atbd-new.json');
 const atbdVersions = require('./server/atbd-versions.json');
 const atbdVersionNew = require('./server/atbd-version-new.json');
-const atbdStatsNew = require('./server/atbd-version-new.json');
+const atbdStatsNew = require('./server/stats-new.json');
 const atbdEvent = require('./server/atbd-event.json');
 const atbdReviewerList = require('./server/atbd-reviewer-list.json');
 
