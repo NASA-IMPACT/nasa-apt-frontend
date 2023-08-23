@@ -48,15 +48,11 @@ import {
   ReferencesModal,
   withReferenceModal
 } from './plugins/reference';
-import {
-  TABLE,
-  TableBlockPlugin,
-  TABLE_BLOCK,
-  withTable
-} from './plugins/table';
+import { TABLE, TableBlockPlugin, withTable } from './plugins/table';
 import { withCaption, withCaptionLayout } from './plugins/caption';
-import { IMAGE, ImageBlockPlugin, IMAGE_BLOCK } from './plugins/image';
+import { IMAGE, ImageBlockPlugin } from './plugins/image';
 import { LatexModal } from './plugins/equation/latex-cheatsheet-modal';
+import { IMAGE_BLOCK, TABLE_BLOCK } from './plugins/constants';
 
 const EditableDebug = composeDebugEditor(EditableWithPlugins);
 

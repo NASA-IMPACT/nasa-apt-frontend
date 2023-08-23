@@ -7,14 +7,14 @@ import {
   getAbove
 } from '@udecode/slate-plugins';
 
-import { DEFAULTS_CAPTION, getEmptyCaptionNode } from '../caption';
+import { DEFAULT_CAPTION, getEmptyCaptionNode } from '../caption';
 import TableBlock from './table-block';
 import { isInNodeType } from '../common/is-node-type';
 import { getPathForRootBlockInsert } from '../common/utils';
+import { TABLE_BLOCK } from '../constants';
 
 // Plugin type.
 export const TABLE = ELEMENT_TABLE;
-export const TABLE_BLOCK = 'table-block';
 
 /**
  * Check if the current selection is inside a TABLE node
@@ -74,7 +74,7 @@ export const insertTableBlock = (editor) => {
  */
 export const getEmptyTableBlockNode = () => ({
   type: TABLE_BLOCK,
-  children: [getEmptyTableNode(), getEmptyCaptionNode()]
+  children: [getEmptyTableNode(), getEmptyCaptionNode(TABLE_BLOCK)]
 });
 
 /**
@@ -82,7 +82,7 @@ export const getEmptyTableBlockNode = () => ({
  */
 export const renderElementTableBlock = () => {
   const { table, td, th, tr } = DEFAULTS_TABLE;
-  const { caption } = DEFAULTS_CAPTION;
+  const { caption } = DEFAULT_CAPTION;
   const tableBlock = {
     type: TABLE_BLOCK,
     component: TableBlock

@@ -30,6 +30,10 @@ ${reactTippyStyles()}
 }
 
 .slate-equation-element {
+  .katex-equation-wrapper {
+    flex-grow: 1;
+  }
+
   .equation-number {
     display: none;
   }

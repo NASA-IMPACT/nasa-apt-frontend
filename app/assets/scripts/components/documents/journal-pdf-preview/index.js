@@ -3,9 +3,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-  createContext,
   useContext,
-  useCallback,
   useMemo,
   Fragment
 } from 'react';
@@ -16,55 +14,15 @@ import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
 import { resolveTitle } from '../../../utils/common';
 import { SafeReadEditor } from '../../slate';
-
-function useNumberingContextProvider() {
-  const [registeredElements, setRegisteredElements] = useState({});
-
-  const register = useCallback((key) => {
-    setRegisteredElements((prevElements) => {
-      if (prevElements[key]) {
-        return prevElements;
-      }
-
-      const numElements = Object.keys(prevElements).length;
-      return {
-        ...prevElements,
-        [key]: numElements + 1
-      };
-    });
-  }, []);
-
-  const getNumbering = useCallback(
-    (key, numberingFromParent = '') => {
-      if (!registeredElements[key]) {
-        return '';
-      }
-
-      return `${numberingFromParent}${registeredElements[key]}.`;
-    },
-    [registeredElements]
-  );
-
-  return useMemo(
-    () => ({
-      getNumbering,
-      register
-    }),
-    [getNumbering, register]
-  );
-}
-
-const NumberingContext = createContext({
-  numberingFromParent: '',
-  level: 1,
-  register: (key) => {
-    // eslint-disable-next-line no-console
-    console.warn(
-      'NumberingContext::register called before initialization with key',
-      key
-    );
-  }
-});
+import {
+  HeadingNumberingContext,
+  useHeadingNumberingProviderValue
+} from '../../../context/heading-numbering';
+import {
+  NumberingContext,
+  useNumberingProviderValue
+} from '../../../context/numbering';
+import { IMAGE_BLOCK, TABLE_BLOCK } from '../../slate/plugins/constants';
 
 const PreviewContainer = styled.div`
   @media print {
@@ -90,6 +48,7 @@ const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  break-inside: avoid;
 `;
 
 const SectionContent = styled.div`
@@ -100,19 +59,19 @@ const SectionContent = styled.div`
 
 function Section({ id, children, title, skipNumbering }) {
   const { register, getNumbering, level = 1, numberingFromParent } = useContext(
-    NumberingContext
+    HeadingNumberingContext
   );
 
-  const defaultContextValue = useNumberingContextProvider();
+  const headingNumberContextValue = useHeadingNumberingProviderValue();
   const numbering = getNumbering(id, numberingFromParent);
 
   const numberingContextValue = useMemo(
     () => ({
-      ...defaultContextValue,
+      ...headingNumberContextValue,
       numberingFromParent: numbering,
       level: level + 1
     }),
-    [defaultContextValue, level, numbering]
+    [headingNumberContextValue, level, numbering]
   );
 
   useEffect(() => {
@@ -128,14 +87,14 @@ function Section({ id, children, title, skipNumbering }) {
   const H = `h${level + 1}`;
 
   return (
-    <NumberingContext.Provider value={numberingContextValue}>
+    <HeadingNumberingContext.Provider value={numberingContextValue}>
       <SectionContainer>
         <H>
           {numbering} {title}
         </H>
         <SectionContent>{children}</SectionContent>
       </SectionContainer>
-    </NumberingContext.Provider>
+    </HeadingNumberingContext.Provider>
   );
 }
 
@@ -167,6 +126,8 @@ ImplementationDataList.propTypes = {
     })
   )
 };
+
+const emptyAtbd = { document: {} };
 
 function JournalPdfPreview() {
   const { id, version } = useParams();
@@ -201,13 +162,11 @@ function JournalPdfPreview() {
     }
   }, [atbdResponse.status]);
 
-  const numberingContextValue = useNumberingContextProvider();
+  const headingNumberingContextValue = useHeadingNumberingProviderValue();
+  const equationNumberingContextValue = useNumberingProviderValue();
 
-  const atbd = atbdResponse?.data ?? {
-    document: {}
-  };
+  const atbd = atbdResponse?.data ?? emptyAtbd;
 
-  console.info(atbd);
   const { keywords, document } = atbd;
 
   const {
@@ -238,181 +197,195 @@ function JournalPdfPreview() {
     journal_acknowledgements
   } = document;
 
-  const safeReadContext = {
-    subsectionLevel: 'h3',
-    references: publication_references,
-    atbd
-  };
+  const ContentView = useMemo(() => {
+    const safeReadContext = {
+      subsectionLevel: 'h3',
+      references: publication_references,
+      atbd
+    };
+
+    function transformValue(value) {
+      if (!value || !value.children) {
+        return value;
+      }
+
+      return {
+        ...value,
+        children: value.children.map((element) => {
+          if (!element.children) {
+            return element;
+          }
+
+          if (element.type === IMAGE_BLOCK) {
+            return {
+              ...element,
+              children: [
+                element.children[0],
+                {
+                  ...element.children[1],
+                  parent: IMAGE_BLOCK
+                }
+              ]
+            };
+          }
+
+          if (element.type === TABLE_BLOCK) {
+            return {
+              ...element,
+              children: [
+                element.children[0],
+                {
+                  ...element.children[1],
+                  parent: TABLE_BLOCK
+                }
+              ]
+            };
+          }
+          return transformValue(element);
+        })
+      };
+    }
+
+    // eslint-disable-next-line react/display-name, react/prop-types
+    return ({ value }) => (
+      <SafeReadEditor context={safeReadContext} value={transformValue(value)} />
+    );
+  }, [atbd, publication_references]);
 
   return (
-    <NumberingContext.Provider value={numberingContextValue}>
-      <PreviewContainer ref={contentRef}>
-        <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
-        <Section id='key_points' title='Key Points:' skipNumbering>
-          {key_points}
-        </Section>
-        <Section id='abstract' title='Abstract' skipNumbering>
-          <SafeReadEditor context={safeReadContext} value={abstract} />
-        </Section>
-        <Section
-          id='plain_summary'
-          title='Plain Language Summary'
-          skipNumbering
-        >
-          <SafeReadEditor context={safeReadContext} value={plain_summary} />
-        </Section>
-        {keywords && keywords.length > 0 && (
-          <dl>
-            <dt>Keywords:</dt>
-            <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
-          </dl>
-        )}
-        <Section
-          id='version_description'
-          title='Version Description'
-          skipNumbering
-        >
-          <SafeReadEditor
-            context={safeReadContext}
-            value={version_description}
-          />
-        </Section>
-        <Section id='introduction' title='Introduction'>
-          <SafeReadEditor context={safeReadContext} value={introduction} />
-        </Section>
-        <Section id='context_background' title='Context/Background'>
-          <Section id='historical_perspective' title='Historical Perspective'>
-            <SafeReadEditor
-              context={safeReadContext}
-              value={historical_perspective}
-            />
+    <NumberingContext.Provider value={equationNumberingContextValue}>
+      <HeadingNumberingContext.Provider value={headingNumberingContextValue}>
+        <PreviewContainer ref={contentRef}>
+          <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
+          <Section id='key_points' title='Key Points:' skipNumbering>
+            {key_points}
           </Section>
-          <Section id='additional_information' title='Additional Information'>
-            <SafeReadEditor
-              context={safeReadContext}
-              value={additional_information}
-            />
+          <Section id='abstract' title='Abstract' skipNumbering>
+            <ContentView value={abstract} />
           </Section>
-        </Section>
-        <Section id='algorithm_description' title='Algorithm Description'>
-          <Section id='scientific_theory' title='Scientific Theory'>
-            <SafeReadEditor
-              context={safeReadContext}
-              value={scientific_theory}
-            />
-            <Section
-              id='scientific_theory_assumptions'
-              title='Scientific Theory Assumptions'
-            >
-              <SafeReadEditor
-                context={safeReadContext}
-                value={scientific_theory_assumptions}
-              />
+          <Section
+            id='plain_summary'
+            title='Plain Language Summary'
+            skipNumbering
+          >
+            <ContentView value={plain_summary} />
+          </Section>
+          {keywords && keywords.length > 0 && (
+            <dl>
+              <dt>Keywords:</dt>
+              <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
+            </dl>
+          )}
+          <Section
+            id='version_description'
+            title='Version Description'
+            skipNumbering
+          >
+            <ContentView value={version_description} />
+          </Section>
+          <Section id='introduction' title='Introduction'>
+            <ContentView value={introduction} />
+          </Section>
+          <Section id='context_background' title='Context/Background'>
+            <Section id='historical_perspective' title='Historical Perspective'>
+              <ContentView value={historical_perspective} />
+            </Section>
+            <Section id='additional_information' title='Additional Information'>
+              <ContentView value={additional_information} />
             </Section>
           </Section>
-          <Section id='mathematical_theory' title='Mathematical Theory'>
-            <SafeReadEditor
-              context={safeReadContext}
-              value={mathematical_theory}
-            />
+          <Section id='algorithm_description' title='Algorithm Description'>
+            <Section id='scientific_theory' title='Scientific Theory'>
+              <ContentView value={scientific_theory} />
+              <Section
+                id='scientific_theory_assumptions'
+                title='Scientific Theory Assumptions'
+              >
+                <ContentView value={scientific_theory_assumptions} />
+              </Section>
+            </Section>
+            <Section id='mathematical_theory' title='Mathematical Theory'>
+              <ContentView value={mathematical_theory} />
+              <Section
+                id='mathematical_theory_assumptions'
+                title='Mathematical Theory Assumptions'
+              >
+                <ContentView value={mathematical_theory_assumptions} />
+              </Section>
+            </Section>
             <Section
-              id='mathematical_theory_assumptions'
-              title='Mathematical Theory Assumptions'
+              id='algorithm_input_variables'
+              title='Algorithm Input Variables'
             >
-              <SafeReadEditor
-                context={safeReadContext}
-                value={mathematical_theory_assumptions}
-              />
+              <ContentView value={algorithm_input_variables} />
+            </Section>
+            <Section
+              id='algorithm_output_variables'
+              title='Algorithm Output Variables'
+            >
+              <ContentView value={algorithm_output_variables} />
             </Section>
           </Section>
           <Section
-            id='algorithm_input_variables'
-            title='Algorithm Input Variables'
+            id='algorithm_usage_constraints'
+            title='Algorithm Usage Constraints'
           >
-            <SafeReadEditor
-              context={safeReadContext}
-              value={algorithm_input_variables}
-            />
+            <ContentView value={algorithm_usage_constraints} />
+          </Section>
+          <Section id='performance_assessment' title='Performance Assessment'>
+            <Section
+              id='performance_assessment_validation_methods'
+              title='Validation Methods'
+            >
+              <ContentView value={performance_assessment_validation_methods} />
+            </Section>
+            <Section
+              id='performance_assessment_validation_uncertainties'
+              title='Uncertainties'
+            >
+              <ContentView
+                value={performance_assessment_validation_uncertainties}
+              />
+            </Section>
+            <Section
+              id='performance_assessment_validation_errors'
+              title='Validation Errors'
+            >
+              <ContentView value={performance_assessment_validation_errors} />
+            </Section>
           </Section>
           <Section
-            id='algorithm_output_variables'
-            title='Algorithm Output Variables'
+            id='algorithm_implementation'
+            title='Algorithm Implementation'
           >
-            <SafeReadEditor
-              context={safeReadContext}
-              value={algorithm_output_variables}
-            />
+            <Section id='algorithm_availability' title='Algorithm Availability'>
+              <ImplementationDataList list={algorithm_implementations} />
+            </Section>
+            <Section id='data_access_input_data' title='Input Data Access'>
+              <ImplementationDataList list={data_access_input_data} />
+            </Section>
+            <Section id='data_access_output_data' title='Output Data Access'>
+              <ImplementationDataList list={data_access_output_data} />
+            </Section>
+            <Section
+              id='data_access_related_urls'
+              title='Important Related URLs'
+            >
+              <ImplementationDataList list={data_access_related_urls} />
+            </Section>
           </Section>
-        </Section>
-        <Section
-          id='algorithm_usage_constraints'
-          title='Algorithm Usage Constraints'
-        >
-          <SafeReadEditor
-            context={safeReadContext}
-            value={algorithm_usage_constraints}
-          />
-        </Section>
-        <Section id='performance_assessment' title='Performance Assessment'>
-          <Section
-            id='performance_assessment_validation_methods'
-            title='Validation Methods'
-          >
-            <SafeReadEditor
-              context={safeReadContext}
-              value={performance_assessment_validation_methods}
-            />
+          <Section id='journal_discussion' title='Significance Discussion'>
+            <ContentView value={journal_discussion} />
           </Section>
-          <Section
-            id='performance_assessment_validation_uncertainties'
-            title='Uncertainties'
-          >
-            <SafeReadEditor
-              context={safeReadContext}
-              value={performance_assessment_validation_uncertainties}
-            />
+          <Section id='data_availability' title='Open Research'>
+            <ContentView value={data_availability} />
           </Section>
-          <Section
-            id='performance_assessment_validation_errors'
-            title='Validation Errors'
-          >
-            <SafeReadEditor
-              context={safeReadContext}
-              value={performance_assessment_validation_errors}
-            />
+          <Section id='journal_acknowledgements' title='Acknowledgements'>
+            <ContentView value={journal_acknowledgements} />
           </Section>
-        </Section>
-        <Section id='algorithm_implementation' title='Algorithm Implementation'>
-          <Section id='algorithm_availability' title='Algorithm Availability'>
-            <ImplementationDataList list={algorithm_implementations} />
-          </Section>
-          <Section id='data_access_input_data' title='Input Data Access'>
-            <ImplementationDataList list={data_access_input_data} />
-          </Section>
-          <Section id='data_access_output_data' title='Output Data Access'>
-            <ImplementationDataList list={data_access_output_data} />
-          </Section>
-          <Section id='data_access_related_urls' title='Important Related URLs'>
-            <ImplementationDataList list={data_access_related_urls} />
-          </Section>
-        </Section>
-        <Section id='journal_discussion' title='Significance Discussion'>
-          <SafeReadEditor
-            context={safeReadContext}
-            value={journal_discussion}
-          />
-        </Section>
-        <Section id='data_availability' title='Open Research'>
-          <SafeReadEditor context={safeReadContext} value={data_availability} />
-        </Section>
-        <Section id='journal_acknowledgements' title='Acknowledgements'>
-          <SafeReadEditor
-            context={safeReadContext}
-            value={journal_acknowledgements}
-          />
-        </Section>
-        {previewReady && <div id='pdf-preview-ready' />}
-      </PreviewContainer>
+          {previewReady && <div id='pdf-preview-ready' />}
+        </PreviewContainer>
+      </HeadingNumberingContext.Provider>
     </NumberingContext.Provider>
   );
 }
