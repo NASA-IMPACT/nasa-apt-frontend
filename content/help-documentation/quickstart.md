@@ -11,9 +11,13 @@ title: Quick Start Guide
 The Algorithm Publication Tool (APT) is a cloud-based publication tool developed within NASA’s Earth Science Data Systems (ESDS) program that standardizes Algorithm Theoretical Basis Document (ATBD) content, streamlines the authoring process of ATBDs, and allows the science community to search and retrieve ATBDs from a centralized repository.
 Users can create an ATBD within the APT user interface or use one of the provided ATBD templates to create their document (e.g., Google Docs, Microsoft Word, or LaTeX; see [APT User Guide](https://www.earthdata.nasa.gov/apt/user-guide/apt) and APT Template User Guide). Both options require an APT account.
 
+[[Back to top](#)]
+
 ## 2. Getting Started
 
 This quick start guide shows how to sign up for an account and how to create an ATBD.
+
+[[Back to top](#)]
 
 ### 2.1 Create an Account
 
@@ -52,6 +56,8 @@ Follow these steps to create an account.
 ![Figure 6](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_FIgure6_OTP.png?raw=true 'Figure 6. Upon each sign in attempt, you must use your MFA authenticator to generate a one time password (red box).')
 
 - Click “confirm” to sign in. You should now see your user dashboard (Figure 7).
+
+[[Back to top](#)]
 
 ### 2.2 Create an ATBD
 
@@ -95,6 +101,8 @@ Use provided ATBD template
 
 ![Figure 13](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure13_ViewPDF.png?raw=true "Figure 13. View your uploaded PDF by clicking 'view selected file.'")
 
+[[Back to top](#)]
+
 ### 2.3 Add Collaborators to Your ATBD
 
 Most ATBDs are a collaborative effort; therefore, multiple authors can be added to an ATBD within APT. Collaborators can be added to a document from the dashboard or from within a document by clicking the view collaborators icon (Figures 14). From the collaborators pop up, click the pencil icon (Figure 15).
@@ -105,7 +113,13 @@ Most ATBDs are a collaborative effort; therefore, multiple authors can be added 
 
 ![Figure 16](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure16_addCollaborators.png?raw=true 'Figure 16. Select to add your desired collaborators.')
 
+[[Back to top](#)]
+
 ### 2.4 How to Suggest a Reviewer for Your ATBD
+
+Coming soon.
+
+[[Back to top](#)]
 
 ### 2.5 How to Indicate Section Progress
 
@@ -119,13 +133,19 @@ An ATBD is typically developed in APT over time. Since one can work on any secti
 
 ![Figure 18](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure18_sectionprogress2.png?raw=true 'Figure 18. Check progress via the dropdown at the upper right of the blue bar (red box). This example shows the algorithm description section is 25% complete.')
 
+[[Back to top](#)]
+
 ### 2.6 How to Write a Plain Language Summary
 
 A plain language summary lets you reach a wider audience by summarizing your work in clear language accessible to people outside your discipline. For further reference and helpful tips, be sure to visit the [AGU guide to writing plain language summaries.](https://www.agu.org/Share-and-Advocate/Share/Community/Plain-language-summary)
 
+[[Back to top](#)]
+
 ### 2.7 How to Choose Keywords
 
 Choosing the right keywords helps users discover your ATBD easily without knowing the title. To learn more about choosing keywords, and for keyword suggestions, visit [American Geophysical Union (AGU) Index Terms](https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Index-terms) and [NASA Global Change Master Directory (GCMD) Key Words.](https://www.agu.org/Publish-with-AGU/Publish/Author-Resources/Index-terms)
+
+[[Back to top](#)]
 
 ## 3 How to Review an ATBD
 
@@ -145,6 +165,8 @@ Click “conclude review” once you are finished with your review (Figure 21), 
 
 ![Figure 22](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure22_ConfirmReview.png?raw=true 'Figure 22. Confirm (red box) that you have concluded your review.')
 
+[[Back to top](#)]
+
 ### 3.1 How to Add Comments
 
 Comment threads are opened by clicking the comments icon on the page banner (Figure 23 and 24) or by clicking the popup icon to the left of each section header.
@@ -160,3 +182,5 @@ Existing comments can be replied to and resolved (Figure 25). A user can also ed
 ![Figure 25](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure25_CommentResolve.png?raw=true 'Figure 25. Reply to comments using the reply to comment icon and resolve comment threads using the resolve comment thread icon (red box).')
 
 ![Figure 26](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure26_CommentEdit.png?raw=true 'Figure 26. A user can edit or delete their own comment from the options dropdown menu (red box).')
+
+[[Back to top](#)]
