@@ -1,18 +1,11 @@
 import T from 'prop-types';
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useContext,
-  useMemo,
-  Fragment
-} from 'react';
+import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 
 import { useSingleAtbd } from '../../../context/atbds-list';
 import { useUser } from '../../../context/user';
-import { resolveTitle } from '../../../utils/common';
+import { isTruthyString, resolveTitle } from '../../../utils/common';
 import { SafeReadEditor } from '../../slate';
 import {
   HeadingNumberingContext,
@@ -23,6 +16,36 @@ import {
   useNumberingProviderValue
 } from '../../../context/numbering';
 import { IMAGE_BLOCK, TABLE_BLOCK } from '../../slate/plugins/constants';
+import serializeToString from '../../slate/serialize-to-string';
+import { getContactName } from '../../contacts/contact-utils';
+
+const DataList = styled.dl`
+  display: flex;
+  gap: 0.5rem;
+
+  dt {
+    font-weight: bold;
+
+    ::after {
+      content: ': ';
+    }
+  }
+
+  dd {
+    word-break: break-word;
+    flex-grow: 1;
+  }
+`;
+
+const DataListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  dt {
+    font-weight: bold;
+  }
+`;
 
 const PreviewContainer = styled.div`
   @media print {
@@ -37,18 +60,25 @@ const PreviewContainer = styled.div`
   margin: 15mm;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
 `;
 
 const DocumentHeading = styled.h1`
   margin: 0;
 `;
 
+const AuthorsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+`;
+
 const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  break-inside: avoid;
+  break-before: ${(props) => (props.breakBeforePage ? 'page' : undefined)};
 `;
 
 const SectionContent = styled.div`
@@ -57,10 +87,13 @@ const SectionContent = styled.div`
   gap: 1rem;
 `;
 
-function Section({ id, children, title, skipNumbering }) {
-  const { register, getNumbering, level = 1, numberingFromParent } = useContext(
-    HeadingNumberingContext
-  );
+function Section({ id, children, title, skipNumbering, breakBeforePage }) {
+  const {
+    register,
+    getNumbering,
+    level = 1,
+    numberingFromParent
+  } = useContext(HeadingNumberingContext);
 
   const headingNumberContextValue = useHeadingNumberingProviderValue();
   const numbering = getNumbering(id, numberingFromParent);
@@ -84,15 +117,16 @@ function Section({ id, children, title, skipNumbering }) {
     return null;
   }
 
-  const H = `h${level + 1}`;
+  const H = `h${Math.min((level ?? 0) + 1, 6)}`;
 
   return (
     <HeadingNumberingContext.Provider value={numberingContextValue}>
-      <SectionContainer>
+      <SectionContainer breakBeforePage={breakBeforePage}>
         <H>
           {numbering} {title}
         </H>
         <SectionContent>{children}</SectionContent>
+        <div />
       </SectionContainer>
     </HeadingNumberingContext.Provider>
   );
@@ -102,19 +136,26 @@ Section.propTypes = {
   id: T.string,
   title: T.node,
   children: T.node,
+  breakBeforePage: T.bool,
   skipNumbering: T.bool
 };
 
+const EMPTY_CONTENT_MESSAGE = 'Content not available';
+
 function ImplementationDataList({ list }) {
+  if (!list || list.length === 0) {
+    return EMPTY_CONTENT_MESSAGE;
+  }
+
   return (
-    <dl>
+    <DataListContainer>
       {list?.map(({ url, description }) => (
-        <Fragment key={url}>
+        <dl key={url}>
           <dt>{url}</dt>
           <dd>{description}</dd>
-        </Fragment>
+        </dl>
       ))}
-    </dl>
+    </DataListContainer>
   );
 }
 
@@ -126,6 +167,10 @@ ImplementationDataList.propTypes = {
     })
   )
 };
+
+function hasContent(content) {
+  return isTruthyString(serializeToString(content));
+}
 
 const emptyAtbd = { document: {} };
 
@@ -167,7 +212,7 @@ function JournalPdfPreview() {
 
   const atbd = atbdResponse?.data ?? emptyAtbd;
 
-  const { keywords, document } = atbd;
+  const { keywords, document, contacts_link } = atbd;
 
   const {
     key_points,
@@ -248,18 +293,88 @@ function JournalPdfPreview() {
 
     // eslint-disable-next-line react/display-name, react/prop-types
     return ({ value }) => (
-      <SafeReadEditor context={safeReadContext} value={transformValue(value)} />
+      <SafeReadEditor
+        context={safeReadContext}
+        value={transformValue(value)}
+        // TODO: verify the default empty behavior
+        whenEmpty={EMPTY_CONTENT_MESSAGE}
+      />
     );
   }, [atbd, publication_references]);
+
+  const threeKeyPoints = key_points
+    ?.split('\n')
+    .filter(isTruthyString)
+    .slice(0, 3);
+
+  const contacts = useMemo(() => {
+    return contacts_link?.reduce(
+      (acc, contact_link, i) => {
+        const { contact, affiliations } = contact_link;
+
+        const hasAffiliation = affiliations && affiliations.length > 0;
+        if (hasAffiliation) {
+          acc.affiliations_list.push(affiliations);
+        }
+
+        const item = (
+          <span key={contact.id}>
+            <strong>{getContactName(contact, { full: true })}</strong>
+            {hasAffiliation && <sup>{acc.affiliations_list.length}</sup>}
+            {i < acc.maxIndex && <span>, </span>}
+            {i === acc.maxIndex - 1 && <span>and </span>}
+          </span>
+        );
+
+        acc.items.push(item);
+
+        return acc;
+      },
+      {
+        affiliations_list: [],
+        items: [],
+        maxIndex: (contacts_link.length ?? 0) - 1
+      }
+    );
+  }, [contacts_link]);
 
   return (
     <NumberingContext.Provider value={equationNumberingContextValue}>
       <HeadingNumberingContext.Provider value={headingNumberingContextValue}>
         <PreviewContainer ref={contentRef}>
           <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
+          <AuthorsSection>
+            <div>{contacts?.items}</div>
+            <div>
+              {contacts?.affiliations_list.map((affiliations, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <div key={i}>
+                  <sup>{i + 1}</sup> {affiliations.join(', ')}
+                </div>
+              ))}
+            </div>
+          </AuthorsSection>
           <Section id='key_points' title='Key Points:' skipNumbering>
-            {key_points}
+            <ul>
+              {threeKeyPoints?.map((keyPoint) => (
+                <li key={keyPoint}>{keyPoint}</li>
+              ))}
+            </ul>
           </Section>
+          <div>
+            <DataList>
+              <dt>Version</dt>
+              <dd>{version}</dd>
+            </DataList>
+            <DataList>
+              <dt>Release Date</dt>
+              <dd>TBD</dd>
+            </DataList>
+            <DataList>
+              <dt>DOI</dt>
+              <dd>TBD</dd>
+            </DataList>
+          </div>
           <Section id='abstract' title='Abstract' skipNumbering>
             <ContentView value={abstract} />
           </Section>
@@ -269,13 +384,13 @@ function JournalPdfPreview() {
             skipNumbering
           >
             <ContentView value={plain_summary} />
+            {keywords && keywords.length > 0 && (
+              <DataList>
+                <dt>Keywords:</dt>
+                <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
+              </DataList>
+            )}
           </Section>
-          {keywords && keywords.length > 0 && (
-            <dl>
-              <dt>Keywords:</dt>
-              <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
-            </dl>
-          )}
           <Section
             id='version_description'
             title='Version Description'
@@ -283,7 +398,7 @@ function JournalPdfPreview() {
           >
             <ContentView value={version_description} />
           </Section>
-          <Section id='introduction' title='Introduction'>
+          <Section breakBeforePage id='introduction' title='Introduction'>
             <ContentView value={introduction} />
           </Section>
           <Section id='context_background' title='Context/Background'>
@@ -326,12 +441,14 @@ function JournalPdfPreview() {
               <ContentView value={algorithm_output_variables} />
             </Section>
           </Section>
-          <Section
-            id='algorithm_usage_constraints'
-            title='Algorithm Usage Constraints'
-          >
-            <ContentView value={algorithm_usage_constraints} />
-          </Section>
+          {hasContent(algorithm_usage_constraints) && (
+            <Section
+              id='algorithm_usage_constraints'
+              title='Algorithm Usage Constraints'
+            >
+              <ContentView value={algorithm_usage_constraints} />
+            </Section>
+          )}
           <Section id='performance_assessment' title='Performance Assessment'>
             <Section
               id='performance_assessment_validation_methods'
@@ -383,6 +500,7 @@ function JournalPdfPreview() {
           <Section id='journal_acknowledgements' title='Acknowledgements'>
             <ContentView value={journal_acknowledgements} />
           </Section>
+          {/* TODO: Contact Details, References */}
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
       </HeadingNumberingContext.Provider>

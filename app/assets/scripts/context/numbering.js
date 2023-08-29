@@ -78,7 +78,7 @@ export function useNumberingProviderValue() {
         return '';
       }
 
-      return `Image ${numbering}: `;
+      return `Figure ${numbering}: `;
     },
     [registeredImages]
   );

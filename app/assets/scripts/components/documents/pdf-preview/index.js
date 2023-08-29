@@ -271,9 +271,6 @@ function PdfPreview() {
                 id='table-of-contents'
               />
             </div>
-            <div className='print-page-header'>
-              This is the header for print
-            </div>
             <DocumentProse className='preview-page-content'>
               <DocumentBody atbd={atbd.data} disableScrollManagement={true} />
             </DocumentProse>
