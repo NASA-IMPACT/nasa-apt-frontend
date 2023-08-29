@@ -41,7 +41,8 @@ export default function DocumentDownloadMenu(props) {
   // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
   // const ability = useContextualAbility();
   //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
-  const [canDownloadJournalPdf, setCanDownloadJournalPdf] = React.useState(false);
+  const [canDownloadJournalPdf, setCanDownloadJournalPdf] =
+    React.useState(false);
 
   React.useEffect(() => {
     async function fetchBootstrap() {
@@ -75,7 +76,10 @@ export default function DocumentDownloadMenu(props) {
         );
       }
 
-      const retryUrl = retryCount === 0 ? `${url}?retry=true` : url;
+      const retryUrl =
+        retryCount === 0
+          ? `${url}${url.includes('?') ? '&' : '?'}retry=true`
+          : url;
 
       try {
         let user;
@@ -204,7 +208,7 @@ export default function DocumentDownloadMenu(props) {
     );
 
     const { id, version, alias } = atbd;
-    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/journal-pdf`;
+    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf?journal=true`;
 
     const pdfFileName = `Journal-${alias}-v${version}.pdf`;
     fetchPdf(pdfUrl, pdfFileName, processToast);
