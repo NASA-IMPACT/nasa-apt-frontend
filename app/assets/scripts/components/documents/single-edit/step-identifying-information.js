@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import T from 'prop-types';
 import set from 'lodash.set';
-import { Formik, Form as FormikForm } from 'formik';
+import { Formik, Form as FormikForm, useField } from 'formik';
 import { Form, FormHelperMessage } from '@devseed-ui/form';
 
 import { Inpage, InpageBody } from '../../../styles/inpage';
@@ -27,6 +27,13 @@ import { isPublished } from '../status';
 import { LocalStore } from './local-store';
 import { FormikUnloadPrompt } from '../../common/unload-prompt';
 import RichTextContex2Formik from './rich-text-ctx-formik';
+import { resolveTitle } from '../../../utils/common';
+
+function TitlePreview() {
+  const [{ value }] = useField('title');
+
+  return <h4>Preview: {resolveTitle(value)}</h4>;
+}
 
 export default function StepIdentifyingInformation(props) {
   const { renderInpageHeader, renderFormFooter, atbd, id, version, step } =
@@ -100,6 +107,7 @@ export default function StepIdentifyingInformation(props) {
                     name='title'
                     label='ATBD Title'
                     description={formString('identifying_information.title')}
+                    helper={<TitlePreview />}
                   />
                   <FieldAtbdAlias disabled={hasAnyVersionPublished} />
                 </SectionFieldset>

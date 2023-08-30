@@ -43,6 +43,13 @@ async function gotoTestDocument(page, status) {
 }
 
 /**
+ * Goes to new document page
+ * @param page
+ */
+async function gotoNewDocument(page) {
+  return page.goto('http://localhost:9000/documents/3/v1.0');
+}
+/**
  * Represents a logged in page with a given role
  *
  * The init method will login the user with the role and register which routes
@@ -62,6 +69,10 @@ class LoggedInPage {
 
   async gotoTestDocument(status) {
     return gotoTestDocument(this.page, status);
+  }
+
+  async gotoNewDocument() {
+    return gotoNewDocument(this.page);
   }
 
   async init() {
