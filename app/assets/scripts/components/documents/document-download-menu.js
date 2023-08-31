@@ -126,7 +126,7 @@ export default function DocumentDownloadMenu(props) {
         if (
           response.status === 404 &&
           response.headers.get('content-type') === 'application/json' &&
-          url.includes('?retry=true')
+          url.includes('retry=true')
         ) {
           if (retryCount < maxRetries) {
             setTimeout(() => {
