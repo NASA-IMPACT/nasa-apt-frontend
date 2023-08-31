@@ -3,10 +3,11 @@ import T from 'prop-types';
 
 import { ReadEditor } from './editor';
 import { RichContextProvider } from './plugins/common/rich-context';
-import { IMAGE, IMAGE_BLOCK } from './plugins/image';
+import { IMAGE } from './plugins/image';
 import { removeNodeFromSlateDocument } from './nodes-from-slate';
 import serializeToString from './serialize-to-string';
 import { isTruthyString } from '../../utils/common';
+import { IMAGE_BLOCK } from './plugins/constants';
 
 export default class SafeReadEditor extends React.Component {
   static getDerivedStateFromError(error) {
