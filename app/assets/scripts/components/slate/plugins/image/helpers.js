@@ -5,16 +5,16 @@ import {
   ELEMENT_IMAGE
 } from '@udecode/slate-plugins';
 
-import { DEFAULTS_CAPTION, getEmptyCaptionNode } from '../caption';
+import { DEFAULT_CAPTION, getEmptyCaptionNode } from '../caption';
 import ImageBlock from './image-block';
 import Image from './image';
 
 import { isInNodeType } from '../common/is-node-type';
 import { getPathForRootBlockInsert } from '../common/utils';
+import { IMAGE_BLOCK } from '../constants';
 
 // Plugin type.
 export const IMAGE = ELEMENT_IMAGE;
-export const IMAGE_BLOCK = 'image-block';
 
 /**
  * Check if the current selection is inside a IMAGE_BLOCK node
@@ -79,14 +79,14 @@ const getEmptyImageNode = () => ({
  */
 export const getEmptyImageBlockNode = () => ({
   type: IMAGE_BLOCK,
-  children: [getEmptyImageNode(), getEmptyCaptionNode()]
+  children: [getEmptyImageNode(), getEmptyCaptionNode(IMAGE_BLOCK)]
 });
 
 /**
  * Render function for the image block elements.
  */
 export const renderElementImageBlock = () => {
-  const { caption } = DEFAULTS_CAPTION;
+  const { caption } = DEFAULT_CAPTION;
   const image = {
     type: IMAGE,
     component: Image

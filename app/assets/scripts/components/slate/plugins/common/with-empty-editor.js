@@ -11,7 +11,7 @@ export const withEmptyEditor = (editor) => {
 
     // We want to ensure that when the editor only has 1 child, it must be a
     // node. If it is a leaf, normalize to a paragraph.
-    if (editor.children[0].children.length === 1 && Text.isText(node)) {
+    if (editor.children[0]?.children?.length === 1 && Text.isText(node)) {
       Transforms.wrapNodes(
         editor,
         {

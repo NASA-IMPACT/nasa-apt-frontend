@@ -3,13 +3,13 @@ import { Transforms, Node, Element, Editor } from 'slate';
 
 import { Caption } from './caption';
 
-export * from './caption';
+// export * from './caption';
 
 // Caption Element
 export const CAPTION = 'caption';
 
 // Caption settings.
-export const DEFAULTS_CAPTION = {
+export const DEFAULT_CAPTION = {
   caption: {
     type: CAPTION,
     component: Caption

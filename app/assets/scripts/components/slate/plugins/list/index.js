@@ -14,7 +14,7 @@ import {
 } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
-import { TABLE_BLOCK } from '../table';
+import { TABLE_BLOCK } from '../constants';
 
 const Ul = styled.ul`
   list-style: initial;

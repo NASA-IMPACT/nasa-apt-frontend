@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import T from 'prop-types';
 import styled, { css } from 'styled-components';
 import { Node, Transforms } from 'slate';
@@ -8,9 +8,11 @@ import { BlockMath, InlineMath } from 'react-katex';
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
 import { isInlineEquation } from '.';
+import { NumberingContext } from '../../../../context/numbering';
 
 const EquationReadOnly = styled.span`
-  display: ${({ isInline }) => (isInline ? 'inline' : 'block')};
+  display: ${({ isInline }) => (isInline ? 'inline-flex' : 'flex')};
+  align-items: center;
 `;
 
 const Equation = styled.span`
@@ -54,6 +56,13 @@ function EquationElement(props) {
 
   const isInline = isInlineEquation(element);
   const MathElement = isInline ? InlineMath : BlockMath;
+  const numberingContext = useContext(NumberingContext);
+
+  useEffect(() => {
+    if (numberingContext && !isInline) {
+      numberingContext.registerEquation(latexEquation);
+    }
+  }, [numberingContext, isInline, latexEquation]);
 
   const returnElement = React.useMemo(() => {
     if (readOnly) {
@@ -73,6 +82,9 @@ function EquationElement(props) {
           <span className='katex-equation-wrapper'>
             <MathElement math={latexEquation || 'latex~empty~equation'} />
           </span>
+          {!isInline && numberingContext && (
+            <span>{numberingContext.getEquationNumbering(latexEquation)}</span>
+          )}
           {!isInline && <span className='equation-number' />}
         </EquationReadOnly>
       );
@@ -98,6 +110,7 @@ function EquationElement(props) {
     isInline,
     isSelected,
     latexEquation,
+    numberingContext,
     readOnly
   ]);
 

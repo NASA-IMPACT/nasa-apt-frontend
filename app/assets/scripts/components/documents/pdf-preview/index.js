@@ -19,6 +19,7 @@ const PreviewContainer = styled.div`
   @media print {
     @page {
       size: portrait;
+      margin: 15mm;
     }
   }
 `;
