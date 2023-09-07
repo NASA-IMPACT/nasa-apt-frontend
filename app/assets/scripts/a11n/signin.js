@@ -114,7 +114,10 @@ function SignIn() {
       const loggedUser = await Auth.signIn(email, password);
       setUser(loggedUser);
 
-      if (loggedUser.preferredMFA === 'NOMFA') {
+      if (
+        loggedUser.challengeName === 'MFA_SETUP' ||
+        loggedUser.preferredMFA === 'NOMFA'
+      ) {
         toastRef.current.update('Please setup OTP using Authenticator app.');
         const secretCode = await Auth.setupTOTP(loggedUser);
         setMfaCode(secretCode);
