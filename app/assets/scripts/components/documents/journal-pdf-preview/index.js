@@ -18,6 +18,40 @@ import {
 import { IMAGE_BLOCK, TABLE_BLOCK } from '../../slate/plugins/constants';
 import serializeToString from '../../slate/serialize-to-string';
 import { getContactName } from '../../contacts/contact-utils';
+import {
+  createDocumentReferenceIndex,
+  formatReference,
+  sortReferences
+} from '../../../utils/references';
+
+const ReferencesList = styled.ol`
+  && {
+    list-style: none;
+    margin: 0;
+    line-height: 2.5;
+  }
+`;
+
+const IndentedContainer = styled.div`
+  padding-left: 1rem;
+`;
+
+const DataListInline = styled.dl`
+  dt {
+    display: inline;
+    text-decoration: underline;
+
+    ::after {
+      content: ': ';
+    }
+  }
+
+  dd {
+    display: inline;
+    word-break: break-word;
+    flex-grow: 1;
+  }
+`;
 
 const DataList = styled.dl`
   display: flex;
@@ -95,9 +129,12 @@ const SectionContent = styled.div`
 `;
 
 function Section({ id, children, title, skipNumbering, breakBeforePage }) {
-  const { register, getNumbering, level = 1, numberingFromParent } = useContext(
-    HeadingNumberingContext
-  );
+  const {
+    register,
+    getNumbering,
+    level = 1,
+    numberingFromParent
+  } = useContext(HeadingNumberingContext);
 
   const headingNumberContextValue = useHeadingNumberingProviderValue();
   const numbering = getNumbering(id, numberingFromParent);
@@ -170,6 +207,60 @@ ImplementationDataList.propTypes = {
       description: T.string
     })
   )
+};
+
+function ContactOutput(props) {
+  const { data } = props;
+  const { affiliations, contact, roles } = data;
+
+  const name = [contact.first_name, contact.last_name]
+    .filter(Boolean)
+    .join(', ');
+
+  return (
+    <div>
+      <div>{name}</div>
+      <IndentedContainer>
+        {isTruthyString(contact.uuid) && (
+          <DataListInline>
+            <dt>UUID</dt>
+            <dd>{contact.uuid}</dd>
+          </DataListInline>
+        )}
+        {isTruthyString(contact.url) && (
+          <DataListInline>
+            <dt>URL</dt>
+            <dd>{contact.url}</dd>
+          </DataListInline>
+        )}
+        <DataListInline>
+          <dt>Contact mechanism</dt>
+          <dd>
+            {contact.mechanisms
+              ?.map(
+                ({ mechanism_type, mechanism_value }) =>
+                  `${mechanism_type}: ${mechanism_value}`
+              )
+              .join(', ')}
+          </dd>
+        </DataListInline>
+        <DataListInline>
+          <dt>Role(s) related to this ATBD</dt>
+          <dd>{roles?.join(', ')}</dd>
+        </DataListInline>
+        {affiliations && (
+          <DataListInline>
+            <dt>Affiliation</dt>
+            <dd>{affiliations.join(', ')}</dd>
+          </DataListInline>
+        )}
+      </IndentedContainer>
+    </div>
+  );
+}
+
+ContactOutput.propTypes = {
+  data: T.object
 };
 
 function hasContent(content) {
@@ -343,6 +434,37 @@ function JournalPdfPreview() {
     );
   }, [contacts_link]);
 
+  const referencesUseIndex = useMemo(
+    () => createDocumentReferenceIndex(document),
+    [document]
+  );
+
+  const referenceList = useMemo(
+    () =>
+      Object.values(referencesUseIndex)
+        .sort(function (a, b) {
+          const refA = (document.publication_references || []).find(
+            (r) => r.id === a.refId
+          );
+          const refB = (document.publication_references || []).find(
+            (r) => r.id === b.refId
+          );
+
+          return sortReferences(refA, refB);
+        })
+        .map(({ refId }) => {
+          const ref = (document.publication_references || []).find(
+            (r) => r.id === refId
+          );
+          return (
+            <li key={refId}>
+              {ref ? formatReference(ref, 'jsx') : 'Reference not found'}
+            </li>
+          );
+        }),
+    [referencesUseIndex, document.publication_references]
+  );
+
   if (!atbdResponse.data) {
     return <div>Loading...</div>;
   }
@@ -409,6 +531,10 @@ function JournalPdfPreview() {
   const openResearchVisible = hasContent(data_availability);
 
   const journalAcknowledgementsVisible = hasContent(journal_acknowledgements);
+
+  const contactSectionVisible = contacts_link && contacts_link.length > 0;
+
+  const referencesVisible = referenceList && referenceList.length > 0;
 
   return (
     <NumberingContext.Provider value={equationNumberingContextValue}>
@@ -632,7 +758,21 @@ function JournalPdfPreview() {
               <ContentView value={journal_acknowledgements} />
             </Section>
           )}
-          {/* TODO: Contact Details, References */}
+          {contactSectionVisible && (
+            <Section id='contact_details' title='Contact Details'>
+              {contacts_link.map((contactLink) => (
+                <ContactOutput
+                  key={contactLink.contact.id}
+                  data={contactLink}
+                />
+              ))}
+            </Section>
+          )}
+          {referencesVisible && (
+            <Section id='references' title='References'>
+              <ReferencesList>{referenceList}</ReferencesList>
+            </Section>
+          )}
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
       </HeadingNumberingContext.Provider>
