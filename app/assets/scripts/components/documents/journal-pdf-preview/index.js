@@ -18,6 +18,40 @@ import {
 import { IMAGE_BLOCK, TABLE_BLOCK } from '../../slate/plugins/constants';
 import serializeToString from '../../slate/serialize-to-string';
 import { getContactName } from '../../contacts/contact-utils';
+import {
+  createDocumentReferenceIndex,
+  formatReference,
+  sortReferences
+} from '../../../utils/references';
+
+const ReferencesList = styled.ol`
+  && {
+    list-style: none;
+    margin: 0;
+    line-height: 2.5;
+  }
+`;
+
+const IndentedContainer = styled.div`
+  padding-left: 1rem;
+`;
+
+const DataListInline = styled.dl`
+  dt {
+    display: inline;
+    text-decoration: underline;
+
+    ::after {
+      content: ': ';
+    }
+  }
+
+  dd {
+    display: inline;
+    word-break: break-word;
+    flex-grow: 1;
+  }
+`;
 
 const DataList = styled.dl`
   display: flex;
@@ -50,14 +84,21 @@ const DataListContainer = styled.div`
 const PreviewContainer = styled.div`
   @media print {
     @page {
-      size: portrait;
+      size: A4 portrait;
       margin: 15mm;
     }
   }
 
+  @media screen {
+    margin: 0 auto;
+    background-color: #fff;
+    margin: 1rem auto;
+    padding: 15mm;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 210mm;
+  }
+
   font-family: serif;
-  width: 210mm;
-  margin: 15mm;
   display: flex;
   flex-direction: column;
   gap: 3rem;
@@ -168,6 +209,60 @@ ImplementationDataList.propTypes = {
   )
 };
 
+function ContactOutput(props) {
+  const { data } = props;
+  const { affiliations, contact, roles } = data;
+
+  const name = [contact.first_name, contact.last_name]
+    .filter(Boolean)
+    .join(', ');
+
+  return (
+    <div>
+      <div>{name}</div>
+      <IndentedContainer>
+        {isTruthyString(contact.uuid) && (
+          <DataListInline>
+            <dt>UUID</dt>
+            <dd>{contact.uuid}</dd>
+          </DataListInline>
+        )}
+        {isTruthyString(contact.url) && (
+          <DataListInline>
+            <dt>URL</dt>
+            <dd>{contact.url}</dd>
+          </DataListInline>
+        )}
+        <DataListInline>
+          <dt>Contact mechanism</dt>
+          <dd>
+            {contact.mechanisms
+              ?.map(
+                ({ mechanism_type, mechanism_value }) =>
+                  `${mechanism_type}: ${mechanism_value}`
+              )
+              .join(', ')}
+          </dd>
+        </DataListInline>
+        <DataListInline>
+          <dt>Role(s) related to this ATBD</dt>
+          <dd>{roles?.join(', ')}</dd>
+        </DataListInline>
+        {affiliations && (
+          <DataListInline>
+            <dt>Affiliation</dt>
+            <dd>{affiliations.join(', ')}</dd>
+          </DataListInline>
+        )}
+      </IndentedContainer>
+    </div>
+  );
+}
+
+ContactOutput.propTypes = {
+  data: T.object
+};
+
 function hasContent(content) {
   return isTruthyString(serializeToString(content));
 }
@@ -191,6 +286,7 @@ function JournalPdfPreview() {
   useEffect(() => {
     async function waitForImages() {
       const images = contentRef.current.querySelectorAll('img');
+
       const promises = Array.from(images).map((image) => {
         return new Promise((accept) => {
           image.addEventListener('load', () => {
@@ -338,6 +434,108 @@ function JournalPdfPreview() {
     );
   }, [contacts_link]);
 
+  const referencesUseIndex = useMemo(
+    () => createDocumentReferenceIndex(document),
+    [document]
+  );
+
+  const referenceList = useMemo(
+    () =>
+      Object.values(referencesUseIndex)
+        .sort(function (a, b) {
+          const refA = (document.publication_references || []).find(
+            (r) => r.id === a.refId
+          );
+          const refB = (document.publication_references || []).find(
+            (r) => r.id === b.refId
+          );
+
+          return sortReferences(refA, refB);
+        })
+        .map(({ refId }) => {
+          const ref = (document.publication_references || []).find(
+            (r) => r.id === refId
+          );
+          return (
+            <li key={refId}>
+              {ref ? formatReference(ref, 'jsx') : 'Reference not found'}
+            </li>
+          );
+        }),
+    [referencesUseIndex, document.publication_references]
+  );
+
+  if (!atbdResponse.data) {
+    return <div>Loading...</div>;
+  }
+
+  const historicalPerspectiveVisible = hasContent(historical_perspective);
+  const additionalInformationVisible = hasContent(additional_information);
+  const contextBackgroundVisible =
+    historicalPerspectiveVisible || additionalInformationVisible;
+
+  const scientificTheoryAssumptionsVisible = hasContent(
+    scientific_theory_assumptions
+  );
+  const scientificTheoryVisible =
+    hasContent(scientific_theory) || scientificTheoryAssumptionsVisible;
+  const mathematicalTheoryAssumptionsVisible = hasContent(
+    mathematical_theory_assumptions
+  );
+  const mathematicalTheoryVisible =
+    hasContent(mathematical_theory) || mathematicalTheoryAssumptionsVisible;
+  const algorithmInputVariablesVisible = hasContent(algorithm_input_variables);
+  const algorithmOutputVariablesVisible = hasContent(
+    algorithm_output_variables
+  );
+  const algorithmDescriptionVisible =
+    scientificTheoryVisible ||
+    mathematicalTheoryVisible ||
+    algorithmInputVariablesVisible ||
+    algorithmOutputVariablesVisible;
+
+  const algorithmUsageConstraintsVisible = hasContent(
+    algorithm_usage_constraints
+  );
+
+  const validationMethodsVisible = hasContent(
+    performance_assessment_validation_methods
+  );
+  const uncertainitiesVisible = hasContent(
+    performance_assessment_validation_uncertainties
+  );
+  const validationErrorsVisible = hasContent(
+    performance_assessment_validation_errors
+  );
+  const performanceAssessmentVisible =
+    validationMethodsVisible ||
+    uncertainitiesVisible ||
+    validationErrorsVisible;
+
+  const algorithmAvailabilityVisible =
+    algorithm_implementations && algorithm_implementations.length > 0;
+  const inputDataAccessVisible =
+    data_access_input_data && data_access_input_data.length > 0;
+  const outputDataAccessVisible =
+    data_access_output_data && data_access_output_data.length > 0;
+  const importantRelatedUrlsVisible =
+    data_access_related_urls && data_access_related_urls.length > 0;
+  const algorithmImplementationVisible =
+    algorithmAvailabilityVisible ||
+    inputDataAccessVisible ||
+    outputDataAccessVisible ||
+    importantRelatedUrlsVisible;
+
+  const journalDiscussionVisible = hasContent(journal_discussion);
+
+  const openResearchVisible = hasContent(data_availability);
+
+  const journalAcknowledgementsVisible = hasContent(journal_acknowledgements);
+
+  const contactSectionVisible = contacts_link && contacts_link.length > 0;
+
+  const referencesVisible = referenceList && referenceList.length > 0;
+
   return (
     <NumberingContext.Provider value={equationNumberingContextValue}>
       <HeadingNumberingContext.Provider value={headingNumberingContextValue}>
@@ -401,47 +599,73 @@ function JournalPdfPreview() {
           <Section breakBeforePage id='introduction' title='Introduction'>
             <ContentView value={introduction} />
           </Section>
-          <Section id='context_background' title='Context/Background'>
-            <Section id='historical_perspective' title='Historical Perspective'>
-              <ContentView value={historical_perspective} />
+          {contextBackgroundVisible && (
+            <Section id='context_background' title='Context/Background'>
+              {historicalPerspectiveVisible && (
+                <Section
+                  id='historical_perspective'
+                  title='Historical Perspective'
+                >
+                  <ContentView value={historical_perspective} />
+                </Section>
+              )}
+              {additionalInformationVisible && (
+                <Section
+                  id='additional_information'
+                  title='Additional Information'
+                >
+                  <ContentView value={additional_information} />
+                </Section>
+              )}
             </Section>
-            <Section id='additional_information' title='Additional Information'>
-              <ContentView value={additional_information} />
+          )}
+          {algorithmDescriptionVisible && (
+            <Section id='algorithm_description' title='Algorithm Description'>
+              {scientificTheoryVisible && (
+                <Section id='scientific_theory' title='Scientific Theory'>
+                  <ContentView value={scientific_theory} />
+                  {scientificTheoryAssumptionsVisible && (
+                    <Section
+                      id='scientific_theory_assumptions'
+                      title='Scientific Theory Assumptions'
+                    >
+                      <ContentView value={scientific_theory_assumptions} />
+                    </Section>
+                  )}
+                </Section>
+              )}
+              {mathematicalTheoryVisible && (
+                <Section id='mathematical_theory' title='Mathematical Theory'>
+                  <ContentView value={mathematical_theory} />
+                  {mathematicalTheoryAssumptionsVisible && (
+                    <Section
+                      id='mathematical_theory_assumptions'
+                      title='Mathematical Theory Assumptions'
+                    >
+                      <ContentView value={mathematical_theory_assumptions} />
+                    </Section>
+                  )}
+                </Section>
+              )}
+              {algorithmInputVariablesVisible && (
+                <Section
+                  id='algorithm_input_variables'
+                  title='Algorithm Input Variables'
+                >
+                  <ContentView value={algorithm_input_variables} />
+                </Section>
+              )}
+              {algorithmOutputVariablesVisible && (
+                <Section
+                  id='algorithm_output_variables'
+                  title='Algorithm Output Variables'
+                >
+                  <ContentView value={algorithm_output_variables} />
+                </Section>
+              )}
             </Section>
-          </Section>
-          <Section id='algorithm_description' title='Algorithm Description'>
-            <Section id='scientific_theory' title='Scientific Theory'>
-              <ContentView value={scientific_theory} />
-              <Section
-                id='scientific_theory_assumptions'
-                title='Scientific Theory Assumptions'
-              >
-                <ContentView value={scientific_theory_assumptions} />
-              </Section>
-            </Section>
-            <Section id='mathematical_theory' title='Mathematical Theory'>
-              <ContentView value={mathematical_theory} />
-              <Section
-                id='mathematical_theory_assumptions'
-                title='Mathematical Theory Assumptions'
-              >
-                <ContentView value={mathematical_theory_assumptions} />
-              </Section>
-            </Section>
-            <Section
-              id='algorithm_input_variables'
-              title='Algorithm Input Variables'
-            >
-              <ContentView value={algorithm_input_variables} />
-            </Section>
-            <Section
-              id='algorithm_output_variables'
-              title='Algorithm Output Variables'
-            >
-              <ContentView value={algorithm_output_variables} />
-            </Section>
-          </Section>
-          {hasContent(algorithm_usage_constraints) && (
+          )}
+          {algorithmUsageConstraintsVisible && (
             <Section
               id='algorithm_usage_constraints'
               title='Algorithm Usage Constraints'
@@ -449,58 +673,106 @@ function JournalPdfPreview() {
               <ContentView value={algorithm_usage_constraints} />
             </Section>
           )}
-          <Section id='performance_assessment' title='Performance Assessment'>
+          {performanceAssessmentVisible && (
+            <Section id='performance_assessment' title='Performance Assessment'>
+              {validationMethodsVisible && (
+                <Section
+                  id='performance_assessment_validation_methods'
+                  title='Validation Methods'
+                >
+                  <ContentView
+                    value={performance_assessment_validation_methods}
+                  />
+                </Section>
+              )}
+              {uncertainitiesVisible && (
+                <Section
+                  id='performance_assessment_validation_uncertainties'
+                  title='Uncertainties'
+                >
+                  <ContentView
+                    value={performance_assessment_validation_uncertainties}
+                  />
+                </Section>
+              )}
+              {validationErrorsVisible && (
+                <Section
+                  id='performance_assessment_validation_errors'
+                  title='Validation Errors'
+                >
+                  <ContentView
+                    value={performance_assessment_validation_errors}
+                  />
+                </Section>
+              )}
+            </Section>
+          )}
+          {algorithmImplementationVisible && (
             <Section
-              id='performance_assessment_validation_methods'
-              title='Validation Methods'
+              id='algorithm_implementation'
+              title='Algorithm Implementation'
             >
-              <ContentView value={performance_assessment_validation_methods} />
+              {algorithmAvailabilityVisible && (
+                <Section
+                  id='algorithm_availability'
+                  title='Algorithm Availability'
+                >
+                  <ImplementationDataList list={algorithm_implementations} />
+                </Section>
+              )}
+              {inputDataAccessVisible && (
+                <Section id='data_access_input_data' title='Input Data Access'>
+                  <ImplementationDataList list={data_access_input_data} />
+                </Section>
+              )}
+              {outputDataAccessVisible && (
+                <Section
+                  id='data_access_output_data'
+                  title='Output Data Access'
+                >
+                  <ImplementationDataList list={data_access_output_data} />
+                </Section>
+              )}
+              {importantRelatedUrlsVisible && (
+                <Section
+                  id='data_access_related_urls'
+                  title='Important Related URLs'
+                >
+                  <ImplementationDataList list={data_access_related_urls} />
+                </Section>
+              )}
             </Section>
-            <Section
-              id='performance_assessment_validation_uncertainties'
-              title='Uncertainties'
-            >
-              <ContentView
-                value={performance_assessment_validation_uncertainties}
-              />
+          )}
+          {journalDiscussionVisible && (
+            <Section id='journal_discussion' title='Significance Discussion'>
+              <ContentView value={journal_discussion} />
             </Section>
-            <Section
-              id='performance_assessment_validation_errors'
-              title='Validation Errors'
-            >
-              <ContentView value={performance_assessment_validation_errors} />
+          )}
+          {openResearchVisible && (
+            <Section id='data_availability' title='Open Research'>
+              <ContentView value={data_availability} />
             </Section>
-          </Section>
-          <Section
-            id='algorithm_implementation'
-            title='Algorithm Implementation'
-          >
-            <Section id='algorithm_availability' title='Algorithm Availability'>
-              <ImplementationDataList list={algorithm_implementations} />
+          )}
+          {journalAcknowledgementsVisible && (
+            <Section id='journal_acknowledgements' title='Acknowledgements'>
+              <ContentView value={journal_acknowledgements} />
             </Section>
-            <Section id='data_access_input_data' title='Input Data Access'>
-              <ImplementationDataList list={data_access_input_data} />
+          )}
+          {contactSectionVisible && (
+            <Section id='contact_details' title='Contact Details'>
+              {contacts_link.map((contactLink) => (
+                <ContactOutput
+                  key={contactLink.contact.id}
+                  data={contactLink}
+                />
+              ))}
             </Section>
-            <Section id='data_access_output_data' title='Output Data Access'>
-              <ImplementationDataList list={data_access_output_data} />
+          )}
+          {referencesVisible && (
+            <Section id='references' title='References'>
+              <ReferencesList>{referenceList}</ReferencesList>
             </Section>
-            <Section
-              id='data_access_related_urls'
-              title='Important Related URLs'
-            >
-              <ImplementationDataList list={data_access_related_urls} />
-            </Section>
-          </Section>
-          <Section id='journal_discussion' title='Significance Discussion'>
-            <ContentView value={journal_discussion} />
-          </Section>
-          <Section id='data_availability' title='Open Research'>
-            <ContentView value={data_availability} />
-          </Section>
-          <Section id='journal_acknowledgements' title='Acknowledgements'>
-            <ContentView value={journal_acknowledgements} />
-          </Section>
-          {/* TODO: Contact Details, References */}
+          )}
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
       </HeadingNumberingContext.Provider>
