@@ -24,6 +24,7 @@ import { SectionFieldset } from '../components/common/forms/section-fieldset';
 import { FormikInputText } from '../components/common/forms/input-text';
 import { createProcessToast } from '../components/common/toasts';
 import { useUser } from '../context/user';
+import FormInfoTip from '../components/common/forms/form-info-tooltip';
 
 const OTPModal = styled(Modal)`
   max-width: 24rem;
@@ -192,7 +193,33 @@ function SignIn() {
       {!mfaEnabled && mfaCode && (
         <Backdrop>
           <OTPModal>
-            <h2>Set-up OTP</h2>
+            <h2>
+              Set-up OTP
+              <FormInfoTip
+                html={
+                  <p>
+                    A one-time password (OTP) increases the security of your APT
+                    account. To use OTP with APT, you&apos;ll need to download
+                    an application (sometimes referred to as MFA) that generates
+                    a time-sensitive code (OTP) that is entered upon login. APT
+                    doesn&apos;t endorse any particular application, but some
+                    include{' '}
+                    <a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2'>
+                      Google Authenticator
+                    </a>{' '}
+                    (Android, iOS),{' '}
+                    <a href='https://www.microsoft.com/en/security/mobile-authenticator-app'>
+                      Microsoft Authenticator
+                    </a>{' '}
+                    (Android, iOS), and{' '}
+                    <a href='https://1password.com/'>1Password</a> (Android,
+                    iOS, Mac, PC, Linux, web browser). Please follow the
+                    respective application&apos;s instructions for how to
+                    install and setup the OTP generator.
+                  </p>
+                }
+              />
+            </h2>
             <div>
               Please use the following code or QR to generate Time-based OTP
               from the Authenticator app.

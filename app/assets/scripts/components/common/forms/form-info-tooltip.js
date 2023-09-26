@@ -23,9 +23,9 @@ const TooltipTagComponent = React.forwardRef((props, ref) => (
 
 TooltipTagComponent.displayName = 'TooltipTagComponent';
 
-export default function FormInfoTip({ title }) {
+export default function FormInfoTip({ title, ...rest }) {
   return (
-    <Tip title={title} tag={TooltipTagComponent} interactive>
+    <Tip title={title} tag={TooltipTagComponent} interactive {...rest}>
       More information
     </Tip>
   );
