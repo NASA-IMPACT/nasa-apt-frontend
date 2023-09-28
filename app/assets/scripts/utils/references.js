@@ -126,6 +126,7 @@ function formatAuthors(authors, type = 'reference') {
 }
 
 export function sortReferences(refA, refB) {
+  if (!refA || !refB) return 0;
   const hasAuthorsA = 'authors' in refA && refA.authors.length > 0;
   const hasAuthorsB = 'authors' in refB && refB.authors.length > 0;
   const hasYearA = 'year' in refA;
@@ -232,6 +233,7 @@ export const formatReference = (reference, type = 'jsx') => {
 };
 
 export function formatCitation(reference) {
+  if (!reference) return '';
   const { authors, year, title } = reference;
   const authorsStr = formatAuthors(authors, 'citation') || title;
   const yearStr = year || 'n.d.';
