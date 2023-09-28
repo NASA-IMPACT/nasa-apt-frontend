@@ -560,20 +560,6 @@ function JournalPdfPreview() {
               ))}
             </ul>
           </Section>
-          <div>
-            <DataList>
-              <dt>Version</dt>
-              <dd>{version}</dd>
-            </DataList>
-            <DataList>
-              <dt>Release Date</dt>
-              <dd>TBD</dd>
-            </DataList>
-            <DataList>
-              <dt>DOI</dt>
-              <dd>TBD</dd>
-            </DataList>
-          </div>
           <Section id='abstract' title='Abstract' skipNumbering>
             <ContentView value={abstract} />
           </Section>
