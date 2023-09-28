@@ -118,6 +118,10 @@ const AuthorsSectionHeader = styled.div`
   text-align: center;
 `;
 
+const KeyPoint = styled.li`
+  list-style: disc;
+`;
+
 const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
@@ -579,8 +583,8 @@ function JournalPdfPreview() {
           </AuthorsSection>
           <Section id='key_points' title='Key Points:' skipNumbering>
             <ul>
-              {threeKeyPoints?.map((keyPoint) => (
-                <li key={keyPoint}>{keyPoint}</li>
+              {threeKeyPoints.map((keyPoint) => (
+                <KeyPoint key={keyPoint}>{keyPoint}</KeyPoint>
               ))}
             </ul>
           </Section>
