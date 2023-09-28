@@ -105,6 +105,7 @@ const PreviewContainer = styled.div`
 `;
 
 const DocumentHeading = styled.h1`
+  text-align: center;
   margin: 0;
 `;
 
