@@ -588,7 +588,7 @@ function JournalPdfPreview() {
               ))}
             </ul>
           </Section>
-          <Section id='abstract' title='Abstract' skipNumbering>
+          <Section id='abstract' title='Abstract' skipNumbering breakBeforePage>
             <ContentView value={abstract} />
           </Section>
           <Section
