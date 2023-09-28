@@ -571,7 +571,7 @@ function JournalPdfPreview() {
             <ContentView value={plain_summary} />
             {keywords && keywords.length > 0 && (
               <DataList>
-                <dt>Keywords:</dt>
+                <dt>Keywords</dt>
                 <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
               </DataList>
             )}
