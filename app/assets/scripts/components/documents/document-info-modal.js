@@ -41,7 +41,7 @@ export default function DocumentInfoModal(props) {
 
   useEffect(() => {
     if (revealed) {
-      ReactGA.modalview('document-info');
+      ReactGA.send({ hitType: 'modalview', page: '/modal/document-info' });
     }
   }, [revealed]);
 

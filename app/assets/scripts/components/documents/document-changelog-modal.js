@@ -121,7 +121,7 @@ export default function DocumentChangelogModal(props) {
 
   useEffect(() => {
     if (revealed) {
-      ReactGA.modalview('document-changelog');
+      ReactGA.send({ hitType: 'modalview', page: '/modal/document-changelog' });
     }
   }, [revealed]);
 

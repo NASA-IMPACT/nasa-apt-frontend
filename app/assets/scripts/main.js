@@ -84,9 +84,17 @@ const { gaTrackingCode } = config;
 // Google analytics
 if (gaTrackingCode) {
   ReactGA.initialize(gaTrackingCode);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  // ReactGA.initialize(gaTrackingCode, {
+  //   gaOptions: {
+  //     debug_mode: true,
+  //   },
+  //   gtagOptions: {
+  //     debug_mode: true,
+  //   },
+  // });
+  ReactGA.send({ hitType: 'pageview', page: window.location.pathname + window.location.search})
   history.listen((location) =>
-    ReactGA.pageview(location.pathname + location.search)
+    ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search})
   );
 }
 
