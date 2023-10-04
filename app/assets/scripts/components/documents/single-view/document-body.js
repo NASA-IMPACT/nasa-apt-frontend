@@ -28,6 +28,7 @@ import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
 import { isDefined, isTruthyString } from '../../../utils/common';
+import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -1418,7 +1419,6 @@ export function getAtbdContentSections(pdfMode = false) {
 export default function DocumentBody(props) {
   const { atbd, disableScrollManagement } = props;
   const document = atbd.document;
-
   // Scroll to an existing hash when the component mounts.
   useScrollToHashOnMount(disableScrollManagement);
   // Setup the listener to change active links.
@@ -1456,7 +1456,7 @@ export default function DocumentBody(props) {
   );
 
   return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
-    document,
+    document: formatDocumentTableCaptions(document),
     referencesUseIndex,
     referenceList,
     atbd,
