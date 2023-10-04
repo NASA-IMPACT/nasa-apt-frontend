@@ -10,7 +10,7 @@ import { IMAGE_BLOCK, TABLE_BLOCK } from '../constants';
 const CaptionElement = styled.figcaption`
   font-size: 0.875rem;
   line-height: 1.25rem;
-  text-align: center;
+  text-align: left;
   position: relative;
 `;
 
