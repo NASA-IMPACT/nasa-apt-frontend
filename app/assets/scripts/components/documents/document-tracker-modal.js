@@ -140,7 +140,10 @@ export default function DocumentTrackerModal(props) {
 
   useEffect(() => {
     if (revealed) {
-      ReactGA.send({ hitType: 'modalview', page: '/modal/document-progress-tracker' });
+      ReactGA.send({
+        hitType: 'modalview',
+        page: '/modal/document-progress-tracker'
+      });
     }
   }, [revealed]);
 
