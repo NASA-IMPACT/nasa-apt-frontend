@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import T from 'prop-types';
 import qs from 'qs';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import styled, { css } from 'styled-components';
 import { useLocation } from 'react-router';
 import { Modal, ModalFooter } from '@devseed-ui/modal';

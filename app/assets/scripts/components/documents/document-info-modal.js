@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
 
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Modal as BaseModal } from '@devseed-ui/modal';
 import { glsp } from '@devseed-ui/theme-provider';
 

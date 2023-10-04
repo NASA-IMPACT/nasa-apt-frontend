@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { glsp, rgba, themeVal } from '@devseed-ui/theme-provider';
 import { Heading } from '@devseed-ui/typography';
 import { Button } from '@devseed-ui/button';

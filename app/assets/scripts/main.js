@@ -13,7 +13,7 @@ import {
   useLocation,
   useHistory
 } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import qs from 'qs';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';

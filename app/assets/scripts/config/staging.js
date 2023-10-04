@@ -1,6 +1,6 @@
 // module exports is required to be able to load from gulpfile.
 module.exports = {
-  gaTrackingCode: 'UA-163103126-1',
+  gaTrackingCode: 'G-K4DQR9HTZH',
   apiUrl: 'https://af7f32q2kh.execute-api.us-east-1.amazonaws.com/v2',
   auth: {
     // DOCS: https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource
