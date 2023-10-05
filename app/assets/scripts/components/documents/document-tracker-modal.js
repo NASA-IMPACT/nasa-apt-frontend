@@ -331,7 +331,6 @@ export default function DocumentTrackerModal(props) {
       content={
         <ModalInnerContent>
           {isWelcome && infoText}
-
           <Accordion initialState={initialAccordionState}>
             {({ checkExpanded, setExpanded }) => (
               <Tracker>
@@ -423,6 +422,15 @@ export default function DocumentTrackerModal(props) {
           >
             {isWelcome ? 'Understood' : 'Dismiss'}
           </Button>
+          <a
+            href='https://drive.google.com/file/d/1CmWvfC7JeUO-SGCvf7iOR6H4cMvS3vZX/view'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Button variation='primary-raised-light' useIcon='expand-top-right'>
+              Learn More About Document Stages
+            </Button>
+          </a>
         </ModalFooter>
       )}
     />
