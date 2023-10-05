@@ -106,14 +106,21 @@ const PreviewContainer = styled.div`
 `;
 
 const DocumentHeading = styled.h1`
+  text-align: center;
   margin: 0;
 `;
 
 const AuthorsSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2rem;
+`;
+const AuthorsSectionHeader = styled.div`
+  text-align: center;
+`;
+
+const KeyPoint = styled.li`
+  list-style: disc;
 `;
 
 const SectionContainer = styled.section`
@@ -405,34 +412,56 @@ function JournalPdfPreview() {
     .slice(0, 3);
 
   const contacts = useMemo(() => {
-    return contacts_link?.reduce(
-      (acc, contact_link, i) => {
-        const { contact, affiliations } = contact_link;
+    // Get list of unique affiliations
+    let affiliations = new Set();
+    contacts_link?.forEach(({ affiliations: contactAffiliations }) => {
+      contactAffiliations?.forEach((affiliation) => {
+        affiliations.add(affiliation);
+      });
+    });
 
-        const hasAffiliation = affiliations && affiliations.length > 0;
-        if (hasAffiliation) {
-          acc.affiliations_list.push(affiliations);
-        }
+    // create contacts list component with superscripts
+    let contacts = [];
+    contacts_link?.forEach(
+      ({ contact, affiliations: contactAffiliations }, i) => {
+        const hasAffiliation =
+          contactAffiliations && contactAffiliations.length > 0;
+
+        let contactEmail = contact.mechanisms.find(
+          (mechanism) => mechanism.mechanism_type === 'Email'
+        )?.mechanism_value;
 
         const item = (
           <span key={contact.id}>
-            <strong>{getContactName(contact, { full: true })}</strong>
-            {hasAffiliation && <sup>{acc.affiliations_list.length}</sup>}
-            {i < acc.maxIndex && <span>, </span>}
-            {i === acc.maxIndex - 1 && <span>and </span>}
+            <strong>
+              {getContactName(contact, { full: true })}
+              {contactEmail && ` (${contactEmail})`}
+            </strong>
+            {hasAffiliation &&
+              contactAffiliations.map((affiliation, j) => {
+                return (
+                  <>
+                    <sup>
+                      {Array.from(affiliations).indexOf(affiliation) + 1}
+                    </sup>
+                    <sup>
+                      {j < contactAffiliations.length - 1 && <span>, </span>}
+                    </sup>
+                  </>
+                );
+              })}
+            {i < contacts_link.length - 1 && <span>, </span>}
+            {i === contacts_link.length - 2 && <span>and </span>}
           </span>
         );
-
-        acc.items.push(item);
-
-        return acc;
-      },
-      {
-        affiliations_list: [],
-        items: [],
-        maxIndex: (contacts_link.length ?? 0) - 1
+        contacts.push(item);
       }
     );
+    return {
+      items: contacts,
+      affiliations_list: Array.from(affiliations),
+      maxIndex: (contacts_link?.length ?? 0) - 1
+    };
   }, [contacts_link]);
 
   const referencesUseIndex = useMemo(
@@ -543,38 +572,24 @@ function JournalPdfPreview() {
         <PreviewContainer ref={contentRef}>
           <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
           <AuthorsSection>
-            <div>{contacts?.items}</div>
+            <AuthorsSectionHeader>{contacts?.items}</AuthorsSectionHeader>
             <div>
-              {contacts?.affiliations_list.map((affiliations, i) => (
+              {contacts?.affiliations_list.map((affiliation, i) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <div key={i}>
-                  <sup>{i + 1}</sup> {affiliations.join(', ')}
+                  <sup>{i + 1}</sup> {affiliation}
                 </div>
               ))}
             </div>
           </AuthorsSection>
           <Section id='key_points' title='Key Points:' skipNumbering>
             <ul>
-              {threeKeyPoints?.map((keyPoint) => (
-                <li key={keyPoint}>{keyPoint}</li>
+              {threeKeyPoints.map((keyPoint) => (
+                <KeyPoint key={keyPoint}>{keyPoint}</KeyPoint>
               ))}
             </ul>
           </Section>
-          <div>
-            <DataList>
-              <dt>Version</dt>
-              <dd>{version}</dd>
-            </DataList>
-            <DataList>
-              <dt>Release Date</dt>
-              <dd>TBD</dd>
-            </DataList>
-            <DataList>
-              <dt>DOI</dt>
-              <dd>TBD</dd>
-            </DataList>
-          </div>
-          <Section id='abstract' title='Abstract' skipNumbering>
+          <Section id='abstract' title='Abstract' skipNumbering breakBeforePage>
             <ContentView value={abstract} />
           </Section>
           <Section
@@ -585,7 +600,7 @@ function JournalPdfPreview() {
             <ContentView value={plain_summary} />
             {keywords && keywords.length > 0 && (
               <DataList>
-                <dt>Keywords:</dt>
+                <dt>Keywords</dt>
                 <dd>{keywords.map(({ label }) => label).join(', ')}</dd>
               </DataList>
             )}
