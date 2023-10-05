@@ -15,5 +15,5 @@ algorithm_output_variables:
 scientific_theory: Provide a description of the scientific principles used in product retrieval including the physics and associated geophysical phenomena observed.
 scientific_theory_assumptions: What are the assumptions or limitations inherent to the algorithm being described?
 
-mathematical_theory: Provide a description of the mathematical theory essential to algorithm development.
-mathematical_theory_assumptions: Provide a description of any mathematical assumptions, simplifications and approximations made when deriving the algorithm.
+mathematical_theory: Provide a description of the mathematical theory essential to algorithm development. If this is described in the scientific theory section, summarize it in this section in a couple of sentences.
+mathematical_theory_assumptions: Provide a description of any mathematical assumptions, simplifications and approximations made when deriving the algorithm. If this is described in the scientific theory section, summarize it in this section in a couple of sentences. If you have retrieval uncertainties, please add a new header within this section and describe them.
