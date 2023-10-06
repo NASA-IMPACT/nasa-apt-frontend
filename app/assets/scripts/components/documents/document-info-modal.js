@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import T from 'prop-types';
 import styled from 'styled-components';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { FormTextarea } from '@devseed-ui/form';
 import { Modal } from '@devseed-ui/modal';
 import { Button } from '@devseed-ui/button';
@@ -41,7 +41,7 @@ export default function DocumentInfoModal(props) {
 
   useEffect(() => {
     if (revealed) {
-      ReactGA.modalview('document-info');
+      ReactGA.send({ hitType: 'modalview', page: '/modal/document-info' });
     }
   }, [revealed]);
 

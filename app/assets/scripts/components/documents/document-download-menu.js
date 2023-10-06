@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Auth } from 'aws-amplify';
 import { saveAs } from 'file-saver';
 
