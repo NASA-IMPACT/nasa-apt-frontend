@@ -122,14 +122,20 @@ export const LinkPlugin = {
   onUse: onLinkUse
 };
 
+/**
+ * Set the http protocol if it is missing.
+ * @param {String} link The link to check.
+ * @returns {String} The link with http protocol.
+ */
 function setHttp(link) {
   if (!link) {
     return link;
   }
 
   let newLink = link;
-  if (link.search(/^http[s]?:\/\//) == -1) {
-    newLink = `http://${link}`;
+
+  if (!link.startsWith('http://') && !link.startsWith('https://')) {
+    newLink = `https://${link}`;
   }
 
   return newLink;
