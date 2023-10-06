@@ -122,6 +122,19 @@ export const LinkPlugin = {
   onUse: onLinkUse
 };
 
+function setHttp(link) {
+  if (!link) {
+    return link;
+  }
+
+  let newLink = link;
+  if (link.search(/^http[s]?:\/\//) == -1) {
+    newLink = `http://${link}`;
+  }
+
+  return newLink;
+}
+
 export const onLinkEditorAction = (editor, action, payload) => {
   switch (action) {
     case 'cancel':
@@ -133,7 +146,7 @@ export const onLinkEditorAction = (editor, action, payload) => {
         // Reselect value.
         Transforms.select(editor, editor.linkEditor.getData().selection);
         // Upsert the link.
-        upsertLinkAtSelection(editor, payload.value, { wrap: true });
+        upsertLinkAtSelection(editor, setHttp(payload.value), { wrap: true });
         // Refocus the editor.
         ReactEditor.focus(editor);
         // Reset the link editor to hide it.
