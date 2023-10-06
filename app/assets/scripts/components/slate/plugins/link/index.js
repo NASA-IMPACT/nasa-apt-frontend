@@ -122,6 +122,25 @@ export const LinkPlugin = {
   onUse: onLinkUse
 };
 
+/**
+ * Set the http protocol if it is missing.
+ * @param {String} link The link to check.
+ * @returns {String} The link with http protocol.
+ */
+function setHttp(link) {
+  if (!link) {
+    return link;
+  }
+
+  let newLink = link;
+
+  if (!link.startsWith('http://') && !link.startsWith('https://')) {
+    newLink = `https://${link}`;
+  }
+
+  return newLink;
+}
+
 export const onLinkEditorAction = (editor, action, payload) => {
   switch (action) {
     case 'cancel':
@@ -133,7 +152,7 @@ export const onLinkEditorAction = (editor, action, payload) => {
         // Reselect value.
         Transforms.select(editor, editor.linkEditor.getData().selection);
         // Upsert the link.
-        upsertLinkAtSelection(editor, payload.value, { wrap: true });
+        upsertLinkAtSelection(editor, setHttp(payload.value), { wrap: true });
         // Refocus the editor.
         ReactEditor.focus(editor);
         // Reset the link editor to hide it.
