@@ -9,6 +9,7 @@ import { createProcessToast } from '../common/toasts';
 
 import { apiUrl } from '../../config';
 import { useAuthToken } from '../../context/user';
+import { axiosAPI } from '../../utils/axios';
 
 function DropMenuItemOutboundLink(props) {
   const { eventLabel, menuItem, active, ...rest } = props;
@@ -40,34 +41,45 @@ export default function DocumentDownloadMenu(props) {
   // Temporarily disable journal PDF downloading https://github.com/nasa-impact/nasa-apt/issues/744
   // const ability = useContextualAbility();
   //const canDownloadJournalPdf = ability.can('download-journal-pdf', atbd);
-  const canDownloadJournalPdf = false;
+  const [canDownloadJournalPdf, setCanDownloadJournalPdf] =
+    React.useState(false);
 
-  const handlePdfDownloadClick = React.useCallback(() => {
-    const processToast = createProcessToast('Downloading PDF, please wait...');
+  React.useEffect(() => {
+    async function fetchBootstrap() {
+      try {
+        const headers = {};
+        const response = await axiosAPI({
+          url: 'bootstrap',
+          headers
+        });
 
-    if (atbd.documentType === 'PDF' && !atbd.pdf) {
-      processToast.error("This ATBD doesn't have the attachment");
-      return;
+        if (response?.data?.feature_flags?.JOURNAL_PDF_EXPORT_ENABLED) {
+          setCanDownloadJournalPdf(true);
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        setCanDownloadJournalPdf(false);
+      }
     }
 
-    const { id, version, alias } = atbd;
-    const pdfUrl =
-      atbd.documentType === 'PDF'
-        ? atbd.pdf.file_path
-        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    if (atbd.document_type === 'HTML') {
+      fetchBootstrap();
+    }
+  }, [atbd]);
 
-    const pdfFileName = `${alias}-v${version}.pdf`;
-    const maxRetries = 50;
-    const waitBetweenTries = 5000;
-    const initialWait = 10000;
-    let retryCount = 0;
-
-    async function fetchPdf(url) {
+  const fetchPdf = React.useCallback(
+    async (url, fileName, processToast, retryCount = 0) => {
       if (retryCount > 0) {
         processToast.update(
           'Generating the PDF. This may take up to 5 minutes.'
         );
       }
+
+      const retryUrl =
+        retryCount === 0
+          ? `${url}${url.includes('?') ? '&' : '?'}retry=true`
+          : url;
 
       try {
         let user;
@@ -104,18 +116,22 @@ export default function DocumentDownloadMenu(props) {
           headers
         });
 
+        const maxRetries = 50;
+        const waitBetweenTries = 5000;
+        const initialWait = 10000;
+        let retryCount = 0;
+
         // If we get a 404 on retry, it means the PDF is not ready yet.
         // Keep retrying until we reach the max retry count.
         if (
           response.status === 404 &&
           response.headers.get('content-type') === 'application/json' &&
-          url.includes('?retry=true')
+          url.includes('retry=true')
         ) {
           if (retryCount < maxRetries) {
             setTimeout(() => {
-              fetchPdf(`${pdfUrl}?retry=true`);
+              fetchPdf(retryUrl, fileName, processToast, retryCount + 1);
             }, waitBetweenTries);
-            ++retryCount;
           } else {
             processToast.error(
               'Failed to download PDF. Please retry after several minutes. If this error persists, please contact the APT team.'
@@ -137,9 +153,8 @@ export default function DocumentDownloadMenu(props) {
           }
 
           setTimeout(() => {
-            fetchPdf(`${pdfUrl}?retry=true`);
+            fetchPdf(retryUrl, fileName, processToast, retryCount + 1);
           }, initialWait);
-          ++retryCount;
 
           return;
         }
@@ -152,7 +167,7 @@ export default function DocumentDownloadMenu(props) {
         ) {
           const result = await response.json();
 
-          saveAs(result.pdf_url, pdfFileName);
+          saveAs(result.pdf_url, fileName);
           processToast.success(
             'PDF downloaded successfully! If the PDF did not open automatically, your browser may have blocked the download. Please make sure that popups are allowed on this site.'
           );
@@ -163,12 +178,41 @@ export default function DocumentDownloadMenu(props) {
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
-        processToast.error('Failed to download PDF!');
+        processToast.error('Failed to download the PDF!');
       }
+    },
+    [token, atbd]
+  );
+
+  const handlePdfDownloadClick = React.useCallback(() => {
+    const processToast = createProcessToast('Downloading PDF, please wait...');
+
+    if (atbd.document_type === 'PDF' && !atbd.pdf) {
+      processToast.error("This ATBD doesn't have the attachment");
+      return;
     }
 
-    fetchPdf(pdfUrl);
-  }, [token, atbd]);
+    const { id, version, alias } = atbd;
+    const pdfUrl =
+      atbd.document_type === 'PDF'
+        ? atbd.pdf.file_path
+        : `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+
+    const pdfFileName = `${alias}-v${version}.pdf`;
+    fetchPdf(pdfUrl, pdfFileName, processToast);
+  }, [atbd, fetchPdf]);
+
+  const handleJournalPdfDownloadClick = React.useCallback(() => {
+    const processToast = createProcessToast(
+      'Downloading Journal PDF, please wait...'
+    );
+
+    const { id, version, alias } = atbd;
+    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf?journal=true`;
+
+    const pdfFileName = `Journal-${alias}-v${version}.pdf`;
+    fetchPdf(pdfUrl, pdfFileName, processToast);
+  }, [atbd, fetchPdf]);
 
   const dropProps = useMemo(() => {
     const triggerProps = {
@@ -184,21 +228,24 @@ export default function DocumentDownloadMenu(props) {
     // Therefore if the minor version is a 4, we know that there are also pdf
     // for minor 3, 2, 1 and 0. The urls are constructed dynamically.
     let pdfLinks = [];
-    const { id, version } = atbd;
-    const pdfUrl = `${apiUrl}/atbds/${id}/versions/${version}/pdf`;
+    const { version } = atbd;
 
     if (canDownloadJournalPdf) {
       pdfLinks.push({
-        id: `${version}-journal`,
+        id: `${version}-journal-pdf`,
         label: `${version} Journal PDF`,
         title: `Download journal for version ${version}`,
-        href: `${pdfUrl}?journal=true${token ? `&token=${token}` : ''}`,
         /* eslint-disable-next-line react/display-name */
-        render: (props) => (
-          <DropMenuItemOutboundLink
-            {...props}
-            eventLabel={`Journal PDF ${id}/${version}`}
-          />
+        render: (p) => (
+          <DropMenuItemEnhanced
+            data-dropdown='click.close'
+            key={p.id}
+            eventLabel={`Journal PDF ${atbd.id}/${version}`}
+            onClick={handleJournalPdfDownloadClick}
+            title={p.menuItem.title}
+          >
+            {p.menuItem.label}
+          </DropMenuItemEnhanced>
         )
       });
     }
@@ -207,7 +254,6 @@ export default function DocumentDownloadMenu(props) {
       id: `${version}-document`,
       label: `${version} Document PDF`,
       title: `Download document for version ${version}`,
-      href: `${pdfUrl}${token ? `?token=${token}` : ''}`,
       /* eslint-disable-next-line react/display-name */
       render: (p) => {
         return (
@@ -234,10 +280,10 @@ export default function DocumentDownloadMenu(props) {
   }, [
     hideText,
     variation,
-    token,
     atbd,
     canDownloadJournalPdf,
-    handlePdfDownloadClick
+    handlePdfDownloadClick,
+    handleJournalPdfDownloadClick
   ]);
 
   return (

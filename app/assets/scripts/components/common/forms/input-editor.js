@@ -5,11 +5,13 @@ import { FormHelperMessage } from '@devseed-ui/form';
 
 import FormGroupStructure from './form-group-structure';
 import { RichTextEditor, InlineRichTextEditor } from '../../slate';
+import { IMAGE_BLOCK } from '../../slate/plugins/constants';
 
 function validateImageBlock(value) {
-  const imageBlocks = value?.children?.filter(
-    (slateElement) => slateElement.type === 'image-block'
-  );
+  const imageBlocks =
+    value?.children?.filter(
+      (slateElement) => slateElement.type === IMAGE_BLOCK
+    ) ?? [];
 
   if (imageBlocks.length > 0) {
     const captions = imageBlocks.map(

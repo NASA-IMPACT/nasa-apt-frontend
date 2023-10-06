@@ -28,6 +28,7 @@ import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
 import { isDefined, isTruthyString } from '../../../utils/common';
+import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -1284,6 +1285,68 @@ const pdfAtbdContentSections = [
     }
   },
   {
+    label: 'Reviewer Information',
+    id: 'reviewer_info',
+    shouldRender: ({ atbd }) => {
+      if (!atbd || !atbd.reviewer_info) {
+        return false;
+      }
+
+      const {
+        reviewer_info: { first_name, last_name }
+      } = atbd;
+
+      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
+        return false;
+      }
+
+      return true;
+    },
+    render: ({ element, atbd, printMode }) => {
+      if (!atbd || !atbd.reviewer_info) {
+        return null;
+      }
+
+      const {
+        reviewer_info: { first_name, last_name, email, affiliations }
+      } = atbd;
+
+      let fullName;
+      if (isTruthyString(first_name) || isTruthyString(last_name)) {
+        fullName = [first_name, last_name].filter(isDefined).join(' ');
+      }
+
+      if (!isTruthyString(fullName) && !isTruthyString(email)) {
+        return null;
+      }
+
+      return (
+        <AtbdSection
+          key={element.id}
+          id={element.id}
+          title={element.label}
+          atbd={atbd}
+          printMode={printMode}
+          className='pdf-preview-hidden'
+        >
+          <AtbdSubSection>
+            <h3>{fullName}</h3>
+            <DetailsList type='horizontal'>
+              <dt>Email</dt>
+              <dd>{email}</dd>
+              <dt>Affiliations</dt>
+              {affiliations.length ? (
+                <dd>{renderMultipleStringValues(affiliations)}</dd>
+              ) : (
+                <dd>No affiliations for the reviewer</dd>
+              )}
+            </DetailsList>
+          </AtbdSubSection>
+        </AtbdSection>
+      );
+    }
+  },
+  {
     label: 'References',
     id: 'references',
     render: ({ element, referenceList, atbd, printMode }) => {
@@ -1356,7 +1419,6 @@ export function getAtbdContentSections(pdfMode = false) {
 export default function DocumentBody(props) {
   const { atbd, disableScrollManagement } = props;
   const document = atbd.document;
-
   // Scroll to an existing hash when the component mounts.
   useScrollToHashOnMount(disableScrollManagement);
   // Setup the listener to change active links.
@@ -1394,7 +1456,7 @@ export default function DocumentBody(props) {
   );
 
   return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
-    document,
+    document: formatDocumentTableCaptions(document),
     referencesUseIndex,
     referenceList,
     atbd,

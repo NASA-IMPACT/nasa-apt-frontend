@@ -14,7 +14,7 @@ import {
 } from '@udecode/slate-plugins';
 
 import { modKey } from '../common/utils';
-import { TABLE_BLOCK } from '../table';
+import { TABLE_BLOCK } from '../constants';
 
 const Ul = styled.ul`
   list-style: initial;
@@ -153,10 +153,23 @@ const VUl = styled.ul`
 `;
 
 const VOl = styled.ol`
-  padding-left: ${glsp(1)}!important;
+  counter-reset: item;
+  margin: 0;
+  padding: 0;
 
   > li {
-    padding-left: ${glsp(1 / 2)};
+    display: table;
+    counter-increment: item;
+
+    &::before {
+      content: counters(item, '.') '. ';
+      display: table-cell;
+      padding-right: ${glsp(1 / 2)};
+    }
+  }
+
+  li ol > li:before {
+    content: counters(item, '.') ' ';
   }
 `;
 

@@ -13,10 +13,16 @@ import { TABLE } from './plugins/table';
  * @returns string
  */
 const serializeToString = (node) => {
-  if (!node) return '';
+  if (!node) {
+    return '';
+  }
 
   if (Text.isText(node)) {
     return node.text.trim();
+  }
+
+  if (!node.children) {
+    return '';
   }
 
   const children = node.children.map((n) => serializeToString(n)).join('');

@@ -210,6 +210,116 @@ export default function DocumentTrackerModal(props) {
     [atbd]
   );
 
+  const pdfMode = atbd?.document_type === 'PDF';
+
+  const infoText = pdfMode ? (
+    <Prose>
+      <p>
+        The form on this page is divided into several steps and contains all the
+        fields needed to create a document. You can move freely between steps
+        and add content in any order. Invite other users to help with the
+        writing process using the collaborator options. Only you, APT curators,
+        and invited users will have access to this document.
+      </p>
+      <p>
+        A document goes through different stages, each with different required
+        actions. The progress tracker below offers an overview of all the
+        stages, as well as the current progress.
+      </p>
+    </Prose>
+  ) : (
+    <Prose>
+      <p>
+        The form on this page is divided into several steps and contains all the
+        fields needed to create a document. You can freely move between steps
+        and add content in any order you like. Invite other users to help with
+        the writing process using the collaborator options. Only you, the APT
+        Curators, and invited users will have access to this document.
+      </p>
+      <p>
+        A document goes through different stages, each one with different
+        actions required. The progress tracker below offers an overview of all
+        the stages as well as the current progress.
+      </p>
+    </Prose>
+  );
+
+  const draftText = pdfMode ? (
+    <p>
+      The Draft stage is where the majority of document creation work occurs.
+      The author can download an ATBD template and upload the completed document
+      as a PDF. Authors can complete different document steps in any order and
+      add metadata content to the ATBD. Once completed, the Lead Author can
+      submit the document for review.
+    </p>
+  ) : (
+    <p>
+      The Draft stage is where most of the document creation work happens.
+      Authors will be able to go through the different document steps in any
+      order they please and add content to the ATBD. Once done the Lead Author
+      will submit the document for review.
+    </p>
+  );
+
+  const closedReviewText = pdfMode ? (
+    <Prose>
+      <p>
+        During the closed review stage, the reviewers assigned to the document
+        review it and leave comments with notes. Authors can read and reply to
+        the comments. Once the reviewers complete their review, the document
+        will be transitioned to Open Review.
+      </p>
+
+      <p>
+        If the ATBD is reviewed externally, the author can email the curator to
+        alert them that the document has been reviewed outside the APT
+        interface. The curator will contact the reviewers to confirm that the
+        reviewers have reviewed and approved the ATBD. The curator will then
+        review the ATBD for completeness. If the ATBD is incomplete, the curator
+        will contact the lead author for changes. If all required elements are
+        there, the curator will close the review. The Lead Author can submit the
+        document for publication.
+      </p>
+    </Prose>
+  ) : (
+    <p>
+      During the closed review stage, the edition of the document is blocked.
+      The reviewers that the curator assigned to the document are going through
+      it and leaving comments with their notes. The authors can read and reply
+      the comments but can make no changes to the document.
+    </p>
+  );
+
+  const inReviewText = pdfMode ? (
+    <p>
+      In Open Review, reviewers and authors work together iteratively to address
+      any issues. Authors must make the necessary edits and re-upload their
+      ATBD. When all the comments are marked as resolved, the Lead Author can
+      submit the document for publication.
+    </p>
+  ) : (
+    <p>
+      With the Open Review the document is editable again and reviewers and
+      authors work together iteratively to address any issues. When all the
+      comments are marked as resolved the Lead Author can submit the document
+      for publication (curation).
+    </p>
+  );
+
+  const publishedText = pdfMode ? (
+    <p>
+      At this point, the document is published in APT and publicly available to
+      all users. An icon will be displayed if the document is also published to
+      the journal.
+    </p>
+  ) : (
+    <p>
+      At this point, the document is published in APT and publicly available to
+      all users. If the document is also published to the journal, an icon is
+      displayed to convey this information.
+    </p>
+  );
+
   return (
     <Modal
       id='modal'
@@ -220,24 +330,7 @@ export default function DocumentTrackerModal(props) {
       data-cy='document-tracker-modal'
       content={
         <ModalInnerContent>
-          {isWelcome && (
-            <Prose>
-              <p>
-                The form on this page is divided into several steps and contains
-                all the fields needed to create a document. You can freely move
-                between steps and add content in any order you like. Invite
-                other users to help with the writing process using the
-                collaborator options. Only you, the APT Curators, and invited
-                users will have access to this document.
-              </p>
-              <p>
-                A document goes through different stages, each one with
-                different actions required. The progress tracker below offers an
-                overview of all the stages as well as the current progress.
-              </p>
-            </Prose>
-          )}
-
+          {isWelcome && infoText}
           <Accordion initialState={initialAccordionState}>
             {({ checkExpanded, setExpanded }) => (
               <Tracker>
@@ -250,15 +343,7 @@ export default function DocumentTrackerModal(props) {
                     title={`${getDocumentStatusLabel(DRAFT)}${
                       isDraft(atbd) ? `: ${percentDraft}%` : ''
                     }`}
-                    content={
-                      <p>
-                        The Draft stage is where most of the document creation
-                        work happens. Authors will be able to go through the
-                        different document steps in any order they please and
-                        add content to the ATBD. Once done the Lead Author will
-                        submit the document for review.
-                      </p>
-                    }
+                    content={draftText}
                   />
                   <SubTracker>
                     <TrackerItem
@@ -283,16 +368,7 @@ export default function DocumentTrackerModal(props) {
                         ? `: ${revCompleted}/${revTotal}`
                         : ''
                     }`}
-                    content={
-                      <p>
-                        During the closed review stage, the edition of the
-                        document is blocked. The reviewers that the curator
-                        assigned to the document are going through it and
-                        leaving comments with their notes. The authors can read
-                        and reply the comments but can make no changes to the
-                        document.
-                      </p>
-                    }
+                    content={closedReviewText}
                   />
                 </TrackerItem>
                 <TrackerItem status={checkStatusProgress(OPEN_REVIEW)}>
@@ -302,15 +378,7 @@ export default function DocumentTrackerModal(props) {
                     setExpanded={setExpanded}
                     swatchColor={statusMapping[OPEN_REVIEW]}
                     title={getDocumentStatusLabel(OPEN_REVIEW)}
-                    content={
-                      <p>
-                        With the Open Review the document is editable again and
-                        reviewers and authors work together iteratively to
-                        address any issues. When all the comments are marked as
-                        resolved the Lead Author can submit the document for
-                        publication (curation).
-                      </p>
-                    }
+                    content={inReviewText}
                   />
                   <SubTracker>
                     <TrackerItem
@@ -336,14 +404,7 @@ export default function DocumentTrackerModal(props) {
                         ? journalStatusIcons[atbd.journal_status]
                         : undefined
                     }
-                    content={
-                      <p>
-                        At this point, the document is published in APT and
-                        publicly available to all users. If the document is also
-                        published to the journal, an icon is displayed to convey
-                        this information.
-                      </p>
-                    }
+                    content={publishedText}
                   />
                 </TrackerItem>
               </Tracker>
@@ -361,6 +422,15 @@ export default function DocumentTrackerModal(props) {
           >
             {isWelcome ? 'Understood' : 'Dismiss'}
           </Button>
+          <a
+            href='https://drive.google.com/file/d/1CmWvfC7JeUO-SGCvf7iOR6H4cMvS3vZX/view'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Button variation='primary-raised-light' useIcon='expand-top-right'>
+              Learn More About Document Stages
+            </Button>
+          </a>
         </ModalFooter>
       )}
     />

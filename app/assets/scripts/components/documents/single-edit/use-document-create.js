@@ -18,7 +18,20 @@ export function useDocumentCreate(title, alias, isPdfType) {
     const result = await createAtbd(title, alias, isPdfType);
 
     if (result.error) {
-      processToast.error(`An error occurred: ${result.error.message}`);
+      if (result.error.response) {
+        const { status } = result.error.response;
+        if (status === 400) {
+          processToast.error(
+            `An error occurred: ${result.error.response.data.detail}`
+          );
+        } else {
+          processToast.error(
+            `An error occurred: ${result.error.response.statusText}`
+          );
+        }
+      } else {
+        processToast.error(`An error occurred: ${result.error.message}`);
+      }
     } else {
       processToast.success('Document successfully created');
       // To trigger the modals to open from other pages, we use the history

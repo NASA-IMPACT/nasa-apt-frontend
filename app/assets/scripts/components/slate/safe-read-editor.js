@@ -3,9 +3,11 @@ import T from 'prop-types';
 
 import { ReadEditor } from './editor';
 import { RichContextProvider } from './plugins/common/rich-context';
-import { IMAGE, IMAGE_BLOCK } from './plugins/image';
+import { IMAGE } from './plugins/image';
 import { removeNodeFromSlateDocument } from './nodes-from-slate';
 import serializeToString from './serialize-to-string';
+import { isTruthyString } from '../../utils/common';
+import { IMAGE_BLOCK } from './plugins/constants';
 
 export default class SafeReadEditor extends React.Component {
   static getDerivedStateFromError(error) {
@@ -36,7 +38,7 @@ SafeReadEditor.propTypes = {
 };
 
 const SafeReadEditorComponent = (props) => {
-  const { value, whenEmpty, context, contextDeps, ...rest } = props;
+  const { value, whenEmpty = null, context, contextDeps, ...rest } = props;
 
   const strValue = value?.children
     ? value.children.map((n) => serializeToString(n).trim()).join('')
@@ -47,7 +49,7 @@ const SafeReadEditorComponent = (props) => {
   // value, and won't have a objectKey.
   const cleanValue = useMemo(
     () =>
-      strValue
+      isTruthyString(strValue)
         ? removeNodeFromSlateDocument(value, (node) => {
             // Only act on image blocks.
             if (node.type !== IMAGE_BLOCK) return false;
@@ -63,9 +65,10 @@ const SafeReadEditorComponent = (props) => {
     [strValue, value]
   );
 
-  if (whenEmpty && !strValue) {
+  if (!isTruthyString(strValue)) {
     return whenEmpty;
   }
+
   return (
     <RichContextProvider context={context} contextDeps={contextDeps}>
       <ReadEditor value={cleanValue} {...rest} />
