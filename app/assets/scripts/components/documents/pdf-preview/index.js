@@ -204,10 +204,19 @@ function generateTocAndHeadingNumbering(content) {
   // Starting from h2
   generateHeading(2, tocElement, content, undefined);
 
-  const captions = content.querySelectorAll('.slate-image-block figcaption');
-  Array.from(captions).forEach((caption, i) => {
+  const imageCaptions = content.querySelectorAll(
+    '.slate-image-block figcaption'
+  );
+  Array.from(imageCaptions).forEach((caption, i) => {
     const captionPrefix = document.createElement('span');
     captionPrefix.innerText = `Figure ${i + 1}: `;
+    caption.prepend(captionPrefix);
+  });
+
+  const tableCaptions = content.querySelectorAll('.slate-table + figcaption');
+  Array.from(tableCaptions).forEach((caption, i) => {
+    const captionPrefix = document.createElement('span');
+    captionPrefix.innerText = `Table ${i + 1}: `;
     caption.prepend(captionPrefix);
   });
 

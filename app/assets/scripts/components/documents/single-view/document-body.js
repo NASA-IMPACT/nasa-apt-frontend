@@ -28,7 +28,6 @@ import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
 import { isDefined, isTruthyString } from '../../../utils/common';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -1456,7 +1455,7 @@ export default function DocumentBody(props) {
   );
 
   return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
-    document: formatDocumentTableCaptions(document),
+    document,
     referencesUseIndex,
     referenceList,
     atbd,
