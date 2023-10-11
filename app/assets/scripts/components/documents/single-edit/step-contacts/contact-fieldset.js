@@ -38,7 +38,8 @@ const roleTypes = [
   'Supervision',
   'Investigation',
   'Funding acquisition',
-  'Corresponding Author'
+  'Corresponding Author',
+  'Document Reviewer'
 ];
 
 const emptyAffiliation = '';
@@ -96,6 +97,21 @@ export default function ContactsFieldset(props) {
               ))}
             </RolesGroup>
           </FormGroupStructure>
+          <FormGroupStructure
+            id={`${name}-${index}-reviewer`}
+            name={`${name}.${index}.reviewer`}
+            label='Reviewer Info'
+            description={formString(`contact_information.reviewer_info`)}
+          >
+            <FormikInputCheckable
+              type='checkbox'
+              id={`${name}-${index}-reviewer-checkbox`}
+              name={`${name}.${index}.reviewer`}
+            >
+              Mark contact as reviewer for this document
+            </FormikInputCheckable>
+          </FormGroupStructure>
+
           <FieldArray
             name={`${name}.${index}.affiliations`} // will be affFieldName
             render={({ remove, push, form, name: affFieldName }) => {
