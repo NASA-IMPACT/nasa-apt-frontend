@@ -9,6 +9,7 @@ import DocumentBody from '../single-view/document-body';
 import DocumentTitle from '../single-view/document-title';
 import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
+import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 
 const TocHeader = styled.h1`
   border-bottom: 3px solid #000;
@@ -213,13 +214,6 @@ function generateTocAndHeadingNumbering(content) {
     caption.prepend(captionPrefix);
   });
 
-  const tableCaptions = content.querySelectorAll('.slate-table + figcaption');
-  Array.from(tableCaptions).forEach((caption, i) => {
-    const captionPrefix = document.createElement('span');
-    captionPrefix.innerText = `Table ${i + 1}: `;
-    caption.prepend(captionPrefix);
-  });
-
   const equationNumbers = content.querySelectorAll(
     '.slate-equation-element .equation-number'
   );
@@ -234,6 +228,7 @@ function PdfPreview() {
   const { isAuthReady } = useUser();
   const contentRef = useRef(null);
   const [previewReady, setPreviewReady] = useState(false);
+  const [document, setDocument] = useState(null);
 
   useEffect(() => {
     isAuthReady && fetchSingleAtbd();
@@ -254,11 +249,18 @@ function PdfPreview() {
     }
 
     if (atbd.status === 'succeeded') {
-      generateTocAndHeadingNumbering(contentRef.current);
-
+      setDocument(formatDocumentTableCaptions(atbd.data.document));
       waitForImages();
     }
   }, [atbd.status]);
+
+  // This useEffect is responsible for generating the ToC and numbering
+  // after the document is transformed
+  useEffect(() => {
+    if (document && contentRef?.current) {
+      generateTocAndHeadingNumbering(contentRef.current);
+    }
+  }, [document]);
 
   return (
     <ScrollAnchorProvider disabled>
@@ -280,9 +282,17 @@ function PdfPreview() {
                 id='table-of-contents'
               />
             </div>
-            <DocumentProse className='preview-page-content'>
-              <DocumentBody atbd={atbd.data} disableScrollManagement={true} />
-            </DocumentProse>
+            {document && (
+              <DocumentProse className='preview-page-content'>
+                <DocumentBody
+                  atbd={{
+                    ...atbd.data,
+                    document
+                  }}
+                  disableScrollManagement={true}
+                />
+              </DocumentProse>
+            )}
           </div>
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
