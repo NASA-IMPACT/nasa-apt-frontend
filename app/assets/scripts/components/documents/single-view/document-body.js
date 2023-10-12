@@ -27,7 +27,6 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
-import { isDefined, isTruthyString } from '../../../utils/common';
 import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 
 const PDFPreview = styled.iframe`
@@ -1051,58 +1050,48 @@ const htmlAtbdContentSections = [
     ),
     children: ({ atbd }) => {
       const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
-        label: getContactName(contact),
-        id: `contacts_${idx + 1}`,
-        render: ({ element }) => (
-          <ContactItem
-            key={element.id}
-            id={element.id}
-            label={element.label}
-            contact={contact}
-            roles={roles}
-            affiliations={affiliations}
-          />
+      return contactsLink
+        .filter(
+          ({ roles }) =>
+            // Remove reviewers that have the role 'Document Reviewer'
+            !roles.includes('Document Reviewer')
         )
-      }));
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
     label: 'Reviewer Information',
     id: 'reviewer_info',
     shouldRender: ({ atbd }) => {
-      if (!atbd || !atbd.reviewer_info) {
-        return false;
+      if (!atbd) return false;
+
+      // Render if there are reviewers with the role 'Document Reviewer'
+      const contactsLink = atbd?.contacts_link || [];
+
+      for (const { roles } of contactsLink) {
+        if (roles.includes('Document Reviewer')) {
+          return true;
+        }
       }
-
-      const {
-        reviewer_info: { first_name, last_name }
-      } = atbd;
-
-      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
-        return false;
-      }
-
-      return true;
+      return false;
     },
-    render: ({ element, atbd, printMode }) => {
-      if (!atbd || !atbd.reviewer_info) {
+    render: ({ element, atbd, printMode, children }) => {
+      if (!atbd) {
         return null;
       }
-
-      const {
-        reviewer_info: { first_name, last_name, email, affiliations }
-      } = atbd;
-
-      let fullName;
-      if (isTruthyString(first_name) || isTruthyString(last_name)) {
-        fullName = [first_name, last_name].filter(isDefined).join(' ');
-      }
-
-      if (!isTruthyString(fullName) && !isTruthyString(email)) {
-        return null;
-      }
-
       return (
         <AtbdSection
           key={element.id}
@@ -1110,23 +1099,36 @@ const htmlAtbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
-          className='pdf-preview-hidden'
         >
-          <AtbdSubSection>
-            <h3>{fullName}</h3>
-            <DetailsList type='horizontal'>
-              <dt>Email</dt>
-              <dd>{email}</dd>
-              <dt>Affiliations</dt>
-              {affiliations.length ? (
-                <dd>{renderMultipleStringValues(affiliations)}</dd>
-              ) : (
-                <dd>No affiliations for the reviewer</dd>
-              )}
-            </DetailsList>
-          </AtbdSubSection>
+          {React.Children.count(children) ? (
+            children
+          ) : (
+            <p>There are no reviewers associated with this document</p>
+          )}
         </AtbdSection>
       );
+    },
+    children: ({ atbd }) => {
+      const contactsLink = atbd?.contacts_link || [];
+      return contactsLink
+        .filter(({ roles }) =>
+          // Include reviewers that have the role 'Document Reviewer'
+          roles.includes('Document Reviewer')
+        )
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
@@ -1268,58 +1270,48 @@ const pdfAtbdContentSections = [
     ),
     children: ({ atbd }) => {
       const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
-        label: getContactName(contact),
-        id: `contacts_${idx + 1}`,
-        render: ({ element }) => (
-          <ContactItem
-            key={element.id}
-            id={element.id}
-            label={element.label}
-            contact={contact}
-            roles={roles}
-            affiliations={affiliations}
-          />
+      return contactsLink
+        .filter(
+          ({ roles }) =>
+            // Remove reviewers that have the role 'Document Reviewer'
+            !roles.includes('Document Reviewer')
         )
-      }));
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
     label: 'Reviewer Information',
     id: 'reviewer_info',
     shouldRender: ({ atbd }) => {
-      if (!atbd || !atbd.reviewer_info) {
-        return false;
+      if (!atbd) return false;
+
+      // Render if there are reviewers with the role 'Document Reviewer'
+      const contactsLink = atbd?.contacts_link || [];
+
+      for (const { roles } of contactsLink) {
+        if (roles.includes('Document Reviewer')) {
+          return true;
+        }
       }
-
-      const {
-        reviewer_info: { first_name, last_name }
-      } = atbd;
-
-      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
-        return false;
-      }
-
-      return true;
+      return false;
     },
-    render: ({ element, atbd, printMode }) => {
-      if (!atbd || !atbd.reviewer_info) {
+    render: ({ element, atbd, printMode, children }) => {
+      if (!atbd) {
         return null;
       }
-
-      const {
-        reviewer_info: { first_name, last_name, email, affiliations }
-      } = atbd;
-
-      let fullName;
-      if (isTruthyString(first_name) || isTruthyString(last_name)) {
-        fullName = [first_name, last_name].filter(isDefined).join(' ');
-      }
-
-      if (!isTruthyString(fullName) && !isTruthyString(email)) {
-        return null;
-      }
-
       return (
         <AtbdSection
           key={element.id}
@@ -1327,21 +1319,12 @@ const pdfAtbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
-          className='pdf-preview-hidden'
         >
-          <AtbdSubSection>
-            <h3>{fullName}</h3>
-            <DetailsList type='horizontal'>
-              <dt>Email</dt>
-              <dd>{email}</dd>
-              <dt>Affiliations</dt>
-              {affiliations.length ? (
-                <dd>{renderMultipleStringValues(affiliations)}</dd>
-              ) : (
-                <dd>No affiliations for the reviewer</dd>
-              )}
-            </DetailsList>
-          </AtbdSubSection>
+          {React.Children.count(children) ? (
+            children
+          ) : (
+            <p>There are no reviewers associated with this document</p>
+          )}
         </AtbdSection>
       );
     }
