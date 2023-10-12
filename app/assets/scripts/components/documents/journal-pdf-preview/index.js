@@ -23,7 +23,7 @@ import {
   formatReference,
   sortReferences
 } from '../../../utils/references';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
 
 const ReferencesList = styled.ol`
   && {
@@ -344,7 +344,7 @@ function JournalPdfPreview() {
     journal_discussion,
     data_availability,
     journal_acknowledgements
-  } = formatDocumentTableCaptions(document);
+  } = applyNumberCaptionsToDocument(document);
 
   const ContentView = useMemo(() => {
     const safeReadContext = {

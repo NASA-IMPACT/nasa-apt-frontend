@@ -7,7 +7,7 @@ import {
 /**
  * Include table numbers and move captions before the table in the document.
  */
-export function formatDocumentTableCaptions(document) {
+export function applyNumberCaptionsToDocument(document) {
   // Section id list in the order they should appear in the document
   const documentSectionIds = [
     'key_points',
