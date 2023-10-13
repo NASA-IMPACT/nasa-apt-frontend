@@ -427,38 +427,58 @@ function JournalPdfPreview() {
         const hasAffiliation =
           contactAffiliations && contactAffiliations.length > 0;
 
-        let contactEmail = contact.mechanisms.find(
-          (mechanism) => mechanism.mechanism_type === 'Email'
-        )?.mechanism_value;
-
         const item = (
           <span key={contact.id}>
             <strong>
               {getContactName(contact, { full: true })}
-              {contactEmail && ` (${contactEmail})`}
+              {hasAffiliation &&
+                contactAffiliations.map((affiliation, j) => {
+                  return (
+                    <>
+                      <sup>
+                        {Array.from(affiliations).indexOf(affiliation) + 1}
+                      </sup>
+                      <sup>
+                        {j < contactAffiliations.length - 1 && <span>, </span>}
+                      </sup>
+                    </>
+                  );
+                })}
+              {i < contacts_link.length - 1 && <span>, </span>}
+              {i === contacts_link.length - 2 && <span>and </span>}
             </strong>
-            {hasAffiliation &&
-              contactAffiliations.map((affiliation, j) => {
-                return (
-                  <>
-                    <sup>
-                      {Array.from(affiliations).indexOf(affiliation) + 1}
-                    </sup>
-                    <sup>
-                      {j < contactAffiliations.length - 1 && <span>, </span>}
-                    </sup>
-                  </>
-                );
-              })}
-            {i < contacts_link.length - 1 && <span>, </span>}
-            {i === contacts_link.length - 2 && <span>and </span>}
           </span>
         );
         contacts.push(item);
       }
     );
+
+    // create corresponding authors list component
+    const correspondingAuthors =
+      contacts_link
+        ?.filter((c) =>
+          c.roles?.find((r) => r.toLowerCase() === 'corresponding author')
+        )
+        .map(({ contact }) => {
+          let contactEmail = contact.mechanisms.find(
+            (mechanism) => mechanism.mechanism_type === 'Email'
+          )?.mechanism_value;
+
+          let contactName = getContactName(contact, { full: true });
+
+          return `${contactName} ${contactEmail ? `(${contactEmail})` : ''}`;
+        }) || [];
+
+    const correspondingAuthorsString = correspondingAuthors.map((author, i) => (
+      <>
+        {author}
+        {i < correspondingAuthors.length - 1 && <span>, </span>}
+        {i === correspondingAuthors.length - 2 && <span>and </span>}
+      </>
+    ));
     return {
       items: contacts,
+      correspondingAuthors: correspondingAuthorsString,
       affiliations_list: Array.from(affiliations),
       maxIndex: (contacts_link?.length ?? 0) - 1
     };
@@ -580,6 +600,14 @@ function JournalPdfPreview() {
                   <sup>{i + 1}</sup> {affiliation}
                 </div>
               ))}
+            </div>
+            <div>
+              {contacts?.correspondingAuthors?.length > 0 && (
+                <div>
+                  <strong>Corresponding Author(s): </strong>
+                  {contacts?.correspondingAuthors}
+                </div>
+              )}
             </div>
           </AuthorsSection>
           <Section id='key_points' title='Key Points:' skipNumbering>
