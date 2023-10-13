@@ -25,6 +25,7 @@ import {
 } from '../../../utils/references';
 import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 import { VariableItem } from '../single-view/document-body';
+import { variableNodeType } from '../../../types';
 
 const ReferencesList = styled.ol`
   && {
@@ -237,30 +238,7 @@ function VariablesList({ list }) {
 }
 
 VariablesList.propTypes = {
-  list: T.arrayOf(T.object)
-};
-
-const pChildType = T.shape({
-  type: T.string.isRequired,
-  children: T.arrayOf(
-    T.shape({
-      text: T.string.isRequired
-    })
-  ).isRequired
-});
-
-const variableNodePropType = T.shape({
-  children: T.arrayOf(pChildType).isRequired
-});
-
-VariablesList.propTypes = {
-  list: T.arrayOf(
-    T.shape({
-      name: variableNodePropType.isRequired,
-      long_name: variableNodePropType.isRequired,
-      unit: variableNodePropType.isRequired
-    })
-  )
+  list: T.arrayOf(variableNodeType)
 };
 
 function ContactOutput(props) {
