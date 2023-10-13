@@ -24,6 +24,7 @@ import {
   sortReferences
 } from '../../../utils/references';
 import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { sortContacts } from '../../../utils/sort-contacts';
 
 const ReferencesList = styled.ol`
   && {
@@ -422,8 +423,13 @@ function JournalPdfPreview() {
 
     // create contacts list component with superscripts
     let contacts = [];
-    contacts_link?.forEach(
-      ({ contact, affiliations: contactAffiliations }, i) => {
+    let authors = contacts_link?.filter(
+      (c) => !c.roles?.includes('Document Reviewer')
+    ); // Remove any reviewer from the authors list
+
+    authors
+      ?.sort(sortContacts)
+      .forEach(({ contact, affiliations: contactAffiliations }, i) => {
         const hasAffiliation =
           contactAffiliations && contactAffiliations.length > 0;
 
@@ -444,18 +450,17 @@ function JournalPdfPreview() {
                     </>
                   );
                 })}
-              {i < contacts_link.length - 1 && <span>, </span>}
-              {i === contacts_link.length - 2 && <span>and </span>}
+              {i < authors.length - 1 && <span>, </span>}
+              {i === authors.length - 2 && <span>and </span>}
             </strong>
           </span>
         );
         contacts.push(item);
-      }
-    );
+      });
 
     // create corresponding authors list component
     const correspondingAuthors =
-      contacts_link
+      authors
         ?.filter((c) =>
           c.roles?.find((r) => r.toLowerCase() === 'corresponding author')
         )
