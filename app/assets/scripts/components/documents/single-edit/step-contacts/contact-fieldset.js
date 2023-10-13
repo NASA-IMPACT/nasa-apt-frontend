@@ -38,7 +38,8 @@ const roleTypes = [
   'Supervision',
   'Investigation',
   'Funding acquisition',
-  'Corresponding Author'
+  'Corresponding Author',
+  'Document Reviewer'
 ];
 
 const emptyAffiliation = '';
