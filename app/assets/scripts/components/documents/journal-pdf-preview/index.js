@@ -24,6 +24,8 @@ import {
   sortReferences
 } from '../../../utils/references';
 import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { VariableItem } from '../single-view/document-body';
+import { variableNodeType } from '../../../types';
 import { sortContacts } from '../../../utils/sort-contacts';
 
 const ReferencesList = styled.ol`
@@ -216,6 +218,28 @@ ImplementationDataList.propTypes = {
       description: T.string
     })
   )
+};
+
+function VariablesList({ list }) {
+  if (!list || list.length === 0) {
+    return EMPTY_CONTENT_MESSAGE;
+  }
+
+  return (
+    <DataListContainer>
+      {list?.map((variable, i) => (
+        <VariableItem
+          key={`variable-${i + 1}`}
+          variable={variable}
+          element={{ id: `variable-${i}`, label: `Variable #${i + 1}` }}
+        />
+      ))}
+    </DataListContainer>
+  );
+}
+
+VariablesList.propTypes = {
+  list: T.arrayOf(variableNodeType)
 };
 
 function ContactOutput(props) {
@@ -539,10 +563,9 @@ function JournalPdfPreview() {
   );
   const mathematicalTheoryVisible =
     hasContent(mathematical_theory) || mathematicalTheoryAssumptionsVisible;
-  const algorithmInputVariablesVisible = hasContent(algorithm_input_variables);
-  const algorithmOutputVariablesVisible = hasContent(
-    algorithm_output_variables
-  );
+  const algorithmInputVariablesVisible = algorithm_input_variables?.length > 0;
+  const algorithmOutputVariablesVisible =
+    algorithm_output_variables?.length > 0;
   const algorithmDescriptionVisible =
     scientificTheoryVisible ||
     mathematicalTheoryVisible ||
@@ -701,7 +724,7 @@ function JournalPdfPreview() {
                   id='algorithm_input_variables'
                   title='Algorithm Input Variables'
                 >
-                  <ContentView value={algorithm_input_variables} />
+                  <VariablesList list={algorithm_input_variables} />
                 </Section>
               )}
               {algorithmOutputVariablesVisible && (
@@ -709,7 +732,7 @@ function JournalPdfPreview() {
                   id='algorithm_output_variables'
                   title='Algorithm Output Variables'
                 >
-                  <ContentView value={algorithm_output_variables} />
+                  <VariablesList list={algorithm_output_variables} />
                 </Section>
               )}
             </Section>
