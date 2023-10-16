@@ -215,7 +215,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
   </AtbdSubSection>
 );
 
-const VariableItem = ({ element, variable }) => (
+export const VariableItem = ({ element, variable }) => (
   <React.Fragment>
     <h4 id={element.id} data-scroll='target'>
       {element.label}
@@ -300,7 +300,7 @@ const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   </AtbdSubSection>
 );
 
-const EmptySection = ({ className }) => (
+export const EmptySection = ({ className }) => (
   <p className={className}>No content available.</p>
 );
 
