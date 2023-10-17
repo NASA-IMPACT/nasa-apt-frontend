@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
+import ReactGA from 'react-ga4';
 
 import { useAtbds } from '../../../context/atbds-list';
 import { documentEdit } from '../../../utils/url-creator';
@@ -33,6 +34,10 @@ export function useDocumentCreate(title, alias, isPdfType) {
         processToast.error(`An error occurred: ${result.error.message}`);
       }
     } else {
+      ReactGA.event('atbd_created', {
+        type: isPdfType ? 'pdf' : 'regular'
+      });
+
       processToast.success('Document successfully created');
       // To trigger the modals to open from other pages, we use the history
       // state as the user is sent from one page to another. See explanation

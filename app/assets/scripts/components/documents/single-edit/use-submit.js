@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router';
+import ReactGA from 'react-ga4';
 
 import { documentEdit } from '../../../utils/url-creator';
 import { createProcessToast } from '../../common/toasts';
@@ -22,6 +23,7 @@ export function useSubmitForMetaAndVersionData(updateAtbd, atbd, step) {
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
+        ReactGA.event('atbd_updated');
         resetForm({ values });
         processToast.success('Changes saved');
         // Update the path in case the alias changed.
@@ -81,6 +83,7 @@ export function useSubmitForVersionData(updateAtbd, atbd, hook) {
       if (result.error) {
         processToast.error(`An error occurred: ${result.error.message}`);
       } else {
+        ReactGA.event('atbd_updated');
         formBag.resetForm({ values });
         processToast.success('Changes saved');
 
@@ -300,6 +303,7 @@ export function useSubmitForAtbdContacts({
             `An error occurred: ${result.error.message}. Please try again`
           );
         } else {
+          ReactGA.event('atbd_updated');
           resetForm({
             values: {
               ...values,

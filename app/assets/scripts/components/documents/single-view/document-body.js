@@ -27,8 +27,7 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
-import { isDefined, isTruthyString } from '../../../utils/common';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { sortContacts } from '../../../utils/sort-contacts';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -216,7 +215,7 @@ const DataAccessItem = ({ id, label, url, description }) => (
   </AtbdSubSection>
 );
 
-const VariableItem = ({ element, variable }) => (
+export const VariableItem = ({ element, variable }) => (
   <React.Fragment>
     <h4 id={element.id} data-scroll='target'>
       {element.label}
@@ -301,7 +300,7 @@ const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   </AtbdSubSection>
 );
 
-const EmptySection = ({ className }) => (
+export const EmptySection = ({ className }) => (
   <p className={className}>No content available.</p>
 );
 
@@ -1051,58 +1050,49 @@ const htmlAtbdContentSections = [
     ),
     children: ({ atbd }) => {
       const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
-        label: getContactName(contact),
-        id: `contacts_${idx + 1}`,
-        render: ({ element }) => (
-          <ContactItem
-            key={element.id}
-            id={element.id}
-            label={element.label}
-            contact={contact}
-            roles={roles}
-            affiliations={affiliations}
-          />
+      return contactsLink
+        .filter(
+          ({ roles }) =>
+            // Remove reviewers that have the role 'Document Reviewer'
+            !roles.includes('Document Reviewer')
         )
-      }));
+        .sort(sortContacts)
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
     label: 'Reviewer Information',
     id: 'reviewer_info',
     shouldRender: ({ atbd }) => {
-      if (!atbd || !atbd.reviewer_info) {
-        return false;
+      if (!atbd) return false;
+
+      // Render if there are reviewers with the role 'Document Reviewer'
+      const contactsLink = atbd?.contacts_link || [];
+
+      for (const { roles } of contactsLink) {
+        if (roles.includes('Document Reviewer')) {
+          return true;
+        }
       }
-
-      const {
-        reviewer_info: { first_name, last_name }
-      } = atbd;
-
-      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
-        return false;
-      }
-
-      return true;
+      return false;
     },
-    render: ({ element, atbd, printMode }) => {
-      if (!atbd || !atbd.reviewer_info) {
+    render: ({ element, atbd, printMode, children }) => {
+      if (!atbd) {
         return null;
       }
-
-      const {
-        reviewer_info: { first_name, last_name, email, affiliations }
-      } = atbd;
-
-      let fullName;
-      if (isTruthyString(first_name) || isTruthyString(last_name)) {
-        fullName = [first_name, last_name].filter(isDefined).join(' ');
-      }
-
-      if (!isTruthyString(fullName) && !isTruthyString(email)) {
-        return null;
-      }
-
       return (
         <AtbdSection
           key={element.id}
@@ -1110,23 +1100,37 @@ const htmlAtbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
-          className='pdf-preview-hidden'
         >
-          <AtbdSubSection>
-            <h3>{fullName}</h3>
-            <DetailsList type='horizontal'>
-              <dt>Email</dt>
-              <dd>{email}</dd>
-              <dt>Affiliations</dt>
-              {affiliations.length ? (
-                <dd>{renderMultipleStringValues(affiliations)}</dd>
-              ) : (
-                <dd>No affiliations for the reviewer</dd>
-              )}
-            </DetailsList>
-          </AtbdSubSection>
+          {React.Children.count(children) ? (
+            children
+          ) : (
+            <p>There are no reviewers associated with this document</p>
+          )}
         </AtbdSection>
       );
+    },
+    children: ({ atbd }) => {
+      const contactsLink = atbd?.contacts_link || [];
+      return contactsLink
+        .filter(({ roles }) =>
+          // Include reviewers that have the role 'Document Reviewer'
+          roles.includes('Document Reviewer')
+        )
+        .sort(sortContacts)
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
@@ -1268,58 +1272,48 @@ const pdfAtbdContentSections = [
     ),
     children: ({ atbd }) => {
       const contactsLink = atbd?.contacts_link || [];
-      return contactsLink.map(({ contact, roles, affiliations }, idx) => ({
-        label: getContactName(contact),
-        id: `contacts_${idx + 1}`,
-        render: ({ element }) => (
-          <ContactItem
-            key={element.id}
-            id={element.id}
-            label={element.label}
-            contact={contact}
-            roles={roles}
-            affiliations={affiliations}
-          />
+      return contactsLink
+        .filter(
+          ({ roles }) =>
+            // Remove reviewers that have the role 'Document Reviewer'
+            !roles.includes('Document Reviewer')
         )
-      }));
+        .map(({ contact, roles, affiliations }, idx) => ({
+          label: getContactName(contact),
+          id: `contacts_${idx + 1}`,
+          render: ({ element }) => (
+            <ContactItem
+              key={element.id}
+              id={element.id}
+              label={element.label}
+              contact={contact}
+              roles={roles}
+              affiliations={affiliations}
+            />
+          )
+        }));
     }
   },
   {
     label: 'Reviewer Information',
     id: 'reviewer_info',
     shouldRender: ({ atbd }) => {
-      if (!atbd || !atbd.reviewer_info) {
-        return false;
+      if (!atbd) return false;
+
+      // Render if there are reviewers with the role 'Document Reviewer'
+      const contactsLink = atbd?.contacts_link || [];
+
+      for (const { roles } of contactsLink) {
+        if (roles.includes('Document Reviewer')) {
+          return true;
+        }
       }
-
-      const {
-        reviewer_info: { first_name, last_name }
-      } = atbd;
-
-      if (!isTruthyString(first_name) && !isTruthyString(last_name)) {
-        return false;
-      }
-
-      return true;
+      return false;
     },
-    render: ({ element, atbd, printMode }) => {
-      if (!atbd || !atbd.reviewer_info) {
+    render: ({ element, atbd, printMode, children }) => {
+      if (!atbd) {
         return null;
       }
-
-      const {
-        reviewer_info: { first_name, last_name, email, affiliations }
-      } = atbd;
-
-      let fullName;
-      if (isTruthyString(first_name) || isTruthyString(last_name)) {
-        fullName = [first_name, last_name].filter(isDefined).join(' ');
-      }
-
-      if (!isTruthyString(fullName) && !isTruthyString(email)) {
-        return null;
-      }
-
       return (
         <AtbdSection
           key={element.id}
@@ -1327,21 +1321,12 @@ const pdfAtbdContentSections = [
           title={element.label}
           atbd={atbd}
           printMode={printMode}
-          className='pdf-preview-hidden'
         >
-          <AtbdSubSection>
-            <h3>{fullName}</h3>
-            <DetailsList type='horizontal'>
-              <dt>Email</dt>
-              <dd>{email}</dd>
-              <dt>Affiliations</dt>
-              {affiliations.length ? (
-                <dd>{renderMultipleStringValues(affiliations)}</dd>
-              ) : (
-                <dd>No affiliations for the reviewer</dd>
-              )}
-            </DetailsList>
-          </AtbdSubSection>
+          {React.Children.count(children) ? (
+            children
+          ) : (
+            <p>There are no reviewers associated with this document</p>
+          )}
         </AtbdSection>
       );
     }
@@ -1456,7 +1441,7 @@ export default function DocumentBody(props) {
   );
 
   return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
-    document: formatDocumentTableCaptions(document),
+    document,
     referencesUseIndex,
     referenceList,
     atbd,
