@@ -1,6 +1,5 @@
 // module exports is required to be able to load from gulpfile.
 module.exports = {
-  gaTrackingCode: 'G-K4DQR9HTZH',
   apiUrl: 'https://af7f32q2kh.execute-api.us-east-1.amazonaws.com/v2',
   auth: {
     // DOCS: https://docs.amplify.aws/lib/auth/start/q/platform/js#re-use-existing-authentication-resource
@@ -13,5 +12,6 @@ module.exports = {
     // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   },
+  gaTrackingCode: 'G-K4DQR9HTZH',
   hostedAuthUi: 'https://nasa-apt-api-staging.auth.us-east-1.amazoncognito.com'
 };
