@@ -27,7 +27,6 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
 import { sortContacts } from '../../../utils/sort-contacts';
 
 const PDFPreview = styled.iframe`
@@ -1442,7 +1441,7 @@ export default function DocumentBody(props) {
   );
 
   return renderElements(getAtbdContentSections(atbd.document_type === 'PDF'), {
-    document: formatDocumentTableCaptions(document),
+    document,
     referencesUseIndex,
     referenceList,
     atbd,

@@ -23,7 +23,7 @@ import {
   formatReference,
   sortReferences
 } from '../../../utils/references';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
 import { VariableItem } from '../single-view/document-body';
 import { variableNodeType } from '../../../types';
 import { sortContacts } from '../../../utils/sort-contacts';
@@ -369,7 +369,7 @@ function JournalPdfPreview() {
     journal_discussion,
     data_availability,
     journal_acknowledgements
-  } = formatDocumentTableCaptions(document);
+  } = applyNumberCaptionsToDocument(document);
 
   const ContentView = useMemo(() => {
     const safeReadContext = {
