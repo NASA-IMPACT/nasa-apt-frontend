@@ -14,7 +14,7 @@ module.exports = {
     // Manually set the authentication flow type. Default is 'USER_SRP_AUTH'
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   },
-  gaTrackingCode: 'UA-163103126-1',
+  gaTrackingCode: 'UA-163103126-2',
   hostedAuthUi:
     'https://nasa-apt-api-lambda-prod-v2.auth.us-west-2.amazoncognito.com',
   feedbackForm: 'https://forms.gle/JG6ykqj2mAjzke6S6'
