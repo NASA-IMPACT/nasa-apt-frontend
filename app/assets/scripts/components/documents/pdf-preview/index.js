@@ -9,7 +9,11 @@ import DocumentBody from '../single-view/document-body';
 import DocumentTitle from '../single-view/document-title';
 import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
-import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
+import {
+  PLACEMENTS,
+  applyNumberCaptionsToDocument
+} from '../../../utils/apply-number-captions-to-document';
+import { IMAGE_BLOCK } from '../../slate/plugins/constants';
 
 const TocHeader = styled.h1`
   border-bottom: 3px solid #000;
@@ -240,7 +244,11 @@ function PdfPreview() {
     }
 
     if (atbd.status === 'succeeded') {
-      setDocument(applyNumberCaptionsToDocument(atbd.data.document));
+      setDocument(
+        applyNumberCaptionsToDocument(atbd.data.document, {
+          imageCaptionBelow: true
+        })
+      );
       waitForImages();
     }
   }, [atbd.status]);
