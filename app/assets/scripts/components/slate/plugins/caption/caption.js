@@ -4,9 +4,6 @@ import { Node } from 'slate';
 import { useReadOnly, useSelected } from 'slate-react';
 import styled from 'styled-components';
 
-import { NumberingContext } from '../../../../context/numbering';
-import { IMAGE_BLOCK, TABLE_BLOCK } from '../constants';
-
 const CaptionElement = styled.figcaption`
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -27,41 +24,10 @@ export function Caption(props) {
   const { attributes, htmlAttributes, element, children } = props;
   const isSelected = useSelected();
   const readOnly = useReadOnly();
-  const id = JSON.stringify(element);
-  const { parent } = element;
 
   const emptyCaption = !Node.string(element);
-  const numberingContext = React.useContext(NumberingContext);
 
   const showPlaceholder = !readOnly && !isSelected && emptyCaption;
-
-  React.useEffect(() => {
-    if (numberingContext && !showPlaceholder && id) {
-      if (parent === TABLE_BLOCK) {
-        numberingContext.registerTable(id);
-      } else if (parent === IMAGE_BLOCK) {
-        numberingContext.registerImage(id);
-      }
-    }
-  }, [numberingContext, showPlaceholder, id, parent]);
-
-  const numbering = React.useMemo(() => {
-    if (!numberingContext) {
-      return null;
-    }
-
-    if (parent === TABLE_BLOCK) {
-      return numberingContext.getTableNumbering(id);
-    }
-
-    if (parent === IMAGE_BLOCK) {
-      return numberingContext.getImageNumbering(id);
-    }
-
-    return null;
-  }, [numberingContext, parent, id]);
-
-  // if (readOnly && emptyCaption) return null;
 
   // The current version of Slate has no way to render a placeholder on an
   // element. The best way is to create an element which is absolutely
@@ -71,7 +37,6 @@ export function Caption(props) {
       {showPlaceholder && (
         <Placeholder contentEditable={false}>Write a caption</Placeholder>
       )}
-      {numbering}
       {children}
     </CaptionElement>
   );

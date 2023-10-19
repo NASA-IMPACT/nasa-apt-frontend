@@ -8,7 +8,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import { themeVal, rgba } from '@devseed-ui/theme-provider';
 
 import { isInlineEquation } from '.';
-import { NumberingContext } from '../../../../context/numbering';
+import { EquationNumberingContext } from '../../../../context/equation-numbering';
 
 const EquationReadOnly = styled.span`
   display: ${({ isInline }) => (isInline ? 'inline-flex' : 'flex')};
@@ -56,7 +56,7 @@ function EquationElement(props) {
 
   const isInline = isInlineEquation(element);
   const MathElement = isInline ? InlineMath : BlockMath;
-  const numberingContext = useContext(NumberingContext);
+  const numberingContext = useContext(EquationNumberingContext);
 
   useEffect(() => {
     if (numberingContext && !isInline) {

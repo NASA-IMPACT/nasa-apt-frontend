@@ -12,9 +12,9 @@ import {
   useHeadingNumberingProviderValue
 } from '../../../context/heading-numbering';
 import {
-  NumberingContext,
-  useNumberingProviderValue
-} from '../../../context/numbering';
+  EquationNumberingContext,
+  useEquationNumberingProviderValue
+} from '../../../context/equation-numbering';
 import { IMAGE_BLOCK, TABLE_BLOCK } from '../../slate/plugins/constants';
 import serializeToString from '../../slate/serialize-to-string';
 import { getContactName } from '../../contacts/contact-utils';
@@ -337,7 +337,7 @@ function JournalPdfPreview() {
   }, [atbdResponse.status]);
 
   const headingNumberingContextValue = useHeadingNumberingProviderValue();
-  const equationNumberingContextValue = useNumberingProviderValue();
+  const equationNumberingContextValue = useEquationNumberingProviderValue();
 
   const atbd = atbdResponse?.data ?? emptyAtbd;
 
@@ -615,7 +615,7 @@ function JournalPdfPreview() {
   const referencesVisible = referenceList && referenceList.length > 0;
 
   return (
-    <NumberingContext.Provider value={equationNumberingContextValue}>
+    <EquationNumberingContext.Provider value={equationNumberingContextValue}>
       <HeadingNumberingContext.Provider value={headingNumberingContextValue}>
         <PreviewContainer ref={contentRef}>
           <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
@@ -848,7 +848,7 @@ function JournalPdfPreview() {
           {previewReady && <div id='pdf-preview-ready' />}
         </PreviewContainer>
       </HeadingNumberingContext.Provider>
-    </NumberingContext.Provider>
+    </EquationNumberingContext.Provider>
   );
 }
 

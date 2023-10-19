@@ -5,7 +5,10 @@ import {
 } from '../components/slate/plugins/constants';
 
 /**
- * Include table numbers and move captions before the table in the document.
+ * Include tables and figures numbers to their captions. We don't use a
+ * numbering context (like equation numbering) because we also need to change
+ * the position of the caption in the document, which is not possible with the
+ * current implementation of equation numbering context.
  */
 export function applyNumberCaptionsToDocument(document) {
   // Section id list in the order they should appear in the document
