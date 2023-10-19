@@ -7,7 +7,7 @@ import {
 /**
  * Include table numbers and move captions before the table in the document.
  */
-export function applyNumberCaptionsToDocument(document, placement) {
+export function applyNumberCaptionsToDocument(document) {
   // Section id list in the order they should appear in the document
   const documentSectionIds = [
     'key_points',
@@ -73,9 +73,9 @@ export function applyNumberCaptionsToDocument(document, placement) {
 
               // Reverse the table rows to make caption appear first
               // and add the table number to the caption
-              let nextChild = {
+              return {
                 ...child,
-                children: child.children.map((c) => {
+                children: child.children.reverse().map((c) => {
                   if (c.type !== 'caption') {
                     return c;
                   }
@@ -93,15 +93,6 @@ export function applyNumberCaptionsToDocument(document, placement) {
                   };
                 })
               };
-
-              if (child.type === IMAGE_BLOCK && placement?.imageCaptionBelow) {
-                return nextChild;
-              } else {
-                return {
-                  ...nextChild,
-                  children: nextChild.children.reverse()
-                };
-              }
             }
 
             return child;
