@@ -1,40 +1,13 @@
 import { createContext, useCallback, useMemo, useState } from 'react';
 
+/**
+ *  Provides a context for equation numbering.
+ */
 export function useNumberingProviderValue() {
   const [registeredEquations, setRegisteredEquations] = useState({});
-  const [registeredImages, setRegisteredImages] = useState({});
-  const [registeredTables, setRegisteredTables] = useState({});
 
   const registerEquation = useCallback((key) => {
     setRegisteredEquations((prevElements) => {
-      if (prevElements[key]) {
-        return prevElements;
-      }
-
-      const numElements = Object.keys(prevElements).length;
-      return {
-        ...prevElements,
-        [key]: numElements + 1
-      };
-    });
-  }, []);
-
-  const registerImage = useCallback((key) => {
-    setRegisteredImages((prevElements) => {
-      if (prevElements[key]) {
-        return prevElements;
-      }
-
-      const numElements = Object.keys(prevElements).length;
-      return {
-        ...prevElements,
-        [key]: numElements + 1
-      };
-    });
-  }, []);
-
-  const registerTable = useCallback((key) => {
-    setRegisteredTables((prevElements) => {
       if (prevElements[key]) {
         return prevElements;
       }
@@ -59,47 +32,12 @@ export function useNumberingProviderValue() {
     [registeredEquations]
   );
 
-  const getTableNumbering = useCallback(
-    (key) => {
-      const numbering = registeredTables[key];
-      if (!numbering) {
-        return '';
-      }
-
-      return `Table ${numbering}: `;
-    },
-    [registeredTables]
-  );
-
-  const getImageNumbering = useCallback(
-    (key) => {
-      const numbering = registeredImages[key];
-      if (!numbering) {
-        return '';
-      }
-
-      return `Figure ${numbering}: `;
-    },
-    [registeredImages]
-  );
-
   return useMemo(
     () => ({
       getEquationNumbering,
-      getTableNumbering,
-      getImageNumbering,
-      registerEquation,
-      registerTable,
-      registerImage
+      registerEquation
     }),
-    [
-      getEquationNumbering,
-      getTableNumbering,
-      getImageNumbering,
-      registerEquation,
-      registerTable,
-      registerImage
-    ]
+    [getEquationNumbering, registerEquation]
   );
 }
 
