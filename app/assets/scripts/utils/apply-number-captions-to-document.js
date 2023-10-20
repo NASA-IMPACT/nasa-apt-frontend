@@ -5,7 +5,10 @@ import {
 } from '../components/slate/plugins/constants';
 
 /**
- * Include table numbers and move captions before the table in the document.
+ * Include tables and figures numbers to their captions. We don't use a
+ * numbering context (like equation numbering) because we also need to change
+ * the position of the caption in the document, which is not possible with the
+ * current implementation of equation numbering context.
  */
 export function applyNumberCaptionsToDocument(document) {
   // Section id list in the order they should appear in the document
@@ -71,27 +74,33 @@ export function applyNumberCaptionsToDocument(document) {
                 child.type === TABLE_BLOCK ? 'Table' : 'Figure'
               } ${elementCount[child.type]}: `;
 
-              // Reverse the table rows to make caption appear first
-              // and add the table number to the caption
+              // Prefix the caption with the table/image number
+              const children = child.children.map((c) => {
+                if (c.type !== 'caption') {
+                  return c;
+                }
+
+                const currentCaption = get(c, 'children[0].text');
+
+                return {
+                  ...c,
+                  children: [
+                    {
+                      ...c.children[0],
+                      text: `${captionPrefix}${currentCaption}`
+                    }
+                  ]
+                };
+              });
+
+              // Table should be reversed to make the caption appear first
+              if (child.type === TABLE_BLOCK) {
+                children.reverse();
+              }
+
               return {
                 ...child,
-                children: child.children.reverse().map((c) => {
-                  if (c.type !== 'caption') {
-                    return c;
-                  }
-
-                  const currentCaption = get(c, 'children[0].text');
-
-                  return {
-                    ...c,
-                    children: [
-                      {
-                        ...c.children[0],
-                        text: `${captionPrefix}${currentCaption}`
-                      }
-                    ]
-                  };
-                })
+                children
               };
             }
 
