@@ -42,6 +42,7 @@ function EquationElement(props) {
   const isSelected = useSelected();
   const { element, attributes, children } = props;
   const latexEquation = Node.string(element);
+  const equationPath = JSON.stringify(ReactEditor.findPath(editor, element));
   const readOnly = useReadOnly();
 
   const handleClick = useCallback(() => {
@@ -60,9 +61,9 @@ function EquationElement(props) {
 
   useEffect(() => {
     if (numberingContext && !isInline) {
-      numberingContext.registerEquation(latexEquation);
+      numberingContext.registerEquation(equationPath);
     }
-  }, [numberingContext, isInline, latexEquation]);
+  }, [numberingContext, isInline, equationPath]);
 
   const returnElement = React.useMemo(() => {
     if (readOnly) {
@@ -83,7 +84,7 @@ function EquationElement(props) {
             <MathElement math={latexEquation || 'latex~empty~equation'} />
           </span>
           {!isInline && numberingContext && (
-            <span>{numberingContext.getEquationNumbering(latexEquation)}</span>
+            <span>{numberingContext.getEquationNumbering(equationPath)}</span>
           )}
           {!isInline && <span className='equation-number' />}
         </EquationReadOnly>
@@ -110,6 +111,7 @@ function EquationElement(props) {
     isInline,
     isSelected,
     latexEquation,
+    equationPath,
     numberingContext,
     readOnly
   ]);
