@@ -1,5 +1,6 @@
 import { confirmDeleteDocumentVersion } from '../common/confirmation-prompt';
 import toasts from '../common/toasts';
+import ReactGA from 'react-ga4';
 
 /**
  * Convenience method to delete an atbd version and show a toast notification.
@@ -24,6 +25,7 @@ export async function documentDeleteVersionConfirmAndToast({
     if (result.error) {
       toasts.error(`An error occurred: ${result.error.message}`);
     } else {
+      ReactGA.event('atbd_version_deleted');
       toasts.success('Document version successfully deleted');
       history.push('/dashboard');
     }

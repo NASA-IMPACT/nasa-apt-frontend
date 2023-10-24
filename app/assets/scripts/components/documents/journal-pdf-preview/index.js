@@ -23,7 +23,10 @@ import {
   formatReference,
   sortReferences
 } from '../../../utils/references';
-import { formatDocumentTableCaptions } from '../../../utils/format-table-captions';
+import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
+import { VariableItem } from '../single-view/document-body';
+import { variableNodeType } from '../../../types';
+import { sortContacts } from '../../../utils/sort-contacts';
 
 const ReferencesList = styled.ol`
   && {
@@ -217,6 +220,28 @@ ImplementationDataList.propTypes = {
   )
 };
 
+function VariablesList({ list }) {
+  if (!list || list.length === 0) {
+    return EMPTY_CONTENT_MESSAGE;
+  }
+
+  return (
+    <DataListContainer>
+      {list?.map((variable, i) => (
+        <VariableItem
+          key={`variable-${i + 1}`}
+          variable={variable}
+          element={{ id: `variable-${i}`, label: `Variable #${i + 1}` }}
+        />
+      ))}
+    </DataListContainer>
+  );
+}
+
+VariablesList.propTypes = {
+  list: T.arrayOf(variableNodeType)
+};
+
 function ContactOutput(props) {
   const { data } = props;
   const { affiliations, contact, roles } = data;
@@ -344,7 +369,7 @@ function JournalPdfPreview() {
     journal_discussion,
     data_availability,
     journal_acknowledgements
-  } = formatDocumentTableCaptions(document);
+  } = applyNumberCaptionsToDocument(document);
 
   const ContentView = useMemo(() => {
     const safeReadContext = {
@@ -422,43 +447,67 @@ function JournalPdfPreview() {
 
     // create contacts list component with superscripts
     let contacts = [];
-    contacts_link?.forEach(
-      ({ contact, affiliations: contactAffiliations }, i) => {
+    let authors = contacts_link?.filter(
+      (c) => !c.roles?.includes('Document Reviewer')
+    ); // Remove any reviewer from the authors list
+
+    authors
+      ?.sort(sortContacts)
+      .forEach(({ contact, affiliations: contactAffiliations }, i) => {
         const hasAffiliation =
           contactAffiliations && contactAffiliations.length > 0;
-
-        let contactEmail = contact.mechanisms.find(
-          (mechanism) => mechanism.mechanism_type === 'Email'
-        )?.mechanism_value;
 
         const item = (
           <span key={contact.id}>
             <strong>
               {getContactName(contact, { full: true })}
-              {contactEmail && ` (${contactEmail})`}
+              {hasAffiliation &&
+                contactAffiliations.map((affiliation, j) => {
+                  return (
+                    <>
+                      <sup>
+                        {Array.from(affiliations).indexOf(affiliation) + 1}
+                      </sup>
+                      <sup>
+                        {j < contactAffiliations.length - 1 && <span>, </span>}
+                      </sup>
+                    </>
+                  );
+                })}
+              {i < authors.length - 1 && <span>, </span>}
+              {i === authors.length - 2 && <span>and </span>}
             </strong>
-            {hasAffiliation &&
-              contactAffiliations.map((affiliation, j) => {
-                return (
-                  <>
-                    <sup>
-                      {Array.from(affiliations).indexOf(affiliation) + 1}
-                    </sup>
-                    <sup>
-                      {j < contactAffiliations.length - 1 && <span>, </span>}
-                    </sup>
-                  </>
-                );
-              })}
-            {i < contacts_link.length - 1 && <span>, </span>}
-            {i === contacts_link.length - 2 && <span>and </span>}
           </span>
         );
         contacts.push(item);
-      }
-    );
+      });
+
+    // create corresponding authors list component
+    const correspondingAuthors =
+      authors
+        ?.filter((c) =>
+          c.roles?.find((r) => r.toLowerCase() === 'corresponding author')
+        )
+        .map(({ contact }) => {
+          let contactEmail = contact.mechanisms.find(
+            (mechanism) => mechanism.mechanism_type === 'Email'
+          )?.mechanism_value;
+
+          let contactName = getContactName(contact, { full: true });
+
+          return `${contactName} ${contactEmail ? `(${contactEmail})` : ''}`;
+        }) || [];
+
+    const correspondingAuthorsString = correspondingAuthors.map((author, i) => (
+      <>
+        {author}
+        {i < correspondingAuthors.length - 1 && <span>, </span>}
+        {i === correspondingAuthors.length - 2 && <span>and </span>}
+      </>
+    ));
     return {
       items: contacts,
+      correspondingAuthors: correspondingAuthorsString,
       affiliations_list: Array.from(affiliations),
       maxIndex: (contacts_link?.length ?? 0) - 1
     };
@@ -514,10 +563,9 @@ function JournalPdfPreview() {
   );
   const mathematicalTheoryVisible =
     hasContent(mathematical_theory) || mathematicalTheoryAssumptionsVisible;
-  const algorithmInputVariablesVisible = hasContent(algorithm_input_variables);
-  const algorithmOutputVariablesVisible = hasContent(
-    algorithm_output_variables
-  );
+  const algorithmInputVariablesVisible = algorithm_input_variables?.length > 0;
+  const algorithmOutputVariablesVisible =
+    algorithm_output_variables?.length > 0;
   const algorithmDescriptionVisible =
     scientificTheoryVisible ||
     mathematicalTheoryVisible ||
@@ -580,6 +628,14 @@ function JournalPdfPreview() {
                   <sup>{i + 1}</sup> {affiliation}
                 </div>
               ))}
+            </div>
+            <div>
+              {contacts?.correspondingAuthors?.length > 0 && (
+                <div>
+                  <strong>Corresponding Author(s): </strong>
+                  {contacts?.correspondingAuthors}
+                </div>
+              )}
             </div>
           </AuthorsSection>
           <Section id='key_points' title='Key Points:' skipNumbering>
@@ -668,7 +724,7 @@ function JournalPdfPreview() {
                   id='algorithm_input_variables'
                   title='Algorithm Input Variables'
                 >
-                  <ContentView value={algorithm_input_variables} />
+                  <VariablesList list={algorithm_input_variables} />
                 </Section>
               )}
               {algorithmOutputVariablesVisible && (
@@ -676,7 +732,7 @@ function JournalPdfPreview() {
                   id='algorithm_output_variables'
                   title='Algorithm Output Variables'
                 >
-                  <ContentView value={algorithm_output_variables} />
+                  <VariablesList list={algorithm_output_variables} />
                 </Section>
               )}
             </Section>

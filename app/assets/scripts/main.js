@@ -13,7 +13,7 @@ import {
   useLocation,
   useHistory
 } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import qs from 'qs';
 import { DevseedUiThemeProvider } from '@devseed-ui/theme-provider';
 import { CollecticonsGlobalStyle } from '@devseed-ui/collecticons';
@@ -84,9 +84,15 @@ const { gaTrackingCode } = config;
 // Google analytics
 if (gaTrackingCode) {
   ReactGA.initialize(gaTrackingCode);
-  ReactGA.pageview(window.location.pathname + window.location.search);
+  ReactGA.send({
+    hitType: 'pageview',
+    page: window.location.pathname + window.location.search
+  });
   history.listen((location) =>
-    ReactGA.pageview(location.pathname + location.search)
+    ReactGA.send({
+      hitType: 'pageview',
+      page: location.pathname + location.search
+    })
   );
 }
 

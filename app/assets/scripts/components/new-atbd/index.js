@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { themeVal, glsp } from '@devseed-ui/theme-provider';
 import { Button } from '@devseed-ui/button';
+import ReactGA from 'react-ga4';
 
 import {
   FaFileAlt,
@@ -232,6 +233,11 @@ function NewAtbd() {
                 href='https://docs.google.com/document/d/1T4q56qZrRN5L6MGXA1UJLMgDgS-Fde9Fo4R4bwVQDF8/edit?usp=sharing'
                 target='_blank'
                 rel='noopener noreferrer'
+                onClick={() => {
+                  ReactGA.event('atbd_template_download', {
+                    template_format: 'Google Docs'
+                  });
+                }}
               >
                 <span>
                   <FaFileAlt />
@@ -242,6 +248,11 @@ function NewAtbd() {
                 href='https://docs.google.com/document/d/1Jh3htOiivNIG_ZqhbN5nEK1TAVB6BjRY/edit?usp=share_link&ouid=102031143611308171378&rtpof=true&sd=true'
                 target='_blank'
                 rel='noopener noreferrer'
+                onClick={() => {
+                  ReactGA.event('atbd_template_download', {
+                    template_format: 'Microsoft Word'
+                  });
+                }}
               >
                 <span>
                   <FaFileWord />
@@ -251,7 +262,12 @@ function NewAtbd() {
               <TemplateLink
                 href='https://drive.google.com/file/d/1AusZOxIpkBiA0QJAB3AtSXSBUU5tWwlJ/view?usp=share_link'
                 target='_blank'
-                rel='noopener'
+                rel='noopener noreferrer'
+                onClick={() => {
+                  ReactGA.event('atbd_template_download', {
+                    template_format: 'Latex'
+                  });
+                }}
               >
                 <span>
                   <SiLatex />

@@ -1,10 +1,16 @@
 import get from 'lodash.get';
-import { TABLE_BLOCK } from '../components/slate/plugins/constants';
+import {
+  IMAGE_BLOCK,
+  TABLE_BLOCK
+} from '../components/slate/plugins/constants';
 
 /**
- * Include table numbers and move captions before the table in the document.
+ * Include tables and figures numbers to their captions. We don't use a
+ * numbering context (like equation numbering) because we also need to change
+ * the position of the caption in the document, which is not possible with the
+ * current implementation of equation numbering context.
  */
-export function formatDocumentTableCaptions(document) {
+export function applyNumberCaptionsToDocument(document) {
   // Section id list in the order they should appear in the document
   const documentSectionIds = [
     'key_points',
@@ -34,6 +40,11 @@ export function formatDocumentTableCaptions(document) {
     'journal_acknowledgements'
   ];
 
+  let elementCount = {
+    [TABLE_BLOCK]: 0,
+    [IMAGE_BLOCK]: 0
+  };
+
   // Process sections to add table numbers to captions
   return documentSectionIds.reduce(
     (doc, sectionId) => {
@@ -50,51 +61,58 @@ export function formatDocumentTableCaptions(document) {
         };
       }
 
-      // Init table count for this section
-      let tableCount = doc.tableCount;
-
       const nextDoc = {
         ...doc,
         [sectionId]: {
           ...section,
           children: section.children.map((child) => {
-            // Ignore non-table blocks
-            if (child.type !== TABLE_BLOCK) {
-              return child;
-            }
+            // Transform the table and image blocks
+            if (child.type === TABLE_BLOCK || child.type === IMAGE_BLOCK) {
+              elementCount[child.type] += 1;
 
-            // Reverse the table rows to make caption appear first
-            // and add the table number to the caption
-            return {
-              ...child,
-              children: child.children.reverse().map((c) => {
+              const captionPrefix = `${
+                child.type === TABLE_BLOCK ? 'Table' : 'Figure'
+              } ${elementCount[child.type]}: `;
+
+              // Prefix the caption with the table/image number
+              const children = child.children.map((c) => {
                 if (c.type !== 'caption') {
                   return c;
                 }
 
                 const currentCaption = get(c, 'children[0].text');
-                tableCount++;
 
                 return {
                   ...c,
                   children: [
                     {
                       ...c.children[0],
-                      text: `Table ${tableCount}: ${currentCaption}`
+                      text: `${captionPrefix}${currentCaption}`
                     }
                   ]
                 };
-              })
-            };
+              });
+
+              // Table should be reversed to make the caption appear first
+              if (child.type === TABLE_BLOCK) {
+                children.reverse();
+              }
+
+              return {
+                ...child,
+                children
+              };
+            }
+
+            return child;
           })
         }
       };
 
       return {
-        ...nextDoc,
-        tableCount: tableCount
+        ...nextDoc
       };
     },
-    { ...document, tableCount: 0 }
+    { ...document }
   );
 }

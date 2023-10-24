@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import T from 'prop-types';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { VerticalDivider } from '@devseed-ui/toolbar';
 import { BsFilePdf } from 'react-icons/bs';
 
