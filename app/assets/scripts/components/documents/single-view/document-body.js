@@ -1076,8 +1076,9 @@ const htmlAtbdContentSections = [
   {
     label: 'Reviewer Information',
     id: 'reviewer_info',
-    shouldRender: ({ atbd }) => {
+    shouldRender: ({ atbd, printMode }) => {
       if (!atbd) return false;
+      if (printMode) return false; // Should not render in the PDF preview
 
       // Render if there are reviewers with the role 'Document Reviewer'
       const contactsLink = atbd?.contacts_link || [];
@@ -1292,43 +1293,6 @@ const pdfAtbdContentSections = [
             />
           )
         }));
-    }
-  },
-  {
-    label: 'Reviewer Information',
-    id: 'reviewer_info',
-    shouldRender: ({ atbd }) => {
-      if (!atbd) return false;
-
-      // Render if there are reviewers with the role 'Document Reviewer'
-      const contactsLink = atbd?.contacts_link || [];
-
-      for (const { roles } of contactsLink) {
-        if (roles.includes('Document Reviewer')) {
-          return true;
-        }
-      }
-      return false;
-    },
-    render: ({ element, atbd, printMode, children }) => {
-      if (!atbd) {
-        return null;
-      }
-      return (
-        <AtbdSection
-          key={element.id}
-          id={element.id}
-          title={element.label}
-          atbd={atbd}
-          printMode={printMode}
-        >
-          {React.Children.count(children) ? (
-            children
-          ) : (
-            <p>There are no reviewers associated with this document</p>
-          )}
-        </AtbdSection>
-      );
     }
   },
   {
