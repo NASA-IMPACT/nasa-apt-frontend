@@ -164,14 +164,14 @@ const FeedbackLink = (props) => (
 
 function NewAtbd() {
   const [showMoreInfo, setShowMoreInfo] = React.useState(false);
-  const { user } = useUser();
+  const { isLogged } = useUser();
 
   return (
     <App pageTitle='New ATBD'>
       <PageContent>
         <Header>
           <h1>ATBD Creation Choices</h1>
-          {!user.isLogged && (
+          {!isLogged && (
             <Feedback>
               <a href={getHostedAuthUiUrl('signup')}>Sign up</a> now to get
               started!
