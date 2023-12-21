@@ -32,7 +32,7 @@ Data users have often found searching for and discovering existing ATBDs very ch
 
 [[Back to top](#)]
 
-## 2. Details of the Algorithm Publicatin Tool Pages and Features
+## 2. Details of the Algorithm Publication Tool Pages and Features
 
 APT has various features that improve the process of authoring, searching, and discovering documents and content through the centralized ATBD repository.
 
@@ -85,7 +85,7 @@ A user will be redirected to your user dashboard when you successfully log into 
 1. **Dashboard** – This button redirects you to your individual dashboard containing all documents associated with your account, if they are an approved user (Figures 6-9). If you are not an approved user, you will see only the public ATBDs on the dashboard.
 2. **Contacts** – This button redirects you to the Contacts page which lists all contacts stored within APT and allows you to create a new contact (see Section 2.2.1).
 3. **About** – This button redirects you to the About page, which introduces APT.
-4. **User Guide** – This button redirects you to this document, the APT user guide (see Section 2.2.2).
+4. **User Guide** - This button redirects you to this document, the APT user guides (see Section 2.2.2). 
 5. **Feedback** – This button brings up a form for you to submit feedback about APT to the project team (see Figure 3).
 6. **Username and profile** – The username of the current account appears in the upper right once you successfully log in to APT. The dropdown menu provides two options; view your profile or sign out of your APT account. If signing out, you are automatically redirected to the public APT dashboard.
 
@@ -166,7 +166,7 @@ Users can create a new ATBD or edit an existing one (Figure 13) from the user da
 ![Figure 14b](https://github.com/bwbaker1/APT_UserGuide_Figures/blob/main/APT_Figure14b.png?raw=true "Figure 14b. Prompt that appears when a user creates a new ATBD. Users must indicate whether they want to create a document within the APT interface or to upload an existing ATBD PDF.")
 
 1. **Title** – Authors should enter a descriptive, formal title of the ATBD. It is recommended that the title be as descriptive as possible, while keeping acronyms to a minimum.
-2. **Alias** – Authors should enter an alias title for the ATBD. Once an ATBD is completed, the alias will not be editable.
+2. **Alias** – Authors should enter an alias title for the ATBD. Once an ATBD is completed, the alias will not be editable. All aliases should be unique.
 3. **Create new ATBD in APT** – Select to create an ATBD within the APT interface.
 4. **Upload existing ATBD PDF** – Select to upload an existing ATBD PDF that was created using one of the provided ATBD templates.
 
@@ -197,7 +197,7 @@ The first authoring step prompts a user to input unique information that identif
 1. **Comments** – Clicking this button opens the comments section of the ATBD (Figure 18b). A user can add or respond to a comment by clicking this icon anywhere it is found in APT.
 2. **Information** – Clicking this icon reveals more information that can be helpful with understanding the needed content for the text field. This is a persistent feature within APT that operates in the same way anywhere a user finds it located.
 3. **Title** – Authors should enter a descriptive, formal title of the ATBD. It is recommended that the title be as descriptive as possible, while keeping acronyms to a minimum.
-4. **Alias** – Authors should enter an alias title for the ATBD. Once an ATBD is completed, the alias will not be editable.
+4. **Alias** – Authors should enter an alias title for the ATBD. Once an ATBD is completed, the alias will not be editable. All alias must be unique.
 5. **DOI** – Enter the digital object identifier (DOI) associated with this ATBD. The DOI is assigned by the APT curator.
 6. **Section progress** – Toggle feature that allows authors to mark the section as complete or incomplete. This is a persistent feature through each step.
 7. **Version description** – Author should provide a meaningful description of how this APT ATBD version differs from previous versions. This is only important for new major versions of the ATBD.
@@ -219,9 +219,11 @@ The first authoring step prompts a user to input unique information that identif
 
 [[Back to top](#)]
 
-#### 2.3.2 Contact Information (Step 2)
+#### 2.3.2 Contact and Reviewer Information (Step 2)
 
 The second step requests contact information for the individual or group responsible for fielding user questions regarding the ATBD (Figure 20). APT stores information from all published documents, which authors can retrieve and use in other documents. Therefore, authors have the option to search for existing contact information stored in APT and should use this information whenever possible instead of entering information manually. This ensures that information is consistent across all documents, which is an advantage of APT.
+
+Document reviewers should be added as a contact. However, their information will not be included on the document PDF. Select “Document Reviewer” under roles related to the document. A minimum of two reviewers are required. 
 
 ![Figure 20](https://github.com/bwbaker1/APT_UserGuide_Figures/blob/main/APT_Figure20.png?raw=true "Figure 20. Individual or group contact information. The red outlined and labeled items correspond to the numbered descriptions in text below.")
 
@@ -312,8 +314,8 @@ This step first describes the scientific and mathematical theories and assumptio
 
 ![Figure 28](https://github.com/bwbaker1/APT_UserGuide_Figures/blob/main/APT_Figure28.png?raw=true "Figure 28. Insert the mathematical theory and assumptions associated with the algorithm. The red outlined and labeled items correspond to the numbered descriptions in text below.")
 
-1. **Describe the mathematical theory** – Describe the mathematical theory that is essential to the algorithm’s development.
-2. **Mathematical theory assumptions** – Provide a description of any mathematical assumptions, simplifications, and approximations made when deriving the algorithm.
+1. **Describe the mathematical theory** – Describe the mathematical theory that is essential to the algorithm’s development. Mathematical theory is not required; however, the section is required. If there is no mathematical theory to add, please write “see scientific theory above.”
+2. **Mathematical theory assumptions** – Provide a description of any mathematical assumptions, simplifications, and approximations made when deriving the algorithm. If there are retrieval error uncertainties, add a new header within the mathematical theory section.
 
 ![Figure 29](https://github.com/bwbaker1/APT_UserGuide_Figures/blob/main/APT_Figure29.png?raw=true "Figure 29. Add input and output variables used and generated by the algorithm. The red outlined and labeled items correspond to the numbered descriptions in text below.")
 
