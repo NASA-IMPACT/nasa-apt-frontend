@@ -164,14 +164,14 @@ const FeedbackLink = (props) => (
 
 function NewAtbd() {
   const [showMoreInfo, setShowMoreInfo] = React.useState(false);
-  const { user } = useUser();
+  const { isLogged } = useUser();
 
   return (
     <App pageTitle='New ATBD'>
       <PageContent>
         <Header>
           <h1>ATBD Creation Choices</h1>
-          {!user.isLogged && (
+          {!isLogged && (
             <Feedback>
               <a href={getHostedAuthUiUrl('signup')}>Sign up</a> now to get
               started!
@@ -234,9 +234,7 @@ function NewAtbd() {
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={() => {
-                  ReactGA.event('atbd_template_download', {
-                    template_format: 'Google Docs'
-                  });
+                  ReactGA.event('atbd_template_download_google_docs');
                 }}
               >
                 <span>
@@ -249,9 +247,7 @@ function NewAtbd() {
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={() => {
-                  ReactGA.event('atbd_template_download', {
-                    template_format: 'Microsoft Word'
-                  });
+                  ReactGA.event('atbd_template_download_ms_word');
                 }}
               >
                 <span>
@@ -264,9 +260,7 @@ function NewAtbd() {
                 target='_blank'
                 rel='noopener noreferrer'
                 onClick={() => {
-                  ReactGA.event('atbd_template_download', {
-                    template_format: 'Latex'
-                  });
+                  ReactGA.event('atbd_template_download_latex');
                 }}
               >
                 <span>

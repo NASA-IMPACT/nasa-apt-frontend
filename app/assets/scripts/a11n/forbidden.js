@@ -15,7 +15,7 @@ import { Link } from '../styles/clean/link';
 import { useUser } from '../context/user';
 
 function Forbidden() {
-  const user = useUser();
+  const { isLogged } = useUser();
 
   return (
     <App pageTitle='Forbidden'>
@@ -29,7 +29,7 @@ function Forbidden() {
           <ContentBlock>
             <Prose>
               <p>You don&apos;t have access to this page!</p>
-              {user.isLogged ? (
+              {isLogged ? (
                 <p>
                   If you think this is a mistake let us know via{' '}
                   <a href='mailto:' title='Send us an email'>

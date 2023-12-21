@@ -75,7 +75,7 @@ Use APT authoring environment
 
 - Give your ATBD a title. Continue adding content (see the [User Guide](https://www.earthdata.nasa.gov/apt/user-guide) for more details). See section 2.3 to learn how to add collaborators.
 
-![Figure 9](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure9_ATBD_Title.png?raw=true 'Figure 9. Give your ATBD a title')
+![Figure 9](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_FIgure_ATBD_Title.png?raw=true 'Figure 9. Give your ATBD a title')
 
 Use provided ATBD template
 
@@ -93,7 +93,7 @@ Use provided ATBD template
 - Navigate to the Attachment step and click choose a file to upload. Locate your PDF and click “open.” Then click “save” (Figure 12).
 - Click “view selected file” to view your uploaded ATBD (Figure 13).
 
-![Figure 10](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure10_trigger_PDF.png?raw=true 'Figure 10. Click the toggle to indicate that you have an existing ATBD PDF to submit')
+![Figure 10](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure10_trigger_PDF.png?raw=true 'Figure 10. Enter the title of your ATBD and click "Create new ATBD in APT" or "Upload existing ATBD PDF".')
 
 ![Figure 11](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure11_PDF_Upload.png?raw=true 'Figure 11. Enter the information related to your ATBD in the identifying information step')
 
@@ -117,7 +117,11 @@ Most ATBDs are a collaborative effort; therefore, multiple authors can be added 
 
 ### 2.4 How to Suggest a Reviewer for Your ATBD
 
-Coming soon.
+At least two people are required to review the ATBD. Reviewer information will not appear on the document PDF, but will appear on the HTML page (i.e., landing page once published). The APT curator will use this information to contact and get the reviewers set-up on the document. 
+
+![Figure 17](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure17_AddReviewer.png?raw=true 'Figure 17. Select the role as "Document Reviewer" if the contact is or will review the document.')
+
+Add the reviewer’s information within the “Contact and Reviewer” section. Select “Document Reviewer” as their role related to the document. At least two reviewers are required. 
 
 [[Back to top](#)]
 
@@ -129,9 +133,9 @@ An ATBD is typically developed in APT over time. Since one can work on any secti
 - Click “save.” A message letting you know that your document has been saved will appear. If this message does not appear, your document has not been saved.
 - You can then see the progress in the section drop-down list (Figure 18).
 
-![Figure 17](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure17_sectionprogress.png?raw=true 'Figure 17. The section or subsection box can be marked complete when finished by selecting the appropriate status shown in the red box.')
+![Figure 18](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure17_sectionprogress.png?raw=true 'Figure 18. The section or subsection box can be marked complete when finished by selecting the appropriate status shown in the red box.')
 
-![Figure 18](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure18_sectionprogress2.png?raw=true 'Figure 18. Check progress via the dropdown at the upper right of the blue bar (red box). This example shows the algorithm description section is 25% complete.')
+![Figure 19](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure18_sectionprogress2.png?raw=true 'Figure 19. Check progress via the dropdown at the upper right of the blue bar (red box). This example shows the algorithm description section is 25% complete.')
 
 [[Back to top](#)]
 
@@ -155,15 +159,15 @@ Prior to review, the author(s) will provide the curator with the names and email
 
 Upon your next login, click the reviewer tab to see ATBDs that your user role is a reviewer (Figure 19). You can view the document in HTML or download it as a PDF (Figure 20). As you review the document, provide feedback and notes to authors by leaving comments. Adding comments is discussed in section 3.1.
 
-![Figure 19](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_FIgure19_ReviewTab.png?raw=true 'Figure 19. From the user dashboard, navigating to the Reviews tab (red box) will display all documents where your role is reviewer.')
+![Figure 20](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_FIgure19_ReviewTab.png?raw=true 'Figure 20. From the user dashboard, navigating to the Reviews tab (red box) will display all documents where your role is reviewer.')
 
-![Figure 20](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure20_ReviewDownloadPDF.png?raw=true 'Figure 20. Clicking on the document from the review tab will open it up in HTML mode. A PDF of the document can be downloaded by clicking on Download (red box).')
+![Figure 21](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure20_ReviewDownloadPDF.png?raw=true 'Figure 21. Clicking on the document from the review tab will open it up in HTML mode. A PDF of the document can be downloaded by clicking on Download (red box).')
 
 Click “conclude review” once you are finished with your review (Figure 21), and then click confirm (Figure 22). The curator will transition the document to open review after all of the reviewers have concluded their review. The document is editable again in open review. In open review, the authors and reviewers work iteratively to address any issues. Once the authors and reviewers are satisfied and all comments are marked as resolved, the lead author has the option to request that the document be published.
 
-![Figure 21](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure21_ConcludeReview.png?raw=true "Figure 21. A review is completed by clicking 'conclude review' (red box)")
+![Figure 22](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure21_ConcludeReview.png?raw=true "Figure 22. A review is completed by clicking 'conclude review' (red box)")
 
-![Figure 22](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure22_ConfirmReview.png?raw=true 'Figure 22. Confirm (red box) that you have concluded your review.')
+![Figure 23](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure22_ConfirmReview.png?raw=true 'Figure 23. Confirm (red box) that you have concluded your review.')
 
 [[Back to top](#)]
 
@@ -175,12 +179,12 @@ Comments can be added to specific sections of the ATBD and specific users can be
 
 Existing comments can be replied to and resolved (Figure 25). A user can also edit and delete their own comments but not other users' comments (Figure 26).
 
-![Figure 23](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure23_CommentsIcons.png?raw=true 'Figure 23. Comment threads are opened by clicking the comments icon on the page banner (red box).')
+![Figure 24](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure23_CommentsIcons.png?raw=true 'Figure 24. Comment threads are opened by clicking the comments icon on the page banner (red box).')
 
-![Figure 24](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure24_Comments.png?raw=true 'Figure 24. Comment threads. Use the comment under the general dropdown to select which section to add the comment and use the notify users dropdown to select which users to notify of regarding the comment (red box).')
+![Figure 25](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure24_Comments.png?raw=true 'Figure 25. Comment threads. Use the comment under the general dropdown to select which section to add the comment and use the notify users dropdown to select which users to notify of regarding the comment (red box).')
 
-![Figure 25](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure25_CommentResolve.png?raw=true 'Figure 25. Reply to comments using the reply to comment icon and resolve comment threads using the resolve comment thread icon (red box).')
+![Figure 26](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure25_CommentResolve.png?raw=true 'Figure 26. Reply to comments using the reply to comment icon and resolve comment threads using the resolve comment thread icon (red box).')
 
-![Figure 26](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure26_CommentEdit.png?raw=true 'Figure 26. A user can edit or delete their own comment from the options dropdown menu (red box).')
+![Figure 27](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure26_CommentEdit.png?raw=true 'Figure 27. A user can edit or delete their own comment from the options dropdown menu (red box).')
 
 [[Back to top](#)]
