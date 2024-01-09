@@ -159,15 +159,20 @@ export default function DocumentDownloadMenu(props) {
           return;
         }
 
-        // If we get a 200, it means the PDF is ready for download.
-        // We get the s3 url and use file saver to download and save the pdf.
-        if (
-          response.status === 200 &&
-          response.headers.get('content-type') === 'application/json'
-        ) {
-          const result = await response.json();
+        if (response.status === 200) {
+          const contentType = response.headers.get('content-type');
+          let downloadData;
 
-          saveAs(result.pdf_url, fileName);
+          if (contentType === 'application/json') {
+            const result = await response.json();
+            downloadData = result.pdf_url;
+          } else if (contentType === 'application/pdf') {
+            downloadData = await response.blob();
+          } else {
+            throw new Error('Unexpected content type received.');
+          }
+
+          saveAs(downloadData, fileName);
           processToast.success(
             'PDF downloaded successfully! If the PDF did not open automatically, your browser may have blocked the download. Please make sure that popups are allowed on this site.'
           );
