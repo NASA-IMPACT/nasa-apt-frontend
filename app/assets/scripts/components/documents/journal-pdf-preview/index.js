@@ -26,7 +26,6 @@ import {
 import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
 import { VariableItem } from '../single-view/document-body';
 import { variableNodeType } from '../../../types';
-import { sortContacts } from '../../../utils/sort-contacts';
 
 const ReferencesList = styled.ol`
   && {
@@ -451,36 +450,34 @@ function JournalPdfPreview() {
       (c) => !c.roles?.includes('Document Reviewer')
     ); // Remove any reviewer from the authors list
 
-    authors
-      ?.sort(sortContacts)
-      .forEach(({ contact, affiliations: contactAffiliations }, i) => {
-        const hasAffiliation =
-          contactAffiliations && contactAffiliations.length > 0;
+    authors?.forEach(({ contact, affiliations: contactAffiliations }, i) => {
+      const hasAffiliation =
+        contactAffiliations && contactAffiliations.length > 0;
 
-        const item = (
-          <span key={contact.id}>
-            <strong>
-              {getContactName(contact, { full: true })}
-              {hasAffiliation &&
-                contactAffiliations.map((affiliation, j) => {
-                  return (
-                    <>
-                      <sup>
-                        {Array.from(affiliations).indexOf(affiliation) + 1}
-                      </sup>
-                      <sup>
-                        {j < contactAffiliations.length - 1 && <span>, </span>}
-                      </sup>
-                    </>
-                  );
-                })}
-              {i < authors.length - 1 && <span>, </span>}
-              {i === authors.length - 2 && <span>and </span>}
-            </strong>
-          </span>
-        );
-        contacts.push(item);
-      });
+      const item = (
+        <span key={contact.id}>
+          <strong>
+            {getContactName(contact, { full: true })}
+            {hasAffiliation &&
+              contactAffiliations.map((affiliation, j) => {
+                return (
+                  <>
+                    <sup>
+                      {Array.from(affiliations).indexOf(affiliation) + 1}
+                    </sup>
+                    <sup>
+                      {j < contactAffiliations.length - 1 && <span>, </span>}
+                    </sup>
+                  </>
+                );
+              })}
+            {i < authors.length - 1 && <span>, </span>}
+            {i === authors.length - 2 && <span>and </span>}
+          </strong>
+        </span>
+      );
+      contacts.push(item);
+    });
 
     // create corresponding authors list component
     const correspondingAuthors =
