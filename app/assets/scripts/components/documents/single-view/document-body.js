@@ -27,7 +27,6 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
-import { sortContacts } from '../../../utils/sort-contacts';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -1056,7 +1055,6 @@ const htmlAtbdContentSections = [
             // Remove reviewers that have the role 'Document Reviewer'
             !roles.includes('Document Reviewer')
         )
-        .sort(sortContacts)
         .map(({ contact, roles, affiliations }, idx) => ({
           label: getContactName(contact),
           id: `contacts_${idx + 1}`,
@@ -1117,7 +1115,6 @@ const htmlAtbdContentSections = [
           // Include reviewers that have the role 'Document Reviewer'
           roles.includes('Document Reviewer')
         )
-        .sort(sortContacts)
         .map(({ contact, roles, affiliations }, idx) => ({
           label: getContactName(contact),
           id: `contacts_${idx + 1}`,
