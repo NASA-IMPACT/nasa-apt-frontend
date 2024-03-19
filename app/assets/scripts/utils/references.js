@@ -107,7 +107,7 @@ function formatAuthors(authors, type = 'reference') {
         .trim()
         .split(' ')
         .map((word) => `${word[0]}.`) // add period after first letter
-        .join(''); // rejoin in case of multiple initials
+        .join(' '); // rejoin with space in case of multiple initials
       return `${lastName}, ${firstNameInitialed}`;
     });
 
