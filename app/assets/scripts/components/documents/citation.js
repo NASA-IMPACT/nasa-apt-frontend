@@ -6,6 +6,8 @@ import { FormHelperMessage } from '@devseed-ui/form';
 import getDocumentIdKey from './get-document-id-key';
 import { documentView } from '../../utils/url-creator';
 import { formatAuthors } from '../../utils/references';
+import config from '../../config';
+const { baseUrl } = config;
 
 // Symbol to define that the description should come from the strings file.
 export const formStringSymbol = Symbol.for('form string');
@@ -115,7 +117,8 @@ function getCitationDocUrl(atbd) {
     return citation.online_resource;
   }
 
-  return `${window.location.origin}${documentView(atbd)}`;
+  const publicUrl = baseUrl || window.location.origin;
+  return `${publicUrl}${documentView(atbd)}`;
 }
 
 function getCitationDocVersion(atbd) {
@@ -164,9 +167,11 @@ export function createStringCitation(atbd) {
   const authors = formatAuthors(atbd.citation.creators, 'citation');
   const title = atbd.title;
   const url = getCitationDocUrl(atbd);
+  const doi = atbd.doi;
+  let docRef = doi ? doi : url;
   const publisher = atbd.citation.publisher;
   const returnStr = `${authors}. (${year}). ${title}, ${getCitationDocVersion(
     atbd
-  )}. ${publisher}. (${url})`;
+  )}. ${publisher}. (${docRef})`;
   return returnStr;
 }
