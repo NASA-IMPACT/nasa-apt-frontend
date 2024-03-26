@@ -19,8 +19,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
-        Doe).
+        Separate values with <em>and</em> (e.g. Doe, John <em>and</em> Doe,
+        Jane).
       </FormHelperMessage>
     )
   },
@@ -30,8 +30,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
-        Doe).
+        Separate values with <em>and</em> (e.g. Doe, John <em>and</em> Doe,
+        Jane).
       </FormHelperMessage>
     )
   },
