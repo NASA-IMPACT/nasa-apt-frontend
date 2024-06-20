@@ -27,6 +27,7 @@ import { useCommentCenter } from '../../../context/comment-center';
 import { isJournalPublicationIntended } from '../status';
 import serializeSlateToString from '../../slate/serialize-to-string';
 import { useContextualAbility } from '../../../a11n';
+import { VariablesTable } from './common/variables-table';
 
 const PDFPreview = styled.iframe`
   width: 100%;
@@ -214,31 +215,6 @@ const DataAccessItem = ({ id, label, url, description }) => (
   </AtbdSubSection>
 );
 
-export const VariableItem = ({ element, variable }) => (
-  <React.Fragment>
-    <h4 id={element.id} data-scroll='target'>
-      {element.label}
-    </h4>
-    <DetailsList>
-      <dt>Name</dt>
-      <dd>
-        <SafeReadEditor value={variable.name} whenEmpty={<EmptySection />} />
-      </dd>
-      <dt>Long name</dt>
-      <dd>
-        <SafeReadEditor
-          value={variable.long_name}
-          whenEmpty={<EmptySection />}
-        />
-      </dd>
-      <dt>Unit</dt>
-      <dd>
-        <SafeReadEditor value={variable.unit} whenEmpty={<EmptySection />} />
-      </dd>
-    </DetailsList>
-  </React.Fragment>
-);
-
 const ContactItem = ({ id, label, contact, roles, affiliations }) => (
   <AtbdSubSection itemScope itemType='https://schema.org/ContactPoint'>
     <h3
@@ -302,6 +278,10 @@ const ContactItem = ({ id, label, contact, roles, affiliations }) => (
 export const EmptySection = ({ className }) => (
   <p className={className}>No content available.</p>
 );
+
+EmptySection.propTypes = {
+  className: T.string
+};
 
 /**
  * Renders each element of the given array (by calling their `render` function)
@@ -601,7 +581,7 @@ const htmlAtbdContentSections = [
       {
         label: 'Algorithm Input Variables',
         id: 'input_variables',
-        render: ({ printMode, element, children, atbd }) => (
+        render: ({ printMode, element, document, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
@@ -609,24 +589,18 @@ const htmlAtbdContentSections = [
                 <HeadingContextualActions id={element.id} atbd={atbd} />
               )}
             </HeadingWActions>
-            {React.Children.count(children) ? children : <EmptySection />}
+            {document.algorithm_input_variables?.length > 0 ? (
+              <VariablesTable variables={document.algorithm_input_variables} />
+            ) : (
+              <EmptySection />
+            )}
           </React.Fragment>
-        ),
-        children: ({ document }) => {
-          const items = document.algorithm_input_variables || [];
-          return items.map((o, idx) => ({
-            label: `Variable #${idx + 1}`,
-            id: `input_variables_${idx + 1}`,
-            render: ({ element }) => (
-              <VariableItem key={element.id} element={element} variable={o} />
-            )
-          }));
-        }
+        )
       },
       {
         label: 'Algorithm Output Variables',
         id: 'output_variables',
-        render: ({ printMode, element, children, atbd }) => (
+        render: ({ printMode, element, document, atbd }) => (
           <React.Fragment key={element.id}>
             <HeadingWActions as='h3' id={element.id} data-scroll='target'>
               <span>{element.label}</span>
@@ -634,19 +608,13 @@ const htmlAtbdContentSections = [
                 <HeadingContextualActions id={element.id} atbd={atbd} />
               )}
             </HeadingWActions>
-            {React.Children.count(children) ? children : <EmptySection />}
+            {document.algorithm_output_variables?.length > 0 ? (
+              <VariablesTable variables={document.algorithm_output_variables} />
+            ) : (
+              <EmptySection />
+            )}
           </React.Fragment>
-        ),
-        children: ({ document }) => {
-          const items = document.algorithm_output_variables || [];
-          return items.map((o, idx) => ({
-            label: `Variable #${idx + 1}`,
-            id: `output_variables_${idx + 1}`,
-            render: ({ element }) => (
-              <VariableItem key={element.id} element={element} variable={o} />
-            )
-          }));
-        }
+        )
       }
     ]
   },
