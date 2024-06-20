@@ -22,7 +22,7 @@ const Th = styled.th`
   border: 1px solid rgb(193, 199, 208);
   padding: 8px;
   min-width: 48px;
-  text-align: center;
+  text-align: left;
 
   > * {
     margin: 0;
