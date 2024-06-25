@@ -37,9 +37,6 @@ jobs:
       - name: Install
         run: yarn install
 
-      - name: list dist, if exists
-        run: ls -la dist
-
       - name: Build staging
         run: yarn stage
 
