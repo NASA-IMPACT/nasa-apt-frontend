@@ -44,6 +44,3 @@ jobs:
         run: |
           cp ./dist/index.html ./dist/200.html
           yarn run surge ./dist ${{ env.SURGE_STAGING_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
-
-      - name: list dist
-        run: ls -la dist
