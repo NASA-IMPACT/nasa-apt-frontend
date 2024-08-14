@@ -10,6 +10,7 @@ import DocumentTitle from '../single-view/document-title';
 import { DocumentProse } from '../single-view/document-content';
 import { ScrollAnchorProvider } from '../single-view/scroll-manager';
 import { applyNumberCaptionsToDocument } from '../../../utils/apply-number-captions-to-document';
+import { isDefined } from '../../../utils/common';
 
 const TocHeader = styled.h1`
   border-bottom: 3px solid #000;
@@ -65,7 +66,6 @@ function generateTocAndHeadingNumbering(content) {
     currentHeading,
     currentLevel,
     sectionContainer,
-    parentContainer,
     parentHeadingNumber
   ) {
     const currentSubHeadings = [];
@@ -148,7 +148,6 @@ function generateTocAndHeadingNumbering(content) {
           subHeading,
           currentLevel + 1,
           subHeadingSections,
-          subHeading.parentNode,
           headingNumber
         );
       });
@@ -192,13 +191,7 @@ function generateTocAndHeadingNumbering(content) {
 
       const sectionTitle = getTitleElement(heading.id, heading.innerText);
       section.append(sectionTitle);
-      generateSubHeadings(
-        heading,
-        2,
-        section,
-        heading.parentNode,
-        headingNumber
-      );
+      generateSubHeadings(heading, 2, section, headingNumber);
     });
   }
 
@@ -239,11 +232,11 @@ function PdfPreview() {
       setPreviewReady(true);
     }
 
-    if (atbd.status === 'succeeded') {
+    if (atbd.status === 'succeeded' && isDefined(atbd.data)) {
       setDocument(applyNumberCaptionsToDocument(atbd.data.document));
       waitForImages();
     }
-  }, [atbd.status]);
+  }, [atbd.data, atbd.status]);
 
   // This useEffect is responsible for generating the ToC and numbering
   // after the document is transformed
