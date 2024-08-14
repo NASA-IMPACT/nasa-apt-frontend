@@ -512,7 +512,7 @@ const htmlAtbdContentSections = [
         ),
         children: [
           {
-            label: 'Assumptions',
+            label: 'Scientific Theory Assumptions',
             id: 'scientific_theory_assumptions',
             editorSubsections: (document, { id }) =>
               subsectionsFromSlateDocument(
@@ -557,7 +557,7 @@ const htmlAtbdContentSections = [
         ),
         children: [
           {
-            label: 'Assumptions',
+            label: 'Mathematical Theory Assumptions',
             id: 'mathematical_theory_assumptions',
             editorSubsections: (document, { id }) =>
               subsectionsFromSlateDocument(
@@ -695,12 +695,12 @@ const htmlAtbdContentSections = [
     )
   },
   {
-    label: 'Performance Assessment Validation',
+    label: 'Performance Assessment',
     id: 'validation',
     render: AtbdSectionPassThrough,
     children: [
       {
-        label: 'Performance Assessment Validation Methods',
+        label: 'Validation Methods',
         id: 'validation_method',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(
@@ -720,7 +720,7 @@ const htmlAtbdContentSections = [
         )
       },
       {
-        label: 'Performance Assessment Validation Uncertainties',
+        label: 'Uncertainties',
         id: 'validation_uncert',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(
@@ -742,7 +742,7 @@ const htmlAtbdContentSections = [
         )
       },
       {
-        label: 'Performance Assessment Validation Errors',
+        label: 'Validation Errors',
         id: 'validation_err',
         editorSubsections: (document, { id }) =>
           subsectionsFromSlateDocument(
@@ -764,12 +764,12 @@ const htmlAtbdContentSections = [
     ]
   },
   {
-    label: 'Data Access',
+    label: 'Algorithm Implementation',
     id: 'data_access',
     render: AtbdSectionPassThrough,
     children: [
       {
-        label: 'Input Data Data Access',
+        label: 'Input Data Access',
         id: 'data_access_input_data',
         render: (props) => (
           <FragmentWithOptionalEditor
@@ -804,7 +804,7 @@ const htmlAtbdContentSections = [
         }
       },
       {
-        label: 'Output Data Data Access',
+        label: 'Output Data Access',
         id: 'data_access_output_data',
         render: (props) => (
           <FragmentWithOptionalEditor
@@ -998,7 +998,7 @@ const htmlAtbdContentSections = [
     ]
   },
   {
-    label: 'Contacts',
+    label: 'Contact Details',
     id: 'contacts',
     render: ({ element, children, atbd, printMode }) => (
       <AtbdSection
@@ -1219,7 +1219,7 @@ const pdfAtbdContentSections = [
     )
   },
   {
-    label: 'Contacts',
+    label: 'Contact Details',
     id: 'contacts',
     render: ({ element, children, atbd, printMode }) => (
       <AtbdSection

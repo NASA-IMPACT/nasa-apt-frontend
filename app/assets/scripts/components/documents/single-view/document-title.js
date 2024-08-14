@@ -19,6 +19,7 @@ const DocumentHeader = styled.header`
 `;
 
 const DocumentHeading = styled(Heading)`
+  text-align: center;
   margin: 0;
 `;
 

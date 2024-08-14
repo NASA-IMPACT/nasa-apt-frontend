@@ -114,9 +114,8 @@ const DocumentHeading = styled.h1`
 const AuthorsSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-`;
-const AuthorsSectionHeader = styled.div`
+  align-items: center;
+  gap: 1.5rem;
   text-align: center;
 `;
 
@@ -594,7 +593,7 @@ function JournalPdfPreview() {
         <PreviewContainer ref={contentRef}>
           <DocumentHeading> {resolveTitle(atbd.title)} </DocumentHeading>
           <AuthorsSection>
-            <AuthorsSectionHeader>{contacts?.items}</AuthorsSectionHeader>
+            <div>{contacts?.items}</div>
             <div>
               {contacts?.affiliations_list.map((affiliation, i) => (
                 // eslint-disable-next-line react/no-array-index-key
@@ -815,7 +814,7 @@ function JournalPdfPreview() {
             </Section>
           )}
           {referencesVisible && (
-            <Section id='references' title='References'>
+            <Section id='references' title='References' skipNumbering>
               <ReferencesList>{referenceList}</ReferencesList>
             </Section>
           )}
