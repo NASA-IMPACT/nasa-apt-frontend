@@ -1,4 +1,3 @@
-import get from 'lodash.get';
 import {
   IMAGE_BLOCK,
   TABLE_BLOCK
@@ -80,16 +79,9 @@ export function applyNumberCaptionsToDocument(document) {
                   return c;
                 }
 
-                const currentCaption = get(c, 'children[0].text');
-
                 return {
                   ...c,
-                  children: [
-                    {
-                      ...c.children[0],
-                      text: `${captionPrefix}${currentCaption}`
-                    }
-                  ]
+                  children: [{ text: captionPrefix }, ...c.children]
                 };
               });
 

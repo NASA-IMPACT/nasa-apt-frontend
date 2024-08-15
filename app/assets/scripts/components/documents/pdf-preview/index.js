@@ -243,7 +243,7 @@ function PdfPreview() {
       setDocument(applyNumberCaptionsToDocument(atbd.data.document));
       waitForImages();
     }
-  }, [atbd.status]);
+  }, [atbd.status, atbd.data]);
 
   // This useEffect is responsible for generating the ToC and numbering
   // after the document is transformed
