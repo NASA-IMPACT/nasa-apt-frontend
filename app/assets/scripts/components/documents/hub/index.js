@@ -21,6 +21,7 @@ import { Link } from '../../../styles/clean/link';
 
 import { useAtbds } from '../../../context/atbds-list';
 import CreateDocumentButton from '../../documents/create-document-button';
+import { PUBLISHED } from '../../documents/status';
 
 export const DocList = styled.ol`
   grid-column: content-start / content-end;
@@ -36,10 +37,10 @@ export const DocListItem = styled.li`
 `;
 
 function Documents() {
-  const { fetchAtbds, atbds } = useAtbds();
+  const { fetchAtbds, atbds } = useAtbds({ status: PUBLISHED });
 
   useEffect(() => {
-    fetchAtbds();
+    fetchAtbds({ status: PUBLISHED });
   }, [fetchAtbds]);
 
   // We only want to handle errors when the atbd request fails. Mutation errors,

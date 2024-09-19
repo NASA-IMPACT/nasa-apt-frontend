@@ -24,7 +24,7 @@ const PageFooterSelf = styled.footer`
 
 const Colophon = styled.p`
   display: grid;
-  grid-template-columns: minmax(min-content, max-content) 1fr;
+  grid-template-columns: minmax(min-content, max-content) 1fr 1fr;
   grid-gap: ${glsp(1)};
   font-size: 0.875rem;
   line-height: 1rem;
@@ -49,6 +49,10 @@ const CreditsLink = styled.a`
   }
 `;
 
+const AccessibilityLink = styled.a`
+  font-weight: ${themeVal('type.base.regular')};
+`;
+
 const VersionInfo = styled.span`
   margin-left: auto;
   opacity: 0.64;
@@ -70,6 +74,12 @@ function PageFooter() {
           </span>
           <time dateTime={nowDate.getFullYear()}>{nowDate.getFullYear()}</time>
         </CreditsLink>
+        <AccessibilityLink
+          href='https://www.nasa.gov/accessibility/'
+          title='Accessibility Statement'
+        >
+          <span>Accessibility Statement</span>
+        </AccessibilityLink>
         <Tip
           tag={VersionInfo}
           delay={1000}

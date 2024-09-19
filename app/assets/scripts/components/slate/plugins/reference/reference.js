@@ -92,7 +92,7 @@ export default function Reference(props) {
     return (
       <RefReadOnly>
         <Tip tag='span' title={referenceTitle}>
-          {`(${formatCitation(reference)})`}
+          {`${formatCitation(reference)}`}
           {children}
         </Tip>
       </RefReadOnly>

@@ -5,6 +5,9 @@ import { FormHelperMessage } from '@devseed-ui/form';
 
 import getDocumentIdKey from './get-document-id-key';
 import { documentView } from '../../utils/url-creator';
+import { formatAuthors } from '../../utils/references';
+import config from '../../config';
+const { baseUrl } = config;
 
 // Symbol to define that the description should come from the strings file.
 export const formStringSymbol = Symbol.for('form string');
@@ -16,8 +19,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
-        Doe).
+        Separate values with <em>and</em> (e.g. Doe, John <em>and</em> Doe,
+        Jane).
       </FormHelperMessage>
     )
   },
@@ -27,8 +30,8 @@ export const citationFields = [
     description: formStringSymbol,
     helper: (
       <FormHelperMessage>
-        Separate values with <em>and</em> (e.g., John Doe <em>and</em> Jane
-        Doe).
+        Separate values with <em>and</em> (e.g. Doe, John <em>and</em> Doe,
+        Jane).
       </FormHelperMessage>
     )
   },
@@ -114,7 +117,8 @@ function getCitationDocUrl(atbd) {
     return citation.online_resource;
   }
 
-  return `${window.location.origin}${documentView(atbd)}`;
+  const publicUrl = baseUrl || window.location.origin;
+  return `${publicUrl}${documentView(atbd)}`;
 }
 
 function getCitationDocVersion(atbd) {
@@ -151,26 +155,23 @@ export function createBibtexCitation(atbd) {
 }
 
 /**
- * Creates a comma separated citation from the given atbd.
+ * Creates a citation from the given atbd.
+ * Format is:
+ * Authors. (Publication Date). Title, version. Publisher. (DOC URL or DOI).
  *
  * @param {object} atbd The document for which to create a citation
  * @returns string
  */
 export function createStringCitation(atbd) {
-  const { title, citation } = atbd;
-  const { dateStr } = getCitationPublicationDate(atbd);
-  const citationVersion = getCitationDocVersion(atbd);
+  const { year } = getCitationPublicationDate(atbd);
+  const authors = formatAuthors(atbd.citation.creators, 'citation');
+  const title = atbd.title;
   const url = getCitationDocUrl(atbd);
-
-  return [
-    title,
-    citation.creators,
-    citation.editors,
-    citation.publisher,
-    dateStr,
-    citationVersion,
-    url
-  ]
-    .filter(Boolean)
-    .join(', ');
+  const doi = atbd.doi;
+  let docRef = doi ? doi : url;
+  const publisher = atbd.citation.publisher;
+  const returnStr = `${authors}. (${year}). ${title}, ${getCitationDocVersion(
+    atbd
+  )}. ${publisher}. (${docRef})`;
+  return returnStr;
 }

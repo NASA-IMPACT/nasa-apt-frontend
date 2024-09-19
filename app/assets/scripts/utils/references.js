@@ -64,7 +64,7 @@ export const getReferenceEmptyValue = (base = {}) => {
  * @param {String} authors - A list of authors separated by 'and'
  * @returns A string of authors in AGU style
  */
-function formatAuthors(authors, type = 'reference') {
+export function formatAuthors(authors, type = 'reference') {
   if (!authors || authors.length === 0) return '';
   const authorsList = authors.split(' and ');
 
@@ -106,7 +106,8 @@ function formatAuthors(authors, type = 'reference') {
       const firstNameInitialed = firstName
         .trim()
         .split(' ')
-        .map((word) => `${word[0]}.`); // first letter
+        .map((word) => `${word[0]}.`) // add period after first letter
+        .join(' '); // rejoin with space in case of multiple initials
       return `${lastName}, ${firstNameInitialed}`;
     });
 

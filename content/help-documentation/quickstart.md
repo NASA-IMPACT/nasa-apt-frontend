@@ -9,7 +9,7 @@ title: Quick Start Guide
 ## 1. Introduction
 
 The Algorithm Publication Tool (APT) is a cloud-based publication tool developed within NASA’s Earth Science Data Systems (ESDS) program that standardizes Algorithm Theoretical Basis Document (ATBD) content, streamlines the authoring process of ATBDs, and allows the science community to search and retrieve ATBDs from a centralized repository.
-Users can create an ATBD within the APT user interface or use one of the provided ATBD templates to create their document (e.g., Google Docs, Microsoft Word, or LaTeX; see [APT User Guide](https://www.earthdata.nasa.gov/apt/user-guide/apt) and APT Template User Guide). Both options require an APT account.
+Users can create an ATBD within the APT user interface or use one of the provided ATBD templates to create their document (e.g., Google Docs, Microsoft Word, or LaTeX; see [APT User Guide](https://www.earthdata.nasa.gov/apt/user-guide/apt). Both options require an APT account.
 
 [[Back to top](#)]
 
@@ -47,11 +47,17 @@ Follow these steps to create an account.
 ![Figure 4](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure4_EmailVerify.png?raw=true 'Figure 4. Once you create your APT account, you will be prompted to verify your email address.')
 
 - You will receive an email when your account is approved.
-  Set-up Multi-factor authentication (MFA, Figure 5). APT uses Multi-factor authentication (MFA) and is required to sign in. This is an authentication method that requires a user to provide two or more forms of identification to gain access to the tool. MFA enhances security, keeping your data safe. Any authenticator application that generates time-based one-time passwords (TOTP) should work for authorization, such as Google Authenticator, Authy, DUO, Microsoft Authenticator, or similar.
+  Set-up Multi-factor authentication (MFA, Figure 5). APT uses Multi-factor authentication (MFA) and is required to sign in. This is an authentication method that requires a user to provide two or more forms of identification to gain access to the tool. MFA enhances security, keeping your data safe. Most authenticator applications that generate time-based one-time passwords (TOTP) should work for authorization, such as [Google Authenticator](https://support.google.com/accounts/answer/1066447?hl=en&co=GENIE.Platform%3DAndroid), [Authy](https://authy.com/features/setup/), [DUO](https://guide.duo.com/), [Microsoft Authenticator](https://support.microsoft.com/en-us/account-billing/set-up-the-microsoft-authenticator-app-as-your-verification-method-33452159-6af9-438f-8f82-63ce94cf3d29), or similar (see provided links for set up instructions). There are also web browser options, such as Google and Microsoft authenication browser extentions.
+
+  Once the application or browser extensions are downloaded, either scan the QR code or manually enter the code to add your APT account to the authenicator (see red box in Figure 5). 
+
+  
+
+  
 
 ![Figure 5](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_Figure5_MFA.png?raw=true 'Figure 5.On your first sign into APT, you will be prompted to set up MFA. Use the provided code or QR to set up MFA (red box).')
 
-- Use your MFA authenticator application to enter a one-time password (OTP, Figure 6).
+- Use your MFA authenticator application to enter a one-time password (OTP, Figure 6). Note that this is the password generated from the authenticator. 
 
 ![Figure 6](https://github.com/bwbaker1/APT_QuickStart_Figures/blob/main/QS_FIgure6_OTP.png?raw=true 'Figure 6. Upon each sign in attempt, you must use your MFA authenticator to generate a one time password (red box).')
 
