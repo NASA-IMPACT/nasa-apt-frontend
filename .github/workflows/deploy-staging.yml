@@ -1,4 +1,4 @@
-name: Deploy Staging - Surge.sh
+name: Deploy Staging
 
 on:
   push:
@@ -6,41 +6,59 @@ on:
       - 'develop'
 
 env:
-  NODE: 14
-  SURGE_STAGING_DOMAIN: https://nasa-apt.surge.sh
+  NODE_VERSION: 14
+  DOMAIN_STAGING: https://d3p0lkft682kz.cloudfront.net
+  DEPLOY_BUCKET_STAGING: nasa-apt-v5-staging
+  DEPLOY_BUCKET_STAGING_REGION: us-east-1
+  STAGING_CLOUDFRONT_DISTRIBUTION_ID: E2XF0H60GJHF3E
+  OIDC_ROLE: arn:aws:iam::552819999234:role/nasa-apt-frontend-ci
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.8.0
+        uses: styfle/cancel-workflow-action@0.12.0
         with:
           access_token: ${{ github.token }}
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ env.NODE }}
-        uses: actions/setup-node@v1
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE }}
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        id: cache-node-modules
+      - name: Cache dependencies
+        uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package.json') }}
+          path: ~/.yarn
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
 
-      - name: Install
-        run: yarn install
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Build staging
-        run: yarn stage
+        run: PUBLIC_URL="${{ env.DOMAIN_STAGING }}" yarn stage
 
-      - name: Deploy Staging to Surge
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.OIDC_ROLE }}
+          aws-region: ${{ env.DEPLOY_BUCKET_STAGING_REGION }}
+
+      - name: Deploy to S3
         run: |
-          cp ./dist/index.html ./dist/200.html
-          yarn run surge ./dist ${{ env.SURGE_STAGING_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+          aws s3 sync ./dist s3://${{ env.DEPLOY_BUCKET_STAGING }} \
+            --delete \
+            --follow-symlinks
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.STAGING_CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
