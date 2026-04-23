@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> **This repository is archived and no longer maintained.**
+
 # Algorithm Publication Tool (APT)
 _version 2_
 
